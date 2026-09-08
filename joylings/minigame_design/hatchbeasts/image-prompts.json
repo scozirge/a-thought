@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 2,
+  "project": "破殼怪獸",
+  "assetSet": "Scratchy crayon places, monster-world activities and a doodle background",
+  "updatedDate": "2026-09-08",
+  "toolMode": "built-in image_gen",
+  "assets": [
+    {
+      "assetName": "garden",
+      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a pink-flower garden vignette with a recognizable green rose arch and one WHITE BUNNY, with pink flowers climbing the arch and several flowers on the ground. Give the bunny a quirky slightly lumpy asymmetric body, funny unequal long ears and mismatched round eyes inspired by the reference's doodle expressiveness. It must still clearly read as a sweet white rabbit. Thin scratchy black contours and scribbled details, pink and green textured crayon patches. Arch, bunny and flowers fully within the right vignette and comfortably away from the image edges.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "requestedDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "actualDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
+      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-8fdfcaeb-7571-4693-8f34-32a0034b26a1.png",
+      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/garden.png",
+      "fileBytes": 3210929,
+      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
+      "inspectionNotes": [
+        "Inspected visually with view_image. White rabbit with uneven oversized eyes and unequal ears, green rose arch, pink flowers; visible patchy crayon and repeated scratchy outlines.",
+        "Subjects are fully visible on right, with broad ivory label space on left. Some outer scene margins are closer than the requested 8%, but no subject is cut off; whole-image contain fit is appropriate.",
+        "No readable text, UI, labels, logos or outcome monster/egg design."
+      ],
+      "projectPath": "public/images/garden.png"
+    },
+    {
+      "assetName": "cave",
+      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a distinctly BLACK-PURPLE CAVE with a rough arched entrance, a few lavender crystals, one warm yellow lantern, and one small GRAY KITTEN. The cave mass is dark charcoal-black and deep violet crayon with very visible hand-scribbled hatch shading. It must read immediately as a dark BLACK-PURPLE cave, not blue, not pale lavender. Place a warm yellow lantern glow near the kitten. The kitten has whimsical uneven round eyes and funny asymmetric ears, with thin scratchy repeated black contours; it remains recognizable as a friendly gray cat. A compact cave vignette on the right, complete arched outline, all crystals, lantern and full kitten safely inset.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "requestedDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "actualDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
+      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-d0bd6e77-955a-4635-b326-77a9cb9e9915.png",
+      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/cave.png",
+      "fileBytes": 3289087,
+      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
+      "inspectionNotes": [
+        "Inspected visually with view_image. Cave is strongly charcoal-black/deep purple with scribbled crayon mass, lavender crystals, warm yellow lantern and a gray kitten with unequal eyes.",
+        "Full kitten, crystals and cave vignette are visible; broad blank ivory left label space. Outer cave margin is narrower than requested 8%, so whole-image contain fit is appropriate.",
+        "No readable text, UI, labels, logos or outcome monster/egg design."
+      ],
+      "projectPath": "public/images/cave.png"
+    },
+    {
+      "assetName": "waterfall",
+      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a clearly recognizable bright blue waterfall flowing between GREEN TREES, a few rounded rocks, and one small BROWN FAWN in front. Keep the entire waterfall and tree silhouettes inside the right vignette. The fawn is a friendly quirky hand-drawn deer with uneven ears, mismatched funny round eyes, wobbly spindly legs and brown grainy crayon fill with pale spots. Natural elements remain immediately recognizable: blue falling water with broken crayon strokes, leafy green trees, gray rocks. Scratchy repeat outlines and scribble hatching throughout. Full fawn legs and hooves visible and inset well above the bottom edge.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "requestedDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "actualDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
+      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-c4b2828e-ad2b-4082-a02b-538347579ef3.png",
+      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/waterfall.png",
+      "fileBytes": 3272504,
+      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
+      "inspectionNotes": [
+        "Inspected visually with view_image. Immediately recognizable blue waterfall, green trees and rocks; brown spotted fawn has uneven large eyes/ears and thin wobbly legs.",
+        "Entire fawn including all hooves is visible, with blank ivory label area on left. Top/right tree clearance is narrower than requested 8% but no elements are cropped.",
+        "No readable text, UI, labels, logos or outcome monster/egg design."
+      ],
+      "projectPath": "public/images/waterfall.png"
+    },
+    {
+      "assetName": "leisure",
+      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: a monster-world game and stories.\nSubject: one goofy small lavender NON-HUMAN blob monster with lumpy body, two uneven bulging eyes, a tiny horn and stubby limbs happily using a magical game contraption. The game contraption is visibly fantasy: a crooked living arcade with a friendly toothy mouth and tiny claw feet, crystal power source and large eyeball-like colored controls. Above it floats a crooked portal projecting just two or three simple fantasy game shapes such as a star and a small jewel. Nearby is one open winged comic book, with small wings attached and a few LARGE simple doodle pictures only on its pages. The monster's stubby hands happily touch the large eyeball controls. Keep the grouping compact and highly readable; the large magical arcade/portal and open winged comic are the main props. This is a monster-world pastime, never an ordinary monitor, consumer console, office or electronics setup. No separate normal desk, keyboard or normal controller. Gentle funny living objects, not scary.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "actualDimensions": {
+        "height": 1024,
+        "width": 1536
+      },
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-0c2cd98d-4f75-4efe-aac8-a5df762af786.png",
+      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/leisure.png",
+      "projectPath": "public/images/leisure.png",
+      "inspectionNotes": [
+        "Pass. Non-human lavender blob operating large eyeball controls on a living toothy claw-footed arcade, with crystal and floating portal; winged open comic has pictures only. Clearly monster-world props; no humans, ordinary consumer-tech scene, text, eggs or assigned hatch creatures. Textured crayon style matches. Left area mostly blank; full props remain visible, with narrow right inset at comic wing."
+      ],
+      "sha256": "17D0698D535F9170FA6A0C9E0C11FDABCC648085B7ADFFAB3CEDE18CD15FB312",
+      "generationCalls": 1
+    },
+    {
+      "assetName": "friends",
+      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: playing with monster friends.\nSubject: exactly THREE clearly NON-HUMAN goofy little monsters playing together with one round bouncing ball. They have different short lumpy blob bodies, unequal bulging eyes and delighted funny expressions. One sage-green monster has tiny horns and two uneven eyes, another muted-pink monster has a curled antenna and stubby odd limbs, and a short round yellow creature has one big eye. They are in playful off-balance poses around the single bouncing ball, happily reaching or nudging it. No human facial or body proportions. Add only a small scribbled grassy patch under them and at most one tiny mushroom. Instantly reads as 'playing with monster friends'. Let these three compact monsters and the round ball be the entire vignette, all on the right.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "actualDimensions": {
+        "height": 1024,
+        "width": 1536
+      },
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-14f042cb-2cfb-47dd-9c4f-88ed5ec2fb1a.png",
+      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/friends.png",
+      "projectPath": "public/images/friends.png",
+      "inspectionNotes": [
+        "Pass. Three visibly non-human lumpy goofy monsters, one round bouncing ball, playful poses and tiny mushroom. Strong repeated charcoal lines and wax-crayon flecks on ivory. No humans, text, eggs or assigned hatch outcome creatures. Left area mostly blank; all subjects fully visible."
+      ],
+      "sha256": "FA35BC1D6BF4ADADADD59A643F8DFF75302D92618D5D63E5327DB11CF1C9C19C",
+      "generationCalls": 1
+    },
+    {
+      "assetName": "learning",
+      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: a curious monster learning in a monster-world mini library.\nSubject: one curious goofy small sage-green NON-HUMAN blob monster with a short lumpy body, two unequal bulging eyes, a curled little antenna and stubby limbs actively peering into and pointing at one big open sentient magical book. The book has expressive friendly eyes clearly visible on its curved cover edge or thick spine, and ONLY simple large star diagrams and doodle pictures inside, never text. The book rests on an irregular mushroom/tree-stump desk with organic lumpy forms, visibly a fantasy object. One oversized feather quill floats above the open book. Beside it is one lavender crystal projecting just a few large simple stars and abstract diagram shapes. The readable core is monster + large magical book + floating oversized quill + crystal, all grouped on the right with full forms safely visible. Suggest a magical mini library through the sentient book itself and these props, without adding ordinary furniture or a busy room. No ordinary human school desk, plain textbook or classroom. The monster is visibly curious and engaged.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "actualDimensions": {
+        "height": 1024,
+        "width": 1536
+      },
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-c8fdf469-a815-444d-8ddf-e08d269a22d6.png",
+      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/learning.png",
+      "projectPath": "public/images/learning.png",
+      "inspectionNotes": [
+        "Pass. Curious non-human blob points into large sentient book on organic tree-stump/mushroom furniture, with oversized floating feather and crystal/stars. Doodle pictures only, no readable text or humans, eggs or assigned hatch creatures. Charcoal and patchy wax-crayon style matches. Left area mostly blank; full forms visible."
+      ],
+      "sha256": "467F5F4885258AFD4FB862EBCA2678501FE9B93B9EAC186B332B169B44C24668",
+      "generationCalls": 1
+    },
+    {
+      "assetName": "doodle-paper",
+      "prompt": "Use case: stylized-concept.\nAsset type: seamless repeatable SQUARE warm ivory paper bitmap background tile for a playful H5 game page, exactly 1024x1024 pixels.\nCreate a NEW decorative pattern. Attached image is STYLE REFERENCE ONLY: borrow loose quirky sketchbook doodles, scratchy repeated thin pencil/charcoal outlines, wobbly asymmetry, scribbled hatching, odd funny round eyes on occasional tiny blob faces. Do not copy its nine creatures and do not create named game outcome monster or egg designs.\nSubject and composition: MANY small scattered decorative doodles distributed across the ENTIRE canvas, including the center: uneven stars, curly spirals, bubbles, flowers, leaves, little crystals, tiny pencil doodles, tiny open-book doodles, tiny game-controller doodles, and occasional simple silly imaginary blob faces. No large centerpiece. Not corners-only. Vary rotation and size with airy irregular spacing. Keep roughly 60–70% empty warm ivory paper between small motifs. Edge continuity should make it a seamless repeatable tile with no obvious straight seam or border.\nStyle and texture: rough hand drawn sketchbook pencil/charcoal contours in thin GRAY-BROWN, softly visible scratchy double strokes and scribble details. Add small soft PINK, SAGE GREEN, WARM YELLOW and LAVENDER grainy WAX-CRAYON accents with patchy paper showing through; preserve evidence of wax-crayon grain. Medium-low contrast: clearly readable little doodles yet light enough behind live UI. Warm ivory paper throughout with gentle paper grain, uniform overall illumination, no vignette.\nConstraints: no writing, text, letters, numbers, labels, UI, arrows, border, frames or logos. No eggs. No big monster portraits. No horror, gore or scary faces. No polished vector, smooth digital cartoon or refined watercolor. This is a dispersed all-over doodle pattern, not a centered illustration.",
+      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
+      "inputReferenceRole": "Style reference only",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "requestedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "actualDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
+      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-8480c592-a182-4c48-888e-7aa2185e313c.png",
+      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/doodle-paper.png",
+      "fileBytes": 2756799,
+      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
+      "inspectionNotes": [
+        "Inspected final generatedImage result. Many small dispersed stars, spirals, bubbles, flowers, leaves, crystals, pencils, books, controllers and small simple silly blob faces, across center and edges.",
+        "Warm ivory textured paper, scratchy gray-brown contours and grainy soft pink/sage/yellow/lavender accents. No large centerpiece, no outer border and no readable lettering.",
+        "Contrast is somewhat stronger than requested; a lowered-opacity decorative UI layer is appropriate.",
+        "Native output is 1254x1254 rather than requested 1024x1024. Preserved unmodified native generated image; no resampling performed here.",
+        "Seamless repeating edges were requested, but exact pixel edge continuity was not established; edge motifs may not join perfectly. Suitable as a square decorative pattern, with integration handling repeat scale/opacity."
+      ],
+      "projectPath": "public/images/storybook-paper.png"
+    }
+  ]
+}

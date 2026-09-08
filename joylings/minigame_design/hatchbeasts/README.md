@@ -1,0 +1,59 @@
+# 破殼怪獸 Hatchbeasts
+
+適合國小生的 H5 孵蛋小遊戲。選擇一個地方、一種休閒活動，再點擊神祕蛋 12 下，孵出對應的怪獸。
+
+## 使用
+
+需要 Node.js 22.13 以上。安裝依賴後啟動開發伺服器：
+
+```sh
+npm install
+npm run dev
+```
+
+開啟終端機列出的本機網址。手機版與桌面版共用同一遊戲，支援觸控、滑鼠和鍵盤。沒有帳號、儲存或 API 需求；重新整理會重新開始。
+
+```sh
+npm run build
+npm run lint
+npx tsc --noEmit
+npm test
+```
+
+`lint` 檢查遊戲原始碼、測試及設定檔；未修改的預裝元件庫保留原樣。
+
+## H5 發布（GitHub Pages）
+
+線上遊戲：https://scozirge.github.io/a-thought/hatchbeasts/
+
+程式碼保存在 `scozirge/a-thought` 的 `master` 分支；靜態檔案放在 `gh-pages` 分支的 `hatchbeasts/`，Pages 發布來源設定為 `gh-pages` 的根目錄，根目錄保留 `.nojekyll`。
+
+建議用 Node.js 22（版本提示見 `.nvmrc`）。Windows 的 Node.js 24.19 在 Vinext 預先渲染結束時曾觸發 libuv assertion；可直接用以下指令以 Node 22 建置：
+
+```sh
+npm ci
+npx --yes --package=node@22 node scripts/build-h5.mjs
+```
+
+若已使用 Node 22，執行 `npm run build:h5` 即可。輸出為 `dist/h5/`，建置會檢查 HTML、CSS、字型及選項圖的路徑。以獨立 checkout 開啟 `gh-pages`，將這個輸出完整同步至其中的 `hatchbeasts/`，commit 後 push；不要把 `dist/server` 或 `node_modules` 放入發布分支。
+
+預設網址前綴是 `/a-thought/hatchbeasts`，可用 `GITHUB_PAGES_BASE_PATH` 環境變數修改。原本的 `npm run build` 仍供 Sites 使用。
+
+## 主要檔案
+
+- `app/page.tsx`：選題、連點搖蛋、破殼動畫與結果介面。
+- `app/globals.css`：怪趣手繪與蠟筆配色、全頁塗鴉紙感背景、響應式版面與減少動態效果支援。
+- `lib/game.ts`：兩題資料、九種結果及遊戲狀態轉換。調整 `HATCH_TAPS` 可改變需要點擊的次數。
+- `public/images/`：六張怪趣手繪選項圖（粗糙輪廓與蠟筆上色），以及滿版重複塗鴉背景；神祕洞穴使用黑紫色調。活動選項以小怪獸玩耍、奇幻遊戲機與魔法學習呈現。
+- `public/fonts/`：本機提供的芫荽 Iansui 手寫字型子集與 SIL Open Font License；字型來自 Google Fonts，子集涵蓋遊戲文字，新增文案時可擴充子集。
+- `image-prompts.json`：選項圖片的生成提示與來源紀錄，使用內建 imagegen 工具製作。
+
+## 孵化對應
+
+| 地方     | 遊戲／漫畫／動畫 | 跟朋友玩 | 學習     |
+| -------- | ---------------- | -------- | -------- |
+| 香氣花園 | 小花熊           | 香草兔   | 木妖     |
+| 神祕洞穴 | 影蛇             | 回聲菇   | 記憶石獸 |
+| 森林瀑布 | 瀑布精靈         | 泡泡龜   | 彩虹梟   |
+
+蛋與怪獸目前依需求使用標示清楚的佔位圖形；每個結果已保留完整蛋殼描述，方便後續替換美術。結果的角色短句是介面創作，並非心理測驗。
