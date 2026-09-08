@@ -137,6 +137,14 @@ h2:focus {
   line-height: 1.35;
   transform: rotate(-1.5deg);
 }
+.game-version {
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0;
+  vertical-align: middle;
+  color: #75664e;
+}
 .game-title::after {
   content: '';
   position: absolute;

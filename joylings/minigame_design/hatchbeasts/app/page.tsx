@@ -6,6 +6,7 @@ import { ArrowLeft, RotateCcw, Stars } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { assetUrl } from '@/lib/assets';
+import { GAME_VERSION } from '@/lib/release';
 import {
   ACTIVITIES,
   PLACES,
@@ -103,7 +104,9 @@ export default function Home() {
       )}
       {isQuestion && (
         <header className="site-header">
-          <h1 className="game-title">破殼怪獸</h1>
+          <h1 className="game-title">
+            破殼怪獸 <span className="game-version">{GAME_VERSION}</span>
+          </h1>
           <p className="game-subtitle">一場小小的孵化奇遇</p>
         </header>
       )}
@@ -218,10 +221,7 @@ export default function Home() {
                   {beast.name}
                 </h2>
                 <div className="beast-arrival">
-                  <div
-                    className="beast-placeholder"
-                    aria-hidden="true"
-                  >
+                  <div className="beast-placeholder" aria-hidden="true">
                     <Stars size={60} strokeWidth={1.2} aria-hidden="true" />
                   </div>
                 </div>
