@@ -34,6 +34,8 @@ npm test
 
 線上遊戲：https://scozirge.github.io/a-thought/hatchbeasts/
 
+線上課堂目錄：https://scozirge.github.io/a-thought/hatchbeasts/classroom/
+
 程式碼保存在 `scozirge/a-thought` 的 `master` 分支；靜態檔案放在 `gh-pages` 分支的 `hatchbeasts/`，Pages 發布來源設定為 `gh-pages` 的根目錄，根目錄保留 `.nojekyll`。
 
 建議用 Node.js 22（版本提示見 `.nvmrc`）。Windows 的 Node.js 24.19 在 Vinext 預先渲染結束時曾觸發 libuv assertion；可直接用以下指令以 Node 22 建置：
@@ -43,7 +45,7 @@ npm ci
 npx --yes --package=node@22 node scripts/build-h5.mjs
 ```
 
-若已使用 Node 22，執行 `npm run build:h5` 即可。輸出為 `dist/h5/`，建置會檢查 HTML、CSS、字型及選項圖的路徑。以獨立 checkout 開啟 `gh-pages`，將這個輸出完整同步至其中的 `hatchbeasts/`，commit 後 push；不要把 `dist/server` 或 `node_modules` 放入發布分支。
+若已使用 Node 22，執行 `npm run build:h5` 即可。輸出為 `dist/h5/`，同時包含遊戲與不帶版號的 `classroom/` 課堂目錄，建置會檢查 HTML、CSS、字型及圖片路徑。以獨立 checkout 開啟 `gh-pages`，將這個輸出同步至其中的 `hatchbeasts/`，但保留現有的 `hatchbeasts/v1/`，commit 後 push；不要把 `dist/server` 或 `node_modules` 放入發布分支。
 
 預設網址前綴是 `/a-thought/hatchbeasts`，可用 `GITHUB_PAGES_BASE_PATH` 環境變數修改。原本的 `npm run build` 仍供 Sites 使用。
 

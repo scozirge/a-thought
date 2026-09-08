@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronDown, Gamepad2, Pencil } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Gamepad2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
@@ -11,14 +11,9 @@ export default function ClassroomHome() {
       <main className="course-main catalog-main">
         <section className="catalog-intro">
           <div>
-            <p className="course-eyebrow">
-              <Pencil size={15} aria-hidden="true" />
-              我們的創作課
-            </p>
             <h1>
               遊戲<span className="crayon-underline">設計</span>
             </h1>
-            <p className="intro-note">選一個單元，開始今天的創作。</p>
             <a
               className="course-button catalog-game-link"
               href={GAME_PUBLIC_URL}
@@ -38,7 +33,6 @@ export default function ClassroomHome() {
               width={1536}
               height={1024}
             />
-            <span className="illustration-label">點子集合！</span>
           </div>
         </section>
 
@@ -49,7 +43,6 @@ export default function ClassroomHome() {
                 className="featured-link"
                 href={assetUrl('/classroom/experience/')}
               >
-                <span className="unit-number">01</span>
                 <span className="unit-icon tint-rose">
                   <UnitIcon name="game" />
                 </span>
@@ -89,24 +82,17 @@ export default function ClassroomHome() {
           </details>
 
           <div className="unit-grid">
-            {units.slice(1).map((unit, i) => (
+            {units.slice(1).map((unit) => (
               <a
                 key={unit.slug}
                 className={`unit-card card-${unit.color}`}
                 href={assetUrl(`/classroom/${unit.slug}/`)}
               >
-                <span className="unit-card-top">
-                  <span className={`unit-icon tint-${unit.color}`}>
-                    <UnitIcon name={unit.icon} />
-                  </span>
-                  <span className="unit-number">
-                    {String(i + 2).padStart(2, '0')}
-                  </span>
+                <span className={`unit-icon tint-${unit.color}`}>
+                  <UnitIcon name={unit.icon} />
                 </span>
-                <span className="unit-card-bottom">
-                  <span className="unit-title">{unit.title}</span>
-                  <ArrowUpRight size={21} aria-hidden="true" />
-                </span>
+                <span className="unit-title">{unit.title}</span>
+                <ArrowUpRight size={21} aria-hidden="true" />
               </a>
             ))}
           </div>

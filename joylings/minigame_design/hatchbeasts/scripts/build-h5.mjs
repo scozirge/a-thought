@@ -15,6 +15,9 @@ const result = spawnSync(process.execPath, ['node_modules/vinext/dist/cli.js', '
   env: {
     ...process.env,
     GITHUB_PAGES: 'true',
+    // Vinext beta currently skips nested routes when trailing-slash redirects
+    // are enabled. Export flat route files, then arrange them below.
+    LOCAL_CLASSROOM: 'true',
     GITHUB_PAGES_BASE_PATH: basePath,
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
@@ -36,6 +39,32 @@ for (const file of ['index.html', 'index.rsc']) {
   cpSync(join(client, file), join(output, file));
 }
 cpSync(join(client, basePath.replace(/^\//, ''), '_next'), join(output, '_next'), { recursive: true });
+for (const slug of [
+  '',
+  'experience',
+  'planning',
+  'analysis',
+  'development',
+  'testing',
+  'review',
+]) {
+  const source = slug
+    ? join(client, 'classroom', slug)
+    : join(client, 'classroom');
+  const route = slug
+    ? join(output, 'classroom', slug)
+    : join(output, 'classroom');
+  mkdirSync(route, { recursive: true });
+  cpSync(`${source}.html`, join(route, 'index.html'));
+  cpSync(
+    `${source}.rsc`,
+    slug
+      ? join(output, 'classroom', `${slug}.rsc`)
+      : join(output, 'classroom.rsc'),
+  );
+}
 writeFileSync(join(output, '.nojekyll'), '');
 verifyH5(output, basePath);
-console.log(`H5 exported and verified at dist/h5 for ${basePath || '/'}.`);
+console.log(
+  `Game and classroom H5 exported and verified at dist/h5 for ${basePath || '/'}.`,
+);

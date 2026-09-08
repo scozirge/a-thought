@@ -14,11 +14,15 @@ export function verifyH5(output, basePath) {
     const relative = decodeURIComponent(
       value.slice(basePath.length + 1).split(/[?#]/)[0],
     );
-    const file = resolve(root, relative);
+    const target = resolve(root, relative);
     assert.ok(
-      file.startsWith(`${root}${sep}`),
+      target === root || target.startsWith(`${root}${sep}`),
       `Asset escapes the H5 folder: ${value}`,
     );
+    const file =
+      existsSync(target) && statSync(target).isDirectory()
+        ? join(target, 'index.html')
+        : target;
     assert.ok(
       existsSync(file) && statSync(file).isFile(),
       `Missing H5 asset: ${value}`,
@@ -46,6 +50,28 @@ export function verifyH5(output, basePath) {
     readFileSync(join(root, 'index.html'), 'utf8').includes('破殼怪獸'),
     'Missing game HTML',
   );
+  const classroom = readFileSync(
+    join(root, 'classroom', 'index.html'),
+    'utf8',
+  );
+  assert.ok(classroom.includes('遊戲設計'), 'Missing classroom catalog');
+  assert.ok(
+    !classroom.includes('我們的創作課'),
+    'Classroom catalog still contains the removed eyebrow',
+  );
+  for (const slug of [
+    'experience',
+    'planning',
+    'analysis',
+    'development',
+    'testing',
+    'review',
+  ]) {
+    assert.ok(
+      existsSync(join(root, 'classroom', slug, 'index.html')),
+      `Missing classroom route: ${slug}`,
+    );
+  }
   for (const name of [
     'garden',
     'cave',
@@ -61,6 +87,6 @@ export function verifyH5(output, basePath) {
   inspect(root);
   assert.ok(references > 10, 'Expected HTML and CSS asset references');
   console.log(
-    `Verified ${references} H5 asset references, including all six choices, the font and background.`,
+    `Verified ${references} H5 references for the game and unversioned classroom catalog.`,
   );
 }
