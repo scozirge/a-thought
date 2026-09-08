@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "project": "破殼怪獸",
-  "assetSet": "Scratchy crayon places, monster-world activities and a doodle background",
+  "assetSet": "Scratchy crayon places, monster-world activities, doodle paper and a quiet hatching nest",
   "updatedDate": "2026-09-08",
   "toolMode": "built-in image_gen",
   "assets": [
@@ -181,6 +181,25 @@
         "Seamless repeating edges were requested, but exact pixel edge continuity was not established; edge motifs may not join perfectly. Suitable as a square decorative pattern, with integration handling repeat scale/opacity."
       ],
       "projectPath": "public/images/storybook-paper.png"
+    },
+    {
+      "assetName": "nest-background",
+      "prompt": "Use case: illustration-story\nAsset type: portrait H5 game background bitmap, 1024 x 1536 pixels.\nPrimary request: ONE original minimal cozy woodland nest background inside a gentle tree-root hollow, for a child-friendly crayon sketchbook monster-egg hatching game. This image contains background scenery only; the egg and interface will be added live separately and MUST NOT be drawn.\nStyle/medium: childlike imperfect doodle craft on warm ivory grainy paper; scratchy loose graphite and pencil contours, uneven rough wax-crayon fill with visible paper showing through. Simple, sparse and handmade, not polished or detailed watercolor.\nScene and palette: soft tree-root hollow edges along the far sides, a few small muted moss-green leaves, honey straw and warm brown accents, warm ivory paper dominant. Cozy, gently magical through warmth only.\nComposition: portrait canvas 1024 x 1536. Keep a very large empty pale paper-like central area. At 15%-36% of canvas height, especially the central region, leave quiet pale ivory negative space for dark live title text. At 35%-65% height, leave the central area especially empty for a large separately rendered egg. Draw ONE shallow oval straw-and-twig nest horizontally centered at approximately x=50%, y=68%, width about 42% of the canvas. The nest has a low shallow rim and an open empty center, positioned to support an egg that will be added above its rim. Keep all nest material roughly within 63%-74% height. The gentle root edges should remain sparse and mostly at the far left and right margins, leaving the center open. At 78%-95% height keep quiet pale ivory negative space for a live instructional line. Broad open paper space takes priority over decoration.\nConstraints: BACKGROUND ONLY. NO EGG of any kind, no round object in the nest, no creatures, no monsters, no people, no text, no letters, no numbers, no UI, no icons, no arrows, no border, no watermark. Do not fill empty areas with little decorative doodles. No dense forest, no detailed bark, no extra nests, no scene clutter, no vivid saturated colors, no glossy digital polish.\n",
+      "toolMode": "built-in image_gen",
+      "toolName": "image_gen__imagegen",
+      "intent": "generate",
+      "actualDimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "dimensionsVerification": "PNG IHDR",
+      "projectPath": "public/images/nest-background.png",
+      "sourceGeneratedPath": "C:/Users/User/Documents/深度問題/output/nest-background-20260908/woodland-nest-background.png",
+      "sha256": "986e78ae066246a40fe7538480befec6e038d952c2ed33ff2e8055bd8db7978f",
+      "generationCalls": 1,
+      "inspectionNotes": [
+        "Inspected original bitmap. No eggs, characters or text; pale central clearing and crayon tree roots around one shallow nest. Nest wider than requested; original output preserved."
+      ]
     }
   ]
 }
