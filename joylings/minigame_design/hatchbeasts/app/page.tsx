@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useRef } from 'react';
 import type { CSSProperties } from 'react';
-import { ArrowLeft, Egg, RotateCcw, Stars } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Stars } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { assetUrl } from '@/lib/assets';
@@ -77,7 +77,6 @@ export default function Home() {
   const previousStage = useRef(state.stage);
   const beast = getBeast(state);
   const isQuestion = state.stage === 'place' || state.stage === 'activity';
-  const isIncubating = state.stage === 'egg' || state.stage === 'hatching';
   const selected = state.stage === 'place' ? state.place : state.activity;
 
   useEffect(() => {
@@ -94,7 +93,7 @@ export default function Home() {
   }, [state.stage]);
 
   return (
-    <div className={`game-world ${isIncubating ? 'is-incubating' : ''}`}>
+    <div className={`game-world ${!isQuestion ? 'is-nest-scene' : ''}`}>
       {state.stage === 'activity' && (
         <link
           rel="preload"
@@ -102,14 +101,14 @@ export default function Home() {
           href={assetUrl('/images/nest-background.png')}
         />
       )}
-      {!isIncubating && (
+      {isQuestion && (
         <header className="site-header">
           <h1 className="game-title">破殼怪獸</h1>
           <p className="game-subtitle">一場小小的孵化奇遇</p>
         </header>
       )}
       <main
-        className={`game-main ${isQuestion ? 'question-main' : isIncubating ? 'nest-main' : 'incubation-main'}`}
+        className={`game-main ${isQuestion ? 'question-main' : 'nest-main'}`}
       >
         {isQuestion ? (
           <section className="question-section" key={state.stage}>
@@ -151,10 +150,18 @@ export default function Home() {
               </Button>
             </div>
           </section>
-        ) : beast && state.stage !== 'result' ? (
+        ) : beast ? (
           <section
             className={`nest-scene ${state.stage === 'hatching' ? 'is-hatching' : ''}`}
-            aria-labelledby="egg-title"
+            aria-labelledby={
+              state.stage === 'result' ? 'beast-name' : 'egg-title'
+            }
+            style={
+              {
+                '--beast-color': beast.color,
+                '--beast-tint': beast.tint,
+              } as CSSProperties
+            }
           >
             {/* oxlint-disable-next-line nextjs/no-img-element -- Decorative local scene uses the same native image path as the options. */}
             <img
@@ -164,90 +171,68 @@ export default function Home() {
               aria-hidden="true"
               draggable={false}
             />
-            <h2
-              id="egg-title"
-              className="egg-arrival-title"
-              ref={titleRef}
-              tabIndex={-1}
-            >
-              一顆怪獸蛋出現了!
-            </h2>
-            <div className="egg-arrival">
-              <button
-                className="egg-button"
-                onClick={() => dispatch({ type: 'TAP' })}
-                disabled={state.stage === 'hatching'}
-                onKeyDown={(event) => {
-                  if (
-                    event.repeat &&
-                    (event.key === ' ' || event.key === 'Enter')
-                  )
-                    event.preventDefault();
-                }}
-                aria-label={`點擊怪獸蛋，已點 ${state.taps} 下，共需 ${HATCH_TAPS} 下`}
-                aria-describedby="egg-prompt"
-              >
-                <span
-                  key={state.taps}
-                  className={`egg-placeholder ${state.taps > 0 ? 'is-tapped' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-            <p id="egg-prompt" className="egg-prompt">
-              連續點點蛋，讓裡面的小怪獸醒過來吧!
-            </p>
-          </section>
-        ) : beast ? (
-          <section
-            className="result-section"
-            style={
-              {
-                '--beast-color': beast.color,
-                '--beast-tint': beast.tint,
-              } as CSSProperties
-            }
-          >
-            <div className="section-heading">
-              <h2 ref={titleRef} tabIndex={-1}>
-                破殼成功！
-              </h2>
-            </div>
-            <div className="result-card">
-              <div className="confetti" aria-hidden="true">
-                {Array.from({ length: 16 }, (_, index) => (
-                  <i key={index} style={{ '--i': index } as CSSProperties} />
-                ))}
-              </div>
-              <span className="result-edition">怪獸 {beast.id}</span>
-              <div className="beast-placeholder">
-                <Stars size={52} strokeWidth={1.2} />
-                <small>怪獸造型準備中</small>
-              </div>
-              <h3>{beast.name}</h3>
-              <div className="choice-receipt">
-                <span>
-                  {PLACES.find((choice) => choice.id === state.place)?.label}
-                </span>
-                <span aria-hidden="true">＋</span>
-                <span>
-                  {
-                    ACTIVITIES.find((choice) => choice.id === state.activity)
-                      ?.shortLabel
-                  }
-                </span>
-              </div>
-              <div className="result-egg-note">
-                <Egg size={17} />
-                <p>{beast.egg}</p>
-              </div>
-            </div>
-            <Button
-              className="primary-button replay-button"
-              onClick={() => dispatch({ type: 'RESET' })}
-            >
-              <RotateCcw size={17} /> 再孵一顆蛋
-            </Button>
+            {state.stage !== 'result' ? (
+              <>
+                <h2
+                  id="egg-title"
+                  className="egg-arrival-title"
+                  ref={titleRef}
+                  tabIndex={-1}
+                >
+                  一顆怪獸蛋出現了!
+                </h2>
+                <div className="egg-arrival">
+                  <button
+                    className="egg-button"
+                    onClick={() => dispatch({ type: 'TAP' })}
+                    disabled={state.stage === 'hatching'}
+                    onKeyDown={(event) => {
+                      if (
+                        event.repeat &&
+                        (event.key === ' ' || event.key === 'Enter')
+                      )
+                        event.preventDefault();
+                    }}
+                    aria-label={`點擊怪獸蛋，已點 ${state.taps} 下，共需 ${HATCH_TAPS} 下`}
+                    aria-describedby="egg-prompt"
+                  >
+                    <span
+                      key={state.taps}
+                      className={`egg-placeholder ${state.taps > 0 ? 'is-tapped' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+                <p id="egg-prompt" className="egg-prompt">
+                  連續點點蛋，讓裡面的小怪獸醒過來吧!
+                </p>
+              </>
+            ) : (
+              <>
+                <h2
+                  id="beast-name"
+                  className="beast-name"
+                  ref={titleRef}
+                  tabIndex={-1}
+                >
+                  {beast.name}
+                </h2>
+                <div className="beast-arrival">
+                  <div
+                    className="beast-placeholder"
+                    aria-hidden="true"
+                  >
+                    <Stars size={60} strokeWidth={1.2} aria-hidden="true" />
+                  </div>
+                </div>
+                <Button
+                  className="primary-button replay-button"
+                  onClick={() => dispatch({ type: 'RESET' })}
+                >
+                  <RotateCcw size={17} /> 再孵一顆蛋
+                </Button>
+              </>
+            )}
           </section>
         ) : null}
       </main>

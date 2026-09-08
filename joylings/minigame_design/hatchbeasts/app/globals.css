@@ -354,14 +354,11 @@ h2:focus {
 .back-button:hover {
   background: #eee6d683;
 }
-.incubation-main {
-  max-width: 720px;
-}
-.game-world.is-incubating {
+.game-world.is-nest-scene {
   max-width: none;
   background: #faf6ed;
 }
-.game-world.is-incubating::before {
+.game-world.is-nest-scene::before {
   display: none;
 }
 .game-main.nest-main {
@@ -397,7 +394,8 @@ h2:focus {
     transparent
   );
 }
-.egg-arrival-title {
+.egg-arrival-title,
+.beast-name {
   position: absolute;
   top: 18%;
   left: 16px;
@@ -467,111 +465,31 @@ h2:focus {
   opacity: 0;
   transition: opacity 0.2s;
 }
-.result-section .section-heading {
-  margin-bottom: 20px;
-}
-.result-card {
-  width: min(415px, 100%);
-  margin: 0 auto;
-  position: relative;
-  text-align: center;
-  padding: 22px 27px;
-  background: #fffaf0bf;
-  border: 1.5px solid #bcb393;
-  border-radius: 22px 17px 25px 19px / 20px 24px 17px 25px;
-  box-shadow:
-    2px 3px 0 #bcb39320,
-    inset 0 0 0 3px #fffdf280;
-  animation: arrive 0.6s ease-out both;
-}
-.result-edition {
-  font-size: 14px;
-  letter-spacing: 2px;
-  color: #9b8a70;
+.beast-arrival {
+  position: absolute;
+  left: 50%;
+  bottom: calc(29% + 16px);
+  transform: translateX(-50%);
 }
 .beast-placeholder {
-  width: 157px;
-  height: 155px;
-  margin: 18px auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+  width: clamp(160px, 24svh, 215px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
   color: var(--beast-color);
   background: var(--beast-tint);
   border: 1px dashed #a7957e;
   border-radius: 48% 51% 47% 53%;
-  box-shadow: 0 0 0 7px #fffaf099;
-}
-.beast-placeholder small {
-  font-size: 14px;
-}
-.result-card h3 {
-  font-size: 31px;
-  font-weight: 400;
-  letter-spacing: 3px;
-  color: #695347;
-  margin: 8px 0 13px;
-}
-.choice-receipt {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  color: #8a765f;
-  font-size: 14px;
-}
-.choice-receipt span:not(:nth-child(2)) {
-  padding: 3px 8px;
-  border: 1px solid #d0c4aa;
-  border-radius: 11px 13px 9px 12px;
-  background: #fcf6e8;
-}
-.result-egg-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-align: left;
-  border-top: 1px dashed #cdbf9f;
-  margin-top: 19px;
-  padding-top: 15px;
-  color: #8e7b64;
-  font-size: 14px;
-}
-.result-egg-note svg {
-  flex-shrink: 0;
-}
-.result-egg-note p {
-  margin: 0;
+  box-shadow: 0 8px 12px -9px #78623b66;
+  animation: arrive 0.6s ease-out both;
 }
 .replay-button {
-  display: flex;
-  margin: 24px auto 0;
-}
-.confetti {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  border-radius: 24px;
-}
-.confetti i {
-  position: absolute;
-  top: -10px;
-  left: calc(var(--i) * 6.5%);
-  width: 6px;
-  height: 10px;
-  border-radius: 2px;
-  background: #c7b6d5;
-  animation: confetti-fall 2s ease-out both;
-  animation-delay: calc(var(--i) * 45ms);
-}
-.confetti i:nth-child(3n) {
-  background: #bac99d;
-}
-.confetti i:nth-child(3n + 1) {
-  background: #e1baab;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
 }
 @keyframes arrive {
   from {
@@ -653,16 +571,6 @@ h2:focus {
     opacity: 0;
   }
 }
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(0) rotate(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(420px) rotate(330deg);
-    opacity: 0;
-  }
-}
 @media (min-width: 1100px) {
   .site-header {
     padding-top: 31px;
@@ -738,9 +646,6 @@ h2:focus {
   .back-button svg {
     width: 15px;
   }
-  .result-card {
-    padding: 20px 22px;
-  }
 }
 @media (max-width: 360px) {
   .game-main {
@@ -773,6 +678,8 @@ h2:focus {
   .egg-button,
   .egg-placeholder,
   .egg-arrival-title,
+  .beast-name,
+  .beast-placeholder,
   .egg-prompt {
     animation: none !important;
   }
@@ -781,8 +688,5 @@ h2:focus {
   }
   .egg-prompt {
     opacity: 1;
-  }
-  .confetti {
-    display: none;
   }
 }
