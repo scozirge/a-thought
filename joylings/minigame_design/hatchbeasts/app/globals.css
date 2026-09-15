@@ -60,7 +60,7 @@
 body {
   margin: 0;
   color: var(--foreground);
-  background: #faf6ed url('../public/images/storybook-paper.png') center top /
+  background: #fff url('../public/images/storybook-paper.png') center top /
     560px 560px repeat;
   font-family:
     'Iansui Game', 'DFKai-SB', 'KaiTi', 'STKaiti', 'Microsoft JhengHei',
@@ -103,7 +103,7 @@ h2:focus {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #faf6ed40;
+  background: #ffffffb8;
 }
 .game-world::before {
   content: '';
@@ -114,8 +114,8 @@ h2:focus {
   background: linear-gradient(
     90deg,
     transparent,
-    #faf6ed88 22%,
-    #faf6ed88 78%,
+    #ffffffcc 22%,
+    #ffffffcc 78%,
     transparent
   );
 }
@@ -202,8 +202,8 @@ h2:focus {
   overflow: hidden;
   padding: 20px 28px;
   cursor: pointer;
-  background: #fcf9f0ed;
-  border: 1.5px solid var(--choice-edge);
+  background: #fffffff5;
+  border: 2.5px solid var(--choice-edge);
   border-radius: 24px 18px 26px 19px / 19px 26px 20px 24px;
   box-shadow:
     0 1px 2px #6259490a,
@@ -364,7 +364,7 @@ h2:focus {
 }
 .game-world.is-nest-scene {
   max-width: none;
-  background: #faf6ed;
+  background: #fff;
 }
 .game-world.is-nest-scene::before {
   display: none;
@@ -439,12 +439,7 @@ h2:focus {
   display: block;
   width: clamp(150px, 22svh, 205px);
   height: clamp(192px, 28svh, 262px);
-  border: 2px solid #a99a80;
-  border-radius: 48% 48% 45% 45% / 61% 61% 39% 39%;
-  background: linear-gradient(125deg, #fffef7 28%, #f0e5ce);
-  box-shadow:
-    inset -7px -9px 16px #b49a7317,
-    0 9px 12px -9px #78623b66;
+  overflow: visible;
   transform-origin: 50% 90%;
 }
 .is-tapped {
@@ -476,19 +471,18 @@ h2:focus {
 .beast-arrival {
   position: absolute;
   left: 50%;
-  bottom: calc(29% + 16px);
+  bottom: 35%;
   transform: translateX(-50%);
+  mix-blend-mode: multiply;
 }
-.beast-placeholder {
-  width: clamp(160px, 24svh, 215px);
+.beast-art {
+  width: clamp(240px, 38svh, 340px);
+  max-width: 86vw;
+  object-fit: contain;
   aspect-ratio: 1;
-  display: grid;
-  place-items: center;
+  display: block;
   color: var(--beast-color);
-  background: var(--beast-tint);
-  border: 1px dashed #a7957e;
-  border-radius: 48% 51% 47% 53%;
-  box-shadow: 0 8px 12px -9px #78623b66;
+  overflow: visible;
   animation: arrive 0.6s ease-out both;
 }
 .replay-button {
@@ -687,7 +681,7 @@ h2:focus {
   .egg-placeholder,
   .egg-arrival-title,
   .beast-name,
-  .beast-placeholder,
+  .beast-art,
   .egg-prompt {
     animation: none !important;
   }
@@ -696,5 +690,60 @@ h2:focus {
   }
   .egg-prompt {
     opacity: 1;
+  }
+}
+.beast-gallery {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  text-align: center;
+  background: #ffffffeb;
+}
+.beast-gallery h1 {
+  font-size: 34px;
+  margin: 0;
+}
+.beast-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+.beast-gallery-grid article {
+  background: white;
+  border: 2px solid #d8c4df;
+  border-radius: 24px 18px 27px 20px;
+  padding: 16px;
+}
+.beast-gallery-grid img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.beast-gallery-grid h2 {
+  font-size: 25px;
+  margin: 8px 0;
+}
+.beast-gallery-grid p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 6px 0;
+}
+@media (max-width: 700px) {
+  .beast-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .beast-gallery {
+    padding: 20px 12px;
+  }
+  .beast-gallery-grid article {
+    padding: 10px;
+  }
+}
+@media (max-width: 420px) {
+  .beast-gallery-grid {
+    grid-template-columns: 1fr;
   }
 }

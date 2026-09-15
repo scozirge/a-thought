@@ -14,7 +14,7 @@ export const PLACES: readonly Choice[] = [
     label: '香氣花園',
     description: '花香、微風，還有一點小魔法',
     image: 'garden',
-    alt: '蠟筆畫的花園、玫瑰花架與小白兔',
+    alt: '塗鴉怪物花園，粉紅獨眼小怪物站在有眼睛的花朵旁',
     tint: '#f5d7d4',
     edge: '#9aab7e',
   },
@@ -23,7 +23,7 @@ export const PLACES: readonly Choice[] = [
     label: '神祕洞穴',
     description: '走進微光裡，發現藏起來的祕密',
     image: 'cave',
-    alt: '蠟筆畫的黑紫色洞穴、紫色水晶、小燈與灰色小貓',
+    alt: '塗鴉黑紫色洞穴，藍綠色三眼小怪物與水晶怪物',
     tint: '#e1d7ed',
     edge: '#9b88ae',
   },
@@ -32,7 +32,7 @@ export const PLACES: readonly Choice[] = [
     label: '森林瀑布',
     description: '聽聽水聲，跟著森林深呼吸',
     image: 'waterfall',
-    alt: '蠟筆畫的森林瀑布與溪邊小鹿',
+    alt: '塗鴉怪物森林瀑布，黃色獨眼水怪與微笑怪物樹',
     tint: '#dde8cf',
     edge: '#8fa58c',
   },
@@ -44,7 +44,7 @@ export const ACTIVITIES: readonly Choice[] = [
     shortLabel: '遊戲與故事',
     description: '躲進喜歡的故事，展開新冒險',
     image: 'leisure',
-    alt: '小怪獸玩奇幻遊戲機，旁邊有魔法漫畫書',
+    alt: '塗鴉小怪獸拿著遊戲手把，旁邊有星星漫畫書',
     tint: '#e5dcf0',
     edge: '#a291b0',
   },
@@ -54,7 +54,7 @@ export const ACTIVITIES: readonly Choice[] = [
     shortLabel: '跟朋友玩',
     description: '有人一起笑，什麼都變好玩',
     image: 'friends',
-    alt: '幾隻呆萌小怪獸一起開心玩球',
+    alt: '三隻彩色塗鴉小怪獸一起開心玩球',
     tint: '#f5dbcf',
     edge: '#bf9b85',
   },
@@ -64,12 +64,14 @@ export const ACTIVITIES: readonly Choice[] = [
     shortLabel: '學習新事物',
     description: '今天，又想弄懂一個新問題',
     image: 'learning',
-    alt: '小怪獸研究魔法書、漂浮羽毛筆與水晶',
+    alt: '綠色塗鴉小怪獸讀書，旁邊有黃色羽毛與水晶',
     tint: '#e3e6c8',
     edge: '#a3a277',
   },
 ];
 export interface Beast {
+  image: string;
+  appearance: string;
   id: string;
   name: string;
   egg: string;
@@ -82,6 +84,8 @@ export const BEASTS: Record<string, Beast> = {
   '11': {
     id: '11',
     name: '小花熊',
+    image: '/images/beasts/11.png',
+    appearance: '可愛胖大熊頭上有一朵小花',
     egg: '蛋頂有一朵小花，整顆蛋覆滿粉色的毛茸茸。',
     color: '#b35f86',
     tint: '#f8e0ed',
@@ -91,6 +95,8 @@ export const BEASTS: Record<string, Beast> = {
   '12': {
     id: '12',
     name: '香草兔',
+    image: '/images/beasts/12.png',
+    appearance: '淡粉與薰衣草紫的小兔，香草葉形軟毛、一垂一立的耳朵與害羞表情',
     egg: '蛋上鋪滿深淺不同的粉色草皮。',
     color: '#ac6186',
     tint: '#f6e1ed',
@@ -100,6 +106,8 @@ export const BEASTS: Record<string, Beast> = {
   '13': {
     id: '13',
     name: '木妖',
+    image: '/images/beasts/13.png',
+    appearance: '樹枝與木根交纏的小樹人，沒有眼睛，樹洞裡留著小小微笑',
     egg: '蛋殼上有一圈圈細緻的木紋。',
     color: '#6f8163',
     tint: '#e6eddc',
@@ -109,6 +117,8 @@ export const BEASTS: Record<string, Beast> = {
   '21': {
     id: '21',
     name: '影蛇',
+    image: '/images/beasts/21.png',
+    appearance: '盤成小圓圈的黑紫影蛇，柔和表情與星星鱗紋，帶一點神祕感',
     egg: '黑色的蛋殼，覆滿層層鱗片。',
     color: '#78609c',
     tint: '#e8dff3',
@@ -118,6 +128,8 @@ export const BEASTS: Record<string, Beast> = {
   '22': {
     id: '22',
     name: '回聲菇',
+    image: '/images/beasts/22.png',
+    appearance: '高低錯落的三朵回聲菇，彎彎菇柄、半月笑眼，伴著音符一起歡樂搖擺',
     egg: '蛋殼上長滿各式各樣的菌類。',
     color: '#996995',
     tint: '#eedff0',
@@ -127,6 +139,8 @@ export const BEASTS: Record<string, Beast> = {
   '23': {
     id: '23',
     name: '記憶石獸',
+    image: '/images/beasts/23.png',
+    appearance: '方方的岩石小怪，菱形眼睛、方齒呆笑與小花，石面刻著歪歪的記憶塗鴉',
     egg: '石頭材質的蛋殼上，帶著幾道裂痕。',
     color: '#738092',
     tint: '#e3e8f0',
@@ -136,6 +150,8 @@ export const BEASTS: Record<string, Beast> = {
   '31': {
     id: '31',
     name: '瀑布精靈',
+    image: '/images/beasts/31.png',
+    appearance: '長條圓頂的透光水精靈，小小呆臉、流動水紋，體內可見小魚',
     egg: '湖水藍的蛋有點透明，隱約看得到裡面透光的水。',
     color: '#478f9f',
     tint: '#d9f0f3',
@@ -145,6 +161,8 @@ export const BEASTS: Record<string, Beast> = {
   '32': {
     id: '32',
     name: '泡泡龜',
+    image: '/images/beasts/32.png',
+    appearance: '圓頭大鰭的淡綠海龜，背殼上有三個隆起的珊瑚孔，正冒出泡泡',
     egg: '堅硬的蛋殼上有大小不一的孔洞，正冒出一顆顆泡泡。',
     color: '#528e84',
     tint: '#dcf0e9',
@@ -154,6 +172,8 @@ export const BEASTS: Record<string, Beast> = {
   '33': {
     id: '33',
     name: '彩虹梟',
+    image: '/images/beasts/33.png',
+    appearance: '眼睛大大的彩色羽毛貓頭鷹',
     egg: '蛋殼帶著繽紛的彩虹色彩。',
     color: '#8f71b3',
     tint: '#ebe0f5',

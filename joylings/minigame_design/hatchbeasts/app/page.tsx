@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useRef } from 'react';
 import type { CSSProperties } from 'react';
-import { ArrowLeft, RotateCcw, Stars } from 'lucide-react';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { assetUrl } from '@/lib/assets';
@@ -49,7 +49,7 @@ function ChoiceCards({
           <span className="choice-art">
             {/* oxlint-disable-next-line nextjs/no-img-element -- Native local images avoid the preview image shim's hook error. */}
             <img
-              src={assetUrl(`/images/${choice.image}.png?v=7`)}
+              src={assetUrl(`/images/${choice.image}.png?v=monster-doodle-2`)}
               alt={choice.alt}
               draggable={false}
               width={1536}
@@ -95,11 +95,12 @@ export default function Home() {
 
   return (
     <div className={`game-world ${!isQuestion ? 'is-nest-scene' : ''}`}>
+      {beast && <link rel="preload" as="image" href={assetUrl(beast.image + '?v=beasts-5')} />}
       {state.stage === 'activity' && (
         <link
           rel="preload"
           as="image"
-          href={assetUrl('/images/nest-background.png')}
+          href={assetUrl('/images/nest-background.png?v=monster-doodle-2')}
         />
       )}
       {isQuestion && (
@@ -169,7 +170,7 @@ export default function Home() {
             {/* oxlint-disable-next-line nextjs/no-img-element -- Decorative local scene uses the same native image path as the options. */}
             <img
               className="nest-background"
-              src={assetUrl('/images/nest-background.png')}
+              src={assetUrl('/images/nest-background.png?v=monster-doodle-2')}
               alt=""
               aria-hidden="true"
               draggable={false}
@@ -199,11 +200,28 @@ export default function Home() {
                     aria-label={`點擊怪獸蛋，已點 ${state.taps} 下，共需 ${HATCH_TAPS} 下`}
                     aria-describedby="egg-prompt"
                   >
-                    <span
+                    <svg
                       key={state.taps}
                       className={`egg-placeholder ${state.taps > 0 ? 'is-tapped' : ''}`}
+                      viewBox="0 0 180 230"
                       aria-hidden="true"
-                    />
+                    >
+                      <path
+                        d="M88 10 C62 8 38 51 24 91 C8 132 11 180 37 204 C60 226 120 222 146 200 C171 177 164 133 151 94 C139 52 114 9 88 10Z"
+                        fill="#fff3be"
+                        stroke="#765398"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M82 14 C56 24 38 67 27 97 M147 111 C160 152 157 183 139 199 M45 207 Q89 226 128 210"
+                        fill="none"
+                        stroke="#765398"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
                   </button>
                 </div>
                 <p id="egg-prompt" className="egg-prompt">
@@ -221,9 +239,15 @@ export default function Home() {
                   {beast.name}
                 </h2>
                 <div className="beast-arrival">
-                  <div className="beast-placeholder" aria-hidden="true">
-                    <Stars size={60} strokeWidth={1.2} aria-hidden="true" />
-                  </div>
+                  {/* oxlint-disable-next-line nextjs/no-img-element -- Local character artwork. */}
+                  <img
+                    className="beast-art"
+                    src={assetUrl(beast.image + '?v=beasts-5')}
+                    alt={beast.appearance}
+                    width={1024}
+                    height={1024}
+                    draggable={false}
+                  />
                 </div>
                 <Button
                   className="primary-button replay-button"

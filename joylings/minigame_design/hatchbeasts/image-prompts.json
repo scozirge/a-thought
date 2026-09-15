@@ -1,205 +1,335 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "project": "破殼怪獸",
-  "assetSet": "Scratchy crayon places, monster-world activities, doodle paper and a quiet hatching nest",
-  "updatedDate": "2026-09-08",
+  "assetSet": "Child-level crayon monster world, no ordinary animal characters",
+  "updatedDate": "2026-09-14",
   "toolMode": "built-in image_gen",
+  "inputReferenceRole": "User-provided style reference only; original subjects, no copied watermarks.",
   "assets": [
     {
       "assetName": "garden",
-      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a pink-flower garden vignette with a recognizable green rose arch and one WHITE BUNNY, with pink flowers climbing the arch and several flowers on the ground. Give the bunny a quirky slightly lumpy asymmetric body, funny unequal long ears and mismatched round eyes inspired by the reference's doodle expressiveness. It must still clearly read as a sweet white rabbit. Thin scratchy black contours and scribbled details, pink and green textured crayon patches. Arch, bunny and flowers fully within the right vignette and comfortably away from the image edges.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "requestedDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "actualDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
-      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-8fdfcaeb-7571-4693-8f34-32a0034b26a1.png",
-      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/garden.png",
-      "fileBytes": 3210929,
-      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
-      "inspectionNotes": [
-        "Inspected visually with view_image. White rabbit with uneven oversized eyes and unequal ears, green rose arch, pink flowers; visible patchy crayon and repeated scratchy outlines.",
-        "Subjects are fully visible on right, with broad ivory label space on left. Some outer scene margins are closer than the requested 8%, but no subject is cut off; whole-image contain fit is appropriate.",
-        "No readable text, UI, labels, logos or outcome monster/egg design."
-      ],
-      "projectPath": "public/images/garden.png"
+      "prompt": "Use case: style-transfer. EDIT the supplied game asset. Preserve its very simple child-level crayon doodle style, coarse scribbled color with white gaps, naive wonky shapes, white paper, composition and dimensions. Make the scene belong to a world of friendly goofy MONSTERS. No ordinary animals or humans. No text, lettering, watermark, gradients, professional illustration or intricate detail. Replace the white bunny completely with a pink round blob monster, one large eye, two tiny uneven yellow horns, stick arms, three stubby feet and one tooth. NOT rabbit-shaped, no long ears or whiskers. Keep the garden arch and flowers; give the flower centers tiny funny eyes to suggest monster flowers. Keep LEFT 35% blank and subjects in RIGHT 65%.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-948ca7a0-8abf-4b4d-bdd8-9e0d49f87b81.png",
+      "projectPath": "public/images/garden.png",
+      "intent": "style-transfer",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually verified: friendly simple crayon monsters, no ordinary animals; original scene composition and whitespace retained.",
+      "inputReferencePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-0f082dfa-470d-475c-9c5e-ac99a0369812.png"
     },
     {
       "assetName": "cave",
-      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a distinctly BLACK-PURPLE CAVE with a rough arched entrance, a few lavender crystals, one warm yellow lantern, and one small GRAY KITTEN. The cave mass is dark charcoal-black and deep violet crayon with very visible hand-scribbled hatch shading. It must read immediately as a dark BLACK-PURPLE cave, not blue, not pale lavender. Place a warm yellow lantern glow near the kitten. The kitten has whimsical uneven round eyes and funny asymmetric ears, with thin scratchy repeated black contours; it remains recognizable as a friendly gray cat. A compact cave vignette on the right, complete arched outline, all crystals, lantern and full kitten safely inset.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "requestedDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "actualDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
-      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-d0bd6e77-955a-4635-b326-77a9cb9e9915.png",
-      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/cave.png",
-      "fileBytes": 3289087,
-      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
-      "inspectionNotes": [
-        "Inspected visually with view_image. Cave is strongly charcoal-black/deep purple with scribbled crayon mass, lavender crystals, warm yellow lantern and a gray kitten with unequal eyes.",
-        "Full kitten, crystals and cave vignette are visible; broad blank ivory left label space. Outer cave margin is narrower than requested 8%, so whole-image contain fit is appropriate.",
-        "No readable text, UI, labels, logos or outcome monster/egg design."
-      ],
-      "projectPath": "public/images/cave.png"
+      "prompt": "Use case: style-transfer. EDIT the supplied game asset. Preserve its very simple child-level crayon doodle style, coarse scribbled color with white gaps, naive wonky shapes, white paper, composition and dimensions. Make the scene belong to a world of friendly goofy MONSTERS. No ordinary animals or humans. No text, lettering, watermark, gradients, professional illustration or intricate detail. Replace the gray kitten completely with a teal three-eyed squat blob monster with two purple horns, wide silly mouth and three stubby feet. No cat ears, whiskers, animal nose or animal anatomy. Keep black-purple cave, lantern and crystals in their positions. Give one crystal tiny eyes. Keep LEFT 35% blank and subjects in RIGHT 65%.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-9cf61be1-24a1-4366-8399-2097c1faf155.png",
+      "projectPath": "public/images/cave.png",
+      "intent": "style-transfer",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually verified: friendly simple crayon monsters, no ordinary animals; original scene composition and whitespace retained.",
+      "inputReferencePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-094d764c-00f9-40cc-b649-586444fa4f74.png"
     },
     {
       "assetName": "waterfall",
-      "prompt": "Use case: illustration-story.\nAsset type: option illustration bitmap for a playful H5 game, one complete illustration, not a UI mockup.\nCreate a NEW original illustration. The attached image is a STYLE REFERENCE ONLY: borrow its loose quirky sketchbook doodle character, scratchy repeated thin black pencil/charcoal contours, uneven pen marks, little scribbled hatching, lumpy asymmetry, mismatched round bulging eyes, silly expressive features. Do not copy its nine creatures or their designs. Do not generate an outcome monster or egg design.\nStyle/medium: hand drawn on warm ivory paper, with evident grainy wax-crayon colored fills beneath rough thin dark contour strokes, white flecks and patchy pressure in crayon, multiple wobbling outlines, lively imperfect marks and scribbled shading. Quirky sketchbook doodles rather than preschool-simple illustrations. Friendly playful humor. Flat paper illustration, no polished vector edges, no smooth digital cartoon, no refined watercolor, no glossy 3D.\nComposition: LANDSCAPE 3:2, exactly 1536x1024 pixels. Main recognizable subjects grouped within the RIGHT 65% of canvas. LEFT 35% must remain blank warm ivory paper for a live label and softly blend into the illustration, with no drawn dividing line. Keep EVERY subject and object completely visible and comfortably inset from ALL edges, including feet, legs, props, trees and arch: at least 8% outer safety margin; no cropped bottom or side details. The UI will show the whole image, so compose one compact coherent vignette with air around it.\nPalette: warm ivory paper, charcoal black scratchy contours, grainy restrained pink, sage/grass green, warm yellow, lavender and scene-appropriate colors.\nConstraints: no text, writing, lettering, numbers, labels, logos, watermark, UI, arrows, card borders or frames. No horror, gore or scary creatures.\nSubject: a clearly recognizable bright blue waterfall flowing between GREEN TREES, a few rounded rocks, and one small BROWN FAWN in front. Keep the entire waterfall and tree silhouettes inside the right vignette. The fawn is a friendly quirky hand-drawn deer with uneven ears, mismatched funny round eyes, wobbly spindly legs and brown grainy crayon fill with pale spots. Natural elements remain immediately recognizable: blue falling water with broken crayon strokes, leafy green trees, gray rocks. Scratchy repeat outlines and scribble hatching throughout. Full fawn legs and hooves visible and inset well above the bottom edge.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "requestedDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "actualDimensions": {
-        "width": 1536,
-        "height": 1024
-      },
-      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
-      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-c4b2828e-ad2b-4082-a02b-538347579ef3.png",
-      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/waterfall.png",
-      "fileBytes": 3272504,
-      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
-      "inspectionNotes": [
-        "Inspected visually with view_image. Immediately recognizable blue waterfall, green trees and rocks; brown spotted fawn has uneven large eyes/ears and thin wobbly legs.",
-        "Entire fawn including all hooves is visible, with blank ivory label area on left. Top/right tree clearance is narrower than requested 8% but no elements are cropped.",
-        "No readable text, UI, labels, logos or outcome monster/egg design."
-      ],
-      "projectPath": "public/images/waterfall.png"
+      "prompt": "Use case: style-transfer. EDIT the supplied game asset. Preserve its very simple child-level crayon doodle style, coarse scribbled color with white gaps, naive wonky shapes, white paper, composition and dimensions. Make the scene belong to a world of friendly goofy MONSTERS. No ordinary animals or humans. No text, lettering, watermark, gradients, professional illustration or intricate detail. Replace deer completely with a yellow lopsided water monster with one huge eye, two purple triangle horns, two stubby feet and a funny toothy smile. No deer shape, antlers or animal anatomy. Keep round trees and blue scribble waterfall. Add simple eyes and smiles to the tree canopies to make monster trees. Keep LEFT 35% blank and subjects in RIGHT 65%.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-ce081a24-50bc-4235-8644-17e7422feeda.png",
+      "projectPath": "public/images/waterfall.png",
+      "intent": "style-transfer",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually verified: friendly simple crayon monsters, no ordinary animals; original scene composition and whitespace retained.",
+      "inputReferencePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-1dcd9c1c-4699-49c8-84e6-dc71755344d1.png"
     },
     {
       "assetName": "leisure",
-      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: a monster-world game and stories.\nSubject: one goofy small lavender NON-HUMAN blob monster with lumpy body, two uneven bulging eyes, a tiny horn and stubby limbs happily using a magical game contraption. The game contraption is visibly fantasy: a crooked living arcade with a friendly toothy mouth and tiny claw feet, crystal power source and large eyeball-like colored controls. Above it floats a crooked portal projecting just two or three simple fantasy game shapes such as a star and a small jewel. Nearby is one open winged comic book, with small wings attached and a few LARGE simple doodle pictures only on its pages. The monster's stubby hands happily touch the large eyeball controls. Keep the grouping compact and highly readable; the large magical arcade/portal and open winged comic are the main props. This is a monster-world pastime, never an ordinary monitor, consumer console, office or electronics setup. No separate normal desk, keyboard or normal controller. Gentle funny living objects, not scary.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "actualDimensions": {
-        "height": 1024,
-        "width": 1536
-      },
-      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-0c2cd98d-4f75-4efe-aac8-a5df762af786.png",
-      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/leisure.png",
+      "prompt": "Use case: illustration-story. Generate ONE original bitmap for a children's game. Reference image is STYLE ONLY, never copy its characters or watermarks. Draw at actual 5-7 year old child's ability: very simple wonky shapes, uneven fat felt-tip/crayon strokes, clumsy proportions, flat scribbled color with white gaps, a few naive black face marks. Every object should be drawable by a child in under one minute. Bright limited mustard yellow, magenta, teal, purple and leaf green on plain white paper. NO professional illustration finesse, fine hatching, shading, lighting, gradients, realism, perspective, intricate details, paper aging, text, letters, numbers, logos, watermark or UI. Far simpler than an adult children's book illustration. Landscape 1536x1024. One sparse compact vignette in RIGHT 65%, LEFT 35% completely blank white. All objects fully visible with 8% margin. Only 3-5 simple shapes per object. Subject: one teal lumpy silly monster with two unequal eyes holding a simple purple rectangle game controller with two yellow dots. Beside it one open magenta comic book made of two crooked rectangles with one star. No furniture or detailed machinery.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-7c3ba13f-f5f4-482b-9a23-65a830fc492f.png",
       "projectPath": "public/images/leisure.png",
-      "inspectionNotes": [
-        "Pass. Non-human lavender blob operating large eyeball controls on a living toothy claw-footed arcade, with crystal and floating portal; winged open comic has pictures only. Clearly monster-world props; no humans, ordinary consumer-tech scene, text, eggs or assigned hatch creatures. Textured crayon style matches. Left area mostly blank; full props remain visible, with narrow right inset at comic wing."
-      ],
-      "sha256": "17D0698D535F9170FA6A0C9E0C11FDABCC648085B7ADFFAB3CEDE18CD15FB312",
-      "generationCalls": 1
+      "intent": "generate",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually checked: simple broad scribbled color shapes, white background, no text or watermark; full subject visible."
     },
     {
       "assetName": "friends",
-      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: playing with monster friends.\nSubject: exactly THREE clearly NON-HUMAN goofy little monsters playing together with one round bouncing ball. They have different short lumpy blob bodies, unequal bulging eyes and delighted funny expressions. One sage-green monster has tiny horns and two uneven eyes, another muted-pink monster has a curled antenna and stubby odd limbs, and a short round yellow creature has one big eye. They are in playful off-balance poses around the single bouncing ball, happily reaching or nudging it. No human facial or body proportions. Add only a small scribbled grassy patch under them and at most one tiny mushroom. Instantly reads as 'playing with monster friends'. Let these three compact monsters and the round ball be the entire vignette, all on the right.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "actualDimensions": {
-        "height": 1024,
-        "width": 1536
-      },
-      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-14f042cb-2cfb-47dd-9c4f-88ed5ec2fb1a.png",
-      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/friends.png",
+      "prompt": "Use case: illustration-story. Generate ONE original bitmap for a children's game. Reference image is STYLE ONLY, never copy its characters or watermarks. Draw at actual 5-7 year old child's ability: very simple wonky shapes, uneven fat felt-tip/crayon strokes, clumsy proportions, flat scribbled color with white gaps, a few naive black face marks. Every object should be drawable by a child in under one minute. Bright limited mustard yellow, magenta, teal, purple and leaf green on plain white paper. NO professional illustration finesse, fine hatching, shading, lighting, gradients, realism, perspective, intricate details, paper aging, text, letters, numbers, logos, watermark or UI. Far simpler than an adult children's book illustration. Landscape 1536x1024. One sparse compact vignette in RIGHT 65%, LEFT 35% completely blank white. All objects fully visible with 8% margin. Only 3-5 simple shapes per object. Subject: three very simple goofy colorful blob monsters playing with one yellow ball, stubby stick arms, uneven eyes, simple smiles. Pink, purple and teal bodies scribbled in with gaps. No environment or props besides ball.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-e1e7218f-b4f1-4413-8c79-5cc2735238cd.png",
       "projectPath": "public/images/friends.png",
-      "inspectionNotes": [
-        "Pass. Three visibly non-human lumpy goofy monsters, one round bouncing ball, playful poses and tiny mushroom. Strong repeated charcoal lines and wax-crayon flecks on ivory. No humans, text, eggs or assigned hatch outcome creatures. Left area mostly blank; all subjects fully visible."
-      ],
-      "sha256": "FA35BC1D6BF4ADADADD59A643F8DFF75302D92618D5D63E5327DB11CF1C9C19C",
-      "generationCalls": 1
+      "intent": "generate",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually checked: simple broad scribbled color shapes, white background, no text or watermark; full subject visible."
     },
     {
       "assetName": "learning",
-      "prompt": "Use case: illustration-story.\nAsset type: one replacement landscape activity-option illustration for the H5 game 破殼怪獸, displayed as a whole image about 260 pixels wide.\nInput image: the supplied image is a STYLE REFERENCE ONLY. Use its quirky hand-drawn lumpy monsters, scratchy repeated thin charcoal/black outlines, scribble hatching, funny asymmetry, uneven oversized eyes, small horns and odd limbs. Do not copy its grid or individual character designs.\nOutput: exactly one landscape 3:2 image, native dimensions 1536x1024.\nStyle and medium: informal childlike handmade pencil-and-WAX-CRAYON drawing on warm ivory paper. Highly visible grainy wax-crayon colored fills with patchy white paper flecks; uneven repeated dark charcoal linework and scribble hatching. Restrained sage green, muted pink, buttery yellow and lavender accents. Friendly silly atmosphere. Avoid polished vector art, clean cartoon rendering, refined watercolor, glossy 3D and smooth gradients.\nComposition: a compact, bold, clearly readable vignette occupying the RIGHT 65 percent of the canvas. The LEFT 35 percent is mostly blank warm ivory paper, gently blending into the vignette without a hard division. Full subjects, heads, limbs and props are safely inset on every edge. Use strong simple monster silhouettes and only a few LARGE recognizable fantasy props, avoiding many tiny details. No cropped subjects.\nUniversal constraints: absolutely NO humans or human children, human body or face proportions, human clothing, ordinary animals, eggs or hatching imagery. Use generic comically goofy little monsters, not named or assigned hatch-outcome creatures. Do not portray disability; their forms are whimsical monster anatomy. Friendly rather than scary; no gore. Absolutely NO text, letters, numbers, writing, readable marks, labels, logos, UI, card borders or arrows. Any book content contains ONLY a few simple doodle pictures, no writing.\nPrimary scene: a curious monster learning in a monster-world mini library.\nSubject: one curious goofy small sage-green NON-HUMAN blob monster with a short lumpy body, two unequal bulging eyes, a curled little antenna and stubby limbs actively peering into and pointing at one big open sentient magical book. The book has expressive friendly eyes clearly visible on its curved cover edge or thick spine, and ONLY simple large star diagrams and doodle pictures inside, never text. The book rests on an irregular mushroom/tree-stump desk with organic lumpy forms, visibly a fantasy object. One oversized feather quill floats above the open book. Beside it is one lavender crystal projecting just a few large simple stars and abstract diagram shapes. The readable core is monster + large magical book + floating oversized quill + crystal, all grouped on the right with full forms safely visible. Suggest a magical mini library through the sentient book itself and these props, without adding ordinary furniture or a busy room. No ordinary human school desk, plain textbook or classroom. The monster is visibly curious and engaged.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "actualDimensions": {
-        "height": 1024,
-        "width": 1536
-      },
-      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a07fe7-6ae5-7c21-844a-9bacf933babc\\exec-c8fdf469-a815-444d-8ddf-e08d269a22d6.png",
-      "savedPath": "C:/Users/User/.codex/generated_images/01a07fe7-6ae5-7c21-844a-9bacf933babc/activity-final/learning.png",
+      "prompt": "Use case: illustration-story. Generate ONE original bitmap for a children's game. Reference image is STYLE ONLY, never copy its characters or watermarks. Draw at actual 5-7 year old child's ability: very simple wonky shapes, uneven fat felt-tip/crayon strokes, clumsy proportions, flat scribbled color with white gaps, a few naive black face marks. Every object should be drawable by a child in under one minute. Bright limited mustard yellow, magenta, teal, purple and leaf green on plain white paper. NO professional illustration finesse, fine hatching, shading, lighting, gradients, realism, perspective, intricate details, paper aging, text, letters, numbers, logos, watermark or UI. Far simpler than an adult children's book illustration. Landscape 1536x1024. One sparse compact vignette in RIGHT 65%, LEFT 35% completely blank white. All objects fully visible with 8% margin. Only 3-5 simple shapes per object. Subject: one green lumpy silly monster looking at one large open purple book drawn as two crooked rectangles with one yellow star inside. One floating yellow feather drawn in three strokes and one teal triangle crystal. No desk or complex props.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-761a85be-8f18-4d55-9c37-0fb019ee02fe.png",
       "projectPath": "public/images/learning.png",
-      "inspectionNotes": [
-        "Pass. Curious non-human blob points into large sentient book on organic tree-stump/mushroom furniture, with oversized floating feather and crystal/stars. Doodle pictures only, no readable text or humans, eggs or assigned hatch creatures. Charcoal and patchy wax-crayon style matches. Left area mostly blank; full forms visible."
-      ],
-      "sha256": "467F5F4885258AFD4FB862EBCA2678501FE9B93B9EAC186B332B169B44C24668",
-      "generationCalls": 1
+      "intent": "generate",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually checked: simple broad scribbled color shapes, white background, no text or watermark; full subject visible."
     },
     {
-      "assetName": "doodle-paper",
-      "prompt": "Use case: stylized-concept.\nAsset type: seamless repeatable SQUARE warm ivory paper bitmap background tile for a playful H5 game page, exactly 1024x1024 pixels.\nCreate a NEW decorative pattern. Attached image is STYLE REFERENCE ONLY: borrow loose quirky sketchbook doodles, scratchy repeated thin pencil/charcoal outlines, wobbly asymmetry, scribbled hatching, odd funny round eyes on occasional tiny blob faces. Do not copy its nine creatures and do not create named game outcome monster or egg designs.\nSubject and composition: MANY small scattered decorative doodles distributed across the ENTIRE canvas, including the center: uneven stars, curly spirals, bubbles, flowers, leaves, little crystals, tiny pencil doodles, tiny open-book doodles, tiny game-controller doodles, and occasional simple silly imaginary blob faces. No large centerpiece. Not corners-only. Vary rotation and size with airy irregular spacing. Keep roughly 60–70% empty warm ivory paper between small motifs. Edge continuity should make it a seamless repeatable tile with no obvious straight seam or border.\nStyle and texture: rough hand drawn sketchbook pencil/charcoal contours in thin GRAY-BROWN, softly visible scratchy double strokes and scribble details. Add small soft PINK, SAGE GREEN, WARM YELLOW and LAVENDER grainy WAX-CRAYON accents with patchy paper showing through; preserve evidence of wax-crayon grain. Medium-low contrast: clearly readable little doodles yet light enough behind live UI. Warm ivory paper throughout with gentle paper grain, uniform overall illumination, no vignette.\nConstraints: no writing, text, letters, numbers, labels, UI, arrows, border, frames or logos. No eggs. No big monster portraits. No horror, gore or scary faces. No polished vector, smooth digital cartoon or refined watercolor. This is a dispersed all-over doodle pattern, not a centered illustration.",
-      "inputReferencePath": "C:/Users/User/AppData/Local/Temp/codex-clipboard-5c711c3e-18fd-4195-a2c8-b1e7c8d495d6.png",
-      "inputReferenceRole": "Style reference only",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "requestedDimensions": {
-        "width": 1024,
-        "height": 1024
-      },
-      "actualDimensions": {
-        "width": 1254,
-        "height": 1254
-      },
-      "dimensionsVerification": "PNG IHDR width and height read from saved bytes",
-      "sourceGeneratedPath": "C:/Users/User/.codex/generated_images/01a07fcf-517a-7d01-80b4-aa0d79a3a135/exec-8480c592-a182-4c48-888e-7aa2185e313c.png",
-      "savedPath": "C:/Users/User/Documents/深度問題/output/quirky-doodle-assets-20260908/doodle-paper.png",
-      "fileBytes": 2756799,
-      "postprocessing": "Copied byte-for-byte; no visual modifications or resampling",
-      "inspectionNotes": [
-        "Inspected final generatedImage result. Many small dispersed stars, spirals, bubbles, flowers, leaves, crystals, pencils, books, controllers and small simple silly blob faces, across center and edges.",
-        "Warm ivory textured paper, scratchy gray-brown contours and grainy soft pink/sage/yellow/lavender accents. No large centerpiece, no outer border and no readable lettering.",
-        "Contrast is somewhat stronger than requested; a lowered-opacity decorative UI layer is appropriate.",
-        "Native output is 1254x1254 rather than requested 1024x1024. Preserved unmodified native generated image; no resampling performed here.",
-        "Seamless repeating edges were requested, but exact pixel edge continuity was not established; edge motifs may not join perfectly. Suitable as a square decorative pattern, with integration handling repeat scale/opacity."
-      ],
-      "projectPath": "public/images/storybook-paper.png"
+      "assetName": "storybook-paper",
+      "prompt": "Use case: style-transfer. EDIT the supplied game asset. Preserve its very simple child-level crayon doodle style, coarse scribbled color with white gaps, naive wonky shapes, white paper, composition and dimensions. Make the scene belong to a world of friendly goofy MONSTERS. No ordinary animals or humans. No text, lettering, watermark, gradients, professional illustration or intricate detail. Replace the generic hearts, stars, flowers and plain smiley circles with small scattered MONSTER doodles: one-eyed horned blobs, three-eyed ovals, silly toothy squares with stick limbs, little spiky monsters. Retain sparse all-over repeat pattern, same bright crayon palette and broad white space, about 80% white. Each monster only 5-10 naive strokes. No central subject, blank edges for clean repeating. Square.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c0be7cc5-2aa3-4906-a14c-258306fbdbc0.png",
+      "projectPath": "public/images/storybook-paper.png",
+      "intent": "style-transfer",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually verified: friendly simple crayon monsters, no ordinary animals; original scene composition and whitespace retained.",
+      "inputReferencePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-541dcf8f-ff39-4b68-9a90-2396f2ccf75f.png"
     },
     {
       "assetName": "nest-background",
-      "prompt": "Use case: illustration-story\nAsset type: portrait H5 game background bitmap, 1024 x 1536 pixels.\nPrimary request: ONE original minimal cozy woodland nest background inside a gentle tree-root hollow, for a child-friendly crayon sketchbook monster-egg hatching game. This image contains background scenery only; the egg and interface will be added live separately and MUST NOT be drawn.\nStyle/medium: childlike imperfect doodle craft on warm ivory grainy paper; scratchy loose graphite and pencil contours, uneven rough wax-crayon fill with visible paper showing through. Simple, sparse and handmade, not polished or detailed watercolor.\nScene and palette: soft tree-root hollow edges along the far sides, a few small muted moss-green leaves, honey straw and warm brown accents, warm ivory paper dominant. Cozy, gently magical through warmth only.\nComposition: portrait canvas 1024 x 1536. Keep a very large empty pale paper-like central area. At 15%-36% of canvas height, especially the central region, leave quiet pale ivory negative space for dark live title text. At 35%-65% height, leave the central area especially empty for a large separately rendered egg. Draw ONE shallow oval straw-and-twig nest horizontally centered at approximately x=50%, y=68%, width about 42% of the canvas. The nest has a low shallow rim and an open empty center, positioned to support an egg that will be added above its rim. Keep all nest material roughly within 63%-74% height. The gentle root edges should remain sparse and mostly at the far left and right margins, leaving the center open. At 78%-95% height keep quiet pale ivory negative space for a live instructional line. Broad open paper space takes priority over decoration.\nConstraints: BACKGROUND ONLY. NO EGG of any kind, no round object in the nest, no creatures, no monsters, no people, no text, no letters, no numbers, no UI, no icons, no arrows, no border, no watermark. Do not fill empty areas with little decorative doodles. No dense forest, no detailed bark, no extra nests, no scene clutter, no vivid saturated colors, no glossy digital polish.\n",
-      "toolMode": "built-in image_gen",
-      "toolName": "image_gen__imagegen",
-      "intent": "generate",
-      "actualDimensions": {
-        "width": 1024,
-        "height": 1536
-      },
-      "dimensionsVerification": "PNG IHDR",
+      "prompt": "Use case: style-transfer. EDIT the supplied game asset. Preserve its very simple child-level crayon doodle style, coarse scribbled color with white gaps, naive wonky shapes, white paper, composition and dimensions. Make the scene belong to a world of friendly goofy MONSTERS. No ordinary animals or humans. No text, lettering, watermark, gradients, professional illustration or intricate detail. Turn the side trees into gentle friendly MONSTER TREES by adding one pair of large wonky eyes and tiny smiles inside the existing green leaf blobs at each side around y30%; add two tiny purple horns to each face. Keep the center x20-80% completely empty and white, keep the empty scribbled nest exactly where it is at y65-71%, no creature or egg inside it. Preserve big blank space for title and instructions. Faces must stay at far margins. Portrait 1024x1536. This is a sparse monster-world background, not a busy monster crowd.",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-a1a6ea92-5a9f-4fc5-aabf-e1f50805fbf3.png",
       "projectPath": "public/images/nest-background.png",
-      "sourceGeneratedPath": "C:/Users/User/Documents/深度問題/output/nest-background-20260908/woodland-nest-background.png",
-      "sha256": "986e78ae066246a40fe7538480befec6e038d952c2ed33ff2e8055bd8db7978f",
-      "generationCalls": 1,
-      "inspectionNotes": [
-        "Inspected original bitmap. No eggs, characters or text; pale central clearing and crayon tree roots around one shallow nest. Nest wider than requested; original output preserved."
+      "intent": "style-transfer",
+      "postprocessing": "Copied byte-for-byte without visual changes",
+      "inspectionNotes": "Visually verified: friendly simple crayon monsters, no ordinary animals; original scene composition and whitespace retained.",
+      "inputReferencePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-a04089c1-b16f-4a7c-a135-493da6457144.png"
+    }
+  ],
+  "characterAssets": [
+    {
+      "id": "11",
+      "name": "小花熊",
+      "description": "可愛胖大熊頭上有一朵小花",
+      "toolMode": "built-in image_gen",
+      "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A very plump big bear monster, huge round belly, small round ears and short fat limbs, soft warm pink crayon fur, one tiny yellow-pink flower on top of head. Simple black bead eyes and tiny silly smile. Clearly fat bear, only one flower.",
+      "backgroundCorrectionPrompt": "Edit ONLY the background of this supplied character. Replace ALL gray checkerboard squares and ALL crumpled paper texture with perfectly uniform SOLID PURE WHITE #FFFFFF. This is an OPAQUE white background image, NOT transparency and NOT a checkerboard preview. White outside character, in gaps between limbs, and through gaps of the water spirit. Preserve the exact character design, proportions, facial expression, colors, crayon scribble texture, notes/bubbles, and every inscription precisely unchanged. Do not add any checkerboard, texture, shadow, scene, labels or new details. Keep whole body visible with white breathing room.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-d77774a2-41f6-4111-b3c9-debe7bced9fe.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-77557553-f226-47c1-9487-87814420cd96.png",
+      "projectPath": "public/images/beasts/11.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications"
+    },
+    {
+      "id": "12",
+      "name": "香草兔",
+      "description": "淡粉與薰衣草紫的小兔，香草葉形軟毛、一垂一立的耳朵與害羞表情",
+      "toolMode": "built-in image_gen",
+      "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A cuddly seated baby rabbit, rounded pear body, very short paws tucked against belly, one long ear upright and the other softly drooping. Pale rose pink and lavender. Fur is a FEW large rounded herb-leaf tufts around cheeks, chest and tail, not layered pointed scales. Small centered face, tiny rabbit nose and soft w-shaped mouth. Fluffy compact appealing shape.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-1188fb00-2903-4b37-a364-75f50606611e.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-a1a46ad6-3375-4c2a-be44-3f017185f7c7.png",
+      "projectPath": "public/images/beasts/12.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "可愛的兔子 香草形狀的毛 粉紅跟紫色淡色調",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A cute rabbit monster with two long unequal bunny ears, pudgy body, fur made of LARGE simple herb-leaf-shaped tufts (not fine hairs), entirely pale pink and pale lavender palette. Two slightly mismatched eyes and a tiny absent-minded smile. Clear herb-shaped fur silhouette.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c09de133-9143-4a6d-bfb8-fba58a089e71.png"
+        }
+      ],
+      "referenceImagePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c09de133-9143-4a6d-bfb8-fba58a089e71.png"
+    },
+    {
+      "id": "13",
+      "name": "木妖",
+      "description": "樹枝與木根交纏的小樹人，沒有眼睛，樹洞裡留著小小微笑",
+      "toolMode": "built-in image_gen",
+      "prompt": "Precise edit of this existing crayon tree creature: REMOVE BOTH EYES completely. Fill their locations with the surrounding natural brown wood texture. Keep only the tiny smiling mouth inside the central tree hollow. No eyes, eye dots, eye-shaped knots or glasses anywhere. Preserve the exact tree silhouette, twisting roots, branch arms and legs, leaves, colors, childlike wax-crayon texture, pose, framing and pure white background. Change nothing else.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-d583f0ca-f526-48cd-b17d-676596b50efe.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-6dcdfc7d-cf9a-4782-83e3-e1f1a935fdb1.png",
+      "projectPath": "public/images/beasts/13.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "瘦瘦的像竹竿的妖怪 有戴眼鏡",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A very THIN TALL bamboo-pole wood monster wearing large crooked round glasses. Narrow green bamboo body with three obvious joint lines, thin stick arms and legs, small leaf sprout on head. Clueless eyes behind spectacles. Keep genuinely skinny, no big round body.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-cc2da6c8-e440-4732-8288-4eb342d9b3a6.png"
+        },
+        {
+          "description": "戴圓眼鏡的瘦長木頭小妖怪，暖棕樹皮、年輪與細樹枝手腳",
+          "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A slender adorable WOODEN LOG sprite wearing small round brown spectacles. Warm honey-brown wood, oval cut top with simple spiral growth rings, two subtle wavy bark grooves, tiny branch arms held close and little root feet. One short twig sprout with a leaf. Tall narrow shape but rounded friendly top. Absolutely NOT bamboo: NO green trunk, NO horizontal joint rings, NO bamboo shape. Shy little face inside glasses.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-0f2cdb96-bfe1-4b23-ae5d-797b3ed9d11c.png"
+        },
+        {
+          "description": "戴圓眼鏡的木頭小妖怪，樹皮、年輪和自然彎曲的枝腳，安靜溫和",
+          "prompt": "Use case: illustration-story. Redesign one game creature using the supplied references. Square full-body illustration on solid pure white background, all parts inside generous 10% margins. Keep recognizable continuity with the original game's wax-crayon hand-drawn collection: broken colored-pencil contours, visible broad crayon strokes, imperfect flat color fills and simple shapes. No vector polish, no 3D rendering, no photorealism, no background scene, checkerboard, title, signature or watermark. First image is current wood creature. Redraw with slightly more mature illustrated storybook sensibility, less baby mascot. Slender but gently irregular warm walnut wooden trunk, oval growth-ring top, round modest-sized spectacles, calm small eyes and subtle friendly smile, asymmetric twig arms relaxed at sides and root feet. A small leaf. Muted ochre and russet, finer more purposeful pencil outline but keep broad crayon texture. Not bamboo. No clasped praying hands. Not realistic or elaborate.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-bb519987-b84c-4284-b21c-08701c4ea4e5.png",
+          "referenceImagePaths": [
+            "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-0f2cdb96-bfe1-4b23-ae5d-797b3ed9d11c.png"
+          ]
+        },
+        {
+          "description": "樹枝與木根交纏的小樹人，葉芽點綴、短短枝腳，樹洞般的小臉",
+          "prompt": "Use case: illustration-story. Create a substantially redesigned game monster. Image 1 is the NEW requested SHAPE reference; image 2 is the OLD character for CRAYON TEXTURE and collection palette only, do not retain its silhouette. One full creature centered square image, pure solid WHITE background, full body with 10% white margins. Very simple cute childlike wax-crayon and colored-pencil illustration: broad patchy scribbles, broken wobbly outlines, big basic shapes, limited flat colors. It must fit a naive crayon monster collection. No realistic rendering, fine crosshatching, vector polish, dark fantasy mood, scene, logos, signature or labels. Use the branch-built tree spirit in image 1 as anatomy inspiration, translated into a SIMPLE CUTE version. A squat torso woven from only 4-5 broad curved wooden roots, two crooked branch arms out to sides, two short bent root legs in a playful stepping pose; small branching crown with 3 leaf tufts. A tiny dark hollow in wood as a quiet smiling face, optional two tiny knot dots, NO glasses. Warm ochre brown and fresh muted green. Friendly rounded branch tips; no claws, weapons, pointed threatening limbs. Absolutely NOT a straight cylindrical log with a flat sawn top. Keep wood twists readable but very simplified.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-cdc1cbe9-8e81-4b76-8aa6-26311c4ba858.png",
+          "referenceImagePaths": [
+            "C:/Users/User/AppData/Local/Temp/codex-clipboard-4c531662-c470-499b-9c8e-0a00a81b7a26.png",
+            "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-bb519987-b84c-4284-b21c-08701c4ea4e5.png"
+          ]
+        }
+      ],
+      "referenceImagePaths": [
+        "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-cdc1cbe9-8e81-4b76-8aa6-26311c4ba858.png"
       ]
+    },
+    {
+      "id": "21",
+      "name": "影蛇",
+      "description": "盤成小圓圈的黑紫影蛇，柔和表情與星星鱗紋，帶一點神祕感",
+      "toolMode": "built-in image_gen",
+      "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A tiny baby shadow snake curled into a compact soft donut coil, rounded bean-shaped head resting on the coil with slight head tilt. Charcoal-violet body and muted lavender belly, five small cream/lavender star marks on scales. Tiny gentle eyes, blush and almost invisible smile. Smooth simple snake silhouette, mysterious sleepy expression; no tongue sticking out, no head fins, no arms.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-9a315993-0c38-4778-b6b4-ad5b9a8d3b7b.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-9a63e1c2-1b92-4aac-95c8-4f4b7457cb9b.png",
+      "projectPath": "public/images/beasts/21.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "黑影樣子的蛇 鱗片上有星型點綴有神祕感",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A mysterious but adorable black shadow snake monster, one simple loose S-shaped coiled body and rounded head, charcoal black and deep purple crayon silhouette. A handful of LARGE simple lavender and yellow star-shaped markings on scales. Silly wide eyes and tiny smile, no scary fangs. No realistic scales; use only a few naive scallop marks.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-5ade4cad-0a36-43eb-bde3-8c30ac9744e9.png"
+        }
+      ],
+      "referenceImagePath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-5ade4cad-0a36-43eb-bde3-8c30ac9744e9.png"
+    },
+    {
+      "id": "22",
+      "name": "回聲菇",
+      "description": "高低錯落的三朵回聲菇，彎彎菇柄、半月笑眼，伴著音符一起歡樂搖擺",
+      "toolMode": "built-in image_gen",
+      "prompt": "Use case: illustration-story. Create a substantially redesigned game monster. Image 1 is the NEW requested SHAPE reference; image 2 is the OLD character for CRAYON TEXTURE and collection palette only, do not retain its silhouette. One full creature centered square image, pure solid WHITE background, full body with 10% white margins. Very simple cute childlike wax-crayon and colored-pencil illustration: broad patchy scribbles, broken wobbly outlines, big basic shapes, limited flat colors. It must fit a naive crayon monster collection. No realistic rendering, fine crosshatching, vector polish, dark fantasy mood, scene, logos, signature or labels. Adopt image 1's MULTIPLE mushroom cluster: THREE cute mushrooms growing together from one small shared soft moss/root base, one taller central mushroom and two shorter side mushrooms, gently curved stems and differently tilted round caps. Each stem has a happy tiny face with closed half-moon smiling eyes and little smile; caps in dusty rose, plum and pale golden yellow, cream stems. Joyful swaying poses with 4 colorful handwritten music notes emerging around them. No speakers, audio hardware or instruments. Do NOT produce one single anthropomorphic mushroom. Simplify base into a few soft moss scribbles; no dark tangled scary roots. Fully childlike appealing mushroom choir, all three clearly visible, one unified game sprite.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-0352518d-301d-47e2-af58-f9208dee2e30.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-cd472c44-c5f5-4982-b4c4-e5197998ce00.png",
+      "projectPath": "public/images/beasts/22.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "菇頭大(類似音箱) 周圍有音符",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A tiny mushroom monster with an OVERSIZED purple-magenta mushroom cap shaped like a rounded speaker cabinet, two large simple dark speaker circles integrated into cap. Very short cream stem body with tiny feet and goofy eyes. Four simple colorful musical notes floating close around cap. Clearly mushroom plus loudspeaker, not headphones.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-65eb4f6b-ba77-42e1-a438-f03e1b80d4de.png"
+        },
+        {
+          "description": "圓滾滾的音箱菇帽、奶油色小身體，身邊飄著音符",
+          "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. An adorable mushroom toddler with a huge SOFT ROUNDED lavender and dusty rose dome cap, two small integrated speaker-like circular spots on the SIDE areas of cap (not huge black circles dominating face), pale cream plump short stem body, tiny feet and mitten nubs tucked in. Face on stem: tiny bean eyes, blush and small smile. Three musical notes float near cap. Mushroom outline must dominate, sound speaker details feel cute and organic.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c3898416-617a-4e00-9f86-5bd2b297e361.png"
+        },
+        {
+          "description": "柔和菇帽的小蘑菇，倒半月閉眼微笑，搖晃身體享受身旁的音符",
+          "prompt": "Use case: illustration-story. Redesign one game creature using the supplied references. Square full-body illustration on solid pure white background, all parts inside generous 10% margins. Keep recognizable continuity with the original game's wax-crayon hand-drawn collection: broken colored-pencil contours, visible broad crayon strokes, imperfect flat color fills and simple shapes. No vector polish, no 3D rendering, no photorealism, no background scene, checkerboard, title, signature or watermark. First image is current mushroom. Remove ALL speakers and audio hardware completely, replace speaker circles with ordinary irregular cap spots. Slightly more mature hand-illustrated storybook style, muted dusty plum and rose cap, cream stem, less baby mascot. Two CLOSED inverted half-moon eyes like smiling upward arches ∩ ∩, no open pupil eyes. Blissfully enjoying music, tiny peaceful smile, subtly tilting cap and swaying little body, relaxed small arms. A few floating handwritten musical notes. Express enjoyment through posture. Keep large appealing mushroom dome.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-3f6c065d-5ddb-45f5-944a-d8937461f1db.png",
+          "referenceImagePaths": [
+            "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c3898416-617a-4e00-9f86-5bd2b297e361.png"
+          ]
+        }
+      ],
+      "referenceImagePaths": [
+        "C:/Users/User/AppData/Local/Temp/codex-clipboard-47e7cfa4-646a-459b-8ad8-4a602a0fe5d7.png",
+        "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-3f6c065d-5ddb-45f5-944a-d8937461f1db.png"
+      ]
+    },
+    {
+      "id": "23",
+      "name": "記憶石獸",
+      "description": "方方的岩石小怪，菱形眼睛、方齒呆笑與小花，石面刻著歪歪的記憶塗鴉",
+      "toolMode": "built-in image_gen",
+      "prompt": "Use case: illustration-story. Create a substantially redesigned game monster. Image 1 is the NEW requested SHAPE reference; image 2 is the OLD character for CRAYON TEXTURE and collection palette only, do not retain its silhouette. One full creature centered square image, pure solid WHITE background, full body with 10% white margins. Very simple cute childlike wax-crayon and colored-pencil illustration: broad patchy scribbles, broken wobbly outlines, big basic shapes, limited flat colors. It must fit a naive crayon monster collection. No realistic rendering, fine crosshatching, vector polish, dark fantasy mood, scene, logos, signature or labels. Adopt image 1's squat chunky angular ROCK BLOCK silhouette, trapezoid monolith with a few large softly beveled facets, short chunky block arms and tiny block feet, two vertical diamond-shaped eye holes, a silly row of 3 square teeth, and one small flower growing from a corner. Gentle lovable clueless demeanor. Pale slate-lavender stone, dark gray pencil contours. NOT old round oval boulder edged with pebbles. Retain a few simple uneven hand-drawn memory engravings on lower stone: cookie, ball, stick friends, and tiny child-written Traditional Chinese 好吃 好玩 朋友. They should be loose sparse marks on the stone, not dominate the face. No text outside body, no annotations from reference.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-d9bd2a12-b0eb-4f71-9b71-830a44cdef22.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-44374481-59cf-4ae7-849a-130873e237f2.png",
+      "projectPath": "public/images/beasts/23.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "石頭怪 身上刻著很多紀錄的圖案文字(好吃的 好玩的 朋友 跟文字)",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A chubby irregular gray-blue stone golem monster with stubby stone limbs and goofy eyes, gentle tiny smile. On its broad body are MANY simple carved memory doodles: a cookie and fruit (yummy food), a ball and toy (fun), two stick friends holding hands, a heart, a spiral; also carve the EXACT Traditional Chinese words 「好吃」「好玩」「朋友」 as three separate large childlike readable inscriptions ON its body. These are body engravings, not external labels. Simple dark crayon incised lines, no realistic texture. Keep drawings and text large enough to see, not dense micro-detail.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-af6c6443-6c28-4061-be0f-d8237b2aeba0.png"
+        },
+        {
+          "description": "圓潤小石獸，身上刻著食物、遊戲、朋友圖案與「好吃、好玩、朋友」",
+          "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A cuddly small pebble golem with a soft rounded-square gray-lavender stone body, very short round pebble feet and tiny pebble arms hugged inward. Small adorable face near top, sleepy dot eyes and blush. Smooth broad silhouette, not a bulky armored gorilla. Belly is a memory stone: simple engraved cookie, ball, two little friends holding hands, heart and apple, with EXACT legible Traditional Chinese inscriptions 好吃 好玩 朋友 arranged neatly among drawings. Keep body carvings large and sparse enough to read; no writing outside body.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-83124048-207e-450f-8403-0943a33bd26f.png"
+        },
+        {
+          "description": "厚實圓鈍的憨厚石怪，小眼睛與傻笑，身上留著歪歪的童趣塗鴉",
+          "prompt": "Use case: illustration-story. Redesign one game creature using the supplied references. Square full-body illustration on solid pure white background, all parts inside generous 10% margins. Keep recognizable continuity with the original game's wax-crayon hand-drawn collection: broken colored-pencil contours, visible broad crayon strokes, imperfect flat color fills and simple shapes. No vector polish, no 3D rendering, no photorealism, no background scene, checkerboard, title, signature or watermark. First image is current stone monster. Make much more honest, stout, gentle and endearingly dopey: wide heavy rounded boulder body, broad blunt shoulders, low short thick feet, chunky hanging arms, tiny widely spaced eyes, a small lopsided slack smile with ONE little square tooth. Not a fierce golem. Soft slate gray. Body graffiti MUST be loose child's hand drawings rather than neat icons/typesetting: broken wobbly scribbled outlines, irregular scales and baselines, uneven pressure. Food cookie, ball, two stick friends, heart. Handwritten Traditional Chinese exactly 好吃 好玩 朋友 unevenly scattered among doodles. Keep face free of text. No professional typography.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-4fde8c2d-edd0-4bc9-928e-d7a44f7c4597.png",
+          "referenceImagePaths": [
+            "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-83124048-207e-450f-8403-0943a33bd26f.png"
+          ]
+        }
+      ],
+      "referenceImagePaths": [
+        "C:/Users/User/AppData/Local/Temp/codex-clipboard-8f465270-5b41-4886-b090-1217785f3908.png",
+        "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-4fde8c2d-edd0-4bc9-928e-d7a44f7c4597.png"
+      ]
+    },
+    {
+      "id": "31",
+      "name": "瀑布精靈",
+      "description": "長條圓頂的透光水精靈，小小呆臉、流動水紋，體內可見小魚",
+      "toolMode": "built-in image_gen",
+      "prompt": "Use case: illustration-story. Redesign one game creature using the supplied references. Square full-body illustration on solid pure white background, all parts inside generous 10% margins. Keep recognizable continuity with the original game's wax-crayon hand-drawn collection: broken colored-pencil contours, visible broad crayon strokes, imperfect flat color fills and simple shapes. No vector polish, no 3D rendering, no photorealism, no background scene, checkerboard, title, signature or watermark. Image 1 is old crayon water sprite STYLE reference; image 2 is desired NEW silhouette and mood. Strongly adopt image 2's tall softly rounded pillar of water, rounded dome top, tiny distant vacant face high on body and bottom spreading into a small puddle. NO separate arms, legs or teardrop tip. Muted pale mint aqua, transparent watery interior with simple descending scalloped water bands and a few white shine dashes. Keep 1-2 tiny simple fish visible inside from original concept. Much more child-drawn and naive than image 2: wobbly crayon outline and sparse uneven scribbling, minimal rendering, adorable blank little face. No gray background or large water scene; isolated white.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-70706a1c-0cb9-4e3c-8b17-0165a1691513.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-cf77b4e6-9d05-42ce-904f-690b34dfb60e.png",
+      "projectPath": "public/images/beasts/31.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "水做成的透光精靈 身體內看的到小魚跟水中生物",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A goofy cute water spirit made entirely of translucent pale cyan water, simple wobbly droplet-shaped body, little flowing water arms and feet, two uneven eyes and a small smile. THROUGH its pale see-through belly clearly see two tiny colorful fish, one tiny snail and a simple aquatic plant. Child-level crayon translucency: light blue sparse strokes and large nearly clear areas, no glossy 3D or realistic refraction. Aquatic creatures contained inside body, not outside.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-a4cfa7d2-e6d4-471d-b5c9-c81d018d7227.png"
+        },
+        {
+          "description": "柔軟水滴形的透光精靈，肚子裡有小魚、蝸牛和水草",
+          "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A tiny soft translucent aqua water spirit, rounded water-drop body with a single curled droplet tip like a sleepy hair curl. No giant splash hands; two tiny rounded water fin arms and puddle feet. Small gentle eyes and little smile placed near upper face. Almost clear pale cyan belly contains two very simple little orange/pink fish, a tiny snail and one sprig aquatic plant. Use pale crayon washes and sparse white gaps to suggest water, not dense cyan scribbling; delicate and cuddly, NOT glass or 3D.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-e8feb598-f347-466c-8b36-e775de771d76.png"
+        }
+      ],
+      "referenceImagePaths": [
+        "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-e8feb598-f347-466c-8b36-e775de771d76.png",
+        "C:/Users/User/AppData/Local/Temp/codex-clipboard-3ce8b3ef-fcc6-40fa-82a1-6ac220053419.png"
+      ]
+    },
+    {
+      "id": "32",
+      "name": "泡泡龜",
+      "description": "圓頭大鰭的淡綠海龜，背殼上有三個隆起的珊瑚孔，正冒出泡泡",
+      "toolMode": "built-in image_gen",
+      "prompt": "Precise edit of this existing crayon sea turtle. KEEP its exact cute large round head, face, swimming pose, green spotted flippers, cream belly, beige/lavender scute shell, proportions and childlike crayon drawing style. ADD THREE short softly rounded raised hollow coral openings on the TOP/BACK of its shell. Each must show a clear dark oval hole with a lavender/pink rim, organically integrated into the shell; not long industrial pipes. Make the bubbles visibly EMERGE FROM these shell holes in little rising trails. Retain some existing surrounding bubbles. Keep the character fully in frame with whitespace, pure solid white background, no scene, text or watermark. Do not remove the shell pattern or change to a land turtle.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-c2bcf7df-287d-4b1b-aa52-2c988fb2cbf7.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-7f6f2d14-096a-4f7e-a0de-e2bc3dcd30fa.png",
+      "projectPath": "public/images/beasts/32.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications",
+      "revisions": [
+        {
+          "description": "龜殼上有隆起管狀像珊瑚的殼 冒出泡泡",
+          "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. An adorable goofy turtle monster shown three-quarter side view, mint green head with large silly eyes, four stubby feet. Its lavender shell has FIVE prominent raised hollow TUBES like tube coral, yellow and pink rims with clearly visible open holes. Several big simple outlined bubbles emerge directly from those tubes. Not a normal smooth turtle shell; tube coral shell is the main distinctive feature.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-ab97ca35-c447-4600-8f8b-ce2afca32d64.png"
+        },
+        {
+          "description": "短脖子圓臉小龜，背著柔和珊瑚管殼，冒出圓圓泡泡",
+          "prompt": "Redesign the supplied monster into a clearly NEW, much cuter and better shaped character, keeping its defining concept but NOT its old pose or facial proportions. One complete original game character centered on SOLID PURE WHITE background, square 1024x1024, full body with 10% blank margin. Childlike wax-crayon illustration: simple soft wonky outlines, broad patchy scribbles, restrained 3-4 colors, flat paper drawing. Appealing compact silhouette, gentle shy personality, tiny dot/bean eyes with small highlights (NOT giant unequal googly eyes), small mouth, blush cheeks, soft rounded forms. No waving human hands, no wide manic grin, no realistic rendering, no glossy 3D, no intricate hatching, no scene, shadow, checkerboard, logo or title. Make design readable at 250px. A baby turtle with a big rounded mint-green head close to body, SHORT neck, tiny gentle eyes and blush, four little rounded flippers. Compact lavender shell with THREE short organically curved tube-coral protrusions, soft peach/pink rims and open oval tops, like a tiny coral garden (NOT tall industrial smokestacks). Three delicate outlined round bubbles rising from the tubes. Three-quarter view, rounded cuddly silhouette, minimal details.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-5c251159-05d0-42a3-9b35-cc810a1da3f2.png"
+        },
+        {
+          "description": "圓頭、大鰭的淡綠小海龜，手繪格紋龜殼，身邊飄著泡泡",
+          "prompt": "Use case: illustration-story. Redesign one game creature using the supplied references. Square full-body illustration on solid pure white background, all parts inside generous 10% margins. Keep recognizable continuity with the original game's wax-crayon hand-drawn collection: broken colored-pencil contours, visible broad crayon strokes, imperfect flat color fills and simple shapes. No vector polish, no 3D rendering, no photorealism, no background scene, checkerboard, title, signature or watermark. Image 1 is old crayon turtle for collection texture ONLY; image 2 is new sea turtle silhouette and palette reference. Redesign as a lovely swimming sea turtle, oversized round pale green head, small smiling open mouth, dark plum friendly eyes, cream underside, two big soft front flippers and small rear flippers, speckled mint markings, low warm beige/lavender shell with irregular hand-drawn scute pattern. Remove the old tall coral tubes. A few simple bubbles floating beside it. Use reference 2's cute swimming proportions but translate fully into naive wax-crayon illustration with rough scribbles and wobbly imperfect pencil lines matching collection. No smooth vector gradients, no signature, no text.",
+          "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-bd66f658-e98a-4a06-a2cf-0d9d2d8dbfc0.png",
+          "referenceImagePaths": [
+            "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-5c251159-05d0-42a3-9b35-cc810a1da3f2.png",
+            "C:/Users/User/AppData/Local/Temp/codex-clipboard-45a684a9-e7a6-4fa7-bf9a-7c73f986853c.png"
+          ]
+        }
+      ],
+      "referenceImagePaths": [
+        "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-bd66f658-e98a-4a06-a2cf-0d9d2d8dbfc0.png"
+      ]
+    },
+    {
+      "id": "33",
+      "name": "彩虹梟",
+      "description": "眼睛大大的彩色羽毛貓頭鷹",
+      "toolMode": "built-in image_gen",
+      "prompt": "Use case: illustration-story. ONE original full-body game monster sprite, square 1024x1024, genuinely transparent background. The supplied image is STYLE reference ONLY, do not copy its characters or ball. Maintain actual young child's simple crayon drawing ability: clumsy asymmetry, broad rough wax crayon scribbles with visible gaps, a few large basic shapes, flat color, wobbly contours. Extremely cute, goofy and slightly clueless expression, friendly relaxed smile, uneven eyes. No polish, no fine hatching, no realistic rendering, no 3D, no dramatic lighting, no setting, no ground, no drop shadow, no border or watermark. ONE character centered, whole body and all accessories visible within 10% canvas margin, occupying 75-80% height. Readable silhouette at 220px. No character name or labels outside body. A very cute round owl monster with two HUGE mismatched white round eyes, tiny triangular beak, short wings and tiny orange feet. Large simple feather patches in rainbow pink orange yellow green teal blue purple, irregular broad scribbled bands and scallops. Goofy slightly cross-eyed innocent expression, no detailed individual feather rendering.",
+      "backgroundCorrectionPrompt": "Edit ONLY the background of this supplied character. Replace ALL gray checkerboard squares and ALL crumpled paper texture with perfectly uniform SOLID PURE WHITE #FFFFFF. This is an OPAQUE white background image, NOT transparency and NOT a checkerboard preview. White outside character, in gaps between limbs, and through gaps of the water spirit. Preserve the exact character design, proportions, facial expression, colors, crayon scribble texture, notes/bubbles, and every inscription precisely unchanged. Do not add any checkerboard, texture, shadow, scene, labels or new details. Keep whole body visible with white breathing room.",
+      "initialGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-0e80eb68-020c-4905-8255-e702fc481b09.png",
+      "sourceGeneratedPath": "C:\\Users\\User\\.codex\\generated_images\\01a09e36-b956-7620-a4ed-c200f208d1a4\\exec-515f19bf-d983-4a30-bf60-1a3a73789b06.png",
+      "projectPath": "public/images/beasts/33.png",
+      "background": "Opaque white; blended with multiply in game",
+      "postprocessing": "Copied byte-for-byte; no programmatic visual modifications"
     }
   ]
 }

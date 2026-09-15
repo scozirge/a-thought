@@ -85,6 +85,9 @@ export function verifyH5(output, basePath) {
     checkUrl(`${basePath}/images/${name}.png`);
   }
   inspect(root);
+  for (const id of ['11', '12', '13', '21', '22', '23', '31', '32', '33']) {
+    checkUrl(`${basePath}/images/beasts/${id}.png`);
+  }
   assert.ok(references > 10, 'Expected HTML and CSS asset references');
   console.log(
     `Verified ${references} H5 references for the game and unversioned classroom catalog.`,

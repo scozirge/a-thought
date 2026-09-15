@@ -33,6 +33,10 @@ for (const [combination, name] of Object.entries(expected)) {
     let state = choose(combination[0], combination[1]);
     assert.equal(state.stage, 'egg');
     assert.equal(getBeast(state)?.name, name);
+    assert.ok(
+      existsSync(new URL(`../public${getBeast(state).image}`, import.meta.url)),
+      `${name} 必須有對應的專屬圖片`,
+    );
     state = send(state, 'REVEAL');
     assert.equal(state.stage, 'egg');
     for (let taps = 1; taps < HATCH_TAPS; taps++) {
