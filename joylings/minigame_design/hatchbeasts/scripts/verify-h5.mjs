@@ -64,6 +64,18 @@ export function verifyH5(output, basePath) {
     rhythm.includes('瀑布精靈音遊 Demo'),
     'Missing rhythm game demo HTML',
   );
+  assert.ok(
+    rhythm.includes(`${basePath}/rhythm/editor/`),
+    'Missing rhythm editor link from game demo',
+  );
+  const editor = readFileSync(
+    join(root, 'rhythm', 'editor', 'index.html'),
+    'utf8',
+  );
+  assert.ok(
+    editor.includes('瀑布精靈製譜器'),
+    'Missing rhythm chart editor HTML',
+  );
   for (const slug of [
     'experience',
     'planning',
@@ -96,6 +108,6 @@ export function verifyH5(output, basePath) {
   checkUrl(`${basePath}/audio/i-wanna-be-like-you-demo.mp3`);
   assert.ok(references > 10, 'Expected HTML and CSS asset references');
   console.log(
-    `Verified ${references} H5 references for the game and unversioned classroom catalog.`,
+    `Verified ${references} H5 references for the game, chart editor and unversioned classroom catalog.`,
   );
 }

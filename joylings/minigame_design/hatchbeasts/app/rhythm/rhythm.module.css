@@ -77,6 +77,7 @@
 
 .backLink:focus-visible,
 .receptor:focus-visible,
+.chartSource a:focus-visible,
 .resultActions a:focus-visible {
   outline: 3px solid #276a76;
   outline-offset: 3px;
@@ -611,9 +612,38 @@
 }
 
 .instructions {
-  margin: 4px 0 18px;
+  margin: 4px 0 12px;
   color: #557176;
   font-size: 17px;
+}
+
+.chartSource {
+  margin: 0 auto 17px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 7px 12px;
+  color: #688287;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+}
+
+.chartSource a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border: 1px solid #9ac9c7;
+  border-radius: 11px 8px 12px 9px;
+  color: #2d6871;
+  background: #effaf7;
+  text-decoration: none;
+}
+
+.chartSource a:hover {
+  background: #dff4ef;
 }
 
 .keyPreview {

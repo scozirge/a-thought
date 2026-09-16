@@ -1,0 +1,800 @@
+.world {
+  --deep-water: #173f48;
+  --water-ink: #244d55;
+  --water-blue: #37bbc4;
+  min-height: 100svh;
+  overflow-x: hidden;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  color: var(--water-ink);
+  background:
+    radial-gradient(circle at 8% 11%, #ffffffc7 0 4%, transparent 16%),
+    radial-gradient(circle at 90% 17%, #c0ede3 0 4%, transparent 18%),
+    linear-gradient(145deg, #eef9f4, #ccebe5 56%, #b7dedb);
+  font-family:
+    'Iansui Game', 'DFKai-SB', 'KaiTi', 'STKaiti', 'Microsoft JhengHei',
+    sans-serif;
+}
+
+.world::before,
+.world::after {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  border: 2px solid #ffffff8a;
+  border-radius: 50%;
+}
+
+.world::before {
+  width: 170px;
+  height: 170px;
+  left: -74px;
+  bottom: 8%;
+  box-shadow:
+    43px -22px 0 -34px #ffffff8a,
+    123px -38px 0 -56px #ffffff70;
+}
+
+.world::after {
+  width: 104px;
+  height: 104px;
+  right: -38px;
+  top: 24%;
+  box-shadow: -74px 52px 0 -37px #ffffff80;
+}
+
+.topbar {
+  position: relative;
+  z-index: 2;
+  width: min(1040px, calc(100% - 32px));
+  min-height: 58px;
+  margin: 0 auto;
+  padding-top: max(10px, env(safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.backLink,
+.songLabel {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #28525a;
+  text-decoration: none;
+}
+
+.backLink {
+  padding: 6px 10px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+.backLink:hover {
+  background: #ffffff80;
+}
+
+.songLabel {
+  color: #3c6870;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.editorShell {
+  position: relative;
+  z-index: 1;
+  width: min(1040px, calc(100% - 32px));
+  margin: 9px auto 0;
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 11px 8px 17px;
+}
+
+.introIcon {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  transform: rotate(-3deg);
+  border: 1.5px solid #70aaa9;
+  border-radius: 50% 44% 53% 47%;
+  color: #28636d;
+  background: #d4f2ed;
+  box-shadow: 3px 4px 0 #82c6c182;
+}
+
+.kicker {
+  margin: 0;
+  color: #3d7a82;
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.intro h1 {
+  margin: 1px 0 0;
+  color: #204f58;
+  font-size: clamp(31px, 5vw, 45px);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: 0.05em;
+}
+
+.intro p:last-child {
+  margin: 0;
+  color: #4f7378;
+  font-size: 15px;
+}
+
+.hitTimeNotice {
+  margin-bottom: 14px;
+  padding: 12px 17px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px 20px;
+  flex-wrap: wrap;
+  border: 1.5px solid #d8ac72;
+  border-radius: 15px 11px 17px 12px / 12px 17px 11px 16px;
+  color: #6e583f;
+  background: #fff1cde8;
+  box-shadow: 2px 3px 0 #dcae7452;
+}
+
+.hitTimeNotice strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.hitTimeNotice span {
+  color: #82715e;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+}
+
+.recorderCard,
+.noteCard,
+.saveCard {
+  min-width: 0;
+  border: 1.5px solid #78aeb1;
+  background: #f7fbf7eb;
+  box-shadow:
+    0 18px 48px #22535a20,
+    inset 0 0 0 3px #ffffff60;
+}
+
+.recorderCard {
+  padding: 20px;
+  border-radius: 25px 37px 28px 33px / 34px 26px 37px 26px;
+}
+
+.recorderHeader {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.recordStatus {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #315d64;
+  font-size: 19px;
+}
+
+.recordStatus i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #8da4a7;
+  box-shadow: 0 0 0 4px #8da4a721;
+}
+
+.recordStatus[data-phase='recording'] i {
+  background: #e76f61;
+  box-shadow: 0 0 0 5px #e76f6130;
+  animation: record-pulse 1.05s ease-in-out infinite;
+}
+
+.recordStatus[data-phase='paused'] i {
+  background: #e2a253;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.counter strong {
+  color: #1c5059;
+  font-size: clamp(20px, 3vw, 27px);
+  line-height: 1.15;
+}
+
+.counter span {
+  color: #71898d;
+  font-size: 12px;
+}
+
+.timeline {
+  position: relative;
+  height: 174px;
+  overflow: hidden;
+  border: 2px solid #1b5059;
+  border-radius: 18px 29px 19px 25px / 25px 18px 27px 19px;
+  background:
+    radial-gradient(circle at 50% 25%, #4e97a23a, transparent 36%),
+    linear-gradient(180deg, #173f48, #0d3039 68%, #092832);
+  box-shadow:
+    inset 0 0 50px #031b215f,
+    inset 0 0 0 2px #7ed8d329;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(90deg, #d9ffff12 1px, transparent 1px);
+  background-size: calc(100% / 12) 100%;
+}
+
+.timeline canvas {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.seekRange {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: ew-resize;
+  opacity: 0;
+}
+
+.seekRange:disabled {
+  cursor: not-allowed;
+}
+
+.startTime,
+.endTime {
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  color: #d5efedb8;
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.startTime {
+  left: 10px;
+}
+
+.endTime {
+  right: 10px;
+}
+
+.laneButtons {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.laneButton {
+  min-width: 0;
+  height: 82px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  padding: 9px;
+  border: 2px solid #8ec9c7;
+  border-radius: 19px 15px 21px 14px / 15px 21px 16px 20px;
+  color: #204f58;
+  background: #dff3ee;
+  box-shadow:
+    2px 3px 0 #90bdbb,
+    inset 0 4px 0 #ffffff75;
+  touch-action: none;
+  user-select: none;
+}
+
+.laneButton.down {
+  border-color: #dcaa78;
+  background: #fae0c1;
+  box-shadow:
+    2px 3px 0 #c89f76,
+    inset 0 4px 0 #ffffff75;
+}
+
+.laneButton.up {
+  border-color: #d894a6;
+  background: #f8d8df;
+  box-shadow:
+    2px 3px 0 #c893a0,
+    inset 0 4px 0 #ffffff75;
+}
+
+.laneButton.right {
+  border-color: #a99bc6;
+  background: #e8e0f5;
+  box-shadow:
+    2px 3px 0 #a99bc6,
+    inset 0 4px 0 #ffffff75;
+}
+
+.laneButton span {
+  align-self: end;
+  font-family: system-ui, sans-serif;
+  font-size: 35px;
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.laneButton small {
+  align-self: end;
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.laneButton:disabled {
+  cursor: default;
+  filter: saturate(0.45);
+  opacity: 0.54;
+}
+
+.laneButton.isPressed {
+  transform: translateY(2px) scale(0.96);
+  filter: none;
+  opacity: 1;
+  box-shadow:
+    0 0 0 5px #80dfd04f,
+    0 0 24px #64cfc3a8;
+}
+
+.controls {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.recordButton,
+.saveAndPlayButton {
+  min-height: 48px;
+  gap: 8px;
+  border: 1.5px solid #245d65;
+  border-radius: 16px 12px 18px 13px / 13px 19px 12px 17px;
+  color: #f5fffc;
+  background: #2f7a82;
+  box-shadow:
+    3px 4px 0 #1d5158,
+    inset 0 0 0 2px #8bd6d04a;
+  font-size: 16px;
+  font-weight: 450;
+  letter-spacing: 0.04em;
+}
+
+.recordButton {
+  min-width: 152px;
+  border-color: #965d50;
+  background: #c97561;
+  box-shadow:
+    3px 4px 0 #8d574b,
+    inset 0 0 0 2px #ffd3c454;
+}
+
+.recordButton:hover {
+  background: #b76655;
+}
+
+.secondaryButton,
+.clearButton,
+.saveOnlyButton,
+.defaultButton {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid #91bdbc;
+  border-radius: 13px 10px 14px 11px;
+  color: #315f66;
+  background: #f7fffc;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.clearButton {
+  border-color: #d2aba4;
+  color: #8d5b53;
+  background: #fff8f5;
+}
+
+.secondaryButton:disabled,
+.clearButton:disabled,
+.saveOnlyButton:disabled,
+.defaultButton:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.audioError {
+  margin: 13px 0 0;
+  color: #9b5148;
+  font-size: 14px;
+  text-align: center;
+}
+
+.liveMessage {
+  min-height: 20px;
+  margin: 12px 4px 0;
+  color: #607c80;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  text-align: center;
+}
+
+.lowerGrid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(285px, 0.7fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.noteCard,
+.saveCard {
+  padding: 19px;
+  border-radius: 24px 18px 27px 20px / 18px 27px 19px 25px;
+}
+
+.saveCard {
+  border-radius: 18px 27px 19px 25px / 25px 18px 27px 19px;
+}
+
+.sectionHeading {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.sectionHeading h2,
+.saveCard h2 {
+  margin: 2px 0 0;
+  color: #245760;
+  font-size: 23px;
+  font-weight: 450;
+}
+
+.sectionHeading > span {
+  padding: 5px 9px;
+  border: 1px solid #b2d5d1;
+  border-radius: 999px;
+  color: #54777c;
+  background: #edf8f5;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+}
+
+.noteList {
+  max-height: 274px;
+  margin: 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-color: #86b9b5 transparent;
+  scrollbar-width: thin;
+}
+
+.noteList li {
+  min-height: 49px;
+  display: grid;
+  grid-template-columns: 48px 58px 1fr 44px;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid #ccdfdc;
+  font-family: system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.noteList li:first-child {
+  border-top: 0;
+}
+
+.noteList li > span {
+  color: #789093;
+  font-size: 11px;
+}
+
+.noteList li strong {
+  color: #315f67;
+  font-size: 16px;
+}
+
+.noteList li[data-lane='left'] strong {
+  text-decoration-color: #75bbb3;
+}
+
+.noteList li[data-lane='down'] strong {
+  color: #a56c3f;
+}
+
+.noteList li[data-lane='up'] strong {
+  color: #a5596e;
+}
+
+.noteList li[data-lane='right'] strong {
+  color: #765d9b;
+}
+
+.noteList time {
+  color: #244f57;
+  font-size: 14px;
+}
+
+.noteList button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 11px;
+  color: #99665d;
+  background: transparent;
+}
+
+.noteList button:hover:not(:disabled) {
+  background: #f8eae6;
+}
+
+.noteList button:disabled {
+  opacity: 0.35;
+}
+
+.emptyNotes {
+  min-height: 104px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  border: 1px dashed #a6c8c5;
+  border-radius: 14px;
+  color: #698286;
+  font-size: 14px;
+  text-align: center;
+}
+
+.saveCard > p:not(.kicker) {
+  margin: 8px 0 18px;
+  color: #5c797d;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.saveAndPlayButton,
+.saveOnlyButton,
+.defaultButton {
+  width: 100%;
+}
+
+.saveAndPlayButton:hover {
+  background: #286c74;
+}
+
+.saveOnlyButton {
+  margin-top: 11px;
+}
+
+.defaultButton {
+  min-height: 38px;
+  margin-top: 10px;
+  border: 0;
+  color: #647e82;
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.saveCard small {
+  display: block;
+  margin-top: 12px;
+  color: #7b8d90;
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.backLink:focus-visible,
+.laneButton:focus-visible,
+.seekRange:focus-visible,
+.secondaryButton:focus-visible,
+.clearButton:focus-visible,
+.saveOnlyButton:focus-visible,
+.defaultButton:focus-visible,
+.noteList button:focus-visible {
+  outline: 3px solid #276a76;
+  outline-offset: 3px;
+}
+
+@keyframes record-pulse {
+  50% {
+    transform: scale(0.72);
+    opacity: 0.62;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar,
+  .editorShell {
+    width: calc(100% - 20px);
+  }
+
+  .topbar {
+    min-height: 52px;
+  }
+
+  .songLabel span:first-of-type,
+  .songLabel span:nth-of-type(2) {
+    display: none;
+  }
+
+  .editorShell {
+    margin-top: 3px;
+  }
+
+  .intro {
+    gap: 11px;
+    padding: 8px 4px 13px;
+  }
+
+  .introIcon {
+    width: 47px;
+    height: 47px;
+  }
+
+  .intro p:last-child {
+    font-size: 13px;
+  }
+
+  .hitTimeNotice {
+    padding: 10px 13px;
+    gap: 3px;
+  }
+
+  .hitTimeNotice strong {
+    font-size: 15px;
+  }
+
+  .recorderCard {
+    padding: 12px;
+    border-radius: 19px 25px 20px 23px;
+  }
+
+  .recordStatus {
+    font-size: 17px;
+  }
+
+  .timeline {
+    height: 138px;
+  }
+
+  .laneButtons {
+    gap: 6px;
+  }
+
+  .laneButton {
+    height: 68px;
+    padding: 6px;
+  }
+
+  .laneButton span {
+    font-size: 29px;
+  }
+
+  .controls {
+    gap: 7px;
+  }
+
+  .recordButton {
+    width: 100%;
+  }
+
+  .secondaryButton,
+  .clearButton {
+    flex: 1 1 128px;
+  }
+
+  .lowerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .noteCard,
+  .saveCard {
+    padding: 15px;
+  }
+
+  .noteList {
+    max-height: 220px;
+  }
+}
+
+@media (max-width: 390px) {
+  .topbar,
+  .editorShell {
+    width: calc(100% - 12px);
+  }
+
+  .backLink {
+    font-size: 14px;
+  }
+
+  .introIcon {
+    display: none;
+  }
+
+  .intro h1 {
+    font-size: 29px;
+  }
+
+  .recorderHeader {
+    gap: 8px;
+  }
+
+  .counter strong {
+    font-size: 18px;
+  }
+
+  .laneButton {
+    height: 64px;
+  }
+
+  .laneButton span {
+    font-size: 26px;
+  }
+
+  .noteList li {
+    grid-template-columns: 42px 50px 1fr 42px;
+    gap: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recordStatus[data-phase='recording'] i {
+    animation: none;
+  }
+
+  .laneButton {
+    transition: none;
+  }
+}

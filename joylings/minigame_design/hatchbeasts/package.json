@@ -12,7 +12,7 @@
     "build:classroom": "node scripts/build-classroom.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint app lib tests vite.config.ts next.config.ts",
-    "test": "node --experimental-strip-types --test tests/game.test.mjs tests/rhythm.test.mjs",
+    "test": "node --experimental-strip-types --test tests/game.test.mjs tests/rhythm.test.mjs tests/rhythm-chart.test.mjs",
     "format": "oxfmt"
   },
   "dependencies": {

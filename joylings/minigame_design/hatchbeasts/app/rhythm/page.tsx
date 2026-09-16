@@ -8,10 +8,21 @@ import {
   useState,
   type CSSProperties,
 } from 'react';
-import { ArrowLeft, Music2, Play, RotateCcw, Waves } from 'lucide-react';
+import {
+  ArrowLeft,
+  Music2,
+  PencilLine,
+  Play,
+  RotateCcw,
+  Waves,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { assetUrl } from '@/lib/assets';
 import { BEASTS } from '@/lib/game';
+import {
+  parseStoredRhythmChart,
+  RHYTHM_CUSTOM_CHART_STORAGE_KEY,
+} from '@/lib/rhythm-chart';
 import {
   formatRhythmTime,
   getAccuracy,
@@ -27,6 +38,7 @@ import {
   RHYTHM_TRAVEL_TIME,
   type HitJudgement,
   type RhythmLane,
+  type RhythmNote,
   type RhythmStats,
 } from '@/lib/rhythm';
 import styles from './rhythm.module.css';
@@ -64,6 +76,31 @@ export default function RhythmDemo() {
   } | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [audioError, setAudioError] = useState('');
+  const [activeChart, setActiveChart] =
+    useState<readonly RhythmNote[]>(RHYTHM_CHART);
+  const [chartSource, setChartSource] = useState<'default' | 'custom'>(
+    'default',
+  );
+  const [chartReady, setChartReady] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const saved = parseStoredRhythmChart(
+          window.localStorage.getItem(RHYTHM_CUSTOM_CHART_STORAGE_KEY),
+        );
+        if (saved?.notes.length) {
+          setActiveChart(saved.notes);
+          setChartSource('custom');
+        }
+      } catch {
+        setChartSource('default');
+      } finally {
+        setChartReady(true);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const flashLane = useCallback((lane: RhythmLane) => {
     setPressedLane(lane);
@@ -102,7 +139,7 @@ export default function RhythmDemo() {
 
     let nextStats = statsRef.current;
     const nextJudged = { ...judgedRef.current };
-    for (const note of RHYTHM_CHART) {
+    for (const note of activeChart) {
       if (nextJudged[note.id]) continue;
       nextJudged[note.id] = 'miss';
       nextStats = recordJudgement(nextStats, 'miss');
@@ -113,7 +150,7 @@ export default function RhythmDemo() {
     setStats(nextStats);
     setSongTime(RHYTHM_DEMO_DURATION);
     setPhase('finished');
-  }, []);
+  }, [activeChart]);
 
   const hitLane = useCallback(
     (lane: RhythmLane) => {
@@ -124,7 +161,7 @@ export default function RhythmDemo() {
         | { id: number; error: number; judgement: Exclude<HitJudgement, 'miss'> }
         | undefined;
 
-      for (const note of RHYTHM_CHART) {
+      for (const note of activeChart) {
         if (note.lane !== lane || judgedRef.current[note.id]) continue;
         const error = currentTime - note.hitTime;
         const judgement = judgeTiming(error);
@@ -134,7 +171,7 @@ export default function RhythmDemo() {
       }
       if (closest) commitJudgement(closest.id, closest.judgement);
     },
-    [commitJudgement, flashLane],
+    [activeChart, commitJudgement, flashLane],
   );
 
   useEffect(() => {
@@ -158,7 +195,7 @@ export default function RhythmDemo() {
       setSongTime(currentTime);
 
       const missedIds: number[] = [];
-      for (const note of RHYTHM_CHART) {
+      for (const note of activeChart) {
         if (
           !judgedRef.current[note.id] &&
           currentTime - note.hitTime > JUDGEMENT_WINDOWS.good
@@ -196,7 +233,7 @@ export default function RhythmDemo() {
         animationRef.current = null;
       }
     };
-  }, [finishGame, phase]);
+  }, [activeChart, finishGame, phase]);
 
   useEffect(() => {
     if (phase === 'finished')
@@ -242,12 +279,12 @@ export default function RhythmDemo() {
 
   const visibleNotes = useMemo(
     () =>
-      RHYTHM_CHART.filter((note) => {
+      activeChart.filter((note) => {
         if (judged[note.id]) return false;
         const untilHit = note.hitTime - songTime;
         return untilHit <= RHYTHM_TRAVEL_TIME && untilHit >= -0.32;
       }),
-    [judged, songTime],
+    [activeChart, judged, songTime],
   );
 
   const progress = Math.min(100, (songTime / RHYTHM_DEMO_DURATION) * 100);
@@ -431,6 +468,17 @@ export default function RhythmDemo() {
               <p className={styles.instructions}>
                 音符到底線時，按下同方向的鍵。
               </p>
+              <div className={styles.chartSource}>
+                <span>
+                  {chartSource === 'custom'
+                    ? `我的錄製譜面 · ${activeChart.length} 顆`
+                    : `示範譜面 · ${activeChart.length} 顆`}
+                </span>
+                <a href={assetUrl('/rhythm/editor/')}>
+                  <PencilLine size={15} aria-hidden="true" />
+                  錄製／編輯譜面
+                </a>
+              </div>
               <div className={styles.keyPreview} aria-label="操作鍵">
                 {RHYTHM_LANES.map((lane) => (
                   <span key={lane.id}>
@@ -443,10 +491,14 @@ export default function RhythmDemo() {
                 className={styles.startButton}
                 size="lg"
                 onClick={startGame}
-                disabled={isStarting}
+                disabled={isStarting || !chartReady}
               >
                 <Play size={19} fill="currentColor" aria-hidden="true" />
-                {isStarting ? '音樂載入中…' : '開始演奏'}
+                {!chartReady
+                  ? '譜面載入中…'
+                  : isStarting
+                    ? '音樂載入中…'
+                    : '開始演奏'}
               </Button>
               {audioError && <p className={styles.audioError}>{audioError}</p>}
             </section>

@@ -42,6 +42,15 @@ cpSync(join(client, basePath.replace(/^\//, ''), '_next'), join(output, '_next')
 mkdirSync(join(output, 'rhythm'), { recursive: true });
 cpSync(join(client, 'rhythm.html'), join(output, 'rhythm', 'index.html'));
 cpSync(join(client, 'rhythm.rsc'), join(output, 'rhythm.rsc'));
+mkdirSync(join(output, 'rhythm', 'editor'), { recursive: true });
+cpSync(
+  join(client, 'rhythm', 'editor.html'),
+  join(output, 'rhythm', 'editor', 'index.html'),
+);
+cpSync(
+  join(client, 'rhythm', 'editor.rsc'),
+  join(output, 'rhythm', 'editor.rsc'),
+);
 for (const slug of [
   '',
   'experience',
