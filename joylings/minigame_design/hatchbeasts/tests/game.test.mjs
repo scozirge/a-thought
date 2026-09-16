@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import {
   gameReducer,
   getBeast,
+  getBeastById,
   initialState,
   HATCH_TAPS,
   PLACES,
@@ -79,4 +80,14 @@ test('每個選項都有本機圖片', () => {
       choice.image,
     );
   }
+});
+
+test('音遊會使用孵出的怪獸，缺少或無效編號時回到瀑布精靈', () => {
+  assert.equal(getBeastById('22').name, '回聲菇');
+  assert.equal(getBeastById('33').name, '彩虹梟');
+  assert.equal(getBeastById(null).name, '瀑布精靈');
+  assert.equal(getBeastById('not-a-beast').name, '瀑布精靈');
+  assert.equal(getBeastById('constructor').name, '瀑布精靈');
+  assert.equal(getBeastById('toString').name, '瀑布精靈');
+  assert.equal(getBeastById('__proto__').name, '瀑布精靈');
 });

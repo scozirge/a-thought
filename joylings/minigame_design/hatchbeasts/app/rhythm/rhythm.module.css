@@ -44,8 +44,20 @@
   box-shadow: -74px 52px 0 -37px #ffffff80;
 }
 
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .topbar {
-  width: min(1180px, calc(100% - 32px));
+  width: min(940px, calc(100% - 32px));
   min-height: 58px;
   margin: 0 auto;
   padding-top: max(10px, env(safe-area-inset-top));
@@ -93,19 +105,18 @@
 .stage {
   position: relative;
   isolation: isolate;
-  width: min(1180px, calc(100% - 32px));
+  width: min(940px, calc(100% - 32px));
   height: calc(100svh - 68px);
   min-height: 630px;
-  max-height: 830px;
+  max-height: 860px;
   margin: 0 auto;
   padding: 10px 0 18px;
-  display: grid;
-  grid-template-columns: minmax(260px, 0.68fr) minmax(410px, 1fr);
-  gap: 18px;
+  display: block;
 }
 
-.mascotPanel,
 .gamePanel {
+  width: 100%;
+  height: 100%;
   min-width: 0;
   border: 1.5px solid #78aeb1;
   box-shadow:
@@ -292,6 +303,7 @@
 
 .playfield {
   position: relative;
+  isolation: isolate;
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -321,9 +333,58 @@
   animation: water-fall 7s linear infinite;
 }
 
-.laneGrid {
+.playfieldBeast {
   position: absolute;
   z-index: 1;
+  top: 9%;
+  left: 50%;
+  width: min(48%, 390px);
+  height: 61%;
+  transform: translateX(-50%);
+  mix-blend-mode: multiply;
+  opacity: 0.28;
+  pointer-events: none;
+  user-select: none;
+}
+
+.beastFloat {
+  width: 100%;
+  height: 100%;
+  animation: beast-float 1.15s ease-in-out infinite alternate;
+}
+
+.beastRest,
+.beastBounce {
+  --beast-lean: 0deg;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 88%;
+}
+
+.beastBounce {
+  animation: beast-hit 220ms cubic-bezier(0.2, 0.9, 0.32, 1.24) both;
+}
+
+.beastBounce[data-lane='left'] {
+  --beast-lean: -2.5deg;
+}
+
+.beastBounce[data-lane='right'] {
+  --beast-lean: 2.5deg;
+}
+
+.playfieldBeast img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  filter: brightness(1.75) saturate(1.35) contrast(1.08);
+}
+
+.laneGrid {
+  position: absolute;
+  z-index: 2;
   inset: 0 12px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -393,8 +454,8 @@
 
 .hitLine {
   position: absolute;
-  z-index: 2;
-  top: 80%;
+  z-index: 4;
+  top: var(--hit-line-top);
   left: 8px;
   right: 8px;
   height: 4px;
@@ -421,7 +482,7 @@
 .receptors {
   position: absolute;
   z-index: 5;
-  top: 80%;
+  top: var(--hit-line-top);
   left: 12px;
   right: 12px;
   display: grid;
@@ -430,13 +491,15 @@
 }
 
 .receptor {
-  width: clamp(54px, 8.7vh, 72px);
+  width: clamp(56px, 8.4vh, 70px);
   aspect-ratio: 1;
   justify-self: center;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  place-items: center;
-  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 5px 6px;
   border: 2px solid #d9fffb;
   border-radius: 19px 15px 21px 14px / 15px 21px 16px 20px;
   color: #eafffb;
@@ -477,20 +540,25 @@
 }
 
 .receptorArrow {
-  align-self: end;
+  display: block;
   font-family: system-ui, sans-serif;
-  font-size: clamp(25px, 4.6vh, 36px);
+  font-size: clamp(26px, 4.2vh, 34px);
   font-weight: 900;
-  line-height: 0.9;
+  line-height: 1;
 }
 
 .receptorKey {
-  align-self: end;
+  display: block;
+  min-width: 21px;
+  padding: 2px 6px;
+  border-radius: 999px;
   font-family: system-ui, sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
   line-height: 1;
-  opacity: 0.78;
+  letter-spacing: 0.06em;
+  background: #ffffff17;
+  opacity: 0.86;
 }
 
 .judgement {
@@ -572,6 +640,10 @@
     inset 0 0 0 4px #ffffff;
   text-align: center;
   animation: card-arrive 0.45s ease-out both;
+}
+
+.resultCard {
+  width: min(650px, 100%);
 }
 
 .startIcon {
@@ -785,17 +857,44 @@
 }
 
 .resultActions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 13px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
 }
 
-.resultActions a {
-  min-height: 32px;
-  padding: 4px 8px;
-  color: #507278;
-  text-underline-offset: 4px;
+.resultActions .startButton,
+.resultAction {
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border-radius: 16px 12px 18px 13px / 13px 18px 12px 17px;
+  font-size: 15px;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.resultActions svg {
+  flex: 0 0 auto;
+}
+
+.resultAction {
+  border: 1.5px solid #8ebdbb;
+  color: #315f67;
+  background: #edf8f4;
+  box-shadow: 2px 3px 0 #b6d8d4;
+}
+
+.resultAction:hover {
+  color: #234f57;
+  background: #dff2ed;
 }
 
 @keyframes water-groove {
@@ -804,6 +903,32 @@
   }
   to {
     transform: translateY(-8px) rotate(1.4deg) scaleY(1.015);
+  }
+}
+
+@keyframes beast-float {
+  from {
+    transform: translateY(3px) rotate(-0.6deg);
+  }
+  to {
+    transform: translateY(-5px) rotate(0.6deg);
+  }
+}
+
+@keyframes beast-hit {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  42% {
+    transform: translateY(9px) rotate(var(--beast-lean)) scaleX(1.08)
+      scaleY(0.86);
+  }
+  72% {
+    transform: translateY(-7px) rotate(var(--beast-lean)) scaleX(0.96)
+      scaleY(1.07);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
   }
 }
 
@@ -907,7 +1032,7 @@
 
   .hud {
     min-height: 49px;
-    padding-left: 98px;
+    padding: 0 4px 8px;
     gap: 7px;
   }
 
@@ -940,6 +1065,13 @@
     min-height: 0;
   }
 
+  .playfieldBeast {
+    top: 12%;
+    width: min(72%, 330px);
+    height: 57%;
+    opacity: 0.22;
+  }
+
   .laneGrid,
   .receptors {
     left: 4px;
@@ -952,7 +1084,17 @@
   }
 
   .receptor {
-    width: clamp(49px, 8.4vh, 64px);
+    width: clamp(52px, 14.5vw, 62px);
+    gap: 2px;
+    padding: 4px 3px 3px;
+  }
+
+  .receptorArrow {
+    font-size: clamp(24px, 8vw, 31px);
+  }
+
+  .receptorKey {
+    padding: 2px 5px;
   }
 
   .controlHint {
@@ -969,6 +1111,21 @@
   .startCard,
   .resultCard {
     padding: 22px 18px 24px;
+  }
+
+  .resultCard {
+    padding-inline: 14px;
+  }
+
+  .resultActions {
+    gap: 7px;
+  }
+
+  .resultActions .startButton,
+  .resultAction {
+    min-height: 50px;
+    padding-inline: 7px;
+    font-size: 14px;
   }
 
   .startIcon {
@@ -1009,7 +1166,7 @@
   }
 
   .hud {
-    padding-left: 89px;
+    padding: 0 2px 7px;
   }
 
   .mascotPanel {
@@ -1018,7 +1175,18 @@
   }
 
   .receptor {
-    width: 48px;
+    width: 52px;
+    gap: 1px;
+    padding: 4px 3px 3px;
+    border-radius: 15px 12px 17px 11px / 12px 17px 12px 16px;
+  }
+
+  .receptorArrow {
+    font-size: 23px;
+  }
+
+  .receptorKey {
+    padding: 1px 4px;
   }
 
   .keyPreview span {
@@ -1031,6 +1199,38 @@
 
   .resultSummary strong {
     font-size: 16px;
+  }
+
+  .resultActions {
+    gap: 5px;
+  }
+
+  .resultActions .startButton,
+  .resultAction {
+    min-height: 48px;
+    gap: 4px;
+    padding-inline: 5px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 340px) {
+  .overlay {
+    overflow-y: auto;
+    place-items: start center;
+  }
+
+  .resultCard {
+    margin-block: auto;
+  }
+
+  .resultActions {
+    grid-template-columns: 1fr;
+  }
+
+  .resultActions .startButton,
+  .resultAction {
+    min-height: 44px;
   }
 }
 
@@ -1046,6 +1246,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .isDancing .mascotWrap,
+  .beastFloat,
+  .beastBounce,
   .playfield::before,
   .judgement,
   .startCard,

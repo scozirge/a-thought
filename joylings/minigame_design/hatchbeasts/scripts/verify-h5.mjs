@@ -61,19 +61,20 @@ export function verifyH5(output, basePath) {
   );
   const rhythm = readFileSync(join(root, 'rhythm', 'index.html'), 'utf8');
   assert.ok(
-    rhythm.includes('瀑布精靈音遊 Demo'),
-    'Missing rhythm game demo HTML',
+    rhythm.includes('怪獸音遊') && rhythm.includes('怪獸節拍'),
+    'Missing integrated monster rhythm game HTML',
   );
   assert.ok(
-    rhythm.includes(`${basePath}/rhythm/editor/`),
-    'Missing rhythm editor link from game demo',
+    existsSync(join(root, 'rhythm', 'editor', 'index.html')),
+    'Missing rhythm editor route',
   );
   const editor = readFileSync(
     join(root, 'rhythm', 'editor', 'index.html'),
     'utf8',
   );
   assert.ok(
-    editor.includes('瀑布精靈製譜器'),
+    editor.includes('怪獸製譜器') &&
+      editor.includes('MONSTER CHART RECORDER'),
     'Missing rhythm chart editor HTML',
   );
   for (const slug of [

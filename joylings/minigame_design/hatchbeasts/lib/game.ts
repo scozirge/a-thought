@@ -181,6 +181,15 @@ export const BEASTS: Record<string, Beast> = {
     story: '一個問題就像一道新顏色，讓世界一天比一天更繽紛。',
   },
 };
+export const DEFAULT_RHYTHM_BEAST_ID = '31';
+
+export function getBeastById(value: string | null | undefined): Beast {
+  const id = value ?? '';
+  return Object.hasOwn(BEASTS, id)
+    ? BEASTS[id]
+    : BEASTS[DEFAULT_RHYTHM_BEAST_ID];
+}
+
 export const HATCH_TAPS = 12;
 export type Stage = 'place' | 'activity' | 'egg' | 'hatching' | 'result';
 export interface GameState {

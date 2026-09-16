@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { assetUrl } from '@/lib/assets';
+import { getBeastById } from '@/lib/game';
 import {
   normalizeRhythmNotes,
   parseStoredRhythmChart,
@@ -70,6 +71,10 @@ export default function RhythmChartEditor() {
   const [message, setMessage] = useState('準備好了，可以從頭開始錄製。');
   const [audioError, setAudioError] = useState('');
   const [isStarting, setIsStarting] = useState(false);
+  const [activeBeast, setActiveBeast] = useState(() => getBeastById(null));
+  const [identityReady, setIdentityReady] = useState(false);
+  const beastQuery = `?beast=${activeBeast.id}`;
+  const visibleBeastName = identityReady ? activeBeast.name : '怪獸';
 
   const replaceNotes = useCallback((next: RhythmNote[]) => {
     notesRef.current = next;
@@ -83,6 +88,11 @@ export default function RhythmChartEditor() {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       try {
+        setActiveBeast(
+          getBeastById(
+            new URLSearchParams(window.location.search).get('beast'),
+          ),
+        );
         const saved = parseStoredRhythmChart(
           window.localStorage.getItem(RHYTHM_CUSTOM_CHART_STORAGE_KEY),
         );
@@ -93,6 +103,8 @@ export default function RhythmChartEditor() {
         }
       } catch {
         setMessage('瀏覽器目前無法讀取已儲存的譜面。');
+      } finally {
+        setIdentityReady(true);
       }
     }, 0);
     return () => window.clearTimeout(timer);
@@ -353,7 +365,7 @@ export default function RhythmChartEditor() {
       setSavedCount(normalized.length);
       setMessage(`已儲存 ${normalized.length} 顆音符。`);
       if (playAfterSaving)
-        window.location.assign(assetUrl('/rhythm/'));
+        window.location.assign(assetUrl(`/rhythm/${beastQuery}`));
     } catch {
       setMessage('瀏覽器無法儲存譜面，請確認沒有封鎖網站資料。');
     }
@@ -402,10 +414,19 @@ export default function RhythmChartEditor() {
       </audio>
 
       <header className={styles.topbar}>
-        <a className={styles.backLink} href={assetUrl('/rhythm/')}>
-          <ArrowLeft size={18} aria-hidden="true" />
-          返回音遊
-        </a>
+        {identityReady ? (
+          <a
+            className={styles.backLink}
+            href={assetUrl(`/rhythm/${beastQuery}`)}
+          >
+            <ArrowLeft size={18} aria-hidden="true" />
+            返回音遊
+          </a>
+        ) : (
+          <span className={styles.backLink} aria-live="polite">
+            怪獸載入中…
+          </span>
+        )}
         <div className={styles.songLabel}>
           <Music2 size={17} aria-hidden="true" />
           <span>I Wan&apos;na Be Like You</span>
@@ -420,8 +441,8 @@ export default function RhythmChartEditor() {
             <Waves size={27} />
           </div>
           <div>
-            <p className={styles.kicker}>WATERFALL CHART RECORDER</p>
-            <h1>瀑布精靈製譜器</h1>
+            <p className={styles.kicker}>MONSTER CHART RECORDER</p>
+            <h1>{visibleBeastName}製譜器</h1>
             <p>聽到想放音符的位置，就按方向鍵或 WASD。</p>
           </div>
         </section>
@@ -603,11 +624,13 @@ export default function RhythmChartEditor() {
             <p className={styles.kicker}>SAVE &amp; TEST</p>
             <h2 id="save-title">存成我的譜面</h2>
             <p>
-              儲存後，瀑布精靈音遊會直接讀取這份譜。音符會自動提早落下，並在你錄下的時間抵達底線。
+              儲存後，{visibleBeastName}音遊會直接讀取這份譜。音符會自動提早落下，並在你錄下的時間抵達底線。
             </p>
             <Button
               className={styles.saveAndPlayButton}
-              disabled={!notes.length || phase === 'recording'}
+              disabled={
+                !identityReady || !notes.length || phase === 'recording'
+              }
               onClick={() => saveChart(true)}
             >
               <Play size={18} fill="currentColor" aria-hidden="true" />

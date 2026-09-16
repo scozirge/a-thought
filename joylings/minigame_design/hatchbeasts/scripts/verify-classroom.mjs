@@ -84,15 +84,16 @@ export function verifyClassroom(output) {
     'Missing rhythm game link from classroom catalog',
   );
   assert.ok(
-    rhythm.includes('瀑布精靈音遊 Demo'),
-    'Missing local rhythm game demo',
+    rhythm.includes('怪獸音遊') && rhythm.includes('怪獸節拍'),
+    'Missing local integrated rhythm game',
   );
   assert.ok(
-    rhythm.includes('href="/rhythm/editor/"'),
-    'Missing local rhythm chart editor link',
+    existsSync(join(root, 'rhythm/editor/index.html')),
+    'Missing local rhythm chart editor route',
   );
   assert.ok(
-    editor.includes('瀑布精靈製譜器'),
+    editor.includes('怪獸製譜器') &&
+      editor.includes('MONSTER CHART RECORDER'),
     'Missing local rhythm chart editor',
   );
   assert.ok(

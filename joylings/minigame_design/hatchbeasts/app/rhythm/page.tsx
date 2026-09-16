@@ -10,6 +10,7 @@ import {
 } from 'react';
 import {
   ArrowLeft,
+  Egg,
   Music2,
   PencilLine,
   Play,
@@ -18,7 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { assetUrl } from '@/lib/assets';
-import { BEASTS } from '@/lib/game';
+import { getBeastById } from '@/lib/game';
 import {
   parseStoredRhythmChart,
   RHYTHM_CUSTOM_CHART_STORAGE_KEY,
@@ -34,7 +35,9 @@ import {
   recordJudgement,
   RHYTHM_CHART,
   RHYTHM_DEMO_DURATION,
+  RHYTHM_HIT_LINE_PERCENT,
   RHYTHM_LANES,
+  RHYTHM_NOTE_START_PERCENT,
   RHYTHM_TRAVEL_TIME,
   type HitJudgement,
   type RhythmLane,
@@ -54,8 +57,6 @@ const JUDGEMENT_COPY: Readonly<
   miss: { label: 'MISS', className: styles.miss },
 };
 
-const waterfallSpirit = BEASTS['31'];
-
 export default function RhythmDemo() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -70,6 +71,8 @@ export default function RhythmDemo() {
   const [judged, setJudged] = useState<Record<number, HitJudgement>>({});
   const [stats, setStats] = useState<RhythmStats>(INITIAL_RHYTHM_STATS);
   const [pressedLane, setPressedLane] = useState<RhythmLane | null>(null);
+  const [reactionSequence, setReactionSequence] = useState(0);
+  const [reactionLane, setReactionLane] = useState<RhythmLane | null>(null);
   const [feedback, setFeedback] = useState<{
     judgement: HitJudgement;
     sequence: number;
@@ -82,10 +85,16 @@ export default function RhythmDemo() {
     'default',
   );
   const [chartReady, setChartReady] = useState(false);
+  const [activeBeast, setActiveBeast] = useState(() => getBeastById(null));
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       try {
+        setActiveBeast(
+          getBeastById(
+            new URLSearchParams(window.location.search).get('beast'),
+          ),
+        );
         const saved = parseStoredRhythmChart(
           window.localStorage.getItem(RHYTHM_CUSTOM_CHART_STORAGE_KEY),
         );
@@ -104,6 +113,8 @@ export default function RhythmDemo() {
 
   const flashLane = useCallback((lane: RhythmLane) => {
     setPressedLane(lane);
+    setReactionLane(lane);
+    setReactionSequence((sequence) => sequence + 1);
     if (pressedTimerRef.current !== null)
       window.clearTimeout(pressedTimerRef.current);
     pressedTimerRef.current = window.setTimeout(() => {
@@ -294,9 +305,15 @@ export default function RhythmDemo() {
   const overlayStyle = {
     '--rhythm-paper': `url("${assetUrl('/images/storybook-paper.png')}")`,
   } as CSSProperties;
+  const playfieldStyle = {
+    '--hit-line-top': `${RHYTHM_HIT_LINE_PERCENT}%`,
+  } as CSSProperties;
+  const beastQuery = `?beast=${activeBeast.id}`;
+  const visibleBeastName = chartReady ? activeBeast.name : '怪獸';
 
   return (
     <main className={styles.world}>
+      <h1 className={styles.srOnly}>{visibleBeastName}音樂節奏遊戲</h1>
       <audio
         ref={audioRef}
         preload="auto"
@@ -316,9 +333,9 @@ export default function RhythmDemo() {
       </audio>
 
       <header className={styles.topbar}>
-        <a className={styles.backLink} href={assetUrl('/classroom/')}>
+        <a className={styles.backLink} href={assetUrl('/')}>
           <ArrowLeft size={18} aria-hidden="true" />
-          課程目錄
+          重新孵蛋
         </a>
         <div className={styles.songLabel}>
           <Music2 size={17} aria-hidden="true" />
@@ -328,38 +345,10 @@ export default function RhythmDemo() {
         </div>
       </header>
 
-      <section className={styles.stage} aria-label="瀑布精靈音樂節奏遊戲">
-        <aside
-          className={`${styles.mascotPanel} ${phase === 'playing' ? styles.isDancing : ''}`}
-        >
-          {/* oxlint-disable-next-line nextjs/no-img-element -- Existing local crayon scene. */}
-          <img
-            className={styles.waterfallScene}
-            src={assetUrl('/images/waterfall.png?v=monster-doodle-2')}
-            alt=""
-            aria-hidden="true"
-            width={1536}
-            height={1024}
-          />
-          <div className={styles.mascotGlow} aria-hidden="true" />
-          <div className={styles.mascotWrap}>
-            {/* oxlint-disable-next-line nextjs/no-img-element -- Existing local character artwork. */}
-            <img
-              className={styles.mascot}
-              src={assetUrl(`${waterfallSpirit.image}?v=beasts-5`)}
-              alt={waterfallSpirit.appearance}
-              width={1254}
-              height={1254}
-              draggable={false}
-            />
-          </div>
-          <div className={styles.mascotCopy}>
-            <span className={styles.demoBadge}>RHYTHM DEMO</span>
-            <h1>瀑布精靈</h1>
-            <p>跟著水花，接住每一拍。</p>
-          </div>
-        </aside>
-
+      <section
+        className={styles.stage}
+        aria-label={`${visibleBeastName}音樂節奏遊戲`}
+      >
         <section className={styles.gamePanel}>
           <div className={styles.hud}>
             <div>
@@ -384,7 +373,33 @@ export default function RhythmDemo() {
             className={styles.playfield}
             data-phase={phase}
             aria-describedby="rhythm-controls"
+            style={playfieldStyle}
           >
+            {chartReady && (
+              <div className={styles.playfieldBeast} aria-hidden="true">
+                <div className={styles.beastFloat}>
+                  <div
+                    className={
+                      reactionSequence > 0
+                        ? styles.beastBounce
+                        : styles.beastRest
+                    }
+                    data-lane={reactionLane ?? 'rest'}
+                    key={reactionSequence}
+                  >
+                    {/* oxlint-disable-next-line nextjs/no-img-element -- White paper is removed visually with multiply blend while preserving the original drawing. */}
+                    <img
+                      src={assetUrl(`${activeBeast.image}?v=beasts-5`)}
+                      alt=""
+                      width={1024}
+                      height={1024}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className={styles.laneGrid} aria-hidden="true">
               {RHYTHM_LANES.map((lane) => (
                 <div
@@ -397,7 +412,10 @@ export default function RhythmDemo() {
                       const travelProgress =
                         1 - (note.hitTime - songTime) / RHYTHM_TRAVEL_TIME;
                       const noteTop =
-                        4 + Math.max(0, Math.min(1.14, travelProgress)) * 76;
+                        RHYTHM_NOTE_START_PERCENT +
+                        Math.max(0, Math.min(1.14, travelProgress)) *
+                          (RHYTHM_HIT_LINE_PERCENT -
+                            RHYTHM_NOTE_START_PERCENT);
                       return (
                         <span
                           className={styles.note}
@@ -437,6 +455,7 @@ export default function RhythmDemo() {
                   type="button"
                   disabled={phase !== 'playing'}
                   aria-label={`${lane.label}方向，鍵盤 ${lane.key} 或 ${lane.arrow}`}
+                  aria-describedby="rhythm-controls"
                   onPointerDown={(event) => {
                     event.preventDefault();
                     hitLane(lane.id);
@@ -463,21 +482,25 @@ export default function RhythmDemo() {
               <div className={styles.startIcon} aria-hidden="true">
                 <Waves size={32} />
               </div>
-              <p className={styles.kicker}>59 秒試玩</p>
-              <h2 id="rhythm-title">水花節拍</h2>
+              <p className={styles.kicker}>{visibleBeastName} · 59 秒</p>
+              <h2 id="rhythm-title">怪獸節拍</h2>
               <p className={styles.instructions}>
                 音符到底線時，按下同方向的鍵。
               </p>
               <div className={styles.chartSource}>
                 <span>
-                  {chartSource === 'custom'
-                    ? `我的錄製譜面 · ${activeChart.length} 顆`
-                    : `示範譜面 · ${activeChart.length} 顆`}
+                  {!chartReady
+                    ? '譜面載入中…'
+                    : chartSource === 'custom'
+                      ? `我的錄製譜面 · ${activeChart.length} 顆`
+                      : `示範譜面 · ${activeChart.length} 顆`}
                 </span>
-                <a href={assetUrl('/rhythm/editor/')}>
-                  <PencilLine size={15} aria-hidden="true" />
-                  錄製／編輯譜面
-                </a>
+                {chartReady && (
+                  <a href={assetUrl(`/rhythm/editor/${beastQuery}`)}>
+                    <PencilLine size={15} aria-hidden="true" />
+                    錄製／編輯譜面
+                  </a>
+                )}
               </div>
               <div className={styles.keyPreview} aria-label="操作鍵">
                 {RHYTHM_LANES.map((lane) => (
@@ -513,7 +536,7 @@ export default function RhythmDemo() {
                 {rank}
               </div>
               <h2 id="result-title" ref={resultTitleRef} tabIndex={-1}>
-                瀑布精靈在替你拍手！
+                {activeBeast.name}在替你拍手！
               </h2>
               <div className={styles.resultSummary}>
                 <div>
@@ -548,11 +571,28 @@ export default function RhythmDemo() {
                 </div>
               </dl>
               <div className={styles.resultActions}>
-                <Button className={styles.startButton} size="lg" onClick={startGame}>
+                <a
+                  className={styles.resultAction}
+                  href={assetUrl('/')}
+                >
+                  <Egg size={18} aria-hidden="true" />
+                  重新孵蛋
+                </a>
+                <Button
+                  className={styles.startButton}
+                  size="lg"
+                  onClick={startGame}
+                >
                   <RotateCcw size={18} aria-hidden="true" />
-                  再玩一次
+                  重新演奏
                 </Button>
-                <a href={assetUrl('/classroom/')}>回到課程目錄</a>
+                <a
+                  className={styles.resultAction}
+                  href={assetUrl(`/rhythm/editor/${beastQuery}`)}
+                >
+                  <PencilLine size={18} aria-hidden="true" />
+                  製譜
+                </a>
               </div>
             </section>
           </div>

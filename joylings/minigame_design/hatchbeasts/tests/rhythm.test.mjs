@@ -12,7 +12,9 @@ import {
   RHYTHM_CHART,
   RHYTHM_CHART_OFFSET,
   RHYTHM_DEMO_DURATION,
+  RHYTHM_HIT_LINE_PERCENT,
   RHYTHM_LANES,
+  RHYTHM_NOTE_START_PERCENT,
 } from '../lib/rhythm.ts';
 
 test('方向鍵和 WASD 映射到同四軌', () => {
@@ -59,6 +61,13 @@ test('譜面補上音訊起音偏移，淡出開始後不再出現音符', () =>
   assert.equal(RHYTHM_CHART[0].hitTime, 2.563);
   assert.equal(RHYTHM_CHART.at(-1).hitTime, 54.935);
   assert.ok(RHYTHM_CHART.every((note) => note.hitTime < 55));
+});
+
+test('視覺音符從頂端落到上移後的判定線', () => {
+  assert.equal(RHYTHM_NOTE_START_PERCENT, 4);
+  assert.equal(RHYTHM_HIT_LINE_PERCENT, 73);
+  assert.ok(RHYTHM_NOTE_START_PERCENT < RHYTHM_HIT_LINE_PERCENT);
+  assert.ok(RHYTHM_HIT_LINE_PERCENT < 100);
 });
 
 test('分數、連擊、準確率與評級正確累積', () => {

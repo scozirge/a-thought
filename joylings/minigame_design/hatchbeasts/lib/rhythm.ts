@@ -1,6 +1,8 @@
 export const RHYTHM_DEMO_DURATION = 59;
 export const RHYTHM_TRAVEL_TIME = 1.85;
 export const RHYTHM_CHART_OFFSET = 0.055;
+export const RHYTHM_NOTE_START_PERCENT = 4;
+export const RHYTHM_HIT_LINE_PERCENT = 73;
 
 export type RhythmLane = 'left' | 'down' | 'up' | 'right';
 export type HitJudgement = 'perfect' | 'great' | 'good' | 'miss';

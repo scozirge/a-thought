@@ -1,8 +1,13 @@
 'use client';
 
-import { useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import type { CSSProperties } from 'react';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import {
+  ArrowLeft,
+  PencilLine,
+  Play,
+  RotateCcw,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { assetUrl } from '@/lib/assets';
@@ -76,6 +81,7 @@ export default function Home() {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const previousStage = useRef(state.stage);
+  const eggAudioContextRef = useRef<AudioContext | null>(null);
   const beast = getBeast(state);
   const isQuestion = state.stage === 'place' || state.stage === 'activity';
   const selected = state.stage === 'place' ? state.place : state.activity;
@@ -87,6 +93,62 @@ export default function Home() {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [state.stage]);
+  useEffect(
+    () => () => {
+      const context = eggAudioContextRef.current;
+      if (context && context.state !== 'closed')
+        void context.close().catch(() => undefined);
+    },
+    [],
+  );
+
+  const playEggTapSound = useCallback((tapCount: number) => {
+    try {
+      const context =
+        eggAudioContextRef.current ??
+        (eggAudioContextRef.current = new AudioContext());
+      if (context.state === 'suspended')
+        void context.resume().catch(() => undefined);
+      const start = context.currentTime + 0.004;
+      const isFinalTap = tapCount + 1 >= HATCH_TAPS;
+
+      const playTone = (
+        type: OscillatorType,
+        frequency: number,
+        volume: number,
+        duration: number,
+        endFrequency: number,
+      ) => {
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        oscillator.frequency.exponentialRampToValueAtTime(
+          endFrequency,
+          start + duration,
+        );
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + 0.015);
+      };
+
+      const pitch = isFinalTap ? 560 : 285 + tapCount * 12;
+      playTone(
+        'triangle',
+        pitch,
+        isFinalTap ? 0.12 : 0.085,
+        0.13,
+        pitch * 0.72,
+      );
+      playTone('sine', 135 + tapCount * 2, 0.05, 0.09, 88);
+      if (isFinalTap) playTone('square', 920, 0.022, 0.07, 180);
+    } catch {
+      // Sound is an enhancement; hatching must still work if Web Audio is unavailable.
+    }
+  }, []);
   useEffect(() => {
     if (state.stage !== 'hatching') return;
     const timer = window.setTimeout(() => dispatch({ type: 'REVEAL' }), 1100);
@@ -188,7 +250,10 @@ export default function Home() {
                 <div className="egg-arrival">
                   <button
                     className="egg-button"
-                    onClick={() => dispatch({ type: 'TAP' })}
+                    onClick={() => {
+                      playEggTapSound(state.taps);
+                      dispatch({ type: 'TAP' });
+                    }}
                     disabled={state.stage === 'hatching'}
                     onKeyDown={(event) => {
                       if (
@@ -249,12 +314,33 @@ export default function Home() {
                     draggable={false}
                   />
                 </div>
-                <Button
-                  className="primary-button replay-button"
-                  onClick={() => dispatch({ type: 'RESET' })}
-                >
-                  <RotateCcw size={17} /> 再孵一顆蛋
-                </Button>
+                <div className="beast-next-actions">
+                  <p>想和{beast.name}一起做什麼？</p>
+                  <div className="beast-primary-actions">
+                    <a
+                      className="beast-action beast-action-primary"
+                      href={assetUrl(`/rhythm/?beast=${beast.id}`)}
+                    >
+                      <Play size={18} fill="currentColor" aria-hidden="true" />
+                      開始演奏
+                    </a>
+                    <a
+                      className="beast-action beast-action-secondary"
+                      href={assetUrl(`/rhythm/editor/?beast=${beast.id}`)}
+                    >
+                      <PencilLine size={18} aria-hidden="true" />
+                      製譜
+                    </a>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="rehatch-button"
+                    onClick={() => dispatch({ type: 'RESET' })}
+                  >
+                    <RotateCcw size={16} aria-hidden="true" />
+                    重新孵蛋
+                  </Button>
+                </div>
               </>
             )}
           </section>
