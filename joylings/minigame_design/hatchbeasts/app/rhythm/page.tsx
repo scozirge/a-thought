@@ -376,7 +376,11 @@ export default function RhythmDemo() {
             style={playfieldStyle}
           >
             {chartReady && (
-              <div className={styles.playfieldBeast} aria-hidden="true">
+              <div
+                className={styles.playfieldBeast}
+                data-beast={activeBeast.id}
+                aria-hidden="true"
+              >
                 <div className={styles.beastFloat}>
                   <div
                     className={

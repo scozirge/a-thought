@@ -334,6 +334,9 @@
 }
 
 .playfieldBeast {
+  --beast-backdrop-opacity: 0.34;
+  --beast-backdrop-mobile-opacity: 0.3;
+  --beast-backdrop-filter: brightness(0.9) saturate(1.15) contrast(1.4);
   position: absolute;
   z-index: 1;
   top: 9%;
@@ -342,9 +345,25 @@
   height: 61%;
   transform: translateX(-50%);
   mix-blend-mode: multiply;
-  opacity: 0.28;
+  opacity: var(--beast-backdrop-opacity);
   pointer-events: none;
   user-select: none;
+}
+
+.playfieldBeast[data-beast='21'] {
+  --beast-backdrop-opacity: 0.2;
+  --beast-backdrop-mobile-opacity: 0.18;
+}
+
+.playfieldBeast[data-beast='31'] {
+  --beast-backdrop-opacity: 0.42;
+  --beast-backdrop-mobile-opacity: 0.36;
+  --beast-backdrop-filter: brightness(0.7) saturate(1.05) contrast(3);
+}
+
+.playfieldBeast[data-beast='32'] {
+  --beast-backdrop-opacity: 0.38;
+  --beast-backdrop-mobile-opacity: 0.34;
 }
 
 .beastFloat {
@@ -379,7 +398,7 @@
   height: 100%;
   object-fit: contain;
   mix-blend-mode: normal;
-  filter: brightness(1.75) saturate(1.35) contrast(1.08);
+  filter: var(--beast-backdrop-filter);
 }
 
 .laneGrid {
@@ -1069,7 +1088,7 @@
     top: 12%;
     width: min(72%, 330px);
     height: 57%;
-    opacity: 0.22;
+    opacity: var(--beast-backdrop-mobile-opacity);
   }
 
   .laneGrid,
