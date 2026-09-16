@@ -102,6 +102,54 @@
   letter-spacing: 0.02em;
 }
 
+.topbarTools {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.quickVolume {
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: auto auto minmax(72px, 100px) 4ch;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 9px;
+  border: 1px solid #94c7c5;
+  border-radius: 14px 11px 15px 12px;
+  color: #315f67;
+  background: #ffffff9e;
+  font: 600 12px system-ui, sans-serif;
+}
+
+.quickVolume svg {
+  flex: none;
+}
+
+.quickVolume input {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  margin: 0;
+  accent-color: #2f7a82;
+  cursor: pointer;
+}
+
+.quickVolume input:focus-visible,
+.volumeRange:focus-visible {
+  outline: 3px solid #276a76;
+  outline-offset: 2px;
+}
+
+.quickVolume output {
+  text-align: right;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .stage {
   position: relative;
   isolation: isolate;
@@ -734,6 +782,165 @@
   background: #dff4ef;
 }
 
+.playbackSettings {
+  width: min(390px, 100%);
+  margin: 0 auto 17px;
+  padding: 11px 13px 12px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid #b6d8d4;
+  border-radius: 15px 11px 16px 12px;
+  color: #315f67;
+  background: #eff8f5d9;
+  font-family: system-ui, sans-serif;
+  text-align: left;
+}
+
+.playbackSettings[data-disabled='true'] {
+  opacity: 0.72;
+}
+
+.settingsHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #3d6d75;
+}
+
+.settingsHeading h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.volumeRow {
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 4ch;
+  align-items: center;
+  gap: 9px;
+}
+
+.volumeRow label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.volumeRange {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  accent-color: #2f7a82;
+  cursor: pointer;
+}
+
+.volumeRow output {
+  text-align: right;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.speedField {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.speedField legend {
+  padding: 0 0 6px;
+  color: #55777c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.speedOptions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.speedChoice {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.speedChoice span {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0 4px;
+  border: 1px solid #8ebdbb;
+  border-radius: 10px 8px 11px 9px;
+  color: #315f67;
+  background: #f9fffd;
+  box-shadow: 1px 2px #c6dfdc;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.speedChoice:hover span {
+  background: #e2f3ef;
+}
+
+.speedChoice[data-selected='true'] span {
+  border-color: #245d65;
+  color: #f5fffc;
+  background: #2f7a82;
+  box-shadow: 2px 2px #1d5158;
+}
+
+.speedChoice:has(.speedRadio:focus-visible) span {
+  outline: 3px solid #276a76;
+  outline-offset: 2px;
+}
+
+.speedChoice:has(.speedRadio[data-disabled]) {
+  cursor: default;
+}
+
+.playbackSettings[data-disabled='true'] .volumeRange {
+  cursor: default;
+}
+
+.playbackSettings[data-disabled='true'] .speedChoice:hover span {
+  background: #f9fffd;
+}
+
+.playbackSettings[data-disabled='true']
+  .speedChoice[data-selected='true']:hover
+  span {
+  background: #2f7a82;
+}
+
+.speedRadio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+.settingsHint {
+  margin: 0;
+  color: #6b8589;
+  text-align: center;
+  font-size: 11px;
+}
+
 .keyPreview {
   display: flex;
   justify-content: center;
@@ -995,11 +1202,29 @@
   .topbar {
     width: calc(100% - 20px);
     min-height: 51px;
+    gap: 8px;
   }
 
-  .songLabel span:first-of-type,
-  .songLabel span:nth-of-type(2) {
+  .songLabel {
     display: none;
+  }
+
+  .topbarTools {
+    gap: 6px;
+  }
+
+  .quickVolume {
+    grid-template-columns: auto minmax(60px, 78px) 3.5ch;
+    gap: 5px;
+    padding: 3px 7px;
+  }
+
+  .quickVolume > span {
+    display: none;
+  }
+
+  .quickVolume output {
+    font-size: 10px;
   }
 
   .stage {
@@ -1120,12 +1345,15 @@
 
   .overlay {
     inset: 4px 0 max(8px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    place-items: start center;
     padding: 12px;
     border-radius: 21px;
   }
 
   .startCard,
   .resultCard {
+    margin-block: auto;
     padding: 22px 18px 24px;
   }
 
@@ -1153,9 +1381,28 @@
     margin-bottom: 14px;
   }
 
+  .chartSource {
+    margin-bottom: 12px;
+  }
+
+  .playbackSettings {
+    margin-bottom: 14px;
+    padding: 9px 10px 10px;
+    gap: 7px;
+  }
+
+  .speedOptions {
+    gap: 4px;
+  }
+
+  .speedChoice span {
+    padding-inline: 2px;
+    font-size: 12px;
+  }
+
   .keyPreview {
     gap: 6px;
-    margin-bottom: 19px;
+    margin-bottom: 14px;
   }
 
   .keyPreview span {
@@ -1171,6 +1418,11 @@
 
   .backLink {
     font-size: 14px;
+  }
+
+  .quickVolume {
+    grid-template-columns: auto 62px 4ch;
+    padding-inline: 5px;
   }
 
   .stage {
@@ -1231,15 +1483,6 @@
 }
 
 @media (max-width: 340px) {
-  .overlay {
-    overflow-y: auto;
-    place-items: start center;
-  }
-
-  .resultCard {
-    margin-block: auto;
-  }
-
   .resultActions {
     grid-template-columns: 1fr;
   }
@@ -1253,6 +1496,16 @@
 @media (max-height: 690px) and (min-width: 761px) {
   .stage {
     min-height: 600px;
+  }
+
+  .overlay {
+    overflow-y: auto;
+    place-items: start center;
+  }
+
+  .startCard,
+  .resultCard {
+    margin-block: auto;
   }
 
   .mascotCopy p {

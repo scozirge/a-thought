@@ -1,13 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  clampRhythmVolume,
+  DEFAULT_RHYTHM_SETTINGS,
   formatRhythmTime,
   getAccuracy,
+  getRhythmNoteTop,
   getResultRank,
   INITIAL_RHYTHM_STATS,
+  isRhythmPlaybackRate,
   JUDGEMENT_WINDOWS,
   judgeTiming,
   laneFromCode,
+  parseStoredRhythmSettings,
   recordJudgement,
   RHYTHM_CHART,
   RHYTHM_CHART_OFFSET,
@@ -15,6 +20,8 @@ import {
   RHYTHM_HIT_LINE_PERCENT,
   RHYTHM_LANES,
   RHYTHM_NOTE_START_PERCENT,
+  RHYTHM_PLAYBACK_RATES,
+  RHYTHM_TRAVEL_TIME,
 } from '../lib/rhythm.ts';
 
 test('方向鍵和 WASD 映射到同四軌', () => {
@@ -68,6 +75,39 @@ test('視覺音符從頂端落到上移後的判定線', () => {
   assert.equal(RHYTHM_HIT_LINE_PERCENT, 73);
   assert.ok(RHYTHM_NOTE_START_PERCENT < RHYTHM_HIT_LINE_PERCENT);
   assert.ok(RHYTHM_HIT_LINE_PERCENT < 100);
+  assert.ok(
+    Math.abs(getRhythmNoteTop(10, 10 - RHYTHM_TRAVEL_TIME) - 4) < 1e-9,
+  );
+  assert.ok(Math.abs(getRhythmNoteTop(10, 10) - 73) < 1e-9);
+  assert.equal(getRhythmNoteTop(10, 0), 4);
+  assert.ok(getRhythmNoteTop(10, 10.4) > RHYTHM_HIT_LINE_PERCENT);
+});
+
+test('節奏速度只接受指定倍率', () => {
+  assert.deepEqual(RHYTHM_PLAYBACK_RATES, [1, 1.2, 1.5, 2, 3]);
+  for (const rate of RHYTHM_PLAYBACK_RATES)
+    assert.equal(isRhythmPlaybackRate(rate), true);
+  for (const invalid of [0, 1.1, 4, Number.NaN, Number.POSITIVE_INFINITY, '2'])
+    assert.equal(isRhythmPlaybackRate(invalid), false);
+});
+
+test('音量與倍速設定能安全還原', () => {
+  assert.deepEqual(parseStoredRhythmSettings(null), DEFAULT_RHYTHM_SETTINGS);
+  assert.deepEqual(parseStoredRhythmSettings('{'), DEFAULT_RHYTHM_SETTINGS);
+  assert.deepEqual(
+    parseStoredRhythmSettings(
+      JSON.stringify({ volume: 0.45, playbackRate: 1.5 }),
+    ),
+    { volume: 0.45, playbackRate: 1.5 },
+  );
+  assert.deepEqual(
+    parseStoredRhythmSettings(
+      JSON.stringify({ volume: -2, playbackRate: 1.1 }),
+    ),
+    { volume: 0, playbackRate: 1 },
+  );
+  assert.equal(clampRhythmVolume(2), 1);
+  assert.equal(clampRhythmVolume(Number.NaN), 1);
 });
 
 test('分數、連擊、準確率與評級正確累積', () => {

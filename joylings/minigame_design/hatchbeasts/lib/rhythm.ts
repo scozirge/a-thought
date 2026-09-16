@@ -3,9 +3,14 @@ export const RHYTHM_TRAVEL_TIME = 1.85;
 export const RHYTHM_CHART_OFFSET = 0.055;
 export const RHYTHM_NOTE_START_PERCENT = 4;
 export const RHYTHM_HIT_LINE_PERCENT = 73;
+export const RHYTHM_PLAYBACK_RATES = [1, 1.2, 1.5, 2, 3] as const;
+export const RHYTHM_SETTINGS_STORAGE_KEY =
+  'hatchbeasts-rhythm-settings-v1';
+export const DEFAULT_RHYTHM_VOLUME = 1;
 
 export type RhythmLane = 'left' | 'down' | 'up' | 'right';
 export type HitJudgement = 'perfect' | 'great' | 'good' | 'miss';
+export type RhythmPlaybackRate = (typeof RHYTHM_PLAYBACK_RATES)[number];
 
 export interface RhythmLaneDefinition {
   id: RhythmLane;
@@ -28,6 +33,49 @@ export interface RhythmStats {
   great: number;
   good: number;
   miss: number;
+}
+
+export interface RhythmSettings {
+  volume: number;
+  playbackRate: RhythmPlaybackRate;
+}
+
+export const DEFAULT_RHYTHM_SETTINGS: Readonly<RhythmSettings> = {
+  volume: DEFAULT_RHYTHM_VOLUME,
+  playbackRate: 1,
+};
+
+export function isRhythmPlaybackRate(
+  value: unknown,
+): value is RhythmPlaybackRate {
+  return (
+    typeof value === 'number' &&
+    RHYTHM_PLAYBACK_RATES.some((rate) => rate === value)
+  );
+}
+
+export function clampRhythmVolume(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value))
+    return DEFAULT_RHYTHM_VOLUME;
+  return Math.max(0, Math.min(1, value));
+}
+
+export function parseStoredRhythmSettings(raw: string | null): RhythmSettings {
+  if (!raw) return { ...DEFAULT_RHYTHM_SETTINGS };
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+      return { ...DEFAULT_RHYTHM_SETTINGS };
+    const settings = parsed as Record<string, unknown>;
+    return {
+      volume: clampRhythmVolume(settings.volume),
+      playbackRate: isRhythmPlaybackRate(settings.playbackRate)
+        ? settings.playbackRate
+        : DEFAULT_RHYTHM_SETTINGS.playbackRate,
+    };
+  } catch {
+    return { ...DEFAULT_RHYTHM_SETTINGS };
+  }
 }
 
 export const RHYTHM_LANES: readonly RhythmLaneDefinition[] = [
@@ -120,6 +168,15 @@ export function formatRhythmTime(seconds: number): string {
   const safeSeconds = Math.max(0, Math.min(RHYTHM_DEMO_DURATION, seconds));
   const whole = Math.floor(safeSeconds);
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
+}
+
+export function getRhythmNoteTop(hitTime: number, songTime: number): number {
+  const travelProgress = 1 - (hitTime - songTime) / RHYTHM_TRAVEL_TIME;
+  return (
+    RHYTHM_NOTE_START_PERCENT +
+    Math.max(0, Math.min(1.14, travelProgress)) *
+      (RHYTHM_HIT_LINE_PERCENT - RHYTHM_NOTE_START_PERCENT)
+  );
 }
 
 const CHART_SECTIONS: readonly {
