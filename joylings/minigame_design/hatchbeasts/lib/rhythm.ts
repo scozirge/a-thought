@@ -1,5 +1,6 @@
 export const RHYTHM_DEMO_DURATION = 59;
 export const RHYTHM_TRAVEL_TIME = 1.85;
+export const RHYTHM_CHART_OFFSET = 0.055;
 
 export type RhythmLane = 'left' | 'down' | 'up' | 'right';
 export type HitJudgement = 'perfect' | 'great' | 'good' | 'miss';
@@ -161,8 +162,7 @@ const CHART_SECTIONS: readonly {
   },
   {
     times: [
-      51.769, 52.35, 52.93, 53.51, 54.404, 54.88, 55.821, 56.703,
-      58.143,
+      51.769, 52.35, 52.93, 53.51, 54.404, 54.88,
     ],
     pattern: ['left', 'up', 'right', 'down', 'left', 'right', 'up', 'down'],
   },
@@ -173,6 +173,6 @@ export const RHYTHM_CHART: readonly RhythmNote[] = CHART_SECTIONS.flatMap(
     times.map((hitTime, index) => ({
       id: 0,
       lane: pattern[index % pattern.length],
-      hitTime,
+      hitTime: Number((hitTime + RHYTHM_CHART_OFFSET).toFixed(3)),
     })),
 ).map((note, id) => ({ ...note, id }));

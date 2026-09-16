@@ -10,6 +10,7 @@ import {
   laneFromCode,
   recordJudgement,
   RHYTHM_CHART,
+  RHYTHM_CHART_OFFSET,
   RHYTHM_DEMO_DURATION,
   RHYTHM_LANES,
 } from '../lib/rhythm.ts';
@@ -51,6 +52,13 @@ test('譜面在 59 秒內且四個方向都有音符', () => {
     new Set(RHYTHM_CHART.map((note) => note.lane)),
     new Set(RHYTHM_LANES.map((lane) => lane.id)),
   );
+});
+
+test('譜面補上音訊起音偏移，淡出開始後不再出現音符', () => {
+  assert.equal(RHYTHM_CHART_OFFSET, 0.055);
+  assert.equal(RHYTHM_CHART[0].hitTime, 2.563);
+  assert.equal(RHYTHM_CHART.at(-1).hitTime, 54.935);
+  assert.ok(RHYTHM_CHART.every((note) => note.hitTime < 55));
 });
 
 test('分數、連擊、準確率與評級正確累積', () => {
