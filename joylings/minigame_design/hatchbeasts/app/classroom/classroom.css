@@ -108,8 +108,22 @@ body:has(.classroom-shell) {
   transform: rotate(-2deg);
   box-shadow: 0 3px 0 #e7ca7938;
 }
-.catalog-game-link {
+.catalog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 18px;
+}
+.catalog-game-link {
+  margin-top: 0;
+}
+.catalog-rhythm-link {
+  background: #477f87;
+  border-color: #477f87;
+  box-shadow: 2px 3px 0 #a9cccb;
+}
+.catalog-rhythm-link:hover {
+  background: #356770;
 }
 .catalog-illustration {
   width: 300px;
@@ -713,6 +727,8 @@ body:has(.classroom-shell) {
     font-size: 14px;
   }
   .catalog-intro {
+    position: relative;
+    display: block;
     min-height: 218px;
   }
   .catalog-intro h1 {
@@ -720,7 +736,15 @@ body:has(.classroom-shell) {
     white-space: nowrap;
   }
   .catalog-illustration {
-    width: 120px;
+    position: absolute;
+    top: 8px;
+    right: 0;
+    width: 112px;
+    height: 124px;
+  }
+  .catalog-illustration img {
+    object-fit: cover;
+    object-position: right center;
   }
   .featured-link {
     padding: 17px 10px 17px 15px;

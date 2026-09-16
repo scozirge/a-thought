@@ -39,6 +39,9 @@ for (const file of ['index.html', 'index.rsc']) {
   cpSync(join(client, file), join(output, file));
 }
 cpSync(join(client, basePath.replace(/^\//, ''), '_next'), join(output, '_next'), { recursive: true });
+mkdirSync(join(output, 'rhythm'), { recursive: true });
+cpSync(join(client, 'rhythm.html'), join(output, 'rhythm', 'index.html'));
+cpSync(join(client, 'rhythm.rsc'), join(output, 'rhythm.rsc'));
 for (const slug of [
   '',
   'experience',

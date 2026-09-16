@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronDown, Gamepad2 } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
@@ -14,16 +14,26 @@ export default function ClassroomHome() {
             <h1>
               遊戲<span className="crayon-underline">設計</span>
             </h1>
-            <a
-              className="course-button catalog-game-link"
-              href={GAME_PUBLIC_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Gamepad2 size={20} aria-hidden="true" />
-              玩破殼怪獸 {GAME_VERSION}
-              <ArrowUpRight size={18} aria-hidden="true" />
-            </a>
+            <div className="catalog-actions">
+              <a
+                className="course-button catalog-game-link"
+                href={GAME_PUBLIC_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Gamepad2 size={20} aria-hidden="true" />
+                玩破殼怪獸 {GAME_VERSION}
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
+              <a
+                className="course-button catalog-rhythm-link"
+                href={assetUrl('/rhythm/')}
+              >
+                <Music2 size={20} aria-hidden="true" />
+                玩瀑布精靈音遊 Demo
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
+            </div>
           </div>
           <div className="catalog-illustration" aria-hidden="true">
             {/* oxlint-disable-next-line nextjs/no-img-element -- Reuse the game's local crayon illustration as a decorative asset. */}

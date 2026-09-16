@@ -62,6 +62,7 @@ export function verifyClassroom(output) {
     'utf8',
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
+  const rhythm = readFileSync(join(root, 'rhythm/index.html'), 'utf8');
   const publicGame = 'https://scozirge.github.io/a-thought/hatchbeasts/v1/';
   for (const html of [catalog, lesson]) {
     assert.ok(
@@ -73,6 +74,21 @@ export function verifyClassroom(output) {
     catalog.includes('<details') && catalog.includes('<summary'),
     'Missing native activity disclosure',
   );
+  assert.ok(
+    catalog.includes('href="/rhythm/"') &&
+      catalog.includes('玩瀑布精靈音遊 Demo'),
+    'Missing rhythm game link from classroom catalog',
+  );
+  assert.ok(
+    rhythm.includes('瀑布精靈音遊 Demo'),
+    'Missing local rhythm game demo',
+  );
+  assert.ok(
+    existsSync(join(root, 'audio/i-wanna-be-like-you-demo.mp3')),
+    'Missing local rhythm game audio',
+  );
+  for (const match of rhythm.matchAll(/(?:src|href)="([^"]+)"/g))
+    checkReference(match[1], 'http://localhost/rhythm/');
   for (const activity of [
     '玩目前遊戲',
     '發想更多選項與怪物',

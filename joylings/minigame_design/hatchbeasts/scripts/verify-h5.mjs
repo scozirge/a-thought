@@ -59,6 +59,11 @@ export function verifyH5(output, basePath) {
     !classroom.includes('我們的創作課'),
     'Classroom catalog still contains the removed eyebrow',
   );
+  const rhythm = readFileSync(join(root, 'rhythm', 'index.html'), 'utf8');
+  assert.ok(
+    rhythm.includes('瀑布精靈音遊 Demo'),
+    'Missing rhythm game demo HTML',
+  );
   for (const slug of [
     'experience',
     'planning',
@@ -88,6 +93,7 @@ export function verifyH5(output, basePath) {
   for (const id of ['11', '12', '13', '21', '22', '23', '31', '32', '33']) {
     checkUrl(`${basePath}/images/beasts/${id}.png`);
   }
+  checkUrl(`${basePath}/audio/i-wanna-be-like-you-demo.mp3`);
   assert.ok(references > 10, 'Expected HTML and CSS asset references');
   console.log(
     `Verified ${references} H5 references for the game and unversioned classroom catalog.`,

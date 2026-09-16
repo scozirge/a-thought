@@ -45,6 +45,8 @@ for (const slug of [
   mkdirSync(join(output, route), { recursive: true });
   renameSync(join(output, `${route}.html`), join(output, route, 'index.html'));
 }
+mkdirSync(join(output, 'rhythm'), { recursive: true });
+renameSync(join(output, 'rhythm.html'), join(output, 'rhythm', 'index.html'));
 writeFileSync(
   join(output, 'START.txt'),
   [
@@ -55,6 +57,7 @@ writeFileSync(
     '',
     '課堂目錄：http://localhost:4317/classroom/',
     '破殼怪獸：http://localhost:4317/',
+    '瀑布精靈音遊 Demo：http://localhost:4317/rhythm/',
     '',
     '請透過本機 HTTP 伺服器開啟，避免直接雙擊 HTML 時瀏覽器限制 JavaScript 模組載入。',
     '圖片、字型、程式與遊戲都在此資料夾內，啟動後不需要外部服務。',
