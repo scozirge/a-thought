@@ -334,9 +334,10 @@
 }
 
 .playfieldBeast {
-  --beast-backdrop-opacity: 0.34;
-  --beast-backdrop-mobile-opacity: 0.3;
-  --beast-backdrop-filter: brightness(0.9) saturate(1.15) contrast(1.4);
+  --beast-backdrop-opacity: 0.58;
+  --beast-backdrop-mobile-opacity: 0.52;
+  --beast-backdrop-filter: invert(1) hue-rotate(180deg) brightness(1.35)
+    saturate(1.45) contrast(1.15);
   position: absolute;
   z-index: 1;
   top: 9%;
@@ -344,26 +345,22 @@
   width: min(48%, 390px);
   height: 61%;
   transform: translateX(-50%);
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
   opacity: var(--beast-backdrop-opacity);
   pointer-events: none;
   user-select: none;
 }
 
 .playfieldBeast[data-beast='21'] {
-  --beast-backdrop-opacity: 0.2;
-  --beast-backdrop-mobile-opacity: 0.18;
+  --beast-backdrop-opacity: 0.45;
+  --beast-backdrop-mobile-opacity: 0.42;
 }
 
 .playfieldBeast[data-beast='31'] {
-  --beast-backdrop-opacity: 0.42;
-  --beast-backdrop-mobile-opacity: 0.36;
-  --beast-backdrop-filter: brightness(0.7) saturate(1.05) contrast(3);
-}
-
-.playfieldBeast[data-beast='32'] {
-  --beast-backdrop-opacity: 0.38;
-  --beast-backdrop-mobile-opacity: 0.34;
+  --beast-backdrop-opacity: 0.68;
+  --beast-backdrop-mobile-opacity: 0.62;
+  --beast-backdrop-filter: invert(1) hue-rotate(180deg) brightness(1.7)
+    saturate(1.5) contrast(1.1);
 }
 
 .beastFloat {
