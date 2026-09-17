@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { DEFAULT_RHYTHM_CHART_SOURCE } from '../lib/default-rhythm-chart.ts';
 import {
   clampRhythmVolume,
   DEFAULT_RHYTHM_SETTINGS,
@@ -15,7 +16,6 @@ import {
   parseStoredRhythmSettings,
   recordJudgement,
   RHYTHM_CHART,
-  RHYTHM_CHART_OFFSET,
   RHYTHM_DEMO_DURATION,
   RHYTHM_HIT_LINE_PERCENT,
   RHYTHM_LANES,
@@ -47,7 +47,7 @@ test('判定窗在邊界內生效，超過 Good 不命中', () => {
 });
 
 test('譜面在 59 秒內且四個方向都有音符', () => {
-  assert.ok(RHYTHM_CHART.length >= 70);
+  assert.equal(RHYTHM_CHART.length, 115);
   assert.ok(
     RHYTHM_CHART.every(
       (note, index) =>
@@ -63,11 +63,28 @@ test('譜面在 59 秒內且四個方向都有音符', () => {
   );
 });
 
-test('譜面補上音訊起音偏移，淡出開始後不再出現音符', () => {
-  assert.equal(RHYTHM_CHART_OFFSET, 0.055);
-  assert.equal(RHYTHM_CHART[0].hitTime, 2.563);
-  assert.equal(RHYTHM_CHART.at(-1).hitTime, 54.935);
-  assert.ok(RHYTHM_CHART.every((note) => note.hitTime < 55));
+test('錄製譜原樣成為預設譜，不重複套用時間偏移', () => {
+  assert.equal(DEFAULT_RHYTHM_CHART_SOURCE.version, 1);
+  assert.equal(
+    DEFAULT_RHYTHM_CHART_SOURCE.updatedAt,
+    '2026-09-16T21:21:22.713Z',
+  );
+  assert.equal(RHYTHM_CHART, DEFAULT_RHYTHM_CHART_SOURCE.notes);
+  assert.deepEqual(RHYTHM_CHART[0], {
+    id: 0,
+    lane: 'right',
+    hitTime: 2.383,
+  });
+  assert.deepEqual(RHYTHM_CHART[57], {
+    id: 57,
+    lane: 'left',
+    hitTime: 33.334,
+  });
+  assert.deepEqual(RHYTHM_CHART.at(-1), {
+    id: 114,
+    lane: 'down',
+    hitTime: 57.929,
+  });
 });
 
 test('視覺音符從頂端落到上移後的判定線', () => {
