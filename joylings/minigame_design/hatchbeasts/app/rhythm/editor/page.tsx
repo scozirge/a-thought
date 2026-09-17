@@ -73,7 +73,6 @@ export default function RhythmChartEditor() {
   const [activeBeast, setActiveBeast] = useState(() => getBeastById(null));
   const [identityReady, setIdentityReady] = useState(false);
   const beastQuery = `?beast=${activeBeast.id}`;
-  const visibleBeastName = identityReady ? activeBeast.name : '怪獸';
 
   const replaceNotes = useCallback((next: RhythmNote[]) => {
     notesRef.current = next;
@@ -601,9 +600,9 @@ export default function RhythmChartEditor() {
 
           <section className={styles.saveCard} aria-labelledby="save-title">
             <p className={styles.kicker}>SAVE &amp; TEST</p>
-            <h2 id="save-title">存成我的譜面</h2>
+            <h2 id="save-title">儲存譜面</h2>
             <p>
-              儲存後，{visibleBeastName}音遊會直接讀取這份譜。音符會自動提早落下，並在你錄下的時間抵達底線。
+              儲存後會以剛剛錄製的譜面進行遊戲。
             </p>
             <Button
               className={styles.saveAndPlayButton}

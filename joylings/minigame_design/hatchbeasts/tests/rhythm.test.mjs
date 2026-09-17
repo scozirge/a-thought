@@ -101,14 +101,19 @@ test('視覺音符從頂端落到上移後的判定線', () => {
 });
 
 test('節奏速度只接受指定倍率', () => {
-  assert.deepEqual(RHYTHM_PLAYBACK_RATES, [1, 1.2, 1.5, 2, 3]);
+  assert.deepEqual(RHYTHM_PLAYBACK_RATES, [0.8, 1, 1.2, 1.5, 2]);
+  assert.equal(DEFAULT_RHYTHM_SETTINGS.playbackRate, 1);
   for (const rate of RHYTHM_PLAYBACK_RATES)
     assert.equal(isRhythmPlaybackRate(rate), true);
-  for (const invalid of [0, 1.1, 4, Number.NaN, Number.POSITIVE_INFINITY, '2'])
+  for (const invalid of [0, 1.1, 3, 4, Number.NaN, Number.POSITIVE_INFINITY, '2'])
     assert.equal(isRhythmPlaybackRate(invalid), false);
 });
 
 test('音量與倍速設定能安全還原', () => {
+  assert.deepEqual(
+    parseStoredRhythmSettings(JSON.stringify({ volume: 0.5, playbackRate: 3 })),
+    { volume: 0.5, playbackRate: 2 },
+  );
   assert.deepEqual(parseStoredRhythmSettings(null), DEFAULT_RHYTHM_SETTINGS);
   assert.deepEqual(parseStoredRhythmSettings('{'), DEFAULT_RHYTHM_SETTINGS);
   assert.deepEqual(

@@ -4,7 +4,7 @@ export const RHYTHM_DEMO_DURATION = 59;
 export const RHYTHM_TRAVEL_TIME = 1.85;
 export const RHYTHM_NOTE_START_PERCENT = 4;
 export const RHYTHM_HIT_LINE_PERCENT = 73;
-export const RHYTHM_PLAYBACK_RATES = [1, 1.2, 1.5, 2, 3] as const;
+export const RHYTHM_PLAYBACK_RATES = [0.8, 1, 1.2, 1.5, 2] as const;
 export const RHYTHM_SETTINGS_STORAGE_KEY =
   'hatchbeasts-rhythm-settings-v1';
 export const DEFAULT_RHYTHM_VOLUME = 1;
@@ -72,7 +72,9 @@ export function parseStoredRhythmSettings(raw: string | null): RhythmSettings {
       volume: clampRhythmVolume(settings.volume),
       playbackRate: isRhythmPlaybackRate(settings.playbackRate)
         ? settings.playbackRate
-        : DEFAULT_RHYTHM_SETTINGS.playbackRate,
+        : settings.playbackRate === 3
+          ? 2
+          : DEFAULT_RHYTHM_SETTINGS.playbackRate,
     };
   } catch {
     return { ...DEFAULT_RHYTHM_SETTINGS };
