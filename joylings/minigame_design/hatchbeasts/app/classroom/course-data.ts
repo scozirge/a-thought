@@ -11,16 +11,16 @@ export const activities = [
   { title: '玩目前遊戲', anchor: 'current-design' },
   { title: '發想更多選項與怪物', anchor: 'think-1' },
   { title: '發想演出與操作互動', anchor: 'think-4' },
-  { title: '發想怪物孵出後可以幹嘛', anchor: 'think-5' },
-  { title: '設計草圖', anchor: 'sketch' },
+  { title: '怎麼讓遊戲更好玩、更好', anchor: 'think-5' },
+  { title: '拿起紙筆動手設計', anchor: 'sketch' },
 ] as const;
 
 export const prompts = [
-  { tag: '選項', text: '選項 1 可以多哪個選項？' },
+  { tag: '選項', text: '還可以增加哪個新地點？' },
+  { tag: '角色', text: '怪物長什麼樣、有什麼特徵？' },
   { tag: '組合', text: '多一個選項，會需要多幾隻怪物要畫？' },
-  { tag: '角色', text: '怪物長什麼樣、有什麼特徵？破殼後會說什麼？' },
   { tag: '演出', text: '破殼演出可以怎麼互動跟演出？' },
-  { tag: '玩法', text: '怪物孵出後可以幹嘛？怎麼樣變成好玩的遊戲？' },
+  { tag: '玩法', text: '怎麼追加設計可以讓遊戲更好？' },
 ] as const;
 
 export const eggDesigns = [

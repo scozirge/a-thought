@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   Compass,
-  Egg,
   Lightbulb,
   Pencil,
   Play,
@@ -11,11 +10,10 @@ import {
 import { assetUrl } from '@/lib/assets';
 import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
 import { CourseHeader } from '../course-ui';
-import { eggDesigns, prompts } from '../course-data';
+import { prompts } from '../course-data';
+import { PLACES, ACTIVITIES, BEASTS } from '@/lib/game';
 
 export const metadata: Metadata = { title: '遊戲體驗與發想｜遊戲設計' };
-const places = ['香氣花園', '神祕洞穴', '森林瀑布'];
-const hobbies = ['玩遊戲看漫畫或動畫', '跟朋友玩', '學習'];
 
 export default function ExperienceLesson() {
   return (
@@ -29,7 +27,6 @@ export default function ExperienceLesson() {
           </h1>
           <nav className="lesson-nav" aria-label="單元內容">
             <a href="#current-design">目前設計</a>
-            <a href="#combinations">選擇</a>
             <a href="#ideas">想想看</a>
             <a href="#sketch">設計草圖</a>
           </nav>
@@ -52,65 +49,31 @@ export default function ExperienceLesson() {
               <ArrowUpRight size={15} aria-hidden="true" />
             </a>
           </div>
-          <div className="question-design-grid">
-            <article className="design-question question-place">
-              <span className="question-label">問題一</span>
-              <h3>你更喜歡哪個地方？</h3>
-              <ol>
-                {places.map((place, i) => (
-                  <li key={place}>
-                    <span className="answer-number">{i + 1}</span>
-                    {place}
-                  </li>
-                ))}
-              </ol>
-            </article>
-            <article className="design-question question-hobby">
-              <span className="question-label">問題二</span>
-              <h3>放假時，你更喜歡？</h3>
-              <ol>
-                {hobbies.map((hobby, i) => (
-                  <li key={hobby}>
-                    <span className="answer-number">{i + 1}</span>
-                    {hobby}
-                  </li>
-                ))}
-              </ol>
-            </article>
-          </div>
-        </section>
-
-        <section id="combinations" className="lesson-section">
-          <div className="lesson-section-heading combination-heading">
-            <h2>
-              <Egg size={26} strokeWidth={1.5} aria-hidden="true" />
-              選擇
-            </h2>
-            <p className="section-note">第一碼是地點，第二碼是活動。</p>
-          </div>
-          <div className="habitat-groups">
-            {places.map((place, index) => (
-              <div className={`habitat-group habitat-${index + 1}`} key={place}>
-                <h3 className="habitat-title">
-                  <span>{index + 1}</span>
-                  {place}
-                </h3>
-                <div className="beast-design-grid">
-                  {eggDesigns
-                    .slice(index * 3, index * 3 + 3)
-                    .map((beast, i) => (
-                      <article className="beast-design-card" key={beast.code}>
-                        <div className="beast-design-top">
-                          <span className="combination-code">{beast.code}</span>
-                          <span className="hobby-label">{hobbies[i]}</span>
-                        </div>
-                        <h3>{beast.name}</h3>
-                        <p>{beast.egg}</p>
-                      </article>
-                    ))}
-                </div>
-              </div>
-            ))}
+          <div className="design-equations">
+            {PLACES.flatMap((place) => ACTIVITIES.map((activity) => {
+              const beast = BEASTS[place.id + activity.id];
+              return (
+                <article className="design-equation" key={beast.id} aria-label={place.label + '加上' + activity.label + '，孵出' + beast.name}>
+                  <figure>
+                    {/* oxlint-disable-next-line nextjs/no-img-element -- Local lesson artwork. */}
+                    <img src={assetUrl('/images/' + place.image + '.png?v=monster-doodle-2')} alt={place.alt} width={240} height={180} />
+                    <figcaption>{place.label}</figcaption>
+                  </figure>
+                  <span className="equation-symbol" aria-hidden="true">＋</span>
+                  <figure>
+                    {/* oxlint-disable-next-line nextjs/no-img-element -- Local lesson artwork. */}
+                    <img src={assetUrl('/images/' + activity.image + '.png?v=monster-doodle-2')} alt={activity.alt} width={240} height={180} />
+                    <figcaption>{activity.label}</figcaption>
+                  </figure>
+                  <span className="equation-symbol" aria-hidden="true">＝</span>
+                  <figure>
+                    {/* oxlint-disable-next-line nextjs/no-img-element -- Local lesson artwork. */}
+                    <img className="equation-beast" src={assetUrl(beast.image + '?v=beasts-5')} alt={beast.appearance} width={240} height={240} />
+                    <figcaption>{beast.name}</figcaption>
+                  </figure>
+                </article>
+              );
+            }))}
           </div>
         </section>
 
@@ -144,8 +107,12 @@ export default function ExperienceLesson() {
             <Pencil size={28} strokeWidth={1.5} aria-hidden="true" />
           </span>
           <div>
-            <h2>設計草圖</h2>
-            <p>拿起紙筆，畫出你的怪獸、破殼演出和新玩法。</p>
+            <h2>拿起紙筆動手設計</h2>
+            <ol className="sketch-steps">
+              <li>畫出你的新地點選項</li>
+              <li>畫出你的新怪獸</li>
+              <li>寫下你的新想法</li>
+            </ol>
           </div>
         </section>
         <a

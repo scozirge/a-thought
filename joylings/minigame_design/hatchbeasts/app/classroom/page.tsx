@@ -27,10 +27,10 @@ export default function ClassroomHome() {
               </a>
               <a
                 className="course-button catalog-rhythm-link"
-                href={assetUrl('/rhythm/')}
+                href={assetUrl('/rhythm/editor/')}
               >
                 <Music2 size={20} aria-hidden="true" />
-                玩瀑布精靈音遊 Demo
+                製譜
                 <ArrowUpRight size={18} aria-hidden="true" />
               </a>
             </div>

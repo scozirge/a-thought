@@ -553,6 +553,30 @@ body:has(.classroom-shell) {
   font-size: 16px;
   line-height: 1.9;
 }
+.design-equations {
+  display: grid;
+  gap: 18px;
+}
+.design-equation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) 32px minmax(0, 1fr);
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #dacebd;
+  border-radius: 17px 12px 18px 13px;
+  background: #fffefb;
+}
+.design-equation figure { margin: 0; text-align: center; min-width: 0; }
+.design-equation img { display: block; width: 100%; height: 150px; object-fit: contain; mix-blend-mode: multiply; }
+.design-equation figcaption { margin-top: 10px; font-size: 19px; line-height: 1.6; }
+.equation-symbol { text-align: center; font-size: 27px; color: #73815e; }
+.sketch-steps { padding-left: 1.5em; margin: 12px 0 0; font-size: 20px; line-height: 2; }
+@media (max-width: 600px) {
+  .design-equation { padding: 12px 8px; grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr) 20px minmax(0, 1fr); }
+  .design-equation img { height: 90px; }
+  .design-equation figcaption { font-size: 15px; }
+  .equation-symbol { font-size: 21px; }
+}
 .ideas-section {
   margin-top: 9px;
   padding: 28px 30px 15px;

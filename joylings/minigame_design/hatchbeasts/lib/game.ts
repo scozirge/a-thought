@@ -199,6 +199,7 @@ export interface GameState {
   taps: number;
 }
 export type GameAction =
+  | { type: 'RESTORE_RESULT'; value: string }
   | { type: 'SELECT'; value: string }
   | { type: 'NEXT' | 'BACK' | 'TAP' | 'REVEAL' | 'RESET' };
 export const initialState: GameState = {
@@ -214,6 +215,9 @@ export function getBeast(state: GameState): Beast | null {
 }
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case 'RESTORE_RESULT':
+      if (!Object.hasOwn(BEASTS, action.value)) return state;
+      return { stage: 'result', place: action.value[0], activity: action.value[1], taps: HATCH_TAPS };
     case 'SELECT':
       if (!['1', '2', '3'].includes(action.value)) return state;
       if (state.stage === 'place') return { ...state, place: action.value };

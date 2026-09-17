@@ -73,7 +73,7 @@ export function verifyH5(output, basePath) {
     'utf8',
   );
   assert.ok(
-    editor.includes('怪獸製譜器') &&
+    editor.includes('音樂製譜工具') &&
       editor.includes('MONSTER CHART RECORDER'),
     'Missing rhythm chart editor HTML',
   );

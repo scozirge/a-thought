@@ -487,9 +487,9 @@ export default function RhythmDemo() {
       </audio>
 
       <header className={styles.topbar}>
-        <a className={styles.backLink} href={assetUrl('/')}>
+        <a className={styles.backLink} href={assetUrl(`/?result=${activeBeast.id}`)}>
           <ArrowLeft size={18} aria-hidden="true" />
-          重新孵蛋
+          回到怪獸
         </a>
         <div className={styles.topbarTools}>
           <div className={styles.songLabel}>
@@ -668,6 +668,10 @@ export default function RhythmDemo() {
                 {visibleBeastName} · {playbackRateLabel} · 約 {wallDuration} 秒
               </p>
               <h2 id="rhythm-title">怪獸節拍</h2>
+              <a className={styles.backLink} href={assetUrl(`/?result=${activeBeast.id}`)}>
+                <ArrowLeft size={18} aria-hidden="true" />
+                回到怪獸
+              </a>
               <p className={styles.instructions}>
                 音符到底線時，按下同方向的鍵。
               </p>
@@ -775,10 +779,10 @@ export default function RhythmDemo() {
               <div className={styles.resultActions}>
                 <a
                   className={styles.resultAction}
-                  href={assetUrl('/')}
+                  href={assetUrl(`/?result=${activeBeast.id}`)}
                 >
                   <Egg size={18} aria-hidden="true" />
-                  重新孵蛋
+                  回到怪獸
                 </a>
                 <Button
                   className={styles.startButton}

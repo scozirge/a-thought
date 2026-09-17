@@ -23,6 +23,18 @@ const expected = {
   33: '彩虹梟',
 };
 const send = (state, type, value) => gameReducer(state, { type, value });
+test('從音遊返回會還原同一隻怪獸，仍可重新孵蛋；無效結果不還原', () => {
+  for (const [id, name] of Object.entries(expected)) {
+    const restored = send(initialState, 'RESTORE_RESULT', id);
+    assert.equal(restored.stage, 'result');
+    assert.equal(getBeast(restored).name, name);
+    assert.equal(restored.taps, HATCH_TAPS);
+    assert.deepEqual(send(restored, 'RESET'), initialState);
+  }
+  for (const id of ['99', '', '__proto__', 'constructor']) {
+    assert.equal(send(initialState, 'RESTORE_RESULT', id), initialState);
+  }
+});
 function choose(place, activity) {
   let state = send(initialState, 'SELECT', place);
   state = send(state, 'NEXT');

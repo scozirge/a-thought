@@ -87,6 +87,11 @@ export default function Home() {
   const selected = state.stage === 'place' ? state.place : state.activity;
 
   useEffect(() => {
+    const result = new URLSearchParams(window.location.search).get('result');
+    if (result) dispatch({ type: 'RESTORE_RESULT', value: result });
+  }, []);
+
+  useEffect(() => {
     if (previousStage.current !== state.stage) {
       previousStage.current = state.stage;
       titleRef.current?.focus({ preventScroll: true });

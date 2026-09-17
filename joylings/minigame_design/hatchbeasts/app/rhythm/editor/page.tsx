@@ -16,7 +16,6 @@ import {
   RotateCcw,
   Save,
   Trash2,
-  Undo2,
   Waves,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -68,7 +67,7 @@ export default function RhythmChartEditor() {
   const [waveform, setWaveform] = useState<number[]>([]);
   const [pressedLane, setPressedLane] = useState<RhythmLane | null>(null);
   const [savedCount, setSavedCount] = useState(0);
-  const [message, setMessage] = useState('準備好了，可以從頭開始錄製。');
+  const [message, setMessage] = useState('');
   const [audioError, setAudioError] = useState('');
   const [isStarting, setIsStarting] = useState(false);
   const [activeBeast, setActiveBeast] = useState(() => getBeastById(null));
@@ -326,17 +325,6 @@ export default function RhythmChartEditor() {
     setMessage('已暫停，可以拖動波形定位後繼續錄製。');
   };
 
-  const undoLastNote = () => {
-    if (!notesRef.current.length) return;
-    const removed = notesRef.current.at(-1);
-    replaceNotes(notesRef.current.slice(0, -1));
-    setMessage(
-      removed
-        ? `已復原 ${formatPreciseTime(removed.hitTime)} 的音符。`
-        : '已復原上一顆音符。',
-    );
-  };
-
   const deleteNote = (id: number) => {
     replaceNotes(notesRef.current.filter((note) => note.id !== id));
     setMessage('已刪除一顆音符。');
@@ -442,7 +430,7 @@ export default function RhythmChartEditor() {
           </div>
           <div>
             <p className={styles.kicker}>MONSTER CHART RECORDER</p>
-            <h1>{visibleBeastName}製譜器</h1>
+            <h1>音樂製譜工具</h1>
             <p>聽到想放音符的位置，就按方向鍵或 WASD。</p>
           </div>
         </section>
@@ -555,22 +543,13 @@ export default function RhythmChartEditor() {
               </button>
             )}
             <button
-              className={styles.secondaryButton}
-              type="button"
-              disabled={!notes.length || phase === 'recording'}
-              onClick={undoLastNote}
-            >
-              <Undo2 size={17} aria-hidden="true" />
-              復原上一顆
-            </button>
-            <button
               className={styles.clearButton}
               type="button"
               disabled={!notes.length || phase === 'recording'}
               onClick={clearWorkingChart}
             >
               <Trash2 size={16} aria-hidden="true" />
-              清空工作區
+              清空
             </button>
           </div>
           {audioError && <p className={styles.audioError}>{audioError}</p>}
