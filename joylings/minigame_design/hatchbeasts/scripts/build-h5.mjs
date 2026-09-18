@@ -41,6 +41,9 @@ for (const file of ['index.html', 'index.rsc']) {
 cpSync(join(client, basePath.replace(/^\//, ''), '_next'), join(output, '_next'), { recursive: true });
 mkdirSync(join(output, 'rhythm'), { recursive: true });
 mkdirSync(join(output, 'beasts'), { recursive: true });
+mkdirSync(join(output, 'arena'), { recursive: true });
+cpSync(join(client, 'arena.html'), join(output, 'arena', 'index.html'));
+cpSync(join(client, 'arena.rsc'), join(output, 'arena.rsc'));
 cpSync(join(client, 'beasts.html'), join(output, 'beasts', 'index.html'));
 cpSync(join(client, 'beasts.rsc'), join(output, 'beasts.rsc'));
 cpSync(join(client, 'rhythm.html'), join(output, 'rhythm', 'index.html'));

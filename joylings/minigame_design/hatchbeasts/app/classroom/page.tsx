@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronDown, Gamepad2, Music2 } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
@@ -15,6 +15,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={assetUrl('/arena/')}>
+                <Crosshair size={20} aria-hidden="true" />
+                3D 槍戰單機範例
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a
                 className="course-button catalog-game-link"
                 href={GAME_PUBLIC_URL}
@@ -58,7 +63,7 @@ export default function ClassroomHome() {
                 </span>
                 <span className="featured-copy">
                   <span className="unit-title">遊戲體驗與發想</span>
-                  <span className="unit-meta">5 個活動</span>
+                  <span className="unit-meta">{activities.length} 個活動</span>
                 </span>
                 <ArrowUpRight
                   className="enter-arrow"
@@ -90,6 +95,16 @@ export default function ClassroomHome() {
               </ol>
             </div>
           </details>
+          <div className="lesson-review-action">
+            <a
+              className="course-button"
+              href={assetUrl('/classroom/experience/#retrospective')}
+            >
+              <ClipboardList size={20} aria-hidden="true" />
+              第一堂課・課後復盤
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
+          </div>
 
           <div className="unit-grid">
             {units.slice(1).map((unit) => (

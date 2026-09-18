@@ -275,6 +275,11 @@ body:has(.classroom-shell) {
   margin-left: auto;
   color: #95816d;
 }
+.lesson-review-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
 .unit-grid {
   display: grid;
   grid-template-columns: 1fr;

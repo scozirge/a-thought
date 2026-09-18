@@ -6,6 +6,7 @@ import {
   Lightbulb,
   Pencil,
   Play,
+  ClipboardList,
 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
@@ -29,6 +30,7 @@ export default function ExperienceLesson() {
             <a href="#current-design">目前設計</a>
             <a href="#ideas">想想看</a>
             <a href="#sketch">設計草圖</a>
+            <a href="#retrospective">課後復盤</a>
           </nav>
         </div>
 
@@ -114,6 +116,38 @@ export default function ExperienceLesson() {
               <li>寫下你的新想法</li>
             </ol>
           </div>
+        </section>
+        <section id="retrospective" className="lesson-section">
+          <div className="lesson-section-heading">
+            <h2>
+              <ClipboardList size={26} strokeWidth={1.5} aria-hidden="true" />
+              課後復盤
+            </h2>
+          </div>
+          <p>第一堂課的課堂觀察</p>
+          <ol className="prompt-list">
+            <li>
+              <span className="prompt-number">01</span>
+              <div>
+                <span className="prompt-tag">課堂專注</span>
+                <p>小朋友有了電腦後，容易專注在自己的電腦上玩東西，難以專心參與課堂。</p>
+              </div>
+            </li>
+            <li>
+              <span className="prompt-number">02</span>
+              <div>
+                <span className="prompt-tag">難度與互動</span>
+                <p>音遊對許多小學生來說仍然偏難，課程內容也缺乏彼此互動的機會。</p>
+              </div>
+            </li>
+            <li>
+              <span className="prompt-number">03</span>
+              <div>
+                <span className="prompt-tag">遊戲興趣</span>
+                <p>這次課堂中，多數男生比較喜歡 Roblox 上的槍戰，對音遊興致不高；當下只有一位小女生明顯有興趣，其他孩子感覺更想玩自己的東西。</p>
+              </div>
+            </li>
+          </ol>
         </section>
         <a
           className="lesson-bottom-back course-back"
