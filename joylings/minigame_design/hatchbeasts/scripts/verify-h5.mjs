@@ -79,6 +79,7 @@ export function verifyH5(output, basePath) {
   );
   for (const slug of [
     'experience',
+    'red-blue-battle',
     'planning',
     'analysis',
     'development',

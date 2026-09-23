@@ -28,7 +28,7 @@ export function CourseHeader({ back = false }: { back?: boolean }) {
     <header className="course-header">
       <a className="course-brand" href={assetUrl('/classroom/')}>
         <BookOpen size={21} strokeWidth={1.7} aria-hidden="true" />
-        <span>破殼怪獸</span>
+        <span>遊戲設計課</span>
       </a>
       {back ? (
         <a className="course-back" href={assetUrl('/classroom/')}>

@@ -656,6 +656,99 @@ body:has(.classroom-shell) {
 .lesson-bottom-back {
   margin: 11px 0 25px;
 }
+.battle-catalog-unit {
+  margin-top: 25px;
+  border-color: #9db7c8;
+  background: #f7fbfc;
+  box-shadow: 4px 5px 0 #dce7ec;
+}
+.catalog-lesson-number {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--course-muted);
+  font-family: 'Microsoft JhengHei', system-ui, sans-serif;
+  font-size: 14px;
+}
+.team-red { color: #ad5149; }
+.team-blue { color: #39718f; }
+.battle-intro-copy {
+  margin: -10px 0 22px;
+  color: var(--course-muted);
+  font-size: 20px;
+}
+.battle-game-link {
+  background: #396b85;
+  border-color: #396b85;
+  box-shadow: 2px 3px 0 #b0cad7;
+}
+.battle-game-link:hover { background: #2b5369; }
+.battle-questions .lesson-section-heading { margin-bottom: 7px; }
+.battle-questions > .section-note { margin-bottom: 22px; }
+.battle-question {
+  margin-top: 16px;
+  border: 1px solid #d3ccbd;
+  border-radius: 14px 18px 12px 16px;
+  background: #fffdf7;
+  box-shadow: 3px 4px 0 #e9e2d6;
+  scroll-margin-top: 105px;
+}
+.battle-question summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  list-style: none;
+  cursor: pointer;
+  border-radius: inherit;
+}
+.battle-question summary::-webkit-details-marker { display: none; }
+.battle-question summary:hover { background: #f3f0e7; }
+.battle-question-number {
+  color: #9a7856;
+  font-size: 23px;
+  min-width: 32px;
+}
+.battle-question-title {
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.6;
+}
+.battle-answer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #596c75;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.answer-label-open,
+.battle-question[open] .answer-label-closed { display: none; }
+.battle-question[open] .answer-label-open { display: inline; }
+.battle-question[open] .battle-answer-toggle svg { transform: rotate(180deg); }
+.battle-answers {
+  border-top: 1px dashed #d3ccbd;
+  padding: 20px 24px 24px 74px;
+}
+.battle-answers > p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #716e65;
+}
+.battle-answers ul { margin: 0; padding-left: 1.2em; }
+.battle-answers li { padding: 4px 0; font-size: 20px; }
+.battle-answers > .battle-idea-note { margin: 14px 0 0; }
+@media (max-width: 600px) {
+  .battle-question summary {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 6px 10px;
+    padding: 18px;
+  }
+  .battle-question-number { font-size: 20px; }
+  .battle-answer-toggle { grid-column: 2; margin-left: 0; }
+  .battle-answers { padding: 17px 20px; }
+  .battle-answers li { font-size: 18px; }
+}
 @media (max-width: 760px) {
   .course-header {
     width: calc(100% - 40px);

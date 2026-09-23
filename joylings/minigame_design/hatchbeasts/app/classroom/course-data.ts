@@ -23,6 +23,43 @@ export const prompts = [
   { tag: '玩法', text: '怎麼追加設計可以讓遊戲更好？' },
 ] as const;
 
+export const redBlueQuestions = [
+  {
+    anchor: 'weapons',
+    text: '目前遊戲中有哪些武器？',
+    answers: ['手槍', '步槍', '狙擊槍', '散彈槍'],
+  },
+  {
+    anchor: 'features',
+    text: '這些武器有什麼特點？',
+    answers: [
+      '手槍：一開始拿到的武器。',
+      '步槍：可以連發，一直射擊。',
+      '狙擊槍：可以打很遠。',
+      '散彈槍：距離很近時，傷害很高。',
+    ],
+  },
+  {
+    anchor: 'new-weapons',
+    text: '還可以加什麼武器？',
+    answers: [
+      '手榴彈：丟出去後會爆炸。',
+      '刀子：靠近對手時使用。',
+      '煙霧彈：放出煙霧，讓對手看不清楚。',
+      '火箭炮：射出會爆炸的火箭。',
+    ],
+  },
+  {
+    anchor: 'skills',
+    text: '角色可以有什麼技能？',
+    answers: [
+      '隱形：讓對手暫時看不見你。',
+      '分身假人：放出一個假的自己，讓對手認錯人。',
+      '彈跳背包：幫助角色跳得更高、更遠。',
+    ],
+  },
+] as const;
+
 export const eggDesigns = [
   { code: '11', name: '小花熊', egg: '蛋頂部有一朵小花，佈滿粉色的毛茸茸。' },
   { code: '12', name: '香草兔', egg: '蛋上佈滿不同深淺的粉色草皮。' },

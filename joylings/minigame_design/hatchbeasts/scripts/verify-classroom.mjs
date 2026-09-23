@@ -7,6 +7,7 @@ export function verifyClassroom(output) {
   const slugs = [
     '',
     'experience',
+    'red-blue-battle',
     'planning',
     'analysis',
     'development',
@@ -67,11 +68,11 @@ export function verifyClassroom(output) {
     join(root, 'rhythm/editor/index.html'),
     'utf8',
   );
-  const publicGame = 'https://scozirge.github.io/a-thought/hatchbeasts/v1/';
+  const publicGame = 'https://scozirge.github.io/a-thought/hatchbeasts/';
   for (const html of [catalog, lesson]) {
     assert.ok(
       html.includes(`href="${publicGame}"`),
-      'Missing fixed v1 game link',
+      'Missing public game link',
     );
   }
   assert.ok(
@@ -79,9 +80,9 @@ export function verifyClassroom(output) {
     'Missing native activity disclosure',
   );
   assert.ok(
-    catalog.includes('href="/rhythm/"') &&
-      catalog.includes('玩瀑布精靈音遊 Demo'),
-    'Missing rhythm game link from classroom catalog',
+    catalog.includes('href="/rhythm/editor/"') &&
+      catalog.includes('製譜'),
+    'Missing rhythm editor link from classroom catalog',
   );
   assert.ok(
     rhythm.includes('怪獸音遊') && rhythm.includes('怪獸節拍'),
@@ -92,7 +93,7 @@ export function verifyClassroom(output) {
     'Missing local rhythm chart editor route',
   );
   assert.ok(
-    editor.includes('怪獸製譜器') &&
+    editor.includes('音樂製譜工具') &&
       editor.includes('MONSTER CHART RECORDER'),
     'Missing local rhythm chart editor',
   );
@@ -108,8 +109,8 @@ export function verifyClassroom(output) {
     '玩目前遊戲',
     '發想更多選項與怪物',
     '發想演出與操作互動',
-    '發想怪物孵出後可以幹嘛',
-    '設計草圖',
+    '怎麼讓遊戲更好玩、更好',
+    '拿起紙筆動手設計',
   ]) {
     assert.ok(catalog.includes(activity), `Missing activity: ${activity}`);
   }
@@ -127,7 +128,6 @@ export function verifyClassroom(output) {
     assert.ok(lesson.includes(name), `Missing monster: ${name}`);
   for (const anchor of [
     'current-design',
-    'combinations',
     'ideas',
     'sketch',
     'think-1',
@@ -149,6 +149,6 @@ export function verifyClassroom(output) {
     'Missing application assets',
   );
   console.log(
-    `Verified 7 classroom pages, 9 monsters, activity anchors and ${references} local references.`,
+    `Verified ${slugs.length} classroom pages, 9 monsters, activity anchors and ${references} local references.`,
   );
 }

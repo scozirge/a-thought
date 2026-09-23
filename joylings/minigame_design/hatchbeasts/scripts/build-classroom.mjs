@@ -35,6 +35,7 @@ cpSync(resolve('dist/client'), output, {
 for (const slug of [
   '',
   'experience',
+  'red-blue-battle',
   'planning',
   'analysis',
   'development',
@@ -61,12 +62,13 @@ writeFileSync(
     'python -m http.server 4317 --bind 127.0.0.1',
     '',
     '課堂目錄：http://localhost:4317/classroom/',
+    '第二次課程：http://localhost:4317/classroom/red-blue-battle/',
     '破殼怪獸：http://localhost:4317/',
     '瀑布精靈音遊 Demo：http://localhost:4317/rhythm/',
     '瀑布精靈製譜器：http://localhost:4317/rhythm/editor/',
     '',
     '請透過本機 HTTP 伺服器開啟，避免直接雙擊 HTML 時瀏覽器限制 JavaScript 模組載入。',
-    '圖片、字型、程式與遊戲都在此資料夾內，啟動後不需要外部服務。',
+    '教材、圖片、字型與破殼怪獸在此資料夾內；紅藍槍戰連結需要網路。',
   ].join('\n'),
   'utf8',
 );

@@ -1,8 +1,8 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { GAME_PUBLIC_URL, GAME_VERSION } from '@/lib/release';
+import { GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
-import { activities, units } from './course-data';
+import { activities, redBlueQuestions, units } from './course-data';
 
 export default function ClassroomHome() {
   return (
@@ -15,9 +15,9 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
-              <a className="course-button" href={assetUrl('/arena/')}>
+              <a className="course-button" href={RED_BLUE_GAME_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Crosshair size={20} aria-hidden="true" />
-                RIVALS 單機範例
+                玩紅藍槍戰
                 <ArrowUpRight size={18} aria-hidden="true" />
               </a>
               <a
@@ -62,8 +62,8 @@ export default function ClassroomHome() {
                   <UnitIcon name="game" />
                 </span>
                 <span className="featured-copy">
-                  <span className="unit-title">遊戲體驗與發想</span>
-                  <span className="unit-meta">{activities.length} 個活動</span>
+                  <span className="unit-title"><span className="catalog-lesson-number">第一次課程</span>破殼怪獸</span>
+                  <span className="unit-meta">遊戲體驗與發想 · {activities.length} 個活動</span>
                 </span>
                 <ArrowUpRight
                   className="enter-arrow"
@@ -106,6 +106,39 @@ export default function ClassroomHome() {
             </a>
           </div>
 
+          <details className="featured-unit battle-catalog-unit">
+            <summary className="featured-heading">
+              <a className="featured-link" href={assetUrl('/classroom/red-blue-battle/')}>
+                <span className="unit-icon tint-blue">
+                  <Crosshair size={28} strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第二次課程</span>紅藍槍戰</span>
+                  <span className="unit-meta">武器與角色技能 · {redBlueQuestions.length} 個問題</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+              <span className="activity-toggle">
+                <span className="toggle-label-closed">展開題目</span>
+                <span className="toggle-label-open">收起題目</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </span>
+            </summary>
+            <div className="activity-content">
+              <ol className="activity-list">
+                {redBlueQuestions.map((question, index) => (
+                  <li key={question.anchor}>
+                    <a href={assetUrl(`/classroom/red-blue-battle/#${question.anchor}`)}>
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      {question.text}
+                      <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </details>
+
           <div className="unit-grid">
             {units.slice(1).map((unit) => (
               <a
@@ -124,7 +157,7 @@ export default function ClassroomHome() {
         </nav>
       </main>
       <footer className="course-footer">
-        <span>破殼怪獸 · 遊戲設計</span>
+        <span>遊戲設計 · 一起把點子做成遊戲</span>
         <span className="footer-line" />
       </footer>
     </>

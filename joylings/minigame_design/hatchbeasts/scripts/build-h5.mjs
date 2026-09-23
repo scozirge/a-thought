@@ -60,6 +60,7 @@ cpSync(
 for (const slug of [
   '',
   'experience',
+  'red-blue-battle',
   'planning',
   'analysis',
   'development',
