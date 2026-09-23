@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一起來對戰</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#0c1422;color:#eaf2ff;font:15px/1.6 system-ui,"Microsoft JhengHei",sans-serif;user-select:none}
+    header,footer{max-width:1280px;margin:auto;padding:16px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    h1{font-size:21px;letter-spacing:3px;margin:0}header span{color:#a4b7d2;font-size:13px}
+    #stage{position:relative;width:min(100%,1280px,calc((100vh - 160px)*16/9));aspect-ratio:16/9;margin:0 auto;background:#111c2d;box-shadow:0 12px 55px #0006}
+    canvas{width:100%;height:100%;display:block;outline:none}#loading{position:absolute;inset:0;display:grid;place-content:center;text-align:center;background:#111c2d;gap:14px}progress{width:260px;accent-color:#7ed4ff}
+    footer{color:#a4b7d2;font-size:13px}button,a{font:inherit;color:#eaf2ff}button{border:1px solid #567393;border-radius:7px;background:#243951;padding:7px 14px;cursor:pointer}a{margin-left:16px}#error{white-space:pre-wrap;color:#ff9e9e;max-width:80vw}#pointer-status{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);width:min(850px,calc(100% - 32px));margin:0;padding:10px 16px;background:#172337;border:1px solid #51647c;border-radius:8px;color:#ffd69c;font-size:13px;z-index:2}
+  </style>
+</head>
+<body>
+  <header><h1>一起來對戰</h1><span>和朋友一起玩，最多 8 人！</span></header>
+  <main id="stage">
+    <canvas id="unity-canvas" tabindex="0" aria-label="遊戲畫面"></canvas>
+    <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
+  </main>
+  <footer><span>WASD 移動 · 左鍵開槍 · 空白鍵跳躍 · Esc 休息一下</span><button id="fullscreen" type="button">放大畫面</button></footer>
+  <p id="pointer-status" role="status" hidden>滑鼠還不能轉動嗎？先點一下試試看。<button id="retry-pointer" type="button">開始控制滑鼠</button></p>
+  <script>
+    const canvas=document.getElementById('unity-canvas');let player;
+    // A browser can reject pointer lock in a background or embedded document.
+    // Handle both legacy exceptions and modern promise rejections before Unity's global error handler.
+    const pointerStatus=document.getElementById('pointer-status');
+    const nativePointerLock=canvas.requestPointerLock?.bind(canvas);
+    function pointerUnavailable(){pointerStatus.hidden=false;document.dispatchEvent(new Event('pointerlockchange'));}
+    if(nativePointerLock)canvas.requestPointerLock=(...args)=>{try{const request=nativePointerLock(...args);return request?.catch(pointerUnavailable);}catch(error){pointerUnavailable();}};
+    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===canvas)pointerStatus.hidden=true;});
+    document.getElementById('retry-pointer').onclick=()=>{canvas.focus();if(nativePointerLock)canvas.requestPointerLock();};
+    canvas.addEventListener('contextmenu',event=>event.preventDefault());
+    canvas.addEventListener('keydown',event=>{if(event.code==='Space'||event.code.startsWith('Arrow')||((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'))event.preventDefault();});
+    function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
+    const config={dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:{{{ JSON.stringify(COMPANY_NAME) }}},productName:{{{ JSON.stringify(PRODUCT_NAME) }}},productVersion:{{{ JSON.stringify(PRODUCT_VERSION) }}},devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/{{{ LOADER_FILENAME }}}';
+    loader.onload=()=>createUnityInstance(canvas,config,p=>document.getElementById('progress').value=p).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
+    loader.onerror=()=>showLoadError('無法下載遊戲');document.body.appendChild(loader);
+    document.getElementById('fullscreen').onclick=()=>{if(player)player.SetFullscreen(1);};
+  </script>
+</body>
+</html>

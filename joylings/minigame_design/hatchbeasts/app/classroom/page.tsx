@@ -17,7 +17,7 @@ export default function ClassroomHome() {
             <div className="catalog-actions">
               <a className="course-button" href={assetUrl('/arena/')}>
                 <Crosshair size={20} aria-hidden="true" />
-                3D 槍戰單機範例
+                RIVALS 單機範例
                 <ArrowUpRight size={18} aria-hidden="true" />
               </a>
               <a

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canStand, moveInArena, turnView, unlockedWeapon } from '../lib/arena.ts';
+import { canStand, moveInArena, turnView, resolveRound, awardRound } from '../lib/arena.ts';
 
 test('players cannot enter cover or leave the arena', () => {
   assert.equal(canStand(0, 12), true);
@@ -24,9 +24,16 @@ test('mouse deltas turn the view in both axes and clamp vertical rotation', () =
   assert.equal(turnView(0, 0, 0, 9999, 0.0025).pitch, -1.15);
 });
 
-test('weapon unlocks occur at the announced kill thresholds', () => {
-  assert.equal(unlockedWeapon(2), 0);
-  assert.equal(unlockedWeapon(3), 1);
-  assert.equal(unlockedWeapon(5), 1);
-  assert.equal(unlockedWeapon(6), 2);
+test('duels resolve timeout by remaining health, including a draw', () => {
+  assert.equal(resolveRound(80, 40), 'player');
+  assert.equal(resolveRound(20, 60), 'opponent');
+  assert.equal(resolveRound(100, 100), 'draw');
+  assert.equal(resolveRound(0, 100), 'opponent');
+});
+
+test('first to five ends the match and drawn rounds do not award points', () => {
+  assert.deepEqual(awardRound(4, 4, 'player'), { player: 5, opponent: 4, result: 'won' });
+  assert.deepEqual(awardRound(4, 4, 'opponent'), { player: 4, opponent: 5, result: 'lost' });
+  assert.deepEqual(awardRound(4, 4, 'draw'), { player: 4, opponent: 4, result: null });
+  assert.deepEqual(awardRound(0, 0, 'player'), { player: 1, opponent: 0, result: null });
 });

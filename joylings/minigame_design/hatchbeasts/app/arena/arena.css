@@ -51,6 +51,45 @@
 .arena-sensitivity input { min-width: 0; flex: 1; accent-color: #3f7565; }
 .arena-health { pointer-events: none; }
 @media (max-width: 600px) { .arena-loadout { right: 12px; bottom: 50px; } .arena-health { left: 12px; bottom: 210px; width: 140px; } .arena-weapons button { font-size: 10px; } }
+
+/* High-contrast duel interface. */
+.arena-page { background: #111723; color: #edf3ff; }
+.arena-header { font-weight: 800; }
+.arena-header > span { font-size: 18px; font-style: italic; letter-spacing: 3px; }
+.arena-header b { font-size: 10px; font-style: normal; background: #26344a; color: #afc2db; }
+.arena-stage { border-color: #35465e; border-radius: 8px; }
+.arena-panel { background: #172132f5; border: 1px solid #50627b; border-radius: 8px; box-shadow: 0 20px 100px #0009; }
+.arena-panel h1 { font-size: clamp(40px, 6vw, 64px); font-style: italic; font-weight: 900; letter-spacing: -3px; color: white; }
+.arena-panel p, .arena-fallback { color: #aebdd1; }
+.arena-eyebrow { color: #76bdff; font-weight: 800; }
+.arena-emblem { background: #2d4360; color: #a4d4ff; border-radius: 6px; width: 48px; height: 48px; margin: 12px auto; }
+.arena-instructions { margin: 18px 0; gap: 10px; color: #d5e2f5; }
+.arena-instructions kbd { color: white; background: #29384e; border-color: #42516a; }
+.arena-start { background: #f0cb47; color: #172132; border-radius: 4px; box-shadow: 0 4px 0 #a48126; font-size: 18px; }
+.arena-start:hover { background: #ffde66; }
+.arena-score, .arena-clock, .arena-health, .arena-ammo { background: #172132e8; border-color: #40516c; border-radius: 4px; color: white; }
+.arena-score strong { color: #79c6ff; }
+.arena-hud small, .arena-ammo small { color: #b3c6df; }
+.arena-hud strong span { color: white; }
+.arena-pause { color: white; background: #26364ee8; border-radius: 4px; }
+.arena-mouse-mode { background: #172132d9; color: #cbd8ec; border-radius: 4px; }
+.arena-mouse-mode button { background: #3f6589; }
+.arena-weapons button { background: #1c2a3ee8; color: #a5b9d5; border-radius: 4px; }
+.arena-weapons button[aria-pressed="true"] { color: white; border-color: #f0cb47; background: #394252; }
+.arena-notice { color: #172132; background: #f0cb47; border-radius: 4px; }
+.arena-health progress { accent-color: #74c7ff; }
+.arena-respawn { background: #0b132399; font-weight: 800; font-size: 24px; }
+.arena-respawn strong { color: #f0cb47; font-size: 80px; }
+.arena-sensitivity input { accent-color: #f0cb47; }
+@media (max-height: 820px) {
+  .arena-panel { padding: 20px 28px; }
+  .arena-panel h1 { font-size: 46px; margin-top: 8px; margin-bottom: 8px; }
+  .arena-emblem { display: none; }
+  .arena-instructions { margin: 14px 0; gap: 6px 10px; }
+  .arena-instructions kbd { padding: 3px 5px; }
+  .arena-fallback { margin-top: 12px; }
+  .arena-sensitivity { margin-bottom: 12px; }
+}
 @media (max-width: 600px) {
   .arena-page { padding: 0 8px 8px; }
   .arena-header { height: 56px; }

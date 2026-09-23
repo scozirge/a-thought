@@ -1,14 +1,21 @@
 export const ARENA_LIMIT = 17;
-export const ROUND_SECONDS = 90;
-export const TARGET_SCORE = 10;
+export const ROUND_SECONDS = 60;
+export const TARGET_SCORE = 5;
 export const WEAPONS = [
-  { name: '泡泡步槍', magazine: 18, interval: 0.16, damage: 1, reload: 1.3, unlock: 0, color: '#477e83' },
-  { name: '重型泡泡槍', magazine: 6, interval: 0.65, damage: 2, reload: 1.7, unlock: 3, color: '#b2774e' },
-  { name: '連發泡泡槍', magazine: 30, interval: 0.085, damage: 1, reload: 1.5, unlock: 6, color: '#8a72ac' },
+  { name: '突擊步槍', magazine: 30, interval: 0.12, damage: 20, reload: 1.6, color: '#313a48', range: 60 },
+  { name: '手槍', magazine: 12, interval: 0.3, damage: 28, reload: 1.1, color: '#778191', range: 45 },
+  { name: '戰術刀', magazine: 1, interval: 0.55, damage: 60, reload: 0, color: '#d7e6ed', range: 2.8 },
 ] as const;
 
-export function unlockedWeapon(score: number) {
-  return score >= 6 ? 2 : score >= 3 ? 1 : 0;
+export function resolveRound(playerHealth: number, opponentHealth: number): 'player' | 'opponent' | 'draw' {
+  return playerHealth > opponentHealth ? 'player' : playerHealth < opponentHealth ? 'opponent' : 'draw';
+}
+
+export function awardRound(player: number, opponent: number, winner: 'player' | 'opponent' | 'draw') {
+  const playerScore = player + Number(winner === 'player');
+  const opponentScore = opponent + Number(winner === 'opponent');
+  return { player: playerScore, opponent: opponentScore,
+    result: playerScore >= TARGET_SCORE ? 'won' as const : opponentScore >= TARGET_SCORE ? 'lost' as const : null };
 }
 
 export function turnView(yaw: number, pitch: number, dx: number, dy: number, sensitivity: number) {
