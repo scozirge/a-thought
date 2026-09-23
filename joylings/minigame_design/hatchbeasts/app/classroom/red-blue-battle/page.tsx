@@ -32,6 +32,11 @@ export default function RedBlueBattleLesson() {
             玩紅藍槍戰
             <ArrowUpRight size={18} aria-hidden="true" />
           </a>
+          <p className="section-note" style={{ marginTop: '1rem' }}>
+            點一下遊戲畫面開始操作：WASD 移動、滑鼠轉向、左鍵開槍、右鍵瞄準、R 換彈、Esc 選單。
+            <br />
+            若顯示「相容操作」，按住右鍵拖曳轉向，放開移回後可再拖曳。用 Chrome 或 Edge 開啟遊戲可嘗試自由轉向。
+          </p>
         </div>
 
         <section className="lesson-section battle-questions" aria-labelledby="battle-questions-title">

@@ -1,0 +1,8 @@
+依使用者指定 1576 × 1039 的寬高各兩倍，最終輸出 3152 × 2078 PNG。
+處理來源：上一版 6176 × 4072，經 Topaz Precision CGI 再做 2 倍超解析為 12352 × 8144，最後用高品質雙三次取樣縮整至指定尺寸。
+Topaz endpoint: topaz/upscale/image/precision
+request_id: 01a0b337-7c2d-7df0-81f0-9517cf2417f4
+設定：face_enhancement=false, sharpen=0.05, denoise=0, crop_to_fill=false。
+最終檔案大小：5843111 bytes。
+下載：https://v3b.fal.media/files/b/0aaae2c8/mUQ0cbJGr1lA-_lFvXHWm_character-design-SR-3152x2078.png
+未重新設計角色；超解析有邊緣修復，非逐像素無損，不能保證恢復來源缺失的小字。

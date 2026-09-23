@@ -7,7 +7,7 @@ $room = 'class-' + [guid]::NewGuid().ToString('N').Substring(0,16)
 $owned = @()
 function Start-Player([string]$Mode, [string]$Name) {
     $log = Join-Path $testRoot ($Name + '.log')
-    $arguments = "-batchmode -nographics -duelSmoke $Mode -expectedPlayers 8 -room $room -logFile `"$log`""
+    $arguments = "-batchmode -nographics -duelSmoke $Mode -expectedPlayers 8 -expectedHumans 8 -room $room -logFile `"$log`""
     $process = Start-Process -FilePath $Exe -ArgumentList $arguments -WindowStyle Hidden -PassThru
     return @{ Process=$process; Log=$log; Name=$Name }
 }
@@ -27,7 +27,7 @@ try {
         $connectedMode = if ($number -eq 1) { 'AutoHostOrClient' } else { 'Client' }
         Wait-Log $clientRun ('RIVALS_CONNECTED ' + $connectedMode)
     }
-    Wait-Log $hostRun 'RIVALS_PLAYER_SPAWN seat=7'
+    Wait-Log $hostRun 'RIVALS_ROSTER players=8 humans=8 bots=0'
     $fullRun = Start-Player '-client' 'ninth-player'; $owned += $fullRun
     Wait-Log $fullRun 'RIVALS_CONNECT_FAILED.*GameIsFull' 20
     if (Select-String -LiteralPath $fullRun.Log -Pattern 'RIVALS_CONNECTED Client' -Quiet) { throw 'Ninth player entered a full room' }
@@ -36,7 +36,7 @@ try {
     foreach ($run in ($owned | Where-Object { $_.Name -ne 'ninth-player' })) {
         if (!$run.Process.WaitForExit(60000)) { throw ($run.Name + ' timed out') }
         if ($run.Process.ExitCode -ne 0) { throw ($run.Name + ' failed with exit code ' + $run.Process.ExitCode) }
-        $result = Select-String -LiteralPath $run.Log -Pattern 'RIVALS_SMOKE_OK players=8 bluePlayers=4 redPlayers=4'
+        $result = Select-String -LiteralPath $run.Log -Pattern 'RIVALS_SMOKE_OK players=8 bluePlayers=4 redPlayers=4 humans=8 bots=0'
         if (!$result) { throw ($run.Name + ' did not reach a balanced eight-player match') }
         if (Select-String -LiteralPath $run.Log -Pattern '^(InvalidOperationException|NullReferenceException|MissingReferenceException|ArgumentException):' -Quiet) { throw ($run.Name + ' has runtime errors') }
         Write-Output ($run.Name + ': ' + $result.Line)

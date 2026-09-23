@@ -1,0 +1,18 @@
+{
+  "source": "設計_高解析重繪.png",
+  "source_size": [1544, 1018],
+  "output": "設計_保守超解析_4倍_Topaz.png",
+  "output_size": [6176, 4072],
+  "file_size": 19371410,
+  "endpoint_id": "topaz/upscale/image/precision",
+  "request_id": "01a0b2fe-b012-76c0-b85c-6d5cb1b5b7c9",
+  "model": "CGI",
+  "upscale_factor": 4,
+  "face_enhancement": false,
+  "sharpen": 0.15,
+  "denoise": 0,
+  "crop_to_fill": false,
+  "output_format": "png",
+  "download_url": "https://v3b.fal.media/files/b/0aaae140/lCAOx8rtMCKZbR2adyus6_image.png",
+  "note": "保守超解析，未重新生成整張設計。沿用高解析重繪版既有內容與字形，不保證恢復原稿缺失細節，也不等於像素完全一致。"
+}

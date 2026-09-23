@@ -1,5 +1,57 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2907879966657752889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 632897117034168953}
+  - component: {fileID: 6845412811346363311}
+  m_Layer: 0
+  m_Name: Lag compensated body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &632897117034168953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907879966657752889}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9216640564430234845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6845412811346363311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907879966657752889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 3
+  SphereRadius: 0
+  CapsuleRadius: 0.32
+  BoxExtents: {x: 0, y: 0, z: 0}
+  CapsuleExtents: 1.85
+  Offset: {x: 0, y: 0.93, z: 0}
+  Root: {fileID: 7274541405929702384}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &5150488475394387639
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +94,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba5a0ac088f124a4887b3804b5bbfd53, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RivalsPrototype.DuelAvatar
 --- !u!1 &8958444563860598850
 GameObject:
@@ -57,7 +109,8 @@ GameObject:
   - component: {fileID: 5897842554729146724}
   - component: {fileID: 750601448547469220}
   - component: {fileID: 9157786788094505759}
-  m_Layer: 0
+  - component: {fileID: 7274541405929702384}
+  m_Layer: 29
   m_Name: RivalsPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,6 +130,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 632897117034168953}
   - {fileID: 1031407599634686889}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -90,7 +144,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 3567544972
   SendPriority: 1
@@ -100,6 +154,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 750601448547469220}
   - {fileID: 9157786788094505759}
+  - {fileID: 7274541405929702384}
   ForceRemoteRenderTimeframe: 0
 --- !u!143 &5897842554729146724
 CharacterController:
@@ -136,7 +191,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Fusion.Unity::Fusion.NetworkCharacterController
   _stateAuthorityChangeErrorCorrectionDelta: 0
   gravity: -20
@@ -155,9 +210,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a38239cd6a43e2f45b0981761cc52287, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RivalsPrototype.DuelPlayer
   _Seat: 0
+  _Nickname:
+    _length: 0
+    _data:
+      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   _IsBot:
     RawValue: 0
   _Health: 0
@@ -166,7 +225,36 @@ MonoBehaviour:
   _PistolAmmo: 0
   _Look: {x: 0, y: 0}
   _Shots: 0
+  _ConsumedFirePress: 0
   _ShotPoint: {x: 0, y: 0, z: 0}
+  _ShotDirection: {x: 0, y: 0, z: 0}
+  _RifleHeat: 0
   _Hits: 0
   _ShotgunAmmo: 0
   _SniperAmmo: 0
+  _OwnedWeapons: 0
+  _PickupsCollected: 0
+  _LastPickupWeapon: 0
+  _LastHitSeat: 0
+  _LastHitDamage: 0
+  _LastHitKilled:
+    RawValue: 0
+  _DamageOrigin: {x: 0, y: 0, z: 0}
+--- !u!114 &7274541405929702384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8958444563860598850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1039544458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.HitboxRoot
+  Config: 3
+  BroadRadius: 1.1
+  Offset: {x: 0, y: 0.93, z: 0}
+  GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  Hitboxes:
+  - {fileID: 6845412811346363311}

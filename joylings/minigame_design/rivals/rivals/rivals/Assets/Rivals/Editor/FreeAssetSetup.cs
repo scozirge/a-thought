@@ -64,6 +64,16 @@ namespace RivalsPrototype.Editor {
       float scale=size/Mathf.Max(.001f,grounded?bounds.size.y:Mathf.Max(bounds.size.x,bounds.size.z));
       model.transform.localScale*=scale;bounds=BoundsOf(model);
       model.transform.localPosition-=grounded?new Vector3(bounds.center.x,bounds.min.y,bounds.center.z):bounds.center;
+      if(name=="Rifle"||name=="Pistol"||name=="Shotgun"||name=="Sniper") {
+        // Bake a socket at the centre of the barrel's front face. Mesh vertices
+        // are read only in the editor, so player builds need no readable meshes.
+        var vertices=model.GetComponentsInChildren<MeshFilter>()
+          .SelectMany(filter=>filter.sharedMesh.vertices.Select(vertex=>root.transform.InverseTransformPoint(filter.transform.TransformPoint(vertex)))).ToArray();
+        float front=vertices.Max(vertex=>vertex.z);
+        var face=vertices.Where(vertex=>vertex.z>=front-.0001f).ToArray();
+        var muzzle=new GameObject("Muzzle").transform;muzzle.SetParent(root.transform,false);
+        muzzle.localPosition=new Vector3((face.Min(v=>v.x)+face.Max(v=>v.x))*.5f,(face.Min(v=>v.y)+face.Max(v=>v.y))*.5f,front);
+      }
       foreach(var renderer in model.GetComponentsInChildren<Renderer>()) {
         var materials=renderer.sharedMaterials;
         for(int i=0;i<materials.Length;i++) {

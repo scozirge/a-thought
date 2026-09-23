@@ -7,7 +7,8 @@ $room = 'test-' + [guid]::NewGuid().ToString('N').Substring(0,16)
 $owned = @()
 function Start-Duel([string]$mode, [string]$name) {
     $log = Join-Path $testRoot ($name + '.log')
-    $arguments = "-batchmode -nographics -duelSmoke $mode -room $room -logFile `"$log`""
+    $humans = if ($name -eq 'practice') { 1 } else { 2 }
+    $arguments = "-batchmode -nographics -duelSmoke $mode -expectedHumans $humans -room $room -logFile `"$log`""
     $process = Start-Process -FilePath $Exe -ArgumentList $arguments -WindowStyle Hidden -PassThru
     return @{ Process=$process; Log=$log; Name=$name }
 }

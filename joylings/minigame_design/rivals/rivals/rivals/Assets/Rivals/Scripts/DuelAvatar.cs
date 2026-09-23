@@ -6,6 +6,23 @@ namespace RivalsPrototype {
     public Transform GunSocket { get; private set; }
     Transform body,head,leftLeg,rightLeg,leftUpper,leftLower,rightUpper,rightLower;
     Color skin,shirt;
+    Renderer[] flashRenderers;
+    Color[] baseColors;
+    MaterialPropertyBlock flashBlock;
+    float flash,fall;
+    int fallSide;
+    public float FallProgress=>fall;
+    public float FlashAmount=>flash;
+    public void Rebuild(int seat){if(body)Destroy(body.gameObject);body=null;fall=flash=0;Build(seat);}
+    public void Celebrate(float phase) {
+      Pose(0,-8,1,true);
+      body.localPosition=Vector3.up*(Mathf.Abs(Mathf.Sin(phase*2))*.16f);
+      body.localRotation=Quaternion.Euler(0,Mathf.Sin(phase)*9,Mathf.Sin(phase*2)*5);
+      Segment(leftUpper,new Vector3(-.46f,1.32f,0),new Vector3(-.7f,1.7f,0),.25f);
+      Segment(leftLower,new Vector3(-.7f,1.7f,0),new Vector3(-.85f,2.05f+Mathf.Sin(phase*4)*.12f,0),.235f);
+      Segment(rightUpper,new Vector3(.46f,1.32f,0),new Vector3(.7f,1.7f,0),.25f);
+      Segment(rightLower,new Vector3(.7f,1.7f,0),new Vector3(.85f,2.05f-Mathf.Sin(phase*4)*.12f,0),.235f);
+    }
     static readonly Color Ink=new Color(.065f,.075f,.095f);
     public static Color Skin(int seat) {
       Color[] colors={new Color(.93f,.94f,.95f),new Color(.98f,.80f,.59f),new Color(1f,.80f,.25f),new Color(.74f,.48f,.29f),new Color(.96f,.86f,.75f),new Color(.42f,.26f,.18f),new Color(.83f,.89f,.95f),new Color(.96f,.74f,.51f)};
@@ -49,6 +66,9 @@ namespace RivalsPrototype {
       rightUpper=Box(body,"Right upper arm",Vector3.zero,Vector3.one,shirt);
       rightLower=Box(body,"Right hand",Vector3.zero,Vector3.one,skin);
       GunSocket=new GameObject("Held weapon").transform;GunSocket.SetParent(body,false);
+      flashRenderers=body.GetComponentsInChildren<Renderer>();baseColors=new Color[flashRenderers.Length];
+      for(int i=0;i<baseColors.Length;i++)baseColors[i]=flashRenderers[i].sharedMaterial.color;
+      flashBlock=new MaterialPropertyBlock();fallSide=seat%2==0?1:-1;
       Pose(0,0,0,true);
     }
     Transform Leg(int side) {
@@ -59,10 +79,31 @@ namespace RivalsPrototype {
     }
     public void Pose(float speed,float pitch,int weapon,bool alive) {
       if(!body)return;
+      bool updateFlash=flash>0;
+      flash=Mathf.MoveTowards(flash,0,Time.deltaTime/ .22f);
+      if(updateFlash&&flashRenderers!=null)for(int i=0;i<flashRenderers.Length;i++) {
+        if(flash==0){flashRenderers[i].SetPropertyBlock(null);continue;}
+        var tint=flash>.8f?Color.white:new Color(1,.12f,.06f);
+        flashBlock.SetColor("_BaseColor",Color.Lerp(baseColors[i],tint,flash));flashRenderers[i].SetPropertyBlock(flashBlock);
+      }
+      if(!alive) {
+        fall=Mathf.MoveTowards(fall,1,Time.deltaTime/ .65f);float eased=Mathf.SmoothStep(0,1,fall);
+        body.localRotation=Quaternion.Euler(-88*eased,0,fallSide*8*eased);
+        body.localPosition=new Vector3(0,.27f*eased,-.18f*eased);
+        head.localRotation=Quaternion.Euler(12*eased,0,fallSide*14*eased);
+        leftLeg.localRotation=Quaternion.Euler(-18*eased,0,8*eased);rightLeg.localRotation=Quaternion.Euler(12*eased,0,-8*eased);
+        Segment(leftUpper,new Vector3(-.46f,1.32f,0),new Vector3(-.62f,.96f,0),.25f);
+        Segment(leftLower,new Vector3(-.62f,.96f,0),new Vector3(-.74f,.68f,.1f),.235f);
+        Segment(rightUpper,new Vector3(.46f,1.32f,0),new Vector3(.63f,.97f,0),.25f);
+        Segment(rightLower,new Vector3(.63f,.97f,0),new Vector3(.78f,.67f,.12f),.235f);
+        GunSocket.localPosition=new Vector3(.79f,.68f,.12f);GunSocket.localRotation=Quaternion.Euler(20,45,35);
+        return;
+      }
+      fall=0;
       float walk=Mathf.Sin(Time.time*10)*Mathf.Clamp01(speed/5)*27;
       leftLeg.localRotation=Quaternion.Euler(walk,0,0);rightLeg.localRotation=Quaternion.Euler(-walk,0,0);
-      body.localRotation=Quaternion.Slerp(body.localRotation,Quaternion.Euler(alive?0:72,0,0),Time.deltaTime*10);
-      body.localPosition=new Vector3(0,alive?Mathf.Abs(Mathf.Sin(Time.time*10))*.025f*Mathf.Clamp01(speed/5):-.4f,0);
+      body.localRotation=Quaternion.identity;
+      body.localPosition=new Vector3(0,Mathf.Abs(Mathf.Sin(Time.time*10))*.025f*Mathf.Clamp01(speed/5),0);
       head.localRotation=Quaternion.Euler(Mathf.Clamp(pitch,-35,35),0,0);
       var rotation=Quaternion.Euler(Mathf.Clamp(pitch,-65,65),0,0);var pivot=new Vector3(0,1.28f,0);
       Vector3 Aim(Vector3 point)=>pivot+rotation*(point-pivot);
@@ -73,6 +114,7 @@ namespace RivalsPrototype {
       Segment(leftUpper,leftShoulder,leftElbow,.25f);Segment(leftLower,leftElbow,leftHand,.235f);
       GunSocket.localPosition=Aim(new Vector3(.27f,1.19f,.42f));GunSocket.localRotation=rotation;
     }
+    public void FlashDamage(){flash=1;}
     static void Segment(Transform part,Vector3 start,Vector3 end,float width) {
       part.localPosition=(start+end)*.5f;part.localRotation=Quaternion.LookRotation(end-start);part.localScale=new Vector3(width,width,Vector3.Distance(start,end)+.075f);
     }

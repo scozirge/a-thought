@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
   SortKey: 3605341998
   SendPriority: 1
@@ -63,10 +63,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a255f7801371ed343bec0bd35d262dcd, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::RivalsPrototype.DuelMatch
   _Phase: 0
   _Blue: 0
   _Red: 0
   _Round: 0
+  _Game: 0
   _Winner: 0
+  _EliminationSequence: 0
