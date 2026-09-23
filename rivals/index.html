@@ -11,11 +11,13 @@
     #stage{position:relative;width:min(100%,1280px,calc((100vh - 120px)*16/9));aspect-ratio:16/9;margin:0 auto;background:#111c2d;box-shadow:0 16px 55px #0005}
     #stage:fullscreen{width:100vw;height:100vh;aspect-ratio:auto;display:grid;place-items:center}#stage:fullscreen canvas{width:min(100vw,177.7778vh);height:auto;aspect-ratio:16/9}
     canvas{width:100%;height:100%;display:block;outline:none}#loading{position:absolute;inset:0;display:grid;place-content:center;text-align:center;background:#10202e;gap:18px;z-index:3}progress{width:240px;height:5px;accent-color:var(--blue)}
-    body.playing-cursor-hidden,body.playing-cursor-hidden #unity-canvas{cursor:none!important}body.playing-cursor-hidden header,body.playing-cursor-hidden footer,body.playing-cursor-hidden #pointer-status{cursor:auto}
+    body.playing-cursor-hidden,body.playing-cursor-hidden #unity-canvas{cursor:none!important}body.playing-cursor-hidden header,body.playing-cursor-hidden footer{cursor:auto}
     button,a{font:inherit;color:inherit}button{border:1px solid var(--line);border-radius:3px;background:#213548;padding:8px 14px;cursor:pointer;transition:background .15s,transform .15s}button:hover{background:#304a60}button:active{transform:translateY(2px)}button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:3px}button:disabled{opacity:.45;cursor:default;transform:none}a{margin-left:16px}
-    #error{white-space:pre-wrap;color:#ff9e9e;max-width:80vw}#pointer-status{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);margin:0;padding:5px 10px;background:#152637eb;border:1px solid var(--line);border-radius:3px;color:#c4d8e8;font-size:11px;z-index:2}#pointer-status button{padding:3px 8px;font-size:11px;margin-left:10px}
-    #control-resume{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-start;justify-content:center;pointer-events:none}#control-resume[hidden]{display:none}#resume-pointer{position:absolute;top:75%;pointer-events:auto;background:#142d42f5;border:1px solid #72c8f8;border-bottom:3px solid #3e8cba;padding:10px 20px;text-align:center;box-shadow:0 8px 24px #0004}#resume-pointer strong{display:block;font-size:15px;letter-spacing:1px}#resume-pointer small{display:block;color:#b0c8d9;font-size:11px;margin-top:3px}
-    .edge-turn{position:absolute;z-index:2;pointer-events:none;background:#142d42ec;border:1px solid #72c8f8;color:#eaf7ff;padding:5px 8px;font-size:11px;text-align:center;line-height:1.4}.edge-turn[hidden]{display:none}.edge-turn b{display:block;font-size:18px;line-height:1.1}.edge-turn small{font-size:9px;color:#a9cadd}#turn-left{left:8px;top:46%}#turn-right{right:8px;top:46%}#turn-up{top:12%;left:calc(50% - 41px)}#turn-down{bottom:12%;left:calc(50% - 41px)}
+    #error{white-space:pre-wrap;color:#ff9e9e;max-width:80vw}
+    #control-resume{position:absolute;inset:0;z-index:2;pointer-events:none}#control-resume[hidden]{display:none}
+    #drag-help{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:2;max-width:58%;padding:6px 10px;background:#142d42e8;border:1px solid #36586e;color:#c4d8e8;font-size:11px;text-align:center;pointer-events:none}#drag-help[hidden]{display:none}#drag-help button{pointer-events:auto;padding:2px 7px;margin-left:6px;font-size:11px}#drag-help small{display:block;color:#94aabe;font-size:10px}
+    #pointer-card{position:absolute;top:64%;left:50%;transform:translateX(-50%);width:min(460px,94%);padding:13px 18px;text-align:center;background:#142d42f5;border:1px solid #72c8f8;border-bottom:3px solid #3e8cba;box-shadow:0 8px 24px #0004;pointer-events:auto}
+    #pointer-title{font-size:15px;letter-spacing:1px}#pointer-help{margin:5px 0 10px;color:#b0c8d9;font-size:11px}.pointer-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.pointer-actions button{font-size:12px;padding:5px 10px}#game-address{width:100%;margin-top:10px;padding:5px 8px;border:1px solid var(--line);background:#0b1823;color:#c4d8e8;font-size:11px;user-select:text}
     #lobby{position:absolute;inset:0;overflow:auto;padding:clamp(20px,3.8%,48px);display:flex;flex-direction:column;justify-content:center;background:radial-gradient(ellipse at 90% 15%,#244e6570,transparent 60%),linear-gradient(140deg,#111f2e,#0d1823)}#lobby:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#93c6e808 1px,transparent 1px),linear-gradient(90deg,#93c6e808 1px,transparent 1px);background-size:40px 40px}#lobby[hidden]{display:none}#lobby>*{position:relative}
     .lobby-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}.brand{display:flex;align-items:center;gap:14px}.brand-mark{display:grid;grid-template-columns:12px 12px;gap:3px;transform:rotate(-6deg)}.brand-mark i{display:block;width:12px;height:12px;background:var(--blue)}.brand-mark i:nth-child(2),.brand-mark i:nth-child(3){background:var(--red)}.brand b{font-size:18px;letter-spacing:2px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:3px}.rule-chip{border:1px solid var(--line);padding:6px 12px;color:#afc0cf;font-size:12px}.rule-chip strong{color:#eff7ff;margin-right:9px}
     .lobby-layout{display:grid;grid-template-columns:minmax(270px,.85fr) minmax(340px,1.3fr);gap:32px}.profile-card{border:1px solid #38566c;border-top:3px solid var(--blue);background:#182b3bee;padding:24px;box-shadow:5px 5px 0 #070e1555}.eyebrow{color:var(--blue);font-size:11px;letter-spacing:2px;margin:0 0 8px}#lobby h2{font-size:32px;line-height:1.3;letter-spacing:1px;margin:0 0 10px}#lobby p{margin:0;color:var(--muted);font-size:12px}#lobby label{display:block;color:#c6d8e7;font-size:12px;margin:23px 0 8px}.field-row{display:flex;gap:8px}.field-row button{white-space:nowrap;font-size:12px;background:#263f52}#player-name{width:100%;min-width:0;background:#0b1823;border:1px solid #3a5366;border-radius:2px;padding:10px 12px;color:#fff;font:inherit;user-select:text}
@@ -30,11 +32,12 @@
   <header><h1>紅藍槍戰</h1><span>和朋友一起玩，最多 8 人！</span></header>
   <main id="stage">
     <canvas id="unity-canvas" tabindex="0" aria-label="遊戲畫面"></canvas>
-    <div id="control-resume" hidden><button id="resume-pointer" type="button"><strong>點一下，恢復操作</strong><small>重新控制視角 · Esc 開啟選單</small></button></div>
-    <div id="turn-left" class="edge-turn" hidden><b>‹</b>向左轉<small><br>往回移即停</small></div>
-    <div id="turn-right" class="edge-turn" hidden><b>›</b>向右轉<small><br>往回移即停</small></div>
-    <div id="turn-up" class="edge-turn" hidden><b>⌃</b>向上看<small><br>往回移即停</small></div>
-    <div id="turn-down" class="edge-turn" hidden><b>⌄</b>向下看<small><br>往回移即停</small></div>
+    <div id="control-resume" hidden><div id="pointer-card" role="status">
+      <strong id="pointer-title">點一下，開始操作</strong><p id="pointer-help">鎖定滑鼠後可自由轉身 · Esc 開啟選單</p>
+      <div class="pointer-actions"><button id="resume-pointer" class="primary" type="button">開始操作</button><button id="open-game-window" type="button" hidden>新視窗開啟</button><button id="copy-game-link" type="button" hidden>複製遊戲網址</button></div>
+      <input id="game-address" aria-label="遊戲網址，可複製到 Chrome 或 Edge" readonly hidden>
+    </div></div>
+    <div id="drag-help" role="status" hidden>相容操作：按住右鍵拖曳轉向，放開移回後可再拖曳。<button id="retry-pointer" type="button">切換自由轉向</button><small>WASD 移動 · 左鍵開火 · Esc 選單</small></div>
     <section id="lobby" aria-label="房間大廳" hidden>
       <div class="lobby-top"><div class="brand"><div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><b>紅藍槍戰</b><small>小隊就位 · 隨時開打</small></div></div><div class="rule-chip"><strong>4 vs 4</strong>先贏 5 小局</div></div>
       <div class="lobby-layout">
@@ -50,7 +53,6 @@
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
   <footer><span>點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵開槍 · 右鍵瞄準 · 四角撿槍替換 · Esc 選單</span><button id="fullscreen" type="button">放大畫面</button></footer>
-  <p id="pointer-status" role="status" hidden>滑鼠備援：往畫面邊緣推可持續轉向，稍微往回移就停。Q／E 也可轉身。<button id="retry-pointer" type="button">啟用滑鼠鎖定</button></p>
   <script>
     const canvas=document.getElementById('unity-canvas');let player;
     const lobby=document.getElementById('lobby'),nameInput=document.getElementById('player-name'),roomPreview=document.getElementById('room-name'),roomList=document.getElementById('room-list');
@@ -86,159 +88,122 @@
     document.getElementById('refresh-rooms').onclick=()=>lobbyCommand('refresh');
     document.getElementById('random-name').onclick=()=>{clearTimeout(renameTimer);randomNamePending=true;lobbyCommand('random');};
     window.rivalsDiagnostics=new URLSearchParams(location.search).has('diagnostics')?{}:null;
-    // Unity consumes these relative deltas each frame. The unlocked fallback
-    // also works without a held mouse button in embedded browsers.
+    // Native lock gives unbounded FPS motion. Restricted browsers use explicit
+    // right-button swipes, never absolute hover input or edge-turn timers.
     const look=window.rivalsLook={x:0,y:0};
-    const pointerStatus=document.getElementById('pointer-status');
     const nativePointerLock=canvas.requestPointerLock?.bind(canvas);
-    const recovery=document.getElementById('control-resume');
-    const turnHints=['left','right','up','down'].map(side=>document.getElementById('turn-'+side));
-    // A deliberate outward movement arms edge assist; simply clicking/resuming
-    // at an edge never starts it. A tiny inward movement stops it immediately.
-    const edge={x:0,y:0,pushX:0,pushY:0};
-    const gameButtons=new Set();
-    let enabled=false,engaged=false,lastMouse=null,turnLeft=false,turnRight=false,lockPending=false,lastFrame=0;
-    let lockTimer=0,lockRequest=0,wasLocked=false,lastReason='waiting';const focusEvents=[];
+    const recovery=document.getElementById('control-resume'),resumeButton=document.getElementById('resume-pointer');
+    const pointerTitle=document.getElementById('pointer-title'),pointerHelp=document.getElementById('pointer-help');
+    const dragHelp=document.getElementById('drag-help');
+    const openWindow=document.getElementById('open-game-window'),copyLink=document.getElementById('copy-game-link'),gameAddress=document.getElementById('game-address');
+    const gameUrl=new URL(location.href);gameUrl.searchParams.delete('diagnostics');gameAddress.value=gameUrl.href;
+    let enabled=false,engaged=false,lockPending=false,lockFailed=false,lockTimer=0,lockRequest=0,wasLocked=false,lastReason='waiting',lastError='',lastPointerView='';
+    let dragMode=false,dragging=false,dragPointer=null,dragX=0,dragY=0;
+    const focusEvents=[];
     const locked=()=>document.pointerLockElement===canvas;
-    const active=()=>enabled&&engaged&&document.activeElement===canvas&&document.hasFocus()&&!document.hidden;
-    function updateCursor(){document.body.classList.toggle('playing-cursor-hidden',active());}
-    function clearEdge(){edge.x=edge.y=edge.pushX=edge.pushY=0;for(const hint of turnHints)hint.hidden=true;}
-    function clearMotion(){look.x=look.y=0;lastMouse=null;turnLeft=turnRight=false;clearEdge();}
-    function updateEdge(axis,position,min,max,delta){
-      const push=axis==='x'?'pushX':'pushY';
-      const band=Math.min(36,(max-min)*.08),side=position<min+band?-1:position>max-band?1:0;
-      if(!side||delta*side<0){edge[axis]=edge[push]=0;return;}
-      if(delta*side>0)edge[push]+=Math.abs(delta);
-      if(edge[push]>=8)edge[axis]=side;
-    }
+    const eligible=()=>enabled&&engaged&&document.activeElement===canvas&&document.hasFocus()&&!document.hidden;
+    const active=()=>eligible()&&(locked()||dragMode);
+    function clearMotion(){look.x=look.y=0;}
+    function stopDrag(){const id=dragPointer;dragging=false;dragPointer=null;clearMotion();if(id!==null&&canvas.hasPointerCapture(id))canvas.releasePointerCapture(id);}
     function recordFocus(reason){lastReason=reason;if(window.rivalsDiagnostics){focusEvents.push({reason,time:performance.now(),locked:locked(),focused:document.activeElement===canvas,engaged});if(focusEvents.length>40)focusEvents.shift();}}
+    function updatePointerUI(){
+      const controlling=active(),view=[enabled,controlling,locked(),lockPending,lockFailed,dragMode,dragging].join(':');
+      if(view===lastPointerView)return;lastPointerView=view;
+      document.body.classList.toggle('playing-cursor-hidden',controlling&&(locked()||dragging));
+      dragHelp.hidden=!controlling||!dragMode;
+      recovery.hidden=!enabled||controlling;resumeButton.disabled=lockPending;
+      pointerTitle.textContent=lockPending?'正在啟用滑鼠鎖定…':'點一下，繼續操作';
+      pointerHelp.textContent=dragMode?'按住右鍵拖曳轉向，放開移回後可再拖曳。使用 Chrome／Edge 開啟可嘗試自由轉向。':'鎖定滑鼠後可自由轉身 · Esc 開啟選單';
+      resumeButton.textContent=dragMode?'繼續遊戲':'開始操作';
+      openWindow.hidden=copyLink.hidden=gameAddress.hidden=!lockFailed;
+    }
     Object.defineProperty(look,'active',{get:active});
     Object.defineProperty(look,'enabled',{enumerable:true,get:()=>enabled,set:value=>{
-      if(enabled!==!!value){clearMotion();gameButtons.clear();}enabled=!!value;updateCursor();
+      if(enabled!==!!value)stopDrag();enabled=!!value;updatePointerUI();
     }});
     function clearLockRequest(){lockPending=false;clearTimeout(lockTimer);}
-    function pointerUnavailable(){clearLockRequest();recordFocus('lock-unavailable');}
-    // Request in a real mouse gesture, before Unity's deferred input processing.
-    // Consume both promise rejections and legacy errors. Never synthesize a
-    // pointerlockchange on failure: that used to discard pending mouse deltas.
+    function pointerUnavailable(error,reason='lock-unavailable'){
+      clearLockRequest();stopDrag();lockFailed=true;dragMode=true;lastError=error?.name||'PointerLockUnavailable';recordFocus(reason);updatePointerUI();
+    }
+    // Run in the click gesture itself, before Unity's deferred input handling.
     canvas.requestPointerLock=(...args)=>{
-      if(locked()||lockPending||!active())return;
-      if(!nativePointerLock||navigator.userActivation?.isActive===false){recordFocus('fallback');return;}
+      if(locked()||lockPending||dragMode||!eligible())return;
+      if(!nativePointerLock){pointerUnavailable();return;}
+      if(navigator.userActivation?.isActive===false){recordFocus('gesture-required');updatePointerUI();return;}
       try{
-        lockPending=true;const id=++lockRequest;
-        // Some embedded hosts produce neither a promise settlement nor an error.
-        // A lost acknowledgement must never block every later click.
-        lockTimer=setTimeout(()=>{if(lockRequest===id&&lockPending){clearLockRequest();recordFocus('lock-timeout');}},1500);
+        lockPending=true;lockFailed=false;lastError='';const id=++lockRequest;updatePointerUI();
+        lockTimer=setTimeout(()=>{if(lockRequest===id&&lockPending)pointerUnavailable(null,'lock-timeout');},1500);
         const request=nativePointerLock(...args);
-        return request?.then(()=>{if(lockRequest===id)clearLockRequest();},()=>{if(lockRequest===id)pointerUnavailable();});
-      }catch(error){pointerUnavailable();}
+        return request?.then(()=>{if(lockRequest===id&&locked()){clearLockRequest();updatePointerUI();}},error=>{if(lockRequest===id&&lockPending)pointerUnavailable(error);});
+      }catch(error){pointerUnavailable(error);}
     };
-    document.addEventListener('pointerlockerror',pointerUnavailable);
+    document.addEventListener('pointerlockerror',()=>{if(lockPending)pointerUnavailable();});
     document.addEventListener('pointerlockchange',()=>{
-      clearLockRequest();clearMotion();
+      clearLockRequest();stopDrag();
       if(locked()){
         if(!engaged||!document.hasFocus()||document.hidden||document.activeElement!==canvas){recordFocus('stale-lock');document.exitPointerLock();}
-        else recordFocus('locked');
-      }
-      else if(wasLocked){engaged=false;recordFocus('lock-lost');}
-      wasLocked=locked();
-      updateCursor();
+        else{dragMode=false;lockFailed=false;lastError='';recordFocus('locked');}
+      }else if(wasLocked){engaged=false;recordFocus('lock-lost');}
+      wasLocked=locked();updatePointerUI();
     });
-    function engage(){canvas.focus({preventScroll:true});engaged=true;clearMotion();recordFocus('resume');updateCursor();if(enabled)canvas.requestPointerLock();}
-    look.resume=engage;
-    look.release=()=>disengage('released');
-    canvas.addEventListener('mousedown',event=>{
-      if(!active())engage();else if(enabled)canvas.requestPointerLock();
-      lastMouse={x:event.clientX,y:event.clientY};
+    function engage(){canvas.focus({preventScroll:true});engaged=true;stopDrag();recordFocus('resume');if(enabled)canvas.requestPointerLock();updatePointerUI();}
+    look.resume=engage;look.release=()=>disengage('released');
+    canvas.addEventListener('mousedown',()=>{if(!active())engage();});
+    // Click is also needed when a Unity pause-menu button resumes on mouse-up.
+    canvas.addEventListener('click',()=>{if(enabled&&!active())engage();});
+    canvas.addEventListener('pointerdown',event=>{
+      if(event.pointerType!=='mouse'||event.button!==2||!dragMode||!enabled)return;
+      if(!active())engage();
+      if(!active())return;
+      stopDrag();dragging=true;dragPointer=event.pointerId;dragX=event.clientX;dragY=event.clientY;
+      canvas.setPointerCapture(event.pointerId);updatePointerUI();
     });
-    canvas.addEventListener('click',()=>{if(enabled)canvas.requestPointerLock();});
-    document.addEventListener('mousedown',event=>{
-      if(!active()||locked())return;
-      if(event.target===canvas){gameButtons.add(event.button);return;}
-      const rect=canvas.getBoundingClientRect();
-      if((event.clientX<rect.left||event.clientX>=rect.right)&&event.clientY>=rect.top&&event.clientY<rect.bottom){
-        // Unity listens for buttons on the canvas. Forward a gutter press once,
-        // keeping DOM focus on the game instead of the page background.
-        gameButtons.add(event.button);forwardButton(event);
-      }
-    },true);
-    document.addEventListener('mouseup',event=>{
-      if(!gameButtons.delete(event.button)||event.target===canvas)return;
-      forwardButton(event);
-    },true);
-    function forwardButton(event){
-      event.preventDefault();event.stopImmediatePropagation();
-      canvas.dispatchEvent(new MouseEvent(event.type,{bubbles:true,cancelable:true,view:window,
-        button:event.button,buttons:event.buttons,clientX:event.clientX,clientY:event.clientY,
-        screenX:event.screenX,screenY:event.screenY,ctrlKey:event.ctrlKey,shiftKey:event.shiftKey,altKey:event.altKey,metaKey:event.metaKey}));
-    }
+    document.addEventListener('mouseup',event=>{if(event.button===2){stopDrag();updatePointerUI();}});
+    canvas.addEventListener('pointercancel',()=>{stopDrag();updatePointerUI();});
+    canvas.addEventListener('lostpointercapture',()=>{stopDrag();updatePointerUI();});
     document.addEventListener('mousemove',event=>{
       if(!active()){clearMotion();return;}
-      if(locked()){
-        look.x+=event.movementX;look.y-=event.movementY;return;
-      }
-      const rect=canvas.getBoundingClientRect();
-      // Include the side gutters so a fast push all the way to the webview's
-      // edge cannot skip the narrow canvas band and strand the camera again.
-      const inside=event.clientX>=0&&event.clientX<innerWidth&&event.clientY>=rect.top&&event.clientY<rect.bottom;
-      if(!inside){lastMouse=null;clearEdge();return;}
-      if(lastMouse){
-        const dx=event.clientX-lastMouse.x,dy=event.clientY-lastMouse.y;
-        look.x+=dx;look.y-=dy;
-        updateEdge('x',event.clientX,rect.left,rect.right,dx);
-        updateEdge('y',event.clientY,rect.top,rect.bottom,dy);
-      }
-      lastMouse={x:event.clientX,y:event.clientY};
+      if(locked()){look.x+=event.movementX;look.y-=event.movementY;return;}
+      if(!dragging)return;
+      if(!(event.buttons&2)){stopDrag();updatePointerUI();return;}
+      look.x+=event.clientX-dragX;look.y-=event.clientY-dragY;dragX=event.clientX;dragY=event.clientY;
     });
-    canvas.addEventListener('mouseleave',event=>{
-      const rect=canvas.getBoundingClientRect();
-      if(!locked()&&(!event.relatedTarget||event.clientY<rect.top||event.clientY>=rect.bottom))clearMotion();
-    });
-    document.addEventListener('mouseleave',()=>{if(!locked())clearMotion();});
-    document.addEventListener('keydown',event=>{
-      if(active()&&event.code==='Tab'){event.preventDefault();return;}
-      if(event.repeat||!active()||locked()||event.ctrlKey||event.metaKey||event.altKey)return;
-      if(event.code==='KeyQ'){turnLeft=true;event.preventDefault();}
-      if(event.code==='KeyE'){turnRight=true;event.preventDefault();}
-    });
-    document.addEventListener('keyup',event=>{
-      if(event.code==='KeyQ')turnLeft=false;
-      if(event.code==='KeyE')turnRight=false;
-    });
-    function disengage(reason){engaged=false;clearMotion();gameButtons.clear();clearLockRequest();recordFocus(reason);updateCursor();if(locked())document.exitPointerLock();}
+    function disengage(reason){engaged=false;stopDrag();clearLockRequest();recordFocus(reason);updatePointerUI();if(locked())document.exitPointerLock();}
     window.addEventListener('blur',()=>disengage('window-blur'));
     canvas.addEventListener('blur',()=>disengage('canvas-blur'));
     document.addEventListener('visibilitychange',()=>{if(document.hidden)disengage('hidden');});
-    document.addEventListener('keydown',event=>{if(event.code==='Escape'){disengage('escape');if(player)player.SendMessage('RIVALS Session','PauseControls');}},true);
-    window.addEventListener('resize',clearMotion);
-    function updateLook(time){
-      const dt=Math.min((time-(lastFrame||time))/1000,.05);lastFrame=time;
-      const fallback=active()&&!locked();
-      updateCursor();
-      pointerStatus.hidden=!fallback;
-      recovery.hidden=!enabled||active();
-      if(window.rivalsDiagnostics)window.rivalsPointer={active:active(),enabled,engaged,locked:locked(),pending:lockPending,focused:document.activeElement===canvas,visible:!document.hidden,edgeX:edge.x,edgeY:edge.y,reason:lastReason,events:focusEvents.slice()};
-      if(fallback){
-        const keyTurn=Number(turnRight)-Number(turnLeft);
-        look.x+=(keyTurn?keyTurn*1500:edge.x*1050)*dt;
-        look.y-=edge.y*700*dt;
-      }else{turnLeft=turnRight=false;clearEdge();}
-      const directions=[edge.x<0,edge.x>0,edge.y<0,edge.y>0];
-      for(let i=0;i<turnHints.length;i++)turnHints[i].hidden=!fallback||!directions[i];
+    document.addEventListener('keydown',event=>{
+      if(event.code==='Escape'){disengage('escape');if(player)player.SendMessage('RIVALS Session','PauseControls');}
+      else if(active()&&event.code==='Tab')event.preventDefault();
+    },true);
+    window.addEventListener('resize',stopDrag);
+    function updateLook(){
+      updatePointerUI();
+      if(window.rivalsDiagnostics)window.rivalsPointer={active:active(),enabled,engaged,locked:locked(),dragMode,dragging,pending:lockPending,failed:lockFailed,error:lastError,focused:document.activeElement===canvas,visible:!document.hidden,reason:lastReason,events:focusEvents.slice()};
       requestAnimationFrame(updateLook);
     }
     requestAnimationFrame(updateLook);
-    document.getElementById('retry-pointer').onclick=engage;
-    document.getElementById('resume-pointer').onclick=engage;
+    resumeButton.onclick=engage;
+    document.getElementById('retry-pointer').addEventListener('mousedown',event=>event.preventDefault());
+    document.getElementById('retry-pointer').onclick=()=>{dragMode=false;engage();};
+    openWindow.onclick=()=>window.open(gameUrl.href,'_blank','noopener,noreferrer');
+    copyLink.onclick=async()=>{
+      gameAddress.focus();gameAddress.select();
+      try{await navigator.clipboard.writeText(gameAddress.value);copyLink.textContent='已複製網址';}
+      catch(error){copyLink.textContent='請按 Ctrl＋C 複製';}
+    };
     canvas.addEventListener('contextmenu',event=>event.preventDefault());
-    document.addEventListener('contextmenu',event=>{if(active())event.preventDefault();});
     canvas.addEventListener('keydown',event=>{if(event.code==='Space'||event.code.startsWith('Arrow')||((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'))event.preventDefault();});
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
-    const config={dataUrl:'Build/Web.data',frameworkUrl:'Build/Web.framework.js',codeUrl:'Build/Web.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
-    const loader=document.createElement('script');loader.src='Build/Web.loader.js';
+    const config={dataUrl:'Build/WebConnection.data',frameworkUrl:'Build/WebConnection.framework.js',codeUrl:'Build/WebConnection.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/WebConnection.loader.js';
     loader.onload=()=>createUnityInstance(canvas,config,p=>document.getElementById('progress').value=p).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
+    // Refresh named Unity assets when the published release changes.
+    const releaseVersion='20260924-controls-connection';
+    for(const key of ['dataUrl','frameworkUrl','codeUrl'])config[key]+='?v='+releaseVersion;
+    loader.src+='?v='+releaseVersion;
     loader.onerror=()=>showLoadError('無法下載遊戲');document.body.appendChild(loader);
-    document.getElementById('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.getElementById('stage').requestFullscreen)await document.getElementById('stage').requestFullscreen();else if(player)player.SetFullscreen(1);if(enabled)engage();}catch(error){console.warn('Fullscreen unavailable',error);}};
+    document.getElementById('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else{if(enabled)engage();if(document.getElementById('stage').requestFullscreen)await document.getElementById('stage').requestFullscreen();else if(player)player.SetFullscreen(1);}}catch(error){console.warn('Fullscreen unavailable',error);}};
   </script>
 </body>
 </html>
