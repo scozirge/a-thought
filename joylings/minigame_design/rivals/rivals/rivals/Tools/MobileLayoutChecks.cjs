@@ -35,7 +35,7 @@ const scenarios=[
     await page.locator('#touch-controls').evaluate((element,s)=>{element.style.setProperty('--safe-left',s.left+'px');element.style.setProperty('--safe-right',s.right+'px');element.style.setProperty('--safe-bottom',s.bottom+'px');},scenario);
     await page.waitForTimeout(60);
     const rects=await page.evaluate(()=>[...document.querySelectorAll('#touch-controls button,#game-toolbar button')].filter(e=>!e.hidden).map(e=>{const b=e.getBoundingClientRect();return{id:e.id,x:b.x,y:b.y,width:b.width,height:b.height};}));
-    assert.equal(rects.length,8);assert.equal(await page.locator('#touch-slide').count(),0);assert.equal(await page.locator('#control-resume').isVisible(),false);
+    assert.equal(rects.length,7);assert.equal(await page.locator('#touch-slide').count(),0);assert.equal(await page.locator('#touch-jump').count(),0);assert.equal(await page.locator('#control-resume').isVisible(),false);
     for(let i=0;i<rects.length;i++){
      const a=rects[i];assert.ok(a.x>=0&&a.y>=0&&a.x+a.width<=scenario.width+.1&&a.y+a.height<=scenario.height+.1,engine+' '+scenario.name+' outside viewport: '+a.id);
      if(!['touch-menu','fullscreen'].includes(a.id)){assert.ok(a.width>=48&&a.height>=48);assert.ok(a.x>=scenario.left&&a.x+a.width<=scenario.width-scenario.right+.1);}

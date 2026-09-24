@@ -28,7 +28,7 @@ namespace RivalsPrototype.Editor {
       NetworkProjectConfigUtilities.SaveGlobalConfig(config);
       var go=new GameObject("RivalsPlayer");go.AddComponent<NetworkObject>();
       go.layer=DuelPlayer.PlayerLayer;
-      var cc=go.AddComponent<NetworkCharacterController>();cc.maxSpeed=5.5f;cc.jumpImpulse=7;
+      var cc=go.AddComponent<NetworkCharacterController>();cc.maxSpeed=5.5f;cc.jumpImpulse=0;
       var capsule=go.GetComponent<CharacterController>();capsule.height=1.85f;capsule.radius=.32f;capsule.center=new Vector3(0,.93f,0);
       go.AddComponent<DuelPlayer>();
       var hitRoot=go.AddComponent<HitboxRoot>();hitRoot.BroadRadius=1.1f;hitRoot.Offset=new Vector3(0,.93f,0);

@@ -209,7 +209,6 @@ namespace RivalsPrototype {
       cc.maxSpeed = IsBot ? 3.8f : aim ? 3.2f : input.Buttons.IsSet(Action.Sprint) ? 8 : 5.5f;
       cc.rotationSpeed = 0; cc.acceleration = 70; cc.braking = 20;
       var move = Quaternion.Euler(0, Look.x, 0) * new Vector3(input.Move.x, 0, input.Move.y);
-      if (pressed.IsSet(Action.Jump)) cc.Jump();
       cc.Move(move); transform.rotation = Quaternion.Euler(0, Look.x, 0);
       // Predict weapon state on the input authority as well as the host. Fusion
       // restores these networked values before resimulation; damage stays on host.

@@ -26,7 +26,7 @@ const suffix=Date.now().toString(36).slice(-6);
   });
   const run={name,errors:[],logs:[]};result.runs.push(run);page.on('pageerror',e=>run.errors.push(e.message));page.on('console',m=>{const t=m.text();if(/^(?:\w*Exception|RuntimeError):/.test(t))run.errors.push(t);if(/RIVALS_|UnityCache|Disconnect|Shutdown/.test(t))run.logs.push(t);});
   await page.addInitScript(()=>document.addEventListener('pointerdown',e=>{if(e.target.closest('#touch-fire'))window.mobileTriggerTime=performance.now();},true));
-  await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startupTimeoutMs});await lobby(page);await page.locator('#player-name').fill(name+suffix);return page;
+  console.log('WEB_MOBILE_LOADING '+name);await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startupTimeoutMs});await lobby(page);console.log('WEB_MOBILE_READY '+name);await page.locator('#player-name').fill(name+suffix);return page;
  }
  try{
   const desktop=await open('鍵鼠',false),phone=await open('手機',true);
@@ -68,8 +68,13 @@ const suffix=Date.now().toString(36).slice(-6);
   const aimedShots=me(await state(phone)).shots;await down(3,await center('#touch-fire'));await move(3,{x:(await center('#touch-fire')).x-15,y:(await center('#touch-fire')).y});await phone.waitForTimeout(600);await up(3);
   const aimed=await wait(phone,s=>s.aiming&&me(s).shots>aimedShots,'shoot while aim is latched');await wait(desktop,s=>s.players.find(p=>p.seat===aimed.localSeat).shots===me(aimed).shots,'aimed shots reach host');
   await tap('#touch-aim',4);await wait(phone,s=>!s.aiming,'second tap releases aim');pass('tap aim stays enabled while firing and dragging; the second tap releases it');
-  const grounded=me(await state(phone)).position.y;await tap('#touch-jump',5);await wait(phone,s=>me(s).position.y>grounded+.35,'touch jump');pass('aim and jump respond to touch buttons');
-  await wait(phone,s=>Math.abs(me(s).position.y-grounded)<.15,'land after jump');
+  assert.equal(await phone.locator('#touch-jump').count(),0);
+  const grounded=me(await state(phone)).position.y;
+  // Retired touch packets must be harmless as well as absent from the UI.
+  await phone.evaluate(()=>{rivalsTouch.pressed|=4;rivalsTouch.held|=4;});
+  for(let sample=0;sample<8;sample++){await phone.waitForTimeout(80);const s=await state(phone);assert.ok(s.controls&&me(s).health>0);assert.ok(Math.abs(me(s).position.y-grounded)<.15,'retired jump bit changed player height');}
+  await phone.evaluate(()=>{rivalsTouch.held&=~4;});
+  pass('no jump button remains and retired touch input cannot jump');
   stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+40,y:stick.y});await down(6,await center('#touch-sprint'));
   assert.equal(await phone.evaluate(()=>!!(rivalsTouch.held&(1<<3))&&rivalsTouch.moveX===1),true);
   // The character accelerates at 10 m/s². Measure after reaching full speed,

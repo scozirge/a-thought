@@ -50,9 +50,9 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.equal(await page.evaluate(()=>rivalsTouch.held),2);await down(23,aim);await up(23);assert.equal(await page.evaluate(()=>rivalsTouch.held&2),0);
   await down(24,fire);await down(25,aim);await up(25);assert.equal(await page.evaluate(()=>rivalsTouch.held&3),3);await up(24);await down(26,aim);await up(26);
   assert.equal(await page.locator('#touch-aim').getAttribute('aria-pressed'),'false');pass('tap aim stays on after release, permits firing and turning, and a second tap turns it off');
-  await page.evaluate(()=>rivalsTouch.reset());const jump=await center('#touch-jump');await down(4,jump);await up(4);
-  assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),4);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),0);
-  assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&4),4);await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&4),0);
+  await page.evaluate(()=>rivalsTouch.reset());const reload=await center('#touch-reload');await down(4,reload);await up(4);
+  assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),16);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),0);
+  assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&16),16);await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&16),0);
   await down(5,fire);await down(6,{x:fire.x+10,y:fire.y});await up(5);assert.equal(await page.evaluate(()=>rivalsTouch.held&1),1);await up(6);
   assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchFirePress()),2);pass('short taps survive until polling and multiple fire fingers release independently');
   await down(7,stick);await move(7,{x:stick.x+40,y:stick.y});await down(8,fire);points.clear();await dispatch('touchCancel');
@@ -74,10 +74,10 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
    await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),false);
   }pass('unsupported or denied fullscreen fills the viewport and exits cleanly');
   await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(output,'mobile-controls-portrait.png')});
-  for(const selector of ['#touch-move','#touch-fire','#touch-aim','#touch-jump','#touch-reload','#touch-sprint']){
+  for(const selector of ['#touch-move','#touch-fire','#touch-aim','#touch-reload','#touch-sprint']){
    const box=await page.locator(selector).boundingBox();assert.ok(box.width>=48&&box.height>=48);assert.ok(box.x>=0&&box.x+box.width<=390.1);assert.ok(box.y>=0&&box.y+box.height<=844.1);
   }pass('portrait controls remain inside the viewport with usable touch targets');
-  assert.equal(await page.locator('#touch-slide').count(),0);
+  assert.equal(await page.locator('#touch-slide').count(),0);assert.equal(await page.locator('#touch-jump').count(),0);
   await page.locator('#touch-menu').tap();await page.locator('#touch-leave').tap();await page.locator('#mode-keyboard').tap();
   await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),true);await page.locator('#fullscreen').tap();
   assert.equal(await page.locator('#touch-controls').isVisible(),false);pass('return to lobby and switch back to keyboard with fullscreen available');

@@ -140,7 +140,7 @@ namespace RivalsPrototype {
     }
     void DrawPauseMenu(){
       if(DuelWebInput.TouchMode)return;Fill(new Rect(0,0,hudWidth,hudHeight),new Color(.025f,.04f,.07f,.62f));var box=new Rect(HudCenter.x-195,HudCenter.y-181,390,362);HudCard(box,TeamColor(0));
-      HudText(new Rect(box.x+28,box.y+20,334,40),"休息一下",30,null,TextAnchor.MiddleLeft,true);HudText(new Rect(box.x+28,box.y+72,334,24),"WASD 移動 · 左鍵射擊 · 右鍵瞄準",16,HudMuted);HudText(new Rect(box.x+28,box.y+100,334,24),"Space 跳躍 · R 裝填 · 四角撿槍",16,HudMuted);
+      HudText(new Rect(box.x+28,box.y+20,334,40),"休息一下",30,null,TextAnchor.MiddleLeft,true);HudText(new Rect(box.x+28,box.y+72,334,24),"WASD 移動 · 左鍵射擊 · 右鍵瞄準",16,HudMuted);HudText(new Rect(box.x+28,box.y+100,334,24),"Shift 衝刺 · R 裝填 · 四角撿槍",16,HudMuted);
       if(HudButton(new Rect(box.x+28,box.y+143,334,44),"繼續玩",true))ResumeControls();if(HudButton(new Rect(box.x+28,box.y+199,334,40),AudioEnabled?"聲音：開":"聲音：關"))SetAudioEnabled(!AudioEnabled);if(HudButton(new Rect(box.x+28,box.y+251,334,40),"回到大廳"))Leave();HudText(new Rect(box.x+28,box.y+311,334,24),"房間內的對戰會繼續進行",14,HudMuted);
     }
   }

@@ -68,6 +68,10 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   const beforeC=me(reloaded).position;await client.page.keyboard.press('c',{delay:80});await client.page.waitForTimeout(650);
   const afterC=await state(client);if(!afterC.controls||me(afterC).health<=0)throw Error('No-slide check requires a live controlled player');
   const cTravel=Math.hypot(me(afterC).position.x-beforeC.x,me(afterC).position.z-beforeC.z);if(cTravel>.15)throw Error('Removed slide key moved the player: '+cTravel);
+  const beforeSpace=me(await state(client)).position.y;let spaceRise=0;
+  await client.page.keyboard.down('Space');
+  for(let sample=0;sample<10;sample++){await client.page.waitForTimeout(80);const local=await state(client),authority=await state(host);if(!local.controls||me(local).health<=0)throw Error('No-jump check requires live controls');spaceRise=Math.max(spaceRise,Math.abs(me(local).position.y-beforeSpace),Math.abs(authority.players.find(p=>p.seat===local.localSeat).position.y-beforeSpace));}
+  await client.page.keyboard.up('Space');if(spaceRise>.15)throw Error('Space still jumps: '+spaceRise);
   await client.page.mouse.down({button:'right'});await wait(client,s=>s.aiming,'mouse hold aim');await client.page.mouse.up({button:'right'});await wait(client,s=>!s.aiming,'mouse release aim');
   // A real movement input must be seen smoothly at the other peer.
   await client.page.keyboard.down('d');await client.page.waitForTimeout(1500);await client.page.keyboard.up('d');
@@ -87,7 +91,7 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   await client.page.evaluate(()=>document.dispatchEvent(new MouseEvent('mousemove',{movementX:0,movementY:70/.12,bubbles:true})));await client.page.waitForTimeout(300);
   await client.page.locator('#unity-canvas').screenshot({path:path.join(root,'network-web-client.png')});
   await client.context.close();await wait(host,s=>s.players.filter(p=>p.bot).length===7&&s.players.length===8,'bot refill');
-  results.summary={clicks:8,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,slideRemoved:true,cKeyTravel:cTravel,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
+  results.summary={clicks:8,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,slideRemoved:true,cKeyTravel:cTravel,jumpRemoved:true,spaceHeightChange:spaceRise,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
  }finally{
   results.runs=runs.map(r=>({name:r.name,errors:r.errors,logs:r.logs}));fs.writeFileSync(path.join(root,lagged?'network-web-lag-check.json':'network-web-check.json'),JSON.stringify(results,null,2));await browser.close();
  }
