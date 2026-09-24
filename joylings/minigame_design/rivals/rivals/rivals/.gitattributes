@@ -1,0 +1,4 @@
+# 正式輸出保留原始位元組，避免換行轉換破壞版本清單的 SHA-256。
+/Builds/Release-20260924-Mobile/** -text
+/Builds/RIVALS-Web-20260924-mobile.zip -text
+/Builds/RIVALS-Windows-x64-20260924-mobile.zip -text

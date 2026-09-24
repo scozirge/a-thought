@@ -1,0 +1,18 @@
+紅藍槍戰｜手機與鍵鼠網頁版（2026-09-24）
+
+公開遊戲：https://scozirge.github.io/a-thought/rivals/
+大廳選「鍵盤滑鼠」或「手機觸控」，建立房間或加入朋友的小隊。
+手機與電腦可同房遊玩，建議手機橫向拿。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。
+
+手機：左側搖桿移動、右側滑動轉向；按住射擊／瞄準也能滑動轉向。
+另有跳躍、衝刺、裝填、滑行；右上選單可切換聲音或回到大廳。
+鍵鼠：WASD 移動、滑鼠轉向、左鍵射擊、右鍵瞄準、Space 跳躍、Shift 衝刺、R 裝填、C 滑行、Esc 選單。
+兩種模式都可按右上「全螢幕」，再次按可退出。
+不支援原生全螢幕時改為填滿可用視窗，瀏覽器網址列可能保留。
+
+本機執行需 Python：在此目錄執行 python serve_web.py --directory . --port 8184
+再開啟 http://127.0.0.1:8184/ ，不可直接雙擊 index.html。
+自行架站請完整上傳此目錄，以 HTTP(S) 提供，.wasm 的 MIME type 為 application/wasm。
+首次下載可能需要數分鐘。房主需保持瀏覽器運作，房主離開後其他玩家返回大廳。
+手機功能已做 Chrome 觸控模擬與實際 Photon 連線測試，Android／iPhone 實機相容性仍待回饋。
+素材來源見 ASSET_CREDITS.txt，請保留 ThirdPartyLicenses 全部授權文件。

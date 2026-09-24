@@ -3,7 +3,12 @@
 /Obj/
 /Logs/
 /UserSettings/
-/Builds/
+# 已驗證的正式輸出隨程式碼一起提交，其餘建置仍留在本機。
+/Builds/*
+!/Builds/Release-20260924-Mobile/
+!/Builds/RIVALS-Web-20260924-mobile.zip
+!/Builds/RIVALS-Windows-x64-20260924-mobile.zip
+/Builds/Release-20260924-Mobile/Windows/*_DoNotShip/
 /.vs/
 *.csproj
 *.sln

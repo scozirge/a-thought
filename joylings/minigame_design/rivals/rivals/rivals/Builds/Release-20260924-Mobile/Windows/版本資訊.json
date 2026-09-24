@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-24",
+  "gameSourceCommit": "cf586f3a1ebc1dae889ca6cc0bfaf0ee1e914ce6",
+  "target": "Windows",
+  "unity": "6000.3.11f1",
+  "backend": "Mono / Windows x64",
+  "development": false,
+  "networkVersion": "rivals-web-16-kill-race",
+  "rules": {
+    "killsToWin": 30,
+    "respawnSeconds": 3
+  },
+  "releaseChanges": [
+    "同步手機網頁版本使用的最新遊戲程式",
+    "保留鍵盤短按直到 Fusion 完成本畫面的輸入讀取",
+    "附完整 EXE、遊戲資料、執行環境與素材授權"
+  ],
+  "sourceSha256": {
+    "Assets/Plugins/WebGL/RivalsInput.jslib": "fc0b4dfaef0ddbc91383433510790ba6d0bc948af3f35fee93b3b728de5a5677",
+    "Assets/Rivals/Editor/ArtReview.cs": "a67562c342f6c181391319e0650ba6b718ea9172e179e90c96c5f1bbbd244865",
+    "Assets/Rivals/Editor/BattleRulesChecks.cs": "5f16382c0f881e7589400935d644e9c57a3929034fbc54e6e5e94e56a0f4889e",
+    "Assets/Rivals/Editor/BotNavigationChecks.cs": "2280abd015d596791469f12fd109b1b5307ef83e67f6368da8a9fdea812ca37e",
+    "Assets/Rivals/Editor/FreeAssetSetup.cs": "f24ac317731c83beca16fd71fc7637c4297810a700ed6e276aa27c3b26e7ff8e",
+    "Assets/Rivals/Editor/GunPresentationChecks.cs": "830b3a405ca31106c9882d5f379c43f60006303c52decd3e291e9fbd3c4c3e24",
+    "Assets/Rivals/Editor/RivalsSetup.cs": "047c29462860df459ced983de2a0d3134d4c4398388d70e517041cdf8bdef26d",
+    "Assets/Rivals/Editor/WebBuild.cs": "f4c8e90f9af8797e337f9be90406f76198cec9dc9e87c98bcbcaf3ea383d4050",
+    "Assets/Rivals/Editor/WindowsBuild.cs": "380b0c045399fa4708163af77a079f70cc5565f5e6a0f0e481fa1e5500dc56b6",
+    "Assets/Rivals/Scripts/DuelArt.cs": "a3ebc0546bb6c41359607d8c087e0df95d030421fe308d878d5229192f433896",
+    "Assets/Rivals/Scripts/DuelAvatar.cs": "7e6bd4f745eb1ce6b99b7a76dfb5221b9c4d4f3d6885c062bcfdbb1c6fcd8505",
+    "Assets/Rivals/Scripts/DuelBattleHUD.cs": "2d4429ce2a48f6605d97dcc22d197f424e851ac222c0b9525106ab2d8c97c25e",
+    "Assets/Rivals/Scripts/DuelBattleSmoke.cs": "5ed0cd4f1a1e1055947e6ace53e573f256c892f00c4f743ad80c7f65150580fc",
+    "Assets/Rivals/Scripts/DuelCombatHUD.cs": "3f530e780ad7c9497815818a185ee858bfbbd30bf1a7eb3b5b478cdae5358b74",
+    "Assets/Rivals/Scripts/DuelCombatSmoke.cs": "83c44e6a69e1e23d28e963630cbc1bf1ee9a54986c62d95502a562814f039a5c",
+    "Assets/Rivals/Scripts/DuelConnection.cs": "245cba381537d9ec722fabb034b566cd943c30cb0ad5521bfe72e304d92aaaa3",
+    "Assets/Rivals/Scripts/DuelDiagnostics.cs": "babf119fc7060b5fec039415d4c57a5bbdc1e8080b62138cf50475784f32efec",
+    "Assets/Rivals/Scripts/DuelInput.cs": "71134136e408395196b0b57ef027f29cd032262ea30d85123ce46d10ff6d4797",
+    "Assets/Rivals/Scripts/DuelLobby.cs": "27d03b2a663df5aded65806a991bd11d10f77f102ffded6a8bc82a5b09688a35",
+    "Assets/Rivals/Scripts/DuelMatch.cs": "bc4ecb8c0d062e08a85ccfb4b9e98a20f6595bab8ed88d6e7ebec8dac00d523e",
+    "Assets/Rivals/Scripts/DuelNames.cs": "51648651164c3c085afbcb5530253355be916165133aa6243c74f2727f03c608",
+    "Assets/Rivals/Scripts/DuelNetworkSmoke.cs": "bdc151f270e42f2af4dcc01cc5737b3d3425d03d762c8e3b1c4b3f99c933b350",
+    "Assets/Rivals/Scripts/DuelPickups.cs": "a344272dc26bb58ac271da3fc09b5852c6fa16d6f8a2a28ce5a140e125046638",
+    "Assets/Rivals/Scripts/DuelPlayer.cs": "7e57db460c7a372c7b99cd07b68745c28f09e0e96dfd270be30d3a5f49ffc729",
+    "Assets/Rivals/Scripts/DuelPodium.cs": "09ea1c89663d57adb7366bad920535c324e5a2f786a49c005c0d020828057a0e",
+    "Assets/Rivals/Scripts/DuelReloadView.cs": "db0d62e32f7111c1ff4750a996b4e26fd54bfaaf8b314c042716620dbb7431e9",
+    "Assets/Rivals/Scripts/DuelRespawn.cs": "ac9c9649e9844c66c81557d5485724e54a0a6565b43fc1ca0213aea373572e23",
+    "Assets/Rivals/Scripts/DuelSession.cs": "19c441cf6836df9498cd7a3462f695264f84131c3ba87e8449649419d5e1e785",
+    "Assets/Rivals/Scripts/DuelShotTracer.cs": "e26813c7903adf13797ed37d20e5384d22a4e4908482f94e58d7c932801df7e4",
+    "Assets/Rivals/Scripts/DuelWebInput.cs": "78802e70a67e952dc08221f506e5285b2bf467f836f9309dae83c6c52193b283",
+    "Assets/Rivals/Scripts/DuelWorld.cs": "67334f3c5c63a46c64b77515214aea6bccdcd095eb36f1fa384754c8b4aac9fa",
+    "Assets/WebGLTemplates/Rivals/index.html": "2abdcf12de44f8ce7cf5dd0adb36b231a467e936ea8cabe728621ea815f25243"
+  }
+}
