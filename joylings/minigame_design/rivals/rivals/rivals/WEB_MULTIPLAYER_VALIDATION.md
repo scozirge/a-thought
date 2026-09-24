@@ -94,10 +94,24 @@ node Tools/ReleaseCrossPlaySmokeTest.cjs
 
 重跑長局時，可在另一個終端使用相同環境變數，等主測試印出 `respawn restores controls without another click` 後執行 `node Tools/WebActiveParticipant.cjs`，讓測試玩家繼續實際參戰。腳本只自動選取唯一一間 `擊殺xxxxxx的房間` 格式的測試房；若同時有多場測試，設定 `RIVALS_PARTICIPANT_ROOM` 為精確房名。結果保存在 `active-participant-check.json`。
 
+## 公開發布與線上驗證
+
+2026-09-24 已將上述正式 Web 成品發布到 [公開遊戲](https://scozirge.github.io/a-thought/rivals/)。GitHub Pages 使用 `gh-pages` 根目錄，部署提交為 `8287d178ba92d8da208d9c142b3fa1fbaddefc02`，對應程式提交 `c149541b23bbbfcc283be259204d6e7148ea6f92`。Pages API 確認該提交為 `built`，完成時間為臺灣時間 13:02:35；變更僅限 `rivals/`，教材及其他網站內容保留。
+
+- 重新核對 32 個建置來源 SHA256，皆符合正式成品記錄。
+- 從公開 HTTPS 網址讀取全部 21 個檔案，SHA256 與正式成品逐一相符。大型 `.data` 與 `.wasm` 使用 HTTP Range 206 分段讀取並完整組合後比對，其他檔案回應 200；WASM MIME 為 `application/wasm`。原有紅藍槍戰教材頁回應 200。
+- 兩個隔離 Chrome 玩家透過公開網址與 Photon asia 建房、加入並完成射擊、換彈、移動同步與離線補 Bot：8 次短按皆同步，含入場點擊共 9 發／9 次特效，本機回饋最慢 13.1 ms，RTT 約 196.4 ms，停止後雙端位置差約 0.000189 單位。沒有未處理的 JavaScript 或 Unity 遊戲例外。
+- 公開下載曾出現逾時：首次四人測試碰到 Playwright 預設 30 秒導覽上限，第二次未在 120 秒內載入可操作大廳；當時沒有遊戲例外。獨立下載 `.data` 的一次完整 gzip 請求耗時約 154 秒。連線與恢復腳本改為先等待 HTML，再以可操作大廳判定完成；可用 `RIVALS_STARTUP_TIMEOUT_MS` 指定啟動等待時間，預設 120 秒。
+- 第三次公開四人測試使用 300 秒啟動窗口，房主成功載入並建房，但第二個隔離瀏覽器在 300 秒內仍未完成大廳載入，因此中止；**此次公開四人測試沒有通過**，不能套用上方本機正式版四人通過的結論。另一次冷載入觀察中，進度持續增加，約 163 秒完成 `.data` 下載與快取，171 秒仍顯示「正在準備戰場」；首次載入效能仍受外部下載狀況影響，未宣稱已解決。
+
+原始線上紀錄保存於 `Logs/PublicMultiplayer/`，包括 `public-artifact-check.json`、`network-web-check.json`、`network-web-client.png`、`public-load-probe.json`，及 `multiplayer-recovery-check-first-attempt.json`、`multiplayer-recovery-check-second-attempt.json`、`multiplayer-recovery-check-third-attempt.json`。這次線上驗證仍在同一台電腦使用隔離的瀏覽器環境，尚未代表不同實體裝置或 ISP 的外部測試。
+
+外部參與者請使用電腦版 Chrome／Edge，由一人建立房間，其他人在即時房間清單加入。最多 8 位真人；所有人應載入新版「先達 30 擊殺」介面。若仍顯示「5 小局」，按 `Ctrl + Shift + R` 強制重新載入；首次載入需下載大型資源，請等待進度完成。房主應保持遊戲頁面運作，離開後其他玩家會回大廳。
+
 ## 範圍與限制
 
 - 測試使用同一台 Windows 電腦上的隔離 Chrome 環境與真實 Photon asia 服務，沒有宣稱完成多台實體裝置、跨 ISP 或長時間壓力測試。
 - 模擬的是 WebSocket 傳輸延遲／停頓及實際關閉連線，不代表涵蓋所有弱網條件。
 - 房主離開後返回大廳；未實作房主遷移或保留原玩家身分的斷線續局。
 - Bot 仍使用簡易方向避障，沒有完整導航尋路；玩家都站定時仍可能在掩體後僵持。本次修正針對已重現的貼牆探測漏判。
-- 本次驗證對象是本機正式成品，沒有更新公開網站。
+- 修正回歸的主要驗證對象為本機正式成品；後續公開部署與線上驗證另記於上節。

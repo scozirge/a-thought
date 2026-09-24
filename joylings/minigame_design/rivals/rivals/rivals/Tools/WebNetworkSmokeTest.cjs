@@ -7,6 +7,7 @@ const root=process.env.RIVALS_TEST_OUTPUT?path.resolve(process.env.RIVALS_TEST_O
 fs.mkdirSync(root,{recursive:true});
 const me=s=>s.players.find(p=>p.seat===s.localSeat);
 const room='連線測試'+Date.now().toString(36);
+const startupTimeoutMs=Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||120000);
 const nameSuffix=Date.now().toString(36).slice(-5);
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
@@ -32,7 +33,9 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   page.on('pageerror',e=>r.errors.push(e.message));page.on('console',m=>r.logs.push(m.text()));
   await page.addInitScript(()=>document.addEventListener('mousedown',e=>{if(e.button===0)window.rivalsTriggerTime=performance.now();},true));
   const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8184/');url.searchParams.set('diagnostics','1');
-  await page.goto(url.href);await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:120000});
+  // Public hosting can still be downloading Unity assets after HTML is ready.
+  // Give the actual playable lobby its own startup deadline.
+  await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startupTimeoutMs});await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:startupTimeoutMs});
   return r;
  }
  try{

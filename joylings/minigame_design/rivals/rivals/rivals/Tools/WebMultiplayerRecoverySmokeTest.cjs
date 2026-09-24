@@ -3,6 +3,7 @@
 const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||'Logs/WebMultiplayer');
+const startupTimeoutMs=Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||120000);
 const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8188/');url.searchParams.set('diagnostics','1');
 const result={url:url.href,testedAt:new Date().toISOString(),checks:[],runs:[],snapshots:[]};
 const title='恢復'+Date.now().toString(36).slice(-6)+'的房間';
@@ -13,6 +14,7 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat);
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
  const peers=[];
  async function open(index){
+  console.log('RECOVERY_LOADING '+index);
   const context=await browser.newContext({viewport:{width:960,height:720}}),page=await context.newPage();
   const run={index,errors:[],logs:[]};result.runs.push(run);peers.push(page);
   page.on('pageerror',e=>run.errors.push(e.message));page.on('console',m=>{const t=m.text();if(/^(?:\w*Exception|RuntimeError):/.test(t))run.errors.push(t);if(/RIVALS_|Disconnect|Shutdown/.test(t))run.logs.push(t);});
@@ -39,10 +41,11 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat);
    test.resume=()=>{test.paused=false;for(const deliver of test.queue.splice(0))deliver();};
    test.disconnect=()=>{test.blocked=true;for(const socket of test.sockets)if(socket.readyState===Native.OPEN)socket.close();};
   });
-  await page.goto(url.href);await lobby(page);await page.locator('#player-name').fill(index?'恢復訪客'+index:title.slice(0,-3));return page;
+  // Wait for the HTML first, then measure readiness using the real Unity lobby.
+  await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startupTimeoutMs});await lobby(page);console.log('RECOVERY_READY '+index);await page.locator('#player-name').fill(index?'恢復訪客'+index:title.slice(0,-3));return page;
  }
  async function state(page){return page.evaluate(()=>window.rivalsDiagnostics);}
- async function lobby(page){await page.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready&&!window.rivalsLobbyState.busy,null,{timeout:90000});}
+ async function lobby(page){await page.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready&&!window.rivalsLobbyState.busy,null,{timeout:startupTimeoutMs});}
  async function playing(page,count){
   await page.waitForFunction(n=>{const s=window.rivalsDiagnostics;return !window.rivalsLobbyState?.visible&&s?.players?.length===8&&s.players.filter(p=>!p.bot).length===n&&s.localInputOwners===1;},count,{timeout:45000});
   const s=await state(page);assert.equal(new Set(s.players.map(p=>p.seat)).size,8);assert.equal(s.players.filter(p=>p.team===0).length,4);return s;

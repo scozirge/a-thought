@@ -4,7 +4,9 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windo
 
 公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
-GitHub Pages 使用 `gh-pages` 分支根目錄；將完整 `Builds/Web/` 發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。課程中的新增武器與技能是發想範例，並非現有功能。
+GitHub Pages 使用 `gh-pages` 分支根目錄。目前公開版於 2026-09-24 發布，部署提交為 `8287d17`，對應程式提交 `c149541`；將完整 `Builds/Release-20260924-Multiplayer/Web/` 發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。課程中的新增武器與技能是發想範例，並非現有功能。
+
+對外測試可直接分享上方公開遊戲網址，建議使用電腦版 Chrome／Edge。由一人建立房間，其他人在即時清單按「加入房間」；同房最多 8 位真人，不足由 Bot 補齊。首次載入需下載遊戲資源，較慢網路可能需要數分鐘，請等進度完成。若仍看到「5 小局」，請按 `Ctrl + Shift + R` 強制重新載入，所有人載入新版後再一起開房。
 
 ## 開始玩
 
@@ -82,7 +84,7 @@ python Tools/serve_web.py --port 8184
 
 ## 載入速度
 
-資源與載入流程最佳化已包含在 `Builds/Release-20260924-Multiplayer/` 正式包；不啟用耗時的 DiskSizeLTO／IL2CPP OptimizeSize。公開網站尚未因這次打包而更新，成品與測試紀錄見 [追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。
+資源與載入流程最佳化已包含在 `Builds/Release-20260924-Multiplayer/` 正式包，並已發布到公開網站；不啟用耗時的 DiskSizeLTO／IL2CPP OptimizeSize。成品、測試與公開部署紀錄見 [追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。
 
 載入流程修改保留 HTTP gzip 與 WASM 串流編譯，並啟用 Unity 資料快取設定。對內容雜湊檔案使用 `immutable`；不支援或禁止快取時，Unity 退回一般下載。
 
