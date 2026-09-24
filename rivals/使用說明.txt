@@ -1,0 +1,15 @@
+﻿紅藍槍戰 — 網頁正式版
+
+部署：將本資料夾中的 index.html、Build、ThirdPartyLicenses 等內容完整上傳到 HTTP(S) 靜態網站。
+伺服器需提供 .wasm 的 application/wasm MIME type；可啟用 HTTP gzip 壓縮。
+遊戲以內容雜湊命名主要資源，更新時請一起替換 index.html 與對應 Build 檔案。
+
+本機試玩：電腦需安裝 Python 3。在本資料夾開啟終端機，執行：
+python serve_web.py --directory . --port 8187
+然後在 Chrome 或 Edge 開啟 http://localhost:8187/ 。
+請透過 HTTP(S) 開啟，直接雙擊 HTML 無法載入 Unity 遊戲。
+此本機伺服器僅供本機預覽；與朋友分享請使用部署後的網站網址。
+
+點擊遊戲畫面取得滑鼠控制。WASD 移動、左鍵射擊、右鍵瞄準、R 裝填、Esc 選單。
+隊伍先達 30 擊殺獲勝；死亡倒數 3 秒後隨機復活。
+需要網路連線；同玩者需使用相同版本。素材來源與授權見 ASSET_CREDITS.txt、ThirdPartyLicenses。

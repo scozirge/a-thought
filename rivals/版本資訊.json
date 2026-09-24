@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-24",
+  "gameSourceCommit": "de93efeae4438ea8a837bc2ae043b5e1dfd1cf32",
+  "networkVersion": "rivals-web-16-kill-race",
+  "unity": "6000.3.11f1",
+  "development": false,
+  "rules": {
+    "killsToWin": 30,
+    "respawnSeconds": 3
+  },
+  "target": "Web",
+  "backend": "IL2CPP / WebAssembly",
+  "releaseChanges": [
+    "修正 Bot 貼牆時避障探測漏判",
+    "新增多人同步、短暫斷網、同名房間與過期清單回歸測試"
+  ],
+  "sourceSha256": {
+    "Assets\\Rivals\\Editor\\ArtReview.cs": "a67562c342f6c181391319e0650ba6b718ea9172e179e90c96c5f1bbbd244865",
+    "Assets\\Rivals\\Editor\\BattleRulesChecks.cs": "5f16382c0f881e7589400935d644e9c57a3929034fbc54e6e5e94e56a0f4889e",
+    "Assets\\Rivals\\Editor\\FreeAssetSetup.cs": "f24ac317731c83beca16fd71fc7637c4297810a700ed6e276aa27c3b26e7ff8e",
+    "Assets\\Rivals\\Editor\\GunPresentationChecks.cs": "830b3a405ca31106c9882d5f379c43f60006303c52decd3e291e9fbd3c4c3e24",
+    "Assets\\Rivals\\Editor\\RivalsSetup.cs": "047c29462860df459ced983de2a0d3134d4c4398388d70e517041cdf8bdef26d",
+    "Assets\\Rivals\\Editor\\WebBuild.cs": "f4c8e90f9af8797e337f9be90406f76198cec9dc9e87c98bcbcaf3ea383d4050",
+    "Assets\\Rivals\\Editor\\WindowsBuild.cs": "380b0c045399fa4708163af77a079f70cc5565f5e6a0f0e481fa1e5500dc56b6",
+    "Assets\\Rivals\\Scripts\\DuelArt.cs": "a3ebc0546bb6c41359607d8c087e0df95d030421fe308d878d5229192f433896",
+    "Assets\\Rivals\\Scripts\\DuelAvatar.cs": "7e6bd4f745eb1ce6b99b7a76dfb5221b9c4d4f3d6885c062bcfdbb1c6fcd8505",
+    "Assets\\Rivals\\Scripts\\DuelBattleHUD.cs": "1aa8d20e418295633720fd94c9b6bb1121676b68dc0815c443ae7a756aef1aa0",
+    "Assets\\Rivals\\Scripts\\DuelBattleSmoke.cs": "5ed0cd4f1a1e1055947e6ace53e573f256c892f00c4f743ad80c7f65150580fc",
+    "Assets\\Rivals\\Scripts\\DuelCombatHUD.cs": "3f530e780ad7c9497815818a185ee858bfbbd30bf1a7eb3b5b478cdae5358b74",
+    "Assets\\Rivals\\Scripts\\DuelCombatSmoke.cs": "83c44e6a69e1e23d28e963630cbc1bf1ee9a54986c62d95502a562814f039a5c",
+    "Assets\\Rivals\\Scripts\\DuelConnection.cs": "bfcf2fc8011b45afba6e6a99579d9ab387fa384a0db2b7382d27c5654b52d45f",
+    "Assets\\Rivals\\Scripts\\DuelDiagnostics.cs": "babf119fc7060b5fec039415d4c57a5bbdc1e8080b62138cf50475784f32efec",
+    "Assets\\Rivals\\Scripts\\DuelInput.cs": "71134136e408395196b0b57ef027f29cd032262ea30d85123ce46d10ff6d4797",
+    "Assets\\Rivals\\Scripts\\DuelLobby.cs": "27d03b2a663df5aded65806a991bd11d10f77f102ffded6a8bc82a5b09688a35",
+    "Assets\\Rivals\\Scripts\\DuelMatch.cs": "bc4ecb8c0d062e08a85ccfb4b9e98a20f6595bab8ed88d6e7ebec8dac00d523e",
+    "Assets\\Rivals\\Scripts\\DuelNames.cs": "51648651164c3c085afbcb5530253355be916165133aa6243c74f2727f03c608",
+    "Assets\\Rivals\\Scripts\\DuelNetworkSmoke.cs": "bdc151f270e42f2af4dcc01cc5737b3d3425d03d762c8e3b1c4b3f99c933b350",
+    "Assets\\Rivals\\Scripts\\DuelPickups.cs": "a344272dc26bb58ac271da3fc09b5852c6fa16d6f8a2a28ce5a140e125046638",
+    "Assets\\Rivals\\Scripts\\DuelPlayer.cs": "7e57db460c7a372c7b99cd07b68745c28f09e0e96dfd270be30d3a5f49ffc729",
+    "Assets\\Rivals\\Scripts\\DuelPodium.cs": "09ea1c89663d57adb7366bad920535c324e5a2f786a49c005c0d020828057a0e",
+    "Assets\\Rivals\\Scripts\\DuelReloadView.cs": "db0d62e32f7111c1ff4750a996b4e26fd54bfaaf8b314c042716620dbb7431e9",
+    "Assets\\Rivals\\Scripts\\DuelRespawn.cs": "ac9c9649e9844c66c81557d5485724e54a0a6565b43fc1ca0213aea373572e23",
+    "Assets\\Rivals\\Scripts\\DuelSession.cs": "dbd005987791e251d6018595094d646291b9cc93b7f009916a54cbd6bd80f9ed",
+    "Assets\\Rivals\\Scripts\\DuelShotTracer.cs": "e26813c7903adf13797ed37d20e5384d22a4e4908482f94e58d7c932801df7e4",
+    "Assets\\Rivals\\Scripts\\DuelWebInput.cs": "c4295686044f2e97288b6e57aef6c63b81456bc222f14ca2de33702b7075e6e0",
+    "Assets\\Rivals\\Scripts\\DuelWorld.cs": "67334f3c5c63a46c64b77515214aea6bccdcd095eb36f1fa384754c8b4aac9fa",
+    "Assets\\Plugins\\WebGL\\RivalsInput.jslib": "6c78a99c14585de922d416a5529b8165b55df44412110af604e83fe404c13a06",
+    "Assets\\WebGLTemplates\\Rivals\\index.html": "50e1441bd6447c8a6251fe01d7d29a96e0f904b36f3cf71e0f697ccf322d3303",
+    "Assets/Rivals/Editor/BotNavigationChecks.cs": "2280abd015d596791469f12fd109b1b5307ef83e67f6368da8a9fdea812ca37e"
+  }
+}

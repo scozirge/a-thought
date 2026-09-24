@@ -3,7 +3,11 @@ THIRD-PARTY ASSET CREDITS
 Noto Sans CJK TC Regular - SIL Open Font License 1.1
 https://github.com/notofonts/noto-cjk
 Font source: Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf
-Unmodified font; license preserved in Assets/ThirdParty/NotoSansTC/OFL.txt.
+The game embeds the derivative Rivals CJK UI, retaining all 44,810 encoded
+characters and their horizontal advances while removing unused alternate
+regional/vertical forms. Generated with fontTools 4.65.0 by Tools/optimize_font.py.
+Unmodified source: Tools/Fonts/NotoSansCJKtc-Regular.otf (outside Unity Assets).
+License preserved in Assets/ThirdParty/NotoSansTC/OFL.txt.
 
 Quaternius - Ultimate Guns Pack - CC0 1.0
 https://quaternius.com/packs/ultimategun.html
