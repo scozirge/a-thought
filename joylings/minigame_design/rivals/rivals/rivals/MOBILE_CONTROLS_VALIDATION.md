@@ -38,6 +38,14 @@
 
 正式成品：`Builds/Release-20260924-Mobile/Web/`；完整 ZIP：`Builds/RIVALS-Web-20260924-mobile.zip`。成品附使用說明、版本來源雜湊、全部素材授權；`Builds/Release-20260924-Mobile/release-manifest.json` 記錄 ZIP 與每個檔案的 SHA-256。
 
+- 程式來源提交：`6cd1cf45e12c7377b1e7e74bb4cf0805b4b77ee3`。
+- ZIP 大小：30,090,980 bytes，21 個檔案、展開後 75,695,927 bytes；CRC 與全部檔案 SHA-256 比對通過。
+- ZIP SHA-256：`e226247a1e9bd210114cca3fb7614844358d291ff2a7a94d39cbed18cfb10897`。
+- 正式 WASM：`Build/3cc0adbfd463c6202046db4718a92b45.wasm`，50,681,811 bytes。
+- 發布到 `gh-pages` 的提交：`6a4faf8094347f5d272de1aa65fe326a2c318667`。發布區的 21 個檔案及 Git 暫存內容逐檔與正式包比對一致，僅更新 `rivals/`。
+- GitHub Pages API 已確認該提交狀態為 `built`，完成時間為 2026-09-24 14:24:14（台北）。公開站點下載的 21 個檔案 SHA-256 全部與正式包相同，WASM 回傳 `application/wasm`，原課程頁仍為 HTTP 200。紀錄：`Logs/MobileControls/Public/public-artifact-check.json`。
+- 兩個全新的瀏覽器直接開啟公開網址，完成正式資源下載後執行相同混合連線測試：11 項全部通過，手機與鍵鼠能互相開房、加入，操作與裝填同步、全螢幕、選單及離房返回大廳正常。射擊畫面回饋最慢 55.8 ms，未記錄到瀏覽器／Unity 例外；紀錄與公開遊戲截圖在 `Logs/MobileControls/Public/`。此輪未額外注入延遲，也未重跑 Bot 致死測試。
+
 公開網址：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/)。首次下載仍可能需要數分鐘，請等待遊戲載入完畢。房主需保持瀏覽器運作，背景節流與房主遷移限制沿用既有版本。
 
 本次手機測試使用 Windows Chrome 的行動裝置與多點觸控模擬，尚未取得 Android 或 iPhone 實機驗證。Safari／iOS 的效能、記憶體壓力、瀏海及原生全螢幕行為仍需實機回饋；不將模擬結果視為所有手機相容性保證。
