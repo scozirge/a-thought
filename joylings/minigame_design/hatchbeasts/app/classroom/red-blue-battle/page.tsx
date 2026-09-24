@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { ArrowLeft, ArrowUpRight, ChevronDown, Play } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, ChevronDown, ClipboardList, Play } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader } from '../course-ui';
-import { redBlueQuestions } from '../course-data';
+import { redBlueQuestions, redBlueRetrospective } from '../course-data';
 
 export const metadata: Metadata = {
   title: '第二次課程｜紅藍槍戰｜遊戲設計',
@@ -22,6 +22,10 @@ export default function RedBlueBattleLesson() {
             <span className="crayon-underline">槍戰</span>
           </h1>
           <p className="battle-intro-copy">先玩一玩，再說說你的想法。</p>
+          <nav className="lesson-nav" aria-label="本課導覽">
+            <a href="#battle-questions-title">一起想想看</a>
+            <a href="#retrospective">課後復盤</a>
+          </nav>
           <a
             className="course-button battle-game-link"
             href={RED_BLUE_GAME_PUBLIC_URL}
@@ -70,6 +74,27 @@ export default function RedBlueBattleLesson() {
               </div>
             </details>
           ))}
+        </section>
+
+        <section id="retrospective" className="lesson-section" aria-labelledby="battle-retrospective-title">
+          <div className="lesson-section-heading">
+            <h2 id="battle-retrospective-title">
+              <ClipboardList size={26} strokeWidth={1.5} aria-hidden="true" />
+              課後復盤
+            </h2>
+          </div>
+          <p>第二堂課的課堂觀察 · <time dateTime="2026-09-24">2026-09-24</time></p>
+          <ol className="prompt-list">
+            {redBlueRetrospective.map((entry, index) => (
+              <li key={entry.tag}>
+                <span className="prompt-number">{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <span className="prompt-tag">{entry.tag}</span>
+                  <p>{entry.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <a className="lesson-bottom-back course-back" href={assetUrl('/classroom/')}>

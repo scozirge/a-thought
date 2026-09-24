@@ -60,6 +60,14 @@ export const redBlueQuestions = [
   },
 ] as const;
 
+export const redBlueRetrospective = [
+  { tag: '課堂互動', text: '這次上課很成功。學生非常專注地在連線玩遊戲，能立刻理解遊戲，並彼此互動。' },
+  { tag: '提問狀況', text: '有出題目讓他們解答，但太過度專注在遊戲，沒辦法每個人都認真思考問題。' },
+  { tag: '紙上設計', text: '這次也有強迫每個人把想要的新武器寫在紙上，並思考強不強，每個人都有寫。' },
+  { tag: '新武器', text: '下次會把這些新武器的想法更新到遊戲中。' },
+  { tag: '遊戲內提問', text: '下次也要把題目加在遊戲中，強迫他們思考，試試看。' },
+] as const;
+
 export const eggDesigns = [
   { code: '11', name: '小花熊', egg: '蛋頂部有一朵小花，佈滿粉色的毛茸茸。' },
   { code: '12', name: '香草兔', egg: '蛋上佈滿不同深淺的粉色草皮。' },

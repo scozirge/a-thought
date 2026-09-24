@@ -139,6 +139,17 @@ export default function ClassroomHome() {
             </div>
           </details>
 
+          <div className="lesson-review-action">
+            <a
+              className="course-button"
+              href={assetUrl('/classroom/red-blue-battle/#retrospective')}
+            >
+              <ClipboardList size={20} aria-hidden="true" />
+              第二堂課・課後復盤
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
+          </div>
+
           <div className="unit-grid">
             {units.slice(1).map((unit) => (
               <a
