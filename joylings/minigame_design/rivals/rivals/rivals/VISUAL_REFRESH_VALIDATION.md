@@ -45,3 +45,13 @@
 | Windows x64 | 203 | 48,648,764 | `d0fea8755f8394433134e3d58a02300812ca3d61d52a4976a8d6674b8618b437` |
 
 兩個 ZIP 的 CRC、檔案清單與解壓後逐檔 SHA-256 均通過比對。Windows 包含 `Rivals.exe`、更新後的 `Assembly-CSharp.dll`、完整 Unity 執行環境及資料；Web 包含此次建置的 HTML、載入器、資料、框架與 WebAssembly。版本資訊保存來源 SHA-256，總清單位於 `release-manifest.json`。
+
+## Git 與公開部署
+
+- `master` 的正式檔案提交為 `774edfea9c4a2ea10ae235a34cc5a975e73343c8`，已推送成功。遠端 GitHub tree 的 228 個成品 blob 與本機完全一致，兩個 ZIP 回傳 HTTP 200，檔案長度與清單相符。
+- `gh-pages` 部署提交為 `9d031dadd7dc187d87f14a69a84fd6535e1075b4`。GitHub Pages API 確認此提交狀態為 `built`，公開站 22 個遊戲檔案逐檔 SHA-256 全部吻合，`.wasm` 以 `application/wasm` 提供。
+- 教學目錄、紅藍槍戰課程及所需的新資源共 10 個檔案，公開站 SHA-256 全部吻合。1440 px 桌面及 390 px 手機的四組展開問題、鍵盤操作、目錄與段落導覽皆通過，無水平溢出或頁面例外。
+- 兩個教學入口的「玩紅藍槍戰」均已實際點擊驗證，會在新分頁開啟 [本次最新版](https://scozirge.github.io/a-thought/rivals/?v=visual-20260924)。
+- 從公開網址首次載入兩個獨立瀏覽器後，手機觸控與桌面鍵鼠的真實 Photon 連線共 12 項通過，包括雙向開房加入、同步移動／轉向／射擊、點按瞄準、短按射擊與裝填、跳躍與衝刺、兩種全螢幕、選單、失焦恢復、房主離開及大廳切換模式；無頁面或遊戲執行例外，此輪觸控回饋最長 62.1 ms。公開站測試報告為 `Logs/VisualRefresh/Public/Mobile/web-mobile-check.json`；3 秒復活已另由本機最終正式版本的第 13 項測試驗證。
+
+遠端與部署報告保存於 `Logs/VisualRefresh/remote-artifacts.json`、`Logs/VisualRefresh/Public/public-artifact-check.json`；教學驗證位於 `hatchbeasts/outputs/rivals-visual-public.json` 及 `hatchbeasts/outputs/rivals-visual/live-results.json`。
