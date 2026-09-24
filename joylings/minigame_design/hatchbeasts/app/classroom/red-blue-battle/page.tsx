@@ -33,7 +33,11 @@ export default function RedBlueBattleLesson() {
             <ArrowUpRight size={18} aria-hidden="true" />
           </a>
           <p className="section-note" style={{ marginTop: '1rem' }}>
-            點一下遊戲畫面開始操作：WASD 移動、滑鼠轉向、左鍵開槍、右鍵瞄準、R 換彈、Esc 選單。
+            在大廳選「手機觸控」或「鍵盤滑鼠」，兩種模式都能按右上角「全螢幕」。
+            <br />
+            手機：左側搖桿移動、右側滑動轉向，按住射擊可連射；瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊。
+            <br />
+            鍵鼠：WASD 移動、滑鼠轉向、左鍵開槍、按住右鍵瞄準、R 換彈、Esc 選單。
             <br />
             若顯示「相容操作」，按住右鍵拖曳轉向，放開移回後可再拖曳。用 Chrome 或 Edge 開啟遊戲可嘗試自由轉向。
           </p>
