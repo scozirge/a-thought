@@ -1,6 +1,6 @@
-紅藍槍戰｜手機與鍵鼠網頁版（2026-09-24 操作修正版）
+紅藍槍戰｜手機與鍵鼠網頁版（2026-09-24 介面與場地更新版）
 
-公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=touch-fix-20260924
+公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=visual-20260924
 大廳選「鍵盤滑鼠」或「手機觸控」，建立房間或加入朋友的小隊。
 手機與電腦可同房遊玩，建議手機橫向拿。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。
 

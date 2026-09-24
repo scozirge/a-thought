@@ -34,3 +34,14 @@
 - 教學 H5 重新建置成功，300 個本機資源引用檢查通過；目錄與課程的遊戲入口更新為 `?v=visual-20260924`。
 
 報告：`LayoutFinal/mobile-layout-check.json`、`VisualFinal/visual-check.json`、`MobileFinal/web-mobile-check.json`、`NetworkFinal/network-web-lag-check.json`，皆位於 `Logs/VisualRefresh/`。
+
+## 正式交付檔案
+
+來源提交：`c6de532de6d5ed835e86ecb3249405ba063b2ed9`。`Builds/Release-20260924-Mobile/` 保留固定下載路徑並替換成此次正式版本；使用者可從原來的 ZIP 連結取得新版。
+
+| 成品 | 完整檔案數 | ZIP 位元組數 | ZIP SHA-256 |
+| --- | ---: | ---: | --- |
+| Web | 22 | 30,095,270 | `17a70cd0c42d34ea9e5484771922ad0169bd45604e6dafcb34e7af9399e01880` |
+| Windows x64 | 203 | 48,648,764 | `d0fea8755f8394433134e3d58a02300812ca3d61d52a4976a8d6674b8618b437` |
+
+兩個 ZIP 的 CRC、檔案清單與解壓後逐檔 SHA-256 均通過比對。Windows 包含 `Rivals.exe`、更新後的 `Assembly-CSharp.dll`、完整 Unity 執行環境及資料；Web 包含此次建置的 HTML、載入器、資料、框架與 WebAssembly。版本資訊保存來源 SHA-256，總清單位於 `release-manifest.json`。
