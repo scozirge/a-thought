@@ -1,15 +1,18 @@
-﻿紅藍槍戰 — 網頁正式版
+紅藍槍戰｜手機與鍵鼠網頁版（2026-09-24）
 
-部署：將本資料夾中的 index.html、Build、ThirdPartyLicenses 等內容完整上傳到 HTTP(S) 靜態網站。
-伺服器需提供 .wasm 的 application/wasm MIME type；可啟用 HTTP gzip 壓縮。
-遊戲以內容雜湊命名主要資源，更新時請一起替換 index.html 與對應 Build 檔案。
+公開遊戲：https://scozirge.github.io/a-thought/rivals/
+大廳選「鍵盤滑鼠」或「手機觸控」，建立房間或加入朋友的小隊。
+手機與電腦可同房遊玩，建議手機橫向拿。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。
 
-本機試玩：電腦需安裝 Python 3。在本資料夾開啟終端機，執行：
-python serve_web.py --directory . --port 8187
-然後在 Chrome 或 Edge 開啟 http://localhost:8187/ 。
-請透過 HTTP(S) 開啟，直接雙擊 HTML 無法載入 Unity 遊戲。
-此本機伺服器僅供本機預覽；與朋友分享請使用部署後的網站網址。
+手機：左側搖桿移動、右側滑動轉向；按住射擊／瞄準也能滑動轉向。
+另有跳躍、衝刺、裝填、滑行；右上選單可切換聲音或回到大廳。
+鍵鼠：WASD 移動、滑鼠轉向、左鍵射擊、右鍵瞄準、Space 跳躍、Shift 衝刺、R 裝填、C 滑行、Esc 選單。
+兩種模式都可按右上「全螢幕」，再次按可退出。
+不支援原生全螢幕時改為填滿可用視窗，瀏覽器網址列可能保留。
 
-點擊遊戲畫面取得滑鼠控制。WASD 移動、左鍵射擊、右鍵瞄準、R 裝填、Esc 選單。
-隊伍先達 30 擊殺獲勝；死亡倒數 3 秒後隨機復活。
-需要網路連線；同玩者需使用相同版本。素材來源與授權見 ASSET_CREDITS.txt、ThirdPartyLicenses。
+本機執行需 Python：在此目錄執行 python serve_web.py --directory . --port 8184
+再開啟 http://127.0.0.1:8184/ ，不可直接雙擊 index.html。
+自行架站請完整上傳此目錄，以 HTTP(S) 提供，.wasm 的 MIME type 為 application/wasm。
+首次下載可能需要數分鐘。房主需保持瀏覽器運作，房主離開後其他玩家返回大廳。
+手機功能已做 Chrome 觸控模擬與實際 Photon 連線測試，Android／iPhone 實機相容性仍待回饋。
+素材來源見 ASSET_CREDITS.txt，請保留 ThirdPartyLicenses 全部授權文件。
