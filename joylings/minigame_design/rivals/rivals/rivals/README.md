@@ -1,6 +1,6 @@
 # 紅藍槍戰｜RIVALS Web 連線原型
 
-Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。當前交付目標為 Web。
+Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windows x64 正式建置。
 
 公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
@@ -82,7 +82,7 @@ python Tools/serve_web.py --port 8184
 
 ## 載入速度
 
-目前僅儲存資源與載入流程修改，尚未重新包版或發布；不啟用耗時的 DiskSizeLTO／IL2CPP OptimizeSize。下列快取設定於日後一般建置時生效，未宣稱正式網站已套用。
+資源與載入流程最佳化已包含在 `Builds/Release-20260924-Multiplayer/` 正式包；不啟用耗時的 DiskSizeLTO／IL2CPP OptimizeSize。公開網站尚未因這次打包而更新，成品與測試紀錄見 [追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。
 
 載入流程修改保留 HTTP gzip 與 WASM 串流編譯，並啟用 Unity 資料快取設定。對內容雜湊檔案使用 `immutable`；不支援或禁止快取時，Unity 退回一般下載。
 
@@ -95,6 +95,12 @@ python Tools/serve_web.py --port 8184
 本次規則變更與結果見 [30 擊殺與復活驗證](KILL_RACE_VALIDATION.md)。`Tools/WebKillRaceSmokeTest.cjs` 以兩個真實 Web 玩家驗證擊殺同步、真人與 Bot 的三秒倒數、隨機出生位置與本機復活畫面；加 `--complete-game` 可持續觀察至 30 擊殺及下一場。
 
 連線生命週期、斷線恢復與 9 人競爭 8 人房間的檢查，見 [連線修正與驗證](CONNECTION_VALIDATION.md)。`Tools/WebConnectionLifecycleSmokeTest.cjs` 可驗證反覆進出房、姓名保留、設定中房主斷線、清單重連與失敗重試；`Tools/WebRoomCapacitySmokeTest.cjs` 驗證滿房競爭及空位釋出後重新加入。設定 `RIVALS_TEST_OUTPUT` 可將這些測試及 `WebNetworkSmokeTest.cjs` 的輸出存到獨立目錄。
+
+正式 30 擊殺版的追加多人測試見 [網頁多人連線追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。`Tools/WebMultiplayerRecoverySmokeTest.cjs` 使用四個隔離的 Web 玩家，涵蓋同時加入、傳輸停頓與恢復、訪客斷線補位及重加、房主無資料時離房、同名房間隔離與過期清單點擊。只在測試瀏覽器攔截 WebSocket，沒有加入遊戲狀態修改介面。
+
+長局檢查發現並修正 Bot 貼牆時避障漏判。Unity 批次入口 `-executeMethod RivalsPrototype.Editor.BotNavigationChecks.Run` 用實測位置重現漏判，驗證沿牆與退離路徑；修正版正式成品在 `Builds/Release-20260924-Multiplayer/`，Web 與 Windows 的 ZIP 名稱皆以 `-multiplayer.zip` 結尾。
+
+長局可另外啟動 `Tools/WebActiveParticipant.cjs`，用實際瀏覽器輸入保持參戰，避免把無人操作的 Bot 掩體僵持當成連線失敗；啟動時機與房間選擇方式見追加驗證文件。
 
 - `Tools/PointerBridgeChecks.cjs`：獨立載入正式 HTML 的滑鼠橋接程式，涵蓋正常鎖定、Promise 拒絕、舊式錯誤、沒有回覆、API 不存在、假成功六種狀態；確認未按右鍵的移動與畫面邊緣不會自轉、右鍵拖曳可持續轉圈、放開可重新定位、失焦取消拖曳，解除限制後可重試成功，另以真正的 iframe sandbox 驗證允許／拒絕鎖定。
 - `Tools/WebFocusSmokeTest.cjs`：在實際 Web 版驗證失焦／回到畫面、意外解除鎖定、一次點擊恢復、Tab、防止按鍵卡住、Esc 選單；`--before` 保存舊版控制狀態與滑鼠不一致的重現紀錄。

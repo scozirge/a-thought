@@ -1,5 +1,7 @@
 # 正式網頁與 Windows 版（2026-09-24）
 
+後續多人連線追加測試發現並修正 Bot 貼牆避障漏判，已重新建置 Web 與 Windows 至 `Builds/Release-20260924-Multiplayer/`；更新包為 `Builds/RIVALS-Web-20260924-multiplayer.zip` 與 `Builds/RIVALS-Windows-x64-20260924-multiplayer.zip`。新一輪結果、版本雜湊與限制見 [網頁多人連線追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。下文保留首次正式打包的紀錄。
+
 ## 版本與輸出
 
 - 遊戲基礎提交：`39e8840c97b54f6e022094eeb6a77b9353c9f8ac`。

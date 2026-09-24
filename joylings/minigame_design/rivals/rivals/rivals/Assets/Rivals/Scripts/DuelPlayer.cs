@@ -272,7 +272,7 @@ namespace RivalsPrototype {
       float best=-2;
       foreach(float turn in SteeringAngles) {
         var direction=Quaternion.Euler(0,turn,0)*desired.normalized;
-        bool blocked=Physics.SphereCast(transform.position+Vector3.up,.4f,direction,out _,2f,WorldMask,QueryTriggerInteraction.Ignore);
+        bool blocked=BotPathBlocked(transform.position,direction);
         if(turn==0)obstacle=blocked;
         float score=Vector3.Dot(direction,desired.normalized);
         if(!blocked&&score>best){best=score;travel=direction;if(turn==0)break;}
@@ -290,6 +290,13 @@ namespace RivalsPrototype {
       bool firingWindow=Mathf.Repeat(now+Seat*.71f,3)<1.4f;
       i.Buttons.Set(Action.Fire,reacted&&aligned&&distanceToEnemy<firingRange&&firingWindow);
       return botInput=i;
+    }
+    public static bool BotPathBlocked(Vector3 feet,Vector3 direction) {
+      // SphereCast skips an obstacle already overlapping its starting sphere.
+      // A low ray also sees short barricades below the sphere on raised decks,
+      // while letting a character touching a wall move along or away from it.
+      return Physics.Raycast(feet+Vector3.up*.5f,direction,2f,WorldMask,QueryTriggerInteraction.Ignore)||
+        Physics.SphereCast(feet+Vector3.up,.4f,direction,out _,2f,WorldMask,QueryTriggerInteraction.Ignore);
     }
     void Fire(bool aiming=false) {
       float botInterval=Weapon==4?2.9f:Weapon==3?1.3f:Weapon==0?.5f:.7f;
