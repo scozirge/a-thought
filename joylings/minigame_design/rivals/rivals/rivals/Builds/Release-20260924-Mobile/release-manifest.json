@@ -1,21 +1,23 @@
 {
-  "builtAt": "2026-09-24T06:22:44.535632+00:00",
+  "builtAt": "2026-09-24T07:49:10.568997+00:00",
   "packages": [
     {
       "target": "Web",
+      "gameSourceCommit": "883a13a81bf538617ae198a8e2a97917fb983191",
       "archive": "Builds/RIVALS-Web-20260924-mobile.zip",
-      "bytes": 30090980,
-      "sha256": "e226247a1e9bd210114cca3fb7614844358d291ff2a7a94d39cbed18cfb10897",
-      "files": 21,
-      "uncompressedBytes": 75695927,
+      "bytes": 30092964,
+      "sha256": "c47d68a58a1c65e6b13163649d2d1484457dcd4baf150d52453387461677d54d",
+      "files": 22,
+      "uncompressedBytes": 75695591,
       "allFilesMatch": true,
       "fileSha256": {
         "ASSET_CREDITS.txt": "43647ce6acfecabbbabe94ff2c87a80e8849c7cc33e5b30cf94f648754b1a5db",
         "Build/04b4ccf4ed1358fd54c28013f21561f4.framework.js": "487832028df9117644e39913dd927aa9935695c0dd514a4267f8db7ad8952a04",
-        "Build/3cc0adbfd463c6202046db4718a92b45.wasm": "b1d4c798f536d6792c124ef47851a1bb0c1389f5b2e57c6382129fbd9f13ed28",
-        "Build/81f3c69d18e6e8586f79c414c6bbc788.data": "654b746b39e50e4bd24dbd990403b2f3e83e72f46907bfee2b9a4dc4a554aa6d",
-        "Build/ab7ab5c64e2ed5487720e8431d284fe3.loader.js": "af834d34c4af3d37342154bcfb01e8e07fcfd7a8600a3cb28f282abb20a82a7e",
-        "index.html": "a0241f188633e18ee5eb01245aadfd4b02a824832942149fac9a45b963906875",
+        "Build/6acb6677ac82c7a8449f5817f041836c.data": "fe422343542a3fa603d33fd1e443a67f8cc31c9fc544f3fbb59c64ed65cbc9b6",
+        "Build/8fbfcf3e4950d166c4988eed4d797f48.loader.js": "6486d62f0ec5d30d04d78670c80785a8db6cd268ab9ba54d576138c9a81afafc",
+        "Build/9f2ce3f16b936e9cd43756ccb0bcb8ed.wasm": "164e05702735ab30753ade201071063d0781062f6f5422f680aa961687d27f67",
+        "index.html": "54b0f31516f632d0a65a0bda0e095b66ef9e55ea77638cc141a702a4f241717c",
+        "README.md": "187f21211f6a9c545b55e3400305b2a05d3116bd9370238708954ddec53002f9",
         "serve_web.py": "8d30c8124477c4ad958c083e5109cbf615e06fa9a83a7f67e18866f7c7bc5ad3",
         "ThirdPartyLicenses/Kenney-blaster-kit/License.txt": "bece5f4d99cca9dcf86931221a69909862ff6cc95e1735462ee678516a1063e2",
         "ThirdPartyLicenses/Kenney-blocky-characters/License.txt": "610fec89c16826112e9d6b80497b726c43fea0e42c9cd9d7cb081f8ad550c0ec",
@@ -29,21 +31,19 @@
         "ThirdPartyLicenses/QuaterniusUltimateGuns/License.txt": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c",
         "ThirdPartyLicenses/SpringySpringoReload/License.txt": "746bca69a6b6ee1afabc3982e3e5be040ed4461eef4fe541f732431938a323a4",
         "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964",
-        "使用說明.txt": "ea2f4ba36e6a262f5fc726b31c6d184e9dd389430ffb1e165648536c820e78c5",
-        "版本資訊.json": "82128ecd0775f1199a556295d5bcabd1183cf44b6037b5510381832afc8eef81"
-      },
-      "gameSourceCommit": "6cd1cf45e12c7377b1e7e74bb4cf0805b4b77ee3"
+        "使用說明.txt": "3ab3fe750b916fbd8affec4f6f35471984d9656b336a42e2a22b4ba82d10a528",
+        "版本資訊.json": "8660c43159fcfe53dad47b0e86b2e318b8f9c80fa47575d3530de516dcdcd713"
+      }
     },
     {
       "target": "Windows",
-      "gameSourceCommit": "cf586f3a1ebc1dae889ca6cc0bfaf0ee1e914ce6",
+      "gameSourceCommit": "883a13a81bf538617ae198a8e2a97917fb983191",
       "archive": "Builds/RIVALS-Windows-x64-20260924-mobile.zip",
-      "bytes": 48647235,
-      "sha256": "58811776d33003ddb3b611f54644e3fb21df00e63e2d760c95daa570ca524989",
+      "bytes": 48647046,
+      "sha256": "4e73ecd21a10c1d3ba1b20e2ca925c3bd9877a9f84df751047459e07855f625f",
       "files": 203,
-      "uncompressedBytes": 120862083,
+      "uncompressedBytes": 120860774,
       "allFilesMatch": true,
-      "peMachine": "0x8664",
       "fileSha256": {
         "ASSET_CREDITS.txt": "43647ce6acfecabbbabe94ff2c87a80e8849c7cc33e5b30cf94f648754b1a5db",
         "D3D12/D3D12Core.dll": "625bd40005b1c3708695d5256ecf230d278e6b8edba5a88af70f3d91324f3052",
@@ -69,12 +69,12 @@
         "MonoBleedingEdge/etc/mono/mconfig/config.xml": "0c56e34c69124510fa8c19e7b4c2ca6c1c4ff460ae19f798dd0ca035809e396d",
         "Rivals.exe": "5bfb02293c482170c4d5035081245e45d69fe0f617fcc92a81e98adee13b945f",
         "Rivals_Data/app.info": "0f31d3d9c3c2d16fd0061a62701b21b0c129a6745d52198f364eeb94778ce6b1",
-        "Rivals_Data/boot.config": "c6b9c06079332a97eadcf6b7e28543312e77d35691751a8b9f75199d8dc41f63",
-        "Rivals_Data/globalgamemanagers": "f60b94e4454e8c16962555e725558fb0c64409bdcd2af17f664698d4484331a6",
+        "Rivals_Data/boot.config": "da00ebaf22d592727e11cd0c6b5ecfa361e1bc86b6eaa63455d35c74d72ecf9a",
+        "Rivals_Data/globalgamemanagers": "21e3aa4ebdab8fcfd32cbc4cd2249f1e80612451bd19a37fe503ae6537f1b822",
         "Rivals_Data/globalgamemanagers.assets": "916082e0a8ca91aabc37acef522ca1cf3b9bb00a6f38fc7c1c003a6ff3a2a662",
         "Rivals_Data/globalgamemanagers.assets.resS": "26b24bbd0bdb7017ecbac3b829c0ed7c4848bc343af5702e96ebdb75a7258b04",
         "Rivals_Data/level0": "871fb8f95c2f56c89039281da7817ac382ee9a87fa6722f65705a7710dd1dd55",
-        "Rivals_Data/Managed/Assembly-CSharp.dll": "9f60ade3d70c31c203a0036fe7782249e3fedcb106d0c39d2501169718f198cb",
+        "Rivals_Data/Managed/Assembly-CSharp.dll": "d0fff7a0d66c8f49f3fe916f88c47d30f05aea6b4970d9139352c030c58bc87e",
         "Rivals_Data/Managed/Fusion.Common.dll": "df7255ef2ea45f0378fe92f3f037269e3fd515fa32fa0ec60936789fae7be5d2",
         "Rivals_Data/Managed/Fusion.Log.dll": "8477239be8b07c379e2081bcc110ecdf7118c36d4bb64dae2f8be967db5f45fa",
         "Rivals_Data/Managed/Fusion.Realtime.dll": "a7aa88534a96ba6e98e2f09a675ecb04c7bd55639f4625bbe00f516064bea3a1",
@@ -225,7 +225,7 @@
         "Rivals_Data/Plugins/x86_64/nanosockets.dll": "037985bd36c9b6984e8680e9f508491a7056f010bdb7207e32f07aa149eaaf00",
         "Rivals_Data/Resources/unity default resources": "fb2492cd1ad7c38dda8a4ce5f1a1fb57edcff44e3ae250b263e44beae3660ec4",
         "Rivals_Data/Resources/unity_builtin_extra": "0d5762d5802b2ae0359244faba8e1f7d7b149bbce7a590071f55cd361fdc9f8f",
-        "Rivals_Data/resources.assets": "9d0fd629b4803daa8e7dbbe08a24e2c71a2121720818da7a032914aa9fb52900",
+        "Rivals_Data/resources.assets": "69109e222205cb3f6ca6b9adff7b12c72fba95355dcb9b1f9909435be6fe9c74",
         "Rivals_Data/resources.assets.resS": "7d1a9d50e35255e3ab491d97fe3544bc37c2b2c5d20faf9dd6d15f8add8e3327",
         "Rivals_Data/resources.resource": "d788c291614738368f159b00bb86c4427ca03124c94e94f42debe6ebaba3aed4",
         "Rivals_Data/RuntimeInitializeOnLoads.json": "a65b4da4d4923c6fddde32107a5e9a9a939cbe7f418a9d7cee6ba3fdd9627307",
@@ -246,9 +246,10 @@
         "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964",
         "UnityCrashHandler64.exe": "043996479f30c535c580c4286d517400ce8408ec9862fc86baced42c78c9d9c1",
         "UnityPlayer.dll": "a2022611884470ddab23927a3eb7bbaef3924c18972d30ba7b5330a8fd25bcc4",
-        "使用說明.txt": "f7590a08d1dd4fbf931bf7bf2cbe869482e25af7e3d9c3502e44b48c94ccaf1f",
-        "版本資訊.json": "3d777f0b536a8ba483c6251d56481f60344722b13a563ae41bda10d18a9d1e3b"
-      }
+        "使用說明.txt": "16bc07fcc21f6905103a50555004c673b9e82a120daa5667e86ee619ddf21ecf",
+        "版本資訊.json": "6149e8de908d9b19e8145ef4cad4edc31e0adf084228645ef95610f338dd5e51"
+      },
+      "peMachine": "0x8664"
     }
   ]
 }

@@ -1,12 +1,13 @@
-紅藍槍戰｜Windows x64 正式版（2026-09-24）
+紅藍槍戰｜Windows x64 正式版（2026-09-24 操作修正版）
 
 1. 完整解壓縮 ZIP，執行 Rivals.exe。
 2. UnityPlayer.dll、Rivals_Data、MonoBleedingEdge、D3D12 等資料夾和檔案必須一起保留。
 3. 輸入名字，建立房間或加入朋友的房間。可與本次手機／鍵鼠網頁版同房，空位由 Bot 補齊。
-4. 同玩者需載入相容版本，連線版本為 rivals-web-16-kill-race。
+4. 同玩者需載入相容版本，連線版本為 rivals-web-17-touch-controls。
 
-公開網頁：https://scozirge.github.io/a-thought/rivals/?v=mobile-20260924
+公開網頁：https://scozirge.github.io/a-thought/rivals/?v=touch-fix-20260924
 規則：先達 30 擊殺獲勝；死亡 3 秒後隨機復活，恢復 300 生命、手槍與滿彈匣。
-操作：WASD 移動、滑鼠轉向、左鍵射擊、右鍵瞄準、R 裝填、Shift 衝刺、Space 跳躍、C 滑行、Esc 選單。
+操作：WASD 移動、滑鼠轉向、左鍵射擊、按住右鍵瞄準、R 裝填、Shift 衝刺、Space 跳躍、Esc 選單。
+所有版本均已移除滑行，C 鍵不再觸發動作。滑鼠瞄準仍是按住啟用、放開取消。
 聲音預設關閉，可從選單開啟。視窗關閉按鈕或 Alt+F4 可離開程式。
 素材來源見 ASSET_CREDITS.txt，請保留 ThirdPartyLicenses 全部授權文件。

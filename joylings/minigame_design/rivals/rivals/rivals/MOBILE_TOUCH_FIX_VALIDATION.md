@@ -42,3 +42,16 @@ Unity 6000.3.11f1 以正式模式重建 Web（IL2CPP／WebAssembly Release）與
 `Tools/ReleaseCrossPlaySmokeTest.cjs` 四項通過：Windows 當房主、Web 加入；Windows 房主離線後 Web 返回大廳；Web 當房主、Windows 加入；Windows 訪客離線後 Web 由 Bot 補回。雙向皆維持八個角色、紅藍各四人，並確認超過連線監看時間仍能持續遊玩，沒有遊戲例外。結果：`Logs/TouchFix/CrossPlay/cross-play-check.json`。
 
 Windows 另通過實際繪圖煙霧測試：八個角色、兩隊各四人、一名本機玩家與七名 Bot，完成 24 次射擊；成功擷取遊戲場景及武器畫面。紀錄與截圖：`Logs/TouchFix/windows-render.log`、`windows-render.png`。
+
+## 正式輸出
+
+遊戲來源提交：`883a13a81bf538617ae198a8e2a97917fb983191`。Web 與 Windows 的版本資訊均附相同遊戲原始檔 SHA-256，連線版本為 `rivals-web-17-touch-controls`。輸出放回既有的 `Builds/Release-20260924-Mobile/` 路徑，原下載連結繼續有效。
+
+| ZIP | 位元組 | 檔案數 | SHA-256 |
+| --- | ---: | ---: | --- |
+| `RIVALS-Web-20260924-mobile.zip` | 30,092,964 | 22 | `c47d68a58a1c65e6b13163649d2d1484457dcd4baf150d52453387461677d54d` |
+| `RIVALS-Windows-x64-20260924-mobile.zip` | 48,647,046 | 203 | `4e73ecd21a10c1d3ba1b20e2ca925c3bd9877a9f84df751047459e07855f625f` |
+
+兩個 ZIP 均通過 CRC 與逐檔 SHA-256 比對，未壓縮的執行檔與資料一併提交；Windows PE 架構為 x64。Web 包含公開遊戲連結的 `README.md`、使用說明、本機伺服器與完整素材授權，Windows 排除 Unity 產生的 `DoNotShip` 偵錯資料。檔案清單見 `Builds/Release-20260924-Mobile/release-manifest.json`。
+
+由於移除網路狀態欄位，新版與舊版房間分開；所有人重新整理網頁，Windows 玩家下載新版，再一起開房。
