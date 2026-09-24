@@ -11,14 +11,14 @@ namespace RivalsPrototype {
   // The host owns the replicated pickup array; these are presentation only.
   public sealed class DuelPickups : MonoBehaviour {
     public static readonly Vector3[] SpawnPoints={new Vector3(-30,.1f,-30),new Vector3(30,.1f,30),new Vector3(30,.1f,-30),new Vector3(-30,.1f,30)};
-    public static int WeaponFor(int slot,int round)=>slot>=2?0:((slot+round)%2==1?3:4);
+    public static int WeaponFor(int slot,int game)=>slot>=2?0:((slot+game)%2==1?3:4);
     DuelMatch match;
     readonly Transform[] roots=new Transform[DuelMatch.PickupCount];
     readonly Transform[] models=new Transform[DuelMatch.PickupCount];
     readonly int[] kinds={-1,-1,-1,-1};
     void Awake(){match=GetComponent<DuelMatch>();}
     void LateUpdate() {
-      if(!match||!match.Object||!match.Object.IsValid||match.Round==0)return;
+      if(!match||!match.Object||!match.Object.IsValid||match.Game==0)return;
       for(int slot=0;slot<roots.Length;slot++) {
         var pickup=match.Pickups[slot];
         if(!roots[slot]) {

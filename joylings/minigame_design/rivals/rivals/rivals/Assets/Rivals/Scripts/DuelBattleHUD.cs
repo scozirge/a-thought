@@ -48,9 +48,9 @@ namespace RivalsPrototype {
       if(!paused){DrawCombatHud();DrawNameTags();DrawKillFeed();}
       DrawTeamRoster(0);DrawTeamRoster(1);
       HudCard(new Rect(574,16,132,62));
-      HudText(new Rect(579,21,122,18),$"第 {Match.Game} 大局  /  {Match.Round} 小局",11,HudMuted);
+      HudText(new Rect(579,21,122,18),$"第 {Match.Game} 場 · 團隊擊殺",11,HudMuted);
       int remaining=Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0);
-      HudText(new Rect(582,41,116,29),Match.Phase==2?$"{remaining:00}":"先贏 5 小局",Match.Phase==2?25:13,Match.Phase==2&&remaining<=10?TeamColor(1):Color.white,bold:true);
+      HudText(new Rect(582,41,116,29),$"先達 {DuelMatch.KillsToWin} 擊殺",16,HudGold,bold:true);
       if(Local){
         HudCard(new Rect(22,640,174,58),TeamColor(Local.Team));
         Fill(new Rect(37,658,16,5),new Color(.7f,.93f,.77f));Fill(new Rect(42.5f,652.5f,5,16),new Color(.7f,.93f,.77f));
@@ -63,17 +63,15 @@ namespace RivalsPrototype {
       if(paused)return;
       if(Match.Phase==1&&Local){
         HudCard(new Rect(454,206,372,120),TeamColor(Local.Team));
-        HudText(new Rect(474,219,250,20),"新小局 · 全員就位",12,HudMuted,TextAnchor.MiddleLeft);
+        HudText(new Rect(474,219,250,20),"新對戰 · 全員就位",12,HudMuted,TextAnchor.MiddleLeft);
         HudText(new Rect(474,247,250,35),"你是"+TeamName(Local.Team),26,TeamColor(Local.Team),TextAnchor.MiddleLeft,true);
-        HudText(new Rect(474,288,310,21),"打敗"+TeamName(1-Local.Team)+"，拿下這一局",14,null,TextAnchor.MiddleLeft);
+        HudText(new Rect(474,288,310,21),$"率先累積 {DuelMatch.KillsToWin} 擊殺，贏得勝利",14,null,TextAnchor.MiddleLeft);
         HudText(new Rect(740,227,64,58),remaining.ToString(),44,HudGold,bold:true);
-      }else if(Match.Phase==3){
-        HudCard(new Rect(465,228,350,88),Match.Winner<0?HudMuted:TeamColor(Match.Winner));
-        HudText(new Rect(480,240,320,32),Match.Winner<0?"這小局平手":TeamName(Match.Winner)+"拿下這小局",23,bold:true);
-        HudText(new Rect(480,280,320,21),$"{remaining} 秒後全員復活",13,HudMuted);
-      }else if(Local&&Local.Health<=0&&Local.DeathProgress>.85f){
-        HudCard(new Rect(499,543,282,62));HudText(new Rect(510,550,260,23),"已陣亡",17,HudMuted,bold:true);
-        HudText(new Rect(510,578,260,18),"等待小局結束，自動復活",12,HudMuted);
+      }else if(Local&&Local.Health<=0&&Match.Phase==2){
+        int respawn=Mathf.CeilToInt(Local.RespawnSecondsRemaining);
+        HudCard(new Rect(489,521,302,86),TeamColor(Local.Team));
+        HudText(new Rect(504,531,272,31),respawn>0?$"{respawn} 秒後復活":"正在準備復活",23,HudGold,bold:true);
+        HudText(new Rect(504,572,272,20),"隨機位置 · 滿血與手槍",13,HudMuted);
       }
 #if !UNITY_WEBGL || UNITY_EDITOR
       if(!smoke&&Local&&Match.Phase==2&&!DuelWebInput.HasControl)
@@ -85,8 +83,10 @@ namespace RivalsPrototype {
       HudCard(new Rect(x,16,220,62),color);
       int alive=0;foreach(var p in Players)if(p.Team==team&&p.Health>0)alive++;
       HudText(new Rect(x+13,21,70,18),$"{TeamName(team)}  {alive}/4",12,color,TextAnchor.MiddleLeft,true);
-      int wins=team==0?Match.Blue:Match.Red;
-      for(int i=0;i<5;i++)Fill(new Rect(x+151+i*11,26,7,7),i<wins?color:new Color(.3f,.35f,.4f));
+      int kills=team==0?Match.Blue:Match.Red;
+      HudText(new Rect(x+117,19,90,22),$"{kills} / {DuelMatch.KillsToWin}",17,color,TextAnchor.MiddleRight,true);
+      Fill(new Rect(x+12,75,196,2),new Color(.3f,.35f,.4f));
+      Fill(new Rect(x+12,75,196*Mathf.Clamp01((float)kills/DuelMatch.KillsToWin),2),color);
       foreach(var p in Players){
         if(p.Team!=team)continue;
         bool living=p.Health>0;float left=x+40+(p.Seat/2)*42;
@@ -138,7 +138,7 @@ namespace RivalsPrototype {
       int shown=0;
       for(int sequence=Match.EliminationSequence;sequence>Mathf.Max(0,Match.EliminationSequence-DuelMatch.FeedCapacity)&&shown<4;sequence--){
         var e=Match.Eliminations[(sequence-1)%DuelMatch.FeedCapacity];
-        if(e.Sequence!=sequence||e.Round!=Match.Round||e.Lifetime.ExpiredOrNotRunning(Runner))continue;
+        if(e.Sequence!=sequence||e.Game!=Match.Game||e.Lifetime.ExpiredOrNotRunning(Runner))continue;
         float life=e.Lifetime.RemainingTime(Runner)??0;var old=GUI.color;GUI.color=new Color(1,1,1,Mathf.Clamp01(life));
         float y=99+shown++*31;const float x=954;
         Fill(new Rect(x,y,304,26),new Color(.045f,.065f,.09f,.86f));
@@ -152,7 +152,7 @@ namespace RivalsPrototype {
     void DrawVictory() {
       var podium=Match.GetComponent<DuelPodium>();var color=TeamColor(Match.Winner);
       HudCard(new Rect(442,25,396,98),color);
-      HudText(new Rect(460,35,360,20),$"第 {Match.Game} 大局 · 冠軍",12,HudMuted);
+      HudText(new Rect(460,35,360,20),$"第 {Match.Game} 場 · {Match.Blue} : {Match.Red} 擊殺",12,HudMuted);
       HudText(new Rect(460,61,360,49),TeamName(Match.Winner)+"獲勝！",36,color,bold:true);
       if(podium&&podium.Camera)for(int i=0;i<4;i++){
         if(!podium.Winners[i])continue;
@@ -160,7 +160,7 @@ namespace RivalsPrototype {
         FeedName(new Rect(p.x*1280-65,(1-p.y)*720-12,130,24),Match.Winners[i].Name.ToString(),Match.Winner);
       }
       HudCard(new Rect(427,630,426,46));
-      HudText(new Rect(443,637,394,30),$"{Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0)} 秒後重新分隊 · 開始下一大局",14);
+      HudText(new Rect(443,637,394,30),$"{Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0)} 秒後重新分隊 · 開始下一場",14);
     }
     void DrawPauseMenu(){
       Fill(new Rect(0,0,1280,720),new Color(.025f,.04f,.07f,.48f));HudCard(new Rect(445,174,390,362),TeamColor(0));

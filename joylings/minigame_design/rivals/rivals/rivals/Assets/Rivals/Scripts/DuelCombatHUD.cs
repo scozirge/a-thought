@@ -4,7 +4,7 @@ using UnityEngine;
 namespace RivalsPrototype {
   public partial class DuelSession {
     DuelPlayer aimTarget,lastHitTarget;
-    int seenPickups,seenRound;
+    int seenPickups,seenLife;
     float targetUntil,pickupUntil,nextTargetScan;
     string pickupMessage;
     public DuelPlayer AimTarget=>aimTarget;
@@ -17,7 +17,7 @@ namespace RivalsPrototype {
     }
     void UpdateCombatHud() {
       if(!Local||!Local.Object||!Local.Object.IsValid||!Match||!Match.Object||!Match.Object.IsValid)return;
-      if(seenRound!=Match.Round){seenRound=Match.Round;lastHitTarget=aimTarget=null;seenPickups=Local.PickupsCollected;lastHits=Local.Hits;pickupUntil=hitUntil=targetUntil=0;ClearWeaponRequest();}
+      if(seenLife!=Local.SpawnSequence){seenLife=Local.SpawnSequence;lastHitTarget=aimTarget=null;seenPickups=Local.PickupsCollected;lastHits=Local.Hits;pickupUntil=hitUntil=targetUntil=0;ClearWeaponRequest();}
       if(Local.Hits!=lastHits) {
         lastHits=Local.Hits;hitUntil=Time.unscaledTime+.24f;targetUntil=Time.unscaledTime+2;
         lastHitTarget=Match.Players.FirstOrDefault(p=>p.Seat==Local.LastHitSeat);

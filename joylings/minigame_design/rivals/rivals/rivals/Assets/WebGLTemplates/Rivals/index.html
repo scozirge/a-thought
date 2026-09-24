@@ -39,7 +39,7 @@
     </div></div>
     <div id="drag-help" role="status" hidden>相容操作：按住右鍵拖曳轉向，放開移回後可再拖曳。<button id="retry-pointer" type="button">切換自由轉向</button><small>WASD 移動 · 左鍵開火 · Esc 選單</small></div>
     <section id="lobby" aria-label="房間大廳" hidden>
-      <div class="lobby-top"><div class="brand"><div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><b>紅藍槍戰</b><small>小隊就位 · 隨時開打</small></div></div><div class="rule-chip"><strong>4 vs 4</strong>先贏 5 小局</div></div>
+      <div class="lobby-top"><div class="brand"><div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><b>紅藍槍戰</b><small>小隊就位 · 隨時開打</small></div></div><div class="rule-chip"><strong>4 vs 4</strong>先達 30 擊殺</div></div>
       <div class="lobby-layout">
         <div class="profile-card"><div class="eyebrow">準備加入戰場</div><h2>這一局，和你一起。</h2><p>取個可愛名字，帶隊拿下勝利。</p>
           <label for="player-name">你的名字 <span style="color:#7892a7">／ 最多 10 字</span></label><div class="field-row"><input id="player-name" maxlength="10" autocomplete="off" spellcheck="false"><button id="random-name" type="button" aria-label="隨機名字">換一個</button></div>
@@ -48,7 +48,7 @@
         </div>
         <div class="rooms-card"><div class="room-heading"><div><h3>加入朋友的小隊</h3><small><i class="live-dot"></i>即時房間清單</small></div><button id="refresh-rooms" type="button">重新整理</button></div><div id="room-list" aria-live="polite"></div><p class="rooms-note">真人加入就接替電腦玩家，紅藍兩隊隨時滿編。</p></div>
       </div>
-      <div class="lobby-bottom"><p id="lobby-message" role="status"></p><span>每大局結束，重新分隊再來一場。</span></div>
+      <div class="lobby-bottom"><p id="lobby-message" role="status"></p><span>死亡 3 秒後隨機復活 · 先達 30 擊殺獲勝</span></div>
     </section>
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
@@ -197,11 +197,13 @@
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
     const config={dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:{{{ JSON.stringify(COMPANY_NAME) }}},productName:{{{ JSON.stringify(PRODUCT_NAME) }}},productVersion:{{{ JSON.stringify(PRODUCT_VERSION) }}},devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
     const loader=document.createElement('script');loader.src='Build/{{{ LOADER_FILENAME }}}';
-    loader.onload=()=>createUnityInstance(canvas,config,p=>document.getElementById('progress').value=p).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
-    // Refresh named Unity assets when the published release changes.
-    const releaseVersion='20260924-controls-connection';
-    for(const key of ['dataUrl','frameworkUrl','codeUrl'])config[key]+='?v='+releaseVersion;
-    loader.src+='?v='+releaseVersion;
+    // Content hashes change only when the asset changes. UI edits no longer
+    // invalidate the whole game; Unity's persistent cache can reuse big files.
+    config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
+    loader.onload=()=>createUnityInstance(canvas,config,p=>{
+      document.getElementById('progress').value=p;
+      document.getElementById('status').textContent=p<.9?'正在載入遊戲 '+Math.round(p*100)+'%':'正在準備戰場…';
+    }).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
     loader.onerror=()=>showLoadError('無法下載遊戲');document.body.appendChild(loader);
     document.getElementById('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else{if(enabled)engage();if(document.getElementById('stage').requestFullscreen)await document.getElementById('stage').requestFullscreen();else if(player)player.SetFullscreen(1);}}catch(error){console.warn('Fullscreen unavailable',error);}};
   </script>

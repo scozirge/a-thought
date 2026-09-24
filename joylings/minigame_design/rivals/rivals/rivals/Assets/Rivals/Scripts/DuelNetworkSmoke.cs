@@ -29,7 +29,7 @@ namespace RivalsPrototype {
         float desired=24+Mathf.Sin(Time.realtimeSinceStartup)*3;
         input.Move=new Vector2(Mathf.Clamp(desired-s.Local.transform.position.x,-1,1),0);
       }else {
-        int stage=s.Match.Round;
+        int stage=s.Match.Game;
         if(stage>=1&&stage<=4){
           input.Weapon=Kinds[stage];
           // Short clicks exercise rollback around button release; held automatic
@@ -69,9 +69,9 @@ namespace RivalsPrototype {
           client.GetComponent<NetworkCharacterController>().Teleport(new Vector3(24,.1f,-10));
           s.Match.Phase=1;s.Match.Timer=TickTimer.CreateFromSeconds(s.Runner,5);await Task.Delay(1500);
           for(int n=0;n<DuelMatch.PickupCount;n++){var pickup=s.Match.Pickups[n];pickup.Respawn=TickTimer.CreateFromSeconds(s.Runner,300);s.Match.Pickups.Set(n,pickup);}
-          s.Match.Round=1;s.Match.Phase=2;s.Match.Timer=TickTimer.CreateFromSeconds(s.Runner,300);ready=true;
+          s.Match.Game=1;s.Match.Phase=2;s.Match.Timer=TickTimer.CreateFromSeconds(s.Runner,300);ready=true;
           for(int stage=1;stage<=4;stage++) {
-            if(stage>1){client.CollectWeapon(Kinds[stage]);s.Match.Round=stage;}
+            if(stage>1){client.CollectWeapon(Kinds[stage]);s.Match.Game=stage;}
             await Wait(()=>client.Shots>=Targets[stage],"authoritative shots "+stage);
             await Task.Delay(1500);
             Check(client.Shots==Targets[stage],"duplicate authoritative shot");
@@ -79,21 +79,21 @@ namespace RivalsPrototype {
             Check(s.Players.All(p=>p.Health==100),"air shots must not damage");
             Debug.Log($"RIVALS_NETWORK_STAGE_OK stage={stage} shots={client.Shots} ammo={client.Ammo}");
           }
-          s.Match.Round=5;
+          s.Match.Game=5;
           await Wait(()=>client.Hits>=3,"moving target hit compensation",20);
           await Task.Delay(1000);
           Check(HistoricalHits>0,"at least one rewind hit misses the current target capsule");
           Debug.Log($"RIVALS_LAG_COMPENSATION_OK hits={client.Hits} rewindOnlyHits={HistoricalHits} targetHealth={s.Local.Health}");
-          s.Match.Round=6;await Task.Delay(3500);
+          s.Match.Game=6;await Task.Delay(3500);
           Debug.Log("RIVALS_NETWORK_HOST_OK weapons=4 shots=25 reload=true duplicates=0 damage=0");
         }else {
-          await Wait(()=>s.Match.Phase==2&&s.Match.Round==1,"ready");ready=true;
-          await Wait(()=>s.Match.Round==5,"all four weapons",80);
+          await Wait(()=>s.Match.Phase==2&&s.Match.Game==1,"ready");ready=true;
+          await Wait(()=>s.Match.Game==5,"all four weapons",80);
           Check(s.Local.Shots==25&&s.Local.VisualShots==25,"exactly 25 predicted/confirmed presentations");
           Check(s.Local.SniperAmmo==2,"sniper ammo reconciled");
           Check(feedbackSamples>=20&&maxFeedback<120,"immediate local feedback");
           Debug.Log($"RIVALS_NETWORK_CLIENT_OK shots={s.Local.Shots} visuals={s.Local.VisualShots} maxFeedbackMs={maxFeedback:F2} samples={feedbackSamples} rttMs={s.Runner.GetPlayerRtt(s.Runner.LocalPlayer)*1000:F1}");
-          await Wait(()=>s.Match.Round==6,"moving target hits",25);
+          await Wait(()=>s.Match.Game==6,"moving target hits",25);
           Check(s.Local.Hits>=3,"authoritative hits returned to client");
         }
         Application.Quit(0);

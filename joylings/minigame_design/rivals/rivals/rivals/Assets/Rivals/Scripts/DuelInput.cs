@@ -9,6 +9,8 @@ namespace RivalsPrototype {
     public int Weapon;
     // A cumulative press survives a short tap being absent from the next packet.
     public int FirePress;
+    // Inputs from the previous life must not move or fire after a respawn.
+    public int SpawnSequence;
   }
   public enum Action { Fire, Aim, Jump, Sprint, Reload, Slide }
   public static class Weapons {

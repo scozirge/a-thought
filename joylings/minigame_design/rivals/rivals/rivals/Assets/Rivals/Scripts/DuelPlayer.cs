@@ -35,6 +35,12 @@ namespace RivalsPrototype {
     }
     [Networked] public NetworkBool IsBot { get; set; }
     [Networked] public int Health { get; set; }
+    [Networked] public TickTimer RespawnTimer { get; set; }
+    [Networked] public int SpawnSequence { get; set; }
+    [Networked] public Vector3 SpawnPoint { get; set; }
+    [Networked] public Vector2 SpawnLook { get; set; }
+    [Networked] public NetworkBool EliminationRecorded { get; set; }
+    public float RespawnSecondsRemaining=>Mathf.Clamp(RespawnTimer.RemainingTime(Runner)??0,0,DuelRespawn.DelaySeconds);
     [Networked] public int Weapon { get; set; }
     [Networked] public int RifleAmmo { get; set; }
     [Networked] public int PistolAmmo { get; set; }
@@ -88,7 +94,7 @@ namespace RivalsPrototype {
     CharacterController capsule;
     Renderer[] bodies;
     DuelAvatar avatar;
-    int renderedSeat=-1;
+    int renderedSeat=-1,presentedSpawnSequence=-1;
     bool spawned;
     public bool IsReady=>spawned&&Object&&Object.IsValid;
     public override void Spawned() {
@@ -111,7 +117,7 @@ namespace RivalsPrototype {
         foreach(var bone in GetComponentsInChildren<Transform>())if(bone.name=="arm-left"||bone.name=="arm-right")pose.AddMixingTransform(bone,true);
         characterAnimation.Blend(holdingClip,1,.1f);
       }
-      if (HasStateAuthority) ResetRound();
+      if (HasStateAuthority) ResetForMatch();
       if (HasInputAuthority) {
         DuelSession.Instance.Local = this;
         DuelSession.Instance.Look = Look;
@@ -133,20 +139,33 @@ namespace RivalsPrototype {
       renderedHealth=Health;
       spawned=true;DuelSession.Instance.RegisterPlayer(this);
     }
-    public void ResetRound() {
+    public void ResetForMatch()=>ResetLife(SpawnPosition(Seat),new Vector2(Team==0?0:180,0));
+    public void RespawnAt(Vector3 position) {
+      var facing=new Vector3(-position.x,0,-position.z);
+      ResetLife(position,new Vector2(facing.sqrMagnitude>.01f?Quaternion.LookRotation(facing).eulerAngles.y:0,0));
+    }
+    void ResetLife(Vector3 position,Vector2 look) {
       if (!HasStateAuthority) return;
       Health = MaxHealth; RifleAmmo = 0; PistolAmmo = 12; ShotgunAmmo=0; SniperAmmo=0; Weapon = Weapons.Pistol;
+      RespawnTimer=TickTimer.None;EliminationRecorded=false;ConsumedFirePress=0;
+      SpawnSequence++;SpawnPoint=position;SpawnLook=look;
       nextBotDecision=0;botTargetSeat=-1;botSeenSince=-1;botInput=default;
       if(hitboxRoot)hitboxRoot.HitboxRootActive=true;
       OwnedWeapons=1<<Weapons.Pistol;LastHitSeat=-1;
       RifleHeat=0;RifleRecovery=TickTimer.None;
       if(capsule){capsule.height=1.85f;capsule.center=new Vector3(0,.93f,0);}
-      Look = new Vector2(Team == 0 ? 0 : 180, 0);
+      Look=look;Previous=default;
       FireTimer = ReloadTimer = SlideTimer = SlideCooldown = TickTimer.None;
       cc = GetComponent<NetworkCharacterController>();
-      cc.Teleport(SpawnPosition(Seat), Quaternion.Euler(0, Look.x, 0));
+      cc.Teleport(position, Quaternion.Euler(0, Look.x, 0));
       cc.Velocity = Vector3.zero;
       if (HasInputAuthority){DuelSession.Instance.Look = Look;DuelSession.Instance.ClearWeaponRequest();}
+    }
+    public void SyncSpawnView() {
+      if(!HasInputAuthority||!IsReady||presentedSpawnSequence==SpawnSequence)return;
+      presentedSpawnSequence=SpawnSequence;
+      DuelSession.Instance.Look=SpawnLook;DuelSession.Instance.ResetLifeInput();
+      DamagePulse=DeathProgress=recoil=0;pendingLocalShots=0;
     }
     public bool CollectWeapon(int kind) {
       if(!HasStateAuthority||Health<=0||!Weapons.IsFirearm(kind))return false;
@@ -158,10 +177,17 @@ namespace RivalsPrototype {
       RifleHeat=0;RifleRecovery=TickTimer.None;
       LastPickupWeapon=kind;PickupsCollected++;return true;
     }
-    public int TakeDamage(int amount,Vector3 origin) {
-      if(!HasStateAuthority||Health<=0)return 0;
+    public int TakeDamage(int amount,Vector3 origin,DuelPlayer attacker=null) {
+      var match=DuelSession.Instance.Match;
+      if(!HasStateAuthority||Health<=0||!match||match.Phase!=2||(attacker&&attacker.Team==Team))return 0;
       int applied=Mathf.Min(Health,Mathf.Max(0,amount));Health-=applied;DamageOrigin=origin;
-      if(Health==0){cc.Velocity=Vector3.zero;if(hitboxRoot)hitboxRoot.HitboxRootActive=false;Debug.Log($"RIVALS_ELIMINATED seat={Seat}");}
+      if(Health==0){
+        cc.Velocity=Vector3.zero;ReloadTimer=SlideTimer=TickTimer.None;
+        RespawnTimer=TickTimer.CreateFromSeconds(Runner,DuelRespawn.DelaySeconds);
+        if(hitboxRoot)hitboxRoot.HitboxRootActive=false;
+        if(attacker)match.RecordElimination(attacker,this);
+        Debug.Log($"RIVALS_ELIMINATED seat={Seat} respawnSeconds={DuelRespawn.DelaySeconds}");
+      }
       return applied;
     }
     public override void FixedUpdateNetwork() {
@@ -174,6 +200,9 @@ namespace RivalsPrototype {
         if(match.Phase!=2||Health<=0){botTargetSeat=-1;botSeenSince=-1;nextBotDecision=0;botInput=default;return;}
         input = BotInput();
       } else if (!GetInput(out input)) return;
+      // Counters are scoped to a life. Old packets must not alter the new
+      // baseline; the first fresh short click is valid even after packet loss.
+      if(!IsBot&&input.SpawnSequence!=SpawnSequence)return;
       if (match.Phase != 2 || Health <= 0) { Previous = input.Buttons; ConsumedFirePress=input.FirePress;return; }
       Look = new Vector2(input.Look.x, Mathf.Clamp(input.Look.y, -85, 85));
       var pressed = input.Buttons.GetPressed(Previous); Previous = input.Buttons;
@@ -285,12 +314,11 @@ namespace RivalsPrototype {
           ShotPoint=point;
           if(HasStateAuthority&&victim&&victim.Health>0) {
             int damage=Weapons.ShotDamage(Weapon,Vector3.Distance(origin,point),hitHeight>1.4f);
-            damageTotal+=victim.TakeDamage(damage,origin);lastVictim=victim;
+            damageTotal+=victim.TakeDamage(damage,origin,this);lastVictim=victim;
           }
         }
       }
-      if(lastVictim){Hits++;LastHitSeat=lastVictim.Seat;LastHitDamage=damageTotal;LastHitKilled=lastVictim.Health==0;
-        if(LastHitKilled)DuelSession.Instance.Match.RecordElimination(this,lastVictim);}
+      if(lastVictim){Hits++;LastHitSeat=lastVictim.Seat;LastHitDamage=damageTotal;LastHitKilled=lastVictim.Health==0;}
       Shots++;
       if(Weapon==4)ReloadTimer=TickTimer.CreateFromSeconds(Runner,Weapons.Reload[4]);
       // Present a local forward simulation event exactly once. A corrected shot
@@ -338,6 +366,7 @@ namespace RivalsPrototype {
     }
     public override void Render() {
       if(!IsReady)return;
+      SyncSpawnView();
       if(renderedSeat!=Seat&&avatar){
         renderedSeat=Seat;avatar.Rebuild(Seat);worldWeaponKind=-1;renderedWeapon=-1;
         bodies=avatar.GetComponentsInChildren<Renderer>();

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RivalsPrototype {
   public partial class DuelSession {
-    public const string NetworkVersion="rivals-web-15-pointer-lock";
+    public const string NetworkVersion="rivals-web-16-kill-race";
     public static string RoomTitle(string name)=>DuelNames.Clean(name)+"的房間";
     public string PlayerName="貓貓";
     NetworkRunner lobbyRunner;
@@ -121,11 +121,13 @@ namespace RivalsPrototype {
       if(Players.All(p=>p.Team==previousTeams[p]))foreach(var p in Players)p.Seat^=1;
       registeredPlayers.Sort((a,b)=>a.Seat.CompareTo(b.Seat));Players=registeredPlayers.ToArray();
     }
-    sealed class SeatSnapshot {
-      public int health,weapon,ammo;public Vector3 position;public Vector2 look;
-      public SeatSnapshot(DuelPlayer p){health=p.Health;weapon=p.Weapon;ammo=p.Ammo;position=p.transform.position;look=p.Look;}
+    internal sealed class SeatSnapshot {
+      public int health,weapon,ammo,spawnSequence;public Vector3 position,spawnPoint;public Vector2 look,spawnLook;
+      public TickTimer respawn;public bool eliminationRecorded;
+      public SeatSnapshot(DuelPlayer p){health=p.Health;weapon=p.Weapon;ammo=p.Ammo;position=p.transform.position;look=p.Look;respawn=p.RespawnTimer;spawnSequence=p.SpawnSequence;spawnPoint=p.SpawnPoint;spawnLook=p.SpawnLook;eliminationRecorded=p.EliminationRecorded;}
       public void Apply(DuelPlayer p){
         p.CollectWeapon(weapon);p.Health=health;p.Look=look;
+        p.RespawnTimer=respawn;p.SpawnSequence=spawnSequence;p.SpawnPoint=spawnPoint;p.SpawnLook=spawnLook;p.EliminationRecorded=eliminationRecorded;
         var hitbox=p.GetComponent<HitboxRoot>();if(hitbox)hitbox.HitboxRootActive=health>0;
         if(weapon==0)p.RifleAmmo=ammo;if(weapon==1)p.PistolAmmo=ammo;if(weapon==3)p.ShotgunAmmo=ammo;if(weapon==4)p.SniperAmmo=ammo;
         p.GetComponent<NetworkCharacterController>().Teleport(position,Quaternion.Euler(0,look.x,0));

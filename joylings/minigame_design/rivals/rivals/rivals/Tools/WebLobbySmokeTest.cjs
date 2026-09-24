@@ -62,10 +62,10 @@ const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    await mouseLook(host.page,0,0);
    // Observe the unmodified game through a real complete match.
    await host.page.waitForFunction(()=>window.rivalsDiagnostics?.phase===4,null,{timeout:720000});
-   const podium=await state(host.page);results.podium=podium;assert.equal(Math.max(podium.blueWins,podium.redWins),5);assert.equal(podium.winners.filter(Boolean).length,4);
+   const podium=await state(host.page);results.podium=podium;assert.equal(Math.max(podium.blueKills,podium.redKills),30);assert.equal(podium.winners.filter(Boolean).length,4);
    await host.page.screenshot({path:path.join(output,'battle-web-podium.png')});
    await host.page.waitForFunction(game=>window.rivalsDiagnostics.game>game,podium.game,{timeout:15000});results.nextGame=await state(host.page);
-   assert.equal(results.nextGame.blueWins,0);assert.equal(results.nextGame.redWins,0);assert.equal(results.nextGame.players.filter(p=>p.team===0).length,4);
+   assert.equal(results.nextGame.blueKills,0);assert.equal(results.nextGame.redKills,0);assert.equal(results.nextGame.players.filter(p=>p.team===0).length,4);
    console.log('WEB_PODIUM_OK');
   }
   assert.ok(results.runs.every(r=>r.errors.length===0));

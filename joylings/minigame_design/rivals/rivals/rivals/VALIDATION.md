@@ -1,5 +1,7 @@
 # 驗證紀錄（2026-09-22）
 
+目前玩法已改為先達 30 擊殺獲勝、死亡三秒後隨機復活；最新規則與實測結果見 [KILL_RACE_VALIDATION.md](KILL_RACE_VALIDATION.md)。以下五小局、60 秒與等待小局結束的描述保留為歷史紀錄。
+
 連線生命週期與滿房競爭的本次修正，另見 [CONNECTION_VALIDATION.md](CONNECTION_VALIDATION.md)。
 
 ## Web 原生滑鼠鎖定與中央遮擋牆（2026-09-24）

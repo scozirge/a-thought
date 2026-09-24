@@ -14,7 +14,7 @@ namespace RivalsPrototype.Editor {
       Check(Weapons.ShotDamage(4,1,true)==150&&Weapons.ShotDamage(4,900,false)==150&&Weapons.Magazines[4]==1,"sniper");
       Check(Weapons.RifleSpread(3,true)==0&&Weapons.RifleSpread(8,true)>3,"rifle burst accuracy");
       Check(Weapons.SpreadOffset(20,1,5)==Weapons.SpreadOffset(20,1,5),"deterministic prediction spread");
-      Check(DuelMatch.PickupCount==4&&DuelMatch.PickupRespawnSeconds==5&&DuelMatch.RoundsToWin==5&&DuelMatch.PodiumSeconds==10,"game rules");
+      Check(DuelMatch.PickupCount==4&&DuelMatch.PickupRespawnSeconds==5&&DuelMatch.KillsToWin==30&&DuelRespawn.DelaySeconds==3&&DuelMatch.PodiumSeconds==10,"30-kill and three-second respawn rules");
       Check(DuelPlayer.MaxHealth==300,"triple player health");
       Check(DuelPickups.SpawnPoints.Length==4&&DuelPickups.SpawnPoints.Distinct().Count()==4&&DuelPickups.SpawnPoints.All(p=>Mathf.Abs(p.x)==30&&Mathf.Abs(p.z)==30),"four corner pickups");
       Check(DuelPickups.WeaponFor(0,1)==3&&DuelPickups.WeaponFor(0,2)==4&&DuelPickups.WeaponFor(1,1)==4&&DuelPickups.WeaponFor(1,2)==3&&DuelPickups.WeaponFor(2,1)==0&&DuelPickups.WeaponFor(3,2)==0,"balanced rotating weapon layout");

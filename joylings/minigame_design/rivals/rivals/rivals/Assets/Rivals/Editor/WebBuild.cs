@@ -21,13 +21,18 @@ namespace RivalsPrototype.Editor {
       var config=NetworkProjectConfig.Global;
       config.AllowClientServerModesInWebGL=true;
       NetworkProjectConfigUtilities.SaveGlobalConfig(config);
+      // GitHub Pages supplies native HTTP gzip (including application/wasm).
+      // Keep streaming compilation instead of adding a JS decompression layer.
       PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Disabled;
-      PlayerSettings.WebGL.dataCaching=false;
+      PlayerSettings.WebGL.dataCaching=true;
+      PlayerSettings.WebGL.nameFilesAsHashes=true;
       PlayerSettings.WebGL.initialMemorySize=256;
       PlayerSettings.WebGL.maximumMemorySize=1024;
       PlayerSettings.WebGL.template="PROJECT:Rivals";
+      PlayerSettings.SplashScreen.show=false;
       UnityEditor.WebGL.UserBuildSettings.codeOptimization=UnityEditor.WebGL.WasmCodeOptimization.RuntimeSpeed;
       PlayerSettings.SetIl2CppCompilerConfiguration(NamedBuildTarget.WebGL,Il2CppCompilerConfiguration.Release);
+      PlayerSettings.SetIl2CppCodeGeneration(NamedBuildTarget.WebGL,Il2CppCodeGeneration.OptimizeSpeed);
       PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.WebGL,ManagedStrippingLevel.Low);
       var report=BuildPipeline.BuildPlayer(EditorBuildSettings.scenes,output,BuildTarget.WebGL,BuildOptions.None);
       if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Web build failed");

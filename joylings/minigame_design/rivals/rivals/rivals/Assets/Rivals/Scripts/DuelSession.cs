@@ -36,12 +36,13 @@ namespace RivalsPrototype {
     int expectedPlayers=MaxPlayers, expectedHumans=1;
     int weapon=-1,smokeWeapon=Weapons.Pistol;
     int firePress,lastFirePressFrame=-1;
-    bool GameplayInputAllowed=>started&&!paused&&!showSettings&&!showCredits&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2&&Local&&Local.IsReady&&Local.Health>0;
-    public bool ControlsActive=>GameplayInputAllowed&&DuelWebInput.HasControl;
+    bool GameplayInputAllowed=>started&&!paused&&!showSettings&&!showCredits&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2&&Local&&Local.IsReady;
+    public bool ControlsActive=>GameplayInputAllowed&&Local.Health>0&&DuelWebInput.HasControl;
     void ResumeControls(){paused=false;DuelWebInput.SetActive(GameplayInputAllowed);DuelWebInput.Resume();}
     public void PauseControls(){if(!started)return;paused=true;DuelWebInput.SetActive(false);DuelWebInput.Release();}
     public bool IsAiming=>ControlsActive&&Mouse.current!=null&&Mouse.current.rightButton.isPressed;
     public void ClearWeaponRequest(){weapon=-1;}
+    public void ResetLifeInput(){pending=default;weapon=-1;firePress=0;lastFirePressFrame=-1;}
     public bool AudioEnabled { get; private set; }
     public void SetAudioEnabled(bool enabled){AudioEnabled=enabled;AudioListener.pause=!enabled;AudioListener.volume=enabled?.65f:0f;}
     NetworkButtons pending;
@@ -134,7 +135,7 @@ namespace RivalsPrototype {
         string signature=string.Join(",",roster.Select(p=>$"{p.Seat}:{(p.IsBot?"B":"H")}"));
         if(signature!=lastRoster) {
           lastRoster=signature;
-          Debug.Log($"RIVALS_ROSTER players={roster.Length} humans={roster.Count(p=>!p.IsBot)} bots={roster.Count(p=>p.IsBot)} bluePlayers={roster.Count(p=>p.Team==0)} redPlayers={roster.Count(p=>p.Team==1)} uniqueSeats={roster.Select(p=>p.Seat).Distinct().Count()} seats={signature} phase={Match.Phase} round={Match.Round} score={Match.Blue}:{Match.Red}");
+          Debug.Log($"RIVALS_ROSTER players={roster.Length} humans={roster.Count(p=>!p.IsBot)} bots={roster.Count(p=>p.IsBot)} bluePlayers={roster.Count(p=>p.Team==0)} redPlayers={roster.Count(p=>p.Team==1)} uniqueSeats={roster.Select(p=>p.Seat).Distinct().Count()} seats={signature} phase={Match.Phase} game={Match.Game} score={Match.Blue}:{Match.Red}");
         }
       }
       bool smokeRosterReady=smoke&&Local&&roster.Length==expectedPlayers&&roster.Count(p=>!p.IsBot)>=expectedHumans;
@@ -188,6 +189,7 @@ namespace RivalsPrototype {
     }
     void OnDestroy(){DuelWebInput.SetActive(false);if(Instance==this)Instance=null;if(settingsIcon)Destroy(settingsIcon);}
     public void OnInput(NetworkRunner runner, NetworkInput input) {
+      if(Local)Local.SyncSpawnView();
       var d=new DuelInput{Look=Look,Weapon=weapon,Buttons=pending};pending=default;weapon=-1;
       var k=Keyboard.current;var m=Mouse.current;
       if(k!=null && m!=null && ControlsActive) {
@@ -213,6 +215,10 @@ namespace RivalsPrototype {
 #endif
 #if UNITY_EDITOR
       if(DuelBattleSmoke.Running)d=DuelBattleSmoke.Input(this);
+#endif
+      d.SpawnSequence=Local&&Local.IsReady?Local.SpawnSequence:0;
+#if UNITY_EDITOR
+      if(DuelBattleSmoke.Running&&DuelBattleSmoke.InputSpawnSequence.HasValue)d.SpawnSequence=DuelBattleSmoke.InputSpawnSequence.Value;
 #endif
       input.Set(d);
       if(Local&&d.Buttons.IsSet(Action.Fire))Local.RecordFireInput();
