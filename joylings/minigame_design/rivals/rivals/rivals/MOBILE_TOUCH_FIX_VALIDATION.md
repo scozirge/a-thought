@@ -55,3 +55,17 @@ Windows 另通過實際繪圖煙霧測試：八個角色、兩隊各四人、一
 兩個 ZIP 均通過 CRC 與逐檔 SHA-256 比對，未壓縮的執行檔與資料一併提交；Windows PE 架構為 x64。Web 包含公開遊戲連結的 `README.md`、使用說明、本機伺服器與完整素材授權，Windows 排除 Unity 產生的 `DoNotShip` 偵錯資料。檔案清單見 `Builds/Release-20260924-Mobile/release-manifest.json`。
 
 由於移除網路狀態欄位，新版與舊版房間分開；所有人重新整理網頁，Windows 玩家下載新版，再一起開房。
+
+## Git 與公開部署
+
+- 程式與測試提交：`883a13a81bf538617ae198a8e2a97917fb983191`。
+- 完整正式輸出提交：`fe82aaef94ef386db396709ceec7420fe9d5f91f`，已推送 `origin/master`。
+- 公開網站提交：`8130b2d2c7f3b177d3853a2cf40edf140ebb68c0`，已推送 `origin/gh-pages`。僅更新 `rivals/`，發布前逐檔確認 Git 暫存內容與正式 Web 輸出一致。
+- GitHub Pages 回報該提交 `built`，完成時間為 2026-09-24 15:51:54（台北時間）。
+- 以 GitHub Git Tree API 確認遠端全部 228 個正式輸出檔案的 Git blob 識別碼與本機相同；兩個 ZIP 下載均回傳 HTTP 200，長度與本機完全一致。驗證報告：`Logs/TouchFix/staged-artifacts.json`、`remote-artifacts.json`、`pages-staged.json`。
+
+公開遊戲：[紅藍槍戰手機操作修正版](https://scozirge.github.io/a-thought/rivals/?v=touch-fix-20260924)。
+
+公開網址的全部 22 個檔案已實際下載並比對 SHA-256，與正式輸出完全相同，`.wasm` 的 Content-Type 為 `application/wasm`；課程頁仍回傳 HTTP 200。驗證報告：`Logs/TouchFix/Public/public-artifact-check.json`。
+
+另直接從公開網址開啟兩個全新瀏覽器環境，完成 `Tools/WebMobileSmokeTest.cjs` 的 12 項多人連線檢查。手機／鍵鼠實際同房、點按瞄準後持續射擊與轉向、再次點按取消、無滑行按鈕、短按射擊／裝填、全螢幕、失焦後觸碰即恢復、互換房主與離房返回皆通過；六次短按射擊最慢回饋 56 ms，沒有頁面錯誤或遊戲例外。結果與公開站截圖：`Logs/TouchFix/Public/web-mobile-check.json`、`phone-lobby.png`、`phone-battle-landscape.png`。此輪包含從 GitHub Pages 首次下載遊戲資源；仍是 Chrome 手機觸控模擬，並非 iPhone／Android 實機執行。
