@@ -163,6 +163,7 @@ namespace RivalsPrototype {
       HudText(new Rect(443,637,394,30),$"{Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0)} 秒後重新分隊 · 開始下一場",14);
     }
     void DrawPauseMenu(){
+      if(DuelWebInput.TouchMode)return; // Large HTML controls remain usable on phones.
       Fill(new Rect(0,0,1280,720),new Color(.025f,.04f,.07f,.48f));HudCard(new Rect(445,174,390,362),TeamColor(0));
       HudText(new Rect(473,194,334,40),"休息一下",28,null,TextAnchor.MiddleLeft,true);
       HudText(new Rect(473,245,334,24),"WASD 移動  /  左鍵射擊  /  右鍵瞄準",13,HudMuted,TextAnchor.MiddleLeft);

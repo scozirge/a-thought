@@ -40,12 +40,21 @@ namespace RivalsPrototype {
     public bool ControlsActive=>GameplayInputAllowed&&Local.Health>0&&DuelWebInput.HasControl;
     void ResumeControls(){paused=false;DuelWebInput.SetActive(GameplayInputAllowed);DuelWebInput.Resume();}
     public void PauseControls(){if(!started)return;paused=true;DuelWebInput.SetActive(false);DuelWebInput.Release();}
-    public bool IsAiming=>ControlsActive&&Mouse.current!=null&&Mouse.current.rightButton.isPressed;
+    public bool IsAiming=>ControlsActive&&(DuelWebInput.TouchMode?(DuelWebInput.TouchHeld&(1<<(int)Action.Aim))!=0:Mouse.current!=null&&Mouse.current.rightButton.isPressed);
     public void ClearWeaponRequest(){weapon=-1;}
-    public void ResetLifeInput(){pending=default;weapon=-1;firePress=0;lastFirePressFrame=-1;}
+    public void ResetLifeInput(){pending=default;resetPendingAfterPoll=false;weapon=-1;firePress=0;lastFirePressFrame=-1;DuelWebInput.ResetTouch();}
+    [UnityEngine.Scripting.Preserve]
+    public void WebControlCommand(string action) {
+      if(!started||busy)return;
+      if(action=="pause")PauseControls();
+      else if(action=="resume"&&!showSettings&&!showCredits)ResumeControls();
+      else if(action=="leave")Leave();
+      else if(action=="audio")SetAudioEnabled(!AudioEnabled);
+    }
     public bool AudioEnabled { get; private set; }
     public void SetAudioEnabled(bool enabled){AudioEnabled=enabled;AudioListener.pause=!enabled;AudioListener.volume=enabled?.65f:0f;}
     NetworkButtons pending;
+    bool resetPendingAfterPoll;
     float sensitivity = .12f;
     int lastHits;
     float hitUntil;
@@ -126,6 +135,9 @@ namespace RivalsPrototype {
       if(snapshot!=null)snapshot.Apply(obj.GetComponent<DuelPlayer>());
     }
     void Update() {
+      // Fusion can poll several ticks in one Unity frame. Keep accumulated taps
+      // for every poll in that frame, then clear before collecting fresh input.
+      if(resetPendingAfterPoll){pending=default;resetPendingAfterPoll=false;}
       TickLobby();
       CheckHostConnection();
       UpdateCombatHud();
@@ -161,25 +173,27 @@ namespace RivalsPrototype {
         if(!smokeKeepAlive){smoke=false;Invoke(nameof(FinishSmoke),10);}
       } else if(smoke && !smokeReported && Time.realtimeSinceStartup-smokeStarted>120) {Debug.LogError("RIVALS_SMOKE_TIMEOUT "+Message+$" match={Match != null} players={roster.Length} local={Local != null}");Application.Quit(2);smoke=false;}
       var k=Keyboard.current;var m=Mouse.current;
-      if(k==null||m==null) return;
-      if(k.f8Key.wasPressedThisFrame)ToggleSettings();
-      if(k.escapeKey.wasPressedThisFrame&&started)PauseControls();
+      if(k!=null&&k.f8Key.wasPressedThisFrame)ToggleSettings();
+      if(k!=null&&k.escapeKey.wasPressedThisFrame&&started)PauseControls();
       // Eligibility must not depend on focus: otherwise the gesture that regains
       // focus can arrive while the browser bridge is still disabled.
       DuelWebInput.SetActive(GameplayInputAllowed);
+      DuelWebInput.SetTouchState(GameplayInputAllowed&&Local.Health>0,started,paused,AudioEnabled);
       bool controls=ControlsActive;
       if(!controls)pending=default;
 #if UNITY_WEBGL && !UNITY_EDITOR
       // Key-up can be delivered to browser chrome instead of the game after blur.
-      if(hadControls&&!controls){InputSystem.ResetDevice(k);InputSystem.ResetDevice(m);}
+      if(hadControls&&!controls){if(k!=null)InputSystem.ResetDevice(k);if(m!=null)InputSystem.ResetDevice(m);DuelWebInput.ResetTouch();}
 #endif
       hadControls=controls;
       var delta=DuelWebInput.ReadDelta();
       if(Local && Local.Health>0 && ControlsActive) {
         Look=DuelWebInput.Rotate(Look,delta,sensitivity);
-        if(k.spaceKey.wasPressedThisFrame) pending.Set(Action.Jump,true);
-        if(k.rKey.wasPressedThisFrame) pending.Set(Action.Reload,true);
-        if(k.cKey.wasPressedThisFrame) pending.Set(Action.Slide,true);
+        if(!DuelWebInput.TouchMode&&k!=null) {
+          if(k.spaceKey.isPressed||k.spaceKey.wasPressedThisFrame) pending.Set(Action.Jump,true);
+          if(k.rKey.isPressed||k.rKey.wasPressedThisFrame) pending.Set(Action.Reload,true);
+          if(k.cKey.isPressed||k.cKey.wasPressedThisFrame) pending.Set(Action.Slide,true);
+        }
       }
 
     }
@@ -191,9 +205,14 @@ namespace RivalsPrototype {
     void OnDestroy(){DuelWebInput.SetActive(false);if(Instance==this)Instance=null;if(settingsIcon)Destroy(settingsIcon);}
     public void OnInput(NetworkRunner runner, NetworkInput input) {
       if(Local)Local.SyncSpawnView();
-      var d=new DuelInput{Look=Look,Weapon=weapon,Buttons=pending};pending=default;weapon=-1;
+      var d=new DuelInput{Look=Look,Weapon=weapon,Buttons=ControlsActive?pending:default};resetPendingAfterPoll=true;weapon=-1;
       var k=Keyboard.current;var m=Mouse.current;
-      if(k!=null && m!=null && ControlsActive) {
+      if(DuelWebInput.TouchMode&&ControlsActive) {
+        d.Move=DuelWebInput.TouchMove;
+        int held=DuelWebInput.TouchHeld,pressed=DuelWebInput.TakeTouchPressed();
+        firePress+=DuelWebInput.TakeTouchFirePress();
+        for(int action=0;action<=((int)Action.Slide);action++)d.Buttons.Set(action,((held|pressed)&(1<<action))!=0);
+      }else if(!DuelWebInput.TouchMode&&k!=null && m!=null && ControlsActive) {
         if(m.leftButton.wasPressedThisFrame&&lastFirePressFrame!=Time.frameCount){firePress++;lastFirePressFrame=Time.frameCount;}
         d.Move=new Vector2((k.dKey.isPressed?1:0)-(k.aKey.isPressed?1:0),(k.wKey.isPressed?1:0)-(k.sKey.isPressed?1:0));
         d.Buttons.Set(Action.Fire,m.leftButton.isPressed||m.leftButton.wasPressedThisFrame);d.Buttons.Set(Action.Aim,m.rightButton.isPressed);d.Buttons.Set(Action.Sprint,k.leftShiftKey.isPressed);

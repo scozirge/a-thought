@@ -4,23 +4,27 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windo
 
 公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
-GitHub Pages 使用 `gh-pages` 分支根目錄。目前公開版於 2026-09-24 發布，部署提交為 `8287d17`，對應程式提交 `c149541`；將完整 `Builds/Release-20260924-Multiplayer/Web/` 發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。課程中的新增武器與技能是發想範例，並非現有功能。
+GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`；發布與測試紀錄見 [手機操作驗證](MOBILE_CONTROLS_VALIDATION.md)。課程中的新增武器與技能是發想範例，並非現有功能。
 
-對外測試可直接分享上方公開遊戲網址，建議使用電腦版 Chrome／Edge。由一人建立房間，其他人在即時清單按「加入房間」；同房最多 8 位真人，不足由 Bot 補齊。首次載入需下載遊戲資源，較慢網路可能需要數分鐘，請等進度完成。若仍看到「5 小局」，請按 `Ctrl + Shift + R` 強制重新載入，所有人載入新版後再一起開房。
+對外測試可直接分享上方公開遊戲網址。電腦可使用 Chrome／Edge，手機在大廳選「手機觸控」，建議橫向遊玩。由一人建立房間，其他人在即時清單按「加入房間」；手機與鍵鼠共用房間，同房最多 8 位真人，不足由 Bot 補齊。首次載入需下載遊戲資源，較慢網路可能需要數分鐘，請等進度完成。若看不到操作方式選擇，請重新整理；電腦可按 `Ctrl + Shift + R`，所有人載入新版後再一起開房。
 
 ## 開始玩
+
+大廳可選「鍵盤滑鼠」或「手機觸控」，瀏覽器會記住選擇；首次進入會依觸控能力選擇預設模式。回到大廳後可隨時切換。兩種模式都能按右上角「全螢幕」放大，再按「退出全螢幕」返回。若瀏覽器不提供或拒絕原生全螢幕，改為填滿可用視窗，按「退出放大」返回；此時瀏覽器網址列可能仍會保留。
+
+手機左側搖桿移動，右側空白區滑動轉向；右側有射擊、瞄準、跳躍、裝填與滑行，搖桿旁有衝刺。按住射擊或瞄準按鈕時也能滑動轉向，支援移動、轉向、開火同時操作。右上角「選單」可暫停自己的操作、切換聲音或回到大廳；房間對戰會繼續。失焦、開選單、死亡或切換全螢幕都會清除舊觸碰，復活後重新觸碰即可操作。
 
 網頁先顯示房間大廳。預設從 100 個簡短的中文動物名字挑一個，也能自行輸入最多 10 字的名字。房間名稱固定為「房主名字的房間」，修改名字或抽取新名字時立即更新預覽，不能單獨輸入房間名稱。按「建立房間」開始，或在即時房間清單選一間按「加入房間」。同名房主的房間使用不同連線識別碼，仍能分別建立。清單顯示真人數與是否已滿；房間容量為 8 位真人，Bot 不占連線名額。
 
 進房後固定 4 對 4，空位由 Bot 補齊。真人加入會接替 Bot，優先挑選仍存活的座位；接替時保留原座位的血量、位置、武器與剩餘復活倒數，避免離線／重加入跳過等待。真人離線也由 Bot 接手原狀態。真人、Bot 都有名字；活著、沒有被牆壁遮住且距離小於 14 公尺的角色才顯示小型頭頂名字，11–14 公尺逐漸淡出，陣亡後隱藏。
 
-進入開場倒數就顯示中央準心；開打後點「開始操作」取得瀏覽器滑鼠鎖定，使用 `movementX/movementY` 相對位移，可連續轉任意圈。鎖定時隱藏游標，按 Esc 或失焦時恢復游標、清除輸入並停止操作；重新點擊後才恢復。
+進入開場倒數就顯示中央準心。鍵鼠模式開打後點「開始操作」取得瀏覽器滑鼠鎖定，使用 `movementX/movementY` 相對位移，可連續轉任意圈。鎖定時隱藏游標，按 Esc 或失焦時恢復游標、清除輸入並停止操作；重新點擊後才恢復。
 
 若內嵌瀏覽器拒絕 Pointer Lock、API 不存在，或 1.5 秒內沒有實際取得鎖定，會自動切換相容操作，不再用錯誤視窗擋住遊戲：按住右鍵拖曳轉向，放開後把滑鼠移回，再次拖曳即可繼續轉身。右鍵仍會瞄準，左鍵射擊、WASD 移動照常。只有按住右鍵拖曳期間才隱藏游標；滑鼠停止、放開或失焦後不會自轉。右鍵拖曳使用每次按下建立的新座標起點，並以 pointer capture 接收畫面外的放開事件；不使用邊緣自轉或 Q／E 模擬轉向。
 
 相容模式的單次拖曳仍受螢幕邊界限制，需放開重新拖曳；要一般 FPS 的連續自由轉向，請在獨立 Chrome／Edge 開啟，再點畫面或「切換自由轉向」。網站無法自行修改外層 iframe 的 sandbox 權限；自行架設嵌入頁需允許 `allow-pointer-lock`。參考 [MDN Pointer Lock](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API)。
 
-鎖定請求在瀏覽器點擊事件直接執行，以實際 `pointerlockchange` 為準；相容操作期間不會每次開槍都重試鎖定。Unity 的 `WebGLInput.stickyCursorLock` 設為 false，避免保留過期狀態。全螢幕與滑鼠鎖定同時要求時先要求鎖定，避免全螢幕消耗點擊授權。Unity 大檔案使用內容雜湊檔名及 immutable 快取；內容改變會產生新檔名，單純改介面不會讓整包遊戲重新下載。
+鎖定請求在瀏覽器點擊事件直接執行，以實際 `pointerlockchange` 為準；相容操作期間不會每次開槍都重試鎖定。Unity 的 `WebGLInput.stickyCursorLock` 設為 false，避免保留過期狀態。全螢幕按鈕直接使用該次點擊授權；鍵鼠切換全螢幕後，點遊戲畫面即可重新取得操作。Unity 大檔案使用內容雜湊檔名及 immutable 快取；內容改變會產生新檔名，單純改介面不會讓整包遊戲重新下載。
 
 | 操作 | 按鍵 |
 | --- | --- |
@@ -93,6 +97,8 @@ python Tools/serve_web.py --port 8184
 `Tools/WebLoadSmokeTest.cjs` 以實際大廳可操作為載入終點，紀錄冷／熱載入的下載量、時間與 Unity 快取命中；`RIVALS_LOAD_MBPS=10` 可固定 10 Mbps 及 50 ms 延遲，`--expect-cache` 驗證大檔案重用，`--deny-cache` 模擬禁止儲存。設定 `RIVALS_LOAD_LABEL`、`RIVALS_TEST_OUTPUT` 保存不同實驗，正式量測見 `LOAD_VALIDATION.md`。
 
 ## 驗證
+
+手機觸控、兩種操作模式與全螢幕的結果見 [手機操作驗證](MOBILE_CONTROLS_VALIDATION.md)。`Tools/MobileBridgeChecks.cjs` 驗證真正瀏覽器多指事件、短按、取消、全螢幕降級與直向版面；`Tools/WebMobileSmokeTest.cjs` 使用觸控與鍵鼠兩個隔離的 Web 玩家實際連線，`--lag` 增加雙向延遲，`--respawn` 由真人觸控移動接近 Bot，驗證實際死亡及三秒復活。手機瀏覽器模擬測試不等同 Android／iPhone 實機驗證。
 
 本次規則變更與結果見 [30 擊殺與復活驗證](KILL_RACE_VALIDATION.md)。`Tools/WebKillRaceSmokeTest.cjs` 以兩個真實 Web 玩家驗證擊殺同步、真人與 Bot 的三秒倒數、隨機出生位置與本機復活畫面；加 `--complete-game` 可持續觀察至 30 擊殺及下一場。
 

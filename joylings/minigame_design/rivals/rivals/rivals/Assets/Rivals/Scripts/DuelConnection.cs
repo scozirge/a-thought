@@ -48,7 +48,7 @@ namespace RivalsPrototype {
       lastConfirmedHostTick=-1;lastHostSnapshotAt=lastHostCheckAt=0;
       Runner=null;Match=null;Local=null;
       registeredPlayers.Clear();Players=Array.Empty<DuelPlayer>();loggedRoster=null;lastRoster=null;
-      pending=default;weapon=-1;firePress=0;lastFirePressFrame=-1;Look=default;
+      ResetLifeInput();Look=default;
       aimTarget=null;lastHitTarget=null;seenPickups=seenLife=lastHits=0;
       hitUntil=targetUntil=pickupUntil=nextTargetScan=0;pickupMessage=null;
       Array.Clear(nameVisible,0,nameVisible.Length);
