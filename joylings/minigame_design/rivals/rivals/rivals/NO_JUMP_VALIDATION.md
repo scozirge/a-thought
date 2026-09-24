@@ -27,7 +27,7 @@
 
 ## 正式成品
 
-来源提交為 `f9084a6534f48a0c3c59540a5ec4cb311122f479`。沿用 `Builds/Release-20260924-Mobile/` 與原本 ZIP 下載路徑，更新完整 Web、Windows、使用說明及版本資訊。
+來源提交為 `f9084a6534f48a0c3c59540a5ec4cb311122f479`。沿用 `Builds/Release-20260924-Mobile/` 與原本 ZIP 下載路徑，更新完整 Web、Windows、使用說明及版本資訊。
 
 | 成品 | 檔案數 | ZIP 位元組數 | ZIP SHA-256 |
 | --- | ---: | ---: | --- |
@@ -35,3 +35,13 @@
 | Windows x64 | 203 | 48,648,718 | `30bae22de9b6bc306a28c703ff41affc5679e4d96227d9f8f9444bd1f48a1762` |
 
 兩個 ZIP 的 CRC、完整檔案清單及解壓後逐檔 SHA-256 均通過比對。版本資訊的來源雜湊包含角色 prefab，能追溯已停用的跳躍衝量；總清單為 `Builds/Release-20260924-Mobile/release-manifest.json`。
+
+## 推送與公開部署
+
+- `master` 的成品提交為 `9904821bf3912d66ecfe4cafc7a2c46c0333c238`，已推送成功。GitHub 遠端的 228 個成品 blob 與本機一致，Web 與 Windows ZIP 均回傳 HTTP 200 且長度符合清單。
+- `gh-pages` 發布提交為 `050d513c238913a03a01aac791398a6fa420f518`，GitHub Pages API 已確認狀態為 `built`。
+- 教學目錄、課程與新資源共 10 個檔案通過公開站 SHA-256 比對。1440 px 桌面與 390 px 手機的展開問題、鍵盤操作、目錄及段落導覽通過，無水平溢出或頁面例外。
+- 已從兩個教學入口實際開啟新版遊戲分頁，確認網址為 `?v=no-jump-20260924`，頁面中沒有跳躍或滑行按鈕。
+- 公開站完整 22 個遊戲檔案逐檔 SHA-256 均符合本次正式包，WebAssembly 的 MIME type 為 `application/wasm`。本輪多人遊戲測試使用本機供應的相同正式檔案與真實 Photon 服務；公開站另做完整檔案與教學入口驗證。
+
+發布報告：`Logs/NoJump/remote-artifacts.json`、`Logs/NoJump/Public/public-artifact-check.json`；教學報告位於 `hatchbeasts/outputs/rivals-no-jump-public.json` 與 `hatchbeasts/outputs/rivals-no-jump/live-results.json`。
