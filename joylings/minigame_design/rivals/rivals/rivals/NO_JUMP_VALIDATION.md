@@ -24,3 +24,14 @@
 - Web／Windows 互連 4 項通過：Windows 開房供 Web 加入、Windows 房主離開後 Web 返回大廳、Web 開房供 Windows 加入、Windows 訪客離開後 Web 由 Bot 補位；雙向均為 8 名角色、2 位真人及 6 位 Bot，無遊戲執行例外。報告為 `CrossPlay/cross-play-check.json`。
 
 報告：`Layout/mobile-layout-check.json`、`Bridge/mobile-bridge-check.json`、`Visual/visual-check.json`、`Network/network-web-lag-check.json`、`Mobile/web-mobile-check.json`，均位於 `Logs/NoJump/`。
+
+## 正式成品
+
+来源提交為 `f9084a6534f48a0c3c59540a5ec4cb311122f479`。沿用 `Builds/Release-20260924-Mobile/` 與原本 ZIP 下載路徑，更新完整 Web、Windows、使用說明及版本資訊。
+
+| 成品 | 檔案數 | ZIP 位元組數 | ZIP SHA-256 |
+| --- | ---: | ---: | --- |
+| Web | 22 | 30,095,136 | `ee989243cabb3a00be9eebb753e1827da9d41122110d16728df079a642d1a208` |
+| Windows x64 | 203 | 48,648,718 | `30bae22de9b6bc306a28c703ff41affc5679e4d96227d9f8f9444bd1f48a1762` |
+
+兩個 ZIP 的 CRC、完整檔案清單及解壓後逐檔 SHA-256 均通過比對。版本資訊的來源雜湊包含角色 prefab，能追溯已停用的跳躍衝量；總清單為 `Builds/Release-20260924-Mobile/release-manifest.json`。
