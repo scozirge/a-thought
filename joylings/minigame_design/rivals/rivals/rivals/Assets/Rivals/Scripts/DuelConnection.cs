@@ -12,6 +12,26 @@ namespace RivalsPrototype {
   public partial class DuelSession {
     const int ConnectionTimeoutSeconds=30;
     const float LobbyRetrySeconds=5;
+    const float HostSnapshotTimeoutSeconds=15;
+    int lastConfirmedHostTick=-1;
+    float lastHostSnapshotAt,lastHostCheckAt;
+
+    void CheckHostConnection() {
+      float now=Time.realtimeSinceStartup;
+      if(!started||busy||!Runner||!Runner.IsRunning||!Runner.IsClient||Runner.IsServer||!Match||!Match.Object||!Match.Object.IsValid) {
+        lastConfirmedHostTick=-1;lastHostCheckAt=now;return;
+      }
+      int confirmed=Runner.LatestServerTick;
+      // A live cloud connection does not guarantee the player host is alive.
+      // Grant a fresh window after the local app was suspended or stalled.
+      if(lastConfirmedHostTick<0||confirmed!=lastConfirmedHostTick||now-lastHostCheckAt>2) {
+        lastConfirmedHostTick=confirmed;lastHostSnapshotAt=now;
+      }
+      lastHostCheckAt=now;
+      if(now-lastHostSnapshotAt<HostSnapshotTimeoutSeconds)return;
+      Debug.LogWarning($"RIVALS_HOST_SNAPSHOT_TIMEOUT tick={confirmed}");
+      Leave("房主連線已中斷，請重新選擇房間。");
+    }
 
     // A Fusion runner is single-use. All async operations keep their own runner
     // reference so a late completion cannot mutate a newer connection.
@@ -25,6 +45,7 @@ namespace RivalsPrototype {
 
     void ResetGameSession() {
       started=false;paused=false;showSettings=false;showCredits=false;hadControls=false;
+      lastConfirmedHostTick=-1;lastHostSnapshotAt=lastHostCheckAt=0;
       Runner=null;Match=null;Local=null;
       registeredPlayers.Clear();Players=Array.Empty<DuelPlayer>();loggedRoster=null;lastRoster=null;
       pending=default;weapon=-1;firePress=0;lastFirePressFrame=-1;Look=default;
@@ -97,13 +118,13 @@ namespace RivalsPrototype {
       }
     }
 
-    async void Leave() {
+    async void Leave(string message="已離開房間。") {
       if(busy)return;
       busy=true;paused=true;DuelWebInput.SetActive(false);DuelWebInput.Release();
       try {
         await DisposeRunner(Runner);
         if(!this)return;
-        ResetGameSession();Message="已離開房間。";
+        ResetGameSession();Message=message;
       } finally {
         if(this){busy=false;nextLobbyRetry=Time.unscaledTime;nextLobbyReport=0;}
       }

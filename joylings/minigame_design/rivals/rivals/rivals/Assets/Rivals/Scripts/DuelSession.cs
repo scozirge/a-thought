@@ -127,6 +127,7 @@ namespace RivalsPrototype {
     }
     void Update() {
       TickLobby();
+      CheckHostConnection();
       UpdateCombatHud();
       ReportDiagnostics();
       var roster=Match&&Match.Object&&Match.Object.IsValid?Match.Players:Array.Empty<DuelPlayer>();

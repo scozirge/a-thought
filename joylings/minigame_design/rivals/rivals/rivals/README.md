@@ -66,6 +66,8 @@ Bot 採較寬鬆的難度，進攻積極度略高於前版：移動上限 3.8 �
 
 ## 建置與本地執行
 
+正式網頁／Windows 64 位元交付與測試見 [RELEASE_VALIDATION.md](RELEASE_VALIDATION.md)。Windows 使用 `RIVALS > Build current Windows release`，或批次執行 `RivalsPrototype.Editor.WindowsBuild.BuildCurrent -rivalsOutput Builds/WindowsRelease`。此入口直接建置目前場景，使用 `BuildOptions.None` 與 Mono，不會重新產生場景或啟用 Development Build。請完整分發 `.exe` 旁的 `Rivals_Data`、`MonoBleedingEdge`、UnityPlayer.dll 等資料與授權檔。
+
 Unity Hub 開啟此資料夾，在 `RIVALS > Build current Web scene` 建置目前場景，產物為 `Builds/Web`。需要對應 Unity 的 Web Build Support。批次可執行 `RivalsPrototype.Editor.WebBuild.BuildCurrent`，以 `-rivalsWebOutput` 指定其他輸出目錄。`Build Web test` 會先重新產生原型場景與網路 Prefab，有手動調整時應使用前述 current 選項。
 
 ```powershell
