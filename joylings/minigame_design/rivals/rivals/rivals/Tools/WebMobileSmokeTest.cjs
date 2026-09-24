@@ -64,7 +64,10 @@ const suffix=Date.now().toString(36).slice(-6);
   const fired=await state(phone);assert.equal(me(fired).shots-initial,6);assert.equal(me(fired).visualShots,me(fired).shots);await wait(desktop,s=>s.players.find(p=>p.seat===fired.localSeat).shots===me(fired).shots,'host shot count');
   result.afterShots=fired;const magazine={0:30,1:12,3:6,4:1}[me(fired).weapon];
   await tap('#touch-reload',8,35);await wait(phone,s=>me(s).ammo===magazine&&!me(s).reloading,'touch reload');await wait(desktop,s=>s.players.find(p=>p.seat===fired.localSeat).ammo===magazine,'host reload');pass('six short touch shots have one feedback each and a short reload tap agrees on both peers');
-  await down(4,await center('#touch-aim'));await wait(phone,s=>s.aiming,'touch aim');await up(4);await wait(phone,s=>!s.aiming,'release aim');
+  await tap('#touch-aim',4);await wait(phone,s=>s.aiming,'tap aim stays enabled');await phone.waitForTimeout(250);assert.equal((await state(phone)).aiming,true);
+  const aimedShots=me(await state(phone)).shots;await down(3,await center('#touch-fire'));await move(3,{x:(await center('#touch-fire')).x-15,y:(await center('#touch-fire')).y});await phone.waitForTimeout(600);await up(3);
+  const aimed=await wait(phone,s=>s.aiming&&me(s).shots>aimedShots,'shoot while aim is latched');await wait(desktop,s=>s.players.find(p=>p.seat===aimed.localSeat).shots===me(aimed).shots,'aimed shots reach host');
+  await tap('#touch-aim',4);await wait(phone,s=>!s.aiming,'second tap releases aim');pass('tap aim stays enabled while firing and dragging; the second tap releases it');
   const grounded=me(await state(phone)).position.y;await tap('#touch-jump',5);await wait(phone,s=>me(s).position.y>grounded+.35,'touch jump');pass('aim and jump respond to touch buttons');
   await wait(phone,s=>Math.abs(me(s).position.y-grounded)<.15,'land after jump');
   stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+40,y:stick.y});await down(6,await center('#touch-sprint'));
@@ -73,7 +76,7 @@ const suffix=Date.now().toString(36).slice(-6);
   // rather than comparing the acceleration from rest to a constant-speed walk.
   await phone.waitForTimeout(1000);const sprintStart=me(await state(phone)).position;await phone.waitForTimeout(900);
   const sprintEnd=me(await state(phone)).position;await up(6);await up(1);result.sprintDistance=Math.hypot(sprintEnd.x-sprintStart.x,sprintEnd.z-sprintStart.z);assert.ok(result.sprintDistance>6,'sprint must exceed walking travel');
-  await phone.waitForTimeout(300);const slideStart=me(await state(phone)).position;await tap('#touch-slide',8,35);await phone.waitForTimeout(650);const slideEnd=me(await state(phone)).position;result.slideDistance=Math.hypot(slideEnd.x-slideStart.x,slideEnd.z-slideStart.z);assert.ok(result.slideDistance>3.5,'short slide tap moves the character');pass('sprint accelerates the joystick and a short slide tap moves forward');
+  assert.equal(await phone.locator('#touch-slide').count(),0);pass('sprint accelerates the joystick and no slide button remains');
   await phone.locator('#fullscreen').tap();await phone.waitForTimeout(300);assert.equal(await phone.evaluate(()=>!!document.fullscreenElement),true);await phone.locator('#fullscreen').tap();await wait(phone,s=>s.controls,'resume after fullscreen');pass('real game supports fullscreen in keyboard and touch modes');
   await phone.locator('#touch-menu').tap();await phone.waitForFunction(()=>window.rivalsTouch.paused);assert.equal(await phone.locator('#touch-pause').isVisible(),true);await wait(phone,s=>!s.controls,'paused touch player');
   await phone.locator('#touch-audio').tap();await phone.waitForFunction(()=>document.getElementById('touch-audio').textContent==='聲音：開');await phone.locator('#touch-audio').tap();await phone.waitForFunction(()=>document.getElementById('touch-audio').textContent==='聲音：關');
@@ -82,7 +85,7 @@ const suffix=Date.now().toString(36).slice(-6);
   // A real loss of focus must not leave a joystick or fire button held.
   stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+35,y:stick.y});await down(3,await center('#touch-fire'));
   await phone.locator('#fullscreen').focus();await phone.waitForTimeout(150);assert.equal(await phone.evaluate(()=>rivalsTouch.held),0);assert.equal(await phone.evaluate(()=>rivalsTouch.moveX),0);await up(1);await up(3);
-  await phone.locator('#resume-pointer').tap();await wait(phone,s=>s.controls,'touch resume after focus');pass('focus loss clears movement and fire before explicit resume');
+  assert.equal(await phone.locator('#control-resume').isVisible(),false);await tap('#touch-fire',3);await wait(phone,s=>s.controls,'first touch resumes after focus');pass('focus loss clears movement and fire; the next touch resumes without a prompt');
   await phone.locator('#touch-menu').tap();await phone.locator('#touch-leave').tap();await lobby(phone);await wait(desktop,s=>s.players.filter(p=>p.bot).length===7,'Bot replaces phone');
   await desktop.keyboard.press('Escape');await desktop.evaluate(()=>player.SendMessage('RIVALS Session','WebControlCommand','leave'));await lobby(desktop);
   await phone.locator('#create-room').tap();await wait(phone,s=>s.server&&s.phase===2&&s.controls,'phone host');await lobby(desktop);
@@ -103,13 +106,13 @@ const suffix=Date.now().toString(36).slice(-6);
     if(now>=nextProgress){if(previous&&distance>4&&Math.hypot(local.position.x-previous.x,local.position.z-previous.z)<.5){detourYaw=yaw+90*side;side=-side;detourUntil=now+1700;}previous=local.position;nextProgress=now+2500;}
     if(now<detourUntil)yaw=detourYaw;
     await turn(yaw,firing?-65:0);
-    if(distance<9&&!firing){await turn(yaw,-65);await down(3,await center('#touch-fire'));firing=true;}
+    if(distance<9&&!firing){await turn(yaw,-65);await tap('#touch-aim',4);await down(3,await center('#touch-fire'));firing=true;}
     await phone.waitForTimeout(140);
    }
    assert.ok(death,'enemy Bots must cause a real touch-player death');await phone.waitForFunction(()=>!rivalsTouch.playable);
    assert.equal(await phone.evaluate(()=>rivalsTouch.held),0);assert.equal(await phone.evaluate(()=>rivalsTouch.moveY),0);assert.equal(await phone.locator('#touch-controls').isVisible(),false);
    await phone.screenshot({path:path.join(output,'phone-respawn-countdown.png')});
-   const respawn=await wait(phone,s=>me(s).health>0&&me(s).spawnSequence>me(death.state).spawnSequence&&s.controls,'touch respawn',6000);
+   const respawn=await wait(phone,s=>me(s).health>0&&me(s).spawnSequence>me(death.state).spawnSequence&&s.controls,'touch respawn',6000);assert.equal(respawn.aiming,false);assert.equal(await phone.locator('#control-resume').isVisible(),false);
    result.respawn={ms:Date.now()-death.time,before:me(death.state),after:me(respawn)};assert.ok(result.respawn.ms>=2500&&result.respawn.ms<=4500);assert.equal(me(respawn).health,300);assert.equal(me(respawn).weapon,1);assert.equal(me(respawn).ammo,12);
    await phone.waitForTimeout(450);const fresh=await state(phone);assert.equal(me(fresh).shots,me(respawn).shots);assert.ok(Math.hypot(me(fresh).position.x-me(respawn).position.x,me(fresh).position.z-me(respawn).position.z)<.3);
    await up(1);if(firing)await up(3);await tap('#touch-fire',3);await wait(phone,s=>me(s).shots>me(fresh).shots,'fresh touch after respawn');

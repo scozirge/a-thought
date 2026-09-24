@@ -192,7 +192,6 @@ namespace RivalsPrototype {
         if(!DuelWebInput.TouchMode&&k!=null) {
           if(k.spaceKey.isPressed||k.spaceKey.wasPressedThisFrame) pending.Set(Action.Jump,true);
           if(k.rKey.isPressed||k.rKey.wasPressedThisFrame) pending.Set(Action.Reload,true);
-          if(k.cKey.isPressed||k.cKey.wasPressedThisFrame) pending.Set(Action.Slide,true);
         }
       }
 
@@ -211,7 +210,7 @@ namespace RivalsPrototype {
         d.Move=DuelWebInput.TouchMove;
         int held=DuelWebInput.TouchHeld,pressed=DuelWebInput.TakeTouchPressed();
         firePress+=DuelWebInput.TakeTouchFirePress();
-        for(int action=0;action<=((int)Action.Slide);action++)d.Buttons.Set(action,((held|pressed)&(1<<action))!=0);
+        for(int action=0;action<=((int)Action.Reload);action++)d.Buttons.Set(action,((held|pressed)&(1<<action))!=0);
       }else if(!DuelWebInput.TouchMode&&k!=null && m!=null && ControlsActive) {
         if(m.leftButton.wasPressedThisFrame&&lastFirePressFrame!=Time.frameCount){firePress++;lastFirePressFrame=Time.frameCount;}
         d.Move=new Vector2((k.dKey.isPressed?1:0)-(k.aKey.isPressed?1:0),(k.wKey.isPressed?1:0)-(k.sKey.isPressed?1:0));

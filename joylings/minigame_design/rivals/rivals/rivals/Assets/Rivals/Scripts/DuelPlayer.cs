@@ -48,8 +48,6 @@ namespace RivalsPrototype {
     [Networked] public NetworkButtons Previous { get; set; }
     [Networked] public TickTimer FireTimer { get; set; }
     [Networked] public TickTimer ReloadTimer { get; set; }
-    [Networked] public TickTimer SlideTimer { get; set; }
-    [Networked] public TickTimer SlideCooldown { get; set; }
     [Networked] public int Shots { get; set; }
     [Networked] public int ConsumedFirePress { get; set; }
     [Networked] public Vector3 ShotPoint { get; set; }
@@ -155,7 +153,7 @@ namespace RivalsPrototype {
       RifleHeat=0;RifleRecovery=TickTimer.None;
       if(capsule){capsule.height=1.85f;capsule.center=new Vector3(0,.93f,0);}
       Look=look;Previous=default;
-      FireTimer = ReloadTimer = SlideTimer = SlideCooldown = TickTimer.None;
+      FireTimer = ReloadTimer = TickTimer.None;
       cc = GetComponent<NetworkCharacterController>();
       cc.Teleport(position, Quaternion.Euler(0, Look.x, 0));
       cc.Velocity = Vector3.zero;
@@ -182,7 +180,7 @@ namespace RivalsPrototype {
       if(!HasStateAuthority||Health<=0||!match||match.Phase!=2||(attacker&&attacker.Team==Team))return 0;
       int applied=Mathf.Min(Health,Mathf.Max(0,amount));Health-=applied;DamageOrigin=origin;
       if(Health==0){
-        cc.Velocity=Vector3.zero;ReloadTimer=SlideTimer=TickTimer.None;
+        cc.Velocity=Vector3.zero;ReloadTimer=TickTimer.None;
         RespawnTimer=TickTimer.CreateFromSeconds(Runner,DuelRespawn.DelaySeconds);
         if(hitboxRoot)hitboxRoot.HitboxRootActive=false;
         if(attacker)match.RecordElimination(attacker,this);
@@ -208,14 +206,9 @@ namespace RivalsPrototype {
       var pressed = input.Buttons.GetPressed(Previous); Previous = input.Buttons;
       if(RifleRecovery.ExpiredOrNotRunning(Runner))RifleHeat=Mathf.MoveTowards(RifleHeat,0,Runner.DeltaTime*20);
       bool aim = input.Buttons.IsSet(Action.Aim);
-      if (pressed.IsSet(Action.Slide) && cc.Grounded && SlideCooldown.ExpiredOrNotRunning(Runner)) {
-        SlideTimer = TickTimer.CreateFromSeconds(Runner, .5f); SlideCooldown = TickTimer.CreateFromSeconds(Runner, 1.5f);
-      }
-      bool sliding = !SlideTimer.ExpiredOrNotRunning(Runner);
-      cc.maxSpeed = IsBot ? 3.8f : sliding ? 11 : aim ? 3.2f : input.Buttons.IsSet(Action.Sprint) ? 8 : 5.5f;
+      cc.maxSpeed = IsBot ? 3.8f : aim ? 3.2f : input.Buttons.IsSet(Action.Sprint) ? 8 : 5.5f;
       cc.rotationSpeed = 0; cc.acceleration = 70; cc.braking = 20;
       var move = Quaternion.Euler(0, Look.x, 0) * new Vector3(input.Move.x, 0, input.Move.y);
-      if (sliding) move = Quaternion.Euler(0, Look.x, 0) * Vector3.forward;
       if (pressed.IsSet(Action.Jump)) cc.Jump();
       cc.Move(move); transform.rotation = Quaternion.Euler(0, Look.x, 0);
       // Predict weapon state on the input authority as well as the host. Fusion

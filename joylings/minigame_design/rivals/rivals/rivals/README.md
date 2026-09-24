@@ -10,7 +10,7 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windo
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
 - 未壓縮的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
-兩個版本共用同一份遊戲程式與連線協定。Windows 已重新建置，包含最新鍵盤短按輸入修正；本次交付結果見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
+兩個版本共用同一份遊戲程式與連線協定，已同步移除滑行。最新手機操作修正與交付結果見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
 GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`；發布與測試紀錄見 [手機操作驗證](MOBILE_CONTROLS_VALIDATION.md)。課程中的新增武器與技能是發想範例，並非現有功能。
 
@@ -20,7 +20,9 @@ GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Bu
 
 大廳可選「鍵盤滑鼠」或「手機觸控」，瀏覽器會記住選擇；首次進入會依觸控能力選擇預設模式。回到大廳後可隨時切換。兩種模式都能按右上角「全螢幕」放大，再按「退出全螢幕」返回。若瀏覽器不提供或拒絕原生全螢幕，改為填滿可用視窗，按「退出放大」返回；此時瀏覽器網址列可能仍會保留。
 
-手機左側搖桿移動，右側空白區滑動轉向；右側有射擊、瞄準、跳躍、裝填與滑行，搖桿旁有衝刺。按住射擊或瞄準按鈕時也能滑動轉向，支援移動、轉向、開火同時操作。右上角「選單」可暫停自己的操作、切換聲音或回到大廳；房間對戰會繼續。失焦、開選單、死亡或切換全螢幕都會清除舊觸碰，復活後重新觸碰即可操作。
+手機左側搖桿移動，右側空白區滑動轉向；右側有射擊、瞄準、跳躍與裝填，搖桿旁有衝刺。**瞄準點一下開啟、再點一下關閉**，按鈕顯示「瞄準中」時可放開手指，接著射擊、移動與轉向。按住射擊也能滑動轉向。觸控按鈕依手機安全邊距整組排列，避免橫向時重疊。
+
+手機已移除中央操作提示，失焦返回後直接觸碰操作區即可繼續。右上角「選單」可暫停自己的操作、切換聲音或回到大廳；房間對戰會繼續。失焦、開選單、死亡或切換全螢幕都會清除舊觸碰及瞄準狀態。**Web 與 Windows 都已移除滑行**，鍵盤 C 鍵不再觸發動作；鍵鼠仍維持按住滑鼠右鍵瞄準、放開取消。修正與驗證見 [觸控操作修正](MOBILE_TOUCH_FIX_VALIDATION.md)。
 
 網頁先顯示房間大廳。預設從 100 個簡短的中文動物名字挑一個，也能自行輸入最多 10 字的名字。房間名稱固定為「房主名字的房間」，修改名字或抽取新名字時立即更新預覽，不能單獨輸入房間名稱。按「建立房間」開始，或在即時房間清單選一間按「加入房間」。同名房主的房間使用不同連線識別碼，仍能分別建立。清單顯示真人數與是否已滿；房間容量為 8 位真人，Bot 不占連線名額。
 
@@ -39,7 +41,7 @@ GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Bu
 | 移動／衝刺 | WASD／Shift |
 | 自由轉向 | 點擊取得滑鼠鎖定後，移動滑鼠 |
 | 相容模式轉向 | 按住右鍵拖曳；放開移回後可再次拖曳 |
-| 跳躍／滑行 | Space／C |
+| 跳躍 | Space |
 | 射擊／瞄準 | 滑鼠左鍵／右鍵 |
 | 裝填 | R |
 | 撿槍 | 靠近四角武器，自動替換目前的槍 |
@@ -90,7 +92,7 @@ python Tools/serve_web.py --port 8184
 
 開啟 <http://localhost:8184/>，不可直接雙擊 HTML。服務只監聽本機；正式分享需把整個 Web 目錄放到支援 WebAssembly 的 HTTP(S) 主機。建置採 IL2CPP Release／OptimizeSpeed、Wasm RuntimeSpeed、內容雜湊檔名與 Unity Data Caching，移除啟動 Splash Screen。GitHub Pages 已提供 HTTP gzip，因此保留原始檔供瀏覽器原生解壓及串流編譯，不加入 JavaScript 解壓層。本機服務提供 WASM MIME type 和 no-store HTTP 標頭；已啟用 Unity 資料快取；WASM 的重用仍待後續驗證，不宣稱目前所有檔案都已命中快取。
 
-連線版本為 `rivals-web-16-kill-race`；同玩者需載入同版。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座／彈道先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、彈道採物件池。
+連線版本為 `rivals-web-17-touch-controls`；同玩者需重新整理網頁或下載新版 Windows。移除滑行相關網路狀態後，舊版與新版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座／彈道先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、彈道採物件池。
 
 房主離開後，其他玩家會返回大廳；目前沒有房主遷移或斷線重連。房主瀏覽器需保持運作，背景節流仍可能影響其他玩家。
 

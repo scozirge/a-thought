@@ -1,5 +1,7 @@
 # 完整主程式上傳驗證
 
+本文件保留首次完整主程式上傳紀錄。後續 Web／Windows 已同步移除滑行並更新手機操作；最新成品與驗證見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)，目前 ZIP 雜湊以 `Builds/Release-20260924-Mobile/release-manifest.json` 為準。
+
 日期：2026-09-24。依使用者要求，正式輸出與程式碼一起提交到 `master`；Unity 建置快取及歷史測試輸出仍由原有忽略規則管理。
 
 ## 完整輸出

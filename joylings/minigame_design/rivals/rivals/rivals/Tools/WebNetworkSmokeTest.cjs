@@ -65,6 +65,10 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   // Reload is predicted as well; verify the final magazine agrees on both peers.
   await client.page.keyboard.press('r',{delay:60});await wait(client,s=>me(s).ammo===12,'reload');await client.page.waitForTimeout(450);
   const reloaded=await state(client);await wait(host,h=>h.players.find(p=>p.seat===reloaded.localSeat)?.ammo===12,'authoritative reload');
+  const beforeC=me(reloaded).position;await client.page.keyboard.press('c',{delay:80});await client.page.waitForTimeout(650);
+  const afterC=await state(client);if(!afterC.controls||me(afterC).health<=0)throw Error('No-slide check requires a live controlled player');
+  const cTravel=Math.hypot(me(afterC).position.x-beforeC.x,me(afterC).position.z-beforeC.z);if(cTravel>.15)throw Error('Removed slide key moved the player: '+cTravel);
+  await client.page.mouse.down({button:'right'});await wait(client,s=>s.aiming,'mouse hold aim');await client.page.mouse.up({button:'right'});await wait(client,s=>!s.aiming,'mouse release aim');
   // A real movement input must be seen smoothly at the other peer.
   await client.page.keyboard.down('d');await client.page.waitForTimeout(1500);await client.page.keyboard.up('d');
   results.afterMovement={client:await state(client),host:await state(host)};
@@ -83,7 +87,7 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   await client.page.evaluate(()=>document.dispatchEvent(new MouseEvent('mousemove',{movementX:0,movementY:70/.12,bubbles:true})));await client.page.waitForTimeout(300);
   await client.page.locator('#unity-canvas').screenshot({path:path.join(root,'network-web-client.png')});
   await client.context.close();await wait(host,s=>s.players.filter(p=>p.bot).length===7&&s.players.length===8,'bot refill');
-  results.summary={clicks:8,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
+  results.summary={clicks:8,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,slideRemoved:true,cKeyTravel:cTravel,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
  }finally{
   results.runs=runs.map(r=>({name:r.name,errors:r.errors,logs:r.logs}));fs.writeFileSync(path.join(root,lagged?'network-web-lag-check.json':'network-web-check.json'),JSON.stringify(results,null,2));await browser.close();
  }

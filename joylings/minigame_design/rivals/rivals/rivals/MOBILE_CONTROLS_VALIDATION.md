@@ -1,5 +1,7 @@
 # 手機操作與全螢幕驗證
 
+後續依實機回饋修正按鈕重疊、手機點按瞄準與操作提示，並移除所有版本滑行。最新結果見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；下文保留首次手機版驗證紀錄。
+
 測試日期：2026-09-24。Unity 6000.3.11f1，IL2CPP Release WebAssembly，非 Development Build。
 
 ## 功能與修正

@@ -44,6 +44,12 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.ok(combined.x>.6&&combined.y>.6&&Math.hypot(combined.x,combined.y)<=1.001);assert.ok(combined.dx>60&&combined.dy>30);assert.ok(combined.held&1);assert.equal(combined.fire,1);assert.equal(combined.locked,false);
   await up(1);assert.equal(await page.evaluate(()=>rivalsTouch.moveX),0);assert.ok(await page.evaluate(()=>rivalsTouch.held&1));await up(2);await up(3);
   assert.equal(await page.evaluate(()=>rivalsTouch.held),0);pass('three fingers move, look and shoot independently without mouse lock');
+  const aim=await center('#touch-aim');await down(21,aim);await up(21);
+  assert.equal(await page.locator('#touch-aim').getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&2),2);
+  await down(22,fire);await move(22,{x:fire.x-20,y:fire.y-12});assert.equal(await page.evaluate(()=>rivalsTouch.held&3),3);await up(22);
+  assert.equal(await page.evaluate(()=>rivalsTouch.held),2);await down(23,aim);await up(23);assert.equal(await page.evaluate(()=>rivalsTouch.held&2),0);
+  await down(24,fire);await down(25,aim);await up(25);assert.equal(await page.evaluate(()=>rivalsTouch.held&3),3);await up(24);await down(26,aim);await up(26);
+  assert.equal(await page.locator('#touch-aim').getAttribute('aria-pressed'),'false');pass('tap aim stays on after release, permits firing and turning, and a second tap turns it off');
   await page.evaluate(()=>rivalsTouch.reset());const jump=await center('#touch-jump');await down(4,jump);await up(4);
   assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),4);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),0);
   assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&4),4);await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&4),0);
@@ -53,9 +59,9 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.deepEqual(await page.evaluate(()=>[rivalsTouch.moveX,rivalsTouch.moveY,rivalsTouch.held,rivalsTouch.firePress]),[0,0,0,0]);pass('pointer cancellation clears all held inputs');
   await down(9,fire);await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await up(9);
   assert.equal(await page.evaluate(()=>rivalsLook.active),false);assert.equal(await page.evaluate(()=>rivalsTouch.held),0);
-  await page.locator('#resume-pointer').tap();await down(10,fire);await page.evaluate(()=>rivalsTouch.setState(2));await up(10);
+  assert.equal(await page.locator('#control-resume').isVisible(),false);await down(10,fire);assert.equal(await page.evaluate(()=>rivalsLook.active),true);await page.evaluate(()=>rivalsTouch.setState(2));await up(10);
   assert.equal(await page.evaluate(()=>rivalsTouch.firePress),0);assert.equal(await page.locator('#touch-controls').isVisible(),false);
-  await page.evaluate(()=>rivalsTouch.setState(3));assert.equal(await page.evaluate(()=>rivalsTouch.held),0);pass('blur and death clear touches before resuming or respawning');
+  await page.evaluate(()=>rivalsTouch.setState(3));assert.equal(await page.evaluate(()=>rivalsTouch.held),0);assert.equal(await page.locator('#control-resume').isVisible(),false);pass('blur and death clear touches; the next touch resumes without an instruction dialog');
   await down(11,fire);await down(12,await center('#touch-menu'));await up(12);await page.waitForTimeout(120);
   assert.equal(await page.locator('#touch-pause').isVisible(),true);await up(11);
   await page.locator('#touch-resume').tap();assert.equal(await page.locator('#touch-pause').isVisible(),false);assert.equal(await page.evaluate(()=>rivalsLook.active),true);pass('phone menu opens while another finger fires and resumes cleanly');
@@ -68,9 +74,10 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
    await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),false);
   }pass('unsupported or denied fullscreen fills the viewport and exits cleanly');
   await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(output,'mobile-controls-portrait.png')});
-  for(const selector of ['#touch-move','#touch-fire','#touch-aim','#touch-jump','#touch-reload','#touch-slide','#touch-sprint']){
+  for(const selector of ['#touch-move','#touch-fire','#touch-aim','#touch-jump','#touch-reload','#touch-sprint']){
    const box=await page.locator(selector).boundingBox();assert.ok(box.width>=48&&box.height>=48);assert.ok(box.x>=0&&box.x+box.width<=390.1);assert.ok(box.y>=0&&box.y+box.height<=844.1);
   }pass('portrait controls remain inside the viewport with usable touch targets');
+  assert.equal(await page.locator('#touch-slide').count(),0);
   await page.locator('#touch-menu').tap();await page.locator('#touch-leave').tap();await page.locator('#mode-keyboard').tap();
   await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),true);await page.locator('#fullscreen').tap();
   assert.equal(await page.locator('#touch-controls').isVisible(),false);pass('return to lobby and switch back to keyboard with fullscreen available');

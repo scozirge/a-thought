@@ -30,14 +30,15 @@
     .control-choice{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 18px}.control-choice>span{font-size:12px;color:var(--muted);margin-right:4px}.control-choice button{min-height:44px;padding:7px 16px}.control-choice button[aria-pressed="true"]{background:#72c8f8;color:#0a2436;border-color:#72c8f8;font-weight:700}#mode-help{font-size:11px;color:#a6bdcf;flex-basis:100%}
     #stage:is(:fullscreen,:-webkit-full-screen),#stage.expanded{width:100vw;height:100vh;height:100dvh;max-width:none;aspect-ratio:auto;margin:0;display:block;background:#0b131d}#stage.expanded{position:fixed;inset:0;z-index:20}body.expanded{overflow:hidden}#stage:is(:fullscreen,:-webkit-full-screen) canvas,#stage.expanded canvas{width:100%;height:100%;aspect-ratio:auto}
     #fullscreen-status{position:absolute;top:58px;left:50%;transform:translateX(-50%);max-width:85%;background:#10273ee8;padding:5px 10px;text-align:center;font-size:12px;z-index:7;pointer-events:none}#fullscreen-status:empty{display:none}
-    body.touch-mode #stage:not(:fullscreen):not(.expanded){width:min(100%,1280px);height:calc(100vh - 100px);height:calc(100dvh - 100px);min-height:260px;aspect-ratio:auto}body.touch-mode canvas{touch-action:none}body.touch-mode header,body.touch-mode footer{padding:8px 12px}body.touch-mode #pointer-card{top:42%;width:min(360px,90%)}
-    #touch-controls{position:absolute;inset:0;z-index:1;pointer-events:none;touch-action:none}#touch-controls[hidden],#touch-pause[hidden]{display:none}#touch-look{position:absolute;inset:0;pointer-events:auto;touch-action:none}#touch-controls button{position:absolute;pointer-events:auto;touch-action:none;-webkit-touch-callout:none;user-select:none;min-width:48px;min-height:48px;padding:0;border-radius:50%;background:#102b47a6;border:1px solid #b9e3ff8c;color:#fff;font-weight:700;box-shadow:0 2px 10px #0003;font-size:12px;transform:none}#touch-controls button.is-pressed{background:#5dbae4d9;border-color:#e5f8ff}
-    #touch-move{left:max(22px,env(safe-area-inset-left));bottom:17%;width:124px;height:124px;background:#102b4766!important}#touch-move:before{content:"";position:absolute;inset:14px;border:1px dashed #c0e7ff55;border-radius:50%}#touch-move span{position:absolute;inset:35px;background:#a5dafa80;border-radius:50%;display:grid;place-items:center;pointer-events:none}#touch-fire{right:max(24px,env(safe-area-inset-right));bottom:25%;width:78px;height:78px;background:#753b37bf!important;border-color:#ffa397!important;font-size:17px!important}#touch-aim{right:113px;bottom:24%;width:54px;height:54px}#touch-jump{right:28px;bottom:calc(25% + 90px);width:54px;height:54px}#touch-reload{right:174px;bottom:19%;width:52px;height:52px}#touch-slide{right:104px;bottom:calc(24% + 68px);width:50px;height:50px}#touch-sprint{left:max(156px,calc(env(safe-area-inset-left) + 140px));bottom:18%;width:52px;height:52px}
-    #touch-hint{position:absolute;top:25%;left:50%;transform:translateX(-50%);font-size:11px;color:#e0f3ffb8;pointer-events:none;white-space:nowrap}#rotate-hint{display:none;position:absolute;top:18%;left:50%;transform:translateX(-50%);white-space:nowrap;padding:4px 10px;background:#10273ebd;font-size:12px;pointer-events:none}
+    body.touch-mode #stage:not(:fullscreen):not(.expanded){width:min(100%,1280px);height:calc(100vh - 100px);height:calc(100dvh - 100px);min-height:260px;aspect-ratio:auto}body.touch-mode canvas{touch-action:none}body.touch-mode header,body.touch-mode footer{padding:8px 12px}body.touch-mode #control-resume{display:none}
+    #touch-controls{--safe-left:env(safe-area-inset-left,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--action-size:56px;--fire-size:78px;--control-gap:16px;--control-bottom:max(52px,calc(var(--safe-bottom) + 32px));position:absolute;inset:0;z-index:1;pointer-events:none;touch-action:none}#touch-controls[hidden],#touch-pause[hidden]{display:none}#touch-look{position:absolute;inset:0;pointer-events:auto;touch-action:none}#touch-controls button{position:relative;pointer-events:auto;touch-action:none;-webkit-touch-callout:none;user-select:none;min-width:48px;min-height:48px;padding:0;border-radius:50%;background:#102b47a6;border:1px solid #b9e3ff8c;color:#fff;font-weight:700;box-shadow:0 2px 10px #0003;font-size:12px;transform:none}#touch-controls button.is-pressed{background:#5dbae4d9;border-color:#e5f8ff}
+    #touch-movement{position:absolute;left:max(18px,var(--safe-left));bottom:var(--control-bottom);display:flex;gap:var(--control-gap);align-items:flex-end}#touch-move{width:110px;height:110px;background:#102b4766!important}#touch-move:before{content:"";position:absolute;inset:14px;border:1px dashed #c0e7ff55;border-radius:50%}#touch-move span{position:absolute;inset:30px;background:#a5dafa80;border-radius:50%;display:grid;place-items:center;pointer-events:none}#touch-sprint{width:var(--action-size);height:var(--action-size)}
+    #touch-actions{position:absolute;right:max(18px,var(--safe-right));bottom:var(--control-bottom);display:grid;grid-template-columns:var(--action-size) var(--fire-size);grid-template-rows:var(--action-size) var(--fire-size);gap:14px var(--control-gap);align-items:center;justify-items:center}#touch-actions button{width:var(--action-size);height:var(--action-size)}#touch-reload{grid-area:1/1}#touch-jump{grid-area:1/2}#touch-aim{grid-area:2/1}#touch-actions #touch-fire{grid-area:2/2;width:var(--fire-size);height:var(--fire-size);background:#753b37bf;border-color:#ffa397;font-size:17px}#touch-aim[aria-pressed="true"]{background:#3991bedb;border:2px solid #d7f5ff}
     #touch-pause{position:absolute;inset:0;display:grid;place-items:center;z-index:4;background:#0713219c;touch-action:manipulation}.touch-menu-card{width:min(340px,90%);padding:18px;background:#142b40;border:1px solid #72c8f8;display:grid;gap:10px;text-align:center}.touch-menu-card strong{font-size:21px}.touch-menu-card button{min-height:46px}.touch-menu-card small{color:var(--muted)}
-    @media(max-height:540px){body.touch-mode header,body.touch-mode footer{display:none}body.touch-mode #stage:not(:fullscreen):not(.expanded){height:100vh;height:100dvh}.lobby-top{margin-bottom:10px}.control-choice{margin-bottom:10px}.profile-card{padding:12px}#lobby h2{font-size:23px;margin-bottom:4px}#lobby label{margin:10px 0 6px}.room-preview{padding:6px 0;margin:8px 0}#touch-move{width:110px;height:110px}#touch-move span{inset:30px}#touch-hint{display:none}.touch-menu-card{padding:12px;gap:7px}.touch-menu-card button{min-height:42px}}
+    @media(max-height:540px){body.touch-mode header,body.touch-mode footer{display:none}body.touch-mode #stage:not(:fullscreen):not(.expanded){height:100vh;height:100dvh}.lobby-top{margin-bottom:10px}.control-choice{margin-bottom:10px}.profile-card{padding:12px}#lobby h2{font-size:23px;margin-bottom:4px}#lobby label{margin:10px 0 6px}.room-preview{padding:6px 0;margin:8px 0}.touch-menu-card{padding:12px;gap:7px}.touch-menu-card button{min-height:42px}}
     @media(max-height:540px){#lobby{padding:52px 18px 12px}.profile-card>.eyebrow,#lobby h2,.profile-card>p,.brand small,.rooms-note{display:none}.lobby-top{margin-bottom:8px}#lobby label{margin:0 0 4px}.room-preview{padding:4px 0;margin:6px 0}#create-room{padding:8px;min-height:44px}#room-list{min-height:85px;max-height:130px}.room-heading{padding-bottom:7px}.lobby-bottom{margin-top:10px}}
-    @media(orientation:portrait){body.touch-mode #rotate-hint{display:block}body.touch-mode #touch-move{left:14px;width:110px;height:110px;bottom:18%}body.touch-mode #touch-move span{inset:30px}body.touch-mode #touch-sprint{left:24px;bottom:calc(18% + 124px)}body.touch-mode #touch-fire{right:16px;bottom:22%}body.touch-mode #touch-aim{right:101px;bottom:20%}body.touch-mode #touch-reload{right:27px;bottom:12%}body.touch-mode #touch-jump{right:24px;bottom:calc(22% + 91px)}body.touch-mode #touch-slide{right:91px;bottom:calc(22% + 91px)}}
+    @media(orientation:portrait){#touch-movement{flex-direction:column-reverse;align-items:center}#touch-controls{--control-bottom:max(76px,calc(var(--safe-bottom) + 52px))}}
+    @media(max-height:330px){#touch-controls{--action-size:48px;--fire-size:64px;--control-gap:12px}#touch-move{width:96px;height:96px}#touch-move span{inset:25px}}
   </style>
 </head>
 <body>
@@ -47,10 +48,9 @@
     <div id="game-toolbar"><button id="touch-menu" type="button" hidden>選單</button><button id="fullscreen" type="button" aria-pressed="false">全螢幕</button></div>
     <div id="fullscreen-status" role="status" aria-live="polite"></div>
     <div id="touch-controls" hidden>
-      <div id="touch-look" aria-label="滑動轉向區"></div><div id="touch-hint">左側移動 · 右側滑動轉向 · 按住射擊可連射</div><div id="rotate-hint">橫向遊玩更好操作</div>
-      <button id="touch-move" type="button" aria-label="移動搖桿"><span>移動</span></button>
-      <button id="touch-fire" type="button" data-action="0" aria-label="射擊，可滑動轉向">射擊</button><button id="touch-aim" type="button" data-action="1">瞄準</button>
-      <button id="touch-jump" type="button" data-action="2">跳躍</button><button id="touch-sprint" type="button" data-action="3">衝刺</button><button id="touch-reload" type="button" data-action="4">裝填</button><button id="touch-slide" type="button" data-action="5">滑行</button>
+      <div id="touch-look" aria-label="滑動轉向區"></div>
+      <div id="touch-movement"><button id="touch-move" type="button" aria-label="移動搖桿"><span>移動</span></button><button id="touch-sprint" type="button" data-action="3">衝刺</button></div>
+      <div id="touch-actions"><button id="touch-reload" type="button" data-action="4">裝填</button><button id="touch-jump" type="button" data-action="2">跳躍</button><button id="touch-aim" type="button" data-action="1" aria-pressed="false" aria-label="瞄準，點一下切換">瞄準</button><button id="touch-fire" type="button" data-action="0" aria-label="射擊，可滑動轉向">射擊</button></div>
     </div>
     <div id="touch-pause" hidden><div class="touch-menu-card"><strong>休息一下</strong><button id="touch-resume" class="primary" type="button">繼續玩</button><button id="touch-audio" type="button">聲音：關</button><button id="touch-leave" type="button">回到大廳</button><small>房間內的對戰會繼續進行</small></div></div>
     <div id="control-resume" hidden><div id="pointer-card" role="status">
@@ -123,7 +123,7 @@
     const gameUrl=new URL(location.href);gameUrl.searchParams.delete('diagnostics');gameAddress.value=gameUrl.href;
     let enabled=false,engaged=false,lockPending=false,lockFailed=false,lockTimer=0,lockRequest=0,wasLocked=false,lastReason='waiting',lastError='',lastPointerView='';
     let dragMode=false,dragging=false,dragPointer=null,dragX=0,dragY=0;
-    const touch=window.rivalsTouch={mode:false,moveX:0,moveY:0,held:0,pressed:0,firePress:0,playable:false,started:false,paused:false};
+    const touch=window.rivalsTouch={mode:false,moveX:0,moveY:0,held:0,pressed:0,firePress:0,aiming:false,playable:false,started:false,paused:false};
     const touchControls=document.getElementById('touch-controls'),touchPause=document.getElementById('touch-pause'),touchMenu=document.getElementById('touch-menu');
     const touchPointers=new Map(),stick=document.getElementById('touch-move'),stickKnob=stick.querySelector('span');
     const touchPulseUntil=new Float64Array(6);
@@ -142,7 +142,7 @@
       touchControls.hidden=!touch.mode||!enabled||!touch.playable;
       touchPause.hidden=!touch.mode||!touch.started||!touch.paused;
       touchMenu.hidden=!touch.mode||!touch.started;
-      recovery.hidden=!enabled||controlling;resumeButton.disabled=lockPending;
+      recovery.hidden=touch.mode||!enabled||controlling;resumeButton.disabled=lockPending;
       pointerTitle.textContent=lockPending?'正在啟用滑鼠鎖定…':'點一下，繼續操作';
       pointerHelp.textContent=touch.mode?'左側搖桿移動 · 右側滑動轉向 · 按住射擊可連射':dragMode?'按住右鍵拖曳轉向，放開移回後可再拖曳。使用 Chrome／Edge 開啟可嘗試自由轉向。':'鎖定滑鼠後可自由轉身 · Esc 開啟選單';
       resumeButton.textContent=touch.mode||dragMode?'繼續遊戲':'開始操作';
@@ -228,16 +228,17 @@
     canvas.addEventListener('keydown',event=>{if(event.code==='Space'||event.code.startsWith('Arrow')||((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'))event.preventDefault();});
     // Pointer ids let movement, looking and action buttons work simultaneously.
     function refreshTouchHeld(){
-      touch.held=0;for(const pointer of touchPointers.values())if(pointer.action!==null)touch.held|=1<<pointer.action;
+      touch.held=touch.aiming?2:0;for(const pointer of touchPointers.values())if(pointer.action!==null&&pointer.action!==1)touch.held|=1<<pointer.action;
       for(const button of touchControls.querySelectorAll('[data-action]'))button.classList.toggle('is-pressed',!!(touch.held&(1<<Number(button.dataset.action))));
+      const aim=document.getElementById('touch-aim');aim.setAttribute('aria-pressed',String(touch.aiming));aim.textContent=touch.aiming?'瞄準中':'瞄準';
     }
     touch.reset=()=>{
-      const pointers=[...touchPointers];touchPointers.clear();touchPulseUntil.fill(0);touch.moveX=touch.moveY=touch.held=touch.pressed=touch.firePress=0;clearMotion();stickKnob.style.transform='';refreshTouchHeld();
+      const pointers=[...touchPointers];touchPointers.clear();touchPulseUntil.fill(0);touch.aiming=false;touch.moveX=touch.moveY=touch.held=touch.pressed=touch.firePress=0;clearMotion();stickKnob.style.transform='';refreshTouchHeld();
       for(const [id,pointer] of pointers)if(pointer.element.hasPointerCapture(id))pointer.element.releasePointerCapture(id);
     };
-    // Brief jump/reload/slide taps must span several input packets. Fire already
-    // has a cumulative press counter; aim and movement stop on physical release.
-    touch.readHeld=()=>{let held=touch.held;const now=performance.now();for(const action of [2,4,5])if(touchPulseUntil[action]>now)held|=1<<action;return held;};
+    // Brief jump/reload taps span input packets. Fire has a cumulative counter;
+    // aiming is toggled separately so one thumb can aim, then fire and turn.
+    touch.readHeld=()=>{let held=touch.held;const now=performance.now();for(const action of [2,4])if(touchPulseUntil[action]>now)held|=1<<action;return held;};
     touch.setState=state=>{
       const playable=!!(state&1);if(touch.playable&&!playable)touch.reset();
       touch.playable=playable;touch.started=!!(state&2);touch.paused=!!(state&4);
@@ -261,9 +262,11 @@
         if(element===stick&&[...touchPointers.values()].some(p=>p.kind==='move'))return;
         if(!active())engage();if(!active())return;
         const action=element.hasAttribute('data-action')?Number(element.dataset.action):null;
+        if(action===1&&[...touchPointers.values()].some(pointer=>pointer.action===1))return;
         const pointer={element,action,kind:element===stick?'move':action===null?'look':'action',x:event.clientX,y:event.clientY};
         touchPointers.set(event.pointerId,pointer);element.setPointerCapture(event.pointerId);
-        if(action!==null){touch.pressed|=1<<action;if(action===0)touch.firePress++;if(action===2||action===4||action===5)touchPulseUntil[action]=performance.now()+180;}refreshTouchHeld();if(pointer.kind==='move')moveTouch(event,pointer);
+        if(action===1)touch.aiming=!touch.aiming;
+        else if(action!==null){touch.pressed|=1<<action;if(action===0)touch.firePress++;if(action===2||action===4)touchPulseUntil[action]=performance.now()+180;}refreshTouchHeld();if(pointer.kind==='move')moveTouch(event,pointer);
       });
       element.addEventListener('pointermove',event=>{const pointer=touchPointers.get(event.pointerId);if(!pointer||!active())return;event.preventDefault();moveTouch(event,pointer);});
       function release(event){const pointer=touchPointers.get(event.pointerId);if(!pointer)return;touchPointers.delete(event.pointerId);if(pointer.kind==='move'){touch.moveX=touch.moveY=0;stickKnob.style.transform='';}refreshTouchHeld();if(element.hasPointerCapture(event.pointerId))element.releasePointerCapture(event.pointerId);}

@@ -12,7 +12,7 @@ namespace RivalsPrototype {
     // Inputs from the previous life must not move or fire after a respawn.
     public int SpawnSequence;
   }
-  public enum Action { Fire, Aim, Jump, Sprint, Reload, Slide }
+  public enum Action { Fire, Aim, Jump, Sprint, Reload }
   public static class Weapons {
     public const int Pistol=1;
     // Asset IDs stay stable; only these four weapons are playable.
