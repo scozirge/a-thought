@@ -2,7 +2,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windows x64 正式建置。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=visual-20260924)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
@@ -10,7 +10,7 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windo
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
 - 未壓縮的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
-兩個版本共用同一份遊戲程式與連線協定，已同步移除滑行。最新手機操作修正與交付結果見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
+兩個版本共用同一份遊戲程式與連線協定，已同步移除滑行。最新介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
 GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`；發布與測試紀錄見 [手機操作驗證](MOBILE_CONTROLS_VALIDATION.md)。課程中的新增武器與技能是發想範例，並非現有功能。
 

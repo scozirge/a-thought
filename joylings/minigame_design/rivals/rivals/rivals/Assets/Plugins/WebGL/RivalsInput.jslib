@@ -1,4 +1,5 @@
 mergeInto(LibraryManager.library, {
+  RivalsHudMetric: function(metric) { var v=window.rivalsViewport;return v?v[metric]||0:0; },
   RivalsLookX: function() { var s=window.rivalsLook; if(!s)return 0;var value=s.x;s.x=0;return value; },
   RivalsLookY: function() { var s=window.rivalsLook; if(!s)return 0;var value=s.y;s.y=0;return value; },
   RivalsCanvasFocused: function() { return window.rivalsLook && window.rivalsLook.active ? 1 : 0; },

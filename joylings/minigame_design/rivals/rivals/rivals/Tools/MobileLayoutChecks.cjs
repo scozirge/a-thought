@@ -39,7 +39,7 @@ const scenarios=[
     for(let i=0;i<rects.length;i++){
      const a=rects[i];assert.ok(a.x>=0&&a.y>=0&&a.x+a.width<=scenario.width+.1&&a.y+a.height<=scenario.height+.1,engine+' '+scenario.name+' outside viewport: '+a.id);
      if(!['touch-menu','fullscreen'].includes(a.id)){assert.ok(a.width>=48&&a.height>=48);assert.ok(a.x>=scenario.left&&a.x+a.width<=scenario.width-scenario.right+.1);}
-     for(const b of rects.slice(i+1)){const x=Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x),y=Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y);assert.ok(x<=0||y<=0,engine+' '+scenario.name+' overlap: '+a.id+' '+b.id);}
+     for(const b of rects.slice(i+1)){const x=Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x),y=Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y);assert.ok(x<=0||y<=0,engine+' '+scenario.name+' overlap: '+JSON.stringify({a,b}));}
     }
     await page.screenshot({path:path.join(output,engine+'-'+scenario.name+'.png')});checks.push({engine,scenario:scenario.name,rects});
    }

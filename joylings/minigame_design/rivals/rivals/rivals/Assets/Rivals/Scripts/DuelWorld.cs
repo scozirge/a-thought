@@ -87,21 +87,23 @@ namespace RivalsPrototype {
       foreach(var part in root.GetComponentsInChildren<Transform>())part.gameObject.layer=30;
       foreach(var renderer in root.GetComponentsInChildren<Renderer>())renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
     }
-    static Material gridMaterial;
-    static Material GridMaterial() {
-      if(gridMaterial)return gridMaterial;
+    static Material floorMaterial,wallMaterial;
+    public static readonly Color SkyColor=new Color(.30f,.40f,.49f);
+    static Material GridMaterial(bool floor) {
+      var cached=floor?floorMaterial:wallMaterial;if(cached)return cached;
       var texture=new Texture2D(128,128,TextureFormat.RGB24,false){wrapMode=TextureWrapMode.Repeat,filterMode=FilterMode.Bilinear,anisoLevel=4};
       for(int y=0;y<128;y++)for(int x=0;x<128;x++) {
         int dx=Mathf.Min(x,127-x),dy=Mathf.Min(y,127-y);
-        var color=new Color(.9f,.91f,.93f);
-        if(dx<1||dy<1)color=new Color(.70f,.73f,.78f);
-        if((dx<3&&dy<10)||(dy<3&&dx<10))color=new Color(.58f,.62f,.68f);
+        var color=floor?new Color(.38f,.44f,.47f):new Color(.58f,.61f,.62f);
+        if(dx<1||dy<1)color=floor?new Color(.33f,.39f,.42f):new Color(.51f,.54f,.55f);
         texture.SetPixel(x,y,color);
       }
-      texture.Apply(false,true);gridMaterial=new Material(Shader.Find("Universal Render Pipeline/Lit"));gridMaterial.mainTexture=texture;gridMaterial.SetFloat("_Smoothness",.08f);return gridMaterial;
+      texture.Apply(false,true);var material=new Material(Shader.Find("Universal Render Pipeline/Lit"));material.mainTexture=texture;
+      material.SetFloat("_Smoothness",0);material.SetFloat("_SpecularHighlights",0);material.SetFloat("_EnvironmentReflections",0);
+      if(floor)floorMaterial=material;else wallMaterial=material;return material;
     }
     static GameObject GridBlock(Transform parent,string name,Vector3 position,Vector3 size) {
-      var go=Block(parent,name,position,size,Color.white);go.GetComponent<Renderer>().sharedMaterial=GridMaterial();
+      var go=Block(parent,name,position,size,Color.white);go.GetComponent<Renderer>().sharedMaterial=GridMaterial(name=="Grid arena floor");
       var mesh=go.GetComponent<MeshFilter>().mesh;var vertices=mesh.vertices;var normals=mesh.normals;var uv=new Vector2[vertices.Length];
       for(int i=0;i<vertices.Length;i++) {
         var point=Vector3.Scale(vertices[i],size)+position;
@@ -112,10 +114,12 @@ namespace RivalsPrototype {
     void Awake() {
       TracerMaterial=new Material(Shader.Find("Universal Render Pipeline/Unlit"));TracerMaterial.color=new Color(1,.83f,.35f);
       RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Trilight;
-      RenderSettings.ambientSkyColor=new Color(.77f,.83f,.94f);RenderSettings.ambientEquatorColor=new Color(.60f,.65f,.73f);RenderSettings.ambientGroundColor=new Color(.35f,.38f,.43f);
-      RenderSettings.fog=true;RenderSettings.fogColor=new Color(.66f,.79f,.94f);RenderSettings.fogMode=FogMode.Linear;RenderSettings.fogStartDistance=90;RenderSettings.fogEndDistance=160;
+      RenderSettings.ambientSkyColor=new Color(.64f,.70f,.76f);RenderSettings.ambientEquatorColor=new Color(.50f,.56f,.60f);RenderSettings.ambientGroundColor=new Color(.32f,.36f,.40f);
+      RenderSettings.fog=true;RenderSettings.fogColor=SkyColor;RenderSettings.fogMode=FogMode.Linear;RenderSettings.fogStartDistance=90;RenderSettings.fogEndDistance=160;
+      foreach(var light in FindObjectsByType<Light>(FindObjectsSortMode.None))if(light.type==LightType.Directional){light.intensity=1;light.color=new Color(1,.96f,.90f);light.shadowStrength=.65f;}
+      foreach(var camera in FindObjectsByType<Camera>(FindObjectsSortMode.None))camera.backgroundColor=SkyColor;
       GridBlock(transform,"Grid arena floor",new Vector3(0,-.3f,0),new Vector3(80,.6f,80));
-      var blue=new Color(.18f,.48f,.94f);var red=new Color(.94f,.28f,.24f);
+      var blue=new Color(.13f,.57f,.85f);var red=new Color(.84f,.30f,.23f);
       foreach(var z in new[]{-36f,36f})GridBlock(transform,"Grid perimeter",new Vector3(0,2.8f,z),new Vector3(73,5.6f,1));
       foreach(var x in new[]{-36f,36f})GridBlock(transform,"Grid perimeter",new Vector3(x,2.8f,0),new Vector3(1,5.6f,73));
       var covers=new[]{new Vector4(-5,-5,4,3),new Vector4(5,5,4,3),new Vector4(6,-7,3,4),new Vector4(-6,7,3,4)};

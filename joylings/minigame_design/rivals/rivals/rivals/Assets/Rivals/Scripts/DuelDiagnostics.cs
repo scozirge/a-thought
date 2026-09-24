@@ -24,6 +24,7 @@ namespace RivalsPrototype {
       public Vector3 cameraPosition,cameraAngles;public int localInputOwners;public bool settingsOpen;
       public float remaining,nameRange;public string[] winners;public FeedSnapshot[] killFeed;
       public float rttMs,frameMs,time;
+      public float hudWidth,hudHeight;public Rect hudScore,hudHealth,hudAmmo;
       public PlayerSnapshot[] players;public PickupSnapshot[] pickups;
     }
 #endif
@@ -46,7 +47,7 @@ namespace RivalsPrototype {
         nameRange=NameRange,killFeed=Enumerable.Range(0,DuelMatch.FeedCapacity).Select(i=>Match.Eliminations[i]).Where(e=>e.Sequence>0&&e.Game==Match.Game&&!e.Lifetime.ExpiredOrNotRunning(Runner)).OrderByDescending(e=>e.Sequence).Take(4).Select(e=>new FeedSnapshot{sequence=e.Sequence,killer=e.Killer.ToString(),victim=e.Victim.ToString(),killerTeam=e.KillerTeam,victimTeam=e.VictimTeam,weapon=e.Weapon,remaining=e.Lifetime.RemainingTime(Runner)??0}).ToArray(),
         winners=Enumerable.Range(0,4).Select(i=>Match.Winners[i].Name.ToString()).ToArray(),localSeat=Local.Seat,targetSeat=AimTarget&&AimTarget.IsReady?AimTarget.Seat:-1,look=Look,controls=ControlsActive,aiming=IsAiming,
         cameraPosition=Local.ViewCamera.transform.position,cameraAngles=Local.ViewCamera.transform.eulerAngles,localInputOwners=Players.Count(p=>p.HasInputAuthority),settingsOpen=showSettings,
-        server=Runner.IsServer,tickRate=Runner.TickRate,rttMs=(float)Runner.GetPlayerRtt(Runner.LocalPlayer)*1000,frameMs=Time.smoothDeltaTime*1000,time=Time.realtimeSinceStartup,
+        server=Runner.IsServer,tickRate=Runner.TickRate,rttMs=(float)Runner.GetPlayerRtt(Runner.LocalPlayer)*1000,frameMs=Time.smoothDeltaTime*1000,time=Time.realtimeSinceStartup,hudWidth=hudWidth,hudHeight=hudHeight,hudScore=scoreBounds,hudHealth=healthBounds,hudAmmo=ammoBounds,
         players=Match.Players.Select(p=>new PlayerSnapshot{seat=p.Seat,team=p.Team,name=p.DisplayName,nameVisible=ShouldShowName(p),distance=Vector3.Distance(p.transform.position,Local.ViewCamera.transform.position),health=p.Health,weapon=p.Weapon,owned=p.OwnedWeapons,ammo=p.Ammo,hits=p.Hits,pickups=p.PickupsCollected,bot=p.IsBot,reloading=p.ReloadTimer.IsRunning,reloadProgress=p.ReloadProgress,reloadStage=p.ReloadTimer.IsRunning?Weapons.ReloadStage(p.Weapon,p.ReloadProgress):"",heat=p.RifleHeat,spread=p.SpreadAngle,shotPoint=p.ShotPoint,shotDirection=p.ShotDirection,position=p.transform.position,damage=p.DamagePulse,fall=p.DeathProgress,shots=p.Shots,visualShots=p.VisualShots,shotFeedbackMs=p.ShotFeedbackMs,visualShotTime=p.LastVisualShotTime,respawnRemaining=p.RespawnSecondsRemaining,spawnSequence=p.SpawnSequence,spawnPoint=p.SpawnPoint,spawnLook=p.SpawnLook}).ToArray(),
         pickups=Enumerable.Range(0,DuelMatch.PickupCount).Select(slot=>{var p=Match.Pickups[slot];return new PickupSnapshot{slot=slot,weapon=p.Weapon,position=p.Position,available=!p.Respawn.IsRunning,respawn=p.Respawn.RemainingTime(Runner)??0};}).ToArray()};
       RivalsReportState(JsonUtility.ToJson(snapshot));

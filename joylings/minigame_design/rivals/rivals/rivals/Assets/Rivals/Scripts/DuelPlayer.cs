@@ -121,7 +121,7 @@ namespace RivalsPrototype {
         DuelSession.Instance.Look = Look;
         var cameraObject = new GameObject("Local FPS camera");
         eye = cameraObject.AddComponent<Camera>(); eye.nearClipPlane = .04f; eye.fieldOfView = 80;
-        eye.clearFlags=CameraClearFlags.SolidColor;eye.backgroundColor=new Color(.36f,.66f,.91f);
+        eye.clearFlags=CameraClearFlags.SolidColor;eye.backgroundColor=DuelWorld.SkyColor;
         eye.cullingMask&=~(1<<30);
         var weaponCameraObject=new GameObject("Viewmodel camera");weaponCameraObject.transform.SetParent(eye.transform,false);
         weaponCamera=weaponCameraObject.AddComponent<Camera>();weaponCamera.cullingMask=1<<30;weaponCamera.fieldOfView=65;

@@ -19,6 +19,8 @@ namespace RivalsPrototype {
     [DllImport("__Internal")] static extern int RivalsTouchFirePress();
     [DllImport("__Internal")] static extern void RivalsResetTouch();
     [DllImport("__Internal")] static extern void RivalsTouchState(int state);
+    [DllImport("__Internal")] static extern float RivalsHudMetric(int metric);
+    public static float HudMetric(int metric)=>RivalsHudMetric(metric);
     public static bool TouchMode=>RivalsTouchMode()!=0;
     public static Vector2 TouchMove=>Vector2.ClampMagnitude(new Vector2(RivalsTouchMoveX(),RivalsTouchMoveY()),1);
     public static int TouchHeld=>RivalsTouchHeld();
@@ -34,6 +36,7 @@ namespace RivalsPrototype {
     public static void Release()=>RivalsReleaseLook();
 #else
     public static bool TouchMode=>false;
+    public static float HudMetric(int metric)=>metric==0?Screen.width:metric==1?Screen.height:0;
     public static Vector2 TouchMove=>Vector2.zero;
     public static int TouchHeld=>0;
     public static int TakeTouchPressed()=>0;

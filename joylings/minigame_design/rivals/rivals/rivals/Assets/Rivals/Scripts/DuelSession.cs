@@ -303,7 +303,11 @@ namespace RivalsPrototype {
     }
     void OnGUI() {
       Styles();GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,new Vector3(Screen.width/1280f,Screen.height/720f,1));
+#if UNITY_WEBGL && !UNITY_EDITOR
       DrawSettingsButton();
+#else
+      if(started||showSettings||showCredits)DrawSettingsButton();
+#endif
       if(showCredits) {
         Panel(new Rect(210,65,860,590));GUI.Label(new Rect(235,85,810,65),"素材與授權",large);
         GUI.Label(new Rect(245,170,790,330),"槍械與短刀：Quaternius（CC0）\n素材、準星與腳步聲：Kenney（CC0）\n角色與格線場地：本專案製作\n換彈音效：SpringySpringo（CC0）\n中文字型：Noto Sans CJK TC（SIL OFL 1.1）\n\n槍聲：(c) 2009 Vincent Sevedge（Tabasco）\n採用 Creative Commons 姓名標示 3.0 授權\n已裁切首發槍聲、轉單聲道並調整音量。\n\n本遊戲為非官方練習作品。\n原始授權文件與遊戲一起提供。",new GUIStyle(text){fontSize=18});

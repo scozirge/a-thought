@@ -100,15 +100,25 @@ namespace RivalsPrototype {
 #if UNITY_WEBGL && !UNITY_EDITOR
       return; // Native HTML inputs support Chinese IME and accessible room buttons.
 #else
-      Panel(new Rect(170,90,940,555));GUI.Label(new Rect(200,108,880,60),"一起來對戰",title);
-      GUI.Label(new Rect(200,184,170,40),"你的名字",text);PlayerName=GUI.TextField(new Rect(375,184,380,42),PlayerName,10);
-      if(GUI.Button(new Rect(780,184,280,42),"隨機名字",button))PlayerName=DuelNames.RandomName();
-      Room=RoomTitle(PlayerName);GUI.Label(new Rect(200,245,555,40),Room,text);
+      Fill(new Rect(0,0,1280,720),new Color(.035f,.065f,.10f));
+      HudRound(new Rect(86,88,7,70),TeamColor(0),3);HudRound(new Rect(98,88,7,70),TeamColor(1),3);
+      HudText(new Rect(126,83,680,60),"紅藍槍戰",44,null,TextAnchor.MiddleLeft,true);
+      HudText(new Rect(130,146,750,30),"4 對 4 · 先達 30 擊殺 · 死亡 3 秒後復活",18,HudMuted,TextAnchor.MiddleLeft);
+      HudCard(new Rect(86,217,416,373),TeamColor(0));HudCard(new Rect(524,217,670,373));
+      HudText(new Rect(114,240,360,34),"準備加入戰場",25,null,TextAnchor.MiddleLeft,true);
+      HudText(new Rect(114,296,360,26),"你的名字",17,HudMuted,TextAnchor.MiddleLeft);
+      PlayerName=GUI.TextField(new Rect(114,330,242,46),PlayerName,10);
       GUI.enabled=!busy&&!lobbyConnecting;
-      if(GUI.Button(new Rect(780,245,280,42),"建立房間",button))_=Connect(GameMode.Host);
-      roomScroll=GUI.BeginScrollView(new Rect(200,312,870,235),roomScroll,new Rect(0,0,835,Mathf.Max(230,rooms.Count*58)));
-      for(int i=0;i<rooms.Count;i++){var room=rooms[i];GUI.Label(new Rect(0,i*58,570,48),$"{ListingTitle(room)}　真人 {room.PlayerCount}/{room.MaxPlayers}",text);GUI.enabled=!busy&&room.IsOpen&&room.PlayerCount<room.MaxPlayers;if(GUI.Button(new Rect(610,i*58,210,46),"加入房間",button)){Room=room.Name;_=Connect(GameMode.Client);}}
-      GUI.EndScrollView();GUI.enabled=true;GUI.Label(new Rect(200,564,870,50),LobbyMessage,text);
+      if(HudButton(new Rect(370,330,104,46),"換一個"))PlayerName=DuelNames.RandomName();
+      Room=RoomTitle(PlayerName);HudText(new Rect(114,396,360,34),Room,19,TeamColor(0),TextAnchor.MiddleLeft);
+      if(HudButton(new Rect(114,456,360,52),"建立房間，開始玩",true))_=Connect(GameMode.Host);
+      HudText(new Rect(114,533,360,26),"一個人也能開局 · 電腦隊友自動就位",16,HudMuted);
+      HudText(new Rect(552,240,550,34),"加入朋友的小隊",25,null,TextAnchor.MiddleLeft,true);
+      roomScroll=GUI.BeginScrollView(new Rect(552,301,612,254),roomScroll,new Rect(0,0,590,Mathf.Max(250,rooms.Count*74)));
+      if(rooms.Count==0){HudText(new Rect(0,58,590,36),"第一場對戰，由你開始",24);HudText(new Rect(0,104,590,30),"建立房間，邀請朋友一起來",17,HudMuted);}
+      for(int i=0;i<rooms.Count;i++){var room=rooms[i];HudCard(new Rect(0,i*74,586,64));HudText(new Rect(16,i*74+5,380,28),FitHudName(ListingTitle(room),380,18),18,null,TextAnchor.MiddleLeft);HudText(new Rect(16,i*74+33,380,23),$"真人 {room.PlayerCount} / {room.MaxPlayers} · 電腦自動補位",15,HudMuted,TextAnchor.MiddleLeft);GUI.enabled=!busy&&!lobbyConnecting&&room.IsOpen&&room.PlayerCount<room.MaxPlayers;if(HudButton(new Rect(428,i*74+10,142,43),"加入房間")){Room=room.Name;_=Connect(GameMode.Client);}}
+      GUI.EndScrollView();GUI.enabled=true;HudText(new Rect(86,618,1108,30),LobbyMessage,17,HudMuted);
+      DrawSettingsButton();
 #endif
     }
     public void ShuffleTeams() {

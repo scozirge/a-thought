@@ -30,13 +30,14 @@ namespace RivalsPrototype {
     }
     public void Build(int seat) {
       if(body)return;
-      skin=Skin(seat);shirt=seat%2==0?new Color(.17f,.43f,.84f):new Color(.9f,.25f,.22f);
+      skin=Skin(seat);shirt=seat%2==0?new Color(.06f,.52f,1f):new Color(1f,.18f,.13f);
       body=new GameObject("Block avatar").transform;body.SetParent(transform,false);
-      Box(body,"Torso",new Vector3(0,1.06f,0),new Vector3(.72f,.66f,.36f),seat%3==0?new Color(.91f,.93f,.96f):Ink);
+      Box(body,"Torso",new Vector3(0,1.06f,0),new Vector3(.72f,.66f,.36f),shirt);
       Box(body,"Team shirt",new Vector3(0,1.12f,.19f),new Vector3(.64f,.43f,.025f),shirt);
       Box(body,"Team back",new Vector3(0,1.12f,-.19f),new Vector3(.64f,.43f,.025f),shirt);
       Box(body,"Jacket seam",new Vector3(0,1.11f,.209f),new Vector3(.025f,.43f,.015f),Ink);
       Box(body,"Chest stripe",new Vector3(.21f,1.22f,.215f),new Vector3(.12f,.035f,.02f),Color.white);
+      Box(body,"Back team stripe",new Vector3(0,1.20f,-.214f),new Vector3(.48f,.07f,.02f),new Color(.88f,.94f,.98f));
       Box(body,"Belt",new Vector3(0,.76f,0),new Vector3(.73f,.1f,.37f),Ink);
       Box(body,"Buckle",new Vector3(0,.76f,.2f),new Vector3(.105f,.07f,.035f),new Color(.65f,.7f,.74f));
       head=new GameObject("Head pivot").transform;head.SetParent(body,false);head.localPosition=new Vector3(0,1.43f,0);

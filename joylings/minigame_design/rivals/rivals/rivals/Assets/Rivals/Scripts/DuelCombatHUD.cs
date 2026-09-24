@@ -50,16 +50,16 @@ namespace RivalsPrototype {
       if(!Local||!Local.ViewCamera)return;
       float pulse=Local.DamagePulse;
       if(pulse>0) {
-        Fill(new Rect(0,0,1280,720),new Color(.8f,.02f,.01f,pulse*.075f));
+        Fill(new Rect(0,0,hudWidth,hudHeight),new Color(.8f,.02f,.01f,pulse*.075f));
         for(int band=0;band<14;band++) {
           var color=new Color(.86f,.035f,.025f,pulse*.6f*(1-band/14f));float inset=band*4;
-          Fill(new Rect(inset,0,4,720),color);Fill(new Rect(1276-inset,0,4,720),color);
-          Fill(new Rect(0,inset,1280,4),color);Fill(new Rect(0,716-inset,1280,4),color);
+          Fill(new Rect(inset,0,4,hudHeight),color);Fill(new Rect(hudWidth-4-inset,0,4,hudHeight),color);
+          Fill(new Rect(0,inset,hudWidth,4),color);Fill(new Rect(0,hudHeight-4-inset,hudWidth,4),color);
         }
         if(Local.Health>0) {
           var direction=Local.ViewCamera.transform.InverseTransformDirection(Local.DamageOrigin-Local.transform.position);
-          var matrix=GUI.matrix;GUIUtility.RotateAroundPivot(Mathf.Atan2(direction.x,direction.z)*Mathf.Rad2Deg,new Vector2(640,360));
-          Fill(new Rect(626,283,28,5),new Color(1,.12f,.07f,pulse));GUI.matrix=matrix;
+          var matrix=GUI.matrix;GUIUtility.RotateAroundPivot(Mathf.Atan2(direction.x,direction.z)*Mathf.Rad2Deg,HudCenter);
+          Fill(new Rect(HudCenter.x-14,HudCenter.y-77,28,5),new Color(1,.12f,.07f,pulse));GUI.matrix=matrix;
         }
       }
       if(Local.Health>0&&Match.Phase==2) {
@@ -67,22 +67,22 @@ namespace RivalsPrototype {
         if(target&&target.IsReady) {
           var color=TeamColor(target.Team);
           bool near=(target.transform.position-Local.ViewCamera.transform.position).sqrMagnitude<NameRange*NameRange;
-          string label=target.Health<=0?"已擊倒":near?FitHudName(target.DisplayName,92,11):"目標";
-          Fill(new Rect(571,313,138,31),new Color(.04f,.07f,.1f,.78f));
-          HudText(new Rect(579,315,96,19),label,11,null,TextAnchor.MiddleLeft);
-          HudText(new Rect(677,315,25,19),target.Health.ToString(),11,color,TextAnchor.MiddleRight);
-          Fill(new Rect(579,338,122,3),new Color(.18f,.2f,.24f));Fill(new Rect(579,338,122*Mathf.Clamp01((float)target.Health/DuelPlayer.MaxHealth),3),color);
+          string label=target.Health<=0?"已擊倒":near?FitHudName(target.DisplayName,105,14):"目標";
+          var box=new Rect(HudCenter.x-88,HudCenter.y-63,176,36);HudRound(box,new Color(.04f,.07f,.1f,.94f),6);
+          HudText(new Rect(box.x+10,box.y+2,111,26),label,14,null,TextAnchor.MiddleLeft);
+          HudText(new Rect(box.x+125,box.y+2,41,26),target.Health.ToString(),14,color,TextAnchor.MiddleRight);
+          Fill(new Rect(box.x+10,box.y+30,156,3),new Color(.18f,.2f,.24f));Fill(new Rect(box.x+10,box.y+30,156*Mathf.Clamp01((float)target.Health/DuelPlayer.MaxHealth),3),color);
         }
         if(Time.unscaledTime<hitUntil) {
-          var matrix=GUI.matrix;GUIUtility.RotateAroundPivot(45,new Vector2(640,360));
+          var matrix=GUI.matrix;GUIUtility.RotateAroundPivot(45,HudCenter);
           var color=Local.LastHitKilled?new Color(1,.73f,.18f):Color.white;
-          foreach(var rect in new[]{new Rect(638,340,4,10),new Rect(638,370,4,10),new Rect(620,358,10,4),new Rect(650,358,10,4)}) {
+          foreach(var rect in new[]{new Rect(HudCenter.x-2,HudCenter.y-20,4,10),new Rect(HudCenter.x-2,HudCenter.y+10,4,10),new Rect(HudCenter.x-20,HudCenter.y-2,10,4),new Rect(HudCenter.x+10,HudCenter.y-2,10,4)}) {
             Fill(new Rect(rect.x-1,rect.y-1,rect.width+2,rect.height+2),Color.black);Fill(rect,color);
           }
           GUI.matrix=matrix;
-          HudText(new Rect(605,392,70,24),Local.LastHitKilled?"擊倒":$"-{Local.LastHitDamage}",16,color,bold:true);
+          HudText(new Rect(HudCenter.x-40,HudCenter.y+28,80,26),Local.LastHitKilled?"擊倒":$"-{Local.LastHitDamage}",19,color,bold:true);
         }
-        if(Time.unscaledTime<pickupUntil){HudCard(new Rect(540,512,200,32));HudText(new Rect(545,514,190,28),pickupMessage,13);}
+        if(Time.unscaledTime<pickupUntil){var box=new Rect(HudCenter.x-110,HudCenter.y+94,220,34);HudCard(box);HudText(box,pickupMessage,15);}
         DrawPickupLabels();
       }
     }
@@ -93,9 +93,9 @@ namespace RivalsPrototype {
         if((point-camera.transform.position).sqrMagnitude>18*18)continue;
         var screen=camera.WorldToViewportPoint(point);
         if(screen.z<=0||screen.x<.08f||screen.x>.92f||screen.y<.22f||screen.y>.78f||!VisiblePoint(point))continue;
-        var rect=new Rect(screen.x*1280-65,(1-screen.y)*720-11,130,22);
+        var rect=new Rect(screen.x*hudWidth-82,(1-screen.y)*hudHeight-14,164,28);
         string hint=pickup.Respawn.IsRunning?$" · {Mathf.CeilToInt(pickup.Respawn.RemainingTime(Runner)??0)}秒":Local.Weapon==pickup.Weapon?" · 已持有":" · 靠近替換";
-        Fill(rect,new Color(.04f,.07f,.1f,.78f));HudText(rect,Weapons.Names[pickup.Weapon]+hint,12,Weapons.Color(pickup.Weapon));
+        HudRound(rect,new Color(.04f,.07f,.1f,.94f),5);HudText(rect,Weapons.Names[pickup.Weapon]+hint,14,Weapons.Color(pickup.Weapon));
       }
     }
   }
