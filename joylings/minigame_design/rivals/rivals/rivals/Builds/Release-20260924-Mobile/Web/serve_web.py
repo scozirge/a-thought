@@ -14,7 +14,7 @@ class Handler(SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=5174)
-    parser.add_argument('--directory', default=str(Path(__file__).resolve().parents[1] / 'Builds' / 'Web'))
+    parser.add_argument('--directory', default=str(Path(__file__).resolve().parent))
     args = parser.parse_args()
     root = Path(args.directory).resolve()
     if not (root / 'index.html').is_file():

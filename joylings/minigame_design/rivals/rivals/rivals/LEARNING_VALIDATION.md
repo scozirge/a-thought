@@ -23,3 +23,10 @@
 - `Tools/WebLearningSmokeTest.cjs`：正式 Web 與兩個真實 Photon 玩家共 **24 項通過**。驗證答題超過三秒不提早復活、答錯原題重出、重複送出不領徽章、學生與房主進度一致、三徽章解鎖菜刀、實際持刀復活，以及離房重入歸零；也確認訓練場可以自由領取核彈且不出題。瀏覽器腳本錯誤為零。
 
 瀏覽器測試使用電腦上的 Chrome 與觸控模擬；不宣稱已在實體 Android／iPhone 上測試。
+
+## 正式成品
+
+- 版本：`rivals-web-24-learning`；來源提交 `efc56cc`，包內 `版本資訊.json` 另保存實際來源檔案 SHA-256。
+- Web ZIP：30,262,099 bytes、24 個檔案，ZIP CRC 與逐檔 SHA-256 全部一致。
+- ZIP SHA-256：`12b60dc93ba9a17751037ee75fc984a44648828af0812f4521e155a44b550824`。
+- `Builds/Release-20260924-Mobile/Web` 與正式 ZIP 更新，Windows 歷史成品及其 manifest 項目不變。

@@ -1,0 +1,52 @@
+(() => {
+  const overlay=document.createElement('section');
+  overlay.id='learning-overlay';overlay.hidden=true;overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','learning-title');
+  overlay.innerHTML='<div class="learning-card"><header><span id="learning-stage"></span><button id="learning-leave" type="button">離開房間</button></header><p id="learning-progress"></p><h2 id="learning-title" tabindex="-1"></h2><p id="learning-context"></p><div id="learning-options"></div><div id="learning-feedback" role="status"></div><div id="learning-weapons" aria-label="復活武器"></div><p id="learning-note"></p><button id="learning-next" type="button">選武器，準備復活</button></div>';
+  document.getElementById('stage').append(overlay);
+  const get=id=>document.getElementById('learning-'+id);
+  const names={1:'手槍',2:'菜刀',6:'火箭筒',8:'毒藥',5:'加特林',7:'核彈'};
+  let current=null,key='',pending=false;
+  const command=value=>window.rivalsLearningCommand?.(value);
+  const readable=value=>window.rivalsTouch?.mode?(value||'').replaceAll('按下滑鼠左鍵','點一下射擊按鈕').replaceAll('按住滑鼠左鍵','按住射擊按鈕'):(value||'');
+  get('leave').onclick=()=>command('leave');
+  get('next').onclick=()=>{if(!current||pending)return;pending=true;get('next').disabled=true;command(`learning:continue:${current.life}`);};
+  overlay.addEventListener('keydown',event=>{
+    if(event.key!=='Tab')return;
+    const buttons=[...overlay.querySelectorAll('button:not(:disabled)')].filter(b=>!b.hidden&&b.offsetParent!==null),first=buttons[0],last=buttons.at(-1);
+    if(event.shiftKey&&(document.activeElement===first||document.activeElement===get('title'))){event.preventDefault();last?.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+  });
+  window.rivalsReceiveLearning=state=>{
+    const wasVisible=!overlay.hidden;overlay.hidden=!state.visible;current=state;
+    // Read-only presentation data; commands are validated again by the room host.
+    window.rivalsLearningState=state;
+    if(!state.visible){key='';pending=false;return;}
+    const nextKey=[state.life,state.state,state.question].join(':');
+    const changed=nextKey!==key;
+    if(changed){key=nextKey;pending=false;overlay.querySelector('.learning-card').scrollTop=0;}
+    overlay.dataset.state=String(state.state);
+    get('stage').textContent=state.state===3?'復活準備':`${state.name}小挑戰 · 第 ${state.question%3+1} 題`;
+    get('progress').textContent=state.complete?'全部武器都解鎖了！':`${'●'.repeat(state.badges)}${'○'.repeat(3-state.badges)}　集滿 3 個徽章，解鎖${state.reward}！`;
+    get('title').textContent=state.state===3?(state.seconds>0?`${state.seconds} 秒後復活`:'正在準備復活'):readable(state.title);
+    get('context').textContent=state.state===3?'選一把已解鎖的武器，下次復活就拿它。':readable(state.context);
+    const options=get('options');options.hidden=state.state===3;
+    if(changed){
+      options.replaceChildren();
+      if(state.state!==3)(state.options||[]).forEach((label,index)=>{
+        const button=document.createElement('button');button.type='button';button.dataset.option=String(index);button.textContent=`${index+1}. ${readable(label)}`;
+        button.disabled=state.state!==1;
+        if(state.state===2){button.classList.toggle('answer-correct',index===state.answer);button.classList.toggle('answer-wrong',index===state.choice&&!state.correct);}
+        button.onclick=()=>{if(pending||current.state!==1)return;pending=true;for(const b of options.children)b.disabled=true;get('note').textContent='正在確認答案…';command(`learning:answer:${state.life}:${state.question}:${index}`);};
+        options.append(button);
+      });
+    }
+    const feedback=get('feedback');feedback.hidden=state.state!==2;feedback.replaceChildren();
+    if(state.state===2){const strong=document.createElement('strong'),explanation=document.createElement('p');strong.textContent=state.correct?(state.unlocked?`答對了！${state.reward}解鎖了！`:'答對了！獲得 1 個徽章！'):'再想一想，下次再挑戰這一題！';explanation.textContent=state.explanation;feedback.append(strong,explanation);}
+    const weapons=get('weapons');weapons.hidden=state.state!==3;
+    if(changed){weapons.replaceChildren();if(state.state===3)for(const kind of state.weapons){const button=document.createElement('button');button.type='button';button.dataset.weapon=String(kind);button.textContent=names[kind];button.onclick=()=>command(`learning:weapon:${state.life}:${kind}`);weapons.append(button);}}
+    for(const button of weapons.children)button.setAttribute('aria-pressed',String(Number(button.dataset.weapon)===state.selected));
+    get('note').textContent=state.state===3?`復活武器：${names[state.selected]||'手槍'}`:state.state===2&&state.unlocked?`這次復活預設拿${state.reward}，也可以改選其他武器。`:'每次死亡挑戰一題。離開房間後，解鎖進度會重新開始。';
+    get('next').hidden=state.state!==2;get('next').disabled=pending;
+    if(!wasVisible||changed)get('title').focus({preventScroll:true});
+  };
+})();
