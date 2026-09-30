@@ -12,9 +12,9 @@ namespace RivalsPrototype {
     public NetworkString<_16> Killer,Victim;
     public TickTimer Lifetime;
   }
-  public class DuelMatch : NetworkBehaviour {
+  public partial class DuelMatch : NetworkBehaviour {
     // 0 preparing, 1 team introduction, 2 continuous combat, 4 podium.
-    public const int KillsToWin=30,PickupCount=4;
+    public const int KillsToWin=30,PickupCount=14;
     public const float PickupRespawnSeconds=5,PodiumSeconds=10;
     [Networked] public int Phase { get; set; }
     [Networked] public int Blue { get; set; }
@@ -28,16 +28,20 @@ namespace RivalsPrototype {
     [Networked] public int EliminationSequence { get; set; }
     [Networked,Capacity(FeedCapacity)] public NetworkArray<EliminationDisplay> Eliminations=>default;
     public void RecordElimination(DuelPlayer killer,DuelPlayer victim) {
-      if(!HasStateAuthority||Phase!=2||!killer||!victim||killer==victim||killer.Team==victim.Team||victim.Health>0||victim.EliminationRecorded)return;
+      if(killer)RecordElimination(AttackCredit.For(killer,killer.Weapon),victim);
+    }
+    public void RecordElimination(AttackCredit killer,DuelPlayer victim) {
+      if(!HasStateAuthority||Phase!=2||!victim||victim.Health>0||victim.EliminationRecorded)return;
       victim.EliminationRecorded=true;
+      if(killer.Team==victim.Team)return;
       int sequence=++EliminationSequence;
       Eliminations.Set((sequence-1)%FeedCapacity,new EliminationDisplay{Sequence=sequence,KillerTeam=killer.Team,VictimTeam=victim.Team,
-        Killer=killer.Nickname,Victim=victim.Nickname,Weapon=killer.Weapon,Game=Game,Lifetime=TickTimer.CreateFromSeconds(Runner,6)});
-      if(killer.Team==0)Blue++;else Red++;
-      if(Blue>=KillsToWin||Red>=KillsToWin)FinishGame(killer.Team);
+        Killer=killer.Name,Victim=victim.Nickname,Weapon=killer.Weapon,Game=Game,Lifetime=TickTimer.CreateFromSeconds(Runner,6)});
+      if(killer.Team==0)Blue=Mathf.Min(KillsToWin,Blue+1);else Red=Mathf.Min(KillsToWin,Red+1);
+      if(Blue>=KillsToWin||Red>=KillsToWin){if(damageBatchDepth>0){if(pendingWinner<0)pendingWinner=killer.Team;}else FinishGame(killer.Team);}
     }
     public DuelPlayer[] Players=>DuelSession.Instance.Players;
-    public override void Spawned(){DuelSession.Instance.Match=this;gameObject.AddComponent<DuelPickups>();gameObject.AddComponent<DuelPodium>();}
+    public override void Spawned(){DuelSession.Instance.Match=this;gameObject.AddComponent<DuelPickups>();gameObject.AddComponent<DuelPodium>();gameObject.AddComponent<DuelOrdnanceView>();}
     public override void FixedUpdateNetwork() {
       if(!HasStateAuthority)return;
       var players=Players;
@@ -49,6 +53,7 @@ namespace RivalsPrototype {
           if(player.Health<=0&&player.RespawnTimer.Expired(Runner)&&DuelRespawn.TryFindPosition(player,players,out var position))
             player.RespawnAt(position);
         UpdatePickups(players);
+        UpdateOrdnance();
       }
       if(Phase==4&&Timer.Expired(Runner)){
         DuelSession.Instance.ShuffleTeams();Game++;BeginGame(Players);
@@ -64,6 +69,7 @@ namespace RivalsPrototype {
     }
     void BeginGame(DuelPlayer[] players) {
       Blue=Red=0;Winner=-1;
+      ClearOrdnance();damageBatchDepth=0;pendingWinner=-1;
       foreach(var player in players)player.ResetForMatch();
       for(int slot=0;slot<PickupCount;slot++)SpawnPickup(slot);
       Phase=1;Timer=TickTimer.CreateFromSeconds(Runner,4);
@@ -80,7 +86,7 @@ namespace RivalsPrototype {
           var delta=pickup.Position-player.transform.position;
           if(Physics.Raycast(player.transform.position+Vector3.up,delta.normalized,delta.magnitude,DuelPlayer.WorldMask,QueryTriggerInteraction.Ignore))continue;
           if(!player.CollectWeapon(pickup.Weapon))continue;
-          pickup.Respawn=TickTimer.CreateFromSeconds(Runner,PickupRespawnSeconds);Pickups.Set(slot,pickup);break;
+          pickup.Respawn=TickTimer.CreateFromSeconds(Runner,pickup.Weapon==Weapons.Nuke?45:PickupRespawnSeconds);Pickups.Set(slot,pickup);break;
         }
       }
     }

@@ -4,15 +4,16 @@ namespace RivalsPrototype {
   // Presentation follows the replicated reload timer, including prediction rollback.
   // These props never participate in physics or change the player's aim.
   public sealed class DuelReloadView : MonoBehaviour {
-    Transform root,hand,sleeve,magazine,cartridge,bolt,casing,support,supportSleeve;
+    Transform root,hand,sleeve,magazine,drumCover,cartridge,bolt,casing,support,supportSleeve;
     int kind;
     public void Build(int weapon,int seat) {
       kind=weapon;support=transform.Find("Supporting hand");supportSleeve=transform.Find("Left sleeve");
       root=new GameObject("Reload presentation").transform;root.SetParent(transform,false);
       hand=DuelWorld.Block(root,"Loading hand",Vector3.zero,new Vector3(.14f,.14f,.17f),DuelAvatar.Skin(seat),false).transform;
       sleeve=DuelWorld.Block(root,"Loading forearm",Vector3.zero,Vector3.one,new Color(.055f,.065f,.08f),false).transform;
-      magazine=DuelWorld.Block(hand,"Spare magazine",new Vector3(.025f,.10f,.04f),new Vector3(.085f,kind==1?.19f:.26f,.12f),new Color(.22f,.27f,.34f),false).transform;
-      DuelWorld.Block(magazine,"Magazine base",new Vector3(0,-.49f,0),new Vector3(1.18f,.13f,1.14f),new Color(.055f,.065f,.08f),false);
+      if(kind==Weapons.Gatling){magazine=DuelWeaponModels.Cylinder(hand,"Spare drum",new Vector3(.025f,.10f,.04f),.17f,.26f,new Color(.16f,.23f,.29f));drumCover=DuelWeaponModels.Cylinder(hand,"Drum cover",new Vector3(.025f,.235f,.04f),.175f,.022f,new Color(.91f,.57f,.16f));}
+      else {magazine=DuelWorld.Block(hand,"Spare magazine",new Vector3(.025f,.10f,.04f),new Vector3(.085f,kind==1?.19f:.26f,.12f),new Color(.22f,.27f,.34f),false).transform;
+        DuelWorld.Block(magazine,"Magazine base",new Vector3(0,-.49f,0),new Vector3(1.18f,.13f,1.14f),new Color(.055f,.065f,.08f),false);}
       cartridge=DuelWorld.Block(hand,"Loaded cartridge",new Vector3(.01f,.09f,.04f),new Vector3(.045f,.045f,kind==3?.13f:.16f),kind==3?new Color(.8f,.06f,.04f):new Color(.95f,.63f,.18f),false).transform;
       DuelWorld.Block(cartridge,"Cartridge brass",new Vector3(0,0,-.42f),new Vector3(1.1f,1.1f,.17f),new Color(.95f,.72f,.27f),false);
       bolt=DuelWorld.Block(root,"Moving charging handle",new Vector3(.08f,.035f,.02f),new Vector3(.10f,.035f,.045f),new Color(.18f,.21f,.26f),false).transform;
@@ -28,7 +29,7 @@ namespace RivalsPrototype {
       if(support)support.gameObject.SetActive(!active);
       if(supportSleeve)supportSleeve.gameObject.SetActive(!active);
       if(!active)return;
-      var well=kind==1?new Vector3(-.02f,-.15f,.005f):new Vector3(-.025f,-.16f,.10f);
+      var well=kind==Weapons.Gatling?new Vector3(.20f,-.16f,-.18f):kind==1?new Vector3(-.02f,-.15f,.005f):new Vector3(-.025f,-.16f,.10f);
       var pocket=new Vector3(-.34f,-.42f,.05f);
       var charging=new Vector3(.10f,.01f,.035f);
       Vector3 position;
@@ -63,6 +64,7 @@ namespace RivalsPrototype {
       var elbow=new Vector3(-.43f,-.45f,-.24f);var wrist=position+new Vector3(-.035f,-.06f,-.025f);
       sleeve.localPosition=(elbow+wrist)*.5f;sleeve.localScale=new Vector3(.16f,.16f,Vector3.Distance(elbow,wrist));sleeve.localRotation=Quaternion.LookRotation(wrist-elbow);
       magazine.gameObject.SetActive(showMagazine);cartridge.gameObject.SetActive(showCartridge);
+      if(drumCover)drumCover.gameObject.SetActive(showMagazine);
       bolt.gameObject.SetActive(kind!=3);bolt.localPosition=charging-Vector3.forward*pull*.16f;
       bool eject=kind==4&&p>.1f&&p<.26f;casing.gameObject.SetActive(eject);
       if(eject){float t=(p-.1f)/.16f;casing.localPosition=new Vector3(.12f+t*.5f,.06f+Mathf.Sin(t*Mathf.PI)*.12f,.13f);casing.localRotation=Quaternion.Euler(t*350,t*200,0);}

@@ -8,6 +8,7 @@ namespace RivalsPrototype {
     float expires;
     static readonly System.Collections.Generic.Stack<DuelShotTracer> pool=new System.Collections.Generic.Stack<DuelShotTracer>();
     public static void ShowWeapon(int weapon,Transform muzzle,Vector3 hit,Vector3 direction,Camera worldCamera=null,Camera viewCamera=null) {
+      if(!Weapons.IsFirearm(weapon))return;
       Show(muzzle,hit,worldCamera,viewCamera,weapon==3?.15f:.08f);
       if(weapon!=3)return;
       var rotation=Quaternion.LookRotation(direction.sqrMagnitude>.1f?direction:Vector3.forward);

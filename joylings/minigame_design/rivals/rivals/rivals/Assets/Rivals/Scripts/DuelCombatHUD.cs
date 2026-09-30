@@ -84,6 +84,17 @@ namespace RivalsPrototype {
         }
         if(Time.unscaledTime<pickupUntil){var box=new Rect(HudCenter.x-110,HudCenter.y+94,220,34);HudCard(box);HudText(box,pickupMessage,15);}
         DrawPickupLabels();
+        DrawArsenalWarning();
+      }
+    }
+    void DrawArsenalWarning() {
+      float nearest=8;
+      for(int i=0;i<DuelMatch.OrdnanceCapacity;i++) {var strike=Match.Ordnance[i];if(strike.Stage==OrdnanceState.Warning&&(Local.transform.position-strike.Position).sqrMagnitude<Weapons.NukeRadius*Weapons.NukeRadius)nearest=Mathf.Min(nearest,strike.Lifetime.RemainingTime(Runner)??0);}
+      if(nearest<=Weapons.NukeDelay) {
+        var box=new Rect(HudCenter.x-137,HudCenter.y+54,274,30);HudRound(box,new Color(.38f,.025f,.035f,.95f),6);HudText(box,$"核彈將至 · {Mathf.CeilToInt(nearest)} 秒 · 離開紅圈",16,new Color(1,.85f,.66f),bold:true);
+      }else if(Local.Weapon==Weapons.Nuke&&!paused) {
+        bool valid=DuelMatch.TryNukeTarget(Local.ViewCamera.transform.position,Local.ViewCamera.transform.forward,out _);
+        var box=new Rect(HudCenter.x-115,HudCenter.y+48,230,28);HudRound(box,new Color(.08f,.09f,.12f,.88f),5);HudText(box,valid?"標記後 7 秒落下 · 小心撤離":"對準場地標記核彈",14,HudGold);
       }
     }
     void DrawPickupLabels() {

@@ -129,13 +129,14 @@ namespace RivalsPrototype {
       if(!HudCompact){int alive=0;foreach(var p in Players)if(p.Team==team&&p.Health>0)alive++;HudText(new Rect(rect.x+13,rect.y+53,rect.width-26,18),$"{alive} / 4 就位",13,HudMuted,TextAnchor.MiddleLeft);}
     }
     void DrawCurrentWeapon(){
-      float w=HudCompact?148:214,h=HudShort?42:HudCompact?54:72;var box=new Rect(hudWidth-hudRight-w,hudHeight-hudBottom-h,w,h);ammoBounds=box;HudCard(box);var icons=DuelArt.Get?DuelArt.Get.WeaponIcons:null;
-      if(!HudCompact&&icons!=null&&Local.Weapon<icons.Length&&icons[Local.Weapon])GUI.DrawTexture(new Rect(box.x+12,box.y+20,62,34),icons[Local.Weapon],ScaleMode.ScaleToFit,true);
-      HudText(new Rect(box.x+12,box.y+3,HudCompact?43:w-24,HudCompact?h-9:22),Weapons.Names[Local.Weapon],14,HudMuted,HudCompact?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
-      string ammo=Local.ReloadTimer.IsRunning?"裝填中":$"{Local.Ammo} / {Weapons.Magazines[Local.Weapon]}";
-      HudText(new Rect(box.x+52,box.y+(HudCompact?2:27),w-64,HudCompact?h-12:32),ammo,Local.ReloadTimer.IsRunning?18:HudShort?22:25,null,TextAnchor.MiddleRight,true);
-      float progress=Local.ReloadTimer.IsRunning?Local.ReloadProgress:(float)Local.Ammo/Weapons.Magazines[Local.Weapon];HudRound(new Rect(box.x+12,box.yMax-8,w-24,3),new Color(.20f,.29f,.34f),1.5f);
-      if(progress>0)HudRound(new Rect(box.x+12,box.yMax-8,(w-24)*Mathf.Clamp01(progress),3),Weapons.Color(Local.Weapon),1.5f);
+      float w=HudCompact?148:214,h=HudShort?42:HudCompact?54:72;var box=new Rect(hudWidth-hudRight-w,hudHeight-hudBottom-h,w,h);ammoBounds=box;HudCard(box);var icon=DuelArt.Get?DuelArt.Get.Icon(Local.Weapon):null;
+      if(!HudCompact&&icon)GUI.DrawTexture(new Rect(box.x+10,box.y+18,72,40),icon,ScaleMode.ScaleToFit,true);
+      HudText(new Rect(box.x+12,box.y+2,w-24,HudShort?16:20),Weapons.Names[Local.Weapon],HudShort?13:14,HudMuted,HudCompact?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
+      float cooldown=Local.CooldownRemaining;bool unlimited=Weapons.Unlimited(Local.Weapon);
+      string ammo=Local.ReloadTimer.IsRunning?"裝填中":unlimited?(cooldown>.05f?$"{cooldown:0.0} 秒":"∞  就緒"):Local.Weapon==Weapons.Nuke?"單次標記":Local.Weapon==Weapons.Cleaver?"揮砍 / 飛刀":$"{Local.Ammo} / {Weapons.Magazines[Local.Weapon]}";
+      HudText(new Rect(box.x+(HudCompact?12:82),box.y+(HudShort?17:HudCompact?22:27),w-(HudCompact?24:94),HudShort?20:30),ammo,Local.ReloadTimer.IsRunning||!Weapons.IsFirearm(Local.Weapon)?HudShort?16:18:HudShort?20:24,null,TextAnchor.MiddleRight,true);
+      float progress=Local.ReloadTimer.IsRunning?Local.ReloadProgress:unlimited?1-cooldown/Weapons.Interval[Local.Weapon]:(float)Local.Ammo/Weapons.Magazines[Local.Weapon];float barY=box.yMax-(HudShort?3:5);HudRound(new Rect(box.x+12,barY,w-24,2),new Color(.20f,.29f,.34f),1);
+      if(progress>0)HudRound(new Rect(box.x+12,barY,(w-24)*Mathf.Clamp01(progress),2),Weapons.Color(Local.Weapon),1);
       if(!paused&&Local.Health>0&&Match.Phase==2&&Local.ReloadTimer.IsRunning){var reload=new Rect(HudCenter.x-100,HudCenter.y+46,200,40);HudCard(reload);
         HudText(new Rect(reload.x+8,reload.y+4,184,26),Weapons.ReloadStage(Local.Weapon,Local.ReloadProgress)+$"  {Local.ReloadTimer.RemainingTime(Runner)??0:0.0}s",15);
         Fill(new Rect(reload.x+12,reload.y+33,176*Local.ReloadProgress,3),Weapons.Color(Local.Weapon));}
@@ -170,7 +171,7 @@ namespace RivalsPrototype {
     }
     void DrawPauseMenu(){
       if(DuelWebInput.TouchMode)return;Fill(new Rect(0,0,hudWidth,hudHeight),new Color(.025f,.04f,.07f,.62f));var box=new Rect(HudCenter.x-195,HudCenter.y-181,390,362);HudCard(box,TeamColor(0));
-      HudText(new Rect(box.x+28,box.y+20,334,40),"休息一下",30,null,TextAnchor.MiddleLeft,true);HudText(new Rect(box.x+28,box.y+72,334,24),"WASD 移動 · 左鍵射擊 · 右鍵瞄準",16,HudMuted);HudText(new Rect(box.x+28,box.y+100,334,24),"Shift 衝刺 · R 裝填 · 四角撿槍",16,HudMuted);
+      HudText(new Rect(box.x+28,box.y+20,334,40),"休息一下",30,null,TextAnchor.MiddleLeft,true);HudText(new Rect(box.x+28,box.y+72,334,24),"WASD 移動 · 左鍵攻擊 · 右鍵瞄準／飛刀",15,HudMuted);HudText(new Rect(box.x+28,box.y+100,334,24),"Shift 衝刺 · R 裝填 · 地圖上撿武器",16,HudMuted);
       if(HudButton(new Rect(box.x+28,box.y+143,334,44),"繼續玩",true))ResumeControls();if(HudButton(new Rect(box.x+28,box.y+199,334,40),AudioEnabled?"聲音：開":"聲音：關"))SetAudioEnabled(!AudioEnabled);if(HudButton(new Rect(box.x+28,box.y+251,334,40),"回到大廳"))Leave();HudText(new Rect(box.x+28,box.y+311,334,24),"房間內的對戰會繼續進行",14,HudMuted);
     }
   }

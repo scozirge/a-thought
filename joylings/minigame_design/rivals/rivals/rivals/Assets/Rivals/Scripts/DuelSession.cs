@@ -36,13 +36,14 @@ namespace RivalsPrototype {
     int expectedPlayers=MaxPlayers, expectedHumans=1;
     int weapon=-1,smokeWeapon=Weapons.Pistol;
     int firePress,lastFirePressFrame=-1;
+    int altPress,lastAltPressFrame=-1;
     bool GameplayInputAllowed=>started&&!paused&&!showSettings&&!showCredits&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2&&Local&&Local.IsReady;
     public bool ControlsActive=>GameplayInputAllowed&&Local.Health>0&&DuelWebInput.HasControl;
     void ResumeControls(){paused=false;DuelWebInput.SetActive(GameplayInputAllowed);DuelWebInput.Resume();}
     public void PauseControls(){if(!started)return;paused=true;DuelWebInput.SetActive(false);DuelWebInput.Release();}
-    public bool IsAiming=>ControlsActive&&(DuelWebInput.TouchMode?(DuelWebInput.TouchHeld&(1<<(int)Action.Aim))!=0:Mouse.current!=null&&Mouse.current.rightButton.isPressed);
+    public bool IsAiming=>ControlsActive&&Weapons.CanAim(Local.Weapon)&&(DuelWebInput.TouchMode?(DuelWebInput.TouchHeld&(1<<(int)Action.Aim))!=0:Mouse.current!=null&&Mouse.current.rightButton.isPressed);
     public void ClearWeaponRequest(){weapon=-1;}
-    public void ResetLifeInput(){pending=default;resetPendingAfterPoll=false;weapon=-1;firePress=0;lastFirePressFrame=-1;DuelWebInput.ResetTouch();}
+    public void ResetLifeInput(){pending=default;resetPendingAfterPoll=false;weapon=-1;firePress=altPress=0;lastFirePressFrame=lastAltPressFrame=-1;DuelWebInput.ResetTouch();}
     [UnityEngine.Scripting.Preserve]
     public void WebControlCommand(string action) {
       if(!started||busy)return;
@@ -83,6 +84,7 @@ namespace RivalsPrototype {
       if(int.TryParse(Arg(args,"-testWeapon","1"),out int selected)&&Weapons.IsFirearm(selected))smokeWeapon=selected;
 #if UNITY_EDITOR
       if(args.Contains("-battleSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelBattleSmoke>();}
+      if(args.Contains("-arsenalSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelArsenalSmoke>();}
 #endif
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
       if(args.Contains("-combatSmoke"))gameObject.AddComponent<DuelCombatSmoke>();
@@ -178,7 +180,7 @@ namespace RivalsPrototype {
       // Eligibility must not depend on focus: otherwise the gesture that regains
       // focus can arrive while the browser bridge is still disabled.
       DuelWebInput.SetActive(GameplayInputAllowed);
-      DuelWebInput.SetTouchState(GameplayInputAllowed&&Local.Health>0,started,paused,AudioEnabled);
+      DuelWebInput.SetTouchState(GameplayInputAllowed&&Local.Health>0,started,paused,AudioEnabled,Local&&Local.IsReady?Local.Weapon:Weapons.Pistol);
       bool controls=ControlsActive;
       if(!controls)pending=default;
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -209,13 +211,16 @@ namespace RivalsPrototype {
         d.Move=DuelWebInput.TouchMove;
         int held=DuelWebInput.TouchHeld,pressed=DuelWebInput.TakeTouchPressed();
         firePress+=DuelWebInput.TakeTouchFirePress();
+        altPress+=DuelWebInput.TakeTouchAltPress();
         for(int action=0;action<=((int)Action.Reload);action++)if(action!=2)d.Buttons.Set(action,((held|pressed)&(1<<action))!=0);
       }else if(!DuelWebInput.TouchMode&&k!=null && m!=null && ControlsActive) {
         if(m.leftButton.wasPressedThisFrame&&lastFirePressFrame!=Time.frameCount){firePress++;lastFirePressFrame=Time.frameCount;}
+        if(m.rightButton.wasPressedThisFrame&&lastAltPressFrame!=Time.frameCount){altPress++;lastAltPressFrame=Time.frameCount;}
         d.Move=new Vector2((k.dKey.isPressed?1:0)-(k.aKey.isPressed?1:0),(k.wKey.isPressed?1:0)-(k.sKey.isPressed?1:0));
         d.Buttons.Set(Action.Fire,m.leftButton.isPressed||m.leftButton.wasPressedThisFrame);d.Buttons.Set(Action.Aim,m.rightButton.isPressed);d.Buttons.Set(Action.Sprint,k.leftShiftKey.isPressed);
       }
       d.FirePress=firePress;
+      d.AltPress=altPress;
       if(smoke && Local && Match && Match.Object && Match.Object.IsValid && Match.Phase==2) {
         d.Weapon=Local.HasWeapon(smokeWeapon)?smokeWeapon:-1;
         var enemy=Match.Players.FirstOrDefault(p=>p.Team!=Local.Team&&p.Health>0);
@@ -233,6 +238,7 @@ namespace RivalsPrototype {
 #endif
 #if UNITY_EDITOR
       if(DuelBattleSmoke.Running)d=DuelBattleSmoke.Input(this);
+      if(DuelArsenalSmoke.Running)d=DuelArsenalSmoke.Input(this);
 #endif
       d.SpawnSequence=Local&&Local.IsReady?Local.SpawnSequence:0;
 #if UNITY_EDITOR
@@ -277,7 +283,7 @@ namespace RivalsPrototype {
       float scale=Mathf.Clamp(Screen.height/720f,.75f,2f);
       GUI.matrix=Matrix4x4.TRS(new Vector3(Screen.width*.5f,Screen.height*.5f,0),Quaternion.identity,new Vector3(scale,scale,1));
       float gap=5;
-      if(Local&&Local.ViewCamera)gap+=Mathf.Tan(Local.SpreadAngle*Mathf.Deg2Rad)*360/Mathf.Tan(Local.ViewCamera.fieldOfView*.5f*Mathf.Deg2Rad);
+      if(Local&&Local.ViewCamera)gap+=Mathf.Tan(Local.SpreadAngle*Mathf.Deg2Rad)*(Screen.height/(2*scale))/Mathf.Tan(Local.ViewCamera.fieldOfView*.5f*Mathf.Deg2Rad);
       CrosshairStroke(new Rect(-1,-gap-7,2,7));CrosshairStroke(new Rect(-1,gap,2,7));
       CrosshairStroke(new Rect(-gap-7,-1,7,2));CrosshairStroke(new Rect(gap,-1,7,2));
       CrosshairStroke(new Rect(-1,-1,2,2));
@@ -309,7 +315,7 @@ namespace RivalsPrototype {
 #endif
       if(showCredits) {
         Panel(new Rect(210,65,860,590));GUI.Label(new Rect(235,85,810,65),"素材與授權",large);
-        GUI.Label(new Rect(245,170,790,330),"槍械與短刀：Quaternius（CC0）\n素材、準星與腳步聲：Kenney（CC0）\n角色與格線場地：本專案製作\n換彈音效：SpringySpringo（CC0）\n中文字型：Noto Sans CJK TC（SIL OFL 1.1）\n\n槍聲：(c) 2009 Vincent Sevedge（Tabasco）\n採用 Creative Commons 姓名標示 3.0 授權\n已裁切首發槍聲、轉單聲道並調整音量。\n\n本遊戲為非官方練習作品。\n原始授權文件與遊戲一起提供。",new GUIStyle(text){fontSize=18});
+        GUI.Label(new Rect(245,170,790,330),"原有槍械：Quaternius（CC0）\n素材、準星與腳步聲：Kenney（CC0）\n角色、場地與五款新武器：本專案製作\n換彈音效：SpringySpringo（CC0）\n中文字型：Noto Sans CJK TC（SIL OFL 1.1）\n\n槍聲：(c) 2009 Vincent Sevedge（Tabasco）\n採用 Creative Commons 姓名標示 3.0 授權\n已裁切首發槍聲、轉單聲道並調整音量。\n\n本遊戲為非官方練習作品。\n原始授權文件與遊戲一起提供。",new GUIStyle(text){fontSize=18});
         if(GUI.Button(new Rect(250,560,245,55),"槍聲來源",button))Application.OpenURL("https://opengameart.org/content/gunshot-sounds");
         if(GUI.Button(new Rect(515,560,245,55),"查看授權",button))Application.OpenURL("https://creativecommons.org/licenses/by/3.0/");
         if(GUI.Button(new Rect(780,560,245,55),"返回設定",button)){showCredits=false;showSettings=true;}

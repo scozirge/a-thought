@@ -15,7 +15,7 @@ Modified: converted materials to URP, recolored surfaces and adjusted model scal
 
 Quaternius - Toon Shooter Game Kit - CC0 1.0
 https://quaternius.com/packs/toonshootergamekit.html
-Knife_1 is used for the knife; other downloaded weapons are visual reference candidates.
+Knife_1 is retained as an unused legacy asset; the playable cleaver is original geometry.
 Modified: converted materials to URP, recolored and adjusted scale/orientation.
 
 Quaternius - Animated Guns Pack - CC0 1.0
@@ -23,6 +23,8 @@ https://quaternius.com/packs/animatedguns.html
 Rifle.fbx is retained as an unused comparison candidate.
 
 Block avatars, team outfits, grid arena and weapon icons: created in this project.
+Gatling, rocket launcher, nuclear designator/payload, cleaver, poison flask,
+projectile models and area/explosion effects: original procedural geometry in this project.
 No Roblox game meshes, character textures or branded screenshots are included in the game.
 
 Kenney - Blocky Characters, Blaster Kit, Prototype Textures, Crosshair Pack,

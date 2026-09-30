@@ -19,6 +19,7 @@ namespace RivalsPrototype {
     }
     public static void RemoveCollider(GameObject go) {var collider=go.GetComponent<Collider>();if(Application.isPlaying)Destroy(collider);else DestroyImmediate(collider);}
     public static Transform MakeWeapon(Transform parent, int kind, bool firstPerson=true,int seat=0) {
+      if(DuelWeaponModels.Custom(kind))return DuelWeaponModels.Build(parent,kind,firstPerson,seat);
       var root = new GameObject("View weapon").transform; root.SetParent(parent, false);
       var dark = new Color(.055f,.065f,.08f);
       var prefab=DuelArt.Get?DuelArt.Get.Weapon(kind):null;
@@ -56,7 +57,7 @@ namespace RivalsPrototype {
       return root;
     }
     public static Transform WeaponMuzzle(Transform weapon) {
-      return weapon.Find("Weapon model/Muzzle")??weapon.Find("Muzzle");
+      return weapon.Find("Weapon model/Muzzle")??weapon.Find("Muzzle")??weapon.Find("Weapon rig/Muzzle");
     }
     static void WeaponDetails(Transform root,int kind) {
       var black=new Color(.055f,.065f,.08f);var orange=new Color(.95f,.56f,.16f);

@@ -33,9 +33,12 @@ const suffix=Date.now().toString(36).slice(-6);
   assert.equal(await phone.locator('#mode-touch').getAttribute('aria-pressed'),'true');assert.equal(await desktop.locator('#mode-keyboard').getAttribute('aria-pressed'),'true');
   await phone.screenshot({path:path.join(output,'phone-lobby.png')});
   await desktop.locator('#fullscreen').click();assert.equal(await desktop.evaluate(()=>!!document.fullscreenElement),true);await desktop.locator('#fullscreen').click();
-  await desktop.locator('#create-room').click();await wait(desktop,s=>s.phase===2,'desktop host');
+  // Join during the opening countdown so this input test starts with a pistol.
+  // Mid-match joins correctly inherit a Bot's weapon, which can now be a nuke.
+  await desktop.locator('#create-room').click();await wait(desktop,s=>s.phase===1||s.phase===2,'desktop host');
   await phone.locator('.room-row').filter({has:phone.getByText('鍵鼠'+suffix+'的房間',{exact:true})}).getByRole('button',{name:'加入房間',exact:true}).tap();
   await wait(phone,s=>s.players.filter(p=>!p.bot).length===2&&s.controls,'phone client');await wait(desktop,s=>s.players.filter(p=>!p.bot).length===2,'two humans');
+  assert.equal(me(await state(phone)).weapon,1,'countdown join starts with pistol');
   assert.equal(await phone.evaluate(()=>!!document.pointerLockElement),false);pass('phone touch and desktop keyboard join the same real room');
   const cdp=await phone.context().newCDPSession(phone),points=new Map();
   const center=async selector=>{const b=await phone.locator(selector).boundingBox();assert.ok(b,selector+' visible');return{x:b.x+b.width/2,y:b.y+b.height/2};};

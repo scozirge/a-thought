@@ -33,7 +33,7 @@ const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   await host.page.waitForFunction(()=>window.rivalsDiagnostics.players.filter(p=>!p.bot).length===2,null,{timeout:15000});
   let s=await state(client.page);assert.deepEqual(s.players.filter(p=>!p.bot).map(p=>p.name).sort(),['房主貓貓','訪客兔兔'].sort());
   assert.equal(s.players.filter(p=>p.bot).length,6);assert.equal(s.players.filter(p=>p.team===0).length,4);assert.equal(s.players.filter(p=>p.team===1).length,4);
-  assert.equal(s.pickups.length,4);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,0,3,4]);assert.ok(s.pickups.every(p=>Math.abs(p.position.x)===30&&Math.abs(p.position.z)===30));
+  assert.equal(s.pickups.length,14);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,0,2,2,3,4,5,5,6,6,7,7,8,8]);assert.ok(s.pickups.slice(0,4).every(p=>Math.abs(p.position.x)===30&&Math.abs(p.position.z)===30));
   results.connected={host:await state(host.page),client:s};
   await client.context.close();await host.page.waitForFunction(()=>window.rivalsDiagnostics.players.filter(p=>p.bot).length===7,null,{timeout:15000});
   // Move using the actual client input through the open spawn-side lane. Retry at

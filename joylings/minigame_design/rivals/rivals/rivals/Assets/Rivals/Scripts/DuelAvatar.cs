@@ -110,7 +110,8 @@ namespace RivalsPrototype {
       Vector3 Aim(Vector3 point)=>pivot+rotation*(point-pivot);
       var rightShoulder=new Vector3(.46f,1.32f,0);var leftShoulder=new Vector3(-.46f,1.32f,0);
       var rightElbow=Aim(new Vector3(.52f,1.05f,.17f));var leftElbow=Aim(new Vector3(-.46f,1.03f,.29f));
-      var rightHand=Aim(new Vector3(.285f,1.12f,.38f));var leftHand=Aim(new Vector3(weapon==1?-.23f:.235f,1.115f,weapon==1?.43f:.65f));
+      bool oneHanded=weapon==Weapons.Pistol||weapon==Weapons.Cleaver||weapon==Weapons.Poison||weapon==Weapons.Nuke;
+      var rightHand=Aim(new Vector3(.285f,1.12f,.38f));var leftHand=Aim(new Vector3(oneHanded?-.23f:.235f,1.115f,oneHanded?.43f:.65f));
       Segment(rightUpper,rightShoulder,rightElbow,.25f);Segment(rightLower,rightElbow,rightHand,.235f);
       Segment(leftUpper,leftShoulder,leftElbow,.25f);Segment(leftLower,leftElbow,leftHand,.235f);
       GunSocket.localPosition=Aim(new Vector3(.27f,1.19f,.42f));GunSocket.localRotation=rotation;

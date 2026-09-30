@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RivalsPrototype {
   public partial class DuelSession {
-    public const string NetworkVersion="rivals-web-18-no-jump";
+    public const string NetworkVersion="rivals-web-19-arsenal";
     public static string RoomTitle(string name)=>DuelNames.Clean(name)+"的房間";
     public string PlayerName="貓貓";
     NetworkRunner lobbyRunner;
@@ -133,13 +133,14 @@ namespace RivalsPrototype {
     }
     internal sealed class SeatSnapshot {
       public int health,weapon,ammo,spawnSequence;public Vector3 position,spawnPoint;public Vector2 look,spawnLook;
-      public TickTimer respawn;public bool eliminationRecorded;
-      public SeatSnapshot(DuelPlayer p){health=p.Health;weapon=p.Weapon;ammo=p.Ammo;position=p.transform.position;look=p.Look;respawn=p.RespawnTimer;spawnSequence=p.SpawnSequence;spawnPoint=p.SpawnPoint;spawnLook=p.SpawnLook;eliminationRecorded=p.EliminationRecorded;}
+      public TickTimer respawn,fire,reload,poison,recovery;public float heat;public bool eliminationRecorded;
+      public SeatSnapshot(DuelPlayer p){health=p.Health;weapon=p.Weapon;ammo=p.Ammo;position=p.transform.position;look=p.Look;respawn=p.RespawnTimer;spawnSequence=p.SpawnSequence;spawnPoint=p.SpawnPoint;spawnLook=p.SpawnLook;eliminationRecorded=p.EliminationRecorded;fire=p.FireTimer;reload=p.ReloadTimer;poison=p.PoisonDamageTimer;heat=p.RifleHeat;recovery=p.RifleRecovery;}
       public void Apply(DuelPlayer p){
         p.CollectWeapon(weapon);p.Health=health;p.Look=look;
         p.RespawnTimer=respawn;p.SpawnSequence=spawnSequence;p.SpawnPoint=spawnPoint;p.SpawnLook=spawnLook;p.EliminationRecorded=eliminationRecorded;
         var hitbox=p.GetComponent<HitboxRoot>();if(hitbox)hitbox.HitboxRootActive=health>0;
-        if(weapon==0)p.RifleAmmo=ammo;if(weapon==1)p.PistolAmmo=ammo;if(weapon==3)p.ShotgunAmmo=ammo;if(weapon==4)p.SniperAmmo=ammo;
+        if(weapon==0)p.RifleAmmo=ammo;if(weapon==1)p.PistolAmmo=ammo;if(weapon==3)p.ShotgunAmmo=ammo;if(weapon==4)p.SniperAmmo=ammo;if(weapon==Weapons.Gatling)p.GatlingAmmo=ammo;
+        p.FireTimer=fire;p.ReloadTimer=reload;p.PoisonDamageTimer=poison;p.RifleHeat=heat;p.RifleRecovery=recovery;
         p.GetComponent<NetworkCharacterController>().Teleport(position,Quaternion.Euler(0,look.x,0));
       }
     }

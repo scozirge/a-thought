@@ -50,6 +50,14 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.equal(await page.evaluate(()=>rivalsTouch.held),2);await down(23,aim);await up(23);assert.equal(await page.evaluate(()=>rivalsTouch.held&2),0);
   await down(24,fire);await down(25,aim);await up(25);assert.equal(await page.evaluate(()=>rivalsTouch.held&3),3);await up(24);await down(26,aim);await up(26);
   assert.equal(await page.locator('#touch-aim').getAttribute('aria-pressed'),'false');pass('tap aim stays on after release, permits firing and turning, and a second tap turns it off');
+  await page.evaluate(()=>rivalsTouch.setState(3|(2<<4)));
+  assert.equal(await page.locator('#touch-aim').textContent(),'飛刀');assert.equal(await page.locator('#touch-fire').textContent(),'揮砍');assert.equal(await page.locator('#touch-reload').isVisible(),false);
+  await down(27,await center('#touch-aim'));await up(27);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchAltPress()),1);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchAltPress()),0);assert.equal(await page.evaluate(()=>rivalsTouch.held&2),0);
+  for(const weapon of [6,7,8]){await page.evaluate(w=>rivalsTouch.setState(3|(w<<4)),weapon);assert.equal(await page.locator('#touch-aim').isVisible(),false);assert.equal(await page.locator('#touch-reload').isVisible(),false);}
+  assert.equal(await page.locator('#touch-fire').textContent(),'投擲');await page.evaluate(()=>rivalsTouch.setState(3|(5<<4)));assert.equal(await page.locator('#touch-aim').isVisible(),true);assert.equal(await page.locator('#touch-reload').isVisible(),true);
+  await down(28,await center('#touch-aim'));await up(28);assert.equal(await page.evaluate(()=>rivalsTouch.held&2),2);await page.evaluate(()=>rivalsTouch.setState(3|(2<<4)));assert.equal(await page.evaluate(()=>rivalsTouch.held&2),0);
+  await down(29,await center('#touch-aim'));await up(29);await page.evaluate(()=>rivalsTouch.reset());assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchAltPress()),0);
+  await page.evaluate(()=>rivalsTouch.setState(3));pass('arsenal buttons switch roles, throwing survives a short tap, and weapon/death resets clear aim and throw');
   await page.evaluate(()=>rivalsTouch.reset());const reload=await center('#touch-reload');await down(4,reload);await up(4);
   assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),16);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchPressed()),0);
   assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&16),16);await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&16),0);

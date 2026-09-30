@@ -44,6 +44,11 @@ namespace RivalsPrototype {
     [Networked] public int Weapon { get; set; }
     [Networked] public int RifleAmmo { get; set; }
     [Networked] public int PistolAmmo { get; set; }
+    [Networked] public int GatlingAmmo { get; set; }
+    [Networked] public int ConsumedAltPress { get; set; }
+    [Networked] public int ShotWeapon { get; set; }
+    [Networked] public NetworkBool Aiming { get; set; }
+    [Networked] public TickTimer PoisonDamageTimer { get; set; }
     [Networked] public Vector2 Look { get; set; }
     [Networked] public NetworkButtons Previous { get; set; }
     [Networked] public TickTimer FireTimer { get; set; }
@@ -54,7 +59,8 @@ namespace RivalsPrototype {
     [Networked] public Vector3 ShotDirection { get; set; }
     [Networked] public float RifleHeat { get; set; }
     [Networked] public TickTimer RifleRecovery { get; set; }
-    public float SpreadAngle=>Weapon==0?Weapons.RifleSpread(RifleHeat,DuelSession.Instance.IsAiming):Weapon==3?3.5f:0;
+    public float SpreadAngle=>Weapons.Spread(Weapon,RifleHeat,HasInputAuthority?DuelSession.Instance.IsAiming:(bool)Aiming,cc?new Vector2(cc.Velocity.x,cc.Velocity.z).magnitude:0);
+    public float CooldownRemaining=>Mathf.Max(0,FireTimer.RemainingTime(Runner)??0);
     [Networked] public int Hits { get; set; }
     [Networked] public int ShotgunAmmo { get; set; }
     [Networked] public int SniperAmmo { get; set; }
@@ -67,11 +73,11 @@ namespace RivalsPrototype {
     [Networked] public Vector3 DamageOrigin { get; set; }
     public float DamagePulse { get; private set; }
     public float DeathProgress { get; private set; }
-    public bool HasWeapon(int kind)=>Weapons.IsFirearm(kind)&&(OwnedWeapons&(1<<kind))!=0;
-    public int AmmoFor(int kind)=>kind switch{0=>RifleAmmo,1=>PistolAmmo,3=>ShotgunAmmo,4=>SniperAmmo,_=>0};
-    public int Ammo => Weapon switch {0=>RifleAmmo,1=>PistolAmmo,3=>ShotgunAmmo,4=>SniperAmmo,_=>1};
+    public bool HasWeapon(int kind)=>Weapons.IsWeapon(kind)&&(OwnedWeapons&(1<<kind))!=0;
+    public int AmmoFor(int kind)=>kind switch{0=>RifleAmmo,1=>PistolAmmo,3=>ShotgunAmmo,4=>SniperAmmo,5=>GatlingAmmo,_=>HasWeapon(kind)?1:0};
+    public int Ammo => AmmoFor(Weapon);
     public float ReloadProgress=>ReloadTimer.IsRunning?Mathf.Clamp01(1-(ReloadTimer.RemainingTime(Runner)??0)/Weapons.Reload[Weapon]):0;
-    void SetAmmo(int value){switch(Weapon){case 0:RifleAmmo=value;break;case 1:PistolAmmo=value;break;case 3:ShotgunAmmo=value;break;case 4:SniperAmmo=value;break;}}
+    void SetAmmo(int value){switch(Weapon){case 0:RifleAmmo=value;break;case 1:PistolAmmo=value;break;case 3:ShotgunAmmo=value;break;case 4:SniperAmmo=value;break;case 5:GatlingAmmo=value;break;}}
     NetworkCharacterController cc;
     Camera eye, weaponCamera;
     public Camera ViewCamera=>eye;
@@ -87,6 +93,7 @@ namespace RivalsPrototype {
     int pendingLocalShots;
     Vector3 predictedShotPoint;
     Vector3 predictedShotDirection;
+    int predictedShotWeapon;
     float recoil;
     int renderedHealth;
     CharacterController capsule;
@@ -145,7 +152,8 @@ namespace RivalsPrototype {
     void ResetLife(Vector3 position,Vector2 look) {
       if (!HasStateAuthority) return;
       Health = MaxHealth; RifleAmmo = 0; PistolAmmo = 12; ShotgunAmmo=0; SniperAmmo=0; Weapon = Weapons.Pistol;
-      RespawnTimer=TickTimer.None;EliminationRecorded=false;ConsumedFirePress=0;
+      GatlingAmmo=0;Aiming=false;PoisonDamageTimer=TickTimer.None;
+      RespawnTimer=TickTimer.None;EliminationRecorded=false;ConsumedFirePress=ConsumedAltPress=0;
       SpawnSequence++;SpawnPoint=position;SpawnLook=look;
       nextBotDecision=0;botTargetSeat=-1;botSeenSince=-1;botInput=default;
       if(hitboxRoot)hitboxRoot.HitboxRootActive=true;
@@ -166,24 +174,28 @@ namespace RivalsPrototype {
       DamagePulse=DeathProgress=recoil=0;pendingLocalShots=0;
     }
     public bool CollectWeapon(int kind) {
-      if(!HasStateAuthority||Health<=0||!Weapons.IsFirearm(kind))return false;
+      if(!HasStateAuthority||Health<=0||!Weapons.IsWeapon(kind))return false;
       if(Weapon==kind)return false;
       OwnedWeapons=1<<kind;
-      RifleAmmo=PistolAmmo=ShotgunAmmo=SniperAmmo=0;
+      RifleAmmo=PistolAmmo=ShotgunAmmo=SniperAmmo=GatlingAmmo=0;
       Weapon=kind;SetAmmo(Weapons.Magazines[kind]);
       ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.18f);
       RifleHeat=0;RifleRecovery=TickTimer.None;
       LastPickupWeapon=kind;PickupsCollected++;return true;
     }
     public int TakeDamage(int amount,Vector3 origin,DuelPlayer attacker=null) {
+      return ApplyDamage(amount,origin,attacker?AttackCredit.For(attacker,attacker.Weapon):default,attacker!=null,false);
+    }
+    public int TakeOrdnanceDamage(int amount,Vector3 origin,AttackCredit owner,bool friendlyFire)=>ApplyDamage(amount,origin,owner,true,friendlyFire);
+    int ApplyDamage(int amount,Vector3 origin,AttackCredit owner,bool hasOwner,bool friendlyFire) {
       var match=DuelSession.Instance.Match;
-      if(!HasStateAuthority||Health<=0||!match||match.Phase!=2||(attacker&&attacker.Team==Team))return 0;
+      if(!HasStateAuthority||Health<=0||!match||match.Phase!=2||(hasOwner&&owner.Team==Team&&!friendlyFire))return 0;
       int applied=Mathf.Min(Health,Mathf.Max(0,amount));Health-=applied;DamageOrigin=origin;
       if(Health==0){
         cc.Velocity=Vector3.zero;ReloadTimer=TickTimer.None;
         RespawnTimer=TickTimer.CreateFromSeconds(Runner,DuelRespawn.DelaySeconds);
         if(hitboxRoot)hitboxRoot.HitboxRootActive=false;
-        if(attacker)match.RecordElimination(attacker,this);
+        if(hasOwner)match.RecordElimination(owner,this);
         Debug.Log($"RIVALS_ELIMINATED seat={Seat} respawnSeconds={DuelRespawn.DelaySeconds}");
       }
       return applied;
@@ -201,12 +213,13 @@ namespace RivalsPrototype {
       // Counters are scoped to a life. Old packets must not alter the new
       // baseline; the first fresh short click is valid even after packet loss.
       if(!IsBot&&input.SpawnSequence!=SpawnSequence)return;
-      if (match.Phase != 2 || Health <= 0) { Previous = input.Buttons; ConsumedFirePress=input.FirePress;return; }
+      if (match.Phase != 2 || Health <= 0) { Previous = input.Buttons; ConsumedFirePress=input.FirePress;ConsumedAltPress=input.AltPress;return; }
       Look = new Vector2(input.Look.x, Mathf.Clamp(input.Look.y, -85, 85));
       var pressed = input.Buttons.GetPressed(Previous); Previous = input.Buttons;
-      if(RifleRecovery.ExpiredOrNotRunning(Runner))RifleHeat=Mathf.MoveTowards(RifleHeat,0,Runner.DeltaTime*20);
-      bool aim = input.Buttons.IsSet(Action.Aim);
+      if(RifleRecovery.ExpiredOrNotRunning(Runner))RifleHeat=Mathf.MoveTowards(RifleHeat,0,Runner.DeltaTime*Weapons.RecoveryRate(Weapon));
+      bool aim = input.Buttons.IsSet(Action.Aim)&&Weapons.CanAim(Weapon);Aiming=aim;
       cc.maxSpeed = IsBot ? 3.8f : aim ? 3.2f : input.Buttons.IsSet(Action.Sprint) ? 8 : 5.5f;
+      if(Weapon==Weapons.Cleaver)cc.maxSpeed*=1.3f;
       cc.rotationSpeed = 0; cc.acceleration = 70; cc.braking = 20;
       var move = Quaternion.Euler(0, Look.x, 0) * new Vector3(input.Move.x, 0, input.Move.y);
       cc.Move(move); transform.rotation = Quaternion.Euler(0, Look.x, 0);
@@ -216,10 +229,15 @@ namespace RivalsPrototype {
         SetAmmo(Weapons.Magazines[Weapon]);
         ReloadTimer = TickTimer.None;
       }
-      if ((pressed.IsSet(Action.Reload) || Ammo == 0) && !ReloadTimer.IsRunning && Ammo < Weapons.Magazines[Weapon])
+      if (Weapons.IsFirearm(Weapon)&&(pressed.IsSet(Action.Reload) || Ammo == 0) && !ReloadTimer.IsRunning && Ammo < Weapons.Magazines[Weapon])
         ReloadTimer = TickTimer.CreateFromSeconds(Runner, Weapons.Reload[Weapon]);
       if(ReloadTimer.IsRunning)ConsumedFirePress=input.FirePress;
       bool wantsFire=input.Buttons.IsSet(Action.Fire)||input.FirePress>ConsumedFirePress;
+      bool wantsAlt=Weapon==Weapons.Cleaver&&(input.AltPress>ConsumedAltPress||pressed.IsSet(Action.Aim));
+      if(Weapon!=Weapons.Cleaver)ConsumedAltPress=input.AltPress;
+      if(wantsAlt&&FireTimer.ExpiredOrNotRunning(Runner)){
+        ConsumedAltPress=input.AltPress;ConsumedFirePress=input.FirePress;FireSpecial(true);return;
+      }
       if (wantsFire && FireTimer.ExpiredOrNotRunning(Runner) && !ReloadTimer.IsRunning && Ammo > 0) {
         ConsumedFirePress=input.FirePress;Fire(aim);
       }
@@ -251,6 +269,8 @@ namespace RivalsPrototype {
       float wobble=Weapon==4?2.7f:Mathf.Lerp(3.2f,5.5f,Mathf.Clamp01(distanceToEnemy/40));
       float aimYaw=target.y+Mathf.Sin(now*1.13f+Seat*1.7f)*wobble;
       float aimPitch=Mathf.DeltaAngle(0,target.x)+Mathf.Sin(now*.87f+Seat*2.3f)*(Weapon==4?1.4f:2.1f);
+      if(Weapon==Weapons.Poison||Weapon==Weapons.Rocket)aimPitch-=Mathf.Clamp(distanceToEnemy*(Weapon==Weapons.Poison?1.1f:.45f),0,28);
+      if(Weapon==Weapons.Nuke)aimPitch=Mathf.Atan2(1.55f,Mathf.Max(1,distanceToEnemy))*Mathf.Rad2Deg;
       var botLook=new Vector2(Mathf.MoveTowardsAngle(Look.x,aimYaw,85*stride*Runner.DeltaTime),Mathf.MoveTowardsAngle(Look.y,aimPitch,60*stride*Runner.DeltaTime));
       var destination=enemy.transform.position;
       float pickupDistance=38*38;
@@ -272,13 +292,14 @@ namespace RivalsPrototype {
       if(best==-2)travel=Vector3.zero;
       var localTravel=Quaternion.Euler(0,-botLook.x,0)*travel;
       bool seekingPickup=pickupDistance<38*38;
-      bool advance=seekingPickup||!visible||distanceToEnemy>17||obstacle;
+      float preferredRange=Weapon==Weapons.Cleaver?1.8f:Weapon==Weapons.Poison?7:Weapon==Weapons.Rocket?14:17;
+      bool advance=seekingPickup||!visible||distanceToEnemy>preferredRange||obstacle;
       // More willing to close distance, with pauses and the same forgiving aim.
       bool moveWindow=Mathf.Repeat(now+Seat*.53f,5)<(seekingPickup?3.8f:3f);
       var i = new DuelInput { Look=botLook,Weapon=-1,Move=advance&&moveWindow?new Vector2(localTravel.x,localTravel.z):Vector2.zero };
-      float firingRange=Weapon==3?12:Weapon==4?50:38;
+      float firingRange=Weapon==Weapons.Cleaver?Weapons.CleaverRange:Weapon==Weapons.Poison?12:Weapon==Weapons.Rocket?28:Weapon==3?12:Weapon==4?50:38;
       bool reacted=visible&&now-botSeenSince>=.8f+(Seat%3)*.15f;
-      bool aligned=Mathf.Abs(Mathf.DeltaAngle(botLook.x,target.y))<12&&Mathf.Abs(Mathf.DeltaAngle(botLook.y,Mathf.DeltaAngle(0,target.x)))<8;
+      bool aligned=Mathf.Abs(Mathf.DeltaAngle(botLook.x,target.y))<12&&Mathf.Abs(Mathf.DeltaAngle(botLook.y,aimPitch))<8;
       bool firingWindow=Mathf.Repeat(now+Seat*.71f,3)<1.4f;
       i.Buttons.Set(Action.Fire,reacted&&aligned&&distanceToEnemy<firingRange&&firingWindow);
       return botInput=i;
@@ -291,14 +312,15 @@ namespace RivalsPrototype {
         Physics.SphereCast(feet+Vector3.up,.4f,direction,out _,2f,WorldMask,QueryTriggerInteraction.Ignore);
     }
     void Fire(bool aiming=false) {
-      float botInterval=Weapon==4?2.9f:Weapon==3?1.3f:Weapon==0?.5f:.7f;
+      if(!Weapons.IsFirearm(Weapon)){FireSpecial(false);return;}
+      float botInterval=Weapon==4?2.9f:Weapon==3?1.3f:Weapon==5?.16f:Weapon==0?.5f:.7f;
       FireTimer = TickTimer.CreateFromSeconds(Runner, IsBot ? Mathf.Max(botInterval,Weapons.Interval[Weapon]) : Weapons.Interval[Weapon]);
       SetAmmo(Ammo-1);
       Vector3 origin = transform.position + Vector3.up * 1.55f;
       Vector3 direction = Quaternion.Euler(Look.y, Look.x, 0) * Vector3.forward;
-      if(Weapon==0) {
-        RifleHeat=Mathf.Min(12,RifleHeat+1);RifleRecovery=TickTimer.CreateFromSeconds(Runner,.24f);
-        var spread=Weapons.SpreadOffset(Shots+1,Seat,Weapons.RifleSpread(RifleHeat,aiming));
+      if(Weapon==Weapons.Rifle||Weapon==Weapons.Gatling||Weapon==Weapons.Pistol) {
+        RifleHeat=Mathf.Min(Weapon==Weapons.Gatling?16:12,RifleHeat+1);RifleRecovery=TickTimer.CreateFromSeconds(Runner,Weapon==Weapons.Gatling?.35f:.24f);
+        var spread=Weapons.SpreadOffset(Shots+1,Seat,Weapons.Spread(Weapon,RifleHeat,aiming,new Vector2(cc.Velocity.x,cc.Velocity.z).magnitude));
         direction=Quaternion.Euler(Look.y+spread.y,Look.x+spread.x,0)*Vector3.forward;
       }
       float range = Weapon==3?30:1000;
@@ -318,16 +340,46 @@ namespace RivalsPrototype {
         }
       }
       if(lastVictim){Hits++;LastHitSeat=lastVictim.Seat;LastHitDamage=damageTotal;LastHitKilled=lastVictim.Health==0;}
-      Shots++;
+      ShotWeapon=Weapon;Shots++;
       if(Weapon==4)ReloadTimer=TickTimer.CreateFromSeconds(Runner,Weapons.Reload[4]);
       // Present a local forward simulation event exactly once. A corrected shot
       // count may go backwards; using that count for local FX can swallow the
       // next short click. Resimulation and returning snapshots never enqueue FX.
-      if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotPoint=ShotPoint;predictedShotDirection=ShotDirection;}
+      if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotPoint=ShotPoint;predictedShotDirection=ShotDirection;predictedShotWeapon=Weapon;}
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
       if(DuelNetworkSmoke.Running&&HasStateAuthority&&!HasInputAuthority&&!IsBot)
         Debug.Log($"RIVALS_CONFIRMED_SHOT count={Shots} utcTicks={System.DateTime.UtcNow.Ticks}");
 #endif
+    }
+    void FireSpecial(bool thrown) {
+      int firedWeapon=Weapon;
+      var origin=transform.position+Vector3.up*1.55f;
+      var direction=Quaternion.Euler(Look.y,Look.x,0)*Vector3.forward;
+      var match=DuelSession.Instance.Match;
+      ShotPoint=origin+direction*Weapons.CleaverRange;ShotDirection=direction;
+      if(firedWeapon==Weapons.Cleaver&&!thrown) {
+        // A short, forgiving blade sweep; the nearest wall still blocks the hit.
+        if(HasStateAuthority) {
+          DuelPlayer target=null;float closest=Weapons.CleaverRange;
+          foreach(var candidate in match.Players) {
+            if(candidate.Team==Team||candidate.Health<=0)continue;
+            var delta=candidate.transform.position+Vector3.up*1.15f-origin;
+            if(delta.magnitude>closest||Vector3.Angle(direction,delta)>48||Physics.Linecast(origin,origin+delta,WorldMask,QueryTriggerInteraction.Ignore))continue;
+            target=candidate;closest=delta.magnitude;
+          }
+          if(target){int damage=target.TakeDamage(300,origin,this);Hits++;LastHitSeat=target.Seat;LastHitDamage=damage;LastHitKilled=target.Health==0;ShotPoint=target.transform.position+Vector3.up;}
+        }
+      }else {
+        if(!match.Launch(this,firedWeapon,origin,direction,out var target)){FireTimer=TickTimer.CreateFromSeconds(Runner,.2f);return;}
+        if(firedWeapon==Weapons.Nuke)ShotPoint=target;
+      }
+      FireTimer=TickTimer.CreateFromSeconds(Runner,Weapons.Interval[firedWeapon]);
+      ShotWeapon=firedWeapon;Shots++;
+      if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotWeapon=firedWeapon;predictedShotPoint=ShotPoint;predictedShotDirection=direction;}
+      if(firedWeapon==Weapons.Nuke||(firedWeapon==Weapons.Cleaver&&thrown)) {
+        Weapon=Weapons.Pistol;OwnedWeapons=1<<Weapon;PistolAmmo=Weapons.Magazines[Weapon];
+        RifleHeat=0;ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.35f);
+      }
     }
     bool TraceShot(Vector3 origin,Vector3 direction,float range,out Vector3 point,out DuelPlayer victim,out float height) {
       point=origin+direction*range;victim=null;height=0;float nearest=range+1;
@@ -406,22 +458,25 @@ namespace RivalsPrototype {
         }
       }
       bool fired=HasInputAuthority?pendingLocalShots>0:Shots>renderedShots;
+      int firedKind=HasInputAuthority?predictedShotWeapon:ShotWeapon;
       if (fired) {
         VisualShots+=HasInputAuthority?pendingLocalShots:Shots-renderedShots;
         pendingLocalShots=0;LastVisualShotTime=Time.realtimeSinceStartup;
         if(HasInputAuthority){ShotFeedbackMs=(LastVisualShotTime-LastInputShotTime)*1000;DuelSession.Instance.ReportLocalShot(VisualShots);}
-        renderedShots = Shots; recoil = Weapon>=3?.19f:.09f;
-        if(art&&sound&&DuelSession.Instance.AudioEnabled)sound.PlayOneShot(art.Shot(Weapon),HasInputAuthority?.3f:.5f);
+        renderedShots = Shots; recoil = firedKind==Weapons.Gatling?.055f:firedKind>=3?.19f:.09f;
+        if(art&&sound&&DuelSession.Instance.AudioEnabled)sound.PlayOneShot(art.Shot(firedKind),HasInputAuthority?.3f:.5f);
+        if(worldWeapon&&firedKind==Weapon)worldWeapon.GetComponent<DuelWeaponMotion>()?.Pulse();
       }
       if (!HasInputAuthority || !eye) {
-        if(fired&&worldMuzzle)DuelShotTracer.ShowWeapon(Weapon,worldMuzzle,ShotPoint,ShotDirection);
+        if(fired&&worldMuzzle&&firedKind==Weapon)DuelShotTracer.ShowWeapon(firedKind,worldMuzzle,ShotPoint,ShotDirection);
+        if(worldWeapon&&Weapon==Weapons.Cleaver)worldWeapon.localRotation=Quaternion.Euler(-60*Mathf.Sin(Mathf.Clamp01((Time.realtimeSinceStartup-LastVisualShotTime)/.32f)*Mathf.PI),0,0);
         return;
       }
       if (renderedWeapon != Weapon) {
         renderedWeapon = Weapon;
         if (viewWeapon) Destroy(viewWeapon.gameObject);
         viewWeapon = DuelWorld.MakeWeapon(weaponCamera.transform, Weapon,true,Seat);
-        reloadView=viewWeapon.gameObject.AddComponent<DuelReloadView>();reloadView.Build(Weapon,Seat);
+        reloadView=null;if(Weapons.IsFirearm(Weapon)){reloadView=viewWeapon.gameObject.AddComponent<DuelReloadView>();reloadView.Build(Weapon,Seat);}
         viewMuzzle = DuelWorld.WeaponMuzzle(viewWeapon);
       }
       recoil = Mathf.MoveTowards(recoil, 0, Time.deltaTime * .8f);
@@ -438,11 +493,14 @@ namespace RivalsPrototype {
       float bob=aim?0:Mathf.Sin(Time.time*9)*Mathf.Clamp01(speed/5)*.008f;
       float reloadBlend=reloading?Mathf.SmoothStep(0,1,Mathf.Min(ReloadProgress/.12f,(1-ReloadProgress)/.12f)):0;
       var restPosition=new Vector3(aim?(Weapon==0?.07f:0f):.24f,(aim?(Weapon==0?-.27f:Weapon==4?-.24f:-.19f):-.20f)+bob,.59f-recoil*.5f);
+      if(Weapon==Weapons.Gatling||Weapon==Weapons.Rocket)restPosition.y-=.055f;
       viewWeapon.localPosition=Vector3.Lerp(viewWeapon.localPosition,Vector3.Lerp(restPosition,new Vector3(.14f,-.09f,.64f),reloadBlend),Time.deltaTime*18);
       viewWeapon.localRotation=Quaternion.Slerp(Quaternion.Euler(-recoil*22,0,0),Quaternion.Euler(-12,-28,32),reloadBlend);
-      reloadView.Pose(reloading,ReloadProgress);
+      if(Weapon==Weapons.Cleaver){float swing=Mathf.Sin(Mathf.Clamp01((Time.realtimeSinceStartup-LastVisualShotTime)/.32f)*Mathf.PI);viewWeapon.localRotation=Quaternion.Euler(-15-65*swing,-18*swing,12+35*swing);}
+      if(reloadView)reloadView.Pose(reloading,ReloadProgress);
+      if(fired&&firedKind==Weapon)viewWeapon.GetComponent<DuelWeaponMotion>()?.Pulse();
       viewWeapon.gameObject.SetActive(Health>0&&!podium);
-      if(fired&&viewMuzzle&&Health>0&&!podium)DuelShotTracer.ShowWeapon(Weapon,viewMuzzle,predictedShotPoint,predictedShotDirection,eye,weaponCamera);
+      if(fired&&viewMuzzle&&firedKind==Weapon&&Health>0&&!podium)DuelShotTracer.ShowWeapon(firedKind,viewMuzzle,predictedShotPoint,predictedShotDirection,eye,weaponCamera);
     }
     public void PrepareDespawn(){spawned=false;if(DuelSession.Instance)DuelSession.Instance.UnregisterPlayer(this);}
     public override void Despawned(NetworkRunner runner,bool hasState) {

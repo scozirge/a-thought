@@ -17,6 +17,7 @@ namespace RivalsPrototype {
     [DllImport("__Internal")] static extern int RivalsTouchHeld();
     [DllImport("__Internal")] static extern int RivalsTouchPressed();
     [DllImport("__Internal")] static extern int RivalsTouchFirePress();
+    [DllImport("__Internal")] static extern int RivalsTouchAltPress();
     [DllImport("__Internal")] static extern void RivalsResetTouch();
     [DllImport("__Internal")] static extern void RivalsTouchState(int state);
     [DllImport("__Internal")] static extern float RivalsHudMetric(int metric);
@@ -26,8 +27,9 @@ namespace RivalsPrototype {
     public static int TouchHeld=>RivalsTouchHeld();
     public static int TakeTouchPressed()=>RivalsTouchPressed();
     public static int TakeTouchFirePress()=>RivalsTouchFirePress();
+    public static int TakeTouchAltPress()=>RivalsTouchAltPress();
     public static void ResetTouch()=>RivalsResetTouch();
-    public static void SetTouchState(bool playable,bool started,bool paused,bool audio)=>RivalsTouchState((playable?1:0)|(started?2:0)|(paused?4:0)|(audio?8:0));
+    public static void SetTouchState(bool playable,bool started,bool paused,bool audio,int weapon)=>RivalsTouchState((playable?1:0)|(started?2:0)|(paused?4:0)|(audio?8:0)|(weapon<<4));
     public static bool Focused=>RivalsCanvasFocused()!=0;
     public static bool HasControl=>Focused;
     public static Vector2 ReadDelta()=>new Vector2(RivalsLookX(),RivalsLookY());
@@ -41,8 +43,9 @@ namespace RivalsPrototype {
     public static int TouchHeld=>0;
     public static int TakeTouchPressed()=>0;
     public static int TakeTouchFirePress()=>0;
+    public static int TakeTouchAltPress()=>0;
     public static void ResetTouch(){}
-    public static void SetTouchState(bool playable,bool started,bool paused,bool audio){}
+    public static void SetTouchState(bool playable,bool started,bool paused,bool audio,int weapon){}
     public static bool Focused=>false;
     public static bool HasControl=>Cursor.lockState==CursorLockMode.Locked;
     public static Vector2 ReadDelta()=>Mouse.current==null?Vector2.zero:Mouse.current.delta.ReadValue();

@@ -11,6 +11,7 @@ mergeInto(LibraryManager.library, {
   RivalsTouchHeld: function() { return window.rivalsTouch ? window.rivalsTouch.readHeld() : 0; },
   RivalsTouchPressed: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.pressed;s.pressed=0;return value; },
   RivalsTouchFirePress: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.firePress;s.firePress=0;return value; },
+  RivalsTouchAltPress: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.altPress||0;s.altPress=0;return value; },
   RivalsResetTouch: function() { if(window.rivalsTouch)window.rivalsTouch.reset(); },
   RivalsTouchState: function(state) { if(window.rivalsTouch)window.rivalsTouch.setState(state); },
   RivalsLookEnabled: function(enabled) { var s=window.rivalsLook;if(s){s.enabled=!!enabled;if(!enabled){s.x=0;s.y=0;}} },
