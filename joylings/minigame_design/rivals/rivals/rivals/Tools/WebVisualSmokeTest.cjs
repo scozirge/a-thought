@@ -4,6 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||'Logs/VisualRefresh/Visual');fs.mkdirSync(output,{recursive:true});
 const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8192/');url.searchParams.set('diagnostics','1');
 const result={url:url.href,checks:[],errors:[]},startup=Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||120000);
+const training=process.argv.includes('--training');
 const scenarios=[
  {name:'phone',width:844,height:390,left:47,right:47,bottom:21},
  {name:'short-phone',width:812,height:303,left:44,right:44,bottom:21},
@@ -22,7 +23,7 @@ const overlap=(a,b)=>Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x)>.5&&Mat
    await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startup});await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:startup});
    await page.screenshot({path:path.join(output,mobile?'phone-lobby.png':'desktop-lobby.png')});
    await page.locator('#player-name').fill('超級無敵勇敢可愛貓貓');
-   await page.locator('#create-room').click();await page.waitForFunction(()=>window.rivalsDiagnostics?.phase===2,null,{timeout:60000});
+   await page.locator(training?'#training-entry':'#create-room').click();await page.waitForFunction(()=>window.rivalsDiagnostics?.phase===2,null,{timeout:60000});
    if(!mobile){
     const box=await page.locator('canvas').boundingBox();await page.mouse.click(box.x+box.width/2,box.y+box.height/2);await page.waitForTimeout(200);
     const s=await page.evaluate(()=>rivalsDiagnostics),local=s.players.find(p=>p.seat===s.localSeat),friend=s.players.find(p=>p.bot&&p.team===local.team&&p.health>0&&p.distance>2&&p.distance<14);
@@ -37,6 +38,7 @@ const overlap=(a,b)=>Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x)>.5&&Mat
     await page.waitForFunction(()=>{const s=window.rivalsDiagnostics,b=document.querySelector('canvas').getBoundingClientRect(),scale=window.rivalsTouch.mode?1:Math.max(1,Math.min(1.35,b.height/800));return s&&Math.abs(s.hudWidth-b.width/scale)<2&&Math.abs(s.hudHeight-b.height/scale)<2;},null,{timeout:12000});await page.waitForTimeout(250);
     const state=await page.evaluate(()=>{const s=rivalsDiagnostics,c=document.querySelector('canvas').getBoundingClientRect(),scale=c.width/s.hudWidth;return {identityName:s.identityName,identityTeam:s.identityTeam,identityFontSize:s.identityFontSize,localName:s.players.find(p=>p.seat===s.localSeat).name,localTeam:s.players.find(p=>p.seat===s.localSeat).team,phase:s.phase,health:s.players.find(p=>p.seat===s.localSeat).health,canvas:{x:c.x,y:c.y,width:c.width,height:c.height},hud:['hudScore','hudHealth','hudAmmo','hudIdentity'].map(name=>{const r=s[name];return{id:name,x:c.x+r.x*scale,y:c.y+r.y*scale,width:r.width*scale,height:r.height*scale};}),buttons:[...document.querySelectorAll('#touch-controls button,#game-toolbar button')].filter(e=>!e.hidden&&e.getClientRects().length).map(e=>{const r=e.getBoundingClientRect();return{id:e.id,x:r.x,y:r.y,width:r.width,height:r.height,font:parseFloat(getComputedStyle(e).fontSize)};})};});
     assert.equal(state.identityName,'超級無敵勇敢可愛貓貓');assert.equal(state.identityName,state.localName);assert.equal(state.identityTeam,state.localTeam);assert.ok(state.identityFontSize>=18);
+    if(training)assert.ok(state.hud.find(h=>h.id==='hudIdentity').width>=Math.min(284,state.canvas.width-32),'training name card too narrow');
     assert.equal(state.phase,2);assert.ok(state.health>0,'layout requires live HUD');
     for(const rect of state.hud){assert.ok(rect.x>=state.canvas.x&&rect.y>=state.canvas.y&&rect.x+rect.width<=state.canvas.x+state.canvas.width+.5&&rect.y+rect.height<=state.canvas.y+state.canvas.height+.5,scenario.name+' HUD outside canvas '+JSON.stringify(rect));for(const button of state.buttons)assert.ok(!overlap(rect,button),scenario.name+' HUD/control overlap '+JSON.stringify({rect,button}));}
     assert.ok(!overlap(state.hud[1],state.hud[2]));for(const button of state.buttons)assert.ok(button.font>=14,scenario.name+' small button font '+button.id);

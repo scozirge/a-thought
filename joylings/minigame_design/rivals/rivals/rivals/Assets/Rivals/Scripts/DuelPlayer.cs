@@ -28,7 +28,7 @@ namespace RivalsPrototype {
     [Networked] public int Seat { get; set; }
     [Networked] public NetworkString<_16> Nickname { get; set; }
     public string DisplayName=>Nickname.ToString();
-    public int Team => Seat % 2;
+    public int Team => DuelSession.Instance&&DuelSession.Instance.IsTraining&&IsBot?1:Seat%2;
     public static Vector3 SpawnPosition(int seat) {
       float[] lanes={0,-7,7,14};
       return new Vector3(lanes[Mathf.Clamp(seat/2,0,3)],.1f,seat%2==0?-29:29);
@@ -144,7 +144,11 @@ namespace RivalsPrototype {
       renderedHealth=Health;
       spawned=true;DuelSession.Instance.RegisterPlayer(this);
     }
-    public void ResetForMatch()=>ResetLife(SpawnPosition(Seat),new Vector2(Team==0?0:180,0));
+    public void ResetForMatch(){
+      bool training=DuelSession.Instance.IsTraining;
+      ResetLife(training?DuelTrainingWorld.Positions[Seat]:SpawnPosition(Seat),new Vector2(Team==0?0:180,0));
+      if(training&&!IsBot)EquipTrainingWeapon(DuelSession.Instance.TrainingWeapon);
+    }
     public void RespawnAt(Vector3 position) {
       var facing=new Vector3(-position.x,0,-position.z);
       ResetLife(position,new Vector2(facing.sqrMagnitude>.01f?Quaternion.LookRotation(facing).eulerAngles.y:0,0));
@@ -181,7 +185,16 @@ namespace RivalsPrototype {
       Weapon=kind;SetAmmo(Weapons.Magazines[kind]);
       ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.18f);
       RifleHeat=0;RifleRecovery=TickTimer.None;
-      LastPickupWeapon=kind;PickupsCollected++;return true;
+      LastPickupWeapon=kind;PickupsCollected++;
+      if(DuelSession.Instance.IsTraining&&!IsBot)DuelSession.Instance.RememberTrainingPickup(kind);
+      return true;
+    }
+    public bool EquipTrainingWeapon(int kind) {
+      var session=DuelSession.Instance;
+      if(!HasStateAuthority||!session.IsTraining||Runner.GameMode!=GameMode.Single||IsBot||Health<=0||!Weapons.IsWeapon(kind))return false;
+      if(Weapon!=kind)CollectWeapon(kind);
+      SetAmmo(Weapons.Magazines[kind]);ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.18f);
+      RifleHeat=0;RifleRecovery=TickTimer.None;Aiming=false;return true;
     }
     public int TakeDamage(int amount,Vector3 origin,DuelPlayer attacker=null) {
       return ApplyDamage(amount,origin,attacker?AttackCredit.For(attacker,attacker.Weapon):default,attacker!=null,false);
@@ -207,6 +220,7 @@ namespace RivalsPrototype {
       DuelInput input;
       if (IsBot) {
         if (!HasStateAuthority) return;
+        if(match.IsTraining){cc.Velocity=Vector3.zero;return;}
         if(match.Phase!=2||Health<=0){botTargetSeat=-1;botSeenSince=-1;nextBotDecision=0;botInput=default;return;}
         input = BotInput();
       } else if (!GetInput(out input)) return;

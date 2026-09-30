@@ -30,7 +30,8 @@ namespace RivalsPrototype {
     }
     public void Build(int seat) {
       if(body)return;
-      skin=Skin(seat);shirt=seat%2==0?new Color(.06f,.52f,1f):new Color(1f,.18f,.13f);
+      skin=Skin(seat);bool trainingTarget=DuelSession.Instance&&DuelSession.Instance.IsTraining&&seat>0;
+      shirt=!trainingTarget&&seat%2==0?new Color(.06f,.52f,1f):new Color(1f,.18f,.13f);
       body=new GameObject("Block avatar").transform;body.SetParent(transform,false);
       Box(body,"Torso",new Vector3(0,1.06f,0),new Vector3(.72f,.66f,.36f),shirt);
       Box(body,"Team shirt",new Vector3(0,1.12f,.19f),new Vector3(.64f,.43f,.025f),shirt);

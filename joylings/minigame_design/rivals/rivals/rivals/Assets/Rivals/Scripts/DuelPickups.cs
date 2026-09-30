@@ -27,6 +27,7 @@ namespace RivalsPrototype {
       if(!match||!match.Object||!match.Object.IsValid||match.Game==0)return;
       for(int slot=0;slot<roots.Length;slot++) {
         var pickup=match.Pickups[slot];
+        if(pickup.Weapon<0){if(roots[slot])roots[slot].gameObject.SetActive(false);continue;}
         if(!roots[slot]) {
           var root=new GameObject("Weapon pickup "+slot).transform;root.SetParent(transform,false);roots[slot]=root;
           var color=Weapons.Color(pickup.Weapon);

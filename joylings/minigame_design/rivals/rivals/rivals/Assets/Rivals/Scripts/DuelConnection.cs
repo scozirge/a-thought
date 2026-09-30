@@ -44,6 +44,7 @@ namespace RivalsPrototype {
     }
 
     void ResetGameSession() {
+      SetTrainingMode(false);
       started=false;paused=false;showSettings=false;showCredits=false;hadControls=false;
       lastConfirmedHostTick=-1;lastHostSnapshotAt=lastHostCheckAt=0;
       Runner=null;Match=null;Local=null;
@@ -57,12 +58,13 @@ namespace RivalsPrototype {
       ClearDiagnostics();
     }
 
-    async Task Connect(GameMode mode) {
-      if(busy||Runner||lobbyConnecting)return;
+    async Task Connect(GameMode mode,bool training=false) {
+      if(busy||Runner||(lobbyConnecting&&mode!=GameMode.Single))return;
       if(mode!=GameMode.Single&&(string.IsNullOrWhiteSpace(Room)||Room.Length>32)) {
         Message="請老師檢查房間設定。";return;
       }
       busy=true;Message="等一下，馬上就好！";nextLobbyReport=0;
+      SetTrainingMode(training&&mode==GameMode.Single);
       PlayerName=DuelNames.Clean(PlayerName);
       NetworkRunner attempt=null;
       bool connected=false;
@@ -85,7 +87,7 @@ namespace RivalsPrototype {
         using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(ConnectionTimeoutSeconds))) {
           var result=await attempt.StartGame(new StartGameArgs {
             GameMode=mode,SessionName=mode==GameMode.Host&&!smoke?Guid.NewGuid().ToString("N"):Room.Trim(),
-            PlayerCount=MaxPlayers,IsVisible=true,
+            PlayerCount=IsTraining?1:MaxPlayers,IsVisible=!IsTraining,
             SessionProperties=mode==GameMode.Host?new Dictionary<string,SessionProperty>{{"host",PlayerName}}:null,
             ConnectionToken=System.Text.Encoding.UTF8.GetBytes(PlayerName),
             Scene=SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex),SceneManager=scenes,

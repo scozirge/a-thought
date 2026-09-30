@@ -1,18 +1,18 @@
 # 紅藍槍戰｜RIVALS Web 連線原型
 
-Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。提供 Web 與 Windows x64 正式建置。
+Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=arsenal-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=training-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
-- [Windows x64 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Windows-x64-20260924-mobile.zip)：完整解壓縮後執行 `Rivals.exe`，保留旁邊的 `Rivals_Data`、DLL 與執行環境。
+- [Windows x64 歷史版本 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Windows-x64-20260924-mobile.zip)：保留上次新武器版（`rivals-web-19-arsenal`），不包含訓練場，也不能加入目前網頁版的房間。
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
 - 未壓縮的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
-兩個版本共用同一份遊戲程式與連線協定，已同步移除跳躍與滑行。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
+目前網頁版使用 `rivals-web-20-training`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
-GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。下載檔名保留原路徑，內容會更新，實際來源提交與版本以包內 `版本資訊.json` 為準。本次追加加特林、無限火箭、核彈、菜刀及劇毒藥水。
+GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。下載檔名保留原路徑，內容會更新，實際來源提交與版本以包內 `版本資訊.json` 為準。本次加入全部九種武器可自由使用的單人訓練場。
 
 對外測試可直接分享上方公開遊戲網址。電腦可使用 Chrome／Edge，手機在大廳選「手機觸控」，建議橫向遊玩。由一人建立房間，其他人在即時清單按「加入房間」；手機與鍵鼠共用房間，同房最多 8 位真人，不足由 Bot 補齊。首次載入需下載遊戲資源，較慢網路可能需要數分鐘，請等進度完成。若看不到操作方式選擇，請重新整理；電腦可按 `Ctrl + Shift + R`，所有人載入新版後再一起開房。
 
@@ -102,7 +102,7 @@ python Tools/serve_web.py --port 8184
 
 開啟 <http://localhost:8184/>，不可直接雙擊 HTML。服務只監聽本機；正式分享需把整個 Web 目錄放到支援 WebAssembly 的 HTTP(S) 主機。建置採 IL2CPP Release／OptimizeSpeed、Wasm RuntimeSpeed、內容雜湊檔名與 Unity Data Caching，移除啟動 Splash Screen。GitHub Pages 已提供 HTTP gzip，因此保留原始檔供瀏覽器原生解壓及串流編譯，不加入 JavaScript 解壓層。本機服務提供 WASM MIME type 和 no-store HTTP 標頭；已啟用 Unity 資料快取；WASM 的重用仍待後續驗證，不宣稱目前所有檔案都已命中快取。
 
-連線版本為 `rivals-web-19-arsenal`；同玩者需重新整理網頁或下載新版 Windows。新武器增加同步狀態，舊版與新版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、子彈彈道採物件池，新武器靜態造型依材質合併以減少繪製次數。
+連線版本為 `rivals-web-20-training`；同玩者需重新整理網頁，載入相同版本。本次訓練場版本與舊版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、子彈彈道採物件池，新武器靜態造型依材質合併以減少繪製次數。
 
 房主離開後，其他玩家會返回大廳；目前沒有房主遷移或斷線重連。房主瀏覽器需保持運作，背景節流仍可能影響其他玩家。
 
@@ -158,3 +158,13 @@ python Tools/serve_web.py --port 8184
 - [Photon Fusion 房間與大廳](https://doc.photonengine.com/fusion/v2/manual/connection-and-matchmaking/matchmaking)
 - [Photon Fusion 玩家輸入](https://doc.photonengine.com/fusion/v2/manual/input/player-input)
 - [RIVALS 官方介紹](https://www.roblox.com/games/17625359962/RIVALS)
+
+## 訓練場
+
+主選單下方按「訓練場」進入獨立的單人打靶模式，不會建立公開房間。遊戲載入後不需 Photon 連線即可練習。
+
+- 七個固定人形靶不走動、不還擊，涵蓋近距離、遠距離與群聚目標。
+- 「更換武器」可領取全部九種武器，按鈕通常在右上，小尺寸橫向手機則在下方中央；鍵鼠先按 Esc 釋放游標，手機直接點選。再次選擇同一把可補滿彈藥。射擊線後方另有九個武器拾取站。
+- 自己與目標死亡後 3 秒自動復活；靶子回原位，玩家回射擊線並補滿生命與所選武器。
+- 射速、後座散射、裝填、拋物線、核彈七秒倒數及範圍自傷與正式對戰相同。訓練場可重新領取單次武器，沒有 30 殺結束或時間限制。
+- 選單可回大廳，繼續正常多人對戰。驗證紀錄見 [訓練場驗證](TRAINING_VALIDATION.md)。

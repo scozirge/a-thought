@@ -33,6 +33,7 @@ namespace RivalsPrototype {
     public void RecordElimination(AttackCredit killer,DuelPlayer victim) {
       if(!HasStateAuthority||Phase!=2||!victim||victim.Health>0||victim.EliminationRecorded)return;
       victim.EliminationRecorded=true;
+      if(IsTraining){if(victim.IsBot)Blue++;return;}
       if(killer.Team==victim.Team)return;
       int sequence=++EliminationSequence;
       Eliminations.Set((sequence-1)%FeedCapacity,new EliminationDisplay{Sequence=sequence,KillerTeam=killer.Team,VictimTeam=victim.Team,
@@ -46,6 +47,7 @@ namespace RivalsPrototype {
       if(!HasStateAuthority)return;
       var players=Players;
       if(players.Length==0)return;
+      if(IsTraining){UpdateTraining(players);return;}
       if(Phase==0){Game=1;BeginGame(players);return;}
       if(Phase==1&&Timer.Expired(Runner)){Phase=2;Timer=TickTimer.None;}
       if(Phase==2){
@@ -75,18 +77,21 @@ namespace RivalsPrototype {
       Phase=1;Timer=TickTimer.CreateFromSeconds(Runner,4);
     }
     void SpawnPickup(int slot) {
+      if(IsTraining){Pickups.Set(slot,new WeaponPickupState{Position=DuelTrainingWorld.PickupPosition(slot),Weapon=slot<Weapons.Slots.Length?Weapons.Slots[slot]:-1,Respawn=TickTimer.None});return;}
       Pickups.Set(slot,new WeaponPickupState{Position=DuelPickups.SpawnPoints[slot],Weapon=DuelPickups.WeaponFor(slot,Game),Respawn=TickTimer.None});
     }
     void UpdatePickups(DuelPlayer[] players) {
       for(int slot=0;slot<PickupCount;slot++){
         var pickup=Pickups[slot];
+        if(pickup.Weapon<0)continue;
         if(pickup.Respawn.IsRunning){if(pickup.Respawn.Expired(Runner))SpawnPickup(slot);continue;}
         foreach(var player in players){
+          if(IsTraining&&player.IsBot)continue;
           if(player.Health<=0||player.Weapon==pickup.Weapon||(player.transform.position-pickup.Position).sqrMagnitude>2.4f*2.4f)continue;
           var delta=pickup.Position-player.transform.position;
           if(Physics.Raycast(player.transform.position+Vector3.up,delta.normalized,delta.magnitude,DuelPlayer.WorldMask,QueryTriggerInteraction.Ignore))continue;
           if(!player.CollectWeapon(pickup.Weapon))continue;
-          pickup.Respawn=TickTimer.CreateFromSeconds(Runner,pickup.Weapon==Weapons.Nuke?45:PickupRespawnSeconds);Pickups.Set(slot,pickup);break;
+          pickup.Respawn=TickTimer.CreateFromSeconds(Runner,IsTraining?1:pickup.Weapon==Weapons.Nuke?45:PickupRespawnSeconds);Pickups.Set(slot,pickup);break;
         }
       }
     }

@@ -47,6 +47,7 @@ namespace RivalsPrototype {
     [UnityEngine.Scripting.Preserve]
     public void WebControlCommand(string action) {
       if(!started||busy)return;
+      if(action.StartsWith("training-select:",StringComparison.Ordinal)&&int.TryParse(action.Substring(16),out int trainingKind)){SelectTrainingWeapon(trainingKind);return;}
       if(action=="pause")PauseControls();
       else if(action=="resume"&&!showSettings&&!showCredits)ResumeControls();
       else if(action=="leave")Leave();
@@ -85,6 +86,7 @@ namespace RivalsPrototype {
 #if UNITY_EDITOR
       if(args.Contains("-battleSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelBattleSmoke>();}
       if(args.Contains("-arsenalSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelArsenalSmoke>();}
+      if(args.Contains("-trainingSmoke")){await Connect(GameMode.Single,true);gameObject.AddComponent<DuelTrainingSmoke>();return;}
 #endif
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
       if(args.Contains("-combatSmoke"))gameObject.AddComponent<DuelCombatSmoke>();
@@ -132,6 +134,7 @@ namespace RivalsPrototype {
     }
     void SpawnBot(NetworkRunner runner,int seat,SeatSnapshot snapshot=null) {
       string name=DuelNames.RandomName();for(int tries=0;tries<100&&Players.Any(p=>p.DisplayName==name);tries++)name=DuelNames.RandomName();
+      if(IsTraining)name="固定靶 "+seat.ToString("00");
       var obj=runner.Spawn(Resources.Load<GameObject>("RivalsPlayer").GetComponent<NetworkObject>(),DuelPlayer.SpawnPosition(seat),Quaternion.identity,PlayerRef.None,
         (r,o)=>{var p=o.GetComponent<DuelPlayer>();p.Seat=seat;p.IsBot=true;p.Nickname=name;});
       if(snapshot!=null)snapshot.Apply(obj.GetComponent<DuelPlayer>());
@@ -299,7 +302,7 @@ namespace RivalsPrototype {
     void DrawSettings() {
       HudCard(new Rect(425,151,430,418),TeamColor(0));HudText(new Rect(453,174,374,42),"遊戲設定",27,null,TextAnchor.MiddleLeft,true);
       HudText(new Rect(453,231,374,22),"房間名稱",12,HudMuted,TextAnchor.MiddleLeft);
-      HudText(new Rect(453,257,374,28),Runner&&Runner.IsRunning?ListingTitle(Runner.SessionInfo):RoomTitle(PlayerName),18,null,TextAnchor.MiddleLeft);
+      HudText(new Rect(453,257,374,28),IsTraining?"單人訓練場":Runner&&Runner.IsRunning?ListingTitle(Runner.SessionInfo):RoomTitle(PlayerName),18,null,TextAnchor.MiddleLeft);
       HudText(new Rect(453,288,374,20),"名稱跟隨房主，無法單獨修改",12,HudMuted,TextAnchor.MiddleLeft);
       if(HudButton(new Rect(453,329,374,40),AudioEnabled?"聲音：開":"聲音：關"))SetAudioEnabled(!AudioEnabled);
       if(HudButton(new Rect(453,382,374,40),"素材與授權"))showCredits=true;
@@ -325,7 +328,7 @@ namespace RivalsPrototype {
       if(!started){DrawLobby();return;}
       if(!Match||!Match.Object||!Match.Object.IsValid){GUI.Label(new Rect(400,310,480,90),"馬上就好！",large);return;}
       DrawBattleHud();
-      if(paused)DrawPauseMenu();
+      if(trainingArmoryOpen)DrawTrainingArmory();else if(paused)DrawPauseMenu();
     }
     public void OnPlayerJoined(NetworkRunner r,PlayerRef p){Debug.Log($"RIVALS_JOINED {p} started={started} server={r.IsServer} match={Match != null}");EnsureRoster(r);}
     public void OnPlayerLeft(NetworkRunner r,PlayerRef p){

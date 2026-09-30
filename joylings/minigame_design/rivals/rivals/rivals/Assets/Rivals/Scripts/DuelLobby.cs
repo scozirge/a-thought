@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RivalsPrototype {
   public partial class DuelSession {
-    public const string NetworkVersion="rivals-web-19-arsenal";
+    public const string NetworkVersion="rivals-web-20-training";
     public static string RoomTitle(string name)=>DuelNames.Clean(name)+"的房間";
     public string PlayerName="貓貓";
     NetworkRunner lobbyRunner;
@@ -22,7 +22,7 @@ namespace RivalsPrototype {
     Vector2 roomScroll;
     [Serializable] class LobbyRequest {public string action,name,room;}
     [Serializable] class RoomView {public string id,name;public int players,max;public bool open;}
-    [Serializable] class LobbyView {public bool visible,busy,ready;public string name,room,message;public RoomView[] rooms;}
+    [Serializable] class LobbyView {public bool visible,busy,ready,training,canTrain;public string name,room,message;public RoomView[] rooms;}
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")] static extern void RivalsReportLobby(string json);
 #endif
@@ -57,10 +57,12 @@ namespace RivalsPrototype {
     }
     [UnityEngine.Scripting.Preserve]
     public void LobbyCommand(string json) {
-      if(started||busy||lobbyConnecting)return;
+      if(started||busy)return;
       LobbyRequest request;
       try{request=JsonUtility.FromJson<LobbyRequest>(json);}catch(ArgumentException){return;}
       if(request==null)return;
+      if(request.action=="training"){PlayerName=DuelNames.Clean(request.name);_=Connect(GameMode.Single,true);return;}
+      if(lobbyConnecting)return;
       if(request.action=="random"){PlayerName=DuelNames.RandomName();Room=RoomTitle(PlayerName);nextLobbyReport=0;return;}
       PlayerName=DuelNames.Clean(request.name);
       if(request.action=="rename"){Room=RoomTitle(PlayerName);nextLobbyReport=0;return;}
@@ -89,7 +91,7 @@ namespace RivalsPrototype {
       if(started&&lobbyHiddenReported)return;
       if(Time.unscaledTime<nextLobbyReport)return;
       nextLobbyReport=Time.unscaledTime+.25f;
-      var snapshot=new LobbyView{visible=!started&&!showSettings&&!showCredits,busy=busy||lobbyConnecting,ready=lobbyReady,name=PlayerName,room=Room,message=LobbyMessage,
+      var snapshot=new LobbyView{visible=!started&&!showSettings&&!showCredits,busy=busy||lobbyConnecting,ready=lobbyReady,training=IsTraining,canTrain=!busy&&!Runner,name=PlayerName,room=Room,message=LobbyMessage,
         rooms=rooms.Select(r=>new RoomView{id=r.Name,name=ListingTitle(r),players=r.PlayerCount,max=r.MaxPlayers,open=r.IsOpen}).ToArray()};
       RivalsReportLobby(JsonUtility.ToJson(snapshot));
       lobbyHiddenReported=started;
@@ -117,7 +119,9 @@ namespace RivalsPrototype {
       roomScroll=GUI.BeginScrollView(new Rect(552,301,612,254),roomScroll,new Rect(0,0,590,Mathf.Max(250,rooms.Count*74)));
       if(rooms.Count==0){HudText(new Rect(0,58,590,36),"第一場對戰，由你開始",24);HudText(new Rect(0,104,590,30),"建立房間，邀請朋友一起來",17,HudMuted);}
       for(int i=0;i<rooms.Count;i++){var room=rooms[i];HudCard(new Rect(0,i*74,586,64));HudText(new Rect(16,i*74+5,380,28),FitHudName(ListingTitle(room),380,18),18,null,TextAnchor.MiddleLeft);HudText(new Rect(16,i*74+33,380,23),$"真人 {room.PlayerCount} / {room.MaxPlayers} · 電腦自動補位",15,HudMuted,TextAnchor.MiddleLeft);GUI.enabled=!busy&&!lobbyConnecting&&room.IsOpen&&room.PlayerCount<room.MaxPlayers;if(HudButton(new Rect(428,i*74+10,142,43),"加入房間")){Room=room.Name;_=Connect(GameMode.Client);}}
-      GUI.EndScrollView();GUI.enabled=true;HudText(new Rect(86,618,1108,30),LobbyMessage,17,HudMuted);
+      GUI.EndScrollView();GUI.enabled=!busy;
+      if(HudButton(new Rect(440,610,400,48),"訓練場 · 自由試用全部武器",true))_=Connect(GameMode.Single,true);
+      GUI.enabled=true;HudText(new Rect(86,674,1108,26),LobbyMessage,16,HudMuted);
       DrawSettingsButton();
 #endif
     }

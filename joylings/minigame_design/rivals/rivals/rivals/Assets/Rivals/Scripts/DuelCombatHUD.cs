@@ -101,6 +101,7 @@ namespace RivalsPrototype {
       var camera=Local.ViewCamera;
       for(int slot=0;slot<DuelMatch.PickupCount;slot++) {
         var pickup=Match.Pickups[slot];var point=pickup.Position+Vector3.up*1.8f;
+        if(pickup.Weapon<0)continue;
         if((point-camera.transform.position).sqrMagnitude>18*18)continue;
         var screen=camera.WorldToViewportPoint(point);
         if(screen.z<=0||screen.x<.08f||screen.x>.92f||screen.y<.22f||screen.y>.78f||!VisiblePoint(point))continue;

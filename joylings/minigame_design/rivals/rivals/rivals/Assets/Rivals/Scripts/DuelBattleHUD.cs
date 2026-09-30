@@ -54,7 +54,7 @@ namespace RivalsPrototype {
     }
     void DrawBattleHud(){
       ConfigureBattleHud();if(Match.Phase==4){DrawVictory();return;}
-      if(!paused){DrawCombatHud();DrawNameTags();}DrawScoreboard();if(!paused)DrawKillFeed();
+      if(!paused){DrawCombatHud();DrawNameTags();}if(IsTraining)DrawTrainingScoreboard();else DrawScoreboard();if(!paused&&!IsTraining)DrawKillFeed();
       if(Local){
         float h=HudShort?42:HudCompact?54:72,w=HudCompact?132:176;
         var health=new Rect(hudLeft,hudHeight-hudBottom-h,w,h);healthBounds=health;HudCard(health);
@@ -76,7 +76,7 @@ namespace RivalsPrototype {
       }else if(Local&&Local.Health<=0&&Match.Phase==2){
         int respawn=Mathf.CeilToInt(Local.RespawnSecondsRemaining);float w=Mathf.Min(284,hudWidth-32);var box=new Rect((hudWidth-w)/2,HudCenter.y-41,w,82);HudCard(box,TeamColor(Local.Team));
         HudText(new Rect(box.x+16,box.y+10,w-32,33),respawn>0?$"{respawn} 秒後復活":"正在準備復活",26,HudGold,bold:true);
-        HudText(new Rect(box.x+16,box.y+48,w-32,22),"隨機位置 · 滿血與手槍",15,HudMuted);
+        HudText(new Rect(box.x+16,box.y+48,w-32,22),IsTraining?"回到射擊線 · 滿血與所選武器":"隨機位置 · 滿血與手槍",15,HudMuted);
       }
 #if !UNITY_WEBGL || UNITY_EDITOR
       if(!smoke&&Local&&Match.Phase==2&&!DuelWebInput.HasControl)if(HudButton(new Rect(HudCenter.x-100,HudCenter.y+80,200,44),"點一下，開始玩",true))ResumeControls();
