@@ -1,6 +1,6 @@
 紅藍槍戰｜武器邏輯教學版
 
-線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=unlock-bots-20261001
+線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=simple-quiz-20261001
 課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges
 
 每次死亡一題，答對一題一個徽章，每三個解鎖下一把武器。
@@ -19,3 +19,5 @@
 五把徽章武器不放在地面，只能解鎖後在復活時取得。場地保留步槍、散彈槍與狙擊槍。
 Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留原有瞄準誤差與射速。
 訓練場仍可透過更換武器選單試用全部武器。
+
+答題時只顯示題目與選項；回答後顯示簡短結果、一句說明與繼續，復活畫面只保留倒數和可選武器。

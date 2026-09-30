@@ -1,12 +1,14 @@
 {
   "date": "2026-10-01",
-  "gameSourceCommit": "e406da6c2c09ddb8e94c39c04b557629be16c674",
+  "gameSourceCommit": "6f5351707b8a4de922a61151ea573696b061ab47",
   "target": "Web",
   "unity": "6000.3.11f1",
   "backend": "IL2CPP / WebAssembly",
   "development": false,
   "networkVersion": "rivals-web-25-unlock-bots",
+  "uiRevision": "simple-quiz-20261001",
   "releaseChanges": [
+    "答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。",
     "五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。",
     "Bot 分散進攻路線、避讓隊友，反應略快且開火時間小幅延長；射速及瞄準誤差不變。",
     "手機答題後復活自動恢復操作焦點，離房與暫停不會誤觸恢復。",
@@ -105,9 +107,9 @@
     "Assets/Rivals/Resources/RivalsPlayer.prefab": "18b69d9ee715649a7e04305b951241f88045f281748b41d921e0613663bfc06f",
     "Assets/Rivals/Resources/TrainingLabel.shader": "8c500b780cebcf3ea1cf6c54bdabdbd59481f79991edef16a9e400f1e3470c94",
     "Assets/Rivals/Resources/WeaponQuestions.json": "7f101c02f30cdcc0c0d7c0f3d0ce12ec3c12c3ad557ddcacbd618a9e9a330770",
-    "Assets/WebGLTemplates/Rivals/index.html": "dc43533822b41e570aaa8e6fced66a9a9e4a0a74c0cfd5ffc7e3552a73ce793c",
-    "Assets/WebGLTemplates/Rivals/learning.css": "7b2af7661cd7890595e86a555178cd4ef4fb38916d8479978fa733e0be862e9c",
-    "Assets/WebGLTemplates/Rivals/learning.js": "9d84e3262d3123e4203debf5a46f1d3da86b2cba023f54af8a889bc352ea9537",
+    "Assets/WebGLTemplates/Rivals/index.html": "5d47ebda39f6593c671d8ee1a7e6ccd93489f519b22a341d10d5a3251b126ef4",
+    "Assets/WebGLTemplates/Rivals/learning.css": "09ccdb8aa095acaa65f069a190253e46b794afb62ef4f11e09c974499b00e21f",
+    "Assets/WebGLTemplates/Rivals/learning.js": "ba2f96c151fa4d306b92514d0e8021046082c760d14441e0c9704d62504661d5",
     "Assets/Plugins/WebGL/RivalsInput.jslib": "5735da0971300596fe914618d53dfe0226ba3b0393f19b2637db9492da57eab3"
   }
 }
