@@ -79,7 +79,7 @@ namespace RivalsPrototype {
       Box(leg,"Shoe",new Vector3(0,-.63f,.055f),new Vector3(.35f,.18f,.46f),Ink);
       Box(leg,"Sole",new Vector3(0,-.71f,.055f),new Vector3(.355f,.035f,.465f),new Color(.81f,.84f,.87f));return leg;
     }
-    public void Pose(float speed,float pitch,int weapon,bool alive) {
+    public void Pose(float speed,float pitch,int weapon,bool alive,float cleaverAge=100) {
       if(!body)return;
       bool updateFlash=flash>0;
       flash=Mathf.MoveTowards(flash,0,Time.deltaTime/ .22f);
@@ -113,9 +113,11 @@ namespace RivalsPrototype {
       var rightElbow=Aim(new Vector3(.52f,1.05f,.17f));var leftElbow=Aim(new Vector3(-.46f,1.03f,.29f));
       bool oneHanded=weapon==Weapons.Pistol||weapon==Weapons.Cleaver||weapon==Weapons.Poison||weapon==Weapons.Nuke;
       var rightHand=Aim(new Vector3(.285f,1.12f,.38f));var leftHand=Aim(new Vector3(oneHanded?-.23f:.235f,1.115f,oneHanded?.43f:.65f));
+      var weaponRotation=rotation;
+      if(weapon==Weapons.Cleaver){DuelCleaverSwing.Pose(cleaverAge,false,out var offset,out var swing);rightHand+=rotation*offset;rightElbow+=rotation*(offset*.45f);weaponRotation=rotation*swing;}
       Segment(rightUpper,rightShoulder,rightElbow,.25f);Segment(rightLower,rightElbow,rightHand,.235f);
       Segment(leftUpper,leftShoulder,leftElbow,.25f);Segment(leftLower,leftElbow,leftHand,.235f);
-      GunSocket.localPosition=Aim(new Vector3(.27f,1.19f,.42f));GunSocket.localRotation=rotation;
+      GunSocket.localPosition=weapon==Weapons.Cleaver?rightHand-weaponRotation*(new Vector3(0,-.12f,-.07f)*.8f):Aim(new Vector3(.27f,1.19f,.42f));GunSocket.localRotation=weaponRotation;
     }
     public void FlashDamage(){flash=1;}
     static void Segment(Transform part,Vector3 start,Vector3 end,float width) {

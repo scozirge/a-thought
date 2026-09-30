@@ -23,6 +23,18 @@ const result={checks:[],errors:[],weapons:[],logs:[]},me=s=>s.players.find(p=>p.
    for(const [x,z] of route)await walk(client,x,z);
    s=await wait(client,s=>me(s).weapon===kind,'collect '+kind,48000);const seat=s.localSeat;await wait(host,h=>h.players.find(p=>p.seat===seat).weapon===kind,'weapon replicated');assert.equal(s.identityName,'武器訪客');assert.equal(s.pickups.length,14);
    await aim(client,side>0?180:0,kind===7?45:kind===6||kind===8?20:-40);await client.screenshot({path:path.join(output,'weapon-'+kind+'.png')});
+   if(kind===2){
+    // Let the last route/aim input reach the host before recording the rest pose.
+    await client.waitForTimeout(500);
+    const idle=(await state(host)).players.find(p=>p.seat===seat);await client.mouse.down();await client.waitForTimeout(45);await client.mouse.up();
+    await wait(host,h=>h.players.find(p=>p.seat===seat).shots>idle.shots&&h.players.find(p=>p.seat===seat).cleaverSwingAge<.54,'remote melee animation');
+    const samples=[],until=Date.now()+800;while(Date.now()<until){samples.push((await state(host)).players.find(p=>p.seat===seat));await host.waitForTimeout(20);}
+    result.remoteSwing={idle,samples};
+    const distance=p=>Math.hypot(...['x','y','z'].map(axis=>(p.weaponPosition[axis]-p.position[axis])-(idle.weaponPosition[axis]-idle.position[axis])));
+    assert.ok(samples.some(p=>distance(p)>.35),'remote blade and arm make a large sweep');assert.ok(samples.some(p=>Math.abs(angle(p.weaponAngles.z-idle.weaponAngles.z))>50),'remote blade rotates');
+    const recovered=(await state(host)).players.find(p=>p.seat===seat);assert.equal(recovered.weapon,2);assert.equal(recovered.shots,idle.shots+1);assert.ok(distance(recovered)<.06,'remote blade returns to hand rest');
+    pass('cleaver broad arm swing and recovery replicated to host');
+   }
    const before=me(await state(client)).shots,sequence=(await state(host)).ordnance.reduce((m,o)=>Math.max(m,o.sequence),0);
    if(kind===2){await client.mouse.down({button:'right'});await client.waitForTimeout(45);await client.mouse.up({button:'right'});}else {await client.mouse.down();await client.waitForTimeout(kind===5?950:45);await client.mouse.up();}
    s=await wait(client,s=>me(s).shots>before,'client attack');await wait(host,h=>h.players.find(p=>p.seat===seat).shots>=me(s).shots,'host confirms attack');

@@ -20,6 +20,9 @@ namespace RivalsPrototype {
     HitboxRoot hitboxRoot;
     public int VisualShots { get; private set; }
     public float LastVisualShotTime { get; private set; }
+    float cleaverSwingStarted=-100;
+    public float CleaverSwingAge=>Time.realtimeSinceStartup-cleaverSwingStarted;
+    public Transform VisibleWeapon=>HasInputAuthority?viewWeapon:worldWeapon;
     public float LastInputShotTime { get; private set; }
     public float ShotFeedbackMs { get; private set; }
     public void RecordFireInput() {
@@ -464,7 +467,6 @@ namespace RivalsPrototype {
       float pitch=Look.y;
       if(!HasInputAuthority&&TryGetSnapshotsBuffers(out var from,out var to,out float alpha))
         pitch=Mathf.LerpAngle(lookReader.Read(from).y,lookReader.Read(to).y,alpha);
-      if(avatar)avatar.Pose(speed,pitch,Weapon,Health>0);
       if(characterAnimation) {
         var clip=speed>.5f?walkClip:idleClip;
         if(!string.IsNullOrEmpty(clip)&&clip!=playingClip){playingClip=clip;characterAnimation.CrossFade(clip,.12f);}
@@ -488,9 +490,11 @@ namespace RivalsPrototype {
         if(art&&sound&&DuelSession.Instance.AudioEnabled)sound.PlayOneShot(art.Shot(firedKind),HasInputAuthority?.3f:.5f);
         if(worldWeapon&&firedKind==Weapon)worldWeapon.GetComponent<DuelWeaponMotion>()?.Pulse();
       }
+      if(Weapon!=Weapons.Cleaver||Health<=0||podium)cleaverSwingStarted=-100;
+      else if(fired&&firedKind==Weapons.Cleaver)cleaverSwingStarted=Time.realtimeSinceStartup;
+      if(avatar)avatar.Pose(speed,pitch,Weapon,Health>0,CleaverSwingAge);
       if (!HasInputAuthority || !eye) {
         if(fired&&worldMuzzle&&firedKind==Weapon)DuelShotTracer.ShowWeapon(firedKind,worldMuzzle,ShotPoint,ShotDirection);
-        if(worldWeapon&&Weapon==Weapons.Cleaver)worldWeapon.localRotation=Quaternion.Euler(-60*Mathf.Sin(Mathf.Clamp01((Time.realtimeSinceStartup-LastVisualShotTime)/.32f)*Mathf.PI),0,0);
         return;
       }
       if (renderedWeapon != Weapon) {
@@ -517,7 +521,7 @@ namespace RivalsPrototype {
       if(Weapon==Weapons.Gatling||Weapon==Weapons.Rocket)restPosition.y-=.055f;
       viewWeapon.localPosition=Vector3.Lerp(viewWeapon.localPosition,Vector3.Lerp(restPosition,new Vector3(.14f,-.09f,.64f),reloadBlend),Time.deltaTime*18);
       viewWeapon.localRotation=Quaternion.Slerp(Quaternion.Euler(-recoil*22,0,0),Quaternion.Euler(-12,-28,32),reloadBlend);
-      if(Weapon==Weapons.Cleaver){float swing=Mathf.Sin(Mathf.Clamp01((Time.realtimeSinceStartup-LastVisualShotTime)/.32f)*Mathf.PI);viewWeapon.localRotation=Quaternion.Euler(-15-65*swing,-18*swing,12+35*swing);}
+      if(Weapon==Weapons.Cleaver){DuelCleaverSwing.Pose(CleaverSwingAge,true,out var offset,out var rotation);viewWeapon.localPosition=restPosition+offset;viewWeapon.localRotation=rotation;}
       if(reloadView)reloadView.Pose(reloading,ReloadProgress);
       if(fired&&firedKind==Weapon)viewWeapon.GetComponent<DuelWeaponMotion>()?.Pulse();
       viewWeapon.gameObject.SetActive(Health>0&&!podium);

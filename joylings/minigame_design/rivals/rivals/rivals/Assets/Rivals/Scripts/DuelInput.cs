@@ -32,7 +32,7 @@ namespace RivalsPrototype {
     public static readonly int[] Damage = { 20, 28, 300, 300, 150, 24, 300, 300, 30 };
     public static readonly float[] Interval = { .12f, .28f, .6f, .8f, 1.2f, .06f, 4f, .5f, 3f };
     public static readonly float[] Reload = { 1.6f, 1.1f, 0, 2f, 2.2f, 12f, 0, 0, 0 };
-    public const float CleaverRange=2.5f,RocketRadius=6f,RocketInnerRadius=3f,NukeRadius=14f,NukeDelay=7f;
+    public const float CleaverRange=2.5f,RocketRadius=7.8f,RocketInnerRadius=3.9f,NukeRadius=14f,NukeDelay=7f;
     public const float PoisonRadius=6f,PoisonDuration=5f,PoisonInterval=.5f,PoisonSpeedMultiplier=.6f;
     public static float Spread(int kind,float heat,bool aiming,float speed=0) {
       float move=Mathf.Clamp01(speed/5.5f);
