@@ -35,6 +35,12 @@
 - ZIP SHA-256：`a8299efd455ebee9bfe017280addfc95b3c2e7fa05a06843d159fe7532b8c590`。
 - 發布資料夾逐檔與正式包一致；Windows 成品及原有 manifest 項目不變。公開站保留舊雜湊資源，避免快取中的舊入口發生資源遺失。
 
-公開網址結果於發布完成後補記。
+## 公開發布
+
+- `master` 正式成品提交 `ce460d8`；`gh-pages` 發布提交 `58ef357`，兩者均已推送。
+- GitHub Pages 發布流程 [36782736272](https://github.com/scozirge/a-thought/actions/runs/36782736272) 成功。
+- `WebPublishedReleaseSmokeTest.cjs` 公開站 11 項全部通過：新版 metadata、真實開房及七隻 Bot、僅四個一般武器拾取點、新房進度歸零、15 題、武器與 Bot 說明、最新遊戲連結、展開答案、手機窄版、目錄入口及無腳本例外。
+- 正式遊戲：https://scozirge.github.io/a-thought/rivals/?v=unlock-bots-20261001
+- 更新教學：https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#game-updates
 
 手機測試使用 Chrome 觸控模擬，不等同實體 Android／iPhone 測試。
