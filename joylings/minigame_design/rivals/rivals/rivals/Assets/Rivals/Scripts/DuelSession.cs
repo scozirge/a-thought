@@ -37,7 +37,7 @@ namespace RivalsPrototype {
     int weapon=-1,smokeWeapon=Weapons.Pistol;
     int firePress,lastFirePressFrame=-1;
     int altPress,lastAltPressFrame=-1;
-    bool GameplayInputAllowed=>started&&!paused&&!showSettings&&!showCredits&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2&&Local&&Local.IsReady;
+    bool GameplayInputAllowed=>started&&!paused&&!showSettings&&!showCredits&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2&&Local&&Local.IsReady&&Local.Health>0;
     public bool ControlsActive=>GameplayInputAllowed&&Local.Health>0&&DuelWebInput.HasControl;
     void ResumeControls(){paused=false;DuelWebInput.SetActive(GameplayInputAllowed);DuelWebInput.Resume();}
     public void PauseControls(){if(!started)return;paused=true;DuelWebInput.SetActive(false);DuelWebInput.Release();}
@@ -47,6 +47,7 @@ namespace RivalsPrototype {
     [UnityEngine.Scripting.Preserve]
     public void WebControlCommand(string action) {
       if(!started||busy)return;
+      if(HandleLearningCommand(action))return;
       if(action.StartsWith("training-select:",StringComparison.Ordinal)&&int.TryParse(action.Substring(16),out int trainingKind)){SelectTrainingWeapon(trainingKind);return;}
       if(action=="pause")PauseControls();
       else if(action=="resume"&&!showSettings&&!showCredits)ResumeControls();
@@ -84,6 +85,7 @@ namespace RivalsPrototype {
       capturePath=Arg(args,"-capture","");
       if(int.TryParse(Arg(args,"-testWeapon","1"),out int selected)&&Weapons.IsFirearm(selected))smokeWeapon=selected;
 #if UNITY_EDITOR
+      if(args.Contains("-learningSmoke")){await Connect(GameMode.Single);gameObject.AddComponent<DuelLearningSmoke>();return;}
       if(args.Contains("-battleSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelBattleSmoke>();}
       if(args.Contains("-arsenalSmoke")){smoke=true;smokeKeepAlive=true;gameObject.AddComponent<DuelArsenalSmoke>();}
       if(args.Contains("-trainingSmoke")){await Connect(GameMode.Single,true);gameObject.AddComponent<DuelTrainingSmoke>();return;}
@@ -146,6 +148,7 @@ namespace RivalsPrototype {
       TickLobby();
       CheckHostConnection();
       UpdateCombatHud();
+      UpdateLearningView();
       ReportDiagnostics();
       var roster=Match&&Match.Object&&Match.Object.IsValid?Match.Players:Array.Empty<DuelPlayer>();
       if(roster.Length>0&&roster!=loggedRoster) {

@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace RivalsPrototype {
   [RequireComponent(typeof(NetworkCharacterController))]
-  public class DuelPlayer : NetworkBehaviour {
+  public partial class DuelPlayer : NetworkBehaviour {
     public const int MaxHealth=300;
     public const int PlayerLayer=29;
     public const int WorldMask=~(1<<PlayerLayer);
@@ -125,7 +125,7 @@ namespace RivalsPrototype {
         foreach(var bone in GetComponentsInChildren<Transform>())if(bone.name=="arm-left"||bone.name=="arm-right")pose.AddMixingTransform(bone,true);
         characterAnimation.Blend(holdingClip,1,.1f);
       }
-      if (HasStateAuthority) ResetForMatch();
+      if (HasStateAuthority) {RespawnWeapon=Weapons.Pistol;ResetForMatch();}
       if (HasInputAuthority) {
         DuelSession.Instance.Local = this;
         DuelSession.Instance.Look = Look;
@@ -151,15 +151,18 @@ namespace RivalsPrototype {
       bool training=DuelSession.Instance.IsTraining;
       ResetLife(training?DuelTrainingWorld.Positions[Seat]:SpawnPosition(Seat),new Vector2(Team==0?0:180,0));
       if(training&&!IsBot)EquipTrainingWeapon(DuelSession.Instance.TrainingWeapon);
+      else if(UsesLearning&&DuelLearning.CanSelect(LearningProgress,RespawnWeapon)&&Weapon!=RespawnWeapon)CollectWeapon(RespawnWeapon);
     }
     public void RespawnAt(Vector3 position) {
       var facing=new Vector3(-position.x,0,-position.z);
       ResetLife(position,new Vector2(facing.sqrMagnitude>.01f?Quaternion.LookRotation(facing).eulerAngles.y:0,0));
+      if(UsesLearning&&DuelLearning.CanSelect(LearningProgress,RespawnWeapon)&&Weapon!=RespawnWeapon)CollectWeapon(RespawnWeapon);
     }
     void ResetLife(Vector3 position,Vector2 look) {
       if (!HasStateAuthority) return;
       Health = MaxHealth; RifleAmmo = 0; PistolAmmo = 12; ShotgunAmmo=0; SniperAmmo=0; Weapon = Weapons.Pistol;
       GatlingAmmo=0;Aiming=false;PoisonDamageTimer=TickTimer.None;
+      LearningState=0;LearningChoice=-1;
       RespawnTimer=TickTimer.None;EliminationRecorded=false;ConsumedFirePress=ConsumedAltPress=0;
       SpawnSequence++;SpawnPoint=position;SpawnLook=look;
       nextBotDecision=0;botTargetSeat=-1;botSeenSince=-1;botInput=default;
@@ -181,7 +184,7 @@ namespace RivalsPrototype {
       DamagePulse=DeathProgress=recoil=0;pendingLocalShots=0;
     }
     public bool CollectWeapon(int kind) {
-      if(!HasStateAuthority||Health<=0||!Weapons.IsWeapon(kind))return false;
+      if(!HasStateAuthority||Health<=0||!Weapons.IsWeapon(kind)||!CanCollectLearningWeapon(kind))return false;
       if(Weapon==kind)return false;
       OwnedWeapons=1<<kind;
       RifleAmmo=PistolAmmo=ShotgunAmmo=SniperAmmo=GatlingAmmo=0;
@@ -209,7 +212,7 @@ namespace RivalsPrototype {
       int applied=Mathf.Min(Health,Mathf.Max(0,amount));Health-=applied;DamageOrigin=origin;
       if(Health==0){
         cc.Velocity=Vector3.zero;ReloadTimer=TickTimer.None;
-        RespawnTimer=TickTimer.CreateFromSeconds(Runner,DuelRespawn.DelaySeconds);
+        BeginLearningDeath();
         if(hitboxRoot)hitboxRoot.HitboxRootActive=false;
         if(hasOwner)match.RecordElimination(owner,this);
         Debug.Log($"RIVALS_ELIMINATED seat={Seat} respawnSeconds={DuelRespawn.DelaySeconds}");

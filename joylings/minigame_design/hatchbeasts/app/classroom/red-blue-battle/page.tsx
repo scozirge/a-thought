@@ -4,6 +4,7 @@ import { assetUrl } from '@/lib/assets';
 import { RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader } from '../course-ui';
 import { redBlueQuestions, redBlueRetrospective } from '../course-data';
+import weaponQuestions from './weapon-questions.json';
 
 export const metadata: Metadata = {
   title: '第二次課程｜紅藍槍戰｜遊戲設計',
@@ -24,6 +25,7 @@ export default function RedBlueBattleLesson() {
           <p className="battle-intro-copy">先玩一玩，再說說你的想法。</p>
           <nav className="lesson-nav" aria-label="本課導覽">
             <a href="#battle-questions-title">一起想想看</a>
+            <a href="#weapon-challenges">武器邏輯挑戰・15 題</a>
             <a href="#retrospective">課後復盤</a>
           </nav>
           <a
@@ -73,6 +75,28 @@ export default function RedBlueBattleLesson() {
                 {index >= 2 && <p className="battle-idea-note">這些是新點子，你也可以想出不一樣的！</p>}
               </div>
             </details>
+          ))}
+        </section>
+
+        <section id="weapon-challenges" className="lesson-section" aria-labelledby="weapon-challenges-title">
+          <div className="lesson-section-heading"><h2 id="weapon-challenges-title">武器邏輯挑戰</h2></div>
+          <p className="section-note">每次死亡挑戰一題，答對拿一個徽章。每集滿 3 個，就解鎖下一把武器！答錯下次再挑戰同一題。</p>
+          <p>手槍 → 菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈</p>
+          <p className="section-note">新武器解鎖後，下次復活預設拿它；倒數時也能改選已解鎖的武器。核彈解鎖後不再出題。離開房間後，進度重新開始。手機的「射擊按鈕」就是題目中的「滑鼠左鍵」。</p>
+          {weaponQuestions.stages.map((stage) => (
+            <div key={stage.weapon} className="weapon-question-group">
+              <h3>{stage.name}的 3 題 → 解鎖{stage.reward}</h3>
+              {stage.questions.map((question, index) => (
+                <article className="battle-question" key={question.title}>
+                  <div className="weapon-question-content">
+                    <h4>第 {index + 1} 題｜{question.title}</h4>
+                    {'context' in question && <p>{question.context}</p>}
+                    <ol>{question.options.map((option) => <li key={option}>{option}</li>)}</ol>
+                    <details><summary>看答案與說明</summary><p><strong>答案：{question.answer + 1}。</strong>{question.explanation}</p></details>
+                  </div>
+                </article>
+              ))}
+            </div>
           ))}
         </section>
 

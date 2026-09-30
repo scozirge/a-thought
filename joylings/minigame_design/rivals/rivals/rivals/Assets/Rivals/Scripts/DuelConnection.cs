@@ -45,6 +45,7 @@ namespace RivalsPrototype {
 
     void ResetGameSession() {
       SetTrainingMode(false);
+      lastLearningJson=null;learningWasVisible=false;
       started=false;paused=false;showSettings=false;showCredits=false;hadControls=false;
       lastConfirmedHostTick=-1;lastHostSnapshotAt=lastHostCheckAt=0;
       Runner=null;Match=null;Local=null;

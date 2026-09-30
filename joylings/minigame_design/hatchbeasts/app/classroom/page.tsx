@@ -114,7 +114,7 @@ export default function ClassroomHome() {
                 </span>
                 <span className="featured-copy">
                   <span className="unit-title"><span className="catalog-lesson-number">第二次課程</span>紅藍槍戰</span>
-                  <span className="unit-meta">武器與角色技能 · {redBlueQuestions.length} 個問題</span>
+                  <span className="unit-meta">武器與角色技能 · 15 題武器邏輯挑戰</span>
                 </span>
                 <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
               </a>
@@ -135,6 +135,7 @@ export default function ClassroomHome() {
                     </a>
                   </li>
                 ))}
+                <li><a href={assetUrl('/classroom/red-blue-battle/#weapon-challenges')}><span>★</span>武器邏輯挑戰・答題集徽章<ArrowUpRight size={16} aria-hidden="true" /></a></li>
               </ol>
             </div>
           </details>

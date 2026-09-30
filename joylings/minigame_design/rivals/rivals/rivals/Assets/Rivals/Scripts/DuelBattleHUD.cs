@@ -73,7 +73,7 @@ namespace RivalsPrototype {
         HudText(new Rect(box.x+22,box.y+13,w-96,22),TeamName(Local.Team)+" · 準備就位",15,TeamColor(Local.Team),TextAnchor.MiddleLeft);
         HudText(new Rect(box.x+22,box.y+40,w-96,35),FitHudName(Local.DisplayName,w-96,22),22,Color.white,TextAnchor.MiddleLeft,true);
         HudText(new Rect(box.xMax-77,box.y+17,60,64),remaining.ToString(),46,HudGold,bold:true);
-      }else if(Local&&Local.Health<=0&&Match.Phase==2){
+      }else if(Local&&Local.Health<=0&&Match.Phase==2&&IsTraining){
         int respawn=Mathf.CeilToInt(Local.RespawnSecondsRemaining);float w=Mathf.Min(284,hudWidth-32);var box=new Rect((hudWidth-w)/2,HudCenter.y-41,w,82);HudCard(box,TeamColor(Local.Team));
         HudText(new Rect(box.x+16,box.y+10,w-32,33),respawn>0?$"{respawn} 秒後復活":"正在準備復活",26,HudGold,bold:true);
         HudText(new Rect(box.x+16,box.y+48,w-32,22),IsTraining?"回到射擊線 · 滿血與所選武器":"隨機位置 · 滿血與手槍",15,HudMuted);

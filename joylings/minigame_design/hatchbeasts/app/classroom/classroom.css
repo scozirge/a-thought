@@ -918,3 +918,5 @@ body:has(.classroom-shell) {
     scroll-behavior: auto !important;
   }
 }
+
+#weapon-challenges{scroll-margin-top:7rem}.weapon-question-group{margin-top:2rem}.weapon-question-content{padding:1.25rem 1.5rem}.weapon-question-content h4{font-size:1.1rem;line-height:1.7;margin:0 0 .75rem}.weapon-question-content ol{padding-left:1.75rem;line-height:1.9;list-style:decimal}.weapon-question-content details{margin-top:1rem}.weapon-question-content details summary{padding:.5rem 0;font-size:1rem;font-weight:600;cursor:pointer}.weapon-question-content details p{line-height:1.8}
