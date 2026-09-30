@@ -1,6 +1,6 @@
 {
   "date": "2026-10-01",
-  "gameSourceCommit": "cf2400ee576fc3d6a08a34614a4cb507033cd540",
+  "gameSourceCommit": "9a4df993bf2bf42fdac37f1a4c923ba671f94724",
   "target": "Web",
   "unity": "6000.3.11f1",
   "backend": "IL2CPP / WebAssembly",
@@ -17,7 +17,7 @@
     "offline": true
   },
   "releaseChanges": [
-    "菜刀改為大幅抬刀、橫斬及收刀，遠端角色手臂同步揮砍",
+    "菜刀改為右上至左下斜劈，前臂保持連接右下方並從下方收刀，遠端同步",
     "火箭內外傷害半徑增加百分之三十至三點九與七點八公尺，爆炸特效同步放大",
     "藥水與飛刀投擲更遠，毒區半徑六公尺並緩速四成，移除紫色內圈",
     "火箭點按單發、冷卻不排隊且縮短射程；核彈用後保持手槍",
@@ -36,6 +36,7 @@
     "Assets/Rivals/Editor/ArtReview.cs": "a67562c342f6c181391319e0650ba6b718ea9172e179e90c96c5f1bbbd244865",
     "Assets/Rivals/Editor/BattleRulesChecks.cs": "ddd15d5f0517319971af435979c31dd32730079a05580500f5f2274f6eedde61",
     "Assets/Rivals/Editor/BotNavigationChecks.cs": "2280abd015d596791469f12fd109b1b5307ef83e67f6368da8a9fdea812ca37e",
+    "Assets/Rivals/Editor/CleaverReview.cs": "964fbe61d85d4f86667e46477d28a192001ceec9fb8cad56770d25bf677a5419",
     "Assets/Rivals/Editor/FreeAssetSetup.cs": "f24ac317731c83beca16fd71fc7637c4297810a700ed6e276aa27c3b26e7ff8e",
     "Assets/Rivals/Editor/GunPresentationChecks.cs": "830b3a405ca31106c9882d5f379c43f60006303c52decd3e291e9fbd3c4c3e24",
     "Assets/Rivals/Editor/RivalsSetup.cs": "f7a82559cdbfb1a1fc113ca97dac3fb88c5747a366f1b261cae9d2a0b7f769f3",
@@ -55,7 +56,7 @@
     "Assets/Rivals/Scripts/DuelAvatar.cs": "ff09e9df0c8332c6cd5947eaac48863ea06e58e51b1c53d7ef35f5ac84bad33d",
     "Assets/Rivals/Scripts/DuelBattleHUD.cs": "92686644eae4b2d43aecbe3879fdec3a339190b43e211cb40015ce05f84a313f",
     "Assets/Rivals/Scripts/DuelBattleSmoke.cs": "7bd03012e1bcdcc12a37d4fee997b728ed348cb2579ffa3313d54e59c2fb8a9c",
-    "Assets/Rivals/Scripts/DuelCleaverSwing.cs": "aa8934f9f32eca672376c1190bc71fe97803a77eb8fb0c34b8ba03aadca2f422",
+    "Assets/Rivals/Scripts/DuelCleaverSwing.cs": "d1381a1a86abf3792aff5c58604819cc048bb13a648a717245e716c000b44a93",
     "Assets/Rivals/Scripts/DuelCombatHUD.cs": "ec659c0ef2ba602e9e52740b4e2f638614f42a689e4297934d8c5afc6599dc63",
     "Assets/Rivals/Scripts/DuelCombatSmoke.cs": "83c44e6a69e1e23d28e963630cbc1bf1ee9a54986c62d95502a562814f039a5c",
     "Assets/Rivals/Scripts/DuelConnection.cs": "35a56b2eafa41c88c1565891589c5f397d549cc169196bac06e89c4ed08b770f",
@@ -76,7 +77,7 @@
     "Assets/Rivals/Scripts/DuelShotTracer.cs": "092fed64110e2194afb16598a7b2084a4921215abb3cee4f692c6bd4599552c6",
     "Assets/Rivals/Scripts/DuelTraining.cs": "e14322906b6bad2285d23490edc9d87392b2319fab253fa5af7f0f07417a0bed",
     "Assets/Rivals/Scripts/DuelTrainingSmoke.cs": "c6d88a54b45f98c98494a07dfb8017cbd5176912c948f94ea796def73000fc71",
-    "Assets/Rivals/Scripts/DuelWeaponModels.cs": "e34958a634f4880d5e96ab203a596812cd55bd35791fdae6d9a9603f4c49f873",
+    "Assets/Rivals/Scripts/DuelWeaponModels.cs": "8f9c528f3857daa018c68ccb69344dc2d03f2b2852c3c88badfee0f699b28b0c",
     "Assets/Rivals/Scripts/DuelWebInput.cs": "76d70e3d77b88e6ea58aa92dfacbc5c33998ad464e9a715b9d98571c4d81eaaa",
     "Assets/Rivals/Scripts/DuelWorld.cs": "c8d0db0ad9afae24ca58efdbe0de6d466ab749ae29d911e1f53189479de68590",
     "Assets/WebGLTemplates/Rivals/index.html": "fa27676a25ae1e69c7b0bb1b80e99fa54868246e82fa9d4bfef0543d7beb0138"
