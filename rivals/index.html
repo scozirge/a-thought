@@ -70,6 +70,7 @@
     @media(max-height:540px){#training-entry{padding:10px 18px;margin-top:12px;min-height:60px}.armory-card{padding:14px 18px}.armory-card p{margin:4px 0 10px}.armory-grid{gap:8px}.armory-grid button{min-height:58px;padding:7px 10px}.armory-heading h2{font-size:22px}.armory-grid strong{font-size:18px}}
     @media(min-width:521px) and (max-width:760px) and (max-height:540px){#training-weapons{position:fixed;top:auto;bottom:max(8px,calc(env(safe-area-inset-bottom) + 4px));left:50%;transform:translateX(-50%);z-index:6}}
   </style>
+  <link rel="stylesheet" href="learning.css">
 </head>
 <body>
   <header><h1>紅藍槍戰</h1><span>和朋友一起玩，最多 8 人！</span></header>
@@ -103,7 +104,7 @@
         <div class="rooms-card"><div class="room-heading"><div><h3>加入朋友的小隊</h3><small><i class="live-dot"></i>即時房間清單</small></div><button id="refresh-rooms" type="button">重新整理</button></div><div id="room-list" aria-live="polite"></div><p class="rooms-note">真人加入就接替電腦玩家，紅藍兩隊隨時滿編。</p></div>
       </div>
       <button id="training-entry" type="button"><strong>訓練場</strong><span>全部武器自由試用<br>單人打靶 · 自動復活 · 隨時練習</span></button>
-      <div class="lobby-bottom"><p id="lobby-message" role="status"></p><span>死亡 3 秒後隨機復活 · 先達 30 擊殺獲勝</span></div>
+      <div class="lobby-bottom"><p id="lobby-message" role="status"></p><span>死亡挑戰一題 · 每 3 個徽章解鎖新武器</span></div>
     </section>
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
@@ -243,6 +244,7 @@
     canvas.addEventListener('blur',()=>disengage('canvas-blur'));
     document.addEventListener('visibilitychange',()=>{if(document.hidden)disengage('hidden');});
     document.addEventListener('keydown',event=>{
+      if(event.code==='Escape'&&document.getElementById('learning-overlay')?.hidden===false){event.preventDefault();return;}
       if(event.code==='Escape'){if(stage.classList.contains('expanded'))exitExpanded();disengage('escape');if(player)player.SendMessage('RIVALS Session','PauseControls');}
       else if(active()&&event.code==='Tab')event.preventDefault();
     },true);
@@ -327,6 +329,7 @@
     document.getElementById('mode-touch').onclick=()=>chooseControls('touch');document.getElementById('mode-keyboard').onclick=()=>chooseControls('keyboard');
     let preferredMode=navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches?'touch':'keyboard';try{const saved=localStorage.getItem('rivals.controlMode');if(saved==='touch'||saved==='keyboard')preferredMode=saved;}catch(error){}
     chooseControls(preferredMode);
+    window.rivalsLearningCommand=action=>gameControl(action);
     function gameControl(action){touch.reset();if(player)player.SendMessage('RIVALS Session','WebControlCommand',action);}
     // A secondary finger does not always produce a compatibility click. Handle
     // its pointer-up directly, then ignore the duplicate click if one follows.
@@ -366,8 +369,8 @@
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
     function updateHudViewport(){const rect=canvas.getBoundingClientRect(),safe=getComputedStyle(document.getElementById('viewport-safe-area'));window.rivalsViewport=[rect.width,rect.height,parseFloat(safe.paddingLeft)||0,parseFloat(safe.paddingRight)||0,parseFloat(safe.paddingTop)||0,parseFloat(safe.paddingBottom)||0];}
     new ResizeObserver(updateHudViewport).observe(canvas);window.addEventListener('resize',updateHudViewport);window.visualViewport?.addEventListener('resize',updateHudViewport);updateHudViewport();
-    const config={dataUrl:'Build/4a5a42c8afd80dc858b16d4559fef4b6.data',frameworkUrl:'Build/aa71c54c66021503da26e933e9e370a9.framework.js',codeUrl:'Build/80c1328254a8f229b4581c411ea66099.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
-    const loader=document.createElement('script');loader.src='Build/93b414e51d71b2984500020d39b790b7.loader.js';
+    const config={dataUrl:'Build/01df531e4a1296caec402dca5c86c680.data',frameworkUrl:'Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js',codeUrl:'Build/674934de36d3d97759518025b438eb66.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/80bdeff16e141379947a06232b098c57.loader.js';
     // Content hashes change only when the asset changes. UI edits no longer
     // invalidate the whole game; Unity's persistent cache can reuse big files.
     config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
@@ -377,5 +380,6 @@
     }).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
     loader.onerror=()=>showLoadError('無法下載遊戲');document.body.appendChild(loader);
   </script>
+  <script src="learning.js"></script>
 </body>
 </html>
