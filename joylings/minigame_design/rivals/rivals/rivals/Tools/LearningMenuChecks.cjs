@@ -14,12 +14,14 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
    await page.addStyleTag({path:path.join(template,'learning.css')});
    await page.evaluate(touch=>{window.commands=[];window.resumeCount=0;window.rivalsLook={resume:()=>window.resumeCount++};window.rivalsTouch={mode:touch,playable:true,paused:false};window.rivalsLearningCommand=s=>window.commands.push(s);},touch);
    await page.addScriptTag({path:path.join(template,'learning.js')});
+   assert.equal(await page.locator('#learning-leave,#learning-stage,#learning-progress,#learning-note').count(),0,'no secondary labels or room-exit action in the lesson');
    for(let i=0;i<15;i++){
     const stage=bank.stages[Math.floor(i/3)],q=stage.questions[i%3];
     const state={visible:true,state:1,life:i+1,question:i,progress:i,badges:i%3,selected:1,choice:-1,answer:-1,seconds:0,name:stage.name,reward:stage.reward,...q,answer:-1,explanation:'',weapons:[1],complete:false};
     await page.evaluate(s=>window.rivalsReceiveLearning(s),state);
     assert.equal(await page.locator('#learning-options button').count(),q.options.length);
     assert.equal(await page.locator('#learning-feedback').isVisible(),false);
+    if(i===0)await page.locator('.learning-card').screenshot({path:path.join(output,`question-${width}-${height}.png`)});
     for(const button of await page.locator('#learning-options button').all()){
      await button.scrollIntoViewIfNeeded();const box=await button.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width+1,'option fits horizontally');
      assert.ok(await button.evaluate(b=>b.scrollWidth<=b.clientWidth+1),'option text wraps without horizontal clipping');
@@ -30,6 +32,9 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
     state.state=2;state.progress=i+1;state.choice=q.answer;state.answer=q.answer;state.correct=true;state.unlocked=(i+1)%3===0;state.explanation=q.explanation;
     await page.evaluate(s=>window.rivalsReceiveLearning(s),state);
     assert.ok((await page.locator('#learning-feedback').textContent()).includes(q.explanation));
+    assert.equal(await page.locator('#learning-options').isVisible(),false,'feedback shows only the result and one explanation');
+    assert.equal(await page.locator('#learning-next').textContent(),'繼續');
+    if(i===0){state.correct=false;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);assert.equal(await page.locator('#learning-title').textContent(),'答錯了');state.correct=true;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);}
     if(i===0||i===13)await page.screenshot({path:path.join(output,`lesson-${width}-${height}-${i}.png`)});
     if(touch)await page.locator('#learning-next').tap();else await page.locator('#learning-next').click();
     assert.equal(await page.evaluate(()=>window.commands.at(-1)),`learning:continue:${i+1}`);

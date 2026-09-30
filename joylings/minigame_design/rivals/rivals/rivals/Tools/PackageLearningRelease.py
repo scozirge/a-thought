@@ -22,7 +22,9 @@ info = {
     'date': '2026-10-01', 'gameSourceCommit': commit, 'target': 'Web',
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
     'networkVersion': 'rivals-web-25-unlock-bots',
+    'uiRevision': 'simple-quiz-20261001',
     'releaseChanges': [
+        '答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。',
         '五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。',
         'Bot 分散進攻路線、避讓隊友，反應略快且開火時間小幅延長；射速及瞄準誤差不變。',
         '手機答題後復活自動恢復操作焦點，離房與暫停不會誤觸恢復。',
