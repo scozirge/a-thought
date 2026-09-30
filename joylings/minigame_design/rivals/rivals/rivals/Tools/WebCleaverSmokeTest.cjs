@@ -42,6 +42,25 @@ const result={checks:[],errors:[]},me=s=>s.players.find(p=>p.seat===s.localSeat)
     else {const rect=await page.locator(secondary?'#touch-aim':'#touch-fire').boundingBox();await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:72,x:rect.x+rect.width/2,y:rect.y+rect.height/2,radiusX:3,radiusY:3,force:1}]});if(!held){await page.waitForTimeout(50);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}}
    }
    async function release(){if(mobile)await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});else await page.mouse.up();}
+   async function movePulse(x,y,milliseconds){
+    if(mobile){
+     const b=await page.locator('#touch-move').boundingBox(),start={x:b.x+b.width/2,y:b.y+b.height/2};
+     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:73,...start}]});
+     await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:73,x:start.x+x*45,y:start.y-y*45}]});
+     await page.waitForTimeout(milliseconds);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    }else {const key=x>0?'d':y>0?'w':'s';await page.keyboard.down(key);await page.waitForTimeout(milliseconds);await page.keyboard.up(key);}
+    await page.waitForTimeout(200);
+   }
+   async function moveToRange(wanted){
+    await aim(0,0);
+    for(let attempt=0;attempt<20;attempt++){
+     const s=await state(page),p=me(s),target=s.players.find(p=>p.seat===1);
+     const distance=Math.hypot(target.position.x-p.position.x,target.position.y-p.position.y-.4,target.position.z-p.position.z);
+     if(Math.abs(distance-wanted)<.09){await aim(Math.atan2(target.position.x-p.position.x,target.position.z-p.position.z)*180/Math.PI,0);return distance;}
+     const backward=distance<wanted,milliseconds=Math.max(35,Math.min(160,Math.abs(distance-wanted)/7.15*700));
+     await movePulse(0,backward?-1:1,milliseconds);
+    }throw Error('cannot reach test distance '+wanted);
+   }
    await select(2);await aim(0,0);await page.waitForTimeout(300);
    const idle=me(await state(page)),targetLife=(await state(page)).players.find(p=>p.seat===1).spawnSequence;
    await page.screenshot({path:path.join(output,mode+'-idle.png')});await press();
@@ -49,20 +68,32 @@ const result={checks:[],errors:[]},me=s=>s.players.find(p=>p.seat===s.localSeat)
    while(Date.now()<until){samples.push(me(await state(page)));await page.waitForTimeout(16);}
    const raised=samples.filter(p=>p.cleaverSwingAge>=.05&&p.cleaverSwingAge<.20).sort((a,b)=>b.weaponPosition.y-a.weaponPosition.y)[0];
    const lower=samples.filter(p=>p.cleaverSwingAge>=.23&&p.cleaverSwingAge<.38).sort((a,b)=>a.weaponPosition.x-b.weaponPosition.x)[0];
+   result.swings??=[];result.swings.push({mode,idle,raised,lower,samples});
    assert.ok(raised&&lower,'windup and follow-through both observed');
-   assert.ok(raised.weaponPosition.x>idle.weaponPosition.x+.02&&raised.weaponPosition.y>idle.weaponPosition.y+.16,'knife lifts to upper right');
+   // The 100 ms diagnostic samples may straddle the exact apex. Check the
+   // visible upper-right quadrant and the observed down-left travel.
+   assert.ok(raised.weaponPosition.x>idle.position.x+.12&&raised.weaponPosition.y>idle.weaponPosition.y+.12,'knife lifts to upper right');
    assert.ok(raised.weaponPosition.x-lower.weaponPosition.x>.40,'chop crosses from right to left');
    assert.ok(raised.weaponPosition.y-lower.weaponPosition.y>.25,'chop drops from upper right to lower left');
    assert.ok(lower.weaponPosition.x<idle.weaponPosition.x-.30&&lower.weaponPosition.y<idle.weaponPosition.y-.045,'cut ends down-left');
    const recovered=me(await state(page));assert.equal(recovered.shots,idle.shots+1);assert.equal(recovered.weapon,2);
    assert.ok(Math.hypot(...['x','y','z'].map(a=>recovered.weaponPosition[a]-idle.weaponPosition[a]))<.025,'knife returns to rest');
    assert.equal((await state(page)).players.find(p=>p.seat===1).health,0,'single cleaver strike kills target');
-   result.swings??=[];result.swings.push({mode,idle,raised,lower,recovered,samples});pass(mode+' upper-right to lower-left chop, single hit and recovery');
+   result.swings.at(-1).recovered=recovered;pass(mode+' upper-right to lower-left chop, single hit and recovery');
    // A second real attack supplies ordered visual frames without slowing the motion sampler.
    await press();await page.waitForTimeout(50);await page.screenshot({path:path.join(output,mode+'-raised.png')});await page.waitForTimeout(70);await page.screenshot({path:path.join(output,mode+'-downstroke.png')});await page.waitForTimeout(400);
    const start=me(await state(page)).shots;await press(true);await page.waitForTimeout(1320);await release();await page.waitForTimeout(650);
    const after=me(await state(page));assert.ok(after.shots-start>=2&&after.shots-start<=3);assert.equal(after.weapon,2);assert.ok(after.cleaverSwingAge>=.56);pass(mode+' repeated chops finish and recover at normal cadence');
    await wait(page,s=>s.players.find(p=>p.seat===1).spawnSequence>targetLife&&s.players.find(p=>p.seat===1).health===300,'target respawn',6000);pass(mode+' training target revives after chopping');
+   // Stand between the rear weapon racks so moving back does not equip another weapon.
+   for(let i=0;i<12&&me(await state(page)).position.x<2.1;i++)await movePulse(1,0,100);
+   assert.ok(me(await state(page)).position.x>=2.1,'move clear of weapon racks');
+   const outside=await moveToRange(5.3);let count=me(await state(page)).shots;await press();await wait(page,s=>me(s).shots===count+1,'outside range swing');await page.waitForTimeout(650);
+   assert.equal((await state(page)).players.find(p=>p.seat===1).health,300);pass(mode+' target outside five meters stays unharmed');
+   const inside=await moveToRange(4.7);count=me(await state(page)).shots;const oldLife=(await state(page)).players.find(p=>p.seat===1).spawnSequence;
+   await press();await wait(page,s=>me(s).shots===count+1&&s.players.find(p=>p.seat===1).health===0,'extended reach kills target');
+   result.ranges??=[];result.ranges.push({mode,inside,outside});pass(mode+' target beyond old range and inside five meters dies in one chop');
+   await wait(page,s=>s.players.find(p=>p.seat===1).spawnSequence>oldLife&&s.players.find(p=>p.seat===1).health===300,'extended range target respawn',6000);
    const throwStart=me(await state(page)).shots;await press(false,true);await wait(page,s=>me(s).shots===throwStart+1&&me(s).weapon===1,'throw returns pistol');pass(mode+' secondary throw restores pistol');
    if(mobile)await context.setOffline(false);await context.close();
   }

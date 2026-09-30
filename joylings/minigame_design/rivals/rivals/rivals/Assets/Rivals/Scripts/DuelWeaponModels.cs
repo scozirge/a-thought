@@ -87,6 +87,10 @@ namespace RivalsPrototype {
       Muzzle(root,new Vector3(0,0,.36f));
     }
     static void Cleaver(Transform root) {
+      // Enlarge the knife around its grip so the hand and swing stay aligned.
+      var shape=new GameObject("Cleaver profile").transform;shape.SetParent(root,false);
+      const float size=1.25f;shape.localScale=Vector3.one*size;
+      shape.localPosition=new Vector3(0,-.12f,-.07f)*(1-size);root=shape;
       Box(root,"Walnut handle",new Vector3(0,-.10f,-.07f),new Vector3(.075f,.28f,.10f),new Color(.24f,.095f,.045f));
       Box(root,"Steel tang",new Vector3(0,-.10f,-.07f),new Vector3(.015f,.31f,.105f),Steel);
       for(int i=0;i<3;i++)Sphere(root,"Brass rivet",new Vector3(.041f,-.19f+i*.085f,-.07f),new Vector3(.014f,.027f,.027f),Brass);

@@ -11,7 +11,7 @@ namespace RivalsPrototype {
     public static void Pose(float age,bool firstPerson,out Vector3 offset,out Quaternion rotation) {
       offset=Vector3.zero;rotation=Rest;
       if(age<0||age>=Duration)return;
-      var raised=firstPerson?new Vector3(.10f,.32f,0):new Vector3(.16f,.62f,-.10f);
+      var raised=firstPerson?new Vector3(.10f,.27f,0):new Vector3(.16f,.62f,-.10f);
       var downLeft=firstPerson?new Vector3(-.49f,-.10f,.12f):new Vector3(-.60f,-.34f,.28f);
       if(age<.12f){float t=Mathf.SmoothStep(0,1,age/.12f);offset=Vector3.Lerp(Vector3.zero,raised,t);rotation=Quaternion.Slerp(Rest,Raised,t);}
       else if(age<.28f){float t=Mathf.SmoothStep(0,1,(age-.12f)/.16f);offset=Vector3.Lerp(raised,downLeft,t);rotation=Quaternion.Slerp(Raised,FollowThrough,t);}
