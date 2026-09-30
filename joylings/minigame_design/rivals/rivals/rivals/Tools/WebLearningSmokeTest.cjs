@@ -13,11 +13,14 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
  async function open(){const c=await browser.newContext({viewport:{width:1280,height:800}}),p=await c.newPage();p.on('pageerror',e=>result.errors.push(e.message));await p.goto((process.env.RIVALS_WEB_URL||'http://127.0.0.1:8187')+'/?diagnostics=1');return p;}
  async function engage(p){const b=p.locator('#resume-pointer');if(await b.isVisible())await b.click();else await p.locator('#unity-canvas').click({position:{x:600,y:400}});}
  async function die(p){
-  const until=Date.now()+150000;let next=Date.now()+15000;
+  const until=Date.now()+150000;let next=Date.now()+15000,lastPosition=null,stuck=0,escape=0;
   while(Date.now()<until){const s=await state(p),local=me(s);if(local.health===0&&s.phase===2)return;
    if(s.phase!==2){await p.waitForTimeout(500);continue;}
    if(!s.controls)await engage(p);
-   const enemies=s.players.filter(x=>x.team!==local.team&&x.health>0).sort((a,b)=>Math.hypot(a.position.x-local.position.x,a.position.z-local.position.z)-Math.hypot(b.position.x-local.position.x,b.position.z-local.position.z));
+   if(lastPosition&&Math.hypot(local.position.x-lastPosition.x,local.position.z-lastPosition.z)<.15)stuck++;else stuck=0;
+   lastPosition=local.position;
+   if(stuck>=5){await p.keyboard.up('w');const key=escape++%2?'a':'d';await p.keyboard.down(key);await p.waitForTimeout(1800);await p.keyboard.up(key);stuck=0;continue;}
+   const enemies=s.players.filter(x=>x.bot&&x.team!==local.team&&x.health>0).sort((a,b)=>Math.hypot(a.position.x-local.position.x,a.position.z-local.position.z)-Math.hypot(b.position.x-local.position.x,b.position.z-local.position.z));
    if(enemies[0]){const target=enemies[0].position,yaw=Math.atan2(target.x-local.position.x,target.z-local.position.z)*180/Math.PI;
     await p.evaluate(({x,y})=>document.dispatchEvent(new MouseEvent('mousemove',{movementX:x,movementY:y,bubbles:true})),{x:angle(yaw-s.look.x)/.12,y:-s.look.y/.12});
     const distance=Math.hypot(target.x-local.position.x,target.z-local.position.z);if(distance>6)await p.keyboard.down('w');else await p.keyboard.up('w');
