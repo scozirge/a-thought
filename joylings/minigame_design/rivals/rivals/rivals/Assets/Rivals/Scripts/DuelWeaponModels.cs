@@ -176,9 +176,18 @@ namespace RivalsPrototype {
     void OnDestroy(){foreach(var mesh in Meshes)if(mesh){if(Application.isPlaying)Destroy(mesh);else DestroyImmediate(mesh);}}
   }
   public sealed class DuelWeaponMotion : MonoBehaviour {
-    Transform rotor;float spin,until;
-    public void Configure(int kind,Transform rig){if(kind==Weapons.Gatling)rotor=rig.Find("Rotors");}
+    Transform rotor,sleeve;float spin,until;
+    public void Configure(int kind,Transform rig){if(kind==Weapons.Gatling)rotor=rig.Find("Rotors");if(kind==Weapons.Cleaver)sleeve=transform.Find("Right sleeve");}
     public void Pulse(){until=Time.time+.14f;}
-    void LateUpdate(){if(!rotor)return;spin=Mathf.MoveTowards(spin,Time.time<until?1500:0,Time.deltaTime*4200);rotor.Rotate(0,0,spin*Time.deltaTime,Space.Self);}
+    void LateUpdate(){
+      if(sleeve){
+        // The forearm stays connected to the lower-right shoulder as the wrist chops.
+        var shoulder=transform.InverseTransformPoint(transform.parent.TransformPoint(new Vector3(.46f,-.52f,.16f)));
+        var grip=new Vector3(.015f,-.15f,-.08f);
+        sleeve.localPosition=(shoulder+grip)*.5f;sleeve.localRotation=Quaternion.LookRotation(grip-shoulder);
+        sleeve.localScale=new Vector3(.16f,.16f,Vector3.Distance(shoulder,grip));
+      }
+      if(!rotor)return;spin=Mathf.MoveTowards(spin,Time.time<until?1500:0,Time.deltaTime*4200);rotor.Rotate(0,0,spin*Time.deltaTime,Space.Self);
+    }
   }
 }

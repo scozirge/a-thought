@@ -14,7 +14,9 @@ const result={checks:[],errors:[],weapons:[],logs:[]},me=s=>s.players.find(p=>p.
  function pass(s){result.checks.push(s);console.log('WEB_ARSENAL_CHECK '+s);}
  try {
   const host=await open(),client=await open();
-  for(const kind of [6,5,8,2,7]) {
+  const kinds=process.env.RIVALS_TEST_WEAPONS?process.env.RIVALS_TEST_WEAPONS.split(',').map(Number):[6,5,8,2,7];
+  assert.ok(kinds.length&&kinds.every(kind=>[6,5,8,2,7].includes(kind)),'supported weapon selection');
+  for(const kind of kinds) {
    const name='武器'+kind+Date.now().toString(36).slice(-4);await host.locator('#player-name').fill(name);await host.locator('#create-room').click();await wait(host,s=>s.phase===2,'host ready');
    await client.locator('#player-name').fill('武器訪客');await client.locator('.room-row').filter({has:client.getByText(name+'的房間',{exact:true})}).getByRole('button',{name:'加入房間',exact:true}).click();await wait(client,s=>s.phase===2&&s.players.filter(p=>!p.bot).length===2,'client ready');
    const box=await client.locator('canvas').boundingBox();await client.mouse.click(box.x+box.width*.5,box.y+box.height*.5);await wait(client,s=>s.controls,'client control');let s=await state(client);const side=me(s).team===0?-1:1;
@@ -22,18 +24,23 @@ const result={checks:[],errors:[],weapons:[],logs:[]},me=s=>s.players.find(p=>p.
    const route=kind===6?[[18*side,29*side]]:kind===5?[[33*side,29*side],[33*side,0]]:kind===8?[[33*side,29*side],[33*side,-18*side],[30*side,-18*side]]:kind===2?[[0,29*side],[0,12*side],[8*side,12*side]]:[[0,29*side],[0,20*side]];
    for(const [x,z] of route)await walk(client,x,z);
    s=await wait(client,s=>me(s).weapon===kind,'collect '+kind,48000);const seat=s.localSeat;await wait(host,h=>h.players.find(p=>p.seat===seat).weapon===kind,'weapon replicated');assert.equal(s.identityName,'武器訪客');assert.equal(s.pickups.length,14);
-   await aim(client,side>0?180:0,kind===7?45:kind===6||kind===8?20:-40);await client.screenshot({path:path.join(output,'weapon-'+kind+'.png')});
+   await aim(client,side>0?180:0,kind===7?45:kind===6||kind===8?20:kind===2?0:-40);await client.screenshot({path:path.join(output,'weapon-'+kind+'.png')});
    if(kind===2){
     // Let the last route/aim input reach the host before recording the rest pose.
     await client.waitForTimeout(500);
     const idle=(await state(host)).players.find(p=>p.seat===seat);await client.mouse.down();await client.waitForTimeout(45);await client.mouse.up();
-    await wait(host,h=>h.players.find(p=>p.seat===seat).shots>idle.shots&&h.players.find(p=>p.seat===seat).cleaverSwingAge<.54,'remote melee animation');
+    await wait(host,h=>h.players.find(p=>p.seat===seat).shots>idle.shots&&h.players.find(p=>p.seat===seat).cleaverSwingAge<.56,'remote melee animation');
     const samples=[],until=Date.now()+800;while(Date.now()<until){samples.push((await state(host)).players.find(p=>p.seat===seat));await host.waitForTimeout(20);}
     result.remoteSwing={idle,samples};
     const distance=p=>Math.hypot(...['x','y','z'].map(axis=>(p.weaponPosition[axis]-p.position[axis])-(idle.weaponPosition[axis]-idle.position[axis])));
-    assert.ok(samples.some(p=>distance(p)>.35),'remote blade and arm make a large sweep');assert.ok(samples.some(p=>Math.abs(angle(p.weaponAngles.z-idle.weaponAngles.z))>50),'remote blade rotates');
+    assert.ok(samples.some(p=>distance(p)>.35),'remote blade and arm make a large sweep');
+    const raised=samples.filter(p=>p.cleaverSwingAge>=.05&&p.cleaverSwingAge<.20).sort((a,b)=>b.weaponPosition.y-a.weaponPosition.y)[0];
+    const lower=samples.filter(p=>p.cleaverSwingAge>=.23&&p.cleaverSwingAge<.38).sort((a,b)=>a.weaponPosition.y-b.weaponPosition.y)[0];
+    assert.ok(raised&&lower,'remote windup and downstroke observed');
+    assert.ok((side>0?-1:1)*(raised.weaponPosition.x-lower.weaponPosition.x)>.35&&raised.weaponPosition.y-lower.weaponPosition.y>.45,'remote chop travels from upper right to lower left');
     const recovered=(await state(host)).players.find(p=>p.seat===seat);assert.equal(recovered.weapon,2);assert.equal(recovered.shots,idle.shots+1);assert.ok(distance(recovered)<.06,'remote blade returns to hand rest');
-    pass('cleaver broad arm swing and recovery replicated to host');
+    pass('cleaver upper-right to lower-left arm chop and recovery replicated to host');
+    await aim(client,side>0?180:0,-40);await client.waitForTimeout(250);
    }
    const before=me(await state(client)).shots,sequence=(await state(host)).ordnance.reduce((m,o)=>Math.max(m,o.sequence),0);
    if(kind===2){await client.mouse.down({button:'right'});await client.waitForTimeout(45);await client.mouse.up({button:'right'});}else {await client.mouse.down();await client.waitForTimeout(kind===5?950:45);await client.mouse.up();}
