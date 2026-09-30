@@ -1,11 +1,11 @@
 {
   "date": "2026-10-01",
-  "gameSourceCommit": "4e23b5ad80bd817ea67676d8381c03b4246ebad6",
+  "gameSourceCommit": "cf2400ee576fc3d6a08a34614a4cb507033cd540",
   "target": "Web",
   "unity": "6000.3.11f1",
   "backend": "IL2CPP / WebAssembly",
   "development": false,
-  "networkVersion": "rivals-web-21-balance",
+  "networkVersion": "rivals-web-22-swing",
   "rules": {
     "killsToWin": 30,
     "respawnSeconds": 3
@@ -17,6 +17,8 @@
     "offline": true
   },
   "releaseChanges": [
+    "菜刀改為大幅抬刀、橫斬及收刀，遠端角色手臂同步揮砍",
+    "火箭內外傷害半徑增加百分之三十至三點九與七點八公尺，爆炸特效同步放大",
     "藥水與飛刀投擲更遠，毒區半徑六公尺並緩速四成，移除紫色內圈",
     "火箭點按單發、冷卻不排隊且縮短射程；核彈用後保持手槍",
     "加特林傷害二十四、換彈十二秒；狙擊爆頭三百傷害",
@@ -26,7 +28,7 @@
     "火箭與毒液採真實拋物線；核彈七秒警示後爆炸；範圍攻擊傷害全員",
     "手機菜刀提供飛刀鍵，無限武器顯示冷卻，單次武器用完換回手槍",
     "準心按實際散射角、移動、瞄準及螢幕大小擴張與恢復",
-    "同步版本更新為 rivals-web-21-balance，保留自己的名字與隊伍名牌"
+    "同步版本更新為 rivals-web-22-swing，保留自己的名字與隊伍名牌"
   ],
   "sourceSha256": {
     "Assets/Plugins/WebGL/RivalsInput.jslib": "5ad2bc76099161960fe3049f182b8cc9dcd6c6cc09810806e5e1f5bb4657b8eb",
@@ -48,24 +50,25 @@
     "Assets/Rivals/Resources/RivalsMatch.prefab": "83a4c5c91171ddb0359d74e6b379f9d492b9ae88fa59b1e810fd6b35850eb6d0",
     "Assets/Rivals/Resources/RivalsPlayer.prefab": "18b69d9ee715649a7e04305b951241f88045f281748b41d921e0613663bfc06f",
     "Assets/Rivals/Resources/TrainingLabel.shader": "8c500b780cebcf3ea1cf6c54bdabdbd59481f79991edef16a9e400f1e3470c94",
-    "Assets/Rivals/Scripts/DuelArsenalSmoke.cs": "31d453b603d063f800d0f10aad2a90a333df319b2691b289a6dc85ef437f20d3",
+    "Assets/Rivals/Scripts/DuelArsenalSmoke.cs": "a950ed4bbd9420a37ea470caf5a21095e6858bc2e18d4f749492ea1a999cc446",
     "Assets/Rivals/Scripts/DuelArt.cs": "0cb9ebb59129924916cef572d15a26e0e01cba0230914e082efdde5eb33c8b4f",
-    "Assets/Rivals/Scripts/DuelAvatar.cs": "92a746a624b8e06739ef076121b29d891b7c277c9dd567bf8df375f061ba4385",
+    "Assets/Rivals/Scripts/DuelAvatar.cs": "ff09e9df0c8332c6cd5947eaac48863ea06e58e51b1c53d7ef35f5ac84bad33d",
     "Assets/Rivals/Scripts/DuelBattleHUD.cs": "92686644eae4b2d43aecbe3879fdec3a339190b43e211cb40015ce05f84a313f",
     "Assets/Rivals/Scripts/DuelBattleSmoke.cs": "7bd03012e1bcdcc12a37d4fee997b728ed348cb2579ffa3313d54e59c2fb8a9c",
+    "Assets/Rivals/Scripts/DuelCleaverSwing.cs": "aa8934f9f32eca672376c1190bc71fe97803a77eb8fb0c34b8ba03aadca2f422",
     "Assets/Rivals/Scripts/DuelCombatHUD.cs": "ec659c0ef2ba602e9e52740b4e2f638614f42a689e4297934d8c5afc6599dc63",
     "Assets/Rivals/Scripts/DuelCombatSmoke.cs": "83c44e6a69e1e23d28e963630cbc1bf1ee9a54986c62d95502a562814f039a5c",
     "Assets/Rivals/Scripts/DuelConnection.cs": "35a56b2eafa41c88c1565891589c5f397d549cc169196bac06e89c4ed08b770f",
-    "Assets/Rivals/Scripts/DuelDiagnostics.cs": "e812cf95ffabc325472281f96dfa265e980c9dfea7fe7780d7d2aa05531061e0",
-    "Assets/Rivals/Scripts/DuelInput.cs": "f30bd2b3eb2852860b54f21b53e071c76c121090aa163927a5f282571c1d65f4",
-    "Assets/Rivals/Scripts/DuelLobby.cs": "4362508f19338e1072b85c743e355fbf6bf5344f56f0b16916e786438999653f",
+    "Assets/Rivals/Scripts/DuelDiagnostics.cs": "870371005450bcda45d8e2d6e6d32b470e97d2d79173b91f5e7b6a8b75e1b914",
+    "Assets/Rivals/Scripts/DuelInput.cs": "79c56f05ecbb827ce1e914eb8021ce269a3c9be9b90763b216cb1c2981be99d7",
+    "Assets/Rivals/Scripts/DuelLobby.cs": "f9252fea75be80ec93817ad63026ac221731bb52b374023251666fcc1940c0d4",
     "Assets/Rivals/Scripts/DuelMatch.cs": "2f018989ce7d7ee6bdae8b7bf62422a82b1b2999216cff8aca805ca60ae3dace",
     "Assets/Rivals/Scripts/DuelNames.cs": "51648651164c3c085afbcb5530253355be916165133aa6243c74f2727f03c608",
     "Assets/Rivals/Scripts/DuelNetworkSmoke.cs": "bdc151f270e42f2af4dcc01cc5737b3d3425d03d762c8e3b1c4b3f99c933b350",
     "Assets/Rivals/Scripts/DuelOrdnance.cs": "66ca2aca46a97e118e99ffdde2e0663f51c9c916abdf0edd775a746e93b8afa0",
     "Assets/Rivals/Scripts/DuelOrdnanceView.cs": "ca74779cdcdcace996d1aed5cc3d74501cc592c37fed702a2fca8948f49390c8",
     "Assets/Rivals/Scripts/DuelPickups.cs": "168bef3c9174e93c9e546f74e03e7e2207125eddaa14c85239820e7bfe41cb37",
-    "Assets/Rivals/Scripts/DuelPlayer.cs": "9f53a62f2e4a591eef9e8621f9d450a1398a306d08feb3cc0cd6906fbb58f42e",
+    "Assets/Rivals/Scripts/DuelPlayer.cs": "43275f1825f00749504554fbba3f3b77a016e84e6af04233e7f154a5572f5337",
     "Assets/Rivals/Scripts/DuelPodium.cs": "09ea1c89663d57adb7366bad920535c324e5a2f786a49c005c0d020828057a0e",
     "Assets/Rivals/Scripts/DuelReloadView.cs": "463022bb479b4077d914472ef321c03a7fc5b6549922be7d7b591b8d1d056faf",
     "Assets/Rivals/Scripts/DuelRespawn.cs": "ac9c9649e9844c66c81557d5485724e54a0a6565b43fc1ca0213aea373572e23",

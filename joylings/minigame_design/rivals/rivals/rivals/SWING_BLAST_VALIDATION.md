@@ -22,3 +22,10 @@
 - 教學網站正式建置通過，301 個 H5 資源引用檢查完成。
 
 瀏覽器測試使用真實 Web 成品、正常鍵鼠／觸控輸入及唯讀診斷資料；手機環境為 Chrome 觸控模擬，未以 Android／iPhone 實機驗證。
+
+## 正式成品
+
+- 遊戲來源提交：`cf2400ee576fc3d6a08a34614a4cb507033cd540`。
+- Web ZIP：`Builds/RIVALS-Web-20260924-mobile.zip`，30,204,692 bytes，22 個檔案。
+- ZIP SHA-256：`ceca5765868ab7d0cd9ca637b97a2ad8bb7f2daa8cafa255f4f2ae9bda213cf9`。
+- ZIP CRC、解壓縮後逐檔 SHA-256 與正式輸出一致。`release-manifest.json` 保留 Windows 歷史版本的原始記錄；此次只更新 Web。
