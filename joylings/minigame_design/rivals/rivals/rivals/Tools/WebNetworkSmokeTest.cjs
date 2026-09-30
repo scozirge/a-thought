@@ -42,6 +42,12 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   const host=await open('host'),client=await open('client');
   await Promise.all([enterRoom(host.page,{room,name:'網測'+nameSuffix,create:true}),enterRoom(client.page,{room,name:'訪客'+nameSuffix,create:false})]);
   await wait(host,s=>s.players.filter(p=>!p.bot).length===2,'two humans');
+  results.identities=[];
+  for(const [run,expected] of [[host,'網測'+nameSuffix],[client,'訪客'+nameSuffix]]) {
+   const identity=await wait(run,s=>s.identityName===expected,'local identity');
+   if(identity.identityName!==me(identity).name||identity.identityTeam!==me(identity).team)throw Error('Identity displays another player or team');
+   results.identities.push({peer:run.name,name:identity.identityName,team:identity.identityTeam,seat:identity.localSeat});
+  }
   await client.page.bringToFront();const box=await client.page.locator('#unity-canvas').boundingBox();await client.page.mouse.click(box.x+box.width*.5,box.y+box.height*.5,{delay:90});await client.page.waitForTimeout(250);
   // Stand behind spawn cover while exercising the network, away from the now
   // lethal central shotgun/sniper pickups.

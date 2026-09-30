@@ -12,8 +12,11 @@ namespace RivalsPrototype {
     float hudWidth=1280,hudHeight=720,hudLeft=18,hudRight=18,hudTop=12,hudBottom=12;
     bool HudCompact=>hudHeight<500||DuelWebInput.TouchMode;
     bool HudShort=>hudHeight<330;
+    bool HudIdentityInline=>HudCompact||hudWidth<1060;
     Vector2 HudCenter=>new Vector2(hudWidth*.5f,hudHeight*.5f);
-    Rect scoreBounds,healthBounds,ammoBounds;
+    Rect scoreBounds,healthBounds,ammoBounds,identityBounds;
+    string identityName="";
+    int identityTeam=-1,identityFontSize;
     // Uniform CSS-sized units keep text legible across DPR and phone aspect ratios.
     void ConfigureBattleHud(){
       float width=Mathf.Max(1,DuelWebInput.HudMetric(0)),height=Mathf.Max(1,DuelWebInput.HudMetric(1));
@@ -67,8 +70,8 @@ namespace RivalsPrototype {
       int remaining=Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0);
       if(Match.Phase==1&&Local){
         float w=Mathf.Min(340,hudWidth-32);var box=new Rect((hudWidth-w)/2,HudCenter.y-52,w,104);HudCard(box,TeamColor(Local.Team));
-        HudText(new Rect(box.x+22,box.y+13,w-96,22),"準備就位",15,HudMuted,TextAnchor.MiddleLeft);
-        HudText(new Rect(box.x+22,box.y+40,w-96,35),"你是"+TeamName(Local.Team),27,TeamColor(Local.Team),TextAnchor.MiddleLeft,true);
+        HudText(new Rect(box.x+22,box.y+13,w-96,22),TeamName(Local.Team)+" · 準備就位",15,TeamColor(Local.Team),TextAnchor.MiddleLeft);
+        HudText(new Rect(box.x+22,box.y+40,w-96,35),FitHudName(Local.DisplayName,w-96,22),22,Color.white,TextAnchor.MiddleLeft,true);
         HudText(new Rect(box.xMax-77,box.y+17,60,64),remaining.ToString(),46,HudGold,bold:true);
       }else if(Local&&Local.Health<=0&&Match.Phase==2){
         int respawn=Mathf.CeilToInt(Local.RespawnSecondsRemaining);float w=Mathf.Min(284,hudWidth-32);var box=new Rect((hudWidth-w)/2,HudCenter.y-41,w,82);HudCard(box,TeamColor(Local.Team));
@@ -81,15 +84,41 @@ namespace RivalsPrototype {
     }
     void DrawScoreboard(){
       bool narrow=hudWidth<520;float reserve=DuelWebInput.TouchMode&&!narrow?174:0,available=hudWidth-hudLeft-hudRight-reserve;
-      float width=Mathf.Min(HudCompact?340:436,available),x=hudLeft+(available-width)/2,y=hudTop+(DuelWebInput.TouchMode&&narrow?52:0),height=HudCompact?60:76;
-      scoreBounds=new Rect(x,y,width,height);float centerWidth=HudCompact?66:86,teamWidth=(width-centerWidth-16)/2;
+      bool inline=HudIdentityInline;
+      float width=Mathf.Min(inline?360:436,available),x=hudLeft+(available-width)/2,y=hudTop+(DuelWebInput.TouchMode&&narrow?52:0),height=inline?30:76;
+      scoreBounds=new Rect(x,y,width,inline?68:height);
+      DrawLocalIdentity(inline?new Rect(x,y,width,32):new Rect(hudLeft,hudTop,280,76));
+      if(inline)y+=38;
+      float centerWidth=inline?66:86,teamWidth=(width-centerWidth-16)/2;
       DrawTeamRoster(0,new Rect(x,y,teamWidth,height));DrawTeamRoster(1,new Rect(x+teamWidth+centerWidth+16,y,teamWidth,height));
-      var goal=new Rect(x+teamWidth+8,y,centerWidth,height);HudCard(goal);HudText(new Rect(goal.x,goal.y+5,goal.width,20),"目標",14,HudMuted);
+      var goal=new Rect(x+teamWidth+8,y,centerWidth,height);HudCard(goal);
+      if(inline){HudText(goal,"先 "+DuelMatch.KillsToWin,16,HudGold,bold:true);return;}
+      HudText(new Rect(goal.x,goal.y+5,goal.width,20),"目標",14,HudMuted);
       HudText(new Rect(goal.x,goal.y+23,goal.width,30),DuelMatch.KillsToWin.ToString(),28,HudGold,bold:true);
       if(!HudCompact)HudText(new Rect(goal.x,goal.y+53,goal.width,19),"擊殺獲勝",13,HudMuted);
     }
+    void DrawLocalIdentity(Rect rect){
+      identityBounds=rect;identityName=Local?Local.DisplayName:"";identityTeam=Local?Local.Team:-1;
+      if(!Local)return;
+      var color=TeamColor(Local.Team);HudCard(rect,color);
+      bool compact=rect.height<40;
+      var nameRect=compact?new Rect(rect.x+42,rect.y,rect.width-104,rect.height):new Rect(rect.x+22,rect.y+31,rect.width-40,36);
+      int size=compact?20:26;
+      while(size>18&&HudStyle(size,TextAnchor.MiddleLeft,true).CalcSize(new GUIContent(identityName)).x>nameRect.width)size--;
+      identityFontSize=size;
+      if(compact){
+        HudText(new Rect(rect.x+19,rect.y,20,rect.height),"你",15,HudMuted);
+        HudRound(new Rect(rect.xMax-58,rect.y+4,48,rect.height-8),TeamInk(Local.Team),5);
+        HudText(new Rect(rect.xMax-58,rect.y+4,48,rect.height-8),TeamName(Local.Team),15,color,bold:true);
+      }else HudText(new Rect(rect.x+22,rect.y+9,rect.width-40,22),"你的名字 · "+TeamName(Local.Team),16,color,TextAnchor.MiddleLeft,true);
+      HudText(nameRect,identityName,size,Color.white,TextAnchor.MiddleLeft,true);
+    }
     void DrawTeamRoster(int team,Rect rect){
       var color=TeamColor(team);HudCard(rect);int kills=team==0?Match.Blue:Match.Red;
+      if(rect.height<40){
+        HudText(new Rect(rect.x+10,rect.y,38,rect.height),TeamName(team),15,color,TextAnchor.MiddleLeft,true);
+        HudText(new Rect(rect.xMax-45,rect.y,35,rect.height),kills.ToString(),24,Color.white,TextAnchor.MiddleRight,true);return;
+      }
       HudText(new Rect(rect.x+13,rect.y+7,42,24),TeamName(team),16,color,TextAnchor.MiddleLeft,true);
       HudText(new Rect(rect.xMax-65,rect.y+3,52,38),kills.ToString(),HudCompact?32:36,Color.white,TextAnchor.MiddleRight,true);
       float barWidth=(rect.width-35)/4;
@@ -124,7 +153,7 @@ namespace RivalsPrototype {
     }
     void FeedName(Rect rect,string name,int team){HudRound(rect,TeamInk(team),4);HudText(new Rect(rect.x+5,rect.y,rect.width-10,rect.height),FitHudName(name,rect.width-10,14),14,TeamColor(team),bold:true);}
     void DrawKillFeed(){
-      int shown=0,limit=HudShort?1:HudCompact?2:4;float width=HudCompact?260:308,x=HudCompact?scoreBounds.x:hudWidth-hudRight-width,y=HudCompact?scoreBounds.yMax+8:hudTop+88;
+      int shown=0,limit=HudShort?1:HudCompact?2:4;float width=HudCompact?260:308,x=HudIdentityInline?scoreBounds.x:hudWidth-hudRight-width,y=HudIdentityInline?scoreBounds.yMax+8:hudTop+88;
       if(hudWidth<520)x=(hudWidth-width)/2;
       for(int sequence=Match.EliminationSequence;sequence>Mathf.Max(0,Match.EliminationSequence-DuelMatch.FeedCapacity)&&shown<limit;sequence--){
         var e=Match.Eliminations[(sequence-1)%DuelMatch.FeedCapacity];if(e.Sequence!=sequence||e.Game!=Match.Game||e.Lifetime.ExpiredOrNotRunning(Runner))continue;
@@ -135,6 +164,7 @@ namespace RivalsPrototype {
     void DrawVictory(){
       var podium=Match.GetComponent<DuelPodium>();var color=TeamColor(Match.Winner);float width=Mathf.Min(360,hudWidth-32);var box=new Rect(HudCenter.x-width/2,hudTop+8,width,82);HudCard(box,color);
       HudText(new Rect(box.x+16,box.y+9,width-32,24),$"第 {Match.Game} 場 · {Match.Blue} : {Match.Red} 擊殺",16,HudMuted);HudText(new Rect(box.x+16,box.y+34,width-32,39),TeamName(Match.Winner)+"獲勝！",32,color,bold:true);
+      DrawLocalIdentity(new Rect(box.x,box.yMax+8,width,32));
       if(podium&&podium.Camera)for(int i=0;i<4;i++){if(!podium.Winners[i])continue;var p=podium.Camera.WorldToViewportPoint(podium.Winners[i].position+Vector3.up*2.55f);float nameWidth=Mathf.Min(130,(hudWidth-32)/4);FeedName(new Rect(p.x*hudWidth-nameWidth/2,(1-p.y)*hudHeight-12,nameWidth,28),Match.Winners[i].Name.ToString(),Match.Winner);}
       var countdown=new Rect(HudCenter.x-width/2,hudHeight-hudBottom-48,width,42);HudCard(countdown);HudText(countdown,$"{Mathf.CeilToInt(Match.Timer.RemainingTime(Runner)??0)} 秒後重新分隊",16);
     }
