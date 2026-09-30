@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-24",
-  "gameSourceCommit": "f9084a6534f48a0c3c59540a5ec4cb311122f479",
+  "date": "2026-10-01",
+  "gameSourceCommit": "f371a9cfeb7af97e2364794cea291aa7c012bf3f",
   "target": "Windows",
   "unity": "6000.3.11f1",
   "backend": "Mono / Windows x64",
@@ -11,11 +11,10 @@
     "respawnSeconds": 3
   },
   "releaseChanges": [
-    "Web 與 Windows 全面移除跳躍，Space 不再觸發角色動作",
-    "移除手機跳躍按鈕，保留裝填、瞄準與射擊三鍵並重新排版",
-    "移除跳躍輸入與角色跳躍處理，停用舊輸入位元",
-    "連線版本更新為 rivals-web-18-no-jump，避免混用舊規則",
-    "同步更新完整 Web、Windows、使用說明與課堂最新版入口"
+    "對戰全程顯示本機玩家名字及隊伍",
+    "手機名牌整合上方計分區，保留操作空間並支援十字長名字",
+    "開場倒數、復活等待與賽後畫面保留本人身分",
+    "介面更新沿用既有連線版本與遊戲規則"
   ],
   "sourceSha256": {
     "Assets/Plugins/WebGL/RivalsInput.jslib": "23fd20d6654440fd4750f00fd833d6dba103478a060356628627be2449619cf5",
@@ -31,12 +30,12 @@
     "Assets/Rivals/Resources/RivalsPlayer.prefab": "18b69d9ee715649a7e04305b951241f88045f281748b41d921e0613663bfc06f",
     "Assets/Rivals/Scripts/DuelArt.cs": "a3ebc0546bb6c41359607d8c087e0df95d030421fe308d878d5229192f433896",
     "Assets/Rivals/Scripts/DuelAvatar.cs": "f6123279aaddf9145ba70466444b96d42622bca7104c6a46920342c50cc1714d",
-    "Assets/Rivals/Scripts/DuelBattleHUD.cs": "3020fb201ca111c56bce9d8b9f4d47145a74fbb0f428839e8e977e06ad05e87e",
+    "Assets/Rivals/Scripts/DuelBattleHUD.cs": "1c6b637c3ad21be6bf3d4d09225feaa147f9f7a4c86fc9095d52e687c9978226",
     "Assets/Rivals/Scripts/DuelBattleSmoke.cs": "5ed0cd4f1a1e1055947e6ace53e573f256c892f00c4f743ad80c7f65150580fc",
     "Assets/Rivals/Scripts/DuelCombatHUD.cs": "a3b4890636cd78aacbc6f12a9f9c897c7a3f83cc222d4d255f1f6ab40ea47bd2",
     "Assets/Rivals/Scripts/DuelCombatSmoke.cs": "83c44e6a69e1e23d28e963630cbc1bf1ee9a54986c62d95502a562814f039a5c",
     "Assets/Rivals/Scripts/DuelConnection.cs": "245cba381537d9ec722fabb034b566cd943c30cb0ad5521bfe72e304d92aaaa3",
-    "Assets/Rivals/Scripts/DuelDiagnostics.cs": "2c1e985a6774d4747ab47577adb91e6f1889e0ea9168e344e04937533ccd6650",
+    "Assets/Rivals/Scripts/DuelDiagnostics.cs": "771b67f0048efef8e43bd92f0b41fcc56752c835dede79cd2ee020e22b088448",
     "Assets/Rivals/Scripts/DuelInput.cs": "7c3c82248d1686acb918c19c1fb85e9d51984413ff84b64d10e5c83540daefa6",
     "Assets/Rivals/Scripts/DuelLobby.cs": "1fa028114f5f3918cc47b83e9152f2d17600240c594252844b077d9a1073df8b",
     "Assets/Rivals/Scripts/DuelMatch.cs": "bc4ecb8c0d062e08a85ccfb4b9e98a20f6595bab8ed88d6e7ebec8dac00d523e",

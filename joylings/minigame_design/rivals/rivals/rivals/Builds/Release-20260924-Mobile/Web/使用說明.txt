@@ -1,6 +1,6 @@
-紅藍槍戰｜手機與鍵鼠網頁版（2026-09-24 移除跳躍版）
+紅藍槍戰｜手機與鍵鼠網頁版（2026-10-01 玩家身分名牌版）
 
-公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=no-jump-20260924
+公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=identity-20261001
 大廳選「鍵盤滑鼠」或「手機觸控」，建立房間或加入朋友的小隊。
 手機與電腦可同房遊玩，建議手機橫向拿。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。
 
@@ -20,3 +20,5 @@
 連線版本為 rivals-web-18-no-jump；所有人請重新整理網頁或更新 Windows 版，載入同版再開房。
 已做 Chromium／WebKit 版面與輸入檢查、Chrome 觸控模擬的實際 Photon 連線測試；未使用 Android／iPhone 實機。
 素材來源見 ASSET_CREDITS.txt，請保留 ThirdPartyLicenses 全部授權文件。
+
+對戰全程顯示你的名字與隊伍：電腦左上角、手機上方計分區。開場倒數也會顯示本人名字。
