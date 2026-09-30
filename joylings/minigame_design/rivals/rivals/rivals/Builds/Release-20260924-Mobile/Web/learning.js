@@ -17,10 +17,20 @@
     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
   });
   window.rivalsReceiveLearning=state=>{
-    const wasVisible=!overlay.hidden;overlay.hidden=!state.visible;current=state;
+    const wasVisible=!overlay.hidden,wasCountingDown=current?.state===3;overlay.hidden=!state.visible;current=state;
     // Read-only presentation data; commands are validated again by the room host.
     window.rivalsLearningState=state;
-    if(!state.visible){key='';pending=false;return;}
+    if(!state.visible){
+      key='';pending=false;
+      // Unity reports the hidden lesson before updating this frame's touch state.
+      // Restore focus after a mobile respawn, but never steal it in the lobby,
+      // on the victory screen, while paused, or in a background tab.
+      if(wasVisible&&wasCountingDown&&window.rivalsTouch?.mode)requestAnimationFrame(()=>{
+        const touch=window.rivalsTouch;
+        if(!current?.visible&&touch?.mode&&touch.playable&&!touch.paused&&document.hasFocus()&&!document.hidden)window.rivalsLook?.resume?.();
+      });
+      return;
+    }
     const nextKey=[state.life,state.state,state.question].join(':');
     const changed=nextKey!==key;
     if(changed){key=nextKey;pending=false;overlay.querySelector('.learning-card').scrollTop=0;}

@@ -1,8 +1,8 @@
 # 紅藍槍戰｜武器邏輯教學版
 
-[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=learning-20261001) · [第二次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)
+[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=unlock-bots-20261001) · [第二次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)
 
-2026-10-01 更新。連線版本：`rivals-web-24-learning`。僅發布 Web；Windows 是歷史版本。
+2026-10-01 更新。連線版本：`rivals-web-25-unlock-bots`。僅發布 Web；Windows 是歷史版本。
 
 每次死亡回答一題，答對得到一個徽章。每集滿三個就解鎖下一把：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。答錯下次仍出同一題，不扣徽章。共十五題，不必背累積徽章數。
 
@@ -15,3 +15,7 @@
 自行架站時完整保留本資料夾，包含 `Build/`、`learning.js`、`learning.css`、`ThirdPartyLicenses/` 與授權文件。於本資料夾執行 `python -m http.server 8184 --bind 127.0.0.1`，再開啟 `http://127.0.0.1:8184/`。也可執行 `python serve_web.py --port 8184`。
 
 所有玩家請重新整理網頁後再加入同一個房間。桌機可用 Ctrl + Shift + R 更新。
+
+五把徽章武器不放在地面，只能解鎖後在復活時取得。場地保留步槍、散彈槍與狙擊槍。
+Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留原有瞄準誤差與射速。
+訓練場仍可透過更換武器選單試用全部武器。
