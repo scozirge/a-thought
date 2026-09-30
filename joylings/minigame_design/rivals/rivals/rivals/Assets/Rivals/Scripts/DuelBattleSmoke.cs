@@ -27,7 +27,7 @@ namespace RivalsPrototype {
     async Task SetupTarget(float distance,int weapon) {
       fire=false;player.ResetForMatch();enemy.ResetForMatch();player.CollectWeapon(weapon);
       Place(player,new Vector3(34,.1f,-33));Place(enemy,new Vector3(34,.1f,-33+distance));
-      controlledLook=player.Look=session.Look=Vector2.zero;enemy.Look=new Vector2(180,0);await Task.Delay(350);
+      controlledLook=player.Look=session.Look=new Vector2(0,weapon==Weapons.Sniper?Mathf.Atan2(.5f,distance)*Mathf.Rad2Deg:0);enemy.Look=new Vector2(180,0);await Task.Delay(350);
     }
     async Task FireOnce(){int shots=player.Shots;press++;fire=true;await Wait(()=>player.Shots>shots,"shot");fire=false;await Task.Delay(40);}
     void Capture(Camera camera,string name) {
@@ -89,7 +89,7 @@ namespace RivalsPrototype {
         int before=player.Shots;fire=true;press++;await Task.Delay(300);fire=false;Check(player.Shots==before,"sniper cannot shoot while reloading");
         await Wait(()=>!player.ReloadTimer.IsRunning,"sniper reload",4);Check(player.Ammo==1,"sniper single round magazine");
         await FireOnce();Check(enemy.Health==0,"sniper second shot kills at close range");
-        await SetupTarget(65,4);await FireOnce();Check(enemy.Health==150&&Vector3.Angle(player.ShotDirection,Vector3.forward)<.001f,"sniper long-range exact aim and 150 damage");
+        await SetupTarget(65,4);await FireOnce();Check(enemy.Health==150&&Vector3.Angle(player.ShotDirection,Quaternion.Euler(controlledLook.y,0,0)*Vector3.forward)<.001f,"sniper long-range exact aim and 150 damage");
         await Wait(()=>!player.ReloadTimer.IsRunning,"long-range sniper reload",4);await FireOnce();Check(enemy.Health==0,"sniper second shot kills at long range");
         await SetupTarget(60,0);controlledLook=session.Look=new Vector2(0,-65);await Task.Delay(100);
         before=player.Shots;fire=true;press++;await Wait(()=>player.Shots>=before+3,"three rifle shots");fire=false;Check(Weapons.RifleSpread(player.RifleHeat,false)==0,"first three rifle shots accurate");

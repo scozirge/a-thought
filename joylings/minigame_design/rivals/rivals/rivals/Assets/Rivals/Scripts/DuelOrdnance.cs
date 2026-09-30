@@ -30,7 +30,7 @@ namespace RivalsPrototype {
     int damageBatchDepth,pendingWinner=-1;
 
     public static Vector3 LaunchVelocity(int weapon,Vector3 direction)=>weapon==Weapons.Poison
-      ?direction*8+Vector3.up*4:weapon==Weapons.Cleaver?direction*24:direction*13+Vector3.up*5;
+      ?direction*16+Vector3.up*5:weapon==Weapons.Cleaver?direction*32:direction*10+Vector3.up*3.5f;
     public static float ProjectileGravity(int weapon)=>weapon==Weapons.Poison?14:weapon==Weapons.Cleaver?10:7.5f;
     public static int RocketDamage(float distance,bool direct)=>direct?300:distance<=Weapons.RocketInnerRadius?150:distance<=Weapons.RocketRadius?100:0;
 
@@ -62,6 +62,23 @@ namespace RivalsPrototype {
 
     public void ClearOrdnance(){if(HasStateAuthority)for(int i=0;i<OrdnanceCapacity;i++)Ordnance.Set(i,default);}
 
+    static bool PoisonTouches(OrdnanceState zone,DuelPlayer target) {
+      var feet=target.transform.position;
+      return Mathf.Abs(feet.y-zone.Position.y)<=1.1f&&
+        new Vector2(feet.x-zone.Position.x,feet.z-zone.Position.z).sqrMagnitude<=Weapons.PoisonRadius*Weapons.PoisonRadius&&
+        BlastVisible(zone.Position+Vector3.up*.35f,target);
+    }
+    // The same replicated zones drive host movement and client prediction.
+    // Leaving a zone restores speed immediately; overlapping zones never stack.
+    public bool IsInPoison(DuelPlayer target) {
+      if(Phase!=2||target.Health<=0)return false;
+      for(int i=0;i<OrdnanceCapacity;i++) {
+        var zone=Ordnance[i];
+        if(zone.Stage==OrdnanceState.Toxic&&!zone.Lifetime.ExpiredOrNotRunning(Runner)&&PoisonTouches(zone,target))return true;
+      }
+      return false;
+    }
+
     void UpdateOrdnance() {
       for(int slot=0;slot<OrdnanceCapacity&&Phase==2;slot++) {
         var state=Ordnance[slot];if(state.Stage==0)continue;
@@ -89,9 +106,7 @@ namespace RivalsPrototype {
           if(state.Lifetime.Expired(Runner))state=default;
           else foreach(var target in Players) {
             if(target.Health<=0||!target.PoisonDamageTimer.ExpiredOrNotRunning(Runner))continue;
-            var feet=target.transform.position;
-            if(Mathf.Abs(feet.y-state.Position.y)>1.1f||new Vector2(feet.x-state.Position.x,feet.z-state.Position.z).sqrMagnitude>Weapons.PoisonRadius*Weapons.PoisonRadius)continue;
-            if(!BlastVisible(state.Position+Vector3.up*.35f,target))continue;
+            if(!PoisonTouches(state,target))continue;
             target.PoisonDamageTimer=TickTimer.CreateFromSeconds(Runner,Weapons.PoisonInterval);
             ApplyOrdnanceDamage(state.Owner,target,Weapons.Damage[Weapons.Poison],state.Position,true);
           }

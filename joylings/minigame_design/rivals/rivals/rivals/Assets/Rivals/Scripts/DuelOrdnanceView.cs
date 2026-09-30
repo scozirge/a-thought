@@ -57,9 +57,9 @@ namespace RivalsPrototype {
         e.Text=Root("Strike countdown",e.Root).gameObject.AddComponent<TextMesh>();e.Text.anchor=TextAnchor.MiddleCenter;e.Text.fontSize=64;e.Text.characterSize=.065f;e.Text.color=Red;e.Text.transform.localPosition=Vector3.up*3.2f;
       }else if(state.Stage==OrdnanceState.Toxic) {
         e.Disc=Disc(e.Root,Weapons.PoisonRadius,new Color(.26f,.8f,.08f,.38f));
-        e.Ring=Ring(e.Root,Weapons.PoisonRadius,Toxic,.13f);e.Inner=Ring(e.Root,Weapons.PoisonRadius*.92f,new Color(.38f,.09f,.53f,.8f),.08f);
+        e.Ring=Ring(e.Root,Weapons.PoisonRadius,Toxic,.13f);
         e.Bits=new Transform[9];for(int i=0;i<e.Bits.Length;i++)e.Bits[i]=Ball(e.Root,"Poison bubble",new Color(.47f,1,.16f,.40f));
-        for(int i=0;i<6;i++){float a=i*Mathf.PI/3;var mark=DuelWeaponModels.Box(e.Root,"Toxic hazard stripe",new Vector3(Mathf.Cos(a),0,Mathf.Sin(a))*3.65f+Vector3.up*.07f,new Vector3(.32f,.014f,.52f),new Color(.12f,.17f,.06f));mark.localRotation=Quaternion.Euler(0,-a*Mathf.Rad2Deg,0);}
+        for(int i=0;i<6;i++){float a=i*Mathf.PI/3;var mark=DuelWeaponModels.Box(e.Root,"Toxic hazard stripe",new Vector3(Mathf.Cos(a),0,Mathf.Sin(a))*(Weapons.PoisonRadius-.35f)+Vector3.up*.07f,new Vector3(.32f,.014f,.52f),new Color(.12f,.17f,.06f));mark.localRotation=Quaternion.Euler(0,-a*Mathf.Rad2Deg,0);}
       }else {
         bool nuclear=state.Stage==OrdnanceState.NuclearBlast;
         e.Core=Ball(e.Root,"Fireball",Gold);e.Cloud=Root("Smoke crown",e.Root);e.Bits=new Transform[nuclear?10:7];
@@ -90,7 +90,7 @@ namespace RivalsPrototype {
         }else if(state.Stage==OrdnanceState.Toxic) {
           float grow=Mathf.Clamp01(age*5);e.Disc.localScale=new Vector3(Weapons.PoisonRadius*2*grow,.007f,Weapons.PoisonRadius*2*grow);
           e.Ring.widthMultiplier=.10f+.035f*Mathf.Sin(age*5);
-          for(int n=0;n<e.Bits.Length;n++){float phase=Mathf.Repeat(age*.52f+n*.31f,1),angle=n*2.39996f,radius=1+(n%3)*.95f;e.Bits[n].localPosition=new Vector3(Mathf.Cos(angle)*radius,.12f+phase*.85f,Mathf.Sin(angle)*radius);e.Bits[n].localScale=Vector3.one*(.13f+Mathf.Sin(phase*Mathf.PI)*.24f);}
+          for(int n=0;n<e.Bits.Length;n++){float phase=Mathf.Repeat(age*.52f+n*.31f,1),angle=n*2.39996f,radius=(.25f+(n%3)*.2375f)*Weapons.PoisonRadius;e.Bits[n].localPosition=new Vector3(Mathf.Cos(angle)*radius,.12f+phase*.85f,Mathf.Sin(angle)*radius);e.Bits[n].localScale=Vector3.one*(.13f+Mathf.Sin(phase*Mathf.PI)*.24f);}
           if(left<.4f)e.Root.localScale=Vector3.one*Mathf.Clamp01(left/.4f);
         }else {
           bool nuclear=state.Stage==OrdnanceState.NuclearBlast,rocket=state.Weapon==Weapons.Rocket;

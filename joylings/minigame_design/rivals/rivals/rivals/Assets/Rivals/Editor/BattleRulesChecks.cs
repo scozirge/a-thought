@@ -11,7 +11,7 @@ namespace RivalsPrototype.Editor {
       Check(DuelNames.Clean("<b>貓貓</b>\n").IndexOf('<')<0,"names cannot contain markup");
       Check(DuelNames.Clean(new string('貓',30)).Length==10,"name length");
       Check(Weapons.ShotDamage(3,5,false)==300&&Weapons.ShotDamage(3,10,false)<90&&Weapons.ShotDamage(3,25,false)<20,"shotgun falloff");
-      Check(Weapons.ShotDamage(4,1,true)==150&&Weapons.ShotDamage(4,900,false)==150&&Weapons.Magazines[4]==1,"sniper");
+      Check(Weapons.ShotDamage(4,1,true)==300&&Weapons.ShotDamage(4,900,true)==300&&Weapons.ShotDamage(4,900,false)==150&&Weapons.Magazines[4]==1,"sniper head and body damage");
       Check(Weapons.RifleSpread(3,true)==0&&Weapons.RifleSpread(8,true)>3,"rifle burst accuracy");
       Check(Weapons.SpreadOffset(20,1,5)==Weapons.SpreadOffset(20,1,5),"deterministic prediction spread");
       Check(DuelMatch.PickupCount==14&&DuelMatch.PickupRespawnSeconds==5&&DuelMatch.KillsToWin==30&&DuelRespawn.DelaySeconds==3&&DuelMatch.PodiumSeconds==10,"30-kill and three-second respawn rules");

@@ -234,6 +234,7 @@ namespace RivalsPrototype {
       bool aim = input.Buttons.IsSet(Action.Aim)&&Weapons.CanAim(Weapon);Aiming=aim;
       cc.maxSpeed = IsBot ? 3.8f : aim ? 3.2f : input.Buttons.IsSet(Action.Sprint) ? 8 : 5.5f;
       if(Weapon==Weapons.Cleaver)cc.maxSpeed*=1.3f;
+      if(match.IsInPoison(this))cc.maxSpeed*=Weapons.PoisonSpeedMultiplier;
       cc.rotationSpeed = 0; cc.acceleration = 70; cc.braking = 20;
       var move = Quaternion.Euler(0, Look.x, 0) * new Vector3(input.Move.x, 0, input.Move.y);
       cc.Move(move); transform.rotation = Quaternion.Euler(0, Look.x, 0);
@@ -247,6 +248,11 @@ namespace RivalsPrototype {
         ReloadTimer = TickTimer.CreateFromSeconds(Runner, Weapons.Reload[Weapon]);
       if(ReloadTimer.IsRunning)ConsumedFirePress=input.FirePress;
       bool wantsFire=input.Buttons.IsSet(Action.Fire)||input.FirePress>ConsumedFirePress;
+      if(Weapon==Weapons.Rocket&&!IsBot) {
+        wantsFire=input.FirePress>ConsumedFirePress||pressed.IsSet(Action.Fire);
+        // A press during cooldown is discarded, never queued or auto-repeated.
+        ConsumedFirePress=input.FirePress;
+      }
       bool wantsAlt=Weapon==Weapons.Cleaver&&(input.AltPress>ConsumedAltPress||pressed.IsSet(Action.Aim));
       if(Weapon!=Weapons.Cleaver)ConsumedAltPress=input.AltPress;
       if(wantsAlt&&FireTimer.ExpiredOrNotRunning(Runner)){
@@ -392,6 +398,7 @@ namespace RivalsPrototype {
       if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotWeapon=firedWeapon;predictedShotPoint=ShotPoint;predictedShotDirection=direction;}
       if(firedWeapon==Weapons.Nuke||(firedWeapon==Weapons.Cleaver&&thrown)) {
         Weapon=Weapons.Pistol;OwnedWeapons=1<<Weapon;PistolAmmo=Weapons.Magazines[Weapon];
+        if(firedWeapon==Weapons.Nuke&&match.IsTraining&&!IsBot)DuelSession.Instance.RememberTrainingPickup(Weapons.Pistol);
         RifleHeat=0;ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.35f);
       }
     }

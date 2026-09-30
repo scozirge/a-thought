@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RivalsPrototype {
   public partial class DuelSession {
-    public const string NetworkVersion="rivals-web-20-training";
+    public const string NetworkVersion="rivals-web-21-balance";
     public static string RoomTitle(string name)=>DuelNames.Clean(name)+"的房間";
     public string PlayerName="貓貓";
     NetworkRunner lobbyRunner;

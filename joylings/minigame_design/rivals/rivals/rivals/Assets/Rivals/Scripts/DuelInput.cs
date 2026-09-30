@@ -29,11 +29,11 @@ namespace RivalsPrototype {
     public static readonly string[] Names = { "步槍", "手槍", "菜刀", "散彈槍", "狙擊槍", "加特林", "無限火箭", "核彈", "劇毒藥水" };
     public const float ShotgunCloseRange=5f;
     public static readonly int[] Magazines = { 30, 12, 1, 6, 1, 100, 1, 1, 1 };
-    public static readonly int[] Damage = { 20, 28, 300, 300, 150, 12, 300, 300, 30 };
+    public static readonly int[] Damage = { 20, 28, 300, 300, 150, 24, 300, 300, 30 };
     public static readonly float[] Interval = { .12f, .28f, .6f, .8f, 1.2f, .06f, 4f, .5f, 3f };
-    public static readonly float[] Reload = { 1.6f, 1.1f, 0, 2f, 2.2f, 6f, 0, 0, 0 };
+    public static readonly float[] Reload = { 1.6f, 1.1f, 0, 2f, 2.2f, 12f, 0, 0, 0 };
     public const float CleaverRange=2.5f,RocketRadius=6f,RocketInnerRadius=3f,NukeRadius=14f,NukeDelay=7f;
-    public const float PoisonRadius=4f,PoisonDuration=5f,PoisonInterval=.5f;
+    public const float PoisonRadius=6f,PoisonDuration=5f,PoisonInterval=.5f,PoisonSpeedMultiplier=.6f;
     public static float Spread(int kind,float heat,bool aiming,float speed=0) {
       float move=Mathf.Clamp01(speed/5.5f);
       return kind switch {
@@ -44,7 +44,7 @@ namespace RivalsPrototype {
     }
     public static float RecoveryRate(int kind)=>kind==Gatling?6:kind==Pistol?8:20;
     public static int ShotDamage(int kind,float distance,bool headshot) {
-      if(kind==4)return Damage[4];
+      if(kind==Sniper)return headshot?DuelPlayer.MaxHealth:Damage[Sniper];
       if(kind==Cleaver)return 300;
       if(kind==3)return distance<=ShotgunCloseRange?Damage[3]:Mathf.RoundToInt(Mathf.Lerp(15,Damage[3],Mathf.Exp(-(distance-ShotgunCloseRange)*.3f)));
       return Mathf.RoundToInt(Damage[kind]*(headshot?1.5f:1));

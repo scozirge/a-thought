@@ -341,7 +341,7 @@
     bindTap(touchMenu,()=>{disengage('menu');gameControl('pause');});
     bindTap(document.getElementById('touch-resume'),()=>gameControl('resume'));bindTap(document.getElementById('touch-leave'),()=>gameControl('leave'));bindTap(document.getElementById('touch-audio'),()=>gameControl('audio'));
     const armory=document.getElementById('training-armory'),armoryGrid=document.getElementById('armory-grid');
-    const trainingWeapons=[[1,'手槍','起始武器 · 12 發'],[3,'散彈槍','近距離爆發 · 6 發'],[4,'狙擊槍','遠距離瞄準 · 單發'],[0,'步槍','穩定連射 · 30 發'],[5,'加特林','高速連射 · 6 秒裝填'],[6,'無限火箭','拋物線爆炸 · 4 秒冷卻'],[7,'核彈','標記地面 · 7 秒後爆炸'],[2,'菜刀','近戰秒殺 · 右鍵／飛刀'],[8,'劇毒藥水','拋物線毒區 · 持續 5 秒']];
+    const trainingWeapons=[[1,'手槍','起始武器 · 12 發'],[3,'散彈槍','近距離爆發 · 6 發'],[4,'狙擊槍','爆頭秒殺 · 身體 150'],[0,'步槍','穩定連射 · 30 發'],[5,'加特林','傷害 24 · 12 秒裝填'],[6,'無限火箭','點按單發 · 4 秒冷卻'],[7,'核彈','用後換手槍 · 7 秒爆炸'],[2,'菜刀','近戰秒殺 · 右鍵／飛刀'],[8,'劇毒藥水','毒區緩速 · 持續 5 秒']];
     function closeArmory(){armory.hidden=true;lastPointerView='';gameControl('resume');}
     for(const [kind,name,description] of trainingWeapons){const button=document.createElement('button');button.type='button';button.dataset.weapon=String(kind);const title=document.createElement('strong'),detail=document.createElement('small');title.textContent=name;detail.textContent=description;button.append(title,detail);armoryGrid.append(button);bindTap(button,()=>{gameControl('training-select:'+kind);closeArmory();});}
     bindTap(document.getElementById('training-weapons'),()=>{armory.hidden=false;for(const button of armoryGrid.querySelectorAll('button'))button.setAttribute('aria-pressed',String(Number(button.dataset.weapon)===touch.weapon));lastPointerView='';disengage('armory');gameControl('pause');document.getElementById('armory-close').focus();});
