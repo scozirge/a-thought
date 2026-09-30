@@ -17,7 +17,7 @@ const result={checks:[],errors:[]},me=s=>s.players.find(p=>p.seat===s.localSeat)
    await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:120000});await page.waitForFunction(()=>window.rivalsLobbyState?.visible&&rivalsLobbyState.canTrain,null,{timeout:Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||180000)});
    await page.locator('#player-name').fill('訓練'+mode);await page.locator('#training-entry').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(output,mode+'-menu.png')});
    if(mobile){await context.setOffline(true);await page.waitForTimeout(150);}
-   await page.locator('#training-entry').click();let s=await wait(page,s=>s.training&&s.phase===2&&s.players.length===8,'enter training',40000);
+   await page.locator('#training-entry').click();let s=await wait(page,s=>s.training&&s.phase===2&&s.players.length===8&&s.identityName==='訓練'+mode,'training and identity ready',40000);
    assert.equal(s.pickups.length,9);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,1,2,3,4,5,6,7,8]);assert.equal(s.players.filter(p=>p.bot).length,7);assert.equal(s.identityName,'訓練'+mode);
 
    const cdp=await context.newCDPSession(page);
