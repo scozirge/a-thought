@@ -10,7 +10,21 @@ const result={checks:[],errors:[],weapons:[],logs:[]},me=s=>s.players.find(p=>p.
  async function wait(p,test,label,ms=20000){const end=Date.now()+ms;while(Date.now()<end){const s=await state(p);if(s?.players&&test(s))return s;await p.waitForTimeout(50);}throw Error(label+' timeout');}
  async function open(){const context=await browser.newContext({viewport:{width:1280,height:800}}),p=await context.newPage();pages.push(p);p.on('pageerror',e=>result.errors.push(e.message));p.on('console',m=>{if(/^(?:\w*Exception|RuntimeError):/.test(m.text()))result.errors.push(m.text());if(/RIVALS_|Exception/.test(m.text()))result.logs.push(m.text());});await p.goto(url.href,{waitUntil:'domcontentloaded'});await p.waitForFunction(()=>window.rivalsLobbyState?.ready,null,{timeout:180000});return p;}
  async function aim(p,yaw,pitch=0){const s=await state(p);await p.evaluate(({x,y})=>document.dispatchEvent(new MouseEvent('mousemove',{movementX:x,movementY:y,bubbles:true})),{x:angle(yaw-s.look.x)/.12,y:(pitch-s.look.y)/.12});await p.waitForTimeout(100);}
- async function walk(p,x,z){const end=Date.now()+16000;await p.keyboard.down('Shift');await p.keyboard.down('w');try{while(Date.now()<end){const s=await state(p),a=me(s);assert.ok(a.health>0&&s.phase===2,'route interrupted by combat');const dx=x-a.position.x,dz=z-a.position.z;if(Math.hypot(dx,dz)<.7)return;await aim(p,Math.atan2(dx,dz)*180/Math.PI);await p.waitForTimeout(50);}}finally{await p.keyboard.up('w');await p.keyboard.up('Shift');}throw Error('walk stuck '+JSON.stringify({target:{x,z},state:me(await state(p))}));}
+ async function walk(p,x,z){
+  const end=Date.now()+16000;await p.keyboard.down('Shift');await p.keyboard.down('w');
+  try{while(Date.now()<end){
+   let s=await state(p),a=me(s);assert.ok(a.health>0&&s.phase===2,'route interrupted by combat');
+   let dx=x-a.position.x,dz=z-a.position.z;if(Math.hypot(dx,dz)<.7)return;
+   if(Math.hypot(dx,dz)<3){
+    // A cleaver sprint can cross a waypoint between 100 ms diagnostics samples.
+    // Stop and take short walking steps near the waypoint without relaxing its tolerance.
+    await p.keyboard.up('w');await p.keyboard.up('Shift');await p.waitForTimeout(200);
+    a=me(await state(p));dx=x-a.position.x;dz=z-a.position.z;if(Math.hypot(dx,dz)<.7)return;
+    await aim(p,Math.atan2(dx,dz)*180/Math.PI);await p.keyboard.down('w');await p.waitForTimeout(60);await p.keyboard.up('w');await p.waitForTimeout(180);
+   }else {await p.keyboard.down('Shift');await p.keyboard.down('w');await aim(p,Math.atan2(dx,dz)*180/Math.PI);await p.waitForTimeout(50);}
+  }}finally{await p.keyboard.up('w');await p.keyboard.up('Shift');}
+  throw Error('walk stuck '+JSON.stringify({target:{x,z},state:me(await state(p))}));
+ }
  function pass(s){result.checks.push(s);console.log('WEB_ARSENAL_CHECK '+s);}
  try {
   const host=await open(),client=await open();
