@@ -100,7 +100,7 @@
     </section>
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
-  <footer><span id="control-instructions">點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵開槍 · 右鍵瞄準 · 四角撿槍替換 · Esc 選單</span></footer>
+  <footer><span id="control-instructions">點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵攻擊 · 右鍵瞄準／飛刀 · 地圖撿武器 · Esc 選單</span></footer>
   <script>
     const canvas=document.getElementById('unity-canvas');let player;
     const lobby=document.getElementById('lobby'),nameInput=document.getElementById('player-name'),roomPreview=document.getElementById('room-name'),roomList=document.getElementById('room-list');
@@ -149,7 +149,7 @@
     const gameUrl=new URL(location.href);gameUrl.searchParams.delete('diagnostics');gameAddress.value=gameUrl.href;
     let enabled=false,engaged=false,lockPending=false,lockFailed=false,lockTimer=0,lockRequest=0,wasLocked=false,lastReason='waiting',lastError='',lastPointerView='';
     let dragMode=false,dragging=false,dragPointer=null,dragX=0,dragY=0;
-    const touch=window.rivalsTouch={mode:false,moveX:0,moveY:0,held:0,pressed:0,firePress:0,aiming:false,playable:false,started:false,paused:false};
+    const touch=window.rivalsTouch={mode:false,moveX:0,moveY:0,held:0,pressed:0,firePress:0,altPress:0,weapon:1,aiming:false,playable:false,started:false,paused:false};
     const touchControls=document.getElementById('touch-controls'),touchPause=document.getElementById('touch-pause'),touchMenu=document.getElementById('touch-menu');
     const touchPointers=new Map(),stick=document.getElementById('touch-move'),stickKnob=stick.querySelector('span');
     const touchPulseUntil=new Float64Array(6);
@@ -256,16 +256,20 @@
     function refreshTouchHeld(){
       touch.held=touch.aiming?2:0;for(const pointer of touchPointers.values())if(pointer.action!==null&&pointer.action!==1)touch.held|=1<<pointer.action;
       for(const button of touchControls.querySelectorAll('[data-action]'))button.classList.toggle('is-pressed',!!(touch.held&(1<<Number(button.dataset.action))));
-      const aim=document.getElementById('touch-aim');aim.setAttribute('aria-pressed',String(touch.aiming));aim.textContent=touch.aiming?'瞄準中':'瞄準';
+      const aim=document.getElementById('touch-aim');aim.setAttribute('aria-pressed',String(touch.aiming));aim.textContent=touch.weapon===2?'飛刀':touch.aiming?'瞄準中':'瞄準';
+      aim.setAttribute('aria-label',touch.weapon===2?'丟出菜刀，使用後換回手槍':'瞄準，點一下切換');
+      aim.hidden=[6,7,8].includes(touch.weapon);document.getElementById('touch-reload').hidden=[2,6,7,8].includes(touch.weapon);
+      document.getElementById('touch-fire').textContent=touch.weapon===2?'揮砍':touch.weapon===7?'標記':touch.weapon===8?'投擲':'射擊';
     }
     touch.reset=()=>{
-      const pointers=[...touchPointers];touchPointers.clear();touchPulseUntil.fill(0);touch.aiming=false;touch.moveX=touch.moveY=touch.held=touch.pressed=touch.firePress=0;clearMotion();stickKnob.style.transform='';refreshTouchHeld();
+      const pointers=[...touchPointers];touchPointers.clear();touchPulseUntil.fill(0);touch.aiming=false;touch.moveX=touch.moveY=touch.held=touch.pressed=touch.firePress=touch.altPress=0;clearMotion();stickKnob.style.transform='';refreshTouchHeld();
       for(const [id,pointer] of pointers)if(pointer.element.hasPointerCapture(id))pointer.element.releasePointerCapture(id);
     };
     // Brief reload taps span input packets. Fire has a cumulative counter;
     // aiming is toggled separately so one thumb can aim, then fire and turn.
     touch.readHeld=()=>{let held=touch.held;const now=performance.now();for(const action of [4])if(touchPulseUntil[action]>now)held|=1<<action;return held;};
     touch.setState=state=>{
+      const weapon=(state>>4)&15;if(touch.weapon!==weapon){touch.weapon=weapon;touch.aiming=false;touch.altPress=0;refreshTouchHeld();}
       const playable=!!(state&1);if(touch.playable&&!playable)touch.reset();
       touch.playable=playable;touch.started=!!(state&2);touch.paused=!!(state&4);
       const audioText=state&8?'聲音：開':'聲音：關';if(document.getElementById('touch-audio').textContent!==audioText)document.getElementById('touch-audio').textContent=audioText;
@@ -291,7 +295,7 @@
         if(action===1&&[...touchPointers.values()].some(pointer=>pointer.action===1))return;
         const pointer={element,action,kind:element===stick?'move':action===null?'look':'action',x:event.clientX,y:event.clientY};
         touchPointers.set(event.pointerId,pointer);element.setPointerCapture(event.pointerId);
-        if(action===1)touch.aiming=!touch.aiming;
+        if(action===1){if(touch.weapon===2)touch.altPress=(touch.altPress||0)+1;else touch.aiming=!touch.aiming;}
         else if(action!==null){touch.pressed|=1<<action;if(action===0)touch.firePress++;if(action===4)touchPulseUntil[action]=performance.now()+180;}refreshTouchHeld();if(pointer.kind==='move')moveTouch(event,pointer);
       });
       element.addEventListener('pointermove',event=>{const pointer=touchPointers.get(event.pointerId);if(!pointer||!active())return;event.preventDefault();moveTouch(event,pointer);});
@@ -304,7 +308,7 @@
       document.body.classList.toggle('touch-mode',touch.mode);
       document.getElementById('mode-touch').setAttribute('aria-pressed',String(touch.mode));document.getElementById('mode-keyboard').setAttribute('aria-pressed',String(!touch.mode));
       document.getElementById('mode-help').textContent=touch.mode?'左側搖桿移動 · 右側滑動轉向 · 建議橫向遊玩':'WASD 移動 · 滑鼠轉向與射擊';
-      document.getElementById('control-instructions').textContent=touch.mode?'左側移動 · 右側轉向 · 按住射擊 · 四角撿槍替換 · 右上角選單':'點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵開槍 · 右鍵瞄準 · 四角撿槍替換 · Esc 選單';
+      document.getElementById('control-instructions').textContent=touch.mode?'左側移動 · 右側轉向 · 按住射擊 · 地圖撿武器 · 右上角選單':'點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵攻擊 · 右鍵瞄準／飛刀 · 地圖撿武器 · Esc 選單';
       try{localStorage.setItem('rivals.controlMode',touch.mode?'touch':'keyboard');}catch(error){}
       updatePointerUI();
     }
@@ -341,8 +345,8 @@
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
     function updateHudViewport(){const rect=canvas.getBoundingClientRect(),safe=getComputedStyle(document.getElementById('viewport-safe-area'));window.rivalsViewport=[rect.width,rect.height,parseFloat(safe.paddingLeft)||0,parseFloat(safe.paddingRight)||0,parseFloat(safe.paddingTop)||0,parseFloat(safe.paddingBottom)||0];}
     new ResizeObserver(updateHudViewport).observe(canvas);window.addEventListener('resize',updateHudViewport);window.visualViewport?.addEventListener('resize',updateHudViewport);updateHudViewport();
-    const config={dataUrl:'Build/c482aa6735b6656a8a8b28df707988af.data',frameworkUrl:'Build/e5ea70ee7f6bfdb0bb86ca35aab73ffd.framework.js',codeUrl:'Build/74a6af7229204f2519777e3cc554620d.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
-    const loader=document.createElement('script');loader.src='Build/58a5262d03b35f8e16119e1f0884dcfb.loader.js';
+    const config={dataUrl:'Build/d9dfdee46a5da5b318cdce9e346a8549.data',frameworkUrl:'Build/8c7bdf10c6ff2640623ecfef33d68e34.framework.js',codeUrl:'Build/207958f728f5ef46939da897ba784892.wasm',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/1f2a7f0fa7807c149aae3439c53881d2.loader.js';
     // Content hashes change only when the asset changes. UI edits no longer
     // invalidate the whole game; Unity's persistent cache can reuse big files.
     config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
