@@ -1,23 +1,29 @@
 {
-  "builtAt": "2026-09-30T18:14:19.869185+00:00",
+  "builtAt": "2026-09-30T19:13:59.714147+00:00",
+  "releaseTargets": [
+    "Web"
+  ],
+  "legacyTargets": [
+    "Windows"
+  ],
   "packages": [
     {
       "target": "Web",
-      "gameSourceCommit": "30691ad3e54cf668bf5163877473ade040bc9b9d",
+      "gameSourceCommit": "7da06421782697c6b249f1688b80db46c0129d20",
       "archive": "Builds/RIVALS-Web-20260924-mobile.zip",
-      "bytes": 30177380,
-      "sha256": "d3ab35d8341b325a83a0513606fc74299eaccfc998207f135794004be567a334",
+      "bytes": 30197725,
+      "sha256": "4bfca21c72fe5cf968ee1c388ef1c56b2398637bdbd58058c8ceeda07c47ee18",
       "files": 22,
-      "uncompressedBytes": 76025734,
+      "uncompressedBytes": 76053202,
       "allFilesMatch": true,
       "fileSha256": {
         "ASSET_CREDITS.txt": "2ba905dc1efbb0c85042ab4f629ccb14cb18e214864378f7c20c35cc2ca30f72",
-        "Build/1f2a7f0fa7807c149aae3439c53881d2.loader.js": "1921775ac304216d4d2b05be7d0232be59c85ede83ec211044b794dd79a6ca3e",
-        "Build/207958f728f5ef46939da897ba784892.wasm": "fdf888b817ad2a89f2f34ed7c62abd9d2d33abb48dff64e1b3ba8df6a0e1d04d",
-        "Build/8c7bdf10c6ff2640623ecfef33d68e34.framework.js": "1d1c2b22106bc8086575b49dc0257e196e0c65539e50dadc9f7e3006f40eade6",
-        "Build/d9dfdee46a5da5b318cdce9e346a8549.data": "fbad8f4473130da6f84ed7b1f05da5d8c04ef27d5ed0f36b3be225314863070f",
-        "index.html": "ddc5ede80754da0bab07922d57eae800334b8417e63f2617bf7341986feaed5f",
-        "README.md": "4331a0484cbf0b1af39cf191c9b97ddbc61ef16cba4cfd6aa9d42996a3613abb",
+        "Build/1e8cb440843ace5ba7b3cb63ed1b0672.wasm": "d5b5cb0b08d8d5462ccccd11d936e20c42496f8346f1cb2e2a8fe0d716afefc3",
+        "Build/34473f342b5b63671f6ad7c0566d8854.data": "d4cbae88598851ff8e1e96b00293cc1f8b0802043b1f3b92644f117e66005d35",
+        "Build/72bd305c61d050a9a5e82574ffb311e5.framework.js": "d04cd0216787c7823d83170b40400f10ce52f78b61d0ea897c48b6dce693b96e",
+        "Build/f42d984f5ff6840877aa15cf43602c56.loader.js": "51c9deb8c9f6eb5a7e2b0ecd7292ab6f6d55e3d144e56bc5a19c2415de402171",
+        "index.html": "f1bdc52818a2b041edfab90f28679b6cfe9f33e3cc7aad9add0f53c694501279",
+        "README.md": "0897c816a52c339eb6f606bb7a9f3bcef6b871bd547165d645b6c0faf8ca7ee6",
         "serve_web.py": "8d30c8124477c4ad958c083e5109cbf615e06fa9a83a7f67e18866f7c7bc5ad3",
         "ThirdPartyLicenses/Kenney-blaster-kit/License.txt": "bece5f4d99cca9dcf86931221a69909862ff6cc95e1735462ee678516a1063e2",
         "ThirdPartyLicenses/Kenney-blocky-characters/License.txt": "610fec89c16826112e9d6b80497b726c43fea0e42c9cd9d7cb081f8ad550c0ec",
@@ -31,8 +37,8 @@
         "ThirdPartyLicenses/QuaterniusUltimateGuns/License.txt": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c",
         "ThirdPartyLicenses/SpringySpringoReload/License.txt": "746bca69a6b6ee1afabc3982e3e5be040ed4461eef4fe541f732431938a323a4",
         "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964",
-        "使用說明.txt": "2c666348aa2a9b3b75c225b947630db15a91b8909750e5e562ab1cfb9fe7f56b",
-        "版本資訊.json": "01a0eef9dc6d5af3e65653369c43f01ad4bfb81c6b608a83d0dbcd4e546adf89"
+        "使用說明.txt": "754b2fded7b5d3b5a7528c574a2e5401e334e188faf3736cbcacf97f01b9fa06",
+        "版本資訊.json": "23813a5358e0be185f2531b267ad51cf1dedbc891f54c04e48b30c39175f4760"
       }
     },
     {

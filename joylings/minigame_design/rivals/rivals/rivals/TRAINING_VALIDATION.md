@@ -28,3 +28,10 @@
 `Tools/TrainingMenuChecks.cjs` 測試實際網頁選單、武器按鈕及手機觸碰；`Tools/WebTrainingSmokeTest.cjs` 使用正式 Web、一般選單與攻擊輸入，不修改角色、位置、生命或計時器。`Tools/WebVisualSmokeTest.cjs --training` 檢查正式訓練場 HUD 與手機按鈕的邊界及重疊。
 
 測試是瀏覽器觸控模擬，尚未使用 Android／iPhone 實機。
+
+## 正式 Web 輸出
+
+- 遊戲來源提交：`7da06421782697c6b249f1688b80db46c0129d20`。
+- `Builds/RIVALS-Web-20260924-mobile.zip`：30,197,725 bytes；22 個正式執行檔案，逐檔 SHA-256 與 ZIP CRC 驗證通過。
+- ZIP SHA-256：`4bfca21c72fe5cf968ee1c388ef1c56b2398637bdbd58058c8ceeda07c47ee18`。
+- `release-manifest.json` 標示本次發布目標為 Web；Windows 項目與既有 Windows 成品保留原內容。

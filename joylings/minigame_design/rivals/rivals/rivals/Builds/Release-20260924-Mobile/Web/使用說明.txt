@@ -1,6 +1,6 @@
-紅藍槍戰｜手機與鍵鼠網頁版（2026-10-01 五款新武器版）
+紅藍槍戰｜手機與鍵鼠網頁版（2026-10-01 訓練場版）
 
-公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=arsenal-20261001
+公開遊戲：https://scozirge.github.io/a-thought/rivals/?v=training-20261001
 大廳選「鍵盤滑鼠」或「手機觸控」，建立房間或加入朋友的小隊。
 手機與電腦可同房遊玩，建議手機橫向拿。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。
 
@@ -17,9 +17,12 @@
 再開啟 http://127.0.0.1:8184/ ，不可直接雙擊 index.html。
 自行架站請完整上傳此目錄，以 HTTP(S) 提供，.wasm 的 MIME type 為 application/wasm。
 首次下載可能需要數分鐘。房主需保持瀏覽器運作，房主離開後其他玩家返回大廳。
-連線版本為 rivals-web-19-arsenal；所有人請重新整理網頁或更新 Windows 版，載入同版再開房。
+連線版本為 rivals-web-20-training；所有人請重新整理網頁，載入同版再開房。
 已做 Chromium／WebKit 版面與輸入檢查、Chrome 觸控模擬的實際 Photon 連線測試；未使用 Android／iPhone 實機。
 素材來源見 ASSET_CREDITS.txt，請保留 ThirdPartyLicenses 全部授權文件。
+
+
+訓練場：主選單下方進入單人練習，七個固定人形靶不移動、不還擊；自己與目標死亡 3 秒後復活。「更換武器」可選全部九種武器並補滿彈藥，小尺寸橫向手機按鈕在下方中央，其餘畫面在右上；鍵鼠先按 Esc 釋放游標。射擊線後方也能撿武器。沒有 30 殺或時間限制，遊戲載入後不需連上 Photon。
 
 
 新武器：
