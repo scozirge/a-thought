@@ -17,7 +17,7 @@ namespace RivalsPrototype {
         Check(session.IsTraining&&session.Runner.GameMode==GameMode.Single,"private single-player mode");
         Check(targets.Length==7&&targets.All(p=>p.Team!=player.Team),"seven hittable fixed targets");
         Check(!FindFirstObjectByType<DuelWorld>(FindObjectsInactive.Include).gameObject.activeSelf,"combat arena hidden");
-        Check(match.Pickups.Count(p=>p.Weapon>=0)==9&&match.Pickups.Where(p=>p.Weapon>=0).Select(p=>p.Weapon).Distinct().Count()==9,"nine weapon stations");
+        Check(match.Pickups.Count(p=>p.Weapon>=0)==4&&match.Pickups.All(p=>p.Weapon<0||DuelPickups.IsGroundWeapon(p.Weapon)),"four ordinary stations; badge weapons only in practice menu");
         foreach(var p in session.Players)Check(Vector3.Distance(p.SpawnPoint,DuelTrainingWorld.Positions[p.Seat])<.02f,"authored spawn "+p.Seat);
         var positions=targets.Select(p=>p.transform.position).ToArray();await Task.Delay(1600);
         Check(targets.Select((p,i)=>Vector3.Distance(p.transform.position,positions[i])<.005f&&p.Shots==0).All(v=>v),"targets neither move nor attack");

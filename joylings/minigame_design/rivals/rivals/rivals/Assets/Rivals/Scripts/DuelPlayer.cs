@@ -274,9 +274,13 @@ namespace RivalsPrototype {
       int stride=Mathf.Max(1,Runner.TickRate/10);
       nextBotDecision=tick+stride+(nextBotDecision==0?Seat%stride:0);
       DuelPlayer enemy=null;float nearest=float.MaxValue;
-      foreach(var player in DuelSession.Instance.Players) {
+      var players=DuelSession.Instance.Players;
+      foreach(var player in players) {
         if(player.Team==Team||player.Health<=0)continue;
         float distance=(player.transform.position-transform.position).sqrMagnitude;
+        // Prefer a different opponent when distances are similar, without ignoring
+        // a nearby threat just because a teammate is already fighting it.
+        foreach(var ally in players)if(ally!=this&&ally.Team==Team&&ally.Health>0&&ally.IsBot&&ally.botTargetSeat==player.Seat)distance+=36;
         if(distance<nearest){nearest=distance;enemy=player;}
       }
       botInput=default;
@@ -299,12 +303,21 @@ namespace RivalsPrototype {
       if(Weapon==Weapons.Nuke)aimPitch=Mathf.Atan2(1.55f,Mathf.Max(1,distanceToEnemy))*Mathf.Rad2Deg;
       var botLook=new Vector2(Mathf.MoveTowardsAngle(Look.x,aimYaw,85*stride*Runner.DeltaTime),Mathf.MoveTowardsAngle(Look.y,aimPitch,60*stride*Runner.DeltaTime));
       var destination=enemy.transform.position;
+      // Four stable approaches per team; close-range aim still tracks the enemy.
+      if(!visible&&distanceToEnemy>12)destination.x=BotLane(Seat);
+      else destination.x=Mathf.Clamp(destination.x+((Seat/2)%4-1.5f)*3,-32,32);
       float pickupDistance=38*38;
-      if(OwnedWeapons==(1<<Weapons.Pistol))for(int slot=0;slot<DuelMatch.PickupCount;slot++) {
+      bool seekingPickup=false;
+      if(OwnedWeapons==(1<<Weapons.Pistol)&&(!visible||distanceToEnemy>25))for(int slot=0;slot<DuelMatch.PickupCount;slot++) {
         var pickup=DuelSession.Instance.Match.Pickups[slot];float distance=(pickup.Position-transform.position).sqrMagnitude;
-        if(!pickup.Respawn.IsRunning&&distance<pickupDistance){pickupDistance=distance;destination=pickup.Position;}
+        if(pickup.Weapon<0||pickup.Respawn.IsRunning||distance>=38*38)continue;
+        foreach(var ally in players)if(ally!=this&&ally.Team==Team&&ally.Health>0&&ally.IsBot&&ally.OwnedWeapons==(1<<Weapons.Pistol)&&(ally.transform.position-pickup.Position).sqrMagnitude<distance)distance+=225;
+        if(distance<pickupDistance){pickupDistance=distance;destination=pickup.Position;seekingPickup=true;}
       }
       var desired=destination-transform.position;desired.y=0;
+      var separation=Vector3.zero;
+      foreach(var ally in players)if(ally!=this&&ally.Team==Team&&ally.Health>0)separation+=BotSeparation(transform.position,ally.transform.position,Seat,ally.Seat);
+      desired=desired.normalized+Vector3.ClampMagnitude(separation,1)*1.4f;
       var travel=desired.normalized;
       bool obstacle=false;
       float best=-2;
@@ -317,18 +330,24 @@ namespace RivalsPrototype {
       }
       if(best==-2)travel=Vector3.zero;
       var localTravel=Quaternion.Euler(0,-botLook.x,0)*travel;
-      bool seekingPickup=pickupDistance<38*38;
       float preferredRange=Weapon==Weapons.Cleaver?1.8f:Weapon==Weapons.Poison?7:Weapon==Weapons.Rocket?14:17;
-      bool advance=seekingPickup||!visible||distanceToEnemy>preferredRange||obstacle;
+      bool advance=seekingPickup||!visible||distanceToEnemy>preferredRange||obstacle||separation.sqrMagnitude>.04f;
       // More willing to close distance, with pauses and the same forgiving aim.
-      bool moveWindow=Mathf.Repeat(now+Seat*.53f,5)<(seekingPickup?3.8f:3f);
+      bool moveWindow=Mathf.Repeat(now+Seat*.53f,5)<(seekingPickup?3.8f:3.2f);
       var i = new DuelInput { Look=botLook,Weapon=-1,Move=advance&&moveWindow?new Vector2(localTravel.x,localTravel.z):Vector2.zero };
       float firingRange=Weapon==Weapons.Cleaver?Weapons.CleaverRange:Weapon==Weapons.Poison?12:Weapon==Weapons.Rocket?28:Weapon==3?12:Weapon==4?50:38;
-      bool reacted=visible&&now-botSeenSince>=.8f+(Seat%3)*.15f;
+      bool reacted=visible&&now-botSeenSince>=.65f+(Seat%3)*.15f;
       bool aligned=Mathf.Abs(Mathf.DeltaAngle(botLook.x,target.y))<12&&Mathf.Abs(Mathf.DeltaAngle(botLook.y,aimPitch))<8;
-      bool firingWindow=Mathf.Repeat(now+Seat*.71f,3)<1.4f;
+      bool firingWindow=Mathf.Repeat(now+Seat*.71f,3)<1.6f;
       i.Buttons.Set(Action.Fire,reacted&&aligned&&distanceToEnemy<firingRange&&firingWindow);
       return botInput=i;
+    }
+    public static float BotLane(int seat)=>((seat/2)%4) switch {0=>-32,1=>-20,2=>20,_=>32};
+    public static Vector3 BotSeparation(Vector3 position,Vector3 neighbor,int seat,int neighborSeat) {
+      var away=position-neighbor;away.y=0;float distance=away.magnitude;
+      if(distance>=3.5f)return Vector3.zero;
+      if(distance<.01f)return seat<neighborSeat?Vector3.left:Vector3.right;
+      return away/distance*(1-distance/3.5f);
     }
     public static bool BotPathBlocked(Vector3 feet,Vector3 direction) {
       // SphereCast skips an obstacle already overlapping its starting sphere.

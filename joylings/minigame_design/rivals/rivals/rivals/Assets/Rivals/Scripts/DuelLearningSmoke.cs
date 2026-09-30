@@ -14,6 +14,10 @@ namespace RivalsPrototype {
       try {
         var s=DuelSession.Instance;await Wait(()=>s.Local&&s.Local.IsReady&&s.Match&&s.Match.Phase==2,"ready");
         var p=s.Local;var match=s.Match;
+        Check(match.Pickups.Count(x=>x.Weapon>=0)==4,"only four ordinary arena stations");
+        Check(match.Pickups.All(x=>x.Weapon<0||DuelPickups.IsGroundWeapon(x.Weapon)),"no badge weapons exist in pickup state");
+        await Task.Delay(150);
+        Check(match.GetComponentsInChildren<Transform>().Count(x=>x.name.StartsWith("Weapon pickup "))==4,"no hidden badge weapon pedestals");
         // Isolate lesson lifecycle from combat; this harness only exists in Editor.
         foreach(var bot in s.Players.Where(x=>x.IsBot)){bot.Health=0;bot.RespawnTimer=TickTimer.None;}
         Check(p.LearningProgress==0&&p.RespawnWeapon==Weapons.Pistol,"new room starts locked with pistol");

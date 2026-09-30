@@ -18,7 +18,7 @@ const result={checks:[],errors:[]},me=s=>s.players.find(p=>p.seat===s.localSeat)
    await page.locator('#player-name').fill('訓練'+mode);await page.locator('#training-entry').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(output,mode+'-menu.png')});
    if(mobile){await context.setOffline(true);await page.waitForTimeout(150);}
    await page.locator('#training-entry').click();let s=await wait(page,s=>s.training&&s.phase===2&&s.players.length===8,'enter training',40000);
-   assert.equal(s.pickups.length,9);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,1,2,3,4,5,6,7,8]);assert.equal(s.players.filter(p=>p.bot).length,7);assert.equal(s.identityName,'訓練'+mode);
+   assert.equal(s.pickups.length,4);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,1,3,4]);assert.equal(s.players.filter(p=>p.bot).length,7);assert.equal(s.identityName,'訓練'+mode);
    if(!mobile){const box=await page.locator('canvas').boundingBox();await page.mouse.click(box.x+box.width/2,box.y+box.height/2);}
    await wait(page,s=>s.controls,'controls');const cdp=await context.newCDPSession(page);
    async function aim(yaw,pitch=0){

@@ -58,7 +58,9 @@ namespace RivalsPrototype {
           Check(!Physics.CheckCapsule(foot+Vector3.up*.45f,foot+Vector3.up*1.45f,.35f,DuelPlayer.WorldMask,QueryTriggerInteraction.Ignore),"outer lane stays open");
         }
         Debug.Log("RIVALS_SPAWN_SCREENS_OK sightlines=144 middleRoutes=2 outerLanes=2");
-        foreach(var p in session.Players){p.IsBot=false;Place(p,new Vector3(-33,.1f,-28+p.Seat*6));}
+        // Exercise core combat after lessons are complete; LearningSmoke separately
+        // covers the question/feedback gates before countdowns are allowed.
+        foreach(var p in session.Players){p.IsBot=false;p.LearningProgress=DuelLearning.TotalQuestions;p.RespawnWeapon=Weapons.Pistol;Place(p,new Vector3(-33,.1f,-28+p.Seat*6));}
         session.Match.Timer=TickTimer.CreateFromSeconds(session.Runner,240);
         Check(session.Players.All(p=>p.Health==DuelPlayer.MaxHealth),"everyone starts with 300 health");
         await SetupTarget(18,Weapons.Pistol);enemy.CollectWeapon(4);enemy.IsBot=true;
@@ -169,6 +171,7 @@ namespace RivalsPrototype {
         await Wait(()=>match.Game==2&&match.Phase==1,"automatic next game",9);
         foreach(var p in session.Players)if(p!=player)p.IsBot=false;
         Check(match.Blue==0&&match.Red==0,"new game clears both kill scores");
+        Check(match.Pickups.Count(p=>p.Weapon>=0)==4&&match.Pickups.All(p=>p.Weapon<0||DuelPickups.IsGroundWeapon(p.Weapon)),"next game does not restore badge pickups");
         Check(session.Players.Select(p=>p.Seat).Distinct().Count()==8&&session.Players.Count(p=>p.Team==0)==4&&session.Players.Count(p=>p.Team==1)==4,"reshuffle unique balanced seats");
         Check(session.Players.All(p=>p.Health==300&&p.OwnedWeapons==(1<<Weapons.Pistol)&&!p.RespawnTimer.IsRunning),"new game revives everyone and clears death timers");
         await Wait(()=>match.Phase==2,"new game countdown",6);

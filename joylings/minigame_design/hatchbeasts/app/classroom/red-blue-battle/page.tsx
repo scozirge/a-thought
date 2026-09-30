@@ -83,6 +83,11 @@ export default function RedBlueBattleLesson() {
           <p className="section-note">每次死亡挑戰一題，答對拿一個徽章。每集滿 3 個，就解鎖下一把武器！答錯下次再挑戰同一題。</p>
           <p>手槍 → 菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈</p>
           <p className="section-note">新武器解鎖後，下次復活預設拿它；倒數時也能改選已解鎖的武器。核彈解鎖後不再出題。離開房間後，進度重新開始。手機的「射擊按鈕」就是題目中的「滑鼠左鍵」。</p>
+          <div id="game-updates">
+            <p className="section-note"><strong>新版玩法：</strong>菜刀、火箭筒、毒藥、加特林和核彈，只能答題解鎖後在復活時取得，場地上不會出現。場上仍可撿步槍、散彈槍和狙擊槍。</p>
+            <p className="section-note">電腦玩家會分散走不同路線，靠得太近時會讓開，看到敵人也會稍微快一點開火。試著觀察：為什麼隊友不要全部擠在同一條路？</p>
+            <p className="section-note">想先認識武器，可以進入訓練場，用「更換武器」選單自由試用；回到對戰房間，仍要依序答題解鎖。</p>
+          </div>
           {weaponQuestions.stages.map((stage) => (
             <div key={stage.weapon} className="weapon-question-group">
               <h3>{stage.name}的 3 題 → 解鎖{stage.reward}</h3>

@@ -35,7 +35,7 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat);
   const url=new URL(process.env.RIVALS_WEB_URL||'http://localhost:8184/');url.searchParams.set('diagnostics','1');url.searchParams.set('v','balance-qa');await page.goto(url.href);
   await enterRoom(page,{name:'裝填貓貓',room:'裝填貓貓的房間'});
   let s=await state();assert.equal(s.maxHealth,300);assert.ok(s.players.every(p=>p.health===300));
-  assert.equal(s.pickups.length,14);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,0,2,2,3,4,5,5,6,6,7,7,8,8]);assert.ok(s.pickups.slice(0,4).every(p=>Math.abs(p.position.x)===30&&Math.abs(p.position.z)===30));results.start=s;
+  assert.equal(s.pickups.length,4);assert.deepEqual(s.pickups.map(p=>p.weapon).sort(),[0,0,3,4]);assert.ok(s.pickups.every(p=>Math.abs(p.position.x)===30&&Math.abs(p.position.z)===30));results.start=s;
   const box=await page.locator('canvas').boundingBox();await page.mouse.click(box.x+box.width/2,box.y+box.height/2,{delay:60});await wait(350);
   await reload('pistol');
   s=await state();const cornerX=me(s).team===0?30:-30;

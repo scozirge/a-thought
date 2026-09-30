@@ -38,6 +38,7 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
   await host.evaluate(()=>window.rivalsLearningCommand('leave'));await host.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready);
   await enterRoom(host,{room,name:room,create:true});await enterRoom(client,{room,name:'答題學生',create:false});
   check(me(await state(client)).learningProgress===0,'joining starts with zero badges');
+  for(const peer of [host,client])check(JSON.stringify((await state(peer)).pickups.map(p=>p.weapon).sort())==='[0,0,3,4]','host and client have only ordinary ground weapons');
   for(let attempt=0;attempt<4;attempt++){
    await die(client);await client.keyboard.up('w');await client.waitForFunction(()=>window.rivalsLearningState?.visible&&window.rivalsLearningState.state===1);
    let view=await client.evaluate(()=>window.rivalsLearningState);const question=attempt===0?0:attempt-1;check(view.question===question,'fixed question or retry '+attempt);

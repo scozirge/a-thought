@@ -10,6 +10,12 @@ namespace RivalsPrototype.Editor {
       Debug.Log("BOT_NAVIGATION_CHECK "+label);
     }
     public static void Run() {
+      var lanes=new System.Collections.Generic.HashSet<float>();
+      for(int seat=0;seat<8;seat+=2){lanes.Add(DuelPlayer.BotLane(seat));Check(DuelPlayer.BotLane(seat)==DuelPlayer.BotLane(seat+1),"both teams have matching approaches");}
+      Check(lanes.Count==4,"four distinct approaches per team");
+      Check(DuelPlayer.BotSeparation(Vector3.zero,Vector3.right,0,2).x<0,"move away from nearby teammate");
+      Check(DuelPlayer.BotSeparation(Vector3.zero,Vector3.right*4,0,2)==Vector3.zero,"distant teammate does not disturb route");
+      Check(DuelPlayer.BotSeparation(Vector3.zero,Vector3.zero,0,2)==-DuelPlayer.BotSeparation(Vector3.zero,Vector3.zero,2,0),"overlapping teammates split in opposite directions");
       EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
       var wall=new GameObject("Observed staggered screen");
       wall.transform.position=new Vector3(12,2.2f,5);

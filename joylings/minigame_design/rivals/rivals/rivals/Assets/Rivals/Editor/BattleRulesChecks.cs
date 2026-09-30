@@ -16,7 +16,8 @@ namespace RivalsPrototype.Editor {
       Check(Weapons.SpreadOffset(20,1,5)==Weapons.SpreadOffset(20,1,5),"deterministic prediction spread");
       Check(DuelMatch.PickupCount==14&&DuelMatch.PickupRespawnSeconds==5&&DuelMatch.KillsToWin==30&&DuelRespawn.DelaySeconds==3&&DuelMatch.PodiumSeconds==10,"30-kill and three-second respawn rules");
       Check(DuelPlayer.MaxHealth==300,"triple player health");
-      Check(DuelPickups.SpawnPoints.Length==14&&DuelPickups.SpawnPoints.Distinct().Count()==14&&DuelPickups.SpawnPoints.Take(4).All(p=>Mathf.Abs(p.x)==30&&Mathf.Abs(p.z)==30),"four corners and ten arsenal pickups");
+      Check(DuelPickups.SpawnPoints.Length==14&&DuelPickups.SpawnPoints.Take(4).All(p=>Mathf.Abs(p.x)==30&&Mathf.Abs(p.z)==30),"four ordinary corner stations");
+      for(int game=1;game<=4;game++)for(int slot=0;slot<DuelMatch.PickupCount;slot++)Check(slot<4?DuelPickups.IsGroundWeapon(DuelPickups.WeaponFor(slot,game)):DuelPickups.WeaponFor(slot,game)==-1,"badge stations remain absent across rounds");
       Check(DuelPickups.WeaponFor(0,1)==3&&DuelPickups.WeaponFor(0,2)==4&&DuelPickups.WeaponFor(1,1)==4&&DuelPickups.WeaponFor(1,2)==3&&DuelPickups.WeaponFor(2,1)==0&&DuelPickups.WeaponFor(3,2)==0,"balanced rotating weapon layout");
       for(int distance=6;distance<=30;distance++)Check(Weapons.ShotDamage(3,distance,false)<=Weapons.ShotDamage(3,distance-1,false),"monotonic shotgun falloff");
       Debug.Log("RIVALS_BATTLE_RULES_OK");

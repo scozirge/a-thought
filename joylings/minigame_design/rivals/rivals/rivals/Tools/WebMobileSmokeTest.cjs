@@ -34,7 +34,7 @@ const suffix=Date.now().toString(36).slice(-6);
   await phone.screenshot({path:path.join(output,'phone-lobby.png')});
   await desktop.locator('#fullscreen').click();assert.equal(await desktop.evaluate(()=>!!document.fullscreenElement),true);await desktop.locator('#fullscreen').click();
   // Join during the opening countdown so this input test starts with a pistol.
-  // Mid-match joins correctly inherit a Bot's weapon, which can now be a nuke.
+  // Mid-match joins may inherit an ordinary gun already collected by a Bot.
   await desktop.locator('#create-room').click();await wait(desktop,s=>s.phase===1||s.phase===2,'desktop host');
   await phone.locator('.room-row').filter({has:phone.getByText('鍵鼠'+suffix+'的房間',{exact:true})}).getByRole('button',{name:'加入房間',exact:true}).tap();
   await wait(phone,s=>s.players.filter(p=>!p.bot).length===2&&s.controls,'phone client');await wait(desktop,s=>s.players.filter(p=>!p.bot).length===2,'two humans');
@@ -119,12 +119,19 @@ const suffix=Date.now().toString(36).slice(-6);
    }
    assert.ok(death,'enemy Bots must cause a real touch-player death');await phone.waitForFunction(()=>!rivalsTouch.playable);
    assert.equal(await phone.evaluate(()=>rivalsTouch.held),0);assert.equal(await phone.evaluate(()=>rivalsTouch.moveY),0);assert.equal(await phone.locator('#touch-controls').isVisible(),false);
+   await up(1);if(firing)await up(3);
+   await phone.waitForFunction(()=>window.rivalsLearningState?.visible&&rivalsLearningState.state===1);
+   await phone.waitForTimeout(3300);assert.equal(me(await state(phone)).health,0,'reading the question does not auto-respawn');
+   await phone.locator('[data-option="0"]').tap();await phone.waitForFunction(()=>rivalsLearningState.state===2);
+   assert.equal(await phone.evaluate(()=>rivalsLearningState.progress),1,'touch answer earns one badge');
+   await phone.locator('#learning-next').tap();const countdownStarted=Date.now();
+   await phone.waitForFunction(()=>rivalsLearningState.state===3);
    await phone.screenshot({path:path.join(output,'phone-respawn-countdown.png')});
    const respawn=await wait(phone,s=>me(s).health>0&&me(s).spawnSequence>me(death.state).spawnSequence&&s.controls,'touch respawn',6000);assert.equal(respawn.aiming,false);assert.equal(await phone.locator('#control-resume').isVisible(),false);
-   result.respawn={ms:Date.now()-death.time,before:me(death.state),after:me(respawn)};assert.ok(result.respawn.ms>=2500&&result.respawn.ms<=4500);assert.equal(me(respawn).health,300);assert.equal(me(respawn).weapon,1);assert.equal(me(respawn).ammo,12);
+   result.respawn={ms:Date.now()-countdownStarted,before:me(death.state),after:me(respawn)};assert.ok(result.respawn.ms>=2500&&result.respawn.ms<=4500);assert.equal(me(respawn).health,300);assert.equal(me(respawn).weapon,1);assert.equal(me(respawn).ammo,12);
    await phone.waitForTimeout(450);const fresh=await state(phone);assert.equal(me(fresh).shots,me(respawn).shots);assert.ok(Math.hypot(me(fresh).position.x-me(respawn).position.x,me(fresh).position.z-me(respawn).position.z)<.3);
-   await up(1);if(firing)await up(3);await tap('#touch-fire',3);await wait(phone,s=>me(s).shots>me(fresh).shots,'fresh touch after respawn');
-   pass('real death clears held fingers; three-second respawn restores touch without ghost movement or fire');
+   await tap('#touch-fire',3);await wait(phone,s=>me(s).shots>me(fresh).shots,'fresh touch after respawn');
+   pass('real death clears held fingers; touch quiz earns a badge and three-second respawn restores controls without ghost input');
   }
   await phone.locator('#touch-menu').tap();await phone.locator('#touch-leave').tap();await lobby(phone);await lobby(desktop);pass('phone host leaves and both devices return to the lobby');
   await phone.locator('#mode-keyboard').tap();assert.equal(await phone.locator('#mode-keyboard').getAttribute('aria-pressed'),'true');await phone.locator('#mode-touch').tap();pass('lobby can switch input modes after a live session');

@@ -21,8 +21,10 @@ for folder in ['Assets/Rivals/Scripts', 'Assets/Rivals/Resources', 'Assets/WebGL
 info = {
     'date': '2026-10-01', 'gameSourceCommit': commit, 'target': 'Web',
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
-    'networkVersion': 'rivals-web-24-learning',
+    'networkVersion': 'rivals-web-25-unlock-bots',
     'releaseChanges': [
+        '五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。',
+        'Bot 分散進攻路線、避讓隊友，反應略快且開火時間小幅延長；射速及瞄準誤差不變。',
         '加入十五題武器邏輯挑戰，每次死亡回答一題，答錯下次重出原題。',
         '每三個徽章依序解鎖菜刀、火箭筒、毒藥、加特林與核彈。',
         '新武器成為復活預設武器，倒數可改選已解鎖武器。',

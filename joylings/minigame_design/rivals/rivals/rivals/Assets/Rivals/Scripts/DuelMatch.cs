@@ -77,7 +77,7 @@ namespace RivalsPrototype {
       Phase=1;Timer=TickTimer.CreateFromSeconds(Runner,4);
     }
     void SpawnPickup(int slot) {
-      if(IsTraining){Pickups.Set(slot,new WeaponPickupState{Position=DuelTrainingWorld.PickupPosition(slot),Weapon=slot<Weapons.Slots.Length?Weapons.Slots[slot]:-1,Respawn=TickTimer.None});return;}
+      if(IsTraining){int kind=slot<Weapons.Slots.Length?Weapons.Slots[slot]:-1;Pickups.Set(slot,new WeaponPickupState{Position=DuelTrainingWorld.PickupPosition(slot),Weapon=DuelPickups.IsGroundWeapon(kind)?kind:-1,Respawn=TickTimer.None});return;}
       Pickups.Set(slot,new WeaponPickupState{Position=DuelPickups.SpawnPoints[slot],Weapon=DuelPickups.WeaponFor(slot,Game),Respawn=TickTimer.None});
     }
     void UpdatePickups(DuelPlayer[] players) {

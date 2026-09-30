@@ -17,7 +17,10 @@ namespace RivalsPrototype {
       new Vector3(-30,.1f,18),new Vector3(30,.1f,-18),
       new Vector3(-8,.1f,-12),new Vector3(8,.1f,12),
       new Vector3(0,.1f,-20),new Vector3(0,.1f,20)};
-    public static int WeaponFor(int slot,int game)=>slot<2?((slot+game)%2==1?3:4):slot<4?Weapons.Rifle:slot<6?Weapons.Gatling:slot<8?Weapons.Rocket:slot<10?Weapons.Poison:slot<12?Weapons.Cleaver:Weapons.Nuke;
+    // Badge weapons come only from respawn selection, never from arena stations.
+    // Keep the replicated array capacity for training and disable unused slots.
+    public static int WeaponFor(int slot,int game)=>slot<0||slot>=4?-1:slot<2?((slot+game)%2==1?3:4):Weapons.Rifle;
+    public static bool IsGroundWeapon(int kind)=>kind==Weapons.Rifle||kind==Weapons.Pistol||kind==3||kind==4;
     DuelMatch match;
     readonly Transform[] roots=new Transform[DuelMatch.PickupCount];
     readonly Transform[] models=new Transform[DuelMatch.PickupCount];
