@@ -1,13 +1,16 @@
-# 紅藍槍戰｜五款新武器正式版
+# 紅藍槍戰｜全武器訓練場正式版
 
-[直接玩最新版](https://scozirge.github.io/a-thought/rivals/?v=arsenal-20261001) · [課堂教學](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)
+[直接玩最新版](https://scozirge.github.io/a-thought/rivals/?v=training-20261001) · [課堂教學](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)
 
-2026-10-01：新增加特林、無限火箭、核彈、菜刀、劇毒藥水，原創造型與同步特效；準心依實際散射擴張，保留自己的名字與隊伍名牌。
+2026-10-01：主選單下方新增「訓練場」，可測試全部九種武器；七個固定人形靶不移動、不還擊，自己與靶子死亡三秒後自動復活。沒有擊殺或時間限制，遊戲載入後即可離線練習。
 
 大廳可選手機觸控或鍵盤滑鼠，兩者都支援全螢幕並可同房。先達 30 擊殺獲勝，死亡 3 秒後隨機復活。手機點一下瞄準、再點一下關閉，可同時移動、射擊與轉向。所有版本已移除跳躍與滑行。
 
-完整操作與自行架站方式見「使用說明.txt」。請完整保留 Build、ThirdPartyLicenses 與授權文件；Windows 版需另下載完整 Windows ZIP。
+完整操作與自行架站方式見「使用說明.txt」。請完整保留 Build、ThirdPartyLicenses 與授權文件；目前只發布網頁版；先前 Windows 版保留為歷史產物。
 
+
+
+訓練場：主選單下方進入單人練習，七個固定人形靶不移動、不還擊；自己與目標死亡 3 秒後復活。「更換武器」可選全部九種武器並補滿彈藥，小尺寸橫向手機按鈕在下方中央，其餘畫面在右上；鍵鼠先按 Esc 釋放游標。射擊線後方也能撿武器。沒有 30 殺或時間限制，遊戲載入後不需連上 Photon。
 
 
 新武器：
