@@ -2,7 +2,8 @@
 
 ## 武器邏輯挑戰（2026-10-01）
 
-- 正式教學版：`rivals-web-25-unlock-bots`，介面 `simple-quiz-20261001`，發布批次 `final-web-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=final-web-20261001)。
+- 正式教學版：`rivals-web-25-unlock-bots`，介面 `simple-quiz-20261001`，發布批次 `compressed-web-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001)。
+- 下載最佳化：[無損壓縮與快取驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。程式、資源與題庫保留原內容，使用 Brotli 減少傳輸量，重新整理可重用程式與資料快取。
 - 最終整理與廣泛測試：[Web 發布驗證](FINAL_WEB_VALIDATION.md)，涵蓋八人容量、延遲、斷線恢復、鍵鼠／觸控、答題與武器；可用 `Tools/ValidateWebRelease.cjs` 分組重跑。
 - 本次更新：[解鎖武器與 Bot 分散行動驗證](UNLOCK_BOTS_VALIDATION.md)，包含正式連線、手機答題復活與課程更新。
 - 每次死亡只出一題，固定順序；答對拿一個徽章，答錯不扣徽章，下次仍出原題。
@@ -17,13 +18,13 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=final-web-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
 - [Windows x64 歷史版本 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Windows-x64-20260924-mobile.zip)：保留上次新武器版（`rivals-web-19-arsenal`），不包含訓練場，也不能加入目前網頁版的房間。
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
-- 未壓縮的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
+- 展開後的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
 目前網頁版使用 `rivals-web-25-unlock-bots`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
@@ -117,7 +118,7 @@ Unity Hub 開啟此資料夾，在 `RIVALS > Build current Web scene` 建置目�
 python Tools/serve_web.py --port 8184
 ```
 
-開啟 <http://localhost:8184/>，不可直接雙擊 HTML。服務只監聽本機；正式分享需把整個 Web 目錄放到支援 WebAssembly 的 HTTP(S) 主機。建置採 IL2CPP Release／OptimizeSpeed、Wasm RuntimeSpeed、內容雜湊檔名與 Unity Data Caching，移除啟動 Splash Screen。GitHub Pages 已提供 HTTP gzip，因此保留原始檔供瀏覽器原生解壓及串流編譯，不加入 JavaScript 解壓層。本機服務提供 WASM MIME type 和 no-store HTTP 標頭；已啟用 Unity 資料快取；WASM 的重用仍待後續驗證，不宣稱目前所有檔案都已命中快取。
+開啟 <http://localhost:8184/>，不可直接雙擊 HTML。服務只監聽本機；正式分享需把整個 Web 目錄放到 HTTP(S) 主機。建置保留 IL2CPP Release／OptimizeSpeed、Wasm RuntimeSpeed、內容雜湊檔名與 Unity Data Caching，移除啟動 Splash Screen。使用 Unity Brotli 壓縮及 Decompression Fallback，輸出 `.unityweb`，不需主機另設 `Content-Encoding: br`。Unity 載入器負責解壓，程式及資料檔皆採持續快取；禁止儲存時退回一般下載。本機服務提供 no-store HTTP 標頭，可獨立驗證 Unity 快取。本次解壓後的程式、資源與 framework 均與上一版逐位元組相同。
 
 連線版本為 `rivals-web-25-unlock-bots`；同玩者需重新整理網頁，載入相同版本。本次訓練場版本與舊版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、子彈彈道採物件池，新武器靜態造型依材質合併以減少繪製次數。
 
@@ -127,11 +128,11 @@ python Tools/serve_web.py --port 8184
 
 資源與載入流程最佳化已包含在 `Builds/Release-20260924-Multiplayer/` 正式包，並已發布到公開網站；不啟用耗時的 DiskSizeLTO／IL2CPP OptimizeSize。成品、測試與公開部署紀錄見 [追加驗證](WEB_MULTIPLAYER_VALIDATION.md)。
 
-載入流程修改保留 HTTP gzip 與 WASM 串流編譯，並啟用 Unity 資料快取設定。對內容雜湊檔案使用 `immutable`；不支援或禁止快取時，Unity 退回一般下載。
+最新發布改用無損 Brotli 與 Unity 解壓備援；對帶有 `.unityweb` 的內容雜湊檔名也使用 `immutable`，避免每次重新整理再次下載 WASM。不支援或禁止快取時仍可載入。此模式增加解壓步驟，不能同時使用原生 WASM 串流編譯；下載量及實際大廳就緒時間均另外量測，見 [下載最佳化驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。
 
 中文字型使用 Rivals CJK UI 衍生版，保留原始字型全部 44,810 個 Unicode 字元與水平字寬，刪除未使用的直排與其他區域替代字形。來源放在 `Tools/Fonts`，避免被 Unity Resources 重複打包。安裝 `fonttools==4.65.0` 後執行 `python Tools/optimize_font.py` 可重新產生；授權與來源說明在 `ASSET_CREDITS.txt`。
 
-`Tools/WebLoadSmokeTest.cjs` 以實際大廳可操作為載入終點，紀錄冷／熱載入的下載量、時間與 Unity 快取命中；`RIVALS_LOAD_MBPS=10` 可固定 10 Mbps 及 50 ms 延遲，`--expect-cache` 驗證大檔案重用，`--deny-cache` 模擬禁止儲存。設定 `RIVALS_LOAD_LABEL`、`RIVALS_TEST_OUTPUT` 保存不同實驗，正式量測見 `LOAD_VALIDATION.md`。
+`Tools/WebLoadSmokeTest.cjs` 以實際大廳可操作為載入終點，紀錄冷／熱載入的下載量、時間與 Unity 快取命中；`RIVALS_LOAD_MBPS=10` 可固定 10 Mbps 及 50 ms 延遲，`--expect-cache` 驗證兩個大檔案重用，`--deny-cache` 模擬禁止儲存，`--touch` 以手機觸控模式驗證。設定 `RIVALS_LOAD_LABEL`、`RIVALS_TEST_OUTPUT` 保存不同實驗；歷史量測見 `LOAD_VALIDATION.md`，本次量測見 `DOWNLOAD_OPTIMIZATION_VALIDATION.md`。
 
 ## 驗證
 

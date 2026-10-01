@@ -23,8 +23,10 @@ info = {
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
     'networkVersion': 'rivals-web-25-unlock-bots',
     'uiRevision': 'simple-quiz-20261001',
-    'releaseRevision': 'final-web-20261001',
+    'releaseRevision': 'compressed-web-20261001',
+    'compression': 'Brotli / Unity decompression fallback',
     'releaseChanges': [
+        '遊戲程式與資源採用無損 Brotli 壓縮，主程式與資料檔皆使用瀏覽器持續快取。',
         '答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。',
         '五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。',
         'Bot 分散進攻路線、避讓隊友，反應略快且開火時間小幅延長；射速及瞄準誤差不變。',

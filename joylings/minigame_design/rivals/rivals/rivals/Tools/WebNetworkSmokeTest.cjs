@@ -4,6 +4,7 @@ const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const {enterRoom}=require('./WebRoomHelpers.cjs');
 const fs=require('fs'),path=require('path');
 const root=process.env.RIVALS_TEST_OUTPUT?path.resolve(process.env.RIVALS_TEST_OUTPUT):path.resolve(__dirname,'../Logs'),runs=[],results={url:process.env.RIVALS_WEB_URL||'http://127.0.0.1:8184/',testedAt:new Date().toISOString()},lagged=process.argv.includes('--lag');
+results.hostUrl=process.env.RIVALS_HOST_WEB_URL||results.url;
 fs.mkdirSync(root,{recursive:true});
 const me=s=>s.players.find(p=>p.seat===s.localSeat);
 const room='連線測試'+Date.now().toString(36);
@@ -32,7 +33,7 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   });
   page.on('pageerror',e=>r.errors.push(e.message));page.on('console',m=>r.logs.push(m.text()));
   await page.addInitScript(()=>document.addEventListener('mousedown',e=>{if(e.button===0)window.rivalsTriggerTime=performance.now();},true));
-  const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8184/');url.searchParams.set('diagnostics','1');
+  const url=new URL(name==='host'?results.hostUrl:results.url);url.searchParams.set('diagnostics','1');
   // Public hosting can still be downloading Unity assets after HTML is ready.
   // Give the actual playable lobby its own startup deadline.
   const loadStarted=Date.now();console.log('WEB_NETWORK_LOADING '+name);

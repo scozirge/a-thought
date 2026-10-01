@@ -373,7 +373,7 @@
     const loader=document.createElement('script');loader.src='Build/{{{ LOADER_FILENAME }}}';
     // Content hashes change only when the asset changes. UI edits no longer
     // invalidate the whole game; Unity's persistent cache can reuse big files.
-    config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
+    config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:\.unityweb)?(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
     loader.onload=()=>createUnityInstance(canvas,config,p=>{
       document.getElementById('progress').value=p;
       document.getElementById('status').textContent=p<.9?'正在載入遊戲 '+Math.round(p*100)+'%':'正在準備戰場…';

@@ -21,9 +21,11 @@ namespace RivalsPrototype.Editor {
       var config=NetworkProjectConfig.Global;
       config.AllowClientServerModesInWebGL=true;
       NetworkProjectConfigUtilities.SaveGlobalConfig(config);
-      // GitHub Pages supplies native HTTP gzip (including application/wasm).
-      // Keep streaming compilation instead of adding a JS decompression layer.
-      PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Disabled;
+      // Lossless transport compression; keep the existing compiler, stripping,
+      // textures and gameplay settings. Pages cannot set custom Content-Encoding
+      // headers, so use Unity's supported decompressor for .unityweb files.
+      PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Brotli;
+      PlayerSettings.WebGL.decompressionFallback=true;
       PlayerSettings.WebGL.dataCaching=true;
       PlayerSettings.WebGL.nameFilesAsHashes=true;
       PlayerSettings.WebGL.initialMemorySize=256;

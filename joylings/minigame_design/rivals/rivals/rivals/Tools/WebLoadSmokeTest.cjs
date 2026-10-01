@@ -3,13 +3,13 @@ const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs/LoadValidation'));
 const url=new URL(process.env.RIVALS_WEB_URL||'http://localhost:8186/');url.searchParams.set('diagnostics','1');
-const mbps=Number(process.env.RIVALS_LOAD_MBPS||0),expectCache=process.argv.includes('--expect-cache'),denyCache=process.argv.includes('--deny-cache');
+const mbps=Number(process.env.RIVALS_LOAD_MBPS||0),expectCache=process.argv.includes('--expect-cache'),denyCache=process.argv.includes('--deny-cache'),touch=process.argv.includes('--touch');
 const label=process.env.RIVALS_LOAD_LABEL||'load';fs.mkdirSync(output,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
- const results={url:url.href,mbps,latencyMs:mbps?50:0,denyCache,runs:[]};
+ const results={url:url.href,mbps,latencyMs:mbps?50:0,denyCache,touch,runs:[]};
  try{
-  const context=await browser.newContext({viewport:{width:1280,height:900}});
+  const context=await browser.newContext(touch?{viewport:{width:844,height:390},hasTouch:true,isMobile:true}:{viewport:{width:1280,height:900}});
   if(denyCache)await context.addInitScript(()=>{
    IDBFactory.prototype.open=function(){throw new DOMException('QA storage denied','SecurityError');};
    CacheStorage.prototype.open=function(){return Promise.reject(new DOMException('QA cache denied','SecurityError'));};
@@ -25,6 +25,7 @@ const label=process.env.RIVALS_LOAD_LABEL||'load';fs.mkdirSync(output,{recursive
    const resources=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>r.name.includes('/Build/')).map(r=>({name:r.name,ms:r.duration,transfer:r.transferSize,encoded:r.encodedBodySize,decoded:r.decodedBodySize})));
    const run={pass,readyMs,transferBytes:resources.reduce((sum,r)=>sum+r.transfer,0),resources,cacheMessages:[...cacheMessages],errors:[...errors]};results.runs.push(run);
    assert.deepEqual(errors,[]);assert.equal(await page.locator('#create-room').isEnabled(),true);
+   if(touch)assert.equal(await page.locator('#mode-touch').getAttribute('aria-pressed'),'true');
    console.log('WEB_LOAD_PASS '+JSON.stringify({pass,readyMs,transferBytes:run.transferBytes,cacheMessages:run.cacheMessages}));
   }
   if(expectCache&&!denyCache){

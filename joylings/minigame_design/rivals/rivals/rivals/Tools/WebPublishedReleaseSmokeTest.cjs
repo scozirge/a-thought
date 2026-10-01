@@ -4,7 +4,7 @@ const {enterRoom}=require('./WebRoomHelpers.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||'Logs/UnlockBots/Public');fs.mkdirSync(output,{recursive:true});
 const game=new URL(process.env.RIVALS_WEB_URL||'https://scozirge.github.io/a-thought/rivals/');
-const revision='final-web-20261001';
+const revision='compressed-web-20261001';
 game.searchParams.set('v',revision);game.searchParams.set('diagnostics','1');
 const course=process.env.RIVALS_COURSE_URL||'https://scozirge.github.io/a-thought/hatchbeasts/classroom/';
 const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
@@ -21,7 +21,7 @@ const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
   assert.ok(response.ok());const info=await response.json();result.version=info.networkVersion;result.sourceCommit=info.gameSourceCommit;
   check(info.networkVersion==='rivals-web-25-unlock-bots','public release metadata has the new version');
   check(info.uiRevision==='simple-quiz-20261001','public release contains the simplified quiz interface');
-  check(info.releaseRevision===revision,'public release contains the final validated package');
+  check(info.releaseRevision===revision&&info.compression==='Brotli / Unity decompression fallback','public release contains the compressed validated package');
   await page.goto(game.href,{waitUntil:'domcontentloaded',timeout:120000});
   // First visits download the complete WebAssembly build before connecting.
   // Keep that startup allowance separate from the room-connection deadline.
