@@ -20,6 +20,9 @@ export function WeaponChallenges() {
       </p>
       <div id="game-updates">
         <p className="section-note">
+          手機左下方按住拖曳就能移動。按「橫向全螢幕」橫向遊玩；如果網頁仍直向，請解除手機的方向鎖定。
+        </p>
+        <p className="section-note">
           題目下方有解鎖提示。答對一題就填滿一顆星，三顆星全滿就顯示解鎖的新武器。看完結果按「繼續」，再選武器、等倒數復活。
         </p>
         <p className="section-note">

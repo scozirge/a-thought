@@ -3,12 +3,17 @@ const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const source=fs.readFileSync(path.join(__dirname,'../Assets/WebGLTemplates/Rivals/index.html'),'utf8');
 const html=source.slice(0,source.indexOf('    const config='))+`player={SendMessage:(name,method)=>{if(method==='PauseControls'){look.enabled=false;look.release();}}};document.getElementById('loading').style.display='none';</script></body></html>`;
+function serveTemplate(route,body=html){
+ const name=new URL(route.request().url()).pathname.split('/').at(-1);
+ if(name==='asset-delivery.js'||name==='learning.css')return route.fulfill({status:200,contentType:name.endsWith('.js')?'text/javascript':'text/css',body:fs.readFileSync(path.join(__dirname,'../Assets/WebGLTemplates/Rivals',name),'utf8')});
+ return route.fulfill({status:200,contentType:'text/html',body});
+}
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true});const results=[];
  try{
   for(const mode of ['locked','rejected','legacy-error','silent-request','unavailable','false-success']){
    const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-   await page.route('http://localhost:8184/**',route=>route.fulfill({status:200,contentType:'text/html',body:html}));
+   await page.route('http://localhost:8184/**',route=>serveTemplate(route));
    await page.addInitScript(mode=>{
     const native=HTMLCanvasElement.prototype.requestPointerLock;
     if(mode==='unavailable'){HTMLCanvasElement.prototype.requestPointerLock=undefined;return;}
@@ -69,7 +74,7 @@ const html=source.slice(0,source.indexOf('    const config='))+`player={SendMess
   // Exercise the actual browser sandbox restriction, without mocking its API.
   for(const permitted of [false,true]){
    const page=await browser.newPage({viewport:{width:1440,height:1000}});
-   await page.route('http://localhost:8184/**',route=>route.fulfill({status:200,contentType:'text/html',body:route.request().url().includes('/wrapper')?`<iframe src="/?diagnostics=1" sandbox="allow-scripts allow-same-origin ${permitted?'allow-pointer-lock':''}" style="width:1400px;height:950px;border:0"></iframe>`:html}));
+   await page.route('http://localhost:8184/**',route=>serveTemplate(route,route.request().url().includes('/wrapper')?`<iframe src="/?diagnostics=1" sandbox="allow-scripts allow-same-origin ${permitted?'allow-pointer-lock':''}" style="width:1400px;height:950px;border:0"></iframe>`:html));
    await page.goto('http://localhost:8184/wrapper');const frame=page.frames().find(f=>f.parentFrame());
    await frame.waitForFunction(()=>window.rivalsLook);await frame.evaluate(()=>window.rivalsLook.enabled=true);
    await frame.locator('#resume-pointer').click();await page.waitForTimeout(220);

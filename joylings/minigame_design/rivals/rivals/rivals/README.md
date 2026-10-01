@@ -2,7 +2,7 @@
 
 ## 武器邏輯挑戰（2026-10-01）
 
-- 正式教學版：`rivals-web-26-respawn-default`，介面 `star-progress-20261001`，發布批次 `star-progress-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001)。
+- 正式教學版：`rivals-web-26-respawn-default`，介面 `star-progress-20261001`，發布批次 `mobile-controls-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001)。
 - 答題提示與三顆星：[介面與連線驗證](STAR_PROGRESS_VALIDATION.md)。每答對一題填滿一顆星，三顆全滿顯示解鎖的新武器。
 - 載入加速：[CDN 與備援驗證](STARTUP_OPTIMIZATION_VALIDATION.md)。大型檔案經 SHA-256 驗證後載入，失敗或八秒無進度時改用原站，保留原有快取與相同遊戲內容。
 - 復活武器調整：[預設與倒數選擇驗證](RESPAWN_DEFAULT_VALIDATION.md)。每次死亡重新預選最近解鎖的武器，手動改選只套用當次復活。
@@ -21,7 +21,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
@@ -34,6 +34,10 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範�
 GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。下載檔名保留原路徑，內容會更新，實際來源提交與版本以包內 `版本資訊.json` 為準。提供全部九種武器的單人訓練場，本次將菜刀近砍判定距離從 2.5 加倍至 5 公尺，刀身以握柄為中心放大 25%，保留右上至左下斜劈；實測見 [菜刀距離與尺寸驗證](CLEAVER_REACH_VALIDATION.md)。火箭保留前次增加 30% 的爆炸範圍。
 
 對外測試可直接分享上方公開遊戲網址。電腦可使用 Chrome／Edge，手機在大廳選「手機觸控」，建議橫向遊玩。由一人建立房間，其他人在即時清單按「加入房間」；手機與鍵鼠共用房間，同房最多 8 位真人，不足由 Bot 補齊。首次載入需下載遊戲資源，較慢網路可能需要數分鐘，請等進度完成。若看不到操作方式選擇，請重新整理；電腦可按 `Ctrl + Shift + R`，所有人載入新版後再一起開房。
+
+## 手機移動與橫向（2026-10-01）
+
+手機左下方可直接按住拖曳，搖桿以手指落點為中心；網址列高度變動與另一根手指取消不會中斷移動。按「橫向全螢幕」會在支援的瀏覽器要求橫向。若整個網頁仍直向，請解除手機方向鎖定；不支援方向 API 的瀏覽器仍可放大並隨實際畫面尺寸調整。
 
 ## 開始玩
 

@@ -12,7 +12,7 @@ const html=source.slice(0,source.indexOf('    const config='))+`
     document.getElementById('loading').hidden=true;document.getElementById('loading').style.display='none';
     window.startTestGame();
   </script></body></html>`;
-const checks=[],engines=process.argv.includes('--chromium-only')?[['chromium',chromium]]:[['chromium',chromium],['webkit',webkit]];
+const checks=[],engines=process.argv.includes('--chromium-only')?[['chromium',chromium]]:process.argv.includes('--webkit-only')?[['webkit',webkit]]:[['chromium',chromium],['webkit',webkit]];
 const scenarios=[
  {name:'photo-landscape',width:1280,height:517,left:59,right:59,bottom:21},
  {name:'iphone-landscape',width:844,height:390,left:47,right:47,bottom:21},
@@ -22,12 +22,17 @@ const scenarios=[
  {name:'portrait',width:390,height:844,left:0,right:0,bottom:34},
  {name:'small-portrait',width:320,height:568,left:0,right:0,bottom:0},
 ];
+function serveTemplate(route){
+ const name=new URL(route.request().url()).pathname.split('/').at(-1);
+ if(name==='asset-delivery.js'||name==='learning.css')return route.fulfill({status:200,contentType:name.endsWith('.js')?'text/javascript':'text/css',body:fs.readFileSync(path.join(__dirname,'../Assets/WebGLTemplates/Rivals',name),'utf8')});
+ return route.fulfill({status:200,contentType:'text/html',body:html});
+}
 (async()=>{
  for(const [engine,type] of engines){
   const browser=await type.launch({headless:true,...(engine==='chromium'?{executablePath:process.env.RIVALS_CHROME||undefined}:{})});
   try{
    const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,deviceScaleFactor:1}),page=await context.newPage(),errors=[];
-   page.on('pageerror',error=>errors.push(error.message));await page.route('http://rivals.test/**',route=>route.fulfill({contentType:'text/html',body:html}));await page.goto('http://rivals.test/');
+   page.on('pageerror',error=>errors.push(error.message));await page.route('http://rivals.test/**',serveTemplate);await page.goto('http://rivals.test/');
    // Force the touch choice in engines whose desktop test device has no coarse pointer.
    await page.evaluate(()=>{chooseControls('touch');startTestGame();});
    for(const scenario of scenarios){

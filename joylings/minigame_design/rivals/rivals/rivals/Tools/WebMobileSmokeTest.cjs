@@ -52,7 +52,12 @@ const suffix=Date.now().toString(36).slice(-6);
    const dx=angle(yaw-s.look.x)/(.12*scale),dy=(pitch-s.look.y)/(.12*scale),steps=Math.max(1,Math.ceil(Math.max(Math.abs(dx)/200,Math.abs(dy)/150)));
    for(let i=0;i<steps;i++){const from={x:b.x+b.width*.48,y:b.y+b.height*.6};await down(20,from);await move(20,{x:from.x+dx/steps,y:from.y+dy/steps});await phone.waitForTimeout(55);await up(20);await phone.waitForTimeout(35);}
   }
-  let stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+42,y:stick.y});await phone.waitForTimeout(1400);await up(1);await phone.waitForTimeout(350);
+  const zone=await phone.locator('#touch-move-zone').boundingBox(),entry=me(await state(phone)).position;
+  let stick={x:zone.x+30,y:zone.y+zone.height-20};await down(1,stick);await move(1,{x:stick.x+42,y:stick.y});
+  await phone.evaluate(()=>window.dispatchEvent(new Event('resize')));await phone.waitForTimeout(100);
+  assert.ok(await phone.evaluate(()=>rivalsTouch.moveX>.9));await phone.waitForTimeout(1400);await up(1);await phone.waitForTimeout(350);
+  const entered=me(await state(phone)).position;assert.ok(Math.hypot(entered.x-entry.x,entered.z-entry.z)>2);
+  pass('lower-left drag moves the actual player and survives viewport resize');
   const before=await state(phone);await turn(before.look.x,-65);await wait(phone,s=>Math.abs(s.look.y+65)<1,'touch aim upward');
   const shotBaseline=me(await state(phone)).shots;
   stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+36,y:stick.y});await down(2,{x:420,y:175});await move(2,{x:450,y:175});await tap('#touch-fire',3,50);await up(2);await phone.waitForTimeout(400);await up(1);
@@ -86,6 +91,12 @@ const suffix=Date.now().toString(36).slice(-6);
   const sprintEnd=me(await state(phone)).position;await up(6);await up(1);result.sprintDistance=Math.hypot(sprintEnd.x-sprintStart.x,sprintEnd.z-sprintStart.z);assert.ok(result.sprintDistance>6,'sprint must exceed walking travel');
   assert.equal(await phone.locator('#touch-slide').count(),0);pass('sprint accelerates the joystick and no slide button remains');
   await phone.locator('#fullscreen').tap();await phone.waitForTimeout(300);assert.equal(await phone.evaluate(()=>!!document.fullscreenElement),true);await phone.locator('#fullscreen').tap();await wait(phone,s=>s.controls,'resume after fullscreen');pass('real game supports fullscreen in keyboard and touch modes');
+  await phone.setViewportSize({width:390,height:844});await phone.waitForTimeout(250);
+  assert.ok(await phone.evaluate(()=>rivalsViewport[1]>rivalsViewport[0]));
+  stick=await center('#touch-move');await down(1,stick);await move(1,{x:stick.x+40,y:stick.y});assert.ok(await phone.evaluate(()=>rivalsTouch.moveX>.9));await up(1);
+  await phone.setViewportSize({width:844,height:390});await phone.waitForTimeout(250);
+  assert.ok(await phone.evaluate(()=>rivalsViewport[0]>rivalsViewport[1]));assert.equal(await phone.evaluate(()=>rivalsTouch.moveX),0);
+  await wait(phone,s=>s.controls,'controls after rotating back');pass('portrait and landscape update the real game viewport and preserve usable controls');
   await phone.locator('#touch-menu').tap();await phone.waitForFunction(()=>window.rivalsTouch.paused);assert.equal(await phone.locator('#touch-pause').isVisible(),true);await wait(phone,s=>!s.controls,'paused touch player');
   await phone.locator('#touch-audio').tap();await phone.waitForFunction(()=>document.getElementById('touch-audio').textContent==='聲音：開');await phone.locator('#touch-audio').tap();await phone.waitForFunction(()=>document.getElementById('touch-audio').textContent==='聲音：關');
   await phone.locator('#touch-resume').tap();await wait(phone,s=>s.controls,'phone menu resume');

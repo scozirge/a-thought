@@ -4,7 +4,7 @@ const {enterRoom}=require('./WebRoomHelpers.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||'Logs/UnlockBots/Public');fs.mkdirSync(output,{recursive:true});
 const game=new URL(process.env.RIVALS_WEB_URL||'https://scozirge.github.io/a-thought/rivals/');
-const revision='star-progress-20261001';
+const revision='mobile-controls-20261001';
 game.searchParams.set('v',revision);game.searchParams.set('diagnostics','1');
 const course=process.env.RIVALS_COURSE_URL||'https://scozirge.github.io/a-thought/hatchbeasts/classroom/';
 const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
@@ -27,6 +27,7 @@ const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
   // Keep that startup allowance separate from the room-connection deadline.
   await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||180000)});
   check(await page.evaluate(()=>window.rivalsAssetDelivery?.enabled===true),'public release enables verified CDN delivery');
+  check(info.mobileRevision===revision&&await page.locator('#touch-move-zone').count()===1,'public release includes the mobile movement zone and orientation update');
   await enterRoom(page,{name:'公開驗證'+Date.now().toString(36).slice(-4)});
   check(await page.locator('#learning-leave,#learning-stage,#learning-progress,#learning-note').count()===0,'public quiz has no exit, stage labels, badge prompt or rule footer');
   const s=await page.evaluate(()=>window.rivalsDiagnostics);

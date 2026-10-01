@@ -15,12 +15,17 @@ const html=template.slice(0,template.indexOf('    const config='))+`
     window.rivalsReceiveLobby({visible:true,ready:true,busy:false,name:'觸控測試',message:'',rooms:[]});
   </script></body></html>`;
 const checks=[],errors=[];function pass(label){checks.push(label);console.log('MOBILE_BRIDGE_CHECK '+label);}
+function serveTemplate(route){
+ const name=new URL(route.request().url()).pathname.split('/').at(-1);
+ if(name==='asset-delivery.js'||name==='learning.css')return route.fulfill({status:200,contentType:name.endsWith('.js')?'text/javascript':'text/css',body:fs.readFileSync(path.join(__dirname,'../Assets/WebGLTemplates/Rivals',name),'utf8')});
+ return route.fulfill({status:200,contentType:'text/html',body:html});
+}
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true});
  try{
   const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,deviceScaleFactor:1}),page=await context.newPage();
   page.on('pageerror',e=>errors.push(e.message));
-  await page.route('http://rivals.test/**',route=>route.fulfill({status:200,contentType:'text/html',body:html}));
+  await page.route('http://rivals.test/**',serveTemplate);
   await page.goto('http://rivals.test/?diagnostics=1');
   assert.equal(await page.locator('#mode-touch').getAttribute('aria-pressed'),'true');
   await page.locator('#mode-keyboard').tap();await page.reload();assert.equal(await page.locator('#mode-keyboard').getAttribute('aria-pressed'),'true');
@@ -44,6 +49,33 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.ok(combined.x>.6&&combined.y>.6&&Math.hypot(combined.x,combined.y)<=1.001);assert.ok(combined.dx>60&&combined.dy>30);assert.ok(combined.held&1);assert.equal(combined.fire,1);assert.equal(combined.locked,false);
   await up(1);assert.equal(await page.evaluate(()=>rivalsTouch.moveX),0);assert.ok(await page.evaluate(()=>rivalsTouch.held&1));await up(2);await up(3);
   assert.equal(await page.evaluate(()=>rivalsTouch.held),0);pass('three fingers move, look and shoot independently without mouse lock');
+  await down(31,stick);await move(31,{x:stick.x+40,y:stick.y});
+  await page.evaluate(()=>window.dispatchEvent(new Event('resize')));await page.waitForTimeout(80);
+  assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9),'a viewport resize without rotation must not drop a held joystick');
+  await page.setViewportSize({width:844,height:430});await page.waitForTimeout(80);
+  assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9),'browser bar height changes preserve movement');
+  await page.setViewportSize({width:844,height:390});await page.waitForTimeout(80);
+  assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9));
+  await up(31);pass('browser viewport notifications preserve a held joystick');
+  const zone=await page.locator('#touch-move-zone').boundingBox(),outside={x:zone.x+30,y:zone.y+zone.height-20};
+  const beforeLook=await page.evaluate(()=>[rivalsLook.x,rivalsLook.y]);
+  await page.locator('#touch-controls').evaluate(e=>e.style.setProperty('--safe-left','47px'));
+  await down(32,outside);assert.equal(await page.evaluate(()=>rivalsTouch.moveX),0);
+  assert.ok((await page.locator('#touch-move').boundingBox()).x>=47,'floating joystick avoids the notch');
+  await move(32,{x:outside.x+180,y:outside.y-180});
+  assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.6&&rivalsTouch.moveY>.6));
+  assert.deepEqual(await page.evaluate(()=>[rivalsLook.x,rivalsLook.y]),beforeLook);
+  await up(32);assert.equal(await page.locator('#touch-move').evaluate(e=>e.style.transform),'');
+  await page.locator('#touch-controls').evaluate(e=>e.style.removeProperty('--safe-left'));
+  pass('dragging anywhere in the lower-left zone moves without turning the camera');
+  await down(33,{x:stick.x+25,y:stick.y});assert.equal(await page.evaluate(()=>rivalsTouch.moveX),0);
+  await move(33,{x:stick.x+65,y:stick.y});assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9));
+  await up(33);pass('off-center touches start neutrally and follow the thumb');
+  await page.evaluate(()=>document.addEventListener('pointerdown',e=>{if(e.target.id==='touch-fire')window.cancelFireId=e.pointerId;},true));
+  await down(34,stick);await move(34,{x:stick.x+40,y:stick.y});await down(35,fire);
+  await page.evaluate(()=>document.getElementById('touch-fire').dispatchEvent(new PointerEvent('pointercancel',{pointerId:window.cancelFireId,bubbles:true})));
+  assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9));assert.equal(await page.evaluate(()=>rivalsTouch.held&1),0);
+  await up(35);await up(34);pass('cancelling the shooting finger does not cancel movement');
   const aim=await center('#touch-aim');await down(21,aim);await up(21);
   assert.equal(await page.locator('#touch-aim').getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>LibraryManager.library.RivalsTouchHeld()&2),2);
   await down(22,fire);await move(22,{x:fire.x-20,y:fire.y-12});assert.equal(await page.evaluate(()=>rivalsTouch.held&3),3);await up(22);
@@ -74,14 +106,35 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   assert.equal(await page.locator('#touch-pause').isVisible(),true);await up(11);
   await page.locator('#touch-resume').tap();assert.equal(await page.locator('#touch-pause').isVisible(),false);assert.equal(await page.evaluate(()=>rivalsLook.active),true);pass('phone menu opens while another finger fires and resumes cleanly');
   // Use a real fullscreen request, then the no-API and rejected-API paths.
+  await page.evaluate(()=>{
+   window.savedOrientationLock=screen.orientation.lock;window.savedOrientationUnlock=screen.orientation.unlock;window.orientationCalls=[];
+   screen.orientation.lock=value=>{window.orientationCalls.push(value);return Promise.resolve();};screen.orientation.unlock=()=>window.orientationCalls.push('unlock');
+  });
+  assert.equal(await page.locator('#fullscreen').textContent(),'橫向全螢幕');
   await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),true);
   assert.equal(await page.locator('#fullscreen').textContent(),'退出全螢幕');await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),false);pass('native fullscreen enters and exits with touch controls');
+  assert.deepEqual(await page.evaluate(()=>window.orientationCalls),['landscape','unlock']);pass('touch fullscreen requests landscape and releases it on exit');
+  await page.evaluate(()=>{screen.orientation.lock=()=>Promise.reject(new DOMException('Not supported','NotSupportedError'));});
+  await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),true);await page.locator('#fullscreen').tap();
+  await page.evaluate(()=>{screen.orientation.lock=undefined;});
+  await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),true);await page.locator('#fullscreen').tap();
+  await page.evaluate(()=>{screen.orientation.lock=window.savedOrientationLock;screen.orientation.unlock=window.savedOrientationUnlock;});
+  pass('unsupported or rejected orientation locking still allows fullscreen play');
   for(const variant of ['unavailable','rejected']){
    await page.evaluate(variant=>{const stage=document.getElementById('stage');stage.requestFullscreen=variant==='unavailable'?undefined:()=>Promise.reject(new Error('blocked'));stage.webkitRequestFullscreen=undefined;},variant);
    await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),true);
    await page.locator('#fullscreen').tap();assert.equal(await page.locator('#stage').evaluate(el=>el.classList.contains('expanded')),false);
   }pass('unsupported or denied fullscreen fills the viewport and exits cleanly');
+  await down(36,stick);await move(36,{x:stick.x+40,y:stick.y});
   await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(output,'mobile-controls-portrait.png')});
+  assert.equal(await page.evaluate(()=>rivalsTouch.moveX),0);await up(36);
+  assert.ok(await page.evaluate(()=>rivalsViewport[1]>rivalsViewport[0]));
+  await page.locator('#fullscreen').tap();assert.match(await page.locator('#fullscreen-status').textContent(),/解除螢幕方向鎖定/);
+  await page.setViewportSize({width:844,height:390});await page.waitForTimeout(80);
+  assert.equal(await page.locator('#fullscreen-status').textContent(),'');assert.ok(await page.evaluate(()=>rivalsViewport[0]>rivalsViewport[1]));
+  const rotatedStick=await center('#touch-move');await down(37,rotatedStick);await move(37,{x:rotatedStick.x+40,y:rotatedStick.y});assert.ok(await page.evaluate(()=>rivalsTouch.moveX>.9));await up(37);
+  await page.locator('#fullscreen').tap();await page.setViewportSize({width:390,height:844});await page.waitForTimeout(80);
+  pass('rotation resizes the game, clears old touches and permits fresh movement');
   for(const selector of ['#touch-move','#touch-fire','#touch-aim','#touch-reload','#touch-sprint']){
    const box=await page.locator(selector).boundingBox();assert.ok(box.width>=48&&box.height>=48);assert.ok(box.x>=0&&box.x+box.width<=390.1);assert.ok(box.y>=0&&box.y+box.height<=844.1);
   }pass('portrait controls remain inside the viewport with usable touch targets');
@@ -93,7 +146,7 @@ const checks=[],errors=[];function pass(label){checks.push(label);console.log('M
   await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),true);await page.locator('#fullscreen').tap();assert.equal(await page.evaluate(()=>!!document.fullscreenElement),false);pass('keyboard mode also enters and exits native fullscreen');
   const denied=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
   await denied.addInitScript(()=>{Storage.prototype.getItem=()=>{throw new Error('storage disabled');};Storage.prototype.setItem=()=>{throw new Error('storage disabled');};});
-  const deniedPage=await denied.newPage();deniedPage.on('pageerror',e=>errors.push(e.message));await deniedPage.route('http://rivals.test/**',route=>route.fulfill({status:200,contentType:'text/html',body:html}));await deniedPage.goto('http://rivals.test/');await deniedPage.locator('#mode-keyboard').tap();assert.equal(await deniedPage.locator('#mode-keyboard').getAttribute('aria-pressed'),'true');pass('control choice works when browser storage is denied');
+  const deniedPage=await denied.newPage();deniedPage.on('pageerror',e=>errors.push(e.message));await deniedPage.route('http://rivals.test/**',serveTemplate);await deniedPage.goto('http://rivals.test/');await deniedPage.locator('#mode-keyboard').tap();assert.equal(await deniedPage.locator('#mode-keyboard').getAttribute('aria-pressed'),'true');pass('control choice works when browser storage is denied');
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'mobile-bridge-check.json'),JSON.stringify({ok:true,checks,errors},null,2));console.log('MOBILE_BRIDGE_OK '+checks.length);
  }finally{await browser.close();}
 })().catch(error=>{fs.writeFileSync(path.join(output,'mobile-bridge-check.json'),JSON.stringify({ok:false,checks,errors,error:error.stack},null,2));console.error(error);process.exit(1);});
