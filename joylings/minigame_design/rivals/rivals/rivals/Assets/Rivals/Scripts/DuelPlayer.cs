@@ -303,9 +303,10 @@ namespace RivalsPrototype {
       var target=Quaternion.LookRotation(bodyDelta.normalized).eulerAngles;
       // Imperfect tracking belongs to the bot's aim, not the weapon trajectory.
       // In particular, a human sniper still fires exactly along its crosshair.
-      float wobble=Weapon==4?2.7f:Mathf.Lerp(3.2f,5.5f,Mathf.Clamp01(distanceToEnemy/40));
+      // Reduce bot tracking error by 20%, retaining reaction and firing pauses.
+      float wobble=Weapon==4?2.16f:Mathf.Lerp(2.56f,4.4f,Mathf.Clamp01(distanceToEnemy/40));
       float aimYaw=target.y+Mathf.Sin(now*1.13f+Seat*1.7f)*wobble;
-      float aimPitch=Mathf.DeltaAngle(0,target.x)+Mathf.Sin(now*.87f+Seat*2.3f)*(Weapon==4?1.4f:2.1f);
+      float aimPitch=Mathf.DeltaAngle(0,target.x)+Mathf.Sin(now*.87f+Seat*2.3f)*(Weapon==4?1.12f:1.68f);
       if(Weapon==Weapons.Poison||Weapon==Weapons.Rocket)aimPitch-=Mathf.Clamp(distanceToEnemy*(Weapon==Weapons.Poison?1.1f:.45f),0,28);
       if(Weapon==Weapons.Nuke)aimPitch=Mathf.Atan2(1.55f,Mathf.Max(1,distanceToEnemy))*Mathf.Rad2Deg;
       var botLook=new Vector2(Mathf.MoveTowardsAngle(Look.x,aimYaw,85*stride*Runner.DeltaTime),Mathf.MoveTowardsAngle(Look.y,aimPitch,60*stride*Runner.DeltaTime));

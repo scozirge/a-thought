@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RivalsPrototype {
   public partial class DuelSession {
-    public const string NetworkVersion="rivals-web-27-shot-feedback";
+    public const string NetworkVersion="rivals-web-28-bot-respawn";
     public static string RoomTitle(string name)=>DuelNames.Clean(name)+"的房間";
     public string PlayerName="貓貓";
     NetworkRunner lobbyRunner;

@@ -6,6 +6,7 @@ mergeInto(LibraryManager.library, {
   RivalsCanvasFocused: function() { return window.rivalsLook && window.rivalsLook.active ? 1 : 0; },
   RivalsResumeLook: function() { if(window.rivalsLook)window.rivalsLook.resume(); },
   RivalsReleaseLook: function() { if(window.rivalsLook)window.rivalsLook.release(); },
+  RivalsSuspendForRespawn: function() { if(window.rivalsLook)window.rivalsLook.suspendForRespawn(); },
   RivalsTouchMode: function() { return window.rivalsTouch && window.rivalsTouch.mode ? 1 : 0; },
   RivalsTouchMoveX: function() { return window.rivalsTouch ? window.rivalsTouch.moveX : 0; },
   RivalsTouchMoveY: function() { return window.rivalsTouch ? window.rivalsTouch.moveY : 0; },

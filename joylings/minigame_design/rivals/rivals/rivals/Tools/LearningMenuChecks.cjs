@@ -12,7 +12,7 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
    const context=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch}),page=await context.newPage();
    await page.setContent('<meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0}#stage{position:relative;width:100vw;height:100vh}button{cursor:pointer}</style><main id="stage"></main>');
    await page.addStyleTag({path:path.join(template,'learning.css')});
-   await page.evaluate(touch=>{window.commands=[];window.resumeCount=0;window.rivalsLook={resume:()=>window.resumeCount++};window.rivalsTouch={mode:touch,playable:true,paused:false};window.rivalsLearningCommand=s=>window.commands.push(s);},touch);
+   await page.evaluate(touch=>{window.commands=[];window.resumeCount=0;window.rivalsLook={resume:()=>window.resumeCount++,resumeAfterRespawn:()=>{if(window.rivalsTouch.playable&&!window.rivalsTouch.paused)window.resumeCount++;}};window.rivalsTouch={mode:touch,playable:true,paused:false};window.rivalsLearningCommand=s=>window.commands.push(s);},touch);
    await page.addScriptTag({path:path.join(template,'learning.js')});
    assert.equal(await page.locator('#learning-leave,#learning-stage,#learning-progress,#learning-note').count(),0,'no secondary labels or room-exit action in the lesson');
    for(let i=0;i<15;i++){
@@ -57,10 +57,10 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
    await page.screenshot({path:path.join(output,`respawn-${width}-${height}.png`)});
    await page.evaluate(()=>window.rivalsReceiveLearning({visible:false}));assert.equal(await page.locator('#learning-overlay').isVisible(),false);checks++;
    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-   assert.equal(await page.evaluate(()=>window.resumeCount),touch?1:0,'mobile respawn resumes focus; keyboard still requires its gesture');checks++;
+   assert.equal(await page.evaluate(()=>window.resumeCount),1,'mobile and keyboard respawns request focus restoration');checks++;
    await page.evaluate(()=>{window.rivalsTouch.playable=false;window.rivalsReceiveLearning({visible:true,state:3,life:21,question:15,progress:15,badges:0,selected:7,complete:true,seconds:1,weapons:[1,7]});window.rivalsReceiveLearning({visible:false});});
    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-   assert.equal(await page.evaluate(()=>window.resumeCount),touch?1:0,'leaving the room cannot resume gameplay focus');checks++;
+   assert.equal(await page.evaluate(()=>window.resumeCount),1,'leaving the room cannot resume gameplay focus');checks++;
    await context.close();
   }
   fs.writeFileSync(path.join(output,'menu-results.json'),JSON.stringify({checks,viewports:4,questions:15},null,2));console.log('LEARNING_MENU_OK checks='+checks);

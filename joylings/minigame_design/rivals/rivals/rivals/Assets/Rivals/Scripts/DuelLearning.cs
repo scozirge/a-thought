@@ -84,7 +84,7 @@ namespace RivalsPrototype {
     bool learningWasVisible;
     void UpdateLearningView() {
       bool visible=started&&!IsTraining&&Local&&Local.IsReady&&Local.Health<=0&&Match&&Match.Object&&Match.Object.IsValid&&Match.Phase==2;
-      if(visible&&!learningWasVisible){paused=false;ResetLifeInput();DuelWebInput.Release();}
+      if(visible&&!learningWasVisible){paused=false;ResetLifeInput();DuelWebInput.SuspendForRespawn();}
       learningWasVisible=visible;
       var view=new LearningView{visible=visible};
       if(visible){

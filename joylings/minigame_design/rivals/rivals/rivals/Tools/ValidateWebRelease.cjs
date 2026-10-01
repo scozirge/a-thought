@@ -4,12 +4,12 @@ const {spawn}=require('node:child_process');
 const fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const suites={
-  interface:[['LearningMenuChecks'],['TrainingMenuChecks'],['MobileBridgeChecks'],['PointerBridgeChecks'],['MobileLayoutChecks']],
+  interface:[['LearningMenuChecks'],['TrainingMenuChecks'],['MobileBridgeChecks'],['PointerBridgeChecks'],['RespawnPointerChecks'],['MobileLayoutChecks']],
   network:[['WebNetworkSmokeTest'],['WebNetworkSmokeTest','--lag'],['WebConnectionLifecycleSmokeTest'],['WebMultiplayerRecoverySmokeTest'],['WebRoomCapacitySmokeTest'],['WebCameraOwnershipSmokeTest']],
   'network-stress':[['WebNetworkSmokeTest','--lag','--stress']],
   play:[['WebTrainingSmokeTest'],['WebLearningSmokeTest'],['WebMobileSmokeTest','--lag','--respawn'],['WebBotDistributionSmokeTest']],
   public:[['WebPublishedReleaseSmokeTest'],['WebNetworkSmokeTest','--lag']],
-  'desktop-ui':[['LearningMenuChecks'],['TrainingMenuChecks'],['PointerBridgeChecks'],['AssetDeliveryChecks']],
+  'desktop-ui':[['LearningMenuChecks'],['TrainingMenuChecks'],['PointerBridgeChecks'],['RespawnPointerChecks'],['AssetDeliveryChecks']],
   desktop:[['WebFocusSmokeTest'],['WebLookSmokeTest'],['WebEntryCrosshairSmokeTest'],['WebTrainingSmokeTest'],['WebLearningSmokeTest'],['WebBotDistributionSmokeTest']],
 };
 const requested=process.argv.slice(2);

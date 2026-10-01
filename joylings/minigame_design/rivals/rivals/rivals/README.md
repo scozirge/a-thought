@@ -3,7 +3,8 @@
 ## 武器邏輯挑戰（2026-10-01）
 
 - 電腦正式版：修正延遲校正時重複播放射擊效果，以及切換全螢幕後未恢復滑鼠操作；鍵鼠、連線、答題及武器驗證見 [電腦正式版驗證](DESKTOP_RELEASE_VALIDATION.md)。
-- 正式教學版：`rivals-web-27-shot-feedback`，介面 `star-progress-20261001`，發布批次 `desktop-release-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001)。
+- 正式教學版：`rivals-web-28-bot-respawn`，介面 `star-progress-20261001`，發布批次 `bot-aim-respawn-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=bot-aim-respawn-20261001)。
+- Bot 命中與復活操作：[調整與驗證](BOT_RESPAWN_VALIDATION.md)。Bot 瞄準偏差縮小兩成；電腦正常復活自動恢復操作，倒數仍可選武器。
 - 答題提示與三顆星：[介面與連線驗證](STAR_PROGRESS_VALIDATION.md)。每答對一題填滿一顆星，三顆全滿顯示解鎖的新武器。
 - 載入加速：[CDN 與備援驗證](STARTUP_OPTIMIZATION_VALIDATION.md)。大型檔案經 SHA-256 驗證後載入，失敗或八秒無進度時改用原站，保留原有快取與相同遊戲內容。
 - 復活武器調整：[預設與倒數選擇驗證](RESPAWN_DEFAULT_VALIDATION.md)。每次死亡重新預選最近解鎖的武器，手動改選只套用當次復活。
@@ -22,7 +23,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=bot-aim-respawn-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
@@ -30,7 +31,7 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範�
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
 - 展開後的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
-目前網頁版使用 `rivals-web-27-shot-feedback`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
+目前網頁版使用 `rivals-web-28-bot-respawn`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
 GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。下載檔名保留原路徑，內容會更新，實際來源提交與版本以包內 `版本資訊.json` 為準。提供全部九種武器的單人訓練場，本次將菜刀近砍判定距離從 2.5 加倍至 5 公尺，刀身以握柄為中心放大 25%，保留右上至左下斜劈；實測見 [菜刀距離與尺寸驗證](CLEAVER_REACH_VALIDATION.md)。火箭保留前次增加 30% 的爆炸範圍。
 
@@ -56,7 +57,7 @@ GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Bu
 
 進房後固定 4 對 4，空位由 Bot 補齊。真人加入會接替 Bot，優先挑選仍存活的座位；接替時保留原座位的血量、位置、武器與剩餘復活倒數，避免離線／重加入跳過等待。真人離線也由 Bot 接手原狀態。真人、Bot 都有名字；活著、沒有被牆壁遮住且距離小於 14 公尺的角色才顯示小型頭頂名字，11–14 公尺逐漸淡出，陣亡後隱藏。
 
-進入開場倒數就顯示中央準心。鍵鼠模式開打後點「開始操作」取得瀏覽器滑鼠鎖定，使用 `movementX/movementY` 相對位移，可連續轉任意圈。鎖定時隱藏游標，按 Esc 或失焦時恢復游標、清除輸入並停止操作；重新點擊後才恢復。
+進入開場倒數就顯示中央準心。鍵鼠模式開打後點「開始操作」取得瀏覽器滑鼠鎖定，使用 `movementX/movementY` 相對位移，可連續轉任意圈。鎖定時隱藏游標，按 Esc 或失焦時恢復游標、清除輸入並停止操作；重新點擊後才恢復。正常答題與倒數復活則會自動恢復操作，不會每次要求再點「繼續操作」；倒數期間仍能選武器。
 
 若內嵌瀏覽器拒絕 Pointer Lock、API 不存在，或 1.5 秒內沒有實際取得鎖定，會自動切換相容操作，不再用錯誤視窗擋住遊戲：按住右鍵拖曳轉向，放開後把滑鼠移回，再次拖曳即可繼續轉身。右鍵仍會瞄準，左鍵射擊、WASD 移動照常。只有按住右鍵拖曳期間才隱藏游標；滑鼠停止、放開或失焦後不會自轉。右鍵拖曳使用每次按下建立的新座標起點，並以 pointer capture 接收畫面外的放開事件；不使用邊緣自轉或 Q／E 模擬轉向。
 
@@ -102,7 +103,7 @@ GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Bu
 
 地圖只有 4 個拾取點：四角（X/Z ±30）的兩處步槍、一處散彈、一處狙擊；菜刀、火箭筒、毒藥、加特林及核彈不再生成地面武器或底座。散彈和狙擊每場交換兩個對角的位置。一般武器撿走後 5 秒補充；已拿同款，即使缺彈也不會再次撿走或補彈。Bot 使用相同拾取規則。地圖為 80 × 80，有四向對稱的 0.95 公尺矮牆、3.6 公尺高柱、附樓梯的 1.5 公尺側翼平台與角落入口掩體。中央三面 4.4 公尺高的錯位屏障保留彎折中央通道與兩側外路，阻擋各出生位置直接看見對手。
 
-Bot 依座位分散到四條路線，靠近隊友時避讓；敵人距離相近時分配不同目標，也會減少搶同一個拾取點。難度仍較寬鬆，進攻積極度略高於前版：移動上限 3.8 公尺／秒，每 5 秒約有 3.2 秒接近敵人、1.8 秒停頓；敵人可見且在 17 公尺內便不繼續直衝。撿槍時每 5 秒移動 3.8 秒。看到敵人後仍約 0.65–0.95 秒才可能開火，追瞄每秒最多轉 85 度，含上下與左右瞄準誤差；狙擊 Bot 也會瞄偏，真人狙擊仍沿準心射出。Bot 每 3 秒有 1.6 秒的開火窗口，手槍／步槍／散彈／狙擊最短射擊間隔維持 0.7／0.5／1.3／2.9 秒。
+Bot 依座位分散到四條路線，靠近隊友時避讓；敵人距離相近時分配不同目標，也會減少搶同一個拾取點。難度仍較寬鬆，進攻積極度略高於前版：移動上限 3.8 公尺／秒，每 5 秒約有 3.2 秒接近敵人、1.8 秒停頓；敵人可見且在 17 公尺內便不繼續直衝。撿槍時每 5 秒移動 3.8 秒。看到敵人後仍約 0.65–0.95 秒才可能開火，追瞄每秒最多轉 85 度，上下與左右瞄準偏差比前版縮小 20%，更容易打中但仍會射偏；狙擊 Bot 也會瞄偏，真人狙擊仍沿準心射出。Bot 每 3 秒有 1.6 秒的開火窗口，手槍／步槍／散彈／狙擊最短射擊間隔維持 0.7／0.5／1.3／2.9 秒。
 
 ## 30 擊殺獲勝與復活
 

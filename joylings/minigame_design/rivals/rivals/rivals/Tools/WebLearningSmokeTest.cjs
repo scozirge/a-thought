@@ -56,6 +56,8 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
    await client.locator('#learning-next').click();await client.waitForFunction(()=>window.rivalsLearningState?.state===3);
    if(attempt===3){check(await client.locator('#learning-weapons button').count()===2,'only pistol and unlocked cleaver selectable');await client.screenshot({path:path.join(output,'real-respawn.png')});}
    await client.waitForFunction(life=>{const d=window.rivalsDiagnostics,p=d.players.find(x=>x.seat===d.localSeat);return p.health>0&&p.spawnSequence>life;},life,{timeout:12000});
+   await client.waitForFunction(()=>window.rivalsDiagnostics?.controls&&window.rivalsPointer?.locked,null,{timeout:3000});
+   check(!(await client.locator('#control-resume').isVisible()),'respawn restores real pointer lock without another click '+attempt);
    if(attempt===3)check(me(await state(client)).weapon===2,'real client respawns carrying cleaver');
   }
   // A manual choice belongs to one life; every new death restores the latest unlock.
@@ -82,6 +84,8 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
     check(true,'host restores latest unlock after previous pistol selection');
    }
    await client.waitForFunction(life=>{const s=window.rivalsDiagnostics,p=s.players.find(x=>x.seat===s.localSeat);return p.health>0&&p.spawnSequence>life;},life,{timeout:12000});
+   await client.waitForFunction(()=>window.rivalsDiagnostics?.controls&&window.rivalsPointer?.locked,null,{timeout:3000});
+   check(!(await client.locator('#control-resume').isVisible()),'weapon-choice respawn restores controls automatically '+repeat);
    check(me(await state(client)).weapon===(repeat===0?1:2),'actual respawn equips '+(repeat===0?'temporary pistol':'latest unlocked cleaver'));
   }
   await client.evaluate(()=>window.rivalsLearningCommand('leave'));await client.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready);

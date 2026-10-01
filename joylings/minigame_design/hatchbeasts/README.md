@@ -6,7 +6,7 @@
 
 [課堂 H5 使用說明](docs/課堂H5使用說明.md)：課堂目錄與前三堂教材，目前進度為第三堂「紅藍槍戰・武器邏輯」。開發預覽路徑為 `/classroom/`，可輸出為 H5。
 
-[第二次課程：紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)：四個簡單的課堂提問，答案範例可展開／收起，附 [最新版紅藍槍戰遊戲](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001) 連結，支援手機觸控與鍵盤滑鼠。手機瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊；所有版本皆已移除跳躍與滑行。
+[第二次課程：紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)：四個簡單的課堂提問，答案範例可展開／收起，附 [最新版紅藍槍戰遊戲](https://scozirge.github.io/a-thought/rivals/?v=bot-aim-respawn-20261001) 連結，支援手機觸控與鍵盤滑鼠。手機瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊；所有版本皆已移除跳躍與滑行。
 
 [課程清單與設計單](docs/課程清單.md)：目前進度、前三堂課程入口，以及第一堂 60 分鐘的遊戲開發體驗與設計單。
 
