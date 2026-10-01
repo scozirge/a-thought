@@ -1,12 +1,12 @@
 紅藍槍戰｜武器邏輯教學版
 
-線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001
+線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001
 課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges
 
 每次死亡一題，答對一題一個徽章，每三個解鎖下一把武器。
 依序：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。
 答錯下次出同一題。看完說明按繼續，再進入三秒復活倒數。
-剛解鎖的武器會成為復活預設武器，倒數時可以改選已解鎖武器。
+每次死亡預設最近解鎖的武器；倒數可改選手槍或其他已解鎖武器，只影響當次復活。場地撿到的槍不列入復活選單，也不改變預設。
 全部解鎖後不再出題；同房保留進度，離房重新開始。
 
 完整資料夾放在 HTTP(S) 網站即可遊玩，不要直接雙擊 index.html。
