@@ -56,6 +56,32 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
    await client.waitForFunction(life=>{const d=window.rivalsDiagnostics,p=d.players.find(x=>x.seat===d.localSeat);return p.health>0&&p.spawnSequence>life;},life,{timeout:12000});
    if(attempt===3)check(me(await state(client)).weapon===2,'real client respawns carrying cleaver');
   }
+  // A manual choice belongs to one life; every new death restores the latest unlock.
+  for(let repeat=0;repeat<2;repeat++){
+   await die(client);await client.keyboard.up('w');await client.waitForFunction(()=>window.rivalsLearningState?.visible&&window.rivalsLearningState.state===1);
+   const view=await client.evaluate(()=>window.rivalsLearningState),life=view.life;
+   check(view.question===3&&view.progress===3,'cleaver question repeats after a wrong answer '+repeat);
+   check(view.selected===2,'new death defaults to latest unlock '+repeat);
+   const correct=bank.stages[1].questions[0].answer;
+   await client.locator(`[data-option="${(correct+1)%3}"]`).click();await client.waitForFunction(()=>window.rivalsLearningState?.state===2);
+   check((await client.evaluate(()=>window.rivalsLearningState.progress))===3,'wrong answer keeps latest unlock '+repeat);
+   await client.locator('#learning-next').click();await client.waitForFunction(()=>window.rivalsLearningState?.state===3);
+   check(JSON.stringify(await client.locator('#learning-weapons button').evaluateAll(bs=>bs.map(b=>Number(b.dataset.weapon)).sort()))==='[1,2]','ground weapons excluded from countdown '+repeat);
+   await client.evaluate(life=>{for(const weapon of [0,3,4])window.rivalsLearningCommand(`learning:weapon:${life}:${weapon}`);},life);
+   await client.waitForTimeout(250);
+   check((await client.evaluate(()=>window.rivalsLearningState.selected))===2,'ground weapon requests cannot change selection '+repeat);
+   if(repeat===0){
+    await client.locator('#learning-weapons [data-weapon="1"]').click();
+    await client.waitForFunction(()=>window.rivalsLearningState?.selected===1);
+    await host.waitForFunction(()=>window.rivalsDiagnostics.players.find(p=>p.name==='答題學生')?.respawnWeapon===1);
+    check(true,'host confirms temporary pistol selection');
+   }else{
+    await host.waitForFunction(()=>window.rivalsDiagnostics.players.find(p=>p.name==='答題學生')?.respawnWeapon===2);
+    check(true,'host restores latest unlock after previous pistol selection');
+   }
+   await client.waitForFunction(life=>{const s=window.rivalsDiagnostics,p=s.players.find(x=>x.seat===s.localSeat);return p.health>0&&p.spawnSequence>life;},life,{timeout:12000});
+   check(me(await state(client)).weapon===(repeat===0?1:2),'actual respawn equips '+(repeat===0?'temporary pistol':'latest unlocked cleaver'));
+  }
   await client.evaluate(()=>window.rivalsLearningCommand('leave'));await client.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready);
   await enterRoom(client,{room,name:'答題學生',create:false});check(me(await state(client)).learningProgress===0&&me(await state(client)).respawnWeapon===1,'leaving and rejoining clears progress');
   check(result.errors.length===0,'no browser script errors');console.log('RIVALS_WEB_LEARNING_OK checks='+result.checks.length);

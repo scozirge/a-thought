@@ -38,18 +38,29 @@ namespace RivalsPrototype {
           if(p.Health>0)p.TakeDamage(300,Vector3.zero);
           life=p.SpawnSequence;
           Check(p.LearningQuestionIndex==question&&p.LearningState==1,"fixed question order "+question);
+          int previousDefault=DuelLearning.DefaultRespawnWeapon(question);
+          Check(p.RespawnWeapon==previousDefault,"every death defaults to latest unlock "+question);
+          p.RPC_LearningWeapon(life,Weapons.Pistol);Check(p.RespawnWeapon==previousDefault,"cannot change weapon while answering "+question);
           p.RPC_LearningAnswer(life-1,question,DuelLearning.Question(question).answer);Check(p.LearningState==1,"stale life rejected "+question);
           p.RPC_LearningAnswer(life,question,DuelLearning.Question(question).answer);
           Check(p.LearningProgress==question+1&&p.LearningState==2,"one badge awarded "+question);
           p.RPC_LearningAnswer(life,question,DuelLearning.Question(question).answer);Check(p.LearningProgress==question+1,"duplicate cannot award another badge "+question);
           if((question+1)%3==0)Check(p.RespawnWeapon==DuelLearning.Stages[question/3].unlock,"new unlock becomes default "+question);
+          int latest=DuelLearning.DefaultRespawnWeapon(question+1);
+          p.RPC_LearningWeapon(life,Weapons.Pistol);Check(p.RespawnWeapon==latest,"cannot change weapon during feedback "+question);
           p.RPC_LearningContinue(life);
+          foreach(int ground in new[]{Weapons.Rifle,Weapons.Shotgun,Weapons.Sniper}){p.RPC_LearningWeapon(life,ground);Check(p.RespawnWeapon==latest,"ground weapon excluded from respawn selection "+question+":"+ground);}
+          p.RPC_LearningWeapon(life,Weapons.Pistol);Check(p.RespawnWeapon==Weapons.Pistol,"pistol can override this countdown "+question);
           p.RespawnAt(new Vector3(0,.1f,-29));Check(p.Weapon==p.RespawnWeapon&&p.Health==300,"selected weapon equipped with full life "+question);
-          p.ResetForMatch();Check(p.LearningProgress==question+1&&p.Weapon==p.RespawnWeapon,"same-room new match retains progress "+question);
+          int pickup=new[]{Weapons.Rifle,Weapons.Shotgun,Weapons.Sniper}[question%3];
+          Check(p.CollectWeapon(pickup)&&p.Weapon==pickup&&p.RespawnWeapon==Weapons.Pistol,"ground pickup affects held weapon only "+question);
+          p.TakeDamage(300,Vector3.zero);Check(p.RespawnWeapon==latest,"next death ignores pistol override and ground pickup "+question);
+          p.ResetForMatch();Check(p.LearningProgress==question+1&&p.Weapon==latest&&p.RespawnWeapon==latest,"same-room new match uses latest unlocked weapon "+question);
         }
         p.TakeDamage(300,Vector3.zero);Check(p.LearningState==3&&p.RespawnTimer.IsRunning,"all unlocked skips questions");
         p.RPC_LearningWeapon(p.SpawnSequence,Weapons.Cleaver);p.RespawnAt(new Vector3(0,.1f,-29));Check(p.Weapon==Weapons.Cleaver,"older unlocked weapon can be selected");
-        p.TakeDamage(300,Vector3.zero);Check(p.RespawnWeapon==Weapons.Cleaver,"selection persists for subsequent respawns");
+        p.TakeDamage(300,Vector3.zero);Check(p.RespawnWeapon==Weapons.Nuke,"older weapon selection does not replace latest-unlock default");
+        p.RPC_LearningWeapon(p.SpawnSequence-1,Weapons.Cleaver);Check(p.RespawnWeapon==Weapons.Nuke,"previous-life weapon selection rejected");
         // Leaving a question transfers the seat to a bot without trapping it forever.
         p.LearningProgress=0;p.BeginLearningDeath();var snapshot=new DuelSession.SeatSnapshot(p);
         var replacement=s.Players.First(x=>x.IsBot);snapshot.Apply(replacement);Check(replacement.RespawnTimer.IsRunning,"bot replacement has a running timer");

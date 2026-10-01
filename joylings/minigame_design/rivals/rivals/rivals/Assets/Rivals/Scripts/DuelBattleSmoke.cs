@@ -132,6 +132,9 @@ namespace RivalsPrototype {
         int oldShots=player.Shots,oldPlayerLife=player.SpawnSequence;
         var playerDeathPosition=player.transform.position;
         player.TakeDamage(300,enemy.transform.position,enemy);fire=true;press++;
+        Check(player.RespawnWeapon==Weapons.Nuke,"completed lessons default to the latest unlock");
+        player.RPC_LearningWeapon(player.SpawnSequence,Weapons.Pistol);
+        Check(player.RespawnWeapon==Weapons.Pistol,"countdown permits a pistol override for input checks");
         float countdown=player.RespawnTimer.RemainingTime(session.Runner)??0;
         Debug.Log($"RIVALS_RESPAWN_TIMER seconds={countdown:R} ticks={player.RespawnTimer.RemainingTicks(session.Runner)}");
         Check(player.RespawnTimer.RemainingTicks(session.Runner)==Mathf.RoundToInt(3*session.Runner.TickRate)&&player.RespawnSecondsRemaining==3,"player countdown starts at three seconds");
@@ -173,7 +176,7 @@ namespace RivalsPrototype {
         Check(match.Blue==0&&match.Red==0,"new game clears both kill scores");
         Check(match.Pickups.Count(p=>p.Weapon>=0)==4&&match.Pickups.All(p=>p.Weapon<0||DuelPickups.IsGroundWeapon(p.Weapon)),"next game does not restore badge pickups");
         Check(session.Players.Select(p=>p.Seat).Distinct().Count()==8&&session.Players.Count(p=>p.Team==0)==4&&session.Players.Count(p=>p.Team==1)==4,"reshuffle unique balanced seats");
-        Check(session.Players.All(p=>p.Health==300&&p.OwnedWeapons==(1<<Weapons.Pistol)&&!p.RespawnTimer.IsRunning),"new game revives everyone and clears death timers");
+        Check(session.Players.All(p=>p.Health==300&&p.Weapon==(p==player?Weapons.Nuke:Weapons.Pistol)&&p.OwnedWeapons==(1<<p.Weapon)&&!p.RespawnTimer.IsRunning),"new game restores latest human unlock and bot pistols with cleared death timers");
         await Wait(()=>match.Phase==2,"new game countdown",6);
         var blueWinner=session.Players.First(p=>p.Team==0);var redTarget=session.Players.First(p=>p.Team==1);
         match.Blue=29;match.Red=29;redTarget.TakeDamage(300,blueWinner.transform.position,blueWinner);

@@ -149,6 +149,7 @@ namespace RivalsPrototype {
     }
     public void ResetForMatch(){
       bool training=DuelSession.Instance.IsTraining;
+      if(HasStateAuthority&&UsesLearning)RespawnWeapon=DuelLearning.DefaultRespawnWeapon(LearningProgress);
       ResetLife(training?DuelTrainingWorld.Positions[Seat]:SpawnPosition(Seat),new Vector2(Team==0?0:180,0));
       if(training&&!IsBot)EquipTrainingWeapon(DuelSession.Instance.TrainingWeapon);
       else if(UsesLearning&&DuelLearning.CanSelect(LearningProgress,RespawnWeapon)&&Weapon!=RespawnWeapon)CollectWeapon(RespawnWeapon);

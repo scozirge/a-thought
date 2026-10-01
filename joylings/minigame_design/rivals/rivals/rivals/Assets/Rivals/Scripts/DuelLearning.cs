@@ -20,6 +20,10 @@ namespace RivalsPrototype {
     static LearningStage[] stages;
     public static LearningStage[] Stages=>stages??(stages=JsonUtility.FromJson<LearningBank>(Resources.Load<TextAsset>("WeaponQuestions").text).stages);
     public static LearningQuestion Question(int progress)=>Stages[progress/3].questions[progress%3];
+    public static int DefaultRespawnWeapon(int progress) {
+      int unlocked=Mathf.Clamp(progress/3,0,Stages.Length);
+      return unlocked>0?Stages[unlocked-1].unlock:Weapons.Pistol;
+    }
     public static bool CanSelect(int progress,int weapon) {
       if(weapon==Weapons.Pistol)return true;
       for(int i=0;i<Stages.Length;i++)if(Stages[i].unlock==weapon)return progress>=(i+1)*3;
@@ -39,6 +43,8 @@ namespace RivalsPrototype {
     public bool CanCollectLearningWeapon(int kind)=>!UsesLearning||DuelLearning.CanCollect(LearningProgress,kind);
     public void BeginLearningDeath() {
       if(!HasStateAuthority)return;
+      // A countdown selection applies only to that life, never the next death.
+      if(UsesLearning)RespawnWeapon=DuelLearning.DefaultRespawnWeapon(LearningProgress);
       LearningQuestionIndex=LearningProgress;LearningChoice=-1;
       LearningState=UsesLearning&&LearningProgress<DuelLearning.TotalQuestions?1:3;
       RespawnTimer=LearningState==1?TickTimer.None:TickTimer.CreateFromSeconds(Runner,DuelRespawn.DelaySeconds);
@@ -49,7 +55,7 @@ namespace RivalsPrototype {
       if(!LearningRequestValid(life)||LearningState!=1||question!=LearningQuestionIndex||question!=LearningProgress||question<0||question>=DuelLearning.TotalQuestions)return;
       var q=DuelLearning.Question(question);if(choice<0||choice>=q.options.Length)return;
       LearningChoice=choice;LearningState=2;
-      if(choice==q.answer){LearningProgress++;if(LearningProgress%3==0)RespawnWeapon=DuelLearning.Stages[LearningProgress/3-1].unlock;}
+      if(choice==q.answer){LearningProgress++;if(LearningProgress%3==0)RespawnWeapon=DuelLearning.DefaultRespawnWeapon(LearningProgress);}
     }
     [Rpc(RpcSources.InputAuthority,RpcTargets.StateAuthority)]
     public void RPC_LearningContinue(int life) {

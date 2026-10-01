@@ -21,9 +21,9 @@ for folder in ['Assets/Rivals/Scripts', 'Assets/Rivals/Resources', 'Assets/WebGL
 info = {
     'date': '2026-10-01', 'gameSourceCommit': commit, 'target': 'Web',
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
-    'networkVersion': 'rivals-web-25-unlock-bots',
+    'networkVersion': 'rivals-web-26-respawn-default',
     'uiRevision': 'simple-quiz-20261001',
-    'releaseRevision': 'compressed-web-20261001',
+    'releaseRevision': 'respawn-default-20261001',
     'compression': 'Brotli / Unity decompression fallback',
     'releaseChanges': [
         '遊戲程式與資源採用無損 Brotli 壓縮，主程式與資料檔皆使用瀏覽器持續快取。',
@@ -33,7 +33,7 @@ info = {
         '手機答題後復活自動恢復操作焦點，離房與暫停不會誤觸恢復。',
         '加入十五題武器邏輯挑戰，每次死亡回答一題，答錯下次重出原題。',
         '每三個徽章依序解鎖菜刀、火箭筒、毒藥、加特林與核彈。',
-        '新武器成為復活預設武器，倒數可改選已解鎖武器。',
+        '每次死亡預設最近解鎖的武器；倒數可改選手槍或其他已解鎖武器，只影響當次復活，場地拾取武器不列入。',
         '核彈解鎖後不再出題；同房保留進度，離開房間重新開始。',
         '手機與鍵鼠皆可答題，房主驗證答案、重複請求及地圖拾取資格。',
         '保留工作區既有菜刀外觀、揮砍與射程調整；精確原始碼以 sourceFiles 雜湊為準。'
