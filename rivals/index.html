@@ -111,7 +111,7 @@
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
   <footer><span id="control-instructions">點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵攻擊 · 右鍵瞄準／飛刀 · 地圖撿武器 · Esc 選單</span></footer>
-  <script type="application/json" id="rivals-asset-manifest">{"assets":[{"name":"59809aa585f639337d72df57b1c74ad6.wasm.unityweb","bytes":9565835,"sha256":"dc2d1b0e71c99dbd9e586b87e3b2957ff46c2c89d87bc5d67417b8e098d9232b"},{"name":"7d36e820222c631fdc22edbf10cd457a.data.unityweb","bytes":14009120,"sha256":"a48d4b4805c8e350bf018fbcded9294ac89557c03966d421c9fd9b65dc790060"}]}</script>
+  <script type="application/json" id="rivals-asset-manifest">{"assets":[{"name":"33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb","bytes":9549309,"sha256":"1025eea5fedfa201c8a991b687ee3fa5aa863e06bd16a3c74a59ed83338ea3ea"},{"name":"58c0a4eaa8516c5d6dba9496c52de146.data.unityweb","bytes":14004097,"sha256":"db1885ca57dc3646cc7a4e3a434ab43e815addd36f36d72a3c0410ef907669a9"}]}</script>
   <script src="asset-delivery.js?v=cdn-load-20261001"></script>
   <script>
     const canvas=document.getElementById('unity-canvas');let player;
@@ -411,18 +411,21 @@
     function expandViewport(){stage.classList.add('expanded');document.body.classList.add('expanded');fullscreenStatus.textContent=touch.mode?'':'已放大至可用畫面；此瀏覽器可能保留網址列。';clearTimeout(fullscreenNoticeTimer);fullscreenNoticeTimer=setTimeout(()=>{if(!fullscreenStatus.dataset.orientation)fullscreenStatus.textContent='';},6000);updateOrientationHint();updateFullscreen();}
     bindTap(fullscreenButton,async()=>{
       if(fullscreenBusy)return;fullscreenBusy=true;touch.reset();
+      // Pointer lock must use this gesture before fullscreen consumes activation.
+      // Focusing the toolbar button already released the game's previous lock.
+      const resumeKeyboard=!touch.mode&&enabled;if(resumeKeyboard)engage();
       try{
         if(fullscreenElement()){releaseLandscape();const exit=document.exitFullscreen||document.webkitExitFullscreen;if(exit)await exit.call(document);exitExpanded();}
         else if(stage.classList.contains('expanded'))exitExpanded();
         else{const request=stage.requestFullscreen||stage.webkitRequestFullscreen;if(request){try{await request.call(stage);if(!fullscreenElement())expandViewport();}catch(error){expandViewport();}}else expandViewport();requestLandscape();}
-      }finally{fullscreenBusy=false;updateFullscreen();if(touch.mode&&touch.playable&&!touch.paused)engage();}
+      }finally{fullscreenBusy=false;updateFullscreen();if(resumeKeyboard||(touch.mode&&touch.playable&&!touch.paused))engage();}
     });
     for(const event of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(event,()=>{touch.reset();if(fullscreenElement())exitExpanded();else releaseLandscape();updateOrientationHint();updateFullscreen();});
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
     function updateHudViewport(){const rect=canvas.getBoundingClientRect(),safe=getComputedStyle(document.getElementById('viewport-safe-area'));window.rivalsViewport=[rect.width,rect.height,parseFloat(safe.paddingLeft)||0,parseFloat(safe.paddingRight)||0,parseFloat(safe.paddingTop)||0,parseFloat(safe.paddingBottom)||0];}
     new ResizeObserver(updateHudViewport).observe(canvas);window.addEventListener('resize',updateHudViewport);window.visualViewport?.addEventListener('resize',updateHudViewport);updateHudViewport();
-    const config={dataUrl:'Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb',frameworkUrl:'Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb',codeUrl:'Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
-    const loader=document.createElement('script');loader.src='Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js';
+    const config={dataUrl:'Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb',frameworkUrl:'Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb',codeUrl:'Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/d583daa33a6e7e40f309f6e9082caf21.loader.js';
     // Content hashes change only when the asset changes. UI edits no longer
     // invalidate the whole game; Unity's persistent cache can reuse big files.
     config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:\.unityweb)?(?:$|\?)/i.test(url)?'immutable':'must-revalidate';

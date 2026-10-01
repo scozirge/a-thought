@@ -1,8 +1,12 @@
 # 紅藍槍戰｜武器邏輯教學版
 
-[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
+[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
 
-2026-10-01 更新。發布批次：`mobile-controls-20261001`；連線版本：`rivals-web-26-respawn-default`。僅發布 Web；Windows 是歷史版本。
+2026-10-01 更新。發布批次：`desktop-release-20261001`；連線版本：`rivals-web-27-shot-feedback`。僅發布 Web；Windows 是歷史版本。
+
+修正延遲連線時偶爾重複播放射擊效果的問題，保留短按與連射的即時回饋。所有同玩者請重新整理，再建立或加入房間。
+
+電腦按「全螢幕」時一併恢復滑鼠鎖定與操作，不必再點一次畫面。
 
 每次死亡回答一題，答對得到一個徽章。每集滿三個就解鎖下一把：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。答錯下次仍出同一題，不扣徽章。共十五題，不必背累積徽章數。
 
