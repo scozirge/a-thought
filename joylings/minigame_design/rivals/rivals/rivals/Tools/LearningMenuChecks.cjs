@@ -21,6 +21,8 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
     await page.evaluate(s=>window.rivalsReceiveLearning(s),state);
     assert.equal(await page.locator('#learning-options button').count(),q.options.length);
     assert.equal(await page.locator('#learning-feedback').isVisible(),false);
+    assert.equal(await page.locator('#learning-hint').innerText(),'累積答對更多問題，可以解鎖新武器');
+    assert.equal(await page.locator('#learning-stars').isVisible(),false);
     if(i===0)await page.locator('.learning-card').screenshot({path:path.join(output,`question-${width}-${height}.png`)});
     for(const button of await page.locator('#learning-options button').all()){
      await button.scrollIntoViewIfNeeded();const box=await button.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width+1,'option fits horizontally');
@@ -29,12 +31,18 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
     const option=page.locator(`[data-option="${q.answer}"]`);if(touch)await option.tap();else await option.click();
     assert.equal(await page.evaluate(()=>window.commands.at(-1)),`learning:answer:${i+1}:${i}:${q.answer}`);
     assert.equal(await page.locator('#learning-options button:not(:disabled)').count(),0,'one submission until host reply');
-    state.state=2;state.progress=i+1;state.choice=q.answer;state.answer=q.answer;state.correct=true;state.unlocked=(i+1)%3===0;state.explanation=q.explanation;
+    state.state=2;state.progress=i+1;state.badges=i%3+1;state.choice=q.answer;state.answer=q.answer;state.correct=true;state.unlocked=(i+1)%3===0;state.explanation=q.explanation;
     await page.evaluate(s=>window.rivalsReceiveLearning(s),state);
     assert.ok((await page.locator('#learning-feedback').textContent()).includes(q.explanation));
     assert.equal(await page.locator('#learning-options').isVisible(),false,'feedback shows only the result and one explanation');
     assert.equal(await page.locator('#learning-next').textContent(),'繼續');
-    if(i===0){state.correct=false;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);assert.equal(await page.locator('#learning-title').textContent(),'答錯了');state.correct=true;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);}
+    assert.equal(await page.locator('#learning-hint').isVisible(),false);
+    assert.equal(await page.locator('#learning-stars').isVisible(),true);
+    assert.equal(await page.locator('#learning-stars svg').count(),3);
+    assert.equal(await page.locator('#learning-stars .is-filled').count(),i%3+1,'stars reset for each new weapon');
+    assert.equal(await page.locator('#learning-title').textContent(),state.unlocked?`解鎖新武器：${stage.reward}`:'答對了');
+    if(i===0){state.correct=false;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);assert.equal(await page.locator('#learning-title').textContent(),'答錯了');assert.equal(await page.locator('#learning-stars').isVisible(),false);state.correct=true;await page.evaluate(s=>window.rivalsReceiveLearning(s),state);}
+    if(i<3)await page.locator('.learning-card').screenshot({path:path.join(output,`stars-${i+1}-${width}-${height}.png`)});
     if(i===0||i===13)await page.screenshot({path:path.join(output,`lesson-${width}-${height}-${i}.png`)});
     if(touch)await page.locator('#learning-next').tap();else await page.locator('#learning-next').click();
     assert.equal(await page.evaluate(()=>window.commands.at(-1)),`learning:continue:${i+1}`);
@@ -42,6 +50,7 @@ const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(root,'Logs/L
    }
    await page.evaluate(()=>window.rivalsReceiveLearning({visible:true,state:3,life:20,question:15,progress:15,badges:0,selected:7,complete:true,seconds:3,weapons:[1,2,6,8,5,7]}));
    assert.equal(await page.locator('#learning-options').isVisible(),false);assert.equal(await page.locator('#learning-next').isVisible(),false);
+   assert.equal(await page.locator('#learning-hint').isVisible(),false);assert.equal(await page.locator('#learning-stars').isVisible(),false);
    assert.equal(await page.locator('#learning-weapons button[aria-pressed=true]').textContent(),'核彈');
    if(touch)await page.locator('[data-weapon="2"]').tap();else await page.locator('[data-weapon="2"]').click();
    assert.equal(await page.evaluate(()=>window.commands.at(-1)),'learning:weapon:20:2');

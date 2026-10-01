@@ -2,15 +2,15 @@
 
 ## 武器邏輯挑戰（2026-10-01）
 
-- 正式教學版：`rivals-web-26-respawn-default`，介面 `simple-quiz-20261001`，發布批次 `cdn-load-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001)。
+- 正式教學版：`rivals-web-26-respawn-default`，介面 `star-progress-20261001`，發布批次 `star-progress-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001)。
 - 載入加速：[CDN 與備援驗證](STARTUP_OPTIMIZATION_VALIDATION.md)。大型檔案經 SHA-256 驗證後載入，失敗或八秒無進度時改用原站，保留原有快取與相同遊戲內容。
 - 復活武器調整：[預設與倒數選擇驗證](RESPAWN_DEFAULT_VALIDATION.md)。每次死亡重新預選最近解鎖的武器，手動改選只套用當次復活。
 - 前次下載最佳化：[無損壓縮與快取驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。正式站首次遊戲資源傳輸由 30.42 MB 降至 23.71 MB（約 22%），重新整理可重用程式與資料快取。該次純壓縮更新的解壓後程式與資源和當時上一版完全相同，83 項遊玩檢查、新舊版互連及公開站驗證皆通過。
 - 最終整理與廣泛測試：[Web 發布驗證](FINAL_WEB_VALIDATION.md)，涵蓋八人容量、延遲、斷線恢復、鍵鼠／觸控、答題與武器；可用 `Tools/ValidateWebRelease.cjs` 分組重跑。
 - 本次更新：[解鎖武器與 Bot 分散行動驗證](UNLOCK_BOTS_VALIDATION.md)，包含正式連線、手機答題復活與課程更新。
 - 每次死亡只出一題，固定順序；答對拿一個徽章，答錯不扣徽章，下次仍出原題。
-- 每輪三個徽章解鎖下一把：手槍題 → 菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。徽章在背景累積，答題時只顯示題目與選項。
-- 答題視窗不放離房、挑戰名稱、徽章門檻與重複規則；作答後只顯示簡短結果、一句說明及「繼續」，倒數只顯示剩餘秒數與已解鎖武器。
+- 每輪三個徽章解鎖下一把：手槍題 → 菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。題目下方有一句解鎖提示；答對後顯示三顆星，每題填滿一顆，集滿即顯示解鎖的新武器。
+- 答題視窗不放離房、挑戰名稱、徽章門檻與重複規則；題目下方有簡短提示；答對後顯示本輪三顆星進度，集滿顯示新武器，並保留一句說明及「繼續」，倒數只顯示剩餘秒數與已解鎖武器。
 - 每次死亡與同房下一場，預設拿最近解鎖的武器；尚未解鎖時拿手槍。倒數可改選手槍或其他已解鎖武器，只影響當次復活；場地撿到的步槍、散彈槍、狙擊槍不列入復活選單，也不改變預設。
 - 核彈解鎖後不再出題；同房下一場保留進度，離開／斷線返回大廳後清除。
 - 房主判定答案與解鎖，每個生命最多接受一次答案，過期或重複請求不能增加徽章。五款徽章武器不放置於場地，僅在解鎖後由復活選單取得；一般槍械拾取保留。
@@ -20,7 +20,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 

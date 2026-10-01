@@ -20,7 +20,7 @@ export function WeaponChallenges() {
       </p>
       <div id="game-updates">
         <p className="section-note">
-          答題畫面只留題目和選項。看完結果按「繼續」，再選武器、等倒數復活。
+          題目下方有解鎖提示。答對一題就填滿一顆星，三顆星全滿就顯示解鎖的新武器。看完結果按「繼續」，再選武器、等倒數復活。
         </p>
         <p className="section-note">
           每次死亡都先選好最近解鎖的武器；還沒解鎖就拿手槍。倒數時可改選手槍或其他已解鎖武器，只影響這次復活。場上撿到的槍不列入復活選單。

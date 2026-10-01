@@ -46,6 +46,8 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
    if(attempt===0){await client.waitForTimeout(3500);check(me(await state(client)).health===0,'question does not auto-respawn after three seconds');await client.screenshot({path:path.join(output,'real-question.png')});}
    await client.locator(`[data-option="${choice}"]`).click();await client.waitForFunction(()=>window.rivalsLearningState?.state===2);
    view=await client.evaluate(()=>window.rivalsLearningState);check(view.progress===Math.max(0,attempt),'one correct answer equals one badge '+attempt);
+   check(await client.locator('#learning-stars').isVisible()===(attempt>0),'only correct answers show stars '+attempt);
+   if(attempt>0)check(await client.locator('#learning-stars .is-filled').count()===attempt,'host-confirmed star count '+attempt);
    // The same public command as the button: host must reject a duplicate.
    await client.evaluate(({life,question,choice})=>window.rivalsLearningCommand(`learning:answer:${life}:${question}:${choice}`),{life,question,choice:correct});await client.waitForTimeout(250);
    check((await client.evaluate(()=>window.rivalsLearningState.progress))===view.progress,'duplicate submission rejected '+attempt);
