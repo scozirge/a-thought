@@ -6,8 +6,11 @@ const root=path.resolve(__dirname,'..');
 const suites={
   interface:[['LearningMenuChecks'],['TrainingMenuChecks'],['MobileBridgeChecks'],['PointerBridgeChecks'],['MobileLayoutChecks']],
   network:[['WebNetworkSmokeTest'],['WebNetworkSmokeTest','--lag'],['WebConnectionLifecycleSmokeTest'],['WebMultiplayerRecoverySmokeTest'],['WebRoomCapacitySmokeTest'],['WebCameraOwnershipSmokeTest']],
+  'network-stress':[['WebNetworkSmokeTest','--lag','--stress']],
   play:[['WebTrainingSmokeTest'],['WebLearningSmokeTest'],['WebMobileSmokeTest','--lag','--respawn'],['WebBotDistributionSmokeTest']],
   public:[['WebPublishedReleaseSmokeTest'],['WebNetworkSmokeTest','--lag']],
+  'desktop-ui':[['LearningMenuChecks'],['TrainingMenuChecks'],['PointerBridgeChecks'],['AssetDeliveryChecks']],
+  desktop:[['WebFocusSmokeTest'],['WebLookSmokeTest'],['WebEntryCrosshairSmokeTest'],['WebTrainingSmokeTest'],['WebLearningSmokeTest'],['WebBotDistributionSmokeTest']],
 };
 const requested=process.argv.slice(2);
 const groups=requested.length?requested:['interface','network','play'];

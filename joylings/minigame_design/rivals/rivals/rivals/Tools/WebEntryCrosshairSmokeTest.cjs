@@ -2,14 +2,16 @@
 // to capture the mouse. Screenshots verify the reticle rather than a QA flag.
 const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
-const out=path.resolve(__dirname,'../Logs');
+const out=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs'));
+fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling']});
  const page=await browser.newPage({viewport:{width:1440,height:1000}}),result={errors:[]};
  page.on('pageerror',e=>result.errors.push(e.message));
  page.on('console',m=>{if(/^(InvalidOperationException|NullReferenceException|MissingReferenceException|ArgumentException):/.test(m.text()))result.errors.push(m.text());});
  try{
-  await page.goto('http://localhost:8184/?diagnostics=1&v=entry-crosshair');
+  const url=new URL(process.env.RIVALS_WEB_URL||'http://localhost:8184/');url.searchParams.set('diagnostics','1');
+  await page.goto(url.href);
   await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:90000});
   await page.locator('#player-name').fill('準心貓貓');await page.locator('#create-room').click();
   await page.waitForFunction(()=>window.rivalsDiagnostics?.phase===1&&window.rivalsLobbyState?.visible===false,null,{timeout:90000});

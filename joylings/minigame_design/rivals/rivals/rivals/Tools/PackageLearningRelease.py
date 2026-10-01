@@ -21,13 +21,15 @@ for folder in ['Assets/Rivals/Scripts', 'Assets/Rivals/Resources', 'Assets/WebGL
 info = {
     'date': '2026-10-01', 'gameSourceCommit': commit, 'target': 'Web',
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
-    'networkVersion': 'rivals-web-26-respawn-default',
+    'networkVersion': 'rivals-web-27-shot-feedback',
     'uiRevision': 'star-progress-20261001',
-    'releaseRevision': 'mobile-controls-20261001',
+    'releaseRevision': 'desktop-release-20261001',
     'mobileRevision': 'mobile-controls-20261001',
     'assetDelivery': 'jsDelivr / SHA-256 verification / original-host fallback / original Unity cache keys',
     'compression': 'Brotli / Unity decompression fallback',
     'releaseChanges': [
+        '修正延遲校正時重複播放射擊效果，以每次按鍵與連射序號識別；保留新按鍵即時回饋。',
+        '電腦按全螢幕時一併恢復滑鼠鎖定與操作，不必再點一次畫面。',
         '手機左下方可拖曳移動，瀏覽器高度變動不會清除搖桿；獨立處理每根手指的取消事件。',
         '手機可按橫向全螢幕，支援的瀏覽器會要求橫向；不支援時保留放大功能並提示解除方向鎖定。',
         '正式站大型檔案改由 CDN 加速，逐檔核對大小與 SHA-256；失敗或八秒沒有下載進度時改由原站取得。遊戲檔案內容及既有快取不變。',

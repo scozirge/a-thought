@@ -1,7 +1,8 @@
 const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const {enterRoom}=require('./WebRoomHelpers.cjs');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
-const output=path.resolve(__dirname,'../Logs'),beforeMode=process.argv.includes('--before'),results=[];
+const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs')),beforeMode=process.argv.includes('--before'),results=[];
+fs.mkdirSync(output,{recursive:true});
 const angular=(a,b)=>((a-b+540)%360)-180;
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
@@ -55,6 +56,11 @@ const angular=(a,b)=>((a-b+540)%360)-180;
     assert.equal(await page.evaluate(()=>document.fullscreenElement===document.getElementById('stage')),true);
     assert.equal(await page.evaluate(()=>document.pointerLockElement===document.querySelector('canvas')),true,'fullscreen gesture also grants real pointer lock');
     assert.equal((await live()).controls,true);run.fullscreenLock=true;
+    await page.evaluate(()=>document.exitPointerLock());await wait(1400);
+    await page.locator('#fullscreen').click();await wait(400);
+    assert.equal(await page.evaluate(()=>!!document.fullscreenElement),false);
+    assert.equal(await page.evaluate(()=>document.pointerLockElement===document.querySelector('canvas')),true,'leaving fullscreen also restores mouse lock');
+    assert.equal((await live()).controls,true);run.fullscreenExitLock=true;
     run.pointer=await page.evaluate(()=>window.rivalsPointer);run.ok=true;
     await page.screenshot({path:path.join(output,`focus-web-${mode}.png`)});
    }

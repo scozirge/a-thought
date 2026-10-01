@@ -23,7 +23,11 @@ const results=[];
   try{
    for(const [width,height] of [[844,390],[812,303],[568,260],[390,844],[320,568],[1280,720]]){
     const context=await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:true});const page=await context.newPage(),errors=[];
-    page.on('pageerror',e=>errors.push(e.message));await page.route('http://training.test/**',r=>r.fulfill({status:200,contentType:'text/html',body:html}));await page.goto('http://training.test/');
+    page.on('pageerror',e=>errors.push(e.message));await page.route('http://training.test/**',r=>{
+     const name=new URL(r.request().url()).pathname.split('/').at(-1);
+     if(name==='asset-delivery.js'||name==='learning.css')return r.fulfill({status:200,contentType:name.endsWith('.js')?'text/javascript':'text/css',body:fs.readFileSync(path.join(__dirname,'../Assets/WebGLTemplates/Rivals',name),'utf8')});
+     return r.fulfill({status:200,contentType:'text/html',body:html});
+    });await page.goto('http://training.test/');
     assert.equal(await page.locator('#create-room').isDisabled(),true);assert.equal(await page.locator('#training-entry').isDisabled(),false);
     await page.evaluate(()=>rivalsReceiveLobby({visible:true,ready:false,busy:false,canTrain:true,name:'訓練測試',message:'連線中',rooms:[]}));await page.locator('#mode-touch').tap();
     const entry=page.locator('#training-entry');await entry.scrollIntoViewIfNeeded();const ordering=await page.evaluate(()=>document.querySelector('.lobby-layout').getBoundingClientRect().bottom<=document.querySelector('#training-entry').getBoundingClientRect().top);assert.ok(ordering,'training entry below main menu');

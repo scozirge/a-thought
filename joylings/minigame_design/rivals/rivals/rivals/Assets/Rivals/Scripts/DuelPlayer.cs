@@ -49,6 +49,10 @@ namespace RivalsPrototype {
     [Networked] public int PistolAmmo { get; set; }
     [Networked] public int GatlingAmmo { get; set; }
     [Networked] public int ConsumedAltPress { get; set; }
+    [Networked] public int FeedbackFirePress { get; set; }
+    [Networked] public int FeedbackFireShots { get; set; }
+    [Networked] public int FeedbackAltPress { get; set; }
+    [Networked] public int FeedbackAltShots { get; set; }
     [Networked] public int ShotWeapon { get; set; }
     [Networked] public NetworkBool Aiming { get; set; }
     [Networked] public TickTimer PoisonDamageTimer { get; set; }
@@ -94,6 +98,7 @@ namespace RivalsPrototype {
     bool wasReloading;
     int renderedShots, renderedWeapon = -1;
     int pendingLocalShots;
+    readonly ShotFeedbackHistory shotFeedback=new ShotFeedbackHistory();
     Vector3 predictedShotPoint;
     Vector3 predictedShotDirection;
     int predictedShotWeapon;
@@ -165,6 +170,7 @@ namespace RivalsPrototype {
       GatlingAmmo=0;Aiming=false;PoisonDamageTimer=TickTimer.None;
       LearningState=0;LearningChoice=-1;
       RespawnTimer=TickTimer.None;EliminationRecorded=false;ConsumedFirePress=ConsumedAltPress=0;
+      FeedbackFirePress=FeedbackFireShots=FeedbackAltPress=FeedbackAltShots=0;
       SpawnSequence++;SpawnPoint=position;SpawnLook=look;
       nextBotDecision=0;botTargetSeat=-1;botSeenSince=-1;botInput=default;
       if(hitboxRoot)hitboxRoot.HitboxRootActive=true;
@@ -388,10 +394,7 @@ namespace RivalsPrototype {
       if(lastVictim){Hits++;LastHitSeat=lastVictim.Seat;LastHitDamage=damageTotal;LastHitKilled=lastVictim.Health==0;}
       ShotWeapon=Weapon;Shots++;
       if(Weapon==4)ReloadTimer=TickTimer.CreateFromSeconds(Runner,Weapons.Reload[4]);
-      // Present a local forward simulation event exactly once. A corrected shot
-      // count may go backwards; using that count for local FX can swallow the
-      // next short click. Resimulation and returning snapshots never enqueue FX.
-      if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotPoint=ShotPoint;predictedShotDirection=ShotDirection;predictedShotWeapon=Weapon;}
+      QueueShotFeedback(Weapon,false);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
       if(DuelNetworkSmoke.Running&&HasStateAuthority&&!HasInputAuthority&&!IsBot)
         Debug.Log($"RIVALS_CONFIRMED_SHOT count={Shots} utcTicks={System.DateTime.UtcNow.Ticks}");
@@ -421,12 +424,29 @@ namespace RivalsPrototype {
       }
       FireTimer=TickTimer.CreateFromSeconds(Runner,Weapons.Interval[firedWeapon]);
       ShotWeapon=firedWeapon;Shots++;
-      if(HasInputAuthority&&Runner.IsForward){pendingLocalShots++;predictedShotWeapon=firedWeapon;predictedShotPoint=ShotPoint;predictedShotDirection=direction;}
+      QueueShotFeedback(firedWeapon,thrown);
       if(firedWeapon==Weapons.Nuke||(firedWeapon==Weapons.Cleaver&&thrown)) {
         Weapon=Weapons.Pistol;OwnedWeapons=1<<Weapon;PistolAmmo=Weapons.Magazines[Weapon];
         if(firedWeapon==Weapons.Nuke&&match.IsTraining&&!IsBot)DuelSession.Instance.RememberTrainingPickup(Weapons.Pistol);
         RifleHeat=0;ReloadTimer=TickTimer.None;FireTimer=TickTimer.CreateFromSeconds(Runner,.35f);
       }
+    }
+    void QueueShotFeedback(int weapon,bool secondary) {
+      // These counters are replayed with network state. Presentation history is
+      // not: a correction can move the same input's shot into a new forward tick.
+      // Global Shots alone is insufficient because the next fresh press may
+      // reuse a corrected count and must still give immediate feedback.
+      int press=secondary?ConsumedAltPress:ConsumedFirePress;
+      int ordinal;
+      if(secondary){
+        if(FeedbackAltPress!=press){FeedbackAltPress=press;FeedbackAltShots=0;}
+        ordinal=++FeedbackAltShots;
+      }else{
+        if(FeedbackFirePress!=press){FeedbackFirePress=press;FeedbackFireShots=0;}
+        ordinal=++FeedbackFireShots;
+      }
+      if(!HasInputAuthority||!Runner.IsForward||!shotFeedback.TryPresent(SpawnSequence,press,secondary,ordinal))return;
+      pendingLocalShots++;predictedShotWeapon=weapon;predictedShotPoint=ShotPoint;predictedShotDirection=ShotDirection;
     }
     bool TraceShot(Vector3 origin,Vector3 direction,float range,out Vector3 point,out DuelPlayer victim,out float height) {
       point=origin+direction*range;victim=null;height=0;float nearest=range+1;

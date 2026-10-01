@@ -3,7 +3,7 @@
 const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const {enterRoom}=require('./WebRoomHelpers.cjs');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
-const output=path.resolve(__dirname,'../Logs'),results=[];
+const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs')),results=[];
 const angular=(a,b)=>((a-b+540)%360)-180;
 fs.mkdirSync(output,{recursive:true});
 (async()=>{

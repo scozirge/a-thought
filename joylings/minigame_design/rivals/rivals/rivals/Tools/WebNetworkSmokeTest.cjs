@@ -9,6 +9,7 @@ fs.mkdirSync(root,{recursive:true});
 const me=s=>s.players.find(p=>p.seat===s.localSeat);
 const room='連線測試'+Date.now().toString(36);
 const startupTimeoutMs=Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||120000);
+const shotRounds=process.argv.includes('--stress')?4:1;
 const nameSuffix=Date.now().toString(36).slice(-5);
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
@@ -60,15 +61,27 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   await wait(client,s=>Math.abs(s.look.y+70)<.5,'aim upward');
   await client.page.waitForTimeout(700);
   const initial=await state(client),initialShots=me(initial).shots;
-  results.clicks=[];
+  results.clicks=[];results.shotRounds=[];
+  for(let round=0;round<shotRounds;round++){
   for(let i=0;i<8;i++){
    const before=await client.page.evaluate(()=>window.rivalsShotEvents?.length||0);await client.page.mouse.down();
    await client.page.waitForFunction(n=>(window.rivalsShotEvents?.length||0)>n,before,{timeout:1500});await client.page.mouse.up();
    const e=await client.page.evaluate(()=>({delayMs:window.rivalsShotEvents.at(-1).time-window.rivalsTriggerTime,event:window.rivalsShotEvents.at(-1),diagnostics:window.rivalsDiagnostics}));results.clicks.push(e);
    await client.page.waitForTimeout(350);
   }
-  await client.page.waitForTimeout(1000);s=await state(client);const shots=me(s).shots;
-  if(me(s).visualShots!==shots||shots-initialShots!==8)throw Error('Duplicate or missing presentations: '+JSON.stringify(me(s)));
+  await client.page.waitForTimeout(1000);s=await state(client);const roundShots=me(s).shots;
+  if(me(s).visualShots!==roundShots||roundShots-initialShots!==(round+1)*8)throw Error('Duplicate or missing presentations: '+JSON.stringify(me(s)));
+  await wait(host,h=>h.players.find(p=>p.seat===s.localSeat)?.shots===roundShots,'host acknowledges shot round');
+  results.shotRounds.push({round,shots:roundShots,visuals:me(s).visualShots});
+  if(round+1<shotRounds){await client.page.keyboard.press('r',{delay:60});await wait(client,s=>me(s).ammo===12&&!me(s).reloading,'reload between short-click rounds');await wait(host,h=>h.players.find(p=>p.seat===s.localSeat)?.ammo===12,'host round reload');}
+  }
+  if(shotRounds>1){
+   await client.page.keyboard.press('r',{delay:60});await wait(client,s=>me(s).ammo===12&&!me(s).reloading,'reload before held fire');
+   const beforeHeld=me(await state(client)).shots;await client.page.mouse.down();await client.page.waitForTimeout(1000);await client.page.mouse.up();await client.page.waitForTimeout(1000);
+   s=await state(client);if(me(s).shots-beforeHeld<3||me(s).visualShots!==me(s).shots)throw Error('Held fire duplicated or swallowed feedback');
+   results.heldFire={shots:me(s).shots-beforeHeld,visuals:me(s).visualShots};
+  }
+  s=await state(client);const shots=me(s).shots;
   await wait(host,h=>h.players.find(p=>p.seat===s.localSeat)?.shots===shots,'host acknowledges shots');
   results.afterShots={client:s,host:await state(host)};
   // Reload is predicted as well; verify the final magazine agrees on both peers.
@@ -100,7 +113,7 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   await client.page.evaluate(()=>document.dispatchEvent(new MouseEvent('mousemove',{movementX:0,movementY:70/.12,bubbles:true})));await client.page.waitForTimeout(300);
   await client.page.locator('#unity-canvas').screenshot({path:path.join(root,'network-web-client.png')});
   await client.context.close();await wait(host,s=>s.players.filter(p=>p.bot).length===7&&s.players.length===8,'bot refill');
-  results.summary={clicks:8,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,slideRemoved:true,cKeyTravel:cTravel,jumpRemoved:true,spaceHeightChange:spaceRise,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
+  results.summary={clicks:results.clicks.length,maxClickMs,rttMs:results.afterShots.client.rttMs,frameMs:results.afterShots.client.frameMs,shots,visuals:me(results.afterShots.client).visualShots,reload:true,slideRemoved:true,cKeyTravel:cTravel,jumpRemoved:true,spaceHeightChange:spaceRise,botRefill:true,movingLead:lead,stoppedPositionError:stopError,webSocketDelayEachDirectionMs:lagged?90:0};
  }finally{
   results.runs=runs.map(r=>({name:r.name,errors:r.errors,logs:r.logs}));fs.writeFileSync(path.join(root,lagged?'network-web-lag-check.json':'network-web-check.json'),JSON.stringify(results,null,2));await browser.close();
  }

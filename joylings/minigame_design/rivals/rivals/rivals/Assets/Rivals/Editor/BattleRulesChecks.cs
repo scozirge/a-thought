@@ -7,6 +7,7 @@ namespace RivalsPrototype.Editor {
   public static class BattleRulesChecks {
     static void Check(bool value,string message){if(!value)throw new Exception("BATTLE_RULES_FAILED "+message);}
     public static void Validate() {
+      ShotFeedbackChecks.Validate();
       Check(DuelNames.All.Length==100&&DuelNames.All.Distinct().Count()==100,"100 unique names");
       Check(DuelNames.Clean("<b>貓貓</b>\n").IndexOf('<')<0,"names cannot contain markup");
       Check(DuelNames.Clean(new string('貓',30)).Length==10,"name length");

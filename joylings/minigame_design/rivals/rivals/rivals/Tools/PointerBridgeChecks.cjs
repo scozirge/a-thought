@@ -68,6 +68,15 @@ function serveTemplate(route,body=html){
     assert.equal(await page.evaluate(()=>window.rivalsLook.active),false);assert.notEqual(await page.locator('canvas').evaluate(el=>getComputedStyle(el).cursor),'none');
     await page.locator('#resume-pointer').click();await page.waitForTimeout(220);assert.equal(await page.evaluate(()=>window.rivalsLook.active),true);
    }
+   if(mode==='locked'){
+    await page.locator('#fullscreen').focus();await page.waitForTimeout(1500);
+    await page.evaluate(()=>document.getElementById('stage').requestFullscreen=()=>Promise.reject(new Error('QA fullscreen denied')));
+    await page.locator('#fullscreen').click();await page.waitForTimeout(250);
+    assert.ok(await page.evaluate(()=>document.getElementById('stage').classList.contains('expanded')&&rivalsLook.active&&!!document.pointerLockElement),'fullscreen fallback keeps keyboard control');
+    await page.locator('#fullscreen').focus();await page.waitForTimeout(1500);await page.locator('#fullscreen').click();await page.waitForTimeout(250);
+    assert.ok(await page.evaluate(()=>!document.getElementById('stage').classList.contains('expanded')&&rivalsLook.active&&!!document.pointerLockElement),'leaving fallback keeps keyboard control');
+    results.push({mode:'keyboard-fullscreen-fallback',ok:true});
+   }
    await page.keyboard.press('Escape');await page.waitForTimeout(180);assert.equal(await page.locator('#control-resume').isVisible(),false);
    assert.equal(await page.evaluate(()=>window.rivalsLook.active),false);assert.deepEqual(errors,[]);results.push({mode,ok:true});await page.close();
   }
@@ -88,6 +97,7 @@ function serveTemplate(route,body=html){
    }
    results.push({mode:permitted?'iframe-permitted':'iframe-blocked',ok:true});await page.close();
   }
-  fs.writeFileSync(path.join(__dirname,'../Logs/pointer-lock-bridge-check.json'),JSON.stringify(results,null,2));console.log('POINTER_BRIDGE_OK '+JSON.stringify(results));
+  const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs'));fs.mkdirSync(output,{recursive:true});
+  fs.writeFileSync(path.join(output,'pointer-lock-bridge-check.json'),JSON.stringify(results,null,2));console.log('POINTER_BRIDGE_OK '+JSON.stringify(results));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});
