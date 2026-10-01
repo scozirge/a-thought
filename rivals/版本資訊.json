@@ -1,12 +1,13 @@
 {
   "date": "2026-10-01",
-  "gameSourceCommit": "6f5351707b8a4de922a61151ea573696b061ab47",
+  "gameSourceCommit": "56400f1d1e745b67f38e9addb9069285d569a5c4",
   "target": "Web",
   "unity": "6000.3.11f1",
   "backend": "IL2CPP / WebAssembly",
   "development": false,
   "networkVersion": "rivals-web-25-unlock-bots",
   "uiRevision": "simple-quiz-20261001",
+  "releaseRevision": "final-web-20261001",
   "releaseChanges": [
     "答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。",
     "五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。",
