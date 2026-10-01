@@ -2,7 +2,8 @@
 
 ## 武器邏輯挑戰（2026-10-01）
 
-- 正式教學版：`rivals-web-25-unlock-bots`，介面更新 `simple-quiz-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=simple-quiz-20261001)。
+- 正式教學版：`rivals-web-25-unlock-bots`，介面 `simple-quiz-20261001`，發布批次 `final-web-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=final-web-20261001)。
+- 最終整理與廣泛測試：[Web 發布驗證](FINAL_WEB_VALIDATION.md)，涵蓋八人容量、延遲、斷線恢復、鍵鼠／觸控、答題與武器；可用 `Tools/ValidateWebRelease.cjs` 分組重跑。
 - 本次更新：[解鎖武器與 Bot 分散行動驗證](UNLOCK_BOTS_VALIDATION.md)，包含正式連線、手機答題復活與課程更新。
 - 每次死亡只出一題，固定順序；答對拿一個徽章，答錯不扣徽章，下次仍出原題。
 - 每輪三個徽章解鎖下一把：手槍題 → 菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。徽章在背景累積，答題時只顯示題目與選項。
@@ -16,7 +17,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=unlock-bots-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=final-web-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 

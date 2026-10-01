@@ -1,17 +1,25 @@
 const {chromium}=require(process.env.RIVALS_PLAYWRIGHT_MODULE||'playwright');
 const {enterRoom}=require('./WebRoomHelpers.cjs');const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const output=path.resolve(process.env.RIVALS_TEST_OUTPUT||path.join(__dirname,'../Logs'));fs.mkdirSync(output,{recursive:true});
 const results={runs:[],errors:[]},delta=(a,b)=>((a-b+540)%360)-180;
 (async()=>{const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
  async function open(mode){const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),logs=[];
   if(mode==='fallback')await page.addInitScript(()=>HTMLCanvasElement.prototype.requestPointerLock=function(){return Promise.reject(new Error('No pointer lock'));});
   page.on('pageerror',e=>results.errors.push(e.message));page.on('console',m=>{logs.push(m.text());if(/^(InvalidOperationException|NullReferenceException|MissingReferenceException|ArgumentException):/.test(m.text()))results.errors.push(m.text());});
-  await page.goto((process.env.RIVALS_WEB_URL||'http://localhost:8184/')+'?diagnostics=1&v=camera');await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:120000});return {page,context,logs};}
+  const url=new URL(process.env.RIVALS_WEB_URL||'http://localhost:8184/');url.searchParams.set('diagnostics','1');url.searchParams.set('v','camera');
+  await page.goto(url.href);await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:120000});return {page,context,logs,mode};}
  const state=p=>p.page.evaluate(()=>window.rivalsDiagnostics),me=s=>s.players.find(p=>p.seat===s.localSeat);
  async function engage(p){await p.page.bringToFront();p.box=await p.page.locator('canvas').boundingBox();await p.page.mouse.click(p.box.x+p.box.width/2,p.box.y+p.box.height/2);await p.page.waitForTimeout(200);}
  async function stable(observer,mover,label){
   await engage(mover);const before=await state(observer),movingBefore=await state(mover);assert.equal(before.phase,2);assert.ok(me(before).health>0);
   // Only the OTHER browser receives movement and mouse events.
-  await mover.page.keyboard.down('a');await mover.page.mouse.move(mover.box.x+mover.box.width/2+220,mover.box.y+mover.box.height/2-50,{steps:16});await mover.page.waitForTimeout(650);await mover.page.keyboard.up('a');await mover.page.waitForTimeout(200);
+  await mover.page.keyboard.down('a');
+  // Compatibility mode requires a right-button drag, matching the actual UI.
+  // Idle mouse motion deliberately does not turn the camera in this mode.
+  if(mover.mode==='fallback')await mover.page.mouse.down({button:'right'});
+  await mover.page.mouse.move(mover.box.x+mover.box.width/2+300,mover.box.y+mover.box.height/2-50,{steps:16});
+  if(mover.mode==='fallback')await mover.page.mouse.up({button:'right'});
+  await mover.page.waitForTimeout(650);await mover.page.keyboard.up('a');await mover.page.waitForTimeout(200);
   const after=await state(observer),movingAfter=await state(mover);assert.equal(after.phase,2);assert.ok(me(after).health>0);
   const yaw=Math.abs(delta(after.look.x,before.look.x)),pitch=Math.abs(after.look.y-before.look.y);
   const cameraYaw=Math.abs(delta(after.cameraAngles.y,before.cameraAngles.y)),cameraPitch=Math.abs(delta(after.cameraAngles.x,before.cameraAngles.x));
@@ -41,5 +49,5 @@ const results={runs:[],errors:[]},delta=(a,b)=>((a-b+540)%360)-180;
   for(const p of [host,client]){const localSpawns=p.logs.filter(x=>/RIVALS_PLAYER_SPAWN.*local=True/.test(x));assert.equal(localSpawns.length,1,'exactly one local camera owner');}
   console.log('WEB_CAMERA_OWNERSHIP_MODE_OK '+JSON.stringify(run));await host.context.close();await client.page.waitForFunction(()=>window.rivalsLobbyState?.visible&&window.rivalsLobbyState.ready,null,{timeout:30000});await client.context.close();
  }assert.equal(results.errors.length,0);results.ok=true;console.log('WEB_CAMERA_OWNERSHIP_OK');
- }finally{fs.writeFileSync(path.resolve(__dirname,'../Logs/camera-ownership-web-check.json'),JSON.stringify(results,null,2));await browser.close();}
+ }finally{fs.writeFileSync(path.join(output,'camera-ownership-web-check.json'),JSON.stringify(results,null,2));await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

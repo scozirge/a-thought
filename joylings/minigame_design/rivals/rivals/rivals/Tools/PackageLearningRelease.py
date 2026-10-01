@@ -23,6 +23,7 @@ info = {
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
     'networkVersion': 'rivals-web-25-unlock-bots',
     'uiRevision': 'simple-quiz-20261001',
+    'releaseRevision': 'final-web-20261001',
     'releaseChanges': [
         '答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。',
         '五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。',

@@ -10,7 +10,7 @@ const me=s=>s.players.find(p=>p.seat===s.localSeat),angle=a=>((a+540)%360)-180;
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
  const state=p=>p.evaluate(()=>window.rivalsDiagnostics);
  function check(ok,label){assert.ok(ok,label);result.checks.push(label);console.log('LEARNING_WEB_CHECK '+label);}
- async function open(){const c=await browser.newContext({viewport:{width:1280,height:800}}),p=await c.newPage();p.on('pageerror',e=>result.errors.push(e.message));await p.goto((process.env.RIVALS_WEB_URL||'http://127.0.0.1:8187')+'/?diagnostics=1');return p;}
+ async function open(){const c=await browser.newContext({viewport:{width:1280,height:800}}),p=await c.newPage();p.on('pageerror',e=>result.errors.push(e.message));const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8188/');url.searchParams.set('diagnostics','1');await p.goto(url.href);return p;}
  async function engage(p){const b=p.locator('#resume-pointer');if(await b.isVisible())await b.click();else await p.locator('#unity-canvas').click({position:{x:600,y:400}});}
  async function die(p){
   const until=Date.now()+150000;let next=Date.now()+15000,lastPosition=null,stuck=0,escape=0;
