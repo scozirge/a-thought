@@ -9,7 +9,7 @@
   let current=null,key='',pending=false;
   const command=value=>window.rivalsLearningCommand?.(value);
   const readable=value=>window.rivalsTouch?.mode?(value||'').replaceAll('按下滑鼠左鍵','點一下射擊按鈕').replaceAll('按住滑鼠左鍵','按住射擊按鈕'):(value||'');
-  get('next').onclick=()=>{if(!current||pending)return;pending=true;get('next').disabled=true;command(`learning:continue:${current.life}`);};
+  get('next').onclick=()=>{if(!current||pending)return;pending=true;get('next').disabled=true;window.rivalsLook?.prepareRespawn?.();command(`learning:continue:${current.life}`);};
   overlay.addEventListener('keydown',event=>{
     if(event.key!=='Tab')return;
     const buttons=[...overlay.querySelectorAll('button:not(:disabled)')].filter(b=>!b.hidden&&b.offsetParent!==null),first=buttons[0],last=buttons.at(-1);
@@ -23,12 +23,15 @@
     if(!state.visible){
       key='';pending=false;
       // Unity reports the hidden lesson before updating this frame's touch state.
-      // Restore focus after a mobile respawn, but never steal it in the lobby,
+      // Restore focus after a respawn, but never steal it in the lobby,
       // on the victory screen, while paused, or in a background tab.
-      if(wasVisible&&wasCountingDown&&window.rivalsTouch?.mode)requestAnimationFrame(()=>{
+      if(wasVisible&&wasCountingDown)requestAnimationFrame(()=>{
         const touch=window.rivalsTouch;
-        if(!current?.visible&&touch?.mode&&touch.playable&&!touch.paused&&document.hasFocus()&&!document.hidden)window.rivalsLook?.resume?.();
+        if(current?.visible)return;
+        if(touch?.mode){if(touch.playable&&!touch.paused&&document.hasFocus()&&!document.hidden)window.rivalsLook?.resume?.();}
+        else window.rivalsLook?.resumeAfterRespawn?.();
       });
+      else if(wasVisible)window.rivalsLook?.cancelRespawn?.();
       return;
     }
     const nextKey=[state.life,state.state,state.question].join(':');
@@ -55,7 +58,7 @@
     if(!pending)options.removeAttribute('aria-busy');
     const feedback=get('feedback');feedback.hidden=state.state!==2;feedback.textContent=state.state===2?readable(state.explanation):'';
     const weapons=get('weapons');weapons.hidden=state.state!==3;
-    if(changed){weapons.replaceChildren();if(state.state===3)for(const kind of state.weapons){const button=document.createElement('button');button.type='button';button.dataset.weapon=String(kind);button.textContent=names[kind];button.onclick=()=>command(`learning:weapon:${state.life}:${kind}`);weapons.append(button);}}
+    if(changed){weapons.replaceChildren();if(state.state===3)for(const kind of state.weapons){const button=document.createElement('button');button.type='button';button.dataset.weapon=String(kind);button.textContent=names[kind];button.onclick=()=>{window.rivalsLook?.prepareRespawn?.();command(`learning:weapon:${state.life}:${kind}`);};weapons.append(button);}}
     for(const button of weapons.children)button.setAttribute('aria-pressed',String(Number(button.dataset.weapon)===state.selected));
     get('next').hidden=state.state!==2;get('next').disabled=pending;
     if(!wasVisible||changed)get('title').focus({preventScroll:true});

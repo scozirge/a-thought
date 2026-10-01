@@ -111,7 +111,7 @@
     <div id="loading"><strong id="status">遊戲準備中，等一下喔！</strong><progress id="progress" value="0" max="1"></progress><div id="error" role="alert"></div></div>
   </main>
   <footer><span id="control-instructions">點一下畫面後，移動滑鼠轉視角 · WASD 移動 · 左鍵攻擊 · 右鍵瞄準／飛刀 · 地圖撿武器 · Esc 選單</span></footer>
-  <script type="application/json" id="rivals-asset-manifest">{"assets":[{"name":"33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb","bytes":9549309,"sha256":"1025eea5fedfa201c8a991b687ee3fa5aa863e06bd16a3c74a59ed83338ea3ea"},{"name":"58c0a4eaa8516c5d6dba9496c52de146.data.unityweb","bytes":14004097,"sha256":"db1885ca57dc3646cc7a4e3a434ab43e815addd36f36d72a3c0410ef907669a9"}]}</script>
+  <script type="application/json" id="rivals-asset-manifest">{"assets":[{"name":"aafebc9ac64bbe5d0e3113b3558dd231.wasm.unityweb","bytes":9539773,"sha256":"2421ee402b688f250a04733b13423df1b082d55f8fc9831d2ba15b779717d4af"},{"name":"ecf795a99a6750d11e727c156224225e.data.unityweb","bytes":13996881,"sha256":"7f51e00f64b0c38e437fa4d44317dc961174d9cd4007514435dbac04911d1e1d"}]}</script>
   <script src="asset-delivery.js?v=cdn-load-20261001"></script>
   <script>
     const canvas=document.getElementById('unity-canvas');let player;
@@ -165,6 +165,7 @@
     const openWindow=document.getElementById('open-game-window'),copyLink=document.getElementById('copy-game-link'),gameAddress=document.getElementById('game-address');
     const gameUrl=new URL(location.href);gameUrl.searchParams.delete('diagnostics');gameAddress.value=gameUrl.href;
     let enabled=false,engaged=false,lockPending=false,lockFailed=false,lockTimer=0,lockRequest=0,wasLocked=false,lastReason='waiting',lastError='',lastPointerView='';
+    let resumeOnRespawn=false,allowRespawnLock=false,respawnLockPending=false;
     let dragMode=false,dragging=false,dragPointer=null,dragX=0,dragY=0;
     const touch=window.rivalsTouch={mode:false,moveX:0,moveY:0,held:0,pressed:0,firePress:0,altPress:0,weapon:1,aiming:false,playable:false,started:false,paused:false};
     const touchControls=document.getElementById('touch-controls'),touchPause=document.getElementById('touch-pause'),touchMenu=document.getElementById('touch-menu');
@@ -178,14 +179,14 @@
     function stopDrag(){const id=dragPointer;dragging=false;dragPointer=null;clearMotion();if(id!==null&&canvas.hasPointerCapture(id))canvas.releasePointerCapture(id);}
     function recordFocus(reason){lastReason=reason;if(window.rivalsDiagnostics){focusEvents.push({reason,time:performance.now(),locked:locked(),focused:document.activeElement===canvas,engaged});if(focusEvents.length>40)focusEvents.shift();}}
     function updatePointerUI(){
-      const controlling=active(),view=[enabled,controlling,locked(),lockPending,lockFailed,dragMode,dragging,touch.mode,touch.playable,touch.started,touch.paused].join(':');
+      const controlling=active(),view=[enabled,controlling,locked(),lockPending,lockFailed,dragMode,dragging,touch.mode,touch.playable,touch.started,touch.paused,resumeOnRespawn,respawnLockPending].join(':');
       if(view===lastPointerView)return;lastPointerView=view;
       document.body.classList.toggle('playing-cursor-hidden',!touch.mode&&controlling&&(locked()||dragging));
       dragHelp.hidden=touch.mode||!controlling||!dragMode;
       touchControls.hidden=!touch.mode||!enabled||!touch.playable;
       touchPause.hidden=!touch.mode||!touch.started||!touch.paused||!document.getElementById('training-armory').hidden;
       touchMenu.hidden=!touch.mode||!touch.started;
-      recovery.hidden=touch.mode||!enabled||controlling;resumeButton.disabled=lockPending;
+      recovery.hidden=touch.mode||!enabled||controlling||resumeOnRespawn||respawnLockPending;resumeButton.disabled=lockPending;
       pointerTitle.textContent=lockPending?'正在啟用滑鼠鎖定…':'點一下，繼續操作';
       pointerHelp.textContent=touch.mode?'左側搖桿移動 · 右側滑動轉向 · 按住射擊可連射':dragMode?'按住右鍵拖曳轉向，放開移回後可再拖曳。使用 Chrome／Edge 開啟可嘗試自由轉向。':'鎖定滑鼠後可自由轉身 · Esc 開啟選單';
       resumeButton.textContent=touch.mode||dragMode?'繼續遊戲':'開始操作';
@@ -195,7 +196,7 @@
     Object.defineProperty(look,'enabled',{enumerable:true,get:()=>enabled,set:value=>{
       if(enabled!==!!value){stopDrag();touch.reset();}enabled=!!value;updatePointerUI();
     }});
-    function clearLockRequest(){lockPending=false;clearTimeout(lockTimer);}
+    function clearLockRequest(){lockPending=false;respawnLockPending=false;clearTimeout(lockTimer);}
     function pointerUnavailable(error,reason='lock-unavailable'){
       clearLockRequest();stopDrag();lockFailed=true;dragMode=true;lastError=error?.name||'PointerLockUnavailable';recordFocus(reason);updatePointerUI();
     }
@@ -203,7 +204,9 @@
     canvas.requestPointerLock=(...args)=>{
       if(touch.mode||locked()||lockPending||dragMode||!eligible())return;
       if(!nativePointerLock){pointerUnavailable();return;}
-      if(navigator.userActivation?.isActive===false){recordFocus('gesture-required');updatePointerUI();return;}
+      // A successful lock released by the game may be restored after its timer.
+      // Keep the gesture gate for first entry, Escape and ordinary focus loss.
+      if(navigator.userActivation?.isActive===false&&!allowRespawnLock){recordFocus('gesture-required');updatePointerUI();return;}
       try{
         lockPending=true;lockFailed=false;lastError='';const id=++lockRequest;updatePointerUI();
         lockTimer=setTimeout(()=>{if(lockRequest===id&&lockPending)pointerUnavailable(null,'lock-timeout');},1500);
@@ -222,6 +225,20 @@
     });
     function engage(){canvas.focus({preventScroll:true});engaged=true;stopDrag();recordFocus('resume');if(enabled&&!touch.mode)canvas.requestPointerLock();updatePointerUI();}
     look.resume=engage;look.release=()=>disengage('released');
+    look.suspendForRespawn=()=>{
+      const restore=active();enabled=false;disengage('respawn');resumeOnRespawn=restore;updatePointerUI();
+    };
+    look.prepareRespawn=()=>{
+      if(window.rivalsLearningState?.visible&&document.hasFocus()&&!document.hidden&&!touch.paused){resumeOnRespawn=true;updatePointerUI();}
+    };
+    look.cancelRespawn=()=>{resumeOnRespawn=false;lastPointerView='';updatePointerUI();};
+    look.resumeAfterRespawn=()=>{
+      const restore=resumeOnRespawn;resumeOnRespawn=false;lastPointerView='';
+      if(!restore||!enabled||!touch.playable||touch.paused||document.hidden||!document.hasFocus()||window.rivalsLearningState?.visible){updatePointerUI();return;}
+      // Reuse only the lock released for this death, never after leaving the tab.
+      allowRespawnLock=true;respawnLockPending=true;
+      try{engage();}finally{allowRespawnLock=false;if(!lockPending){respawnLockPending=false;updatePointerUI();}}
+    };
     canvas.addEventListener('mousedown',()=>{if(!active())engage();});
     // Click is also needed when a Unity pause-menu button resumes on mouse-up.
     canvas.addEventListener('click',()=>{if(enabled&&!active())engage();});
@@ -243,12 +260,15 @@
       if(!(event.buttons&2)){stopDrag();updatePointerUI();return;}
       look.x+=event.clientX-dragX;look.y-=event.clientY-dragY;dragX=event.clientX;dragY=event.clientY;
     });
-    function disengage(reason){engaged=false;stopDrag();touch.reset();clearLockRequest();recordFocus(reason);updatePointerUI();if(locked())document.exitPointerLock();}
+    function disengage(reason){resumeOnRespawn=false;lastPointerView='';engaged=false;stopDrag();touch.reset();clearLockRequest();recordFocus(reason);updatePointerUI();if(locked())document.exitPointerLock();}
     window.addEventListener('blur',()=>disengage('window-blur'));
-    canvas.addEventListener('blur',()=>disengage('canvas-blur'));
+    canvas.addEventListener('blur',()=>{
+      if(resumeOnRespawn&&window.rivalsLearningState?.visible){stopDrag();return;}
+      disengage('canvas-blur');
+    });
     document.addEventListener('visibilitychange',()=>{if(document.hidden)disengage('hidden');});
     document.addEventListener('keydown',event=>{
-      if(event.code==='Escape'&&document.getElementById('learning-overlay')?.hidden===false){event.preventDefault();return;}
+      if(event.code==='Escape'&&document.getElementById('learning-overlay')?.hidden===false){resumeOnRespawn=false;event.preventDefault();return;}
       if(event.code==='Escape'){if(stage.classList.contains('expanded'))exitExpanded();disengage('escape');if(player)player.SendMessage('RIVALS Session','PauseControls');}
       else if(active()&&event.code==='Tab')event.preventDefault();
     },true);
@@ -424,8 +444,8 @@
     function showLoadError(error){console.error(error);document.getElementById('loading').style.display='grid';document.getElementById('status').textContent='遊戲還沒準備好';document.getElementById('error').textContent='重新整理試試看，也可以請老師幫忙。';}
     function updateHudViewport(){const rect=canvas.getBoundingClientRect(),safe=getComputedStyle(document.getElementById('viewport-safe-area'));window.rivalsViewport=[rect.width,rect.height,parseFloat(safe.paddingLeft)||0,parseFloat(safe.paddingRight)||0,parseFloat(safe.paddingTop)||0,parseFloat(safe.paddingBottom)||0];}
     new ResizeObserver(updateHudViewport).observe(canvas);window.addEventListener('resize',updateHudViewport);window.visualViewport?.addEventListener('resize',updateHudViewport);updateHudViewport();
-    const config={dataUrl:'Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb',frameworkUrl:'Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb',codeUrl:'Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
-    const loader=document.createElement('script');loader.src='Build/d583daa33a6e7e40f309f6e9082caf21.loader.js';
+    const config={dataUrl:'Build/ecf795a99a6750d11e727c156224225e.data.unityweb',frameworkUrl:'Build/fe715474a02037d0381c4e5cae76774a.framework.js.unityweb',codeUrl:'Build/aafebc9ac64bbe5d0e3113b3558dd231.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',companyName:"AThought",productName:"RIVALS Prototype",productVersion:"0.1.0",devicePixelRatio:Math.min(window.devicePixelRatio||1,navigator.maxTouchPoints>0?1:1.5),showBanner:(message,type)=>{if(type==='error')showLoadError(message);}};
+    const loader=document.createElement('script');loader.src='Build/98dbb8047d08a39935396a5869992eb2.loader.js';
     // Content hashes change only when the asset changes. UI edits no longer
     // invalidate the whole game; Unity's persistent cache can reuse big files.
     config.cacheControl=url=>/[a-f0-9]{32}\.(data|wasm)(?:\.unityweb)?(?:$|\?)/i.test(url)?'immutable':'must-revalidate';
@@ -435,6 +455,6 @@
     }).then(instance=>{player=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(showLoadError);
     loader.onerror=()=>showLoadError('無法下載遊戲');document.body.appendChild(loader);
   </script>
-  <script src="learning.js?v=star-progress-20261001"></script>
+  <script src="learning.js?v=respawn-controls-20261001"></script>
 </body>
 </html>

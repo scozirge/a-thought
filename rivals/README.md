@@ -1,12 +1,12 @@
 # 紅藍槍戰｜武器邏輯教學版
 
-[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
+[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=bot-aim-respawn-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
 
-2026-10-01 更新。發布批次：`desktop-release-20261001`；連線版本：`rivals-web-27-shot-feedback`。僅發布 Web；Windows 是歷史版本。
+2026-10-01 更新。發布批次：`bot-aim-respawn-20261001`；連線版本：`rivals-web-28-bot-respawn`。僅發布 Web；Windows 是歷史版本。
 
 修正延遲連線時偶爾重複播放射擊效果的問題，保留短按與連射的即時回饋。所有同玩者請重新整理，再建立或加入房間。
 
-電腦按「全螢幕」時一併恢復滑鼠鎖定與操作，不必再點一次畫面。
+電腦按「全螢幕」時一併恢復滑鼠鎖定與操作，不必再點一次畫面。正常復活也會自動恢復操作，倒數期間仍可選武器。
 
 每次死亡回答一題，答對得到一個徽章。每集滿三個就解鎖下一把：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。答錯下次仍出同一題，不扣徽章。共十五題，不必背累積徽章數。
 
@@ -21,7 +21,7 @@
 所有玩家請重新整理網頁後再加入同一個房間。桌機可用 Ctrl + Shift + R 更新。
 
 五把徽章武器不放在地面，只能解鎖後在復活時取得。場地保留步槍、散彈槍與狙擊槍。
-Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留原有瞄準誤差與射速。
+Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；瞄準偏差比前版縮小兩成，仍會射偏；射速與反應時間維持原設定。
 
 題目下方顯示「累積答對更多問題，可以解鎖新武器」。答對後三顆星依序填滿，集滿顯示「解鎖新武器」與武器名稱；答錯不加星，復活畫面保留倒數和可選武器。
 
