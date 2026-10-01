@@ -23,9 +23,11 @@ info = {
     'unity': '6000.3.11f1', 'backend': 'IL2CPP / WebAssembly', 'development': False,
     'networkVersion': 'rivals-web-26-respawn-default',
     'uiRevision': 'simple-quiz-20261001',
-    'releaseRevision': 'respawn-default-20261001',
+    'releaseRevision': 'cdn-load-20261001',
+    'assetDelivery': 'jsDelivr / SHA-256 verification / original-host fallback / original Unity cache keys',
     'compression': 'Brotli / Unity decompression fallback',
     'releaseChanges': [
+        '正式站大型檔案改由 CDN 加速，逐檔核對大小與 SHA-256；失敗或八秒沒有下載進度時改由原站取得。遊戲檔案內容及既有快取不變。',
         '遊戲程式與資源採用無損 Brotli 壓縮，主程式與資料檔皆使用瀏覽器持續快取。',
         '答題視窗只呈現題目與選項，移除離房、挑戰名稱、徽章門檻及重複規則；結果與復活畫面同步精簡。',
         '五把徽章武器移除地面拾取物與底座，只能解鎖後由復活選單取得。',
