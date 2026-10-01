@@ -2,7 +2,8 @@
 
 ## 武器邏輯挑戰（2026-10-01）
 
-- 正式教學版：`rivals-web-26-respawn-default`，介面 `star-progress-20261001`，發布批次 `mobile-controls-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001)。
+- 電腦正式版：修正延遲校正時重複播放射擊效果，以及切換全螢幕後未恢復滑鼠操作；鍵鼠、連線、答題及武器驗證見 [電腦正式版驗證](DESKTOP_RELEASE_VALIDATION.md)。
+- 正式教學版：`rivals-web-27-shot-feedback`，介面 `star-progress-20261001`，發布批次 `desktop-release-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001)。
 - 答題提示與三顆星：[介面與連線驗證](STAR_PROGRESS_VALIDATION.md)。每答對一題填滿一顆星，三顆全滿顯示解鎖的新武器。
 - 載入加速：[CDN 與備援驗證](STARTUP_OPTIMIZATION_VALIDATION.md)。大型檔案經 SHA-256 驗證後載入，失敗或八秒無進度時改用原站，保留原有快取與相同遊戲內容。
 - 復活武器調整：[預設與倒數選擇驗證](RESPAWN_DEFAULT_VALIDATION.md)。每次死亡重新預選最近解鎖的武器，手動改選只套用當次復活。
@@ -21,7 +22,7 @@
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 
@@ -29,7 +30,7 @@ Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範�
 - [Web 正式 ZIP](https://github.com/scozirge/a-thought/raw/refs/heads/master/joylings/minigame_design/rivals/rivals/rivals/Builds/RIVALS-Web-20260924-mobile.zip)：含手機／鍵鼠模式，整包放到 HTTP(S) 主機即可架設。
 - 展開後的 [Windows 主程式與資料](Builds/Release-20260924-Mobile/Windows/)、[Web 主程式與資源](Builds/Release-20260924-Mobile/Web/)，以及 [逐檔 SHA-256 清單](Builds/Release-20260924-Mobile/release-manifest.json) 也一併提交。
 
-目前網頁版使用 `rivals-web-26-respawn-default`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
+目前網頁版使用 `rivals-web-27-shot-feedback`，保留無跳躍、無滑行的設定。本次移除跳躍的驗證見 [移除跳躍與正式發布](NO_JUMP_VALIDATION.md)。介面與場地更新見 [桌面與手機視覺更新](VISUAL_REFRESH_VALIDATION.md)：放大手機文字、重新排列 HUD、統一深色圓角介面，並以霧面灰藍場地及鮮明隊服改善玩家辨識度。前次操作修正見 [手機實機回饋修正](MOBILE_TOUCH_FIX_VALIDATION.md)；首次整包上傳紀錄見 [完整主程式上傳驗證](BINARY_RELEASE_VALIDATION.md)。
 
 GitHub Pages 使用 `gh-pages` 分支根目錄。手機操作版成品位於 `Builds/Release-20260924-Mobile/Web/`，完整發布到 `rivals/`，保留 `Build/`、`ASSET_CREDITS.txt` 與 `ThirdPartyLicenses/`。下載檔名保留原路徑，內容會更新，實際來源提交與版本以包內 `版本資訊.json` 為準。提供全部九種武器的單人訓練場，本次將菜刀近砍判定距離從 2.5 加倍至 5 公尺，刀身以握柄為中心放大 25%，保留右上至左下斜劈；實測見 [菜刀距離與尺寸驗證](CLEAVER_REACH_VALIDATION.md)。火箭保留前次增加 30% 的爆炸範圍。
 
@@ -129,7 +130,7 @@ python Tools/serve_web.py --port 8184
 
 開啟 <http://localhost:8184/>，不可直接雙擊 HTML。服務只監聽本機；正式分享需把整個 Web 目錄放到 HTTP(S) 主機。建置保留 IL2CPP Release／OptimizeSpeed、Wasm RuntimeSpeed、內容雜湊檔名與 Unity Data Caching，移除啟動 Splash Screen。使用 Unity Brotli 壓縮及 Decompression Fallback，輸出 `.unityweb`，不需主機另設 `Content-Encoding: br`。Unity 載入器負責解壓，程式及資料檔皆採持續快取；禁止儲存時退回一般下載。本機服務提供 no-store HTTP 標頭，可獨立驗證 Unity 快取。前次純壓縮更新曾驗證解壓內容完全相同；目前版本包含復活武器規則調整，已重新建置與測試。
 
-連線版本為 `rivals-web-26-respawn-default`；同玩者需重新整理網頁，載入相同版本。本次訓練場版本與舊版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、子彈彈道採物件池，新武器靜態造型依材質合併以減少繪製次數。
+連線版本為 `rivals-web-27-shot-feedback`；同玩者需重新整理網頁，載入相同版本。本次訓練場版本與舊版分開列出房間。房間清單透過 Photon ClientServer lobby，預設區域 asia。真人開槍、彈藥及裝填在本機預測，槍聲／後座先顯示，傷害和比分由房主決定。網路與模擬為 60 Hz，遠端動作插值、Bot 決策分散更新、子彈彈道採物件池，新武器靜態造型依材質合併以減少繪製次數。
 
 房主離開後，其他玩家會返回大廳；目前沒有房主遷移或斷線重連。房主瀏覽器需保持運作，背景節流仍可能影響其他玩家。
 

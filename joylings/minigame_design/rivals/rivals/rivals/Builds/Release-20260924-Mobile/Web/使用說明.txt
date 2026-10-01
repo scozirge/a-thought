@@ -1,6 +1,6 @@
 紅藍槍戰｜武器邏輯教學版
 
-線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001
+線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001
 課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges
 
 每次死亡一題，答對一題一個徽章，每三個解鎖下一把武器。

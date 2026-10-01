@@ -1,0 +1,304 @@
+{
+  "releaseRevision": "desktop-release-20261001",
+  "networkVersion": "rivals-web-27-shot-feedback",
+  "previousFailures": [
+    "Delayed shooting: shots=9, visualShots=10",
+    "Fullscreen entered without restoring keyboard pointer lock"
+  ],
+  "editor": {
+    "shotFeedbackChecks": 16,
+    "learningChecks": 256,
+    "battleChecks": 796
+  },
+  "scripts": [
+    {
+      "name": "LearningMenuChecks",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 8.8
+    },
+    {
+      "name": "TrainingMenuChecks",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 32
+    },
+    {
+      "name": "PointerBridgeChecks",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 23.5
+    },
+    {
+      "name": "AssetDeliveryChecks",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 0.2
+    },
+    {
+      "name": "WebNetworkSmokeTest",
+      "args": [
+        "--lag",
+        "--stress"
+      ],
+      "ok": true,
+      "durationSeconds": 56.6
+    },
+    {
+      "name": "WebNetworkSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 35.6
+    },
+    {
+      "name": "WebNetworkSmokeTest",
+      "args": [
+        "--lag"
+      ],
+      "ok": true,
+      "durationSeconds": 36.5
+    },
+    {
+      "name": "WebConnectionLifecycleSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 30.9
+    },
+    {
+      "name": "WebMultiplayerRecoverySmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 50.4
+    },
+    {
+      "name": "WebRoomCapacitySmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 73.7
+    },
+    {
+      "name": "WebCameraOwnershipSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 43.3
+    },
+    {
+      "name": "WebFocusSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 18.8
+    },
+    {
+      "name": "WebLookSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 59.2
+    },
+    {
+      "name": "WebEntryCrosshairSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 10.2
+    },
+    {
+      "name": "WebTrainingSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 173.7
+    },
+    {
+      "name": "WebLearningSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 173.9
+    },
+    {
+      "name": "WebBotDistributionSmokeTest",
+      "args": [],
+      "ok": true,
+      "durationSeconds": 99.7
+    }
+  ],
+  "finalPointerCases": 9,
+  "finalTouchCases": 21,
+  "fullscreenBrowsers": {
+    "ChromeFinalFocus": true,
+    "EdgeFocus": true
+  },
+  "stress": {
+    "Chrome": {
+      "clicks": 32,
+      "maxClickMs": 14.300000011920929,
+      "rttMs": 392.1999816894531,
+      "frameMs": 16.365476608276367,
+      "shots": 37,
+      "visuals": 37,
+      "reload": true,
+      "slideRemoved": true,
+      "cKeyTravel": 0,
+      "jumpRemoved": true,
+      "spaceHeightChange": 2.2351741790771484e-08,
+      "botRefill": true,
+      "movingLead": 1.4670562744140625,
+      "stoppedPositionError": 0.00026416778564453125,
+      "webSocketDelayEachDirectionMs": 90
+    },
+    "Edge": {
+      "clicks": 32,
+      "maxClickMs": 29.80000001192093,
+      "rttMs": 393.90008544921875,
+      "frameMs": 16.479188919067383,
+      "shots": 37,
+      "visuals": 37,
+      "reload": true,
+      "slideRemoved": true,
+      "cKeyTravel": 0,
+      "jumpRemoved": true,
+      "spaceHeightChange": 2.2351741790771484e-08,
+      "botRefill": true,
+      "movingLead": 1.0081501007080078,
+      "stoppedPositionError": 0.0004520416259765625,
+      "webSocketDelayEachDirectionMs": 90
+    }
+  },
+  "mobileMultiplayer": {
+    "checks": 15,
+    "ok": true,
+    "maxTouchFeedbackMs": 57
+  },
+  "buildFiles": {
+    "asset-delivery.js": "0015e0a516bc101424dbda8ae8988d5e62f225a1cc51d8e89bd45cf4c967106c",
+    "ASSET_CREDITS.txt": "2ba905dc1efbb0c85042ab4f629ccb14cb18e214864378f7c20c35cc2ca30f72",
+    "index.html": "c2dd9b34afc9b0d63653bb9bf8c28a9092cf1e90a875efe9786249b46d7fac7e",
+    "learning.css": "bf5940693e86fd702c3e5cb47b012738d17c6a839cd64ab9b8eacf81fd0bfea3",
+    "learning.js": "43cca1137c9f5be96c344d1e9e29ef1c4ae582b493c763d5c6ec3a8108c68d05",
+    "Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb": "1025eea5fedfa201c8a991b687ee3fa5aa863e06bd16a3c74a59ed83338ea3ea",
+    "Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb": "db1885ca57dc3646cc7a4e3a434ab43e815addd36f36d72a3c0410ef907669a9",
+    "Build/d583daa33a6e7e40f309f6e9082caf21.loader.js": "1852a6bf97cc64a58cdadb138f4f6c57b6be1110aa3ef72407fe1b9b7ce675be",
+    "Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb": "8f819ee6874b86abe90011e2b4c3f6e2bfe43f7042543a9eb3c570a37094daba",
+    "ThirdPartyLicenses/Kenney-blaster-kit/License.txt": "bece5f4d99cca9dcf86931221a69909862ff6cc95e1735462ee678516a1063e2",
+    "ThirdPartyLicenses/Kenney-blocky-characters/License.txt": "610fec89c16826112e9d6b80497b726c43fea0e42c9cd9d7cb081f8ad550c0ec",
+    "ThirdPartyLicenses/Kenney-crosshair-pack/License.txt": "7488be7a0dcd96de0c5435e37248750fa753224786e3b6fb518751c0d0ccb78e",
+    "ThirdPartyLicenses/Kenney-impact-sounds/License.txt": "b49aa9c56b04528b95913de13e506a0f7c5e807b9925db9bfef86af1f91120db",
+    "ThirdPartyLicenses/Kenney-prototype-textures/License.txt": "b17db4082ba7794153340d83f5fcbd26a3d509ff31a3ce3d2c77cb175e35d308",
+    "ThirdPartyLicenses/Kenney-sci-fi-sounds/License.txt": "a9767b25c3533f69d03af136480efad08efba19a9f0d89616992b34c79fd6186",
+    "ThirdPartyLicenses/NotoSansTC/OFL.txt": "88f117575237307bdd86a17ef15e21790fc9a662fe4dfb103ca1ca077f0d9982",
+    "ThirdPartyLicenses/QuaterniusAnimatedGuns/License.txt": "7208a34e34f89afadd4d9fbebcc7ccde5000f779af9dc0dc70d62a2934df1fe3",
+    "ThirdPartyLicenses/QuaterniusToonGuns/License.txt": "7a85c20ba74fa222d3d981cd8b274f99224188ce66d0b6a415c87aee863c4f51",
+    "ThirdPartyLicenses/QuaterniusUltimateGuns/License.txt": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c",
+    "ThirdPartyLicenses/SpringySpringoReload/License.txt": "746bca69a6b6ee1afabc3982e3e5be040ed4461eef4fe541f732431938a323a4",
+    "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964"
+  },
+  "courseReferences": 335,
+  "localValidationPassed": true,
+  "releasePackage": {
+    "target": "Web",
+    "gameSourceCommit": "0b3acae3c5b8596966d36b582fda75a225dac2c2",
+    "archive": "Builds/RIVALS-Web-20260924-mobile.zip",
+    "bytes": 23487094,
+    "sha256": "a8681892998cf706ed107af6e2ce1d60f75499c7513b0999414d4df1c0ca8abd",
+    "files": 25,
+    "uncompressedBytes": 23857695,
+    "allFilesMatch": true,
+    "fileSha256": {
+      "asset-delivery.js": "0015e0a516bc101424dbda8ae8988d5e62f225a1cc51d8e89bd45cf4c967106c",
+      "ASSET_CREDITS.txt": "2ba905dc1efbb0c85042ab4f629ccb14cb18e214864378f7c20c35cc2ca30f72",
+      "Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb": "1025eea5fedfa201c8a991b687ee3fa5aa863e06bd16a3c74a59ed83338ea3ea",
+      "Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb": "db1885ca57dc3646cc7a4e3a434ab43e815addd36f36d72a3c0410ef907669a9",
+      "Build/d583daa33a6e7e40f309f6e9082caf21.loader.js": "1852a6bf97cc64a58cdadb138f4f6c57b6be1110aa3ef72407fe1b9b7ce675be",
+      "Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb": "8f819ee6874b86abe90011e2b4c3f6e2bfe43f7042543a9eb3c570a37094daba",
+      "index.html": "c2dd9b34afc9b0d63653bb9bf8c28a9092cf1e90a875efe9786249b46d7fac7e",
+      "learning.css": "bf5940693e86fd702c3e5cb47b012738d17c6a839cd64ab9b8eacf81fd0bfea3",
+      "learning.js": "43cca1137c9f5be96c344d1e9e29ef1c4ae582b493c763d5c6ec3a8108c68d05",
+      "README.md": "a3829273c8f6074a7a0771cab6dde757022ec559b7037fa17f3771e2075a18e9",
+      "serve_web.py": "4e77edf9f9936d80208e0bed0926af8b8c360f05424821ee17b6e8a1076df0ee",
+      "ThirdPartyLicenses/Kenney-blaster-kit/License.txt": "bece5f4d99cca9dcf86931221a69909862ff6cc95e1735462ee678516a1063e2",
+      "ThirdPartyLicenses/Kenney-blocky-characters/License.txt": "610fec89c16826112e9d6b80497b726c43fea0e42c9cd9d7cb081f8ad550c0ec",
+      "ThirdPartyLicenses/Kenney-crosshair-pack/License.txt": "7488be7a0dcd96de0c5435e37248750fa753224786e3b6fb518751c0d0ccb78e",
+      "ThirdPartyLicenses/Kenney-impact-sounds/License.txt": "b49aa9c56b04528b95913de13e506a0f7c5e807b9925db9bfef86af1f91120db",
+      "ThirdPartyLicenses/Kenney-prototype-textures/License.txt": "b17db4082ba7794153340d83f5fcbd26a3d509ff31a3ce3d2c77cb175e35d308",
+      "ThirdPartyLicenses/Kenney-sci-fi-sounds/License.txt": "a9767b25c3533f69d03af136480efad08efba19a9f0d89616992b34c79fd6186",
+      "ThirdPartyLicenses/NotoSansTC/OFL.txt": "88f117575237307bdd86a17ef15e21790fc9a662fe4dfb103ca1ca077f0d9982",
+      "ThirdPartyLicenses/QuaterniusAnimatedGuns/License.txt": "7208a34e34f89afadd4d9fbebcc7ccde5000f779af9dc0dc70d62a2934df1fe3",
+      "ThirdPartyLicenses/QuaterniusToonGuns/License.txt": "7a85c20ba74fa222d3d981cd8b274f99224188ce66d0b6a415c87aee863c4f51",
+      "ThirdPartyLicenses/QuaterniusUltimateGuns/License.txt": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c",
+      "ThirdPartyLicenses/SpringySpringoReload/License.txt": "746bca69a6b6ee1afabc3982e3e5be040ed4461eef4fe541f732431938a323a4",
+      "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964",
+      "使用說明.txt": "02828604d267ceb549185786d02d875edb2f0ae40dd1ee4f534846f78ccf3d2f",
+      "版本資訊.json": "9ebfc19b449d0fa014c68726b01724da66801967ccd5a10f73f9655074641311"
+    }
+  },
+  "publicationCommit": "805642b",
+  "preservedGalleryFiles": 45,
+  "public": {
+    "url": "https://scozirge.github.io/a-thought/rivals/?v=desktop-release-20261001",
+    "pagesRun": "https://github.com/scozirge/a-thought/actions/runs/36836355971",
+    "deployment": "success",
+    "releaseChecks": [
+      "public release metadata has the new version",
+      "public release contains the simplified quiz interface",
+      "public release contains the compressed validated package",
+      "public release enables verified CDN delivery",
+      "public release includes the mobile movement zone and orientation update",
+      "public quiz has no exit, stage labels, badge prompt or rule footer",
+      "public game creates a real room with seven Bots",
+      "public arena has four ordinary pickups and no badge weapons",
+      "public room starts with locked lesson progress",
+      "public course retains all fifteen questions",
+      "public course explains unlock-only weapons and distributed Bots",
+      "course links to the current game release",
+      "course describes the quiz hint and three-star progress",
+      "course explains latest-unlock defaults and temporary choices",
+      "question answer can be expanded",
+      "public lesson fits a narrow mobile viewport",
+      "public catalog has the new gameplay entry",
+      "public game and course have no script exceptions"
+    ],
+    "network": {
+      "clicks": 8,
+      "maxClickMs": 15.399999976158142,
+      "rttMs": 407.20001220703125,
+      "frameMs": 16.07826805114746,
+      "shots": 9,
+      "visuals": 9,
+      "reload": true,
+      "slideRemoved": true,
+      "cKeyTravel": 0,
+      "jumpRemoved": true,
+      "spaceHeightChange": 2.2351741790771484e-08,
+      "botRefill": true,
+      "movingLead": 1.2837982177734375,
+      "stoppedPositionError": 0.0003223419189453125,
+      "webSocketDelayEachDirectionMs": 90
+    },
+    "load": [
+      {
+        "pass": "cold",
+        "readyMs": 5443,
+        "transferBytes": 23706147,
+        "cacheMessages": [
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb' successfully downloaded and stored in the browser cache",
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb' successfully downloaded and stored in the browser cache",
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache"
+        ]
+      },
+      {
+        "pass": "warm",
+        "readyMs": 2500,
+        "transferBytes": 300,
+        "cacheMessages": [
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/33dae87dac22e8ce5d2ee3ea19c57d74.wasm.unityweb' served from the browser cache without revalidation",
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/58c0a4eaa8516c5d6dba9496c52de146.data.unityweb' served from the browser cache without revalidation",
+          "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+        ]
+      }
+    ],
+    "validated": true
+  },
+  "cleanup": {
+    "candidateBuildRemoved": true,
+    "testTemporaryFilesRemoved": 141,
+    "editorTemporaryFilesRemoved": 6,
+    "localPreviewStopped": true
+  }
+}
