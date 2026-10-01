@@ -1,0 +1,261 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "release": "compressed-web-20261001",
+  "uiScreens": 20,
+  "questions": 15,
+  "victory": {
+    "blue": 30,
+    "red": 9,
+    "winner": 0
+  },
+  "screens": [
+    {
+      "id": "01-loading",
+      "title": "載入進度",
+      "note": "正式網頁實際畫面",
+      "file": "01-loading.png",
+      "group": "main"
+    },
+    {
+      "id": "02-lobby",
+      "title": "遊戲大廳",
+      "note": "正式網頁實際畫面",
+      "file": "02-lobby.png",
+      "group": "main"
+    },
+    {
+      "id": "04-training",
+      "title": "訓練場",
+      "note": "正式網頁實際畫面",
+      "file": "04-training.png",
+      "group": "main"
+    },
+    {
+      "id": "05-armory",
+      "title": "訓練場選擇武器",
+      "note": "正式網頁實際畫面",
+      "file": "05-armory.png",
+      "group": "main"
+    },
+    {
+      "id": "06-settings",
+      "title": "遊戲設定",
+      "note": "正式網頁實際畫面",
+      "file": "06-settings.png",
+      "group": "main"
+    },
+    {
+      "id": "07-credits",
+      "title": "素材與授權",
+      "note": "正式網頁實際畫面",
+      "file": "07-credits.png",
+      "group": "main"
+    },
+    {
+      "id": "08-countdown",
+      "title": "開場倒數",
+      "note": "正式網頁實際畫面",
+      "file": "08-countdown.png",
+      "group": "main"
+    },
+    {
+      "id": "09-resume",
+      "title": "鍵鼠開始操作提示",
+      "note": "正式網頁實際畫面",
+      "file": "09-resume.png",
+      "group": "main"
+    },
+    {
+      "id": "10-battle",
+      "title": "對戰主畫面",
+      "note": "正式網頁實際畫面",
+      "file": "10-battle.png",
+      "group": "main"
+    },
+    {
+      "id": "03-room-list",
+      "title": "加入房間清單",
+      "note": "正式網頁實際畫面",
+      "file": "03-room-list.png",
+      "group": "main"
+    },
+    {
+      "id": "11-pause",
+      "title": "暫停選單",
+      "note": "正式網頁實際畫面",
+      "file": "11-pause.png",
+      "group": "main"
+    },
+    {
+      "id": "12-question",
+      "title": "死亡後答題",
+      "note": "正式網頁實際畫面",
+      "file": "12-question.png",
+      "group": "main"
+    },
+    {
+      "id": "17-all-weapons",
+      "title": "全部武器解鎖後的復活選擇",
+      "note": "正式介面狀態預覽",
+      "file": "17-all-weapons.png",
+      "group": "main"
+    },
+    {
+      "id": "question-01",
+      "title": "手槍 · 第 1 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-01.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-02",
+      "title": "手槍 · 第 2 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-02.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-03",
+      "title": "手槍 · 第 3 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-03.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-04",
+      "title": "菜刀 · 第 1 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-04.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-05",
+      "title": "菜刀 · 第 2 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-05.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-06",
+      "title": "菜刀 · 第 3 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-06.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-07",
+      "title": "火箭筒 · 第 1 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-07.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-08",
+      "title": "火箭筒 · 第 2 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-08.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-09",
+      "title": "火箭筒 · 第 3 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-09.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-10",
+      "title": "毒藥 · 第 1 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-10.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-11",
+      "title": "毒藥 · 第 2 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-11.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-12",
+      "title": "毒藥 · 第 3 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-12.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-13",
+      "title": "加特林 · 第 1 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-13.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-14",
+      "title": "加特林 · 第 2 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-14.png",
+      "group": "questions"
+    },
+    {
+      "id": "question-15",
+      "title": "加特林 · 第 3 題",
+      "note": "正式題庫的介面狀態預覽",
+      "file": "question-15.png",
+      "group": "questions"
+    },
+    {
+      "id": "13-wrong",
+      "title": "答錯回饋",
+      "note": "正式網頁實際畫面",
+      "file": "13-wrong.png",
+      "group": "main"
+    },
+    {
+      "id": "14-correct-live",
+      "title": "實際答對回饋",
+      "note": "正式網頁實際畫面",
+      "file": "14-correct-live.png",
+      "group": "main"
+    },
+    {
+      "id": "15-unlock-live",
+      "title": "實際解鎖新武器",
+      "note": "正式網頁實際畫面",
+      "file": "15-unlock-live.png",
+      "group": "main"
+    },
+    {
+      "id": "16-respawn-live",
+      "title": "實際解鎖後的復活倒數",
+      "note": "正式網頁實際畫面",
+      "file": "16-respawn-live.png",
+      "group": "main"
+    },
+    {
+      "id": "18-victory",
+      "title": "勝利與頒獎",
+      "note": "正式網頁實際畫面",
+      "file": "18-victory.png",
+      "group": "main"
+    },
+    {
+      "id": "19-lobby-training-entry",
+      "file": "19-lobby-training-entry.png",
+      "title": "大廳向下捲動：訓練場入口",
+      "note": "與線上版相同的正式成品，本機實際截圖",
+      "group": "extra"
+    },
+    {
+      "id": "20-fullscreen-training",
+      "file": "20-fullscreen-training.png",
+      "title": "電腦全螢幕遊玩",
+      "note": "與線上版相同的正式成品，本機實際截圖",
+      "group": "extra"
+    }
+  ]
+}
