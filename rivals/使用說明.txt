@@ -1,7 +1,7 @@
 紅藍槍戰｜武器邏輯教學版
 
-線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001
-課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges
+線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001
+課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges
 
 每次死亡一題，答對一題一個徽章，每三個解鎖下一把武器。
 依序：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。
@@ -20,3 +20,5 @@
 Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留原有瞄準誤差與射速。
 
 答題時只顯示題目與選項；回答後顯示簡短結果、一句說明與繼續，復活畫面只保留倒數和可選武器。
+
+正式站以 CDN 加速大型資源，核對 SHA-256 後才載入；連線失敗、檔案不符或八秒沒有進度會改由原站下載。原有快取仍可重用。自行架站預設讀取同站檔案，請一併保留 asset-delivery.js。
