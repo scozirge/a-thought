@@ -1,8 +1,8 @@
 # 紅藍槍戰｜武器邏輯教學版
 
-[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
+[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001) · [第三次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)
 
-2026-10-01 更新。發布批次：`cdn-load-20261001`；連線版本：`rivals-web-26-respawn-default`。僅發布 Web；Windows 是歷史版本。
+2026-10-01 更新。發布批次：`star-progress-20261001`；連線版本：`rivals-web-26-respawn-default`。僅發布 Web；Windows 是歷史版本。
 
 每次死亡回答一題，答對得到一個徽章。每集滿三個就解鎖下一把：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。答錯下次仍出同一題，不扣徽章。共十五題，不必背累積徽章數。
 
@@ -19,7 +19,7 @@
 五把徽章武器不放在地面，只能解鎖後在復活時取得。場地保留步槍、散彈槍與狙擊槍。
 Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留原有瞄準誤差與射速。
 
-答題時只顯示題目與選項；回答後顯示簡短結果、一句說明與繼續，復活畫面只保留倒數和可選武器。
+題目下方顯示「累積答對更多問題，可以解鎖新武器」。答對後三顆星依序填滿，集滿顯示「解鎖新武器」與武器名稱；答錯不加星，復活畫面保留倒數和可選武器。
 
 本版採無損 Brotli 壓縮，重新整理可重用遊戲程式與資源快取；玩法與畫質保留。自行架站請保留原始 `.unityweb` 檔名，載入器會自動解壓，不需另外設定 Brotli Content-Encoding。
 

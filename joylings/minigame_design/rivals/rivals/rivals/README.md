@@ -3,6 +3,7 @@
 ## 武器邏輯挑戰（2026-10-01）
 
 - 正式教學版：`rivals-web-26-respawn-default`，介面 `star-progress-20261001`，發布批次 `star-progress-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001)。
+- 答題提示與三顆星：[介面與連線驗證](STAR_PROGRESS_VALIDATION.md)。每答對一題填滿一顆星，三顆全滿顯示解鎖的新武器。
 - 載入加速：[CDN 與備援驗證](STARTUP_OPTIMIZATION_VALIDATION.md)。大型檔案經 SHA-256 驗證後載入，失敗或八秒無進度時改用原站，保留原有快取與相同遊戲內容。
 - 復活武器調整：[預設與倒數選擇驗證](RESPAWN_DEFAULT_VALIDATION.md)。每次死亡重新預選最近解鎖的武器，手動改選只套用當次復活。
 - 前次下載最佳化：[無損壓縮與快取驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。正式站首次遊戲資源傳輸由 30.42 MB 降至 23.71 MB（約 22%），重新整理可重用程式與資料快取。該次純壓縮更新的解壓後程式與資源和當時上一版完全相同，83 項遊玩檢查、新舊版互連及公開站驗證皆通過。
