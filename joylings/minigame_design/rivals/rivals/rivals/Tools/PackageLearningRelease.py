@@ -38,7 +38,7 @@ info = {
     ],
     'sourceFiles': sources,
 }
-(web / '版本資訊.json').write_text(json.dumps(info, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+(web / '版本資訊.json').write_text(json.dumps(info, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
 archive = root / 'Builds/RIVALS-Web-20260924-mobile.zip'
 files = sorted(p for p in web.rglob('*') if p.is_file())
 with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
@@ -60,5 +60,5 @@ manifest['packages'] = [entry if p['target'] == 'Web' else p for p in manifest['
 manifest['builtAt'] = datetime.now(timezone.utc).isoformat()
 manifest['releaseTargets'] = ['Web']
 manifest['legacyTargets'] = ['Windows']
-manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
 print(json.dumps({k: entry[k] for k in ['bytes', 'files', 'sha256']}, indent=2))

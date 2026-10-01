@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-09-30T22:05:34.115978+00:00",
+  "builtAt": "2026-10-01T02:47:12.479803+00:00",
   "releaseTargets": [
     "Web"
   ],
@@ -9,12 +9,12 @@
   "packages": [
     {
       "target": "Web",
-      "gameSourceCommit": "6f5351707b8a4de922a61151ea573696b061ab47",
+      "gameSourceCommit": "56400f1d1e745b67f38e9addb9069285d569a5c4",
       "archive": "Builds/RIVALS-Web-20260924-mobile.zip",
-      "bytes": 30259917,
-      "sha256": "7311913b015c92b126914015e4877335ab6d1b082c473b8af38e37259bd16a80",
+      "bytes": 30259869,
+      "sha256": "dc25aa3055157e34860fff9cc02f0a8626d6c9a5afebc2a80aae5a190253472b",
       "files": 24,
-      "uncompressedBytes": 76090292,
+      "uncompressedBytes": 76090132,
       "allFilesMatch": true,
       "fileSha256": {
         "ASSET_CREDITS.txt": "2ba905dc1efbb0c85042ab4f629ccb14cb18e214864378f7c20c35cc2ca30f72",
@@ -25,7 +25,7 @@
         "index.html": "9a8dce8a63fdc91ebf7b0b6f150bef89605d68df58559654e3173b793c169af6",
         "learning.css": "09ccdb8aa095acaa65f069a190253e46b794afb62ef4f11e09c974499b00e21f",
         "learning.js": "ba2f96c151fa4d306b92514d0e8021046082c760d14441e0c9704d62504661d5",
-        "README.md": "0a1667a6210563f84aaa39068bf2f56fa0b193b5d93b2f28192c9034b9dc1362",
+        "README.md": "eef3aabda184844731bf395ffef9e315930afe61e0b4ffefd1cd4fa407f5ec28",
         "serve_web.py": "4e77edf9f9936d80208e0bed0926af8b8c360f05424821ee17b6e8a1076df0ee",
         "ThirdPartyLicenses/Kenney-blaster-kit/License.txt": "bece5f4d99cca9dcf86931221a69909862ff6cc95e1735462ee678516a1063e2",
         "ThirdPartyLicenses/Kenney-blocky-characters/License.txt": "610fec89c16826112e9d6b80497b726c43fea0e42c9cd9d7cb081f8ad550c0ec",
@@ -39,8 +39,8 @@
         "ThirdPartyLicenses/QuaterniusUltimateGuns/License.txt": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c",
         "ThirdPartyLicenses/SpringySpringoReload/License.txt": "746bca69a6b6ee1afabc3982e3e5be040ed4461eef4fe541f732431938a323a4",
         "ThirdPartyLicenses/TabascoGunshots/creativecommons.txt": "d81ca2c19bc175fda5d59820f1e82972fb31d2d525da61ee5e3bd229415b5964",
-        "使用說明.txt": "95429e923adf618bd495595fabe2483d36e2b4c563406597be7f454b50dce8e1",
-        "版本資訊.json": "3f02702004df3737bf4c7d387ab67adf68600b2707b865e3cde53691f5b5aa34"
+        "使用說明.txt": "34fe3c8bfaf96dd104553d0b26dddabe6a86d87c014fff60d5718504d6bb7268",
+        "版本資訊.json": "47dc4a5ee88733e24ff3bb2d678982c5e8a310eeb1f3656216e3785f4613d50f"
       }
     },
     {
