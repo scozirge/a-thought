@@ -53,6 +53,42 @@ export default function ClassroomHome() {
         </section>
 
         <nav aria-label="課程目錄" className="course-catalog">
+          <details className="featured-unit current-course" id="third-course">
+            <summary className="featured-heading">
+              <a className="featured-link" href={assetUrl('/classroom/weapon-logic/')}>
+                <span className="unit-icon tint-purple"><UnitIcon name="code" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">本次課程 · 第三次課程</span>紅藍槍戰・武器邏輯</span>
+                  <span className="unit-meta">15 題 · 完整題目與選項</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+              <span className="activity-toggle">
+                <span className="toggle-label-closed">展開題目與選項</span>
+                <span className="toggle-label-open">收起題目與選項</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </span>
+            </summary>
+            <div className="activity-content">
+              <ol className="activity-list weapon-catalog-list">
+                {weaponQuestions.stages.flatMap((stage, stageIndex) => stage.questions.map((question, index) => (
+                  <li key={`${stage.weapon}-${index}`}>
+                    <a href={assetUrl(`/classroom/weapon-logic/#weapon-question-${stage.weapon}-${index + 1}`)}>
+                      <span>{String(stageIndex * 3 + index + 1).padStart(2, '0')}</span>
+                      {question.title}
+                      <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                    {'context' in question && <p className="catalog-question-context">{question.context}</p>}
+                    <ol className="catalog-question-options">
+                      {question.options.map((option) => <li key={option}>{option}</li>)}
+                    </ol>
+                  </li>
+                )))}
+                <li><a href={assetUrl('/classroom/weapon-logic/#game-updates')}><span>★</span>解鎖與復活規則<ArrowUpRight size={16} aria-hidden="true" /></a></li>
+              </ol>
+            </div>
+          </details>
+
           <details className="featured-unit">
             <summary className="featured-heading">
               <a
@@ -150,38 +186,6 @@ export default function ClassroomHome() {
               <ArrowUpRight size={18} aria-hidden="true" />
             </a>
           </div>
-
-          <details className="featured-unit battle-catalog-unit" id="third-course">
-            <summary className="featured-heading">
-              <a className="featured-link" href={assetUrl('/classroom/weapon-logic/')}>
-                <span className="unit-icon tint-purple"><UnitIcon name="code" /></span>
-                <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">第三次課程</span>紅藍槍戰・武器邏輯</span>
-                  <span className="unit-meta">15 題邏輯挑戰 · 看懂規則，解鎖武器</span>
-                </span>
-                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
-              </a>
-              <span className="activity-toggle">
-                <span className="toggle-label-closed">展開題目</span>
-                <span className="toggle-label-open">收起題目</span>
-                <ChevronDown size={19} aria-hidden="true" />
-              </span>
-            </summary>
-            <div className="activity-content">
-              <ol className="activity-list">
-                {weaponQuestions.stages.flatMap((stage, stageIndex) => stage.questions.map((question, index) => (
-                  <li key={`${stage.weapon}-${index}`}>
-                    <a href={assetUrl(`/classroom/weapon-logic/#weapon-question-${stage.weapon}-${index + 1}`)}>
-                      <span>{String(stageIndex * 3 + index + 1).padStart(2, '0')}</span>
-                      {question.title}
-                      <ArrowUpRight size={16} aria-hidden="true" />
-                    </a>
-                  </li>
-                )))}
-                <li><a href={assetUrl('/classroom/weapon-logic/#game-updates')}><span>★</span>解鎖與復活規則<ArrowUpRight size={16} aria-hidden="true" /></a></li>
-              </ol>
-            </div>
-          </details>
 
           <div className="unit-grid">
             {units.slice(1).map((unit) => (

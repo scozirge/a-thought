@@ -662,6 +662,38 @@ body:has(.classroom-shell) {
   background: #f7fbfc;
   box-shadow: 4px 5px 0 #dce7ec;
 }
+.current-course {
+  margin-bottom: 25px;
+  border-color: #b7a2c6;
+  background: #fcf9ff;
+  box-shadow: 4px 5px 0 #e9e0ef;
+}
+.current-course .catalog-lesson-number {
+  color: #765987;
+  font-weight: 700;
+}
+.weapon-catalog-list > li + li {
+  border-top: 1px dashed #ded3e5;
+}
+.weapon-catalog-list a {
+  align-items: baseline;
+}
+.weapon-catalog-list a > svg,
+.weapon-catalog-list a > span {
+  flex-shrink: 0;
+}
+.catalog-question-options {
+  margin: 0 10px 16px 44px;
+  padding-left: 1.5em;
+  list-style: decimal;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.catalog-question-context {
+  margin: 0 10px 8px 44px;
+  font-size: 16px;
+  line-height: 1.8;
+}
 .catalog-lesson-number {
   display: block;
   margin-bottom: 3px;
