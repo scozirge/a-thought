@@ -1,12 +1,12 @@
 # 紅藍槍戰｜武器邏輯教學版
 
-[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001) · [第二次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)
+[開始遊戲](https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001) · [第二次課程與完整題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)
 
-2026-10-01 更新。發布批次：`compressed-web-20261001`；連線版本：`rivals-web-25-unlock-bots`。僅發布 Web；Windows 是歷史版本。
+2026-10-01 更新。發布批次：`respawn-default-20261001`；連線版本：`rivals-web-26-respawn-default`。僅發布 Web；Windows 是歷史版本。
 
 每次死亡回答一題，答對得到一個徽章。每集滿三個就解鎖下一把：菜刀 → 火箭筒 → 毒藥 → 加特林 → 核彈。答錯下次仍出同一題，不扣徽章。共十五題，不必背累積徽章數。
 
-看完答案說明，按「繼續」才開始三秒倒數。剛解鎖的武器會自動選中，也可以改選其他已解鎖武器。核彈解鎖後不再出題。同房下一場保留進度，離開房間後重新開始。
+看完答案說明，按「繼續」才開始三秒倒數。每次死亡都預設最近解鎖的武器；倒數可改選手槍或其他已解鎖武器，只影響這次復活。場上撿到的槍不列入復活選單。核彈解鎖後不再出題。同房下一場保留進度，離開房間後重新開始。
 
 大廳可選手機觸控或鍵盤滑鼠，兩者都支援全螢幕並可同房。WASD 移動、滑鼠轉向、左鍵射擊、右鍵瞄準／飛刀、R 換彈、Esc 選單。手機左側移動、右側滑動轉向，瞄準按鈕點一下開啟、再點一下關閉。
 
