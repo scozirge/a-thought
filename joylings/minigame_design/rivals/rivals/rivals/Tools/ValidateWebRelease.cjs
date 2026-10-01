@@ -28,7 +28,7 @@ async function run(group,[name,...args]){
   try{
     entry.exitCode=await new Promise((resolve,reject)=>{
       const child=spawn(process.execPath,[path.join(__dirname,name+'.cjs'),...args],{
-        cwd:root,env:{...process.env,RIVALS_WEB_URL:report.url,RIVALS_TEST_OUTPUT:folder},stdio:['ignore','pipe','pipe'],windowsHide:true,
+        cwd:root,env:{...process.env,RIVALS_WEB_URL:report.url,RIVALS_TEST_OUTPUT:folder,...(group==='public'?{RIVALS_STARTUP_TIMEOUT_MS:process.env.RIVALS_STARTUP_TIMEOUT_MS||'180000'}:{})},stdio:['ignore','pipe','pipe'],windowsHide:true,
       });
       child.stdout.on('data',data=>{process.stdout.write(data);log.write(data);});
       child.stderr.on('data',data=>{process.stderr.write(data);log.write(data);});

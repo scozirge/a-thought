@@ -35,7 +35,9 @@ const nameSuffix=Date.now().toString(36).slice(-5);
   const url=new URL(process.env.RIVALS_WEB_URL||'http://127.0.0.1:8184/');url.searchParams.set('diagnostics','1');
   // Public hosting can still be downloading Unity assets after HTML is ready.
   // Give the actual playable lobby its own startup deadline.
+  const loadStarted=Date.now();console.log('WEB_NETWORK_LOADING '+name);
   await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:startupTimeoutMs});await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:startupTimeoutMs});
+  results.startup??=[];results.startup.push({name,readyMs:Date.now()-loadStarted});console.log('WEB_NETWORK_READY '+JSON.stringify(results.startup.at(-1)));
   return r;
  }
  try{

@@ -7,12 +7,14 @@ const game=new URL(process.env.RIVALS_WEB_URL||'https://scozirge.github.io/a-tho
 const revision='final-web-20261001';
 game.searchParams.set('v',revision);game.searchParams.set('diagnostics','1');
 const course=process.env.RIVALS_COURSE_URL||'https://scozirge.github.io/a-thought/hatchbeasts/classroom/';
-const result={checks:[],errors:[],url:game.href};
+const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.RIVALS_CHROME||undefined,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
  const page=await browser.newPage({viewport:{width:1280,height:800}});
  page.on('pageerror',e=>result.errors.push(e.message));
- page.on('console',m=>{if(/^(?:\w*Exception|RuntimeError):/.test(m.text()))result.errors.push(m.text());});
+ page.on('console',m=>{const text=m.text();if(/^(?:\w*Exception|RuntimeError):/.test(text))result.errors.push(text);if(/UnityCache|RIVALS_|Exception|Error/.test(text))result.logs.push(text);});
+ page.on('requestfinished',request=>{if(request.url().includes('/Build/')){result.downloads.push({url:request.url(),timing:request.timing()});console.log('PUBLIC_ASSET_LOADED '+new URL(request.url()).pathname.split('/').at(-1));}});
+ page.on('requestfailed',request=>result.downloads.push({url:request.url(),failure:request.failure()}));
  const check=(ok,label)=>{assert.ok(ok,label);result.checks.push(label);console.log('PUBLIC_CHECK '+label);};
  try{
   const response=await page.request.get(new URL('版本資訊.json?t='+Date.now(),game).href);
@@ -21,6 +23,9 @@ const result={checks:[],errors:[],url:game.href};
   check(info.uiRevision==='simple-quiz-20261001','public release contains the simplified quiz interface');
   check(info.releaseRevision===revision,'public release contains the final validated package');
   await page.goto(game.href,{waitUntil:'domcontentloaded',timeout:120000});
+  // First visits download the complete WebAssembly build before connecting.
+  // Keep that startup allowance separate from the room-connection deadline.
+  await page.waitForFunction(()=>window.rivalsLobbyState?.ready&&!window.rivalsLobbyState.busy,null,{timeout:Number(process.env.RIVALS_STARTUP_TIMEOUT_MS||180000)});
   await enterRoom(page,{name:'公開驗證'+Date.now().toString(36).slice(-4)});
   check(await page.locator('#learning-leave,#learning-stage,#learning-progress,#learning-note').count()===0,'public quiz has no exit, stage labels, badge prompt or rule footer');
   const s=await page.evaluate(()=>window.rivalsDiagnostics);
@@ -44,5 +49,6 @@ const result={checks:[],errors:[],url:game.href};
   await page.goto(course+'?v='+revision,{waitUntil:'domcontentloaded',timeout:60000});
   check(await page.locator('a[href$="#game-updates"]').count()===1,'public catalog has the new gameplay entry');
   check(result.errors.length===0,'public game and course have no script exceptions');
- }finally{fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(result,null,2));await browser.close();}
+ }catch(error){result.failure=error.stack;result.lastState=await page.evaluate(()=>({loading:document.getElementById('loading')?.innerText,lobby:window.rivalsLobbyState,resources:performance.getEntriesByType('resource').filter(r=>r.name.includes('/Build/')).map(r=>({name:r.name,duration:r.duration,transfer:r.transferSize}))})).catch(()=>null);await page.screenshot({path:path.join(output,'failure.png')}).catch(()=>{});throw error;}
+ finally{fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(result,null,2));await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

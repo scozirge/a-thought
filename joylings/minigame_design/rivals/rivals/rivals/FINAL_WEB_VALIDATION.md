@@ -8,6 +8,7 @@
 - 統一課程及下載包的最新遊戲入口，課程補上精簡介面說明；移除下載包說明的重複句。
 - 新增 `Tools/ValidateWebRelease.cjs`，分成介面、連線、實際遊玩及公開站四組，依序執行並保存各測試的輸出與總表。
 - 相機隔離測試的相容模式改用右鍵拖曳，符合正式遊戲操作。原測試只移動滑鼠，無法讓相容模式角色轉向；修正測試後保留原有「確實轉向」及「不可影響另一位玩家」斷言。
+- 公開站首次下載與進房分開計時，載入等待預設 180 秒，可由 `RIVALS_STARTUP_TIMEOUT_MS` 調整；另記錄資源下載耗時及失敗時的畫面與狀態。一般進房與玩法斷言維持原限制。
 - 91 個正式來源檔的 SHA-256 與既有正式包全數相同。本次未修改戰鬥程式及遊戲介面，沿用已建置的 Release WebAssembly，重新驗證及包裝；未建置 Windows。
 
 ## 本次重新執行的檢查
@@ -59,4 +60,11 @@ Unity 編輯器整合檢查分別使用 `RivalsPrototype.Editor.LearningChecks.R
 - 發布資料夾逐檔與正式包一致；課程 78 個輸出檔已逐檔核對。保留公開站舊雜湊資源，避免舊入口快取找不到檔案。
 - Windows 成品與原有 manifest 項目不變。
 
-公開站發布與連線結果於部署完成後補記。
+- `master` 正式包提交 `7785936`；`gh-pages` 網站提交 `bab4d38`，皆已推送。
+- GitHub Pages [發布流程 36807529906](https://github.com/scozirge/a-thought/actions/runs/36807529906) 成功。
+- 公開遊戲與課程 15 項通過：正確發布批次、精簡答題介面、實際開房與七隻 Bot、僅四個一般拾取點、新房進度歸零、完整 15 題、答案展開、手機窄版、教學入口及無腳本例外。
+- 首次公開載入的 90 秒檢查及雙人測試的 120 秒載入門檻曾超時；增加下載紀錄後確認資料檔 24.6 MB 約 76 秒下載完成、程式檔 51.0 MB 約 143 秒完成，之後正常進入大廳與房間。兩檔並行下載，不能將兩個時間相加。這是本次網路樣本，首次開啟需等待下載進度，不等同實際進房延遲。
+
+- 公開站雙人延遲測試重跑通過。兩個全新瀏覽器分別約 97.3 秒及 119.8 秒完成載入；雙向各加 90 ms，實測 RTT 約 390 ms。八次射擊無重複／遺漏，回饋最慢 15.7 ms，換彈、移動與離房補 Bot 正常，停止後雙方位置差約 0.00019 公尺。沒有瀏覽器或遊戲例外。
+- 公開站結果：`Logs/FinalQA/PublicRetry/public/WebPublishedReleaseSmokeTest/results.json`；最後雙人結果：`Logs/FinalQA/PublicNetwork/network-web-lag-check.json`。保留早期超時紀錄，未以失敗結果當作通過。
+- 正式遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=final-web-20261001)；[課程目錄](https://scozirge.github.io/a-thought/hatchbeasts/classroom/)與[課程題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)。
