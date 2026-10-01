@@ -61,6 +61,7 @@ for (const slug of [
   '',
   'experience',
   'red-blue-battle',
+  'weapon-logic',
   'planning',
   'analysis',
   'development',

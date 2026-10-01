@@ -8,6 +8,7 @@ export function verifyClassroom(output) {
     '',
     'experience',
     'red-blue-battle',
+  'weapon-logic',
     'planning',
     'analysis',
     'development',

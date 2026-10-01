@@ -14,12 +14,12 @@
 - 核彈解鎖後不再出題；同房下一場保留進度，離開／斷線返回大廳後清除。
 - 房主判定答案與解鎖，每個生命最多接受一次答案，過期或重複請求不能增加徽章。五款徽章武器不放置於場地，僅在解鎖後由復活選單取得；一般槍械拾取保留。
 - 訓練場保留全部武器自由試用，不出題、不計徽章。Bot 不參加答題。
-- [課程入口與題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)。[定稿文件](../../../hatchbeasts/docs/紅藍槍戰-武器邏輯題庫.md)。[教學功能驗證](LEARNING_VALIDATION.md)。
+- [課程入口與題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges)。[定稿文件](../../../hatchbeasts/docs/紅藍槍戰-武器邏輯題庫.md)。[教學功能驗證](LEARNING_VALIDATION.md)。
 - 題庫來源為課程目錄的 `weapon-questions.json`；Unity 使用相同內容的 `Assets/Rivals/Resources/WeaponQuestions.json`。`Tools/LearningMenuChecks.cjs` 會核對兩份內容一致。
 
 Unity 6000.3.11f1 / URP / Photon Fusion 2.1.2 stable 2279。依最新發布範圍，目前只製作、測試與發布 Web 網頁版。
 
-公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001)。課堂教材：[第二次課程｜紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)。
+公開遊戲：[紅藍槍戰](https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001)。課堂教材：[第三次課程｜武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)。
 
 正式輸出已隨程式碼一同納入 `master`，可直接下載完整主程式：
 

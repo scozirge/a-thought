@@ -35,7 +35,7 @@ const result={checks:[],errors:[],downloads:[],logs:[],url:game.href};
   await page.screenshot({path:path.join(output,'game.png')});
   await page.evaluate(()=>window.rivalsLearningCommand('leave'));
   await page.waitForFunction(()=>window.rivalsLobbyState?.visible&&rivalsLobbyState.ready,null,{timeout:30000});
-  await page.goto(course+'red-blue-battle/?v='+revision,{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(course+'weapon-logic/?v='+revision,{waitUntil:'domcontentloaded',timeout:60000});
   check(await page.locator('#weapon-challenges details').count()===15,'public course retains all fifteen questions');
   const updates=await page.locator('#game-updates').innerText();
   check(updates.includes('場地上不會出現')&&updates.includes('分散走不同路線'),'public course explains unlock-only weapons and distributed Bots');

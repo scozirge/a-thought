@@ -6,11 +6,13 @@
 
 [課堂 H5 使用說明](docs/課堂H5使用說明.md)：課堂目錄、第一次「破殼怪獸」與第二次「紅藍槍戰」教材，開發預覽路徑為 `/classroom/`，可輸出為 H5。
 
-[第二次課程：紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)：四個簡單的課堂提問，答案範例可展開／收起，附 [最新版紅藍槍戰遊戲](https://scozirge.github.io/a-thought/rivals/?v=learning-20261001) 連結，支援手機觸控與鍵盤滑鼠。手機瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊；所有版本皆已移除跳躍與滑行。
+[第二次課程：紅藍槍戰](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/)：四個簡單的課堂提問，答案範例可展開／收起，附 [最新版紅藍槍戰遊戲](https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001) 連結，支援手機觸控與鍵盤滑鼠。手機瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊；所有版本皆已移除跳躍與滑行。
 
 [課程清單與第一課設計單](docs/課程清單.md)：60 分鐘的遊戲開發體驗，從試玩、發想到製作簡單設計文件，附 AI 整理示範與缺課銜接方式。
 
 [跨領域教師提問庫](docs/教師提問庫.md)：12 個面向、48 個探索問題，附選項組合的計算說明及第一課可直接使用的八個主問句。
+
+[第三次課程：紅藍槍戰・武器邏輯](https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/)：15 題與遊戲一致的武器邏輯問題，包含完整選項、可展開的答案說明、徽章解鎖和最新復活規則。目錄可展開全部題目並直接跳題。
 
 [2026-09-24 紅藍槍戰課堂復盤](docs/課堂復盤/2026-09-24-紅藍槍戰.md)：保留授課者原話，記錄連線互動、提問狀況，以及每個人都完成的新武器紙上設計與強弱思考。[線上復盤](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#retrospective) 也記下次將新武器想法與題目加入遊戲的安排。
 
