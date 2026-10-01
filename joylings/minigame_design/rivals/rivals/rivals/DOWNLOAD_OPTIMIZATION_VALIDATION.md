@@ -49,6 +49,15 @@ GitHub Pages 原本已經傳送 gzip，不能把原始約 76 MB 宣稱為實際�
 
 以上本機時間只代表本機解壓／初始化樣本，不能與公開網路時間直接比較。快取被清除、瀏覽器回收儲存或禁止儲存時，仍須重新下載。
 
+發布後以相同工具、全新 Chrome 環境重新量測正式網址，`--expect-cache` 通過：
+
+| 正式站比較 | 舊版傳輸 bytes | 新版傳輸 bytes | 減少 |
+| --- | ---: | ---: | ---: |
+| 首次開啟 | 30,421,795 | 23,709,812 | 6,711,983（22.06%） |
+| 同環境重新整理 | 14,162,108 | 300 | 14,161,808（99.998%） |
+
+新版首次 71.196 秒、重新整理 2.565 秒進入可操作大廳；舊版分別 89.025／63.275 秒。以上是未限速的單次公開網路樣本，不保證不同網路與裝置的載入秒數。重新整理的 300 bytes 為 framework 快取重新驗證的標頭估計值；data／WASM 均直接使用快取且不發出請求，loader 使用 HTTP 快取，不能解讀成整個網頁及連線完全沒有流量。
+
 ## 新舊版本連線
 
 兩個隔離的瀏覽器，真實 Photon 房間，客戶端 WebSocket 雙向各增加 90 ms 延遲。
@@ -75,6 +84,16 @@ GitHub Pages 原本已經傳送 gzip，不能把原始約 76 MB 宣稱為實際�
 - Web ZIP 從 30,259,869 bytes 降為 23,491,144 bytes，減少 22.4%。ZIP 與瀏覽器下載使用不同封裝方式，兩者數字分開列出。
 - ZIP SHA-256：`1c5b04dd99ecd42dbcb16a2ba6665c8b01bcbf2acd539fad1632d1eba29bdeda`。
 - Windows 成品沒有修改，manifest 中的歷史 Windows 項目與更新前完全相同。
+
+## 公開發布
+
+- `master` 來源 `8cd4031`、成品 `dd88bf3`，`gh-pages` 網站 `ee7c4e0`，均已推送。
+- GitHub Pages [發布流程 36812436271](https://github.com/scozirge/a-thought/actions/runs/36812436271) 成功，公開版本資訊已確認為 `compressed-web-20261001`。
+- 遊戲 24 檔、課程 78 檔在發布前逐檔核對 SHA-256 全數相符；網站保留舊版雜湊資源，更新期間的舊頁面仍可使用。
+- 公開遊戲與課程 15 項通過：發布資訊與來源提交、精簡答題介面、真實開房及七隻 Bot、四個一般拾取點、初始進度、完整題庫、答案展開、窄版與新版入口，沒有腳本例外。
+- 公開站雙人延遲連線通過：兩個新瀏覽器分別約 72.1／57.1 秒完成載入；雙向各加 90 ms，實測 RTT 約 391.7 ms。八次射擊無重複或遺漏，回饋最慢 12.8 ms；換彈、移動、離房補 Bot 正常，停止後位置差約 0.000254 公尺。兩支公開測試皆正常結束，結果存於 `Public/validation-public.json`。
+- 網路樣本有明顯波動：上方載入量測的 data 約 67.9 秒下載完成，隨後獨立的公開功能檢查同檔下載約 174.1 秒仍成功載入。因此本次以傳輸量及快取命中判定最佳化效果，不保證首次載入固定更快。
+- [正式遊戲](https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001)、[課程目錄](https://scozirge.github.io/a-thought/hatchbeasts/classroom/)、[武器邏輯題庫](https://scozirge.github.io/a-thought/hatchbeasts/classroom/red-blue-battle/#weapon-challenges)。
 
 ## 重跑及紀錄
 

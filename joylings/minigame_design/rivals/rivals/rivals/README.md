@@ -3,7 +3,7 @@
 ## 武器邏輯挑戰（2026-10-01）
 
 - 正式教學版：`rivals-web-25-unlock-bots`，介面 `simple-quiz-20261001`，發布批次 `compressed-web-20261001`。[玩遊戲](https://scozirge.github.io/a-thought/rivals/?v=compressed-web-20261001)。
-- 下載最佳化：[無損壓縮與快取驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。程式、資源與題庫保留原內容，使用 Brotli 減少傳輸量，重新整理可重用程式與資料快取。
+- 下載最佳化：[無損壓縮與快取驗證](DOWNLOAD_OPTIMIZATION_VALIDATION.md)。正式站首次遊戲資源傳輸由 30.42 MB 降至 23.71 MB（約 22%），重新整理可重用程式與資料快取。解壓後程式與資源和上一版完全相同，83 項遊玩檢查、新舊版互連及公開站驗證皆通過。
 - 最終整理與廣泛測試：[Web 發布驗證](FINAL_WEB_VALIDATION.md)，涵蓋八人容量、延遲、斷線恢復、鍵鼠／觸控、答題與武器；可用 `Tools/ValidateWebRelease.cjs` 分組重跑。
 - 本次更新：[解鎖武器與 Bot 分散行動驗證](UNLOCK_BOTS_VALIDATION.md)，包含正式連線、手機答題復活與課程更新。
 - 每次死亡只出一題，固定順序；答對拿一個徽章，答錯不扣徽章，下次仍出原題。
