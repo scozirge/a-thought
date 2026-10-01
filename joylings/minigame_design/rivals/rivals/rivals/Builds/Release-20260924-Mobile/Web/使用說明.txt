@@ -1,6 +1,6 @@
 紅藍槍戰｜武器邏輯教學版
 
-線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=star-progress-20261001
+線上遊戲：https://scozirge.github.io/a-thought/rivals/?v=mobile-controls-20261001
 課程與題庫：https://scozirge.github.io/a-thought/hatchbeasts/classroom/weapon-logic/#weapon-challenges
 
 每次死亡一題，答對一題一個徽章，每三個解鎖下一把武器。
@@ -22,3 +22,5 @@ Bot 會分散路線並避讓隊友，反應稍快、開火意願略增；保留�
 題目下方顯示「累積答對更多問題，可以解鎖新武器」。答對後三顆星依序填滿，集滿顯示「解鎖新武器」與武器名稱；答錯不加星，復活畫面保留倒數和可選武器。
 
 正式站以 CDN 加速大型資源，核對 SHA-256 後才載入；連線失敗、檔案不符或八秒沒有進度會改由原站下載。原有快取仍可重用。自行架站預設讀取同站檔案，請一併保留 asset-delivery.js。
+
+手機左下方可直接拖曳移動。按「橫向全螢幕」嘗試橫向；若網頁仍直向，請解除手機螢幕方向鎖定，或開啟自動旋轉。
