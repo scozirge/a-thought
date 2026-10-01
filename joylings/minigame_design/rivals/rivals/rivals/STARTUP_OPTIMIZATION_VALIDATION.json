@@ -1,0 +1,1071 @@
+{
+  "date": "2026-10-01",
+  "sourceCommit": "a77c6a6",
+  "publishCommit": "2d7f5b924ae031713f8879600d441621c0ce97f0",
+  "pagesRun": 36821820382,
+  "buildFilesUnchanged": {
+    "59809aa585f639337d72df57b1c74ad6.wasm.unityweb": "dc2d1b0e71c99dbd9e586b87e3b2957ff46c2c89d87bc5d67417b8e098d9232b",
+    "7d36e820222c631fdc22edbf10cd457a.data.unityweb": "a48d4b4805c8e350bf018fbcded9294ac89557c03966d421c9fd9b65dc790060",
+    "9c4f86cffc4404be92d7ff22fde0855d.loader.js": "1dd742b80c51e031319ef25db0443825052350d134a4e19e0cb9e4266525bb66",
+    "dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb": "8f819ee6874b86abe90011e2b4c3f6e2bfe43f7042543a9eb3c570a37094daba"
+  },
+  "loadChecks": {
+    "BaselinePublic": {
+      "url": "https://scozirge.github.io/a-thought/rivals/?v=respawn-default-20261001&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 45261,
+          "transferBytes": 23727696,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 389.7000000476837,
+              "transfer": 71186,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 315.19999998807907,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 1786.300000011921,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 41874.5,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2565,
+          "transferBytes": 300,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 0,
+              "transfer": 0,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 313.30000001192093,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "Candidate": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 4075,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 123.29999995231628,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 10.800000011920929,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 227.39999997615814,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 236.80000001192093,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 273
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 344
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2766,
+          "transferBytes": 118493,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 2.900000035762787,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 3.200000047683716,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "BlockedCdn": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 3830,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 96.89999997615814,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 17.900000035762787,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 5.199999988079071,
+              "transfer": 0,
+              "encoded": 0,
+              "decoded": 0
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 4.900000035762787,
+              "transfer": 0,
+              "encoded": 0,
+              "decoded": 0
+            },
+            {
+              "name": "http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 32.69999998807907,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 80.80000001192093,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "origin",
+                "reason": "Failed to fetch",
+                "ms": 11
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "origin",
+                "reason": "Failed to fetch",
+                "ms": 11
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2784,
+          "transferBytes": 118493,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 4.300000011920929,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 5,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "OldCache": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 4008,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 7.5,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 5.399999976158142,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 51,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 93.60000002384186,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": null,
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2835,
+          "transferBytes": 118493,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 3.899999976158142,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 3.299999952316284,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "TouchNoCache": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": true,
+      "touch": true,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 3495,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 7.300000011920929,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 3.899999976158142,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 166.80000001192093,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 243.69999998807907,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 215
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 309
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] Error when initializing cache: Error: Could not connect to cache: Could not connect to database.",
+            "[UnityCache] Failed to load 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' from browser cache due to the error: Error: Could not connect to cache: Could not connect to database.",
+            "[UnityCache] Failed to load 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' from browser cache due to the error: Error: Could not connect to cache: Could not connect to database.",
+            "[UnityCache] Failed to load 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' from browser cache due to the error: Error: Could not connect to cache: Could not connect to database."
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "Slow10Mbps": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 10,
+      "latencyMs": 50,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 21869,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 165.19999998807907,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 226.30000001192093,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 15519.300000011921,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 19110.299999952316,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 15563
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 19175
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 3185,
+          "transferBytes": 118493,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 168.9000000357628,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 81.60000002384186,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "StalledCdn": {
+      "url": "http://localhost:8191/?asset-source=cdn&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 12668,
+          "transferBytes": 23774703,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 13.900000035762787,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 4.800000011920929,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 8002.799999952316,
+              "transfer": 0,
+              "encoded": 0,
+              "decoded": 0
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 8002.699999988079,
+              "transfer": 0,
+              "encoded": 0,
+              "decoded": 0
+            },
+            {
+              "name": "http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 47.200000047683716,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 104.39999997615814,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "origin",
+                "reason": "signal is aborted without reason",
+                "ms": 8003
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "origin",
+                "reason": "signal is aborted without reason",
+                "ms": 8003
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 3323,
+          "transferBytes": 118493,
+          "resources": [
+            {
+              "name": "http://localhost:8191/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 6.599999964237213,
+              "transfer": 118193,
+              "encoded": 117893,
+              "decoded": 117893
+            },
+            {
+              "name": "http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 6.099999964237213,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'http://localhost:8191/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'http://localhost:8191/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    }
+  },
+  "assetDeliveryChecks": 16,
+  "learningChecks": [
+    "training keeps free weapon selection without a quiz",
+    "joining starts with zero badges",
+    "host and client have only ordinary ground weapons",
+    "host and client have only ordinary ground weapons",
+    "fixed question or retry 0",
+    "question does not auto-respawn after three seconds",
+    "one correct answer equals one badge 0",
+    "duplicate submission rejected 0",
+    "host confirms client progress 0",
+    "fixed question or retry 1",
+    "one correct answer equals one badge 1",
+    "duplicate submission rejected 1",
+    "host confirms client progress 1",
+    "fixed question or retry 2",
+    "one correct answer equals one badge 2",
+    "duplicate submission rejected 2",
+    "host confirms client progress 2",
+    "fixed question or retry 3",
+    "one correct answer equals one badge 3",
+    "duplicate submission rejected 3",
+    "host confirms client progress 3",
+    "third badge defaults to cleaver",
+    "only pistol and unlocked cleaver selectable",
+    "real client respawns carrying cleaver",
+    "cleaver question repeats after a wrong answer 0",
+    "new death defaults to latest unlock 0",
+    "wrong answer keeps latest unlock 0",
+    "ground weapons excluded from countdown 0",
+    "ground weapon requests cannot change selection 0",
+    "host confirms temporary pistol selection",
+    "actual respawn equips temporary pistol",
+    "cleaver question repeats after a wrong answer 1",
+    "new death defaults to latest unlock 1",
+    "wrong answer keeps latest unlock 1",
+    "ground weapons excluded from countdown 1",
+    "ground weapon requests cannot change selection 1",
+    "host restores latest unlock after previous pistol selection",
+    "actual respawn equips latest unlocked cleaver",
+    "leaving and rejoining clears progress",
+    "no browser script errors"
+  ],
+  "mobileChecks": [
+    "phone touch and desktop keyboard join the same real room",
+    "simultaneous joystick movement, drag look and shooting replicate to the host",
+    "six short touch shots have one feedback each and a short reload tap agrees on both peers",
+    "tap aim stays enabled while firing and dragging; the second tap releases it",
+    "no jump button remains and retired touch input cannot jump",
+    "sprint accelerates the joystick and no slide button remains",
+    "real game supports fullscreen in keyboard and touch modes",
+    "phone menu pauses and resumes the real player",
+    "focus loss clears movement and fire; the next touch resumes without a prompt",
+    "phone can host and a desktop keyboard player can join",
+    "real death clears held fingers; touch quiz earns a badge and three-second respawn restores controls without ghost input",
+    "phone host leaves and both devices return to the lobby",
+    "lobby can switch input modes after a live session"
+  ],
+  "network": {
+    "clicks": 8,
+    "maxClickMs": 15.399999976158142,
+    "rttMs": 348.9001159667969,
+    "frameMs": 16.564960479736328,
+    "shots": 9,
+    "visuals": 9,
+    "reload": true,
+    "slideRemoved": true,
+    "cKeyTravel": 0,
+    "jumpRemoved": true,
+    "spaceHeightChange": 9.685754776000977e-08,
+    "botRefill": true,
+    "movingLead": 1.4666738510131836,
+    "stoppedPositionError": 0.0001354217529296875,
+    "webSocketDelayEachDirectionMs": 90
+  },
+  "archiveSha256": "58d3640603a8a72beaea3768efc305f811c0b8602416699842ecff6311dd881a",
+  "pagesDeployment": "success",
+  "publicLoadChecks": {
+    "sample1": {
+      "url": "https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 4916,
+          "transferBytes": 23727696,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 411.7999999523163,
+              "transfer": 71186,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 364.5999999642372,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 235,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 216.80000001192093,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 276
+              },
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 332
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2659,
+          "transferBytes": 300,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 0,
+              "transfer": 0,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 63.80000001192093,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "sample2": {
+      "url": "https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 4487,
+          "transferBytes": 23727696,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 142,
+              "transfer": 71186,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 86.20000004768372,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 162.60000002384186,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 242,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 208
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 304
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2580,
+          "transferBytes": 300,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 0,
+              "transfer": 0,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 63.40000003576279,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    },
+    "sample3": {
+      "url": "https://scozirge.github.io/a-thought/rivals/?v=cdn-load-20261001&diagnostics=1",
+      "mbps": 0,
+      "latencyMs": 0,
+      "denyCache": false,
+      "touch": false,
+      "runs": [
+        {
+          "pass": "cold",
+          "readyMs": 4075,
+          "transferBytes": 23727696,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 276.5999999642372,
+              "transfer": 71186,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 378.60000002384186,
+              "transfer": 80955,
+              "encoded": 80655,
+              "decoded": 80655
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+              "ms": 156.39999997615814,
+              "transfer": 9566135,
+              "encoded": 9565835,
+              "decoded": 9565835
+            },
+            {
+              "name": "https://cdn.jsdelivr.net/gh/scozirge/a-thought@gh-pages/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+              "ms": 232.5,
+              "transfer": 14009420,
+              "encoded": 14009120,
+              "decoded": 14009120
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": [
+              {
+                "name": "59809aa585f639337d72df57b1c74ad6.wasm.unityweb",
+                "source": "cdn",
+                "ms": 198
+              },
+              {
+                "name": "7d36e820222c631fdc22edbf10cd457a.data.unityweb",
+                "source": "cdn",
+                "ms": 292
+              }
+            ]
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' successfully downloaded and stored in the browser cache",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully downloaded and stored in the browser cache"
+          ],
+          "errors": []
+        },
+        {
+          "pass": "warm",
+          "readyMs": 2573,
+          "transferBytes": 300,
+          "resources": [
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/9c4f86cffc4404be92d7ff22fde0855d.loader.js",
+              "ms": 0,
+              "transfer": 0,
+              "encoded": 70886,
+              "decoded": 117893
+            },
+            {
+              "name": "https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb",
+              "ms": 62.39999997615814,
+              "transfer": 300,
+              "encoded": 0,
+              "decoded": 0
+            }
+          ],
+          "delivery": {
+            "enabled": true,
+            "transfers": []
+          },
+          "cacheMessages": [
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/59809aa585f639337d72df57b1c74ad6.wasm.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/7d36e820222c631fdc22edbf10cd457a.data.unityweb' served from the browser cache without revalidation",
+            "[UnityCache] 'https://scozirge.github.io/a-thought/rivals/Build/dc7d992fc87cfe685224a4390d6a0d0d.framework.js.unityweb' successfully revalidated and served from the browser cache"
+          ],
+          "errors": []
+        }
+      ],
+      "ok": true
+    }
+  },
+  "publicChecks": [
+    "public release metadata has the new version",
+    "public release contains the simplified quiz interface",
+    "public release contains the compressed validated package",
+    "public release enables verified CDN delivery",
+    "public quiz has no exit, stage labels, badge prompt or rule footer",
+    "public game creates a real room with seven Bots",
+    "public arena has four ordinary pickups and no badge weapons",
+    "public room starts with locked lesson progress",
+    "public course retains all fifteen questions",
+    "public course explains unlock-only weapons and distributed Bots",
+    "course links to the current game release",
+    "course describes the simplified quiz",
+    "course explains latest-unlock defaults and temporary choices",
+    "question answer can be expanded",
+    "public lesson fits a narrow mobile viewport",
+    "public catalog has the new gameplay entry",
+    "public game and course have no script exceptions"
+  ],
+  "publicNetwork": {
+    "clicks": 8,
+    "maxClickMs": 12.199999988079071,
+    "rttMs": 382.40008544921875,
+    "frameMs": 16.672122955322266,
+    "shots": 9,
+    "visuals": 9,
+    "reload": true,
+    "slideRemoved": true,
+    "cKeyTravel": 0,
+    "jumpRemoved": true,
+    "spaceHeightChange": 2.2351741790771484e-08,
+    "botRefill": true,
+    "movingLead": 0.9170675277709961,
+    "stoppedPositionError": 0.0001926422119140625,
+    "webSocketDelayEachDirectionMs": 90
+  },
+  "coldMedianMs": 4487,
+  "warmMedianMs": 2580,
+  "coldReductionPercent": 90.1
+}
