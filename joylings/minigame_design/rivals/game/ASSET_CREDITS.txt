@@ -1,0 +1,45 @@
+THIRD-PARTY ASSET CREDITS
+
+Noto Sans CJK TC Regular - SIL Open Font License 1.1
+https://github.com/notofonts/noto-cjk
+Font source: Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf
+The game embeds the derivative Rivals CJK UI, retaining all 44,810 encoded
+characters and their horizontal advances while removing unused alternate
+regional/vertical forms. Generated with fontTools 4.65.0 by Tools/optimize_font.py.
+Unmodified source: Tools/Fonts/NotoSansCJKtc-Regular.otf (outside Unity Assets).
+License preserved in Assets/ThirdParty/NotoSansTC/OFL.txt.
+
+Quaternius - Ultimate Guns Pack - CC0 1.0
+https://quaternius.com/packs/ultimategun.html
+Modified: converted materials to URP, recolored surfaces and adjusted model scale/orientation. Original stock, sights and shell-holder details added.
+
+Quaternius - Toon Shooter Game Kit - CC0 1.0
+https://quaternius.com/packs/toonshootergamekit.html
+Knife_1 is used for the knife; other downloaded weapons are visual reference candidates.
+Modified: converted materials to URP, recolored and adjusted scale/orientation.
+
+Quaternius - Animated Guns Pack - CC0 1.0
+https://quaternius.com/packs/animatedguns.html
+Rifle.fbx is retained as an unused comparison candidate.
+
+Block avatars, team outfits, grid arena and weapon icons: created in this project.
+No Roblox game meshes, character textures or branded screenshots are included in the game.
+
+Kenney - Blocky Characters, Blaster Kit, Prototype Textures, Crosshair Pack,
+Impact Sounds (plus unused Sci-fi Sounds samples) - CC0 1.0
+https://kenney.nl/assets
+Modified: selected assets, converted materials and configured animation/scale.
+CC0: https://creativecommons.org/publicdomain/zero/1.0/
+
+Gunshot Sounds - Copyright (c) 2009 Vincent Sevedge (Tabasco)
+Source: https://opengameart.org/content/gunshot-sounds
+License: Creative Commons Attribution 3.0 Unported
+https://creativecommons.org/licenses/by/3.0/
+Modified: first shot extracted, mixed to mono, normalized and faded.
+The download page lists CC0; this distribution follows the bundled CC BY 3.0 notice.
+
+Gun Reload Sounds - SpringySpringo - CC0 1.0
+https://opengameart.org/content/gun-reload-sounds
+
+Original notices are preserved in Assets/ThirdParty (Unity project) and
+ThirdPartyLicenses (Windows distribution). This is an unofficial prototype.

@@ -1,0 +1,15 @@
+{
+  "name": "foolish-hero",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "傻瓜勇者：單人與連線合作的程式邏輯 H5 遊戲",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build:h5": "node scripts/build-h5.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

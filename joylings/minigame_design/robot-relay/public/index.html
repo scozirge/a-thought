@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ec"><title>傻瓜勇者</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <header class="topbar"><a href="./" class="brand" aria-label="傻瓜勇者首頁"><span class="brand-mark" aria-hidden="true">⚔</span>傻瓜勇者</a><div class="top-actions"><span id="connection-label" class="muted">單人冒險</span><button id="room-button">一起玩 ↗</button><button id="help-button" class="icon-button" aria-label="玩法說明">?</button></div></header>
+    <section class="mission-heading"><div><div class="eyebrow">程式小勇者 <span id="level-number">01</span></div><h1 id="mission-title">森林的入口</h1></div><div class="mission-actions"><span class="difficulty" id="difficulty">入門</span><button id="teacher-button">換關卡 <span aria-hidden="true">⌄</span></button></div></section>
+    <div class="game-layout">
+      <section class="adventure" aria-label="冒險地圖">
+        <ol class="quest"><li id="quest-sword"><span>1</span>拿寶劍</li><li id="quest-monster"><span>2</span>打怪物</li><li id="quest-exit"><span>3</span>到出口</li></ol>
+        <svg id="world" viewBox="0 0 640 570" role="img" aria-label="冒險地圖"></svg>
+        <div class="map-footer"><span>↑ 上　↓ 下　← 左　→ 右</span><button id="route-button" class="plain" aria-pressed="false">看提示</button></div>
+        <p id="route-hint" class="route-hint" hidden></p>
+        <div class="feedback" id="feedback" role="status"><span class="feedback-symbol" aria-hidden="true">✦</span><span id="feedback-text">先拿劍，再打怪物。</span></div>
+      </section>
+      <section class="program" aria-label="排列指令">
+        <div class="program-header"><div><h2 id="program-title">我的指令</h2><span id="my-assignment" class="muted small"></span></div><span id="phase-badge" class="phase-badge">作答中</span></div>
+        <div id="round-lobby" class="lobby" hidden><span class="lobby-icon" aria-hidden="true">⚑</span><h3 id="lobby-title"></h3><p id="lobby-description"></p><button class="primary" id="start-round-button">開始本題 →</button></div>
+        <div id="editor-workspace">
+          <div class="editor-caption"><p id="editor-help">點選指令，依序放進格子。</p><button id="clear-button" class="plain">清空</button></div>
+          <div id="timeline" class="timeline" aria-label="依編號排列的指令"></div>
+          <div id="command-deck" class="command-deck" aria-label="選擇指令"></div>
+          <div class="submit-row"><button class="primary" id="submit-button">出發 →</button><button id="pause-button" hidden>暫停</button><button class="primary" id="again-button" hidden>再試一次 →</button></div>
+          <p id="submit-hint" class="muted small center"></p>
+        </div>
+        <button id="team-button" class="team-summary" hidden><span id="team-status">隊伍與討論</span><span aria-hidden="true">↗</span></button>
+      </section>
+    </div>
+    <footer><span>一步一步，寫出你的冒險。</span><button class="plain" id="calm-button" aria-pressed="false">減少動畫</button></footer>
+  </main>
+
+  <dialog id="teacher-dialog"><form method="dialog" class="dialog-close"><button aria-label="關閉">×</button></form><span class="eyebrow">每關只要 6～8 步</span><h2>選一個關卡</h2><div id="level-options" class="level-options"></div><details><summary>自訂題目與分工</summary><div class="teacher-options" data-local-multiplayer><label>每位隊員最多<select id="per-player"><option value="1">1 個指令</option><option value="2" selected>2 個指令</option></select></label></div><p class="muted small">每題最多 8 步，人多時會減少每人的指令。</p><div id="map-brushes" class="map-brushes"></div><div id="map-editor" class="map-editor" aria-label="點格子修改地圖"></div><p id="map-validation" class="muted small"></p></details><p id="teacher-error" class="form-error" role="alert"></p><button class="primary wide" id="apply-level-button">開始這個冒險 →</button></dialog>
+  <dialog id="room-dialog"><form method="dialog" class="dialog-close"><button aria-label="關閉">×</button></form><span class="eyebrow">一起冒險</span><h2 id="room-heading">邀請你的隊友</h2><div id="room-active" hidden></div><div id="room-forms" class="room-forms"><form id="create-form"><h3>建立房間</h3><label for="host-name">你的稱呼</label><input id="host-name" value="老師" maxlength="16" required><button class="primary" type="submit">建立房間</button></form><form id="join-form"><h3>加入房間</h3><label for="player-name">你的稱呼</label><input id="player-name" maxlength="16" placeholder="小勇者" required><label for="room-code">六位房號</label><input id="room-code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required><button class="primary" type="submit">加入房間</button></form></div><p id="room-error" class="form-error" role="alert"></p><p class="muted small">不同電腦請使用相同 Wi-Fi／區網。房主開始本題時才分工；只有一人也能玩。</p></dialog>
+  <dialog id="team-dialog"><form method="dialog" class="dialog-close"><button aria-label="關閉">×</button></form><span class="eyebrow">一起想想</span><h2>隊伍與討論</h2><div id="team-list" class="team-list"></div><p class="muted small">晚加入者下題參加；作答中踢人，步驟交給房主。</p><div id="chat-messages" class="chat-messages" aria-live="polite"></div><div class="quick-chat"><button data-chat="我準備好了！">我準備好了</button><button data-chat="可以一起想想嗎？">一起想想</button></div><form id="chat-form" class="chat-form"><input id="chat-input" maxlength="120" aria-label="討論訊息" placeholder="說說你的想法…" required><button class="primary" type="submit">送出</button></form></dialog>
+  <dialog id="help-dialog"><form method="dialog" class="dialog-close"><button aria-label="關閉">×</button></form><h2>三步，成為小勇者。</h2><ol class="help-steps"><li><b>走到寶劍那格，拿劍。</b><p>上下左右都是畫面上的方向，一次走一格。</p></li><li><b>站在怪物旁邊，攻擊。</b><p>上、下、左、右一格都可以，斜角不算。先打敗怪物才能通過牠的位置。</p></li><li><b>走到出口，通關！</b><p>先排好全部指令，再按出發。多出來的格子用「等待」。可以點格子替換、拖曳指令，或按清空。</p></li></ol><p class="muted">失敗後會清空答案。按「再試一次」回到起點。</p><p class="muted" data-local-multiplayer>連線時，每位隊員負責 1～2 步，剩下由房主完成。全部送交後自動播放。</p></dialog>
+  <div id="toast" class="toast" role="status" hidden></div><script type="module" src="./app.js"></script>
+</body>
+</html>

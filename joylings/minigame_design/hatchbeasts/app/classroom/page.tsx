@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
+import { FOOLISH_HERO_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -53,12 +53,25 @@ export default function ClassroomHome() {
         </section>
 
         <nav aria-label="課程目錄" className="course-catalog">
-          <details className="featured-unit current-course" id="third-course">
+          <div className="featured-unit current-course" id="fourth-course">
+            <div className="featured-heading">
+              <a className="featured-link" href={FOOLISH_HERO_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第四次課程</span>傻瓜勇者</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+
+
+          <details className="featured-unit" id="third-course">
             <summary className="featured-heading">
               <a className="featured-link" href={assetUrl('/classroom/weapon-logic/')}>
                 <span className="unit-icon tint-purple"><UnitIcon name="code" /></span>
                 <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">本次課程 · 第三次課程</span>紅藍槍戰・武器邏輯</span>
+                  <span className="unit-title"><span className="catalog-lesson-number">第三次課程</span>紅藍槍戰・武器邏輯</span>
                   <span className="unit-meta">15 題 · 完整題目與選項</span>
                 </span>
                 <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
