@@ -1,6 +1,6 @@
 // 關卡共用資料；Unity 以獨立 C# 引擎執行，不嵌入 H5 或 JavaScript 遊戲。
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const R=require('../web/rules.js'),{games}=require('../web/catalog.js'),dest=path.resolve(__dirname,'../unity-game/Assets');
+const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js'),dest=path.resolve(__dirname,'../unity-game/Assets');
 const point=p=>p?{x:p[0],y:p[1]}:{x:-1,y:-1};
 const board=b=>({...b,start:point(b.start),goal:point(b.goal),walls:b.walls.map(point)});
 const levels=Object.entries(games).flatMap(([game,info])=>info.levels.map((l,index)=>({

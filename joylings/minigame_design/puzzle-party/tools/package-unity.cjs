@@ -1,6 +1,15 @@
 const fs=require('node:fs'),path=require('node:path');
 const out=path.resolve(__dirname,'../Builds/UnityWeb');
 if(!fs.existsSync(out+'/Build/UnityWeb.wasm'))throw new Error('請先執行 npm run build:unity');
+// 公開站沿用相同檔名，以內容雜湊避免新頁面混用瀏覽器快取的舊引擎檔。
+let webIndex=fs.readFileSync(path.join(out,'index.html'),'utf8');
+for(const name of ['UnityWeb.loader.js','UnityWeb.framework.js','UnityWeb.data','UnityWeb.wasm']){
+ const digest=require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(out,'Build',name))).digest('hex').slice(0,12);
+ const pattern=new RegExp('Build/'+name.replaceAll('.','\\.')+'(?:\\?v=[a-f0-9]+)?','g');
+ if(!webIndex.includes('Build/'+name))throw new Error('Unity 頁面缺少資源：'+name);
+ webIndex=webIndex.replace(pattern,'Build/'+name+'?v='+digest);
+}
+fs.writeFileSync(path.join(out,'index.html'),webIndex);
 fs.copyFileSync(path.resolve(__dirname,'../unity-game/Assets/Resources/NotoSansTC-OFL.txt'),out+'/NotoSansTC-OFL.txt');
 const sdk=path.resolve(__dirname,'../unity-game/Assets/Photon'),licenses=path.join(out,'ThirdPartyLicenses');
 const sdkDocuments=[
@@ -74,7 +83,7 @@ fs.writeFileSync(out+'/使用說明.txt','\uFEFF'+[
  '127.0.0.1 是各自電腦的本地地址，不能當作遠方學生的下載連結。',
  '公開連線版：https://scozirge.github.io/a-thought/puzzle-party/；直接開啟網頁即可，不需本地伺服器。',
  '公開頁與本地 Unity 分享包使用相同建置，可輸入同一房號一起玩。',
- 'H5 分享包仍是單機版；多人連線要使用本 Unity WebGL 分享包。',
+ '目前僅維護 Unity WebGL 版本，支援單機與多人連線。',
  '',
  '單機完成紀錄與草稿保存在各自瀏覽器；換瀏覽器或清除網站資料會重置。連線中的答案以老師房間狀態為準。',
  '中文字體沿用來源專案 Noto Sans TC，授權見 NotoSansTC-OFL.txt。',

@@ -1,7 +1,7 @@
 # 一起想想：合作解謎遊樂園
 
 - 最新 v0.10.1：只開放貼紙工廠與帶企鵝回家，各 20 關，共 40 關。動物拍照隊及傻瓜勇者已移出選單；歷史模組只供回歸驗證。
-- 開放題庫由 `web/catalog.js` 控制，H5 與 Unity 匯出共用。前十關保留 ID 與設定；第 11～20 關在 `web/advanced-levels.js`，使用 v10 ID。`tools/generate-advanced.cjs` 以固定種子離線產生，遊玩不可隨機改題。
+- 開放題庫由 `rules/catalog.js` 控制，供 Unity 匯出與離線規則驗證使用。前十關保留 ID 與設定；第 11～20 關在 `rules/advanced-levels.js`，使用 v10 ID。`tools/generate-advanced.cjs` 以固定種子離線產生，遊玩不可隨機改題。
 - 面向國小二、三年級，前三關簡單。規則簡單、狀態公開、確定性結果；先設定再播放，播放後才呈現實際結果，重試保留設定。
 - 每關固定四個有效作答位置：第 1、2、3 組、老師組各一次，每個位置至少兩個選項。不得再增加第五至八次作答或第二輪。未湊滿學生組時，由老師代答缺席組；單機老師可操作全部四組。
 - 清楚標示第幾步／張及組別。「你是第 X 組／老師組」在單機隨選擇同步，連線學生固定自己的身分。主要文字至少 18px、按鈕 20px；檢查 945px、390px 與 1365px，Unity 不可整幅縮小導致字太小。
@@ -12,12 +12,11 @@
 - Unity 連線參考 RIVALS Photon Fusion Host／Client。`asia`、獨立 `AppVersion=puzzle-party-v10`；老師建六碼房號，第 1～3 組學生各占一個身分，可同時作答且只能改自己的 slot。老師負責老師組並代答缺席組；只有老師能切關、清空、播放、暫停、繼續、停止及調速。學生不能用 UI 或指令橋繞過權限。
 - 學生離房保留答案，老師可接手，空組可重新加入。老師離房即關房，不把教師身分自動轉給學生。播放狀態以教師權威計時同步；單機草稿與房間狀態分開。
 - v0.10.1 連線清理期間維持忙碌並以 epoch 排除舊流程；延遲拒絕必須確認仍在 rejected。使用 Fusion 自訂 RealtimeClient 將老師房間 PlayerTtl 設為 0，避免刷新後 Photon 的 15 秒 inactive 席位占住四人上限；停用 SDK 自動換房。重連仍以明確重新加入／建房為準，不能擴大學生組數。
-- Unity 本地 HTTP 8191 也可連真實 Photon，跨網不用同一區網。公開版為 https://scozirge.github.io/a-thought/puzzle-party/ ，公開頁與同版本本地 Unity 分享包可加入同一房間。`127.0.0.1` 不是遠端分享地址。H5 維持純離線單機，不宣稱 H5 也支援連線。
-- 同時維護 H5 `web/` 與 Unity 6.3 `unity-game/`。Unity C# 規則、IMGUI 操作及動畫獨立執行，不能用網頁包裝冒充 Unity。
+- Unity 本地 HTTP 8191 也可連真實 Photon，跨網不用同一區網。公開版為 https://scozirge.github.io/a-thought/puzzle-party/ ，公開頁與同版本本地 Unity 分享包可加入同一房間。`127.0.0.1` 不是遠端分享地址。只維護 Unity WebGL，支援單機與跨網連線。
+- 僅維護 Unity 6.3 `unity-game/`；`rules/` 是題庫匯出與 Editor 對照驗證工具，不是可玩的 H5 版本。Unity C# 規則、IMGUI 操作及動畫獨立執行，不能用網頁包裝冒充 Unity。
 - 專案源自 RIVALS 的獨立複製；`unity-base/` 保留來源 Assets、Packages、ProjectSettings、Tools。不得改動原 RIVALS、混入其連線房間或發布到原 RIVALS 網址。
 - `npm test` 的 56 項測試驗證 40 題唯一解、固定四個有效選擇、每層可見、形狀連通、企鵝雙邊必要性／最短步數／沒有共同空等，並保留歷史回歸。`npm run analyze` 產生結構分析，不可把組合數或唯一解當成兒童實測難度。
-- `npm run build` 輸出單一 HTML 到 `Builds/Web`；`tests/browser.cjs` 用 Chrome 檢查兩款 40 關、四組各一次、保存／重試與窄版。
 - `npm run build:unity` 使用 Unity 6000.3.11f1。`tools/export-unity.cjs` 匯出 40 關，JS 與 C# 各完整列舉 7,990 組設定，逐關比對成敗及最終畫面資料的 SHA-256、案例數與成功數。摘要只放 Editor。`Editor/PuzzleRoomChecks.cs` 另驗證 99 個權限／房間狀態案例。
-- Unity WebGL 輸出 `Builds/UnityWeb`，本機 HTTP 8191；8190 保留 H5。`tests/unity-browser.cjs` 驗證真正 WebGL、40 關、滑鼠／觸控、四次作答與暫停。跨瀏覽器多人房間必須另實測，不能以 Editor 檢查取代或提前宣稱通過。
+- Unity WebGL 輸出 `Builds/UnityWeb`，本機 HTTP 8190；被占用時啟動器改用 8191。`tests/unity-browser.cjs` 驗證真正 WebGL、40 關、滑鼠／觸控、四次作答與暫停。跨瀏覽器多人房間必須另實測，不能以 Editor 檢查取代或提前宣稱通過。
 - `tools/package-unity.cjs` 補齊本地啟動工具與說明；Unity 分享包須包含 `ThirdPartyLicenses/`、Noto 字體授權、SDK 內 Photon 聲明／NanoSockets 授權等原文。保留啟動工具行為，勿散布無法載入的 file:// WebGL。
 - Git 提交遵守根目錄繁體中文規範。

@@ -1,8 +1,8 @@
 // 可重現的結構分析。指標描述關卡負荷，不代表兒童實測成功率。
 const fs = require('node:fs');
 const path = require('node:path');
-const R = require('../web/rules.js');
-const {games} = require('../web/catalog.js');
+const R = require('../rules/rules.js');
+const {games} = require('../rules/catalog.js');
 function analyze(game, level) {
   const options = R.optionsFor(game, level), solutions = R.solutions(game, level);
   if (solutions.length !== 1) throw new Error(`${level.id} 的通關設定有 ${solutions.length} 組`);

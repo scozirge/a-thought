@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
-const R=require('../web/rules.js'),{games}=require('../web/catalog.js');
+const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 
 // These are real Photon connections. The only network interventions deliberately
 // delay genuine incoming WebSocket events or close the actual native socket.

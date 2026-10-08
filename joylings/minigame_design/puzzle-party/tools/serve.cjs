@@ -1,12 +1,12 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const root = path.resolve(__dirname, process.argv.includes('--unity') ? '../Builds/UnityWeb' : '../Builds/Web');
+const root = path.resolve(__dirname, '../Builds/UnityWeb');
 const file = path.join(root, 'index.html');
 const port = Number(process.argv[2] || 8190);
 const host = process.argv.includes('--lan') ? '0.0.0.0' : '127.0.0.1';
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('連接埠必須為 1–65535。');
-if (!fs.existsSync(file)) throw new Error('請先執行 npm run build。');
+if (!fs.existsSync(file)) throw new Error('請先執行 npm run build:unity。');
 http.createServer((req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); return res.end(); }
   const pathname = new URL(req.url, 'http://localhost').pathname;

@@ -2,8 +2,8 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
-const R=require('../web/rules.js');
-const {games}=require('../web/catalog.js');
+const R=require('../rules/rules.js');
+const {games}=require('../rules/catalog.js');
 
 // Four independent players through the real Photon Cloud. No route interception,
 // fake snapshots, mocked WebSockets or local multiplayer service are used here.

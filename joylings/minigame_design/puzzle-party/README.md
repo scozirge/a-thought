@@ -1,11 +1,19 @@
 # 一起想想｜合作解謎遊樂園
 
-v0.10.1：**貼紙工廠 20 關、帶企鵝回家 20 關，共 40 關；每關固定四組各選一次。** Unity WebGL 支援本地教師操作及 Photon 跨網連線；原生 H5 維持離線單機。選單僅保留這兩款遊戲。
+v0.10.1：**貼紙工廠 20 關、帶企鵝回家 20 關，共 40 關；每關固定四組各選一次。** 僅保留 Unity WebGL，支援本地教師操作及 Photon 跨網連線。選單僅保留這兩款遊戲。
 
-- [Unity 公開連線版](https://scozirge.github.io/a-thought/puzzle-party/)；[Unity 本地測試](http://127.0.0.1:8191/)；[H5 本地測試](http://127.0.0.1:8190/)。
+- [Unity 公開連線版](https://scozirge.github.io/a-thought/puzzle-party/)；[Unity 本地測試](http://127.0.0.1:8190/)。
 - 第 1、2、3 組與老師組各負責一個顏色／方向，沒有第二輪作答。四個位置填完才可播放。
 - 先設定再播放，播放後判定；停止、失敗及重試保留設定，修改只影響該組。
 - 清楚顯示「你是第 X 組／老師組」與步號。主要文字至少 18px、按鈕 20px，窄版可捲動。
+
+## 2026-10-08：統一使用 Unity
+
+已移除原生 H5 介面、單檔 HTML、H5 分享包與專用測試／打包工具。`開始遊戲.cmd`、`npm start` 與 `npm run build` 均指向 Unity WebGL。`rules/` 僅保存題庫與離線對照規則，供 C# Editor 驗證使用，不提供另一套遊戲介面。
+
+`npm run build:unity` 自動尋找 C: 或 E: 的 Unity 6000.3.11f1；也可直接執行 `tools/build-unity.ps1 -Unity <編輯器路徑>`。建置後執行 `npm run package:unity` 更新可分享的 ZIP。公開發布僅將 `Builds/UnityWeb` 的 `index.html`、`Build/`、字體與第三方授權複製至 `gh-pages` 的 `puzzle-party/`。
+
+本次重新建置通過 56 項 Node 規則測試、Unity 7,990 組／40 關逐項結果比對與 99 項房間權限檢查；瀏覽器已實際完成貼紙第一關。完整跨瀏覽器連線情境的歷史紀錄列於下方。
 
 ## 關卡與難度安排
 
@@ -45,17 +53,16 @@ v0.10.1 修正重連的生命週期：斷線清理完成前保持忙碌，舊清
 
 **公開連線版：https://scozirge.github.io/a-thought/puzzle-party/**。不同地點的老師與學生直接開啟這個網址，再以六碼房號透過 Photon 加入，不需要啟動本地伺服器。公開頁發布於獨立 `puzzle-party/` 路徑，原 RIVALS 網頁不變。`127.0.0.1` 仍是各自電腦的本地地址，不能當作遠方學生的分享網址。
 
-Unity 專案測試：雙擊根目錄 `開始 Unity 測試.cmd`，目前使用 [8191](http://127.0.0.1:8191/)。Unity 必須透過 HTTP 載入 `.wasm`、`.data`，不能直接雙擊 HTML。
+Unity 專案測試：雙擊根目錄 `開始 Unity 測試.cmd`，預設使用 [8190](http://127.0.0.1:8190/)，占用時改用 8191。Unity 必須透過 HTTP 載入 `.wasm`、`.data`，不能直接雙擊 HTML。
 
 Unity 分享包：`Builds/puzzle-party-unity-webgl.zip`。解壓後雙擊 `START.cmd`；啟動工具需已安裝 Node.js，包內啟動器預設使用 `http://127.0.0.1:8190/`。本地單機不需外部網路，**建立／加入 Photon 房間需要網際網路**。分享包與公開頁使用相同建置，可以輸入同一房號一起玩。
 
-H5：開啟 `Builds/Web/index.html` 或根目錄 `開始遊戲.cmd`。單檔內含樣式、圖案、程式與題庫，Chrome／Edge 可直接雙擊，不需伺服器或網路；分享包為 `Builds/puzzle-party-h5.zip`。**H5 沒有多人連線**，四組均由同一台裝置代填。
 
 完成紀錄與單機草稿保存在目前瀏覽器。更換瀏覽器、清除網站資料或移動 HTML 位置，可能使用不同進度。
 
 ## 開發與驗證
 
-需要 Node.js 18 以上；Unity 使用 6000.3.11f1。H5 與規則測試不需要第三方執行期套件；Unity 連線使用專案內 Photon Fusion SDK。
+需要 Node.js 18 以上；Unity 使用 6000.3.11f1。離線題庫與規則測試不需要第三方執行期套件；Unity 連線使用專案內 Photon Fusion SDK。
 
 ```powershell
 npm test
@@ -63,28 +70,27 @@ npm run analyze
 npm run test:online
 npm run test:resilience
 npm run test:published
-npm run build
 npm run build:unity
-node tools/package-unity.cjs
-powershell -ExecutionPolicy Bypass -File tools/package.ps1
+npm run package:unity
 
 # 本地服務
 node tools/serve.cjs 8191 --unity
 node tools/serve.cjs 8190
 ```
 
-- `web/catalog.js`：兩款各 20 題的開放清單。
-- `web/sticker-more.js`：貼紙第 5～10 題；`web/advanced-levels.js`：兩款第 11～20 題。
+- `rules/catalog.js`：兩款各 20 題的開放清單。
+- `rules/sticker-more.js`：貼紙第 5～10 題；`rules/advanced-levels.js`：兩款第 11～20 題。
 - `tools/generate-advanced.cjs`：固定種子離線出題器；企鵝以聯合狀態 BFS 篩選唯一最短解，遊玩直接讀固定資料。
-- `web/rules.js`、`web/penguin-rules.js`：規則與求解；`web/app.js`、`web/penguin-view.js`：H5 操作及動畫。
+- `rules/rules.js`、`rules/penguin-rules.js`：規則與求解，供 Unity Editor 完整對照的離線參考規則。
 - `unity-game/Assets/PuzzleParty/`：獨立 C# 規則、IMGUI 介面與動畫；`PuzzleConnection.cs`／`PuzzleOnline.cs` 處理 Photon 連線及同步，`RoomAuthority.cs` 處理教師權限、角色與房間狀態。
 - `tools/export-unity.cjs` 與 `Editor/PuzzleBuild.Check`：JS 與 C# 各完整列舉 **7,990 組設定**，比對案例數、成功數及成敗／最終貼紙格／企鵝位置的有序 SHA-256。摘要只放 Editor。
 - `tests/rules.test.cjs`：**56 項測試已通過**，含 40 題唯一解、四組有效作答、可見線索、企鵝最短路線及歷史規則回歸。
 - `Editor/PuzzleRoomChecks.cs`：99 個房間權限／狀態檢查，包含同時作答、越權、時序、學生離開重入與老師關房。
-- `tests/browser.cjs`、`tests/unity-browser.cjs`：H5 與真正 Unity WebGL 均已完成 Chrome 40 關遊玩，四組各一次、保存／清空、失敗修正、暫停／停止、滑鼠／觸控及 390／945／1365px 檢查通過。以 `PUZZLE_PLAYWRIGHT_MODULE` 指向可用 Playwright 套件執行。
+以下連線報告為先前 v0.10.1 的驗證紀錄，不代表每次重新建置都重跑全部跨瀏覽器情境。
+
 - `tests/online-browser.cjs`：四個隔離瀏覽器以真實 Photon WSS 連線，老師建房、三組同時加入與作答、越權拒絕、兩款遊戲同步播放／暫停、離線代填／重入、錯房號／重複組別及老師關房測試全數通過。報告見 `artifacts/online-v10-report.json`，不是模擬傳輸。
 - `tests/online-resilience.cjs`：v0.10.1 的 17 項連續操作／斷線檢查全數通過，包含六輪四組快速改選與兩款切關、調速／暫停／停止／清空／重播、延遲真實封包拒絕舊題指令、三組依序離房重入、學生刷新／直接關頁、播放中切斷原生 WebSocket，以及三輪老師直接關頁後立即重開房並重聚通關。每次加入都檢查 Photon 回讀 `PlayerTtl=0`；沒有替換遊戲狀態或模擬伺服器。報告見 `artifacts/resilience-v10-report.json`。
-- `tests/published-browser.cjs`：公開 GitHub Pages 0.10.1 的 Unity 載入、公開端開房、本地端以房號分享連結加入、兩端同步完成貼紙第 20 關、原生 WSS 中斷後的中性提示／同頁重入及關房均已通過；公開老師與學生都回讀到 `PlayerTtl=0`。報告見 `artifacts/published-v10-report.json`。最新發布提交為 `3124675`（首次發布 `c17d63f`），已推送至 `gh-pages`；只更新 `puzzle-party/`，未更動原遊戲路徑。
+- `tests/published-browser.cjs`：公開 GitHub Pages 0.10.1 的 Unity 載入、公開端開房、本地端以房號分享連結加入、兩端同步完成貼紙第 20 關、原生 WSS 中斷後的中性提示／同頁重入及關房均已通過；公開老師與學生都回讀到 `PlayerTtl=0`。報告見 `artifacts/published-v10-report.json`。先前發布提交為 `3124675`（首次發布 `c17d63f`），已推送至 `gh-pages`；只更新 `puzzle-party/`，未更動原遊戲路徑。
 - `Builds/difficulty-analysis.json`：40 題結構分析，不含答案；指標不能替代兒童實測難度。
 
 ## 專案來源與授權資料

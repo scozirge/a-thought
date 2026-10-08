@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),path=require('node:path');
 const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
-const R=require('../web/rules.js'),{games}=require('../web/catalog.js');
+const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 (async()=>{const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-unsafe-swiftshader']});try{
  const page=await browser.newPage({viewport:{width:945,height:695},deviceScaleFactor:2}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});

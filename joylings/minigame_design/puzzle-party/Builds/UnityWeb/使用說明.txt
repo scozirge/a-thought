@@ -26,7 +26,7 @@ Photon 使用 asia 區域與獨立 puzzle-party-v10 版本，不加入原 RIVALS
 127.0.0.1 是各自電腦的本地地址，不能當作遠方學生的下載連結。
 公開連線版：https://scozirge.github.io/a-thought/puzzle-party/；直接開啟網頁即可，不需本地伺服器。
 公開頁與本地 Unity 分享包使用相同建置，可輸入同一房號一起玩。
-H5 分享包仍是單機版；多人連線要使用本 Unity WebGL 分享包。
+目前僅維護 Unity WebGL 版本，支援單機與多人連線。
 
 單機完成紀錄與草稿保存在各自瀏覽器；換瀏覽器或清除網站資料會重置。連線中的答案以老師房間狀態為準。
 中文字體沿用來源專案 Noto Sans TC，授權見 NotoSansTC-OFL.txt。

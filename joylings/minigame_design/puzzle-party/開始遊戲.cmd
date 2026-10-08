@@ -1,2 +1,4 @@
 @echo off
-start "" "%~dp0Builds\Web\index.html"
+cd /d "%~dp0"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\start-unity.ps1"
+if errorlevel 1 pause

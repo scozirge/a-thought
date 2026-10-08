@@ -2,10 +2,10 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
-const R = require('../web/rules.js');
+const R = require('../rules/rules.js');
 
 test('四十關均固定四組各一次，拒絕不完整與多餘設定',()=>{
- const {games}=require('../web/catalog.js');
+ const {games}=require('../rules/catalog.js');
  for(const [game,info]of Object.entries(games)){
   assert.deepEqual(info.levels.map(l=>R.optionsFor(game,l).length),Array(20).fill(4));
   for(const l of info.levels){
@@ -19,7 +19,7 @@ test('四十關均固定四組各一次，拒絕不完整與多餘設定',()=>{
  }
 });
 test('新增企鵝需指定的最短步數，兩側單獨多解、同步唯一，沒有共同空等',()=>{
- const levels=require('../web/catalog.js').games.penguin.levels.slice(10),dirs=Object.keys(R.penguin.directions);
+ const levels=require('../rules/catalog.js').games.penguin.levels.slice(10),dirs=Object.keys(R.penguin.directions);
  function countPaths(boards,depth){
   const key=pos=>pos.map(p=>p.join(',')).join(';'),goal=key(boards.map(b=>b.goal));
   let states=new Map([[key(boards.map(b=>b.start)),{positions:boards.map(b=>b.start),ways:1}]]),first=null;
@@ -52,7 +52,7 @@ test('歷史題庫三款各 10 關，名稱與暖身順序正確', () => {
   assert.equal(R.games.penguin.name,'帶企鵝回家');
 });
 test('目前選單：兩款各二十題，每關四個有效選擇', () => {
-  const {games}=require('../web/catalog.js');
+  const {games}=require('../rules/catalog.js');
   assert.deepEqual(Object.keys(games),['sticker','penguin']);
   assert.equal(games.sticker.levels.length,20);
   assert.equal(games.penguin.levels.length,20);
@@ -64,8 +64,8 @@ test('目前選單：兩款各二十題，每關四個有效選擇', () => {
   }
 });
 test('四次作答新題保留前十關；後段用形狀與地形遞進，不增加規則',()=>{
-  const {games}=require('../web/catalog.js');
-  assert.deepEqual(games.sticker.levels.slice(0,10),[...R.games.sticker.levels.slice(0,4),...require('../web/sticker-more.js')]);
+  const {games}=require('../rules/catalog.js');
+  assert.deepEqual(games.sticker.levels.slice(0,10),[...R.games.sticker.levels.slice(0,4),...require('../rules/sticker-more.js')]);
   assert.deepEqual(games.penguin.levels.slice(0,10),R.games.penguin.levels);
   const adjacent=(c,n)=>[c%n?c-1:-1,c%n<n-1?c+1:-1,c>=n?c-n:-1,c<n*(n-1)?c+n:-1].filter(v=>v>=0);
   for(const [k,l]of games.sticker.levels.slice(10).entries()){
@@ -97,7 +97,7 @@ test('四次作答新題保留前十關；後段用形狀與地形遞進，不�
   }
 });
 test('新增貼紙的四組都留下線索，單改一組會改變最終結果',()=>{
-  const levels=require('../web/catalog.js').games.sticker.levels;
+  const levels=require('../rules/catalog.js').games.sticker.levels;
   assert.deepEqual(levels.slice(0,3),R.games.sticker.levels.slice(0,3));
   let previous=0;
   for(const l of levels.slice(4)){

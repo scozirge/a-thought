@@ -89,5 +89,5 @@ for(let k=0;k<10;k++){
  penguin.push({id:'penguin-v10-'+(k+11),title:iceTitles[k],stage:'挑戰',steps:depth,note,boards:[a,b].map((b,i)=>({size:b.size,start:point(b.start,b.size),goal:point(c.goals[i],b.size),walls:b.walls.sort((a,b)=>a-b).map(p=>point(p,b.size))}))});
  console.log('企鵝 '+(k+11)+'：最短 '+depth+' 步且唯一；單邊解 '+solo+'，停住 '+blocked+' 次，場中停點 '+interiorStops+' 次，離家 '+departures+' 次');
 }
-const payload={sticker,penguin},out=path.resolve(__dirname,'../web/advanced-levels.js');
+const payload={sticker,penguin},out=path.resolve(__dirname,'../rules/advanced-levels.js');
 fs.writeFileSync(out,"(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.AdvancedLevels=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){return "+JSON.stringify(payload,null,2)+";});\n");

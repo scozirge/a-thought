@@ -1,6 +1,10 @@
-﻿param([string]$Unity = 'E:/Program Files/Unity/Hub/Editor/6000.3.11f1/Editor/Unity.exe')
+﻿param([string]$Unity = '')
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
+if (!$Unity) {
+  $Unity = @('C:/Program Files/Unity/Hub/Editor/6000.3.11f1/Editor/Unity.exe', 'E:/Program Files/Unity/Hub/Editor/6000.3.11f1/Editor/Unity.exe') | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+}
+if (!$Unity) { throw 'Unity 6000.3.11f1 not found; specify -Unity.' }
 if (!(Test-Path -LiteralPath $Unity)) { throw "找不到 Unity：$Unity" }
 & node (Join-Path $PSScriptRoot 'export-unity.cjs')
 if ($LASTEXITCODE -ne 0) { throw '關卡匯出失敗' }
