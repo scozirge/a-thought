@@ -173,7 +173,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 
   // Browser refresh tears down the real WebSocket; no in-game leave is sent.
   const reloadAt=Date.now();await b.page.reload();await ready(b);await departed(host,b.group,[host,a,c]);
-  const modified=stickerAnswer.slice();modified[b.group]=games.sticker.levels[19].palette.find(v=>v!==modified[b.group]);
+  const modified=stickerAnswer.slice();modified[b.group]=R.optionsFor("sticker",games.sticker.levels[19])[0].find(v=>v!==modified[b.group]);
   await command(host,'set:'+b.group+':'+modified[b.group]);await answers([host,a,c],modified);
   await join(b,code);await members(actors,4);await answers(actors,modified);
   faults.push({kind:'student-refresh',milliseconds:Date.now()-reloadAt,group:b.group});

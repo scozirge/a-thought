@@ -1650,7 +1650,7 @@
 
   function optionsFor(game, level) {
     if (game === 'animal') return Array.from({length:4},()=>Object.keys(A.actions));
-    if (game === 'sticker') return level.masks.map(() => level.palette);
+    if (game === 'sticker') return level.masks.map(() => level.twoColor ? level.palette.flatMap(a=>level.palette.map(b=>a+"|"+b)) : level.palette);
     if (game === 'hero') return level.editable.map(() => level.commands || Object.keys(H.COMMANDS));
     return Array.from({length: level.steps}, () => level.directions || Object.keys(P.directions));
   }
@@ -1688,7 +1688,7 @@
       board = board.slice();
       owners=owners.slice();
       const color=settings[i];
-      mask.forEach(cell => { board[cell] = color; owners[cell]=i; });
+      mask.forEach(cell => { board[cell] = level.twoColor ? color.split("|")[level.masksB[i].includes(cell)?1:0] : color; owners[cell]=i; });
       frames.push({type:'stamp',machine:i,color,mask,board});
       if(level.rotateAfter===i+1) {
         const before=board;

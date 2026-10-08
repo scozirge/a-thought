@@ -4,6 +4,28 @@ const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 const R = require('../rules/rules.js');
 
+test('最後五張雙色題：A、B 都連通且可見，八個選色缺一不可',()=>{
+ const levels=require('../rules/catalog.js').games.sticker.levels;
+ assert.ok(levels.slice(0,15).every(l=>!l.twoColor));
+ for(const [k,l]of levels.slice(15).entries()){
+  assert.equal(l.id,'sticker-v11-'+(16+k));assert.equal(l.twoColor,true);
+  const answer=R.solutions('sticker',l);assert.equal(answer.length,1);
+  const result=R.run('sticker',l,answer[0]);assert.equal(result.frames.length,4);
+  l.masks.forEach((mask,i)=>{
+   const regions=[mask.filter(c=>!l.masksB[i].includes(c)),l.masksB[i]];
+   regions.forEach((region,area)=>{
+    assert.ok(region.length>0&&region.every(c=>mask.includes(c)));
+    const seen=new Set([region[0]]),queue=[region[0]];
+    for(const c of queue)for(const n of region)if(Math.abs(c%4-n%4)+Math.abs((c/4|0)-(n/4|0))===1&&!seen.has(n)){seen.add(n);queue.push(n);}
+    assert.equal(seen.size,region.length);assert.ok(region.some(c=>result.owners[c]===i));
+    const changed=answer[0].slice(),parts=changed[i].split('|');parts[area]=l.palette.find(v=>v!==parts[area]);changed[i]=parts.join('|');
+    assert.equal(R.run('sticker',l,changed).success,false);
+    parts[area]='';changed[i]=parts.join('|');assert.throws(()=>R.run('sticker',l,changed),/設定/);
+   });
+  });
+ }
+});
+
 test('四十關均固定四組各一次，拒絕不完整與多餘設定',()=>{
  const {games}=require('../rules/catalog.js');
  for(const [game,info]of Object.entries(games)){
@@ -68,7 +90,7 @@ test('四次作答新題保留前十關；後段用形狀與地形遞進，不�
   assert.deepEqual(games.sticker.levels.slice(0,10),[...R.games.sticker.levels.slice(0,4),...require('../rules/sticker-more.js')]);
   assert.deepEqual(games.penguin.levels.slice(0,10),R.games.penguin.levels);
   const adjacent=(c,n)=>[c%n?c-1:-1,c%n<n-1?c+1:-1,c>=n?c-n:-1,c<n*(n-1)?c+n:-1].filter(v=>v>=0);
-  for(const [k,l]of games.sticker.levels.slice(10).entries()){
+  for(const [k,l]of games.sticker.levels.slice(10,15).entries()){
     assert.equal(l.id,'sticker-v10-'+(k+11));assert.ok(!l.rotateAfter);
     assert.equal(l.masks.reduce((sum,m)=>sum+m.length,0)-l.cols*l.rows,24+k);
     for(const mask of l.masks){
@@ -104,11 +126,11 @@ test('新增貼紙的四組都留下線索，單改一組會改變最終結果',
     const solution=R.solutions('sticker',l)[0],result=R.run('sticker',l,solution);
     const depth=Array(l.rows*l.cols).fill(0);l.masks.forEach(m=>m.forEach(c=>depth[c]++));
     const overpaint=depth.reduce((s,v)=>s+Math.max(0,v-1),0);
-    assert.ok(overpaint>=previous);previous=overpaint;
+    if(!l.twoColor){assert.ok(overpaint>=previous);previous=overpaint;}
     assert.ok(result.board.every(Boolean));assert.ok(depth.every(v=>v>0));
     for(let i=0;i<solution.length;i++){
       assert.ok(result.owners.includes(i),l.id+' 第 '+i+' 組必須有可見線索');
-      for(const c of l.palette.filter(c=>c!==solution[i])){
+      for(const c of R.optionsFor('sticker',l)[i].filter(c=>c!==solution[i])){
         const changed=solution.slice();changed[i]=c;const r=R.run('sticker',l,changed);
         assert.equal(r.success,false);assert.ok(r.wrong.length>0);
       }

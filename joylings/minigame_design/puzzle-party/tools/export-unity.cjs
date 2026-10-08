@@ -5,7 +5,7 @@ const point=p=>p?{x:p[0],y:p[1]}:{x:-1,y:-1};
 const board=b=>({...b,start:point(b.start),goal:point(b.goal),walls:b.walls.map(point)});
 const levels=Object.entries(games).flatMap(([game,info])=>info.levels.map((l,index)=>({
   ...l,game,index,steps:R.optionsFor(game,l).length,options:R.optionsFor(game,l)[0],start:point(l.start),sword:point(l.sword),monster:point(l.monster),goal:point(l.goal),
-  masks:l.masks?.map(cells=>({cells})),walls:l.walls?.map(point),portals:l.portals?.map(point),boards:l.boards?.map(board),
+  masks:l.masks?.map(cells=>({cells})),masksB:l.masksB?.map(cells=>({cells})),walls:l.walls?.map(point),portals:l.portals?.map(point),boards:l.boards?.map(board),
   events:l.events?.map(e=>({after:e.after,move:e.move||'',fireDirection:e.fire?.direction||'',range:e.fire?.range||0}))
 })));
 fs.mkdirSync(dest+'/Resources',{recursive:true});fs.mkdirSync(dest+'/PuzzleParty/Editor',{recursive:true});

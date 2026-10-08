@@ -100,7 +100,7 @@ namespace Together {
      if(phase=="playing")return Reject(out error,"正在播放，先看完再修改。");
      if(action.slot<0||action.slot>=4)return Reject(out error,"找不到這個作答位置。");
      if(!member.isHost&&action.slot!=member.group)return Reject(out error,"你只能設定自己這一組。");
-     if(action.value==null||!level.options.Contains(action.value))return Reject(out error,"請選擇畫面上的選項。");
+     if(!Rules.ValidChoice(level,action.value))return Reject(out error,"請選擇畫面上的選項。");
      settings[action.slot]=action.value;ResetPlayback();break;
     case "play":
      if(level==null)return Reject(out error,"請先選擇題目。");

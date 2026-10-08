@@ -12,7 +12,7 @@ function analyze(game, level) {
   if (game === 'sticker') {
     let depth = Array(level.cols * level.rows).fill(0);
     result.frames.forEach(f => {if(f.type==='rotate')depth=R.rotateBoard(depth,level.cols,level.rows);else f.mask.forEach(c => depth[c]++);});
-    Object.assign(row, {cells: depth.length, systemRotationAfter:level.rotateAfter||null, rotationCount:result.frames.filter(f=>f.type==='rotate').length,
+    Object.assign(row, {cells: depth.length, colorChoices:level.twoColor?8:4, twoColor:!!level.twoColor, systemRotationAfter:level.rotateAfter||null, rotationCount:result.frames.filter(f=>f.type==='rotate').length,
       overpaint: depth.reduce((n,d)=>n+Math.max(0,d-1),0), maxDepth: Math.max(...depth),
       visiblePerLayer: level.masks.map((_,i)=>result.owners.filter(owner=>owner===i).length)});
   } else if (game === 'animal') {

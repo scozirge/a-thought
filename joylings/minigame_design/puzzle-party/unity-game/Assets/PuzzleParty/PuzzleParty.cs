@@ -29,9 +29,9 @@ namespace Together {
    InitOnline();speed=PlayerPrefs.GetFloat("speed",1);Debug.Log("PUZZLE_UNITY_READY "+levels.Length+" levels");
   }
   void Open(string g,int index){if(Route(new RoomAction{type="open",game=g,index=index}))return;var available=levels.Where(l=>l.game==g).ToArray();if(available.Length==0)return;StopAllCoroutines();playing=false;paused=false;game=g;levelIndex=Mathf.Clamp(index,0,available.Length-1);level=available[levelIndex];selected=3;scroll=Vector2.zero;
-   settings=new string[level.Decisions];for(int i=0;i<settings.Length;i++){var v=PlayerPrefs.GetString(level.id+":"+i,"");if(level.options.Contains(v))settings[i]=v;}ResetScene();
+   settings=new string[level.Decisions];for(int i=0;i<settings.Length;i++){var v=PlayerPrefs.GetString(level.id+":"+i,"");if(Rules.ValidChoice(level,v))settings[i]=v;}ResetScene();
   }
-  void ResetScene(){result=null;log.Clear();active=-1;currentStep=-1;rotating=false;rotation=0;heroAlpha=1;portalPhase="";breath=null;fire=new Cell[0];charge=0;eventStates.Clear();Cue("準備出發","四組填好計畫，再按播放。","ready");
+  void ResetScene(){answerVisible=false;result=null;log.Clear();active=-1;currentStep=-1;rotating=false;rotation=0;heroAlpha=1;portalPhase="";breath=null;fire=new Cell[0];charge=0;eventStates.Clear();Cue("準備出發","四組填好計畫，再按播放。","ready");
    if(level==null)return;
    if(game=="sticker")stickerBoard=new string[level.cols*level.rows];
    if(game=="animal"){animalOrder=(string[])level.lineup.Clone();animalPositions=Enumerable.Range(0,animalOrder.Length).Select(i=>new Vector2(i,0)).ToArray();cameraFlash=0;Cue("先看目標照片","前兩隻交換，或隊長到最後。四步做完才拍照。","ready");}
@@ -39,10 +39,10 @@ namespace Together {
    if(game=="penguin")icePositions=level.boards.Select(b=>b.start.Vec()).ToArray();
   }
   void Cue(string title,string text,string kind){cue=title;detail=text;tone=kind;}
-  void Set(int i,string s){if(Route(new RoomAction{type="set",slot=i,value=s}))return;if(playing||i<0||i>=settings.Length||!level.options.Contains(s))return;settings[i]=s;PlayerPrefs.SetString(level.id+":"+i,s);PlayerPrefs.Save();ResetScene();selected=i;}
+  void Set(int i,string s){if(Route(new RoomAction{type="set",slot=i,value=s}))return;if(playing||i<0||i>=settings.Length||!Rules.ValidChoice(level,s))return;settings[i]=s;PlayerPrefs.SetString(level.id+":"+i,s);PlayerPrefs.Save();ResetScene();selected=i;}
   void Stop(){if(Route(new RoomAction{type="stop"}))return;StopAllCoroutines();playing=false;paused=false;ResetScene();}
-  void Play(){if(Route(new RoomAction{type="play"}))return;if(playing||level==null||settings.Any(string.IsNullOrEmpty))return;ResetScene();scroll.y=stageScrollY;playing=true;paused=false;StartCoroutine(Playback(Rules.Run(level,(string[])settings.Clone())));}
-  public void Command(string s){var p=s.Split(':');switch(p[0]){case "open":Open(p[1],int.Parse(p[2]));break;case "set":Set(int.Parse(p[1]),p[2]);break;case "play":Play();break;case "stop":Stop();break;case "pause":TogglePause();break;case "speed":ChangeSpeed();break;case "clear":ClearChoices();break;case "home":GoHome();break;}}
+  void Play(){if(Route(new RoomAction{type="play"}))return;if(playing||level==null||!Rules.Complete(level,settings))return;ResetScene();scroll.y=stageScrollY;playing=true;paused=false;StartCoroutine(Playback(Rules.Run(level,(string[])settings.Clone())));}
+  public void Command(string s){var p=s.Split(':');switch(p[0]){case "open":Open(p[1],int.Parse(p[2]));break;case "set":Set(int.Parse(p[1]),p[2]);break;case "play":Play();break;case "stop":Stop();break;case "pause":TogglePause();break;case "speed":ChangeSpeed();break;case "clear":ClearChoices();break;case "home":GoHome();break;case "answer":ToggleAnswer();break;}}
   public void Scroll(string delta){if(float.TryParse(delta,System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var d)){scroll.y=Mathf.Clamp(scroll.y+d/scale,0,maxScroll);scroll.x=0;cancelPointer=true;}}
   void OnGUI(){
    if(font==null||levels==null)return;
@@ -59,7 +59,7 @@ namespace Together {
    if(Button(new Rect(viewWidth-185,game==""?22:76,160,44),Online?"房間 / 離開":"連線教室","room"))ShowRoom();
    Text(new Rect(24,76,w-174,56),Online?"房號 "+room.code+"\n"+RoleIdentity():"每組選一次\n老師可代填",18,muted);
    if(game=="")DrawHome(narrow);else DrawGame(narrow);
-   GUI.EndScrollView();if(maxScroll>0){Round(new Rect(viewWidth-7,0,5,vh),C("e5e8db"),3);float thumb=vh*vh/total;Round(new Rect(viewWidth-7,(vh-thumb)*scroll.y/maxScroll,5,thumb),C("a9b9a0"),3);}GUI.matrix=Matrix4x4.identity;
+   GUI.EndScrollView();DrawAnswer(vh);if(maxScroll>0){Round(new Rect(viewWidth-7,0,5,vh),C("e5e8db"),3);float thumb=vh*vh/total;Round(new Rect(viewWidth-7,(vh-thumb)*scroll.y/maxScroll,5,thumb),C("a9b9a0"),3);}GUI.matrix=Matrix4x4.identity;
    if(Event.current.type==EventType.Repaint&&Time.realtimeSinceStartup>nextSnapshot){Publish();nextSnapshot=Time.realtimeSinceStartup+.12f;}
   }
   string RoleIdentity()=>"你是"+Rules.Group(Online?room.myGroup:selected);
@@ -83,6 +83,7 @@ namespace Together {
   }
   void DrawGame(bool narrow){
    Text(new Rect(24,138,viewWidth-48,42),GameName(game),30,ink,true);
+   if(CanReveal&&Button(new Rect(viewWidth-76,136,48,44),"?","answer"))ToggleAnswer();
    var available=levels.Where(l=>l.game==game).ToArray();
    int perRow=Math.Min(available.Length,narrow?5:10);
    for(int i=0;i<available.Length;i++){
@@ -111,7 +112,7 @@ namespace Together {
     GUI.enabled=CanLead;if(Button(new Rect(config.x+15,cy,inner*.70f-8,48),"停止並修改","stop",green,Color.white))Stop();
     if(Button(new Rect(config.x+15+inner*.70f,cy,inner*.30f,48),paused?"繼續":"暫停","pause"))TogglePause();GUI.enabled=true;
    }else{
-    GUI.enabled=CanLead&&settings.All(s=>!string.IsNullOrEmpty(s));
+    GUI.enabled=CanLead&&Rules.Complete(level,settings);
     if(Button(new Rect(config.x+15,cy,inner*.76f-8,48),result==null?"播放看看":"再播放一次","play",green,Color.white))Play();GUI.enabled=true;
     GUI.enabled=CanLead;if(Button(new Rect(config.x+15+inner*.76f,cy,inner*.24f,48),speed+"×","speed"))ChangeSpeed();GUI.enabled=true;
    }
@@ -129,18 +130,19 @@ namespace Together {
    }
    contentHeight=bottom+36;
   }
-  float ChoiceRow(float width)=>game=="animal"?154:level.options.Length>2&&width<520&&(game=="penguin"||level.options.Length==4)?184:138;
+  float ChoiceRow(float width)=>level.twoColor?344:game=="animal"?154:level.options.Length>2&&width<520&&(game=="penguin"||level.options.Length==4)?184:138;
   float ChoiceHeight(float width)=>200+settings.Length*ChoiceRow(width)+190;
   float DrawChoiceControls(Rect r){
    float y=r.y+200,row=ChoiceRow(r.width);
    for(int i=0;i<settings.Length;i++){
     Rect rr=new Rect(r.x+14,y,r.width-28,row-10);Panel(rr,active==i?gold:selected==i?C("eaf2e3"):C("f6f7ef"));
+    if(level.twoColor){DrawTwoColor(rr,i);y+=row;continue;}
     float left=rr.x+10;
     if(game=="sticker"){MiniMask(new Rect(left,rr.y+42,52,52),level.masks[i].cells,level.cols);left+=64;}
     Rect heading=new Rect(left,rr.y+8,rr.xMax-left-8,32);
     Text(heading,Rules.Group(i)+(Online&&room.myGroup==i?" · 你":""),20,ink,true);
     Text(new Rect(left,rr.y+38,rr.xMax-left-8,28),"第 "+(i+1)+(game=="sticker"?" 張貼紙":" 步方向"),18,muted);
-    HitBox(heading,"role:"+i);if(CanChoose(i)&&GUI.Button(heading,"",GUIStyle.none))selected=i;
+    HitBox(heading,"role:"+i);if(!answerVisible&&CanChoose(i)&&GUI.Button(heading,"",GUIStyle.none))selected=i;
     int cols=ChoiceRow(r.width)>138?2:level.options.Length;
     float width=(rr.xMax-left-4)/cols;
     for(int j=0;j<level.options.Length;j++){
@@ -168,7 +170,7 @@ namespace Together {
   void Round(Rect r,Color c,float radius=10){GUI.DrawTexture(r,Texture2D.whiteTexture,ScaleMode.StretchToFill,true,0,c,0,radius);}
   void Panel(Rect r,Color? bg=null){Round(r,line,12);Round(new Rect(r.x+1,r.y+1,r.width-2,r.height-2),bg??paper,11);}
   void Text(Rect r,string s,int size=18,Color? color=null,bool bold=false,TextAnchor anchor=TextAnchor.UpperLeft){labelStyle.fontSize=size;labelStyle.fontStyle=bold?FontStyle.Bold:FontStyle.Normal;labelStyle.alignment=anchor;labelStyle.normal.textColor=color??ink;GUI.Label(r,s??"",labelStyle);}
-  bool Button(Rect r,string s,string id,Color? bg=null,Color? fg=null){Round(r,GUI.enabled?(bg??C("eff0e7")):C("d8ddcf"),8);buttonStyle.normal.textColor=fg??ink;buttonStyle.fontSize=20;HitBox(r,id);return GUI.Button(r,s,buttonStyle);}
+  bool Button(Rect r,string s,string id,Color? bg=null,Color? fg=null){bool enabled=GUI.enabled;GUI.enabled=enabled&&(!answerVisible||id=="answer-close");Round(r,GUI.enabled?(bg??C("eff0e7")):C("d8ddcf"),8);buttonStyle.normal.textColor=fg??ink;buttonStyle.fontSize=20;HitBox(r,id);bool clicked=GUI.Button(r,s,buttonStyle);GUI.enabled=enabled;return clicked;}
   void HitBox(Rect r,string id){hits.Add(new Hit{id=id,enabled=GUI.enabled,x=r.x*scale,y=(r.y-scroll.y)*scale,w=r.width*scale,h=r.height*scale});}
   void RotateLocal(float angle,Vector2 p){GUI.matrix=GUI.matrix*Matrix4x4.TRS(new Vector3(p.x,p.y,0),Quaternion.Euler(0,0,angle),Vector3.one)*Matrix4x4.Translate(new Vector3(-p.x,-p.y,0));}
   void Image(Rect r,string name,float alpha=1,float angle=0){if(!art.TryGetValue(name,out var t)||t==null)return;var m=GUI.matrix;var c=GUI.color;GUI.color=new Color(1,1,1,alpha);if(angle!=0)RotateLocal(angle,r.center);GUI.DrawTexture(r,t,ScaleMode.ScaleToFit);GUI.color=c;GUI.matrix=m;}

@@ -16,7 +16,7 @@ namespace Together {
  [Serializable] public class Level {
   public string id,title,note,stage,game;public int index,size,steps,cols,rows,rotateAfter;
   public Cell start,sword,monster,goal;public Cell[] walls,portals;public MonsterEvent[] events;
-  public int[] editable;public string[] program,options,target,lineup;public Mask[] masks;public IceBoard[] boards;
+  public int[] editable;public string[] program,options,target,lineup;public bool twoColor;public string[] palette;public Mask[] masks,masksB;public IceBoard[] boards;
   public bool Dragon=>events!=null&&events.Any(e=>!string.IsNullOrEmpty(e.fireDirection));
   public int Decisions=>game=="sticker"?masks.Length:game=="hero"?4:steps;
  }
@@ -38,7 +38,7 @@ namespace Together {
   public static int Attempt(int i)=>i/4+1;
   public static readonly string[] AllCommands={"up","right","down","left","take","attack","wait"};
   public static Cell Delta(string d){switch(d){case "up":return new Cell(0,-1);case "down":return new Cell(0,1);case "left":return new Cell(-1,0);default:return new Cell(1,0);}}
-  public static string Label(string s){switch(s){case "up":return "向上";case "down":return "向下";case "left":return "向左";case "right":return "向右";case "take":return "拿劍";case "attack":return "攻擊";case "wait":return "等待";case "red":return "紅";case "blue":return "藍";case "yellow":return "黃";case "green":return "綠";default:return "選一個";}}
+  public static string Label(string s){if(s!=null&&s.Contains("|")){var parts=s.Split('|');return "A "+Label(parts[0])+" / B "+Label(parts[1]);}switch(s){case "up":return "向上";case "down":return "向下";case "left":return "向左";case "right":return "向右";case "take":return "拿劍";case "attack":return "攻擊";case "wait":return "等待";case "red":return "紅";case "blue":return "藍";case "yellow":return "黃";case "green":return "綠";default:return "選一個";}}
   public static string Icon(string s){switch(s){case "up":return "↑";case "down":return "↓";case "left":return "←";case "right":return "→";case "take":return "劍";case "attack":return "攻";case "wait":return "Ⅱ";default:return "？";}}
   public static bool Inside(Cell p,int n)=>p.x>=0&&p.y>=0&&p.x<n&&p.y<n;
   public static bool Wall(Cell[] walls,Cell p)=>walls!=null&&Array.Exists(walls,c=>c.Equals(p));
@@ -67,6 +67,28 @@ namespace Together {
    }
    h.escaped=h.defeated&&h.position.Equals(l.goal);f.hero=h;f.ok=!h.failed;f.message=msg+" "+string.Join(" ",f.effects.Select(e=>e.message));return f;
   }
+  public static string[] ColorParts(string value)=>string.IsNullOrEmpty(value)?new[]{"",""}:value.Split('|');
+  public static bool ValidChoice(Level l,string value){
+   if(l==null||string.IsNullOrEmpty(value))return false;
+   if(l.options.Contains(value))return true;
+   if(!l.twoColor)return false;
+   var parts=value.Split('|');return parts.Length==2&&parts.Any(s=>s!="")&&parts.All(s=>s==""||l.palette.Contains(s));
+  }
+  public static bool Complete(Level l,string[] values)=>l!=null&&values.Length==l.Decisions&&values.All(s=>l.options.Contains(s));
+  public static bool MayReveal(bool busy,bool connected,bool host)=>!busy&&(!connected||host);
+  public static string[] Solve(Level l){
+   var values=new string[l.Decisions];
+   if(l.game=="sticker"&&l.rotateAfter==0){
+    for(int i=0;i<l.Decisions;i++){
+     var visible=l.masks[i].cells.Where(c=>!l.masks.Skip(i+1).Any(m=>m.cells.Contains(c))).ToArray();
+     if(l.twoColor){var a=visible.Where(c=>!l.masksB[i].cells.Contains(c)).ToArray();var b=visible.Where(c=>l.masksB[i].cells.Contains(c)).ToArray();if(a.Length==0||b.Length==0)return null;values[i]=l.target[a[0]]+"|"+l.target[b[0]];}
+     else {if(visible.Length==0)return null;values[i]=l.target[visible[0]];}
+    }
+    return Complete(l,values)&&Run(l,values).success?values:null;
+   }
+   bool Visit(int i){if(i==values.Length)return Run(l,values).success;foreach(var op in l.options){values[i]=op;if(Visit(i+1))return true;}return false;}
+   return Visit(0)?values:null;
+  }
   public static Result Run(Level l,string[] settings){
    if(settings.Length!=l.Decisions||settings.Any(s=>!l.options.Contains(s)))throw new ArgumentException("請先填完所有步驟。");
    var r=new Result();
@@ -82,7 +104,7 @@ namespace Together {
     r.board=b;r.success=b.SequenceEqual(l.target);return r;
    }
    if(l.game=="sticker"){
-    var b=new string[l.cols*l.rows];for(int i=0;i<settings.Length;i++){foreach(int cell in l.masks[i].cells)b[cell]=settings[i];r.frames.Add(new Frame{type="stamp",machine=i,index=i,board=(string[])b.Clone()});if(l.rotateAfter==i+1){var before=(string[])b.Clone();b=Rotate(b,l.cols);r.frames.Add(new Frame{type="rotate",after=i+1,before=before,board=(string[])b.Clone()});}}
+    var b=new string[l.cols*l.rows];for(int i=0;i<settings.Length;i++){var colors=l.twoColor?settings[i].Split('|'):null;foreach(int cell in l.masks[i].cells)b[cell]=l.twoColor?colors[l.masksB[i].cells.Contains(cell)?1:0]:settings[i];r.frames.Add(new Frame{type="stamp",machine=i,index=i,board=(string[])b.Clone()});if(l.rotateAfter==i+1){var before=(string[])b.Clone();b=Rotate(b,l.cols);r.frames.Add(new Frame{type="rotate",after=i+1,before=before,board=(string[])b.Clone()});}}
     r.board=b;r.success=b.SequenceEqual(l.target);return r;
    }
    if(l.game=="hero"){

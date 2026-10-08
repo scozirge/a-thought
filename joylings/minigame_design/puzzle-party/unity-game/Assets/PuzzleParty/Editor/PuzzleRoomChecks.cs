@@ -109,6 +109,27 @@ public static class PuzzleRoomChecks {
   room.Remove("teacher");Need(!room.View("teacher").connected,"老師離開即關房");
   Need(!room.TryJoin("x","新同學",0,out _),"關房後不可加入");
   No(room,"teacher",Action(room,"open","sticker"),"關房後操作拒絕");
+  Need(Rules.ColorParts("").Length==2&&Rules.ColorParts(null).Length==2,"空字串與 null 草稿都能開始選 A、B");
+  Need(Rules.MayReveal(false,false,false),"單機老師可看答案");
+  Need(Rules.MayReveal(false,true,true),"連線老師可看答案");
+  Need(!Rules.MayReveal(false,true,false),"學生不可看答案");
+  Need(!Rules.MayReveal(true,false,true),"連線過渡期間不可看答案");
+  var book=JsonUtility.FromJson<LevelBook>(Resources.Load<TextAsset>("levels").text).levels;
+  var dual=book.First(l=>l.twoColor);var classroom=new RoomAuthority(book,"123456","teacher","老師");
+  Yes(classroom,"teacher",Action(classroom,"open","sticker",dual.index),"開啟雙色題");
+  Need(classroom.TryJoin("pupil","同學",0,out _),"雙色題學生加入");
+  Yes(classroom,"pupil",Action(classroom,"set",slot:0,value:"red|"),"只填 A 區可暫存");
+  Need(classroom.View("teacher").settings[0]=="red|","部分選色同步給老師");
+  No(classroom,"teacher",Action(classroom,"play"),"缺 B 區不可播放");
+  No(classroom,"pupil",Action(classroom,"set",slot:1,value:"red|blue"),"雙色題仍只能填自己組別");
+  No(classroom,"pupil",Action(classroom,"set",slot:0,value:"red|bogus"),"拒絕不存在的顏色");
+  No(classroom,"pupil",Action(classroom,"answer"),"答案不是學生可要求的房間操作");
+  var solved=Rules.Solve(dual);Need(solved!=null&&Rules.Run(dual,solved).success,"雙色答案可通關");
+  Fill(classroom,solved);Yes(classroom,"teacher",Action(classroom,"play"),"完整八色才開播");
+  classroom.Advance(99999);Need(classroom.View("pupil").success,"雙色通關一致");
+  Yes(classroom,"teacher",Action(classroom,"clear"),"雙色清空");
+  Need(classroom.View("teacher").settings.All(string.IsNullOrEmpty),"A、B 同時清空");
+  foreach(var l in book)Need(Rules.Run(l,Rules.Solve(l)).success,"老師答案通關："+l.id);
   Debug.Log("PUZZLE_ROOMS_OK "+checks+" authority checks (four groups, permissions, simultaneous answers, timing and reconnect)");
  }
 }

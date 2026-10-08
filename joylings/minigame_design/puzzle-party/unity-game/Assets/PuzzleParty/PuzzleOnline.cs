@@ -17,8 +17,8 @@ namespace Together {
   void ClearChoices(){if(Route(new RoomAction{type="clear"}))return;if(playing||level==null)return;for(int i=0;i<settings.Length;i++)PlayerPrefs.DeleteKey(level.id+":"+i);settings=new string[level.Decisions];selected=3;ResetScene();PlayerPrefs.Save();}
   [Serializable] class RoomRequest {public string type,code,name;public int group;}
   public void RoomCommand(string json){
-   try{var request=JsonUtility.FromJson<RoomRequest>(json);if(request.type=="leave"){connection.Leave();return;}
-    if(request.type=="create"||request.type=="join"){StopAllCoroutines();playing=false;paused=false;connection.Connect(request.type=="create",request.code,request.name,request.group);}
+   try{var request=JsonUtility.FromJson<RoomRequest>(json);if(request.type=="leave"){answerVisible=false;connection.Leave();return;}
+    if(request.type=="create"||request.type=="join"){answerVisible=false;StopAllCoroutines();playing=false;paused=false;connection.Connect(request.type=="create",request.code,request.name,request.group);}
    }catch(Exception){Debug.LogWarning("無法讀取連線操作，請重新按一次。");}
   }
   [DllImport("__Internal")] static extern void PuzzleOpenRoom();

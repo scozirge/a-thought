@@ -65,21 +65,21 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 
  // 四個格子都用滑鼠點選：每組各一次，修改單組保留其他三組設定。
  await page.setViewportSize({width:945,height:950});await command('open:sticker:19');await page.waitForFunction(()=>puzzleUnityState.game==='sticker');await click('clear');
- const answer=R.solutions('sticker',games.sticker.levels[19])[0],bad=answer.slice();bad[2]=games.sticker.levels[19].palette.find(v=>v!==answer[2]);
+ const answer=R.solutions('sticker',games.sticker.levels[19])[0],bad=answer.slice();bad[2]=R.optionsFor("sticker",games.sticker.levels[19])[0].find(v=>v!==answer[2]);
  for(let i=0;i<4;i++){
    if(i===3){await command('play');await page.waitForTimeout(200);assert.equal((await state()).playing,false);assert.equal((await state()).finished,false);}
-   await click('choose:'+i+':'+bad[i]);assert.equal((await state()).role,'你是'+R.groupFor(i));assert.equal((await state()).decisions,4);
+   await click('color:'+i+':0:'+bad[i].split('|')[0]);await click('color:'+i+':1:'+bad[i].split('|')[1]);assert.equal((await state()).role,'你是'+R.groupFor(i));assert.equal((await state()).decisions,4);
  }
  assert.equal((await state()).finished,false);assert.deepEqual((await state()).settings,bad);assert.ok((await state()).board.every(v=>!v));
  await command('play');await page.waitForFunction(()=>puzzleUnityState.playing);await page.waitForFunction(()=>puzzleUnityState.finished);
  assert.equal((await state()).success,false);assert.deepEqual((await state()).settings,bad);
- await click('choose:2:'+answer[2]);assert.deepEqual((await state()).settings,answer);
+ await click('color:2:0:'+answer[2].split('|')[0]);await click('color:2:1:'+answer[2].split('|')[1]);assert.deepEqual((await state()).settings,answer);
  await command('home');await page.waitForFunction(()=>puzzleUnityState.game==='');await command('open:sticker:19');await page.waitForFunction(()=>puzzleUnityState.game==='sticker');assert.deepEqual((await state()).settings,answer);
  await command('play');await page.waitForFunction(()=>puzzleUnityState.playing);await command('stop');await page.waitForFunction(()=>!puzzleUnityState.playing);
  assert.ok((await state()).board.every(v=>!v));assert.deepEqual((await state()).settings,answer);
  for(const width of [390,945,1365]){
    await page.setViewportSize({width,height:900});await command('open:sticker:19');await page.waitForTimeout(300);await shot('unity-sticker-four-v10-'+width);
-   await click('choose:3:'+answer[3]);assert.equal((await state()).role,'你是老師組');assert.equal((await state()).decisions,4);await shot('unity-sticker-four-controls-v10-'+width);
+   await click('color:3:0:'+answer[3].split('|')[0]);await click('color:3:1:'+answer[3].split('|')[1]);assert.equal((await state()).role,'你是老師組');assert.equal((await state()).decisions,4);await shot('unity-sticker-four-controls-v10-'+width);
    assert.ok((await state()).controls.every(b=>b.x>=0&&b.x+b.w<=width));
    await command('open:penguin:19');await page.waitForFunction(()=>puzzleUnityState.game==='penguin');await page.waitForTimeout(300);await shot('unity-penguin-four-v10-'+width);
    await click('choose:3:'+sol[3]);assert.equal((await state()).decisions,4);await shot('unity-penguin-four-controls-v10-'+width);
