@@ -149,10 +149,10 @@ public static class PuzzleRoomChecks {
    for(int i=0;i<count;i++)Need(allocation.View("s"+i).mySlot>=0&&allocation.View("s"+i).mySlot<count,"學生取得前段作答位置");
    if(count<3){
     Need(allocation.TryJoin("late","晚到",out _),"途中加入");
-    Need(allocation.View("late").mySlot==-1,"途中加入等下題");
-    No(allocation,"late",Action(allocation,"set",slot:count,value:"red"),"晚到不可拿老師步驟");
+    Need(allocation.View("late").mySlot==count,"作答中加入立即接手空步驟");
+    Yes(allocation,"late",Action(allocation,"set",slot:count,value:g=="sticker"?"red":"right"),"新加入可立即作答");
     Yes(allocation,"teacher",Action(allocation,"clear"),"清空不重新分工");
-    Need(allocation.View("late").mySlot==-1,"清空維持分工");
+    Need(allocation.View("late").mySlot==count,"清空維持分工");
     Yes(allocation,"teacher",Action(allocation,"open",g),"下題重算人數");
     Need(allocation.View("late").mySlot>=0&&allocation.View("late").mySlot<=count,"晚到在下題取得學生步驟");
    }
@@ -176,7 +176,7 @@ public static class PuzzleRoomChecks {
   Yes(sync,"teacher",Action(sync,"open","penguin"),"同步切企鵝");
   Need(sync.View("student").game=="penguin"&&sync.View("student").index==0&&sync.View("student").ready.All(v=>!v),"學生跟隨遊戲、關卡與清空狀態");
   Need(sync.TryJoin("late","小貓",out _),"晚加入學生");
-  Need(sync.View("late").game=="penguin"&&sync.View("late").mySlot==-1,"晚加入也顯示老師當題");
+  Need(sync.View("late").game=="penguin"&&sync.View("late").mySlot==1,"晚加入也顯示老師當題");
   No(sync,"student",Action(sync,"remove",playerId:"late"),"學生不能踢人");
   Yes(sync,"teacher",Action(sync,"remove",playerId:"student"),"老師踢出學生");
   Need(!sync.View("student").connected&&sync.View("teacher").slotNames[0]=="大象","被踢者失去房間，空步驟交房主");

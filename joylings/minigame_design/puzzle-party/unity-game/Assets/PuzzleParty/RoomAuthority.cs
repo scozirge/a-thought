@@ -106,6 +106,12 @@ namespace Together {
    int group=Enumerable.Range(0,3).Where(g=>!members.Any(m=>m.group==g)).DefaultIfEmpty(-1).First();
    if(group<0)return Reject(out error,"房間已滿，請選擇其他房間。");
    members.Add(new RoomMember{id=id,name=name,group=group,isHost=false});
+   // A teacher often opens the question before children finish joining.
+   // Hand over one teacher-held student step without reshuffling existing teams.
+   if(level!=null&&phase=="planning"){
+    int available=Enumerable.Range(0,3).Where(i=>slotOwners[i]==hostId).DefaultIfEmpty(-1).First();
+    if(available>=0)slotOwners[available]=id;
+   }
    revision++;return true;
   }
 

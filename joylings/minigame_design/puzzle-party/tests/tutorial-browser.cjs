@@ -39,10 +39,17 @@ const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
   }
   checks.push('貼紙五頁、企鵝四頁、360/390/945/1365px、真實點擊翻頁及完成');
   await host.setViewportSize({width:945,height:820});await room(host,{type:'create',name:'教學老師'});await wait(host,()=>puzzleRoomState.connected&&puzzleRoomState.isHost);
+  await cmd(host,'open:sticker:0');await wait(host,()=>puzzleUnityState.game==='sticker');
   const code=await host.evaluate(()=>puzzleRoomState.code),student=await player();
   await room(student,{type:'join',code,name:'小兔'});await wait(student,()=>puzzleRoomState.connected);
+  await wait(student,()=>puzzleUnityState.game==='sticker'&&puzzleUnityState.room.mySlot===0&&puzzleUnityState.room.slotNames[0]==='小兔');
+  await cmd(student,'set:0:red');await wait(host,()=>puzzleUnityState.settings[0]==='red'&&puzzleUnityState.room.slotNames[0]==='小兔');
+  checks.push('老師先開題再加入：學生立即同步本題、顯示本人名稱且可作答');
   for(const game of ['sticker','penguin']){
-   await cmd(host,`open:${game}:0`);await wait(student,g=>puzzleUnityState.game===g&&puzzleUnityState.room.mySlot===0,game);
+   const previousRound=(await state(host)).room.roundId;
+   await cmd(host,`open:${game}:0`);await wait(host,r=>puzzleUnityState.room.roundId>r,previousRound);
+   const round=(await state(host)).room.roundId;
+   await wait(student,({game,round})=>puzzleUnityState.game===game&&puzzleUnityState.room.roundId===round&&puzzleUnityState.room.mySlot===0,{game,round});
    const choice=game==='sticker'?'red':'right';await cmd(student,`set:0:${choice}`);await wait(host,({game,choice})=>puzzleUnityState.game===game&&puzzleUnityState.settings[0]===choice,{game,choice});
    const before=await state(host);
    await click(host,'tutorial-current');await tutorial(student,game,0);

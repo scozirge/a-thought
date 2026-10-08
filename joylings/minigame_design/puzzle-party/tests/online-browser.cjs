@@ -248,10 +248,10 @@ const {games}=require('../rules/catalog.js');
   await wait(third,()=>!puzzleRoomState.connected&&!puzzleRoomState.busy&&/移出/.test(puzzleRoomState.error));
   await wait(third,code=>puzzleRoomState.lobbyReady&&puzzleRoomState.rooms.some(r=>r.code===code&&r.open),code,65000);
   await host.page.locator('#room-close').click();
-  await join(third,code,true);assert.equal((await state(third)).room.mySlot,-1);
+  await join(third,code,true);third.slot=(await state(third)).room.mySlot;assert.ok(third.slot>=0&&third.slot<3);
   await command(third,'set:'+third.slot+':'+colors[third.slot]);await pause(500);
-  assert.ok((await state(host)).settings.every(v=>!v),'被踢後重新加入不能接手本題步驟');
-  note('老師從名單踢人，學生回大廳可重入，本題等待下題分工');
+  assert.equal((await state(host)).settings[third.slot],colors[third.slot],'重新加入可接手空步驟');
+  note('老師從名單踢人，學生重入立即接手空步驟');
 
   await leave(host);
   await allWait([first,second,third],()=>!window.puzzleRoomState?.connected&&!!window.puzzleRoomState?.error&&window.puzzleUnityState?.game==='',null,65000);
