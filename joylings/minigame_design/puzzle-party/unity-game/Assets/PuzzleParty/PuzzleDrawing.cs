@@ -64,19 +64,24 @@ namespace Together {
   void Border(Rect r,Color c,float w){Round(new Rect(r.x,r.y,r.width,w),c,0);Round(new Rect(r.x,r.yMax-w,r.width,w),c,0);Round(new Rect(r.x,r.y,w,r.height),c,0);Round(new Rect(r.xMax-w,r.y,w,r.height),c,0);}
   void Segment(Vector2 from,Vector2 to,Color c,float width){var m=GUI.matrix;float angle=Mathf.Atan2(to.y-from.y,to.x-from.x)*Mathf.Rad2Deg;RotateLocal(angle,from);Round(new Rect(from.x,from.y-width/2,Vector2.Distance(from,to),width),c,width/2);GUI.matrix=m;}
   void DrawIce(Rect r){
-   Text(new Rect(r.x+18,r.y+86,r.width-36,70),level.boards.Length==1?"先帶小紅回家。每個方向都會滑到冰塊或邊界才停。":"兩隻一起讀相同方向，最後都要停在家裡。",18,ink);
-   float size=Mathf.Min(level.boards.Length==1?320:265,(r.width-45)/level.boards.Length-8),y=r.y+202;
+   float size=Mathf.Min(level.boards.Length==1?320:265,(r.width-45)/level.boards.Length-8),y=r.y+50;
    for(int b=0;b<level.boards.Length;b++){
     var board=level.boards[b];float left=r.x+(r.width-(size+16)*level.boards.Length+16)/2+b*(size+16);Rect gr=new Rect(left,y,size,size);Panel(gr,C("d1e5eb"));float cell=(size-10)/board.size;
-    Color color=b==0?C("cf7268"):C("568cb8");Text(new Rect(left,y-31,size,28),(b==0?"小紅":"小藍")+"的冰場",18,color,true,TextAnchor.MiddleCenter);
+    Color color=b==0?C("cf7268"):C("568cb8");Image(new Rect(left+size/2-20,y-44,40,40),b==0?"penguinRed":"penguinBlue");
     for(int i=0;i<board.size*board.size;i++){var p=new Cell(i%board.size,i/board.size);Rect t=new Rect(left+5+p.x*cell,y+5+p.y*cell,cell-3,cell-3);Round(t,Rules.Wall(board.walls,p)?C("98c3d3"):C("f2faf7"),7);
-     if(Rules.Wall(board.walls,p))Text(t,"冰",18,C("598ca1"),false,TextAnchor.MiddleCenter);
-     if(p.Equals(board.goal)){Border(t,color,3);Text(t,"家",19,color,true,TextAnchor.MiddleCenter);}
+     if(Rules.Wall(board.walls,p))Border(new Rect(t.x+7,t.y+7,t.width-14,t.height-14),C("c3e6f0"),2);
+     if(p.Equals(board.goal)){Border(t,color,3);HouseIcon(t,color);}
     }
     Vector2 pos=icePositions[b];Image(new Rect(left+5+(pos.x-.13f)*cell,y+5+(pos.y-.21f)*cell,cell*1.22f,cell*1.22f),b==0?"penguinRed":"penguinBlue");
    }
-   float fx=r.x+18,fy=y+size+37;for(int i=0;i<settings.Length;i++)Flow("第 "+(i+1)+" 步 · "+StepGroup(i)+"\n"+Rules.Icon(settings[i]),active==i,ref fx,ref fy,r);
-   CueBox(new Rect(r.x+16,fy+90,r.width-32,176));Text(new Rect(r.x+18,fy+282,r.width-36,110),"在家也會繼續讀下一個方向。全部 "+settings.Length+" 步播完，都停在家裡才成功。",18,muted);
+   float fy=y+size+18,slot=(r.width-36)/4;
+   for(int i=0;i<4;i++){
+    Rect step=new Rect(r.x+18+i*slot,fy,slot-5,92);Panel(step,active==i?gold:C("f2f3eb"));
+    Text(new Rect(step.x,step.y+2,step.width,30),StepNumber(i),20,ink,true,TextAnchor.MiddleCenter);
+    DrawDirection(new Rect(step.x+8,step.y+34,step.width-16,48),settings[i],ink);
+   }
+   Text(new Rect(r.x+18,fy+106,r.width-36,48),ShortStatus(),22,ink,true);
+
   }
  }
 }
