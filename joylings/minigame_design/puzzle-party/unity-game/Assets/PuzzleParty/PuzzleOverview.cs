@@ -42,7 +42,7 @@ namespace Together {
     for(int j=0;j<level.palette.Length;j++){
      string color=level.palette[j];bool chosen=(level.twoColor?parts[area]:settings[i])==color;GUI.enabled=CanChoose(i);
      string id=level.twoColor?$"color:{i}:{area}:{color}":$"choose:{i}:{color}";
-     if(Button(new Rect(left+j*w,y,w-4,42),Rules.Label(color),id,ColorOf(color))){
+     if(Button(new Rect(left+j*w,y,w-4,42),Rules.Label(color),id,ColorOf(color),preserveDisabledColor:true)){
       if(level.twoColor){var next=Rules.ColorParts(settings[i]);next[area]=color;Set(i,string.Join("|",next));}else Set(i,color);
      }
      GUI.enabled=true;
@@ -53,11 +53,11 @@ namespace Together {
   void DrawStickerOverview(float y,bool narrow,int count){
    float width=viewWidth-40,gap=10,cardWidth=(width-gap*(narrow?1:3))/(narrow?2:4);
    float nameExtra=OwnerExtra(cardWidth-20);
-   float mask=Mathf.Min(narrow?96:120,cardWidth-24),cardHeight=64+nameExtra+mask+(narrow?10:level.twoColor?168:56);
+   float mask=Mathf.Min(narrow?96:120,cardWidth-24),cardHeight=64+nameExtra+mask+(narrow?44:level.twoColor?168:56);
    float cardsY=narrow?y:y+218;
    for(int i=0;i<4;i++){
     Rect r=new Rect(20+i%(narrow?2:4)*(cardWidth+gap),cardsY+i/(narrow?2:4)*(cardHeight+gap),cardWidth,cardHeight);
-    Panel(r,active==i?gold:selected==i?C("e5efde"):C("f1f3ea"));
+    StepPanel(r,i);
     Text(new Rect(r.x+10,r.y+5,r.width-20,36),StepNumber(i),20,ink,true);
     ReadyBadge(new Rect(r.xMax-44,r.y+3,34,32),i);
     Text(new Rect(r.x+10,r.y+32,r.width-20,28+nameExtra),ShortOwner(i),18,ink);
@@ -65,6 +65,15 @@ namespace Together {
     Rect pick=new Rect(r.x,r.y,r.width,64+nameExtra+mask);HitBox(pick,"role:"+i);
     if(!answerVisible&&CanChoose(i)&&GUI.Button(pick,"",GUIStyle.none))selected=i;
     if(!narrow)StickerColors(new Rect(r.x+10,grid.yMax+8,r.width-20,150),i);
+    else {
+     var parts=level.twoColor?Rules.ColorParts(settings[i]):new[]{settings[i]};
+     float chipWidth=(r.width-20)/parts.Length;
+     for(int part=0;part<parts.Length;part++){
+      Rect chip=new Rect(r.x+10+part*chipWidth,grid.yMax+6,chipWidth-3,30);
+      Round(chip,OtherStep(i)?Color.Lerp(ColorOf(parts[part]),C("d8ddcf"),.55f):ColorOf(parts[part]),5);
+      Text(chip,(level.twoColor?(part==0?"A ":"B "):"")+(string.IsNullOrEmpty(parts[part])?"…":Rules.Label(parts[part])),18,ink,false,TextAnchor.MiddleCenter);
+     }
+    }
    }
    float boardY=narrow?cardsY+2*(cardHeight+gap)+8:y;
    float size=narrow?Mathf.Min(150,(width-18)/2):176;

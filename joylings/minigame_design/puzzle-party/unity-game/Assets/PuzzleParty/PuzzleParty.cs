@@ -149,7 +149,7 @@ namespace Together {
   float DrawChoiceControls(Rect r){
    float y=r.y+70,row=ChoiceRow(r.width);
    for(int i=0;i<settings.Length;i++){
-    Rect rr=new Rect(r.x+14,y,r.width-28,row-10);Panel(rr,active==i?gold:selected==i?C("eaf2e3"):C("f6f7ef"));
+    Rect rr=new Rect(r.x+14,y,r.width-28,row-10);StepPanel(rr,i);
     if(level.twoColor){DrawTwoColor(rr,i);y+=row;continue;}
     float left=rr.x+10;
     if(game=="sticker"){MiniMask(new Rect(left,rr.y+42,52,52),level.masks[i].cells,level.cols);left+=64;}
@@ -189,7 +189,7 @@ namespace Together {
   void Round(Rect r,Color c,float radius=10){GUI.DrawTexture(r,Texture2D.whiteTexture,ScaleMode.StretchToFill,true,0,c,0,radius);}
   void Panel(Rect r,Color? bg=null){Round(r,line,12);Round(new Rect(r.x+1,r.y+1,r.width-2,r.height-2),bg??paper,11);}
   void Text(Rect r,string s,int size=18,Color? color=null,bool bold=false,TextAnchor anchor=TextAnchor.UpperLeft){labelStyle.fontSize=size;labelStyle.fontStyle=bold?FontStyle.Bold:FontStyle.Normal;labelStyle.alignment=anchor;labelStyle.normal.textColor=color??ink;GUI.Label(r,s??"",labelStyle);}
-  bool Button(Rect r,string s,string id,Color? bg=null,Color? fg=null){bool enabled=GUI.enabled;GUI.enabled=enabled&&(!answerVisible||id=="answer-close");Round(r,GUI.enabled?(bg??C("eff0e7")):C("d8ddcf"),8);buttonStyle.normal.textColor=fg??ink;buttonStyle.fontSize=20;HitBox(r,id);bool clicked=GUI.Button(r,s,buttonStyle);GUI.enabled=enabled;return clicked;}
+  bool Button(Rect r,string s,string id,Color? bg=null,Color? fg=null,bool preserveDisabledColor=false){bool enabled=GUI.enabled;GUI.enabled=enabled&&(!answerVisible||id=="answer-close");Round(r,GUI.enabled?(bg??C("eff0e7")):preserveDisabledColor?Color.Lerp(bg??paper,C("d8ddcf"),.55f):C("d8ddcf"),8);buttonStyle.normal.textColor=fg??ink;buttonStyle.fontSize=20;HitBox(r,id);bool clicked=GUI.Button(r,s,buttonStyle);GUI.enabled=enabled;return clicked;}
   void HitBox(Rect r,string id){hits.Add(new Hit{id=id,enabled=GUI.enabled,x=r.x*scale,y=(r.y-scroll.y)*scale,w=r.width*scale,h=r.height*scale});}
   void RotateLocal(float angle,Vector2 p){GUI.matrix=GUI.matrix*Matrix4x4.TRS(new Vector3(p.x,p.y,0),Quaternion.Euler(0,0,angle),Vector3.one)*Matrix4x4.Translate(new Vector3(-p.x,-p.y,0));}
   void Image(Rect r,string name,float alpha=1,float angle=0){if(!art.TryGetValue(name,out var t)||t==null)return;var m=GUI.matrix;var c=GUI.color;GUI.color=new Color(1,1,1,alpha);if(angle!=0)RotateLocal(angle,r.center);GUI.DrawTexture(r,t,ScaleMode.ScaleToFit);GUI.color=c;GUI.matrix=m;}

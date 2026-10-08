@@ -15,7 +15,7 @@ namespace Together {
  }
  [Serializable] public class RoomSnapshot {
   public string code,game,phase,error;
-  public int revision,roundId,runId,index,myGroup,mySlot;
+  public int revision,roundId,runId,index,myGroup,mySlot,ackSequence;
   public int[] slotGroups;
   public string[] slotNames;public bool[] ready;
   public bool isHost,connected,paused,success;
@@ -24,11 +24,27 @@ namespace Together {
   public RoomMember[] members;
  }
 
+ // Keep a student's most recent choice visible until the host acknowledges it.
+ // This also lets rapid A/B clicks compose from the latest local choice.
+ public sealed class ClientChoiceDraft {
+  int sequence,roundId,slot;string value;bool pending;
+  public void Remember(int sent,RoomAction action,RoomSnapshot state){
+   if(state==null||!state.connected||state.isHost||state.phase=="playing"||action.type!="set"||action.roundId!=state.roundId||action.slot!=state.mySlot||action.slot<0)return;
+   sequence=sent;roundId=action.roundId;slot=action.slot;value=action.value;pending=true;
+  }
+  public void Apply(RoomSnapshot state){
+   if(!pending||state==null)return;
+   if(!state.connected||state.isHost||state.roundId!=roundId||state.mySlot!=slot||state.phase=="playing"||state.ackSequence>=sequence){pending=false;return;}
+   state.settings=(string[])state.settings.Clone();state.settings[slot]=value;state.phase="planning";state.success=false;
+  }
+ }
+
  // Pure room state: the Fusion adapter supplies the authenticated sender ID and
  // advances this authority only on the teacher's device. No answers are sent.
  public sealed class RoomAuthority {
   readonly Level[] levels;
   readonly string code,hostId;
+  readonly Random random;
   readonly List<RoomMember> members=new List<RoomMember>();
   string game="",phase="planning";
   int index,revision=1,roundId=1,runId;
@@ -39,10 +55,10 @@ namespace Together {
   Result result;
   Level level;
 
-  public RoomAuthority(Level[] levels,string code,string hostId,string hostName) {
+  public RoomAuthority(Level[] levels,string code,string hostId,string hostName,Random random=null) {
    if(levels==null)throw new ArgumentNullException(nameof(levels));
    if(string.IsNullOrWhiteSpace(hostId))throw new ArgumentException("老師身分不可留空。",nameof(hostId));
-   this.levels=levels;this.code=code??"";this.hostId=hostId;slotOwners=Enumerable.Repeat(hostId,4).ToArray();
+   this.levels=levels;this.code=code??"";this.hostId=hostId;this.random=random??new Random();slotOwners=Enumerable.Repeat(hostId,4).ToArray();
    string name=CleanName(hostName);
    if(name.Length==0)throw new ArgumentException("請輸入組別名稱。",nameof(hostName));
    members.Add(new RoomMember{id=hostId,name=name,group=3,isHost=true});
@@ -56,7 +72,25 @@ namespace Together {
   static bool Reject(out string error,string message){error=message;return false;}
   static bool Finite(float value)=>!float.IsNaN(value)&&!float.IsInfinity(value);
   void ResetPlayback(){phase="planning";paused=false;elapsedMs=0;durationMs=0;result=null;}
-  void AssignSlots(){var students=members.Where(m=>!m.isHost).ToArray();slotOwners=Enumerable.Range(0,4).Select(i=>i<students.Length?students[i].id:hostId).ToArray();}
+  void AssignSlots(){
+   // At most three students: enumerate every order, then randomly choose an order
+   // that changes as many students' steps as possible compared with the last round.
+   var students=members.Where(m=>!m.isHost).Select(m=>m.id).ToArray();
+   var orders=new List<string[]>();
+   void Permute(int start){
+    if(start==students.Length){orders.Add((string[])students.Clone());return;}
+    for(int i=start;i<students.Length;i++){
+     var temp=students[start];students[start]=students[i];students[i]=temp;
+     Permute(start+1);
+     temp=students[start];students[start]=students[i];students[i]=temp;
+    }
+   }
+   Permute(0);
+   int Changes(string[] order)=>order.Where((id,i)=>slotOwners[i]!=id).Count();
+   int best=orders.Max(Changes);var candidates=orders.Where(order=>Changes(order)==best).ToArray();
+   var chosen=candidates[random.Next(candidates.Length)];
+   slotOwners=Enumerable.Range(0,4).Select(i=>i<chosen.Length?chosen[i]:hostId).ToArray();
+  }
   void NextRound(){roundId++;ResetPlayback();}
 
   public bool TryJoin(string id,string name,out string error) {

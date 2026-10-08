@@ -15,7 +15,7 @@ namespace Together {
  // The same Photon Host/Client transport as RIVALS. Only the teacher owns room
  // state; clients submit actions and receive a snapshot made for their identity.
  public sealed class PuzzleConnection : MonoBehaviour, INetworkRunnerCallbacks {
-  public const string NetworkVersion="puzzle-party-v13-classroom";
+  public const string NetworkVersion="puzzle-party-v14-shuffle";
   public bool Busy {get;private set;}
   public bool Connected {get;private set;}
   public bool IsHost {get;private set;}
@@ -34,6 +34,7 @@ namespace Together {
   readonly HashSet<int> rejected=new HashSet<int>();
   readonly HashSet<int> admitted=new HashSet<int>();
   readonly Dictionary<int,int> actionSerials=new Dictionary<int,int>();
+  ClientChoiceDraft choiceDraft=new ClientChoiceDraft();
   [Serializable] sealed class Hello {public string name;}
   [Serializable] sealed class Packet {public string type,error;public int sequence;public RoomAction action;public RoomSnapshot state;}
 
@@ -73,7 +74,7 @@ namespace Together {
    if(!host&&(roomCode.Length!=6||roomCode.Any(c=>c<'0'||c>'9'))){Error="請輸入老師的六位房號。";NotifyError();return;}
    name=RoomAuthority.CleanName(name);
    if(name.Length==0){Error="請輸入組別名稱。";NotifyError();return;}
-   int attempt=++epoch;Busy=true;Connected=false;IsHost=host;Error="";leaving=false;latest=null;authority=null;rejected.Clear();admitted.Clear();actionSerials.Clear();receivedSerial=0;
+   int attempt=++epoch;Busy=true;Connected=false;IsHost=host;Error="";leaving=false;latest=null;authority=null;choiceDraft=new ClientChoiceDraft();rejected.Clear();admitted.Clear();actionSerials.Clear();receivedSerial=0;
    lastTick=lastReceive=lastUpdate=Time.realtimeSinceStartup;nextSend=0;
    Code=host?UnityEngine.Random.Range(100000,1000000).ToString():roomCode;
    displayName=name;
@@ -138,15 +139,20 @@ namespace Together {
    if(IsHost){Apply(runner.LocalPlayer,action);return;}
    int sequence=++serial;var bytes=Encoding.UTF8.GetBytes(JsonUtility.ToJson(new Packet{type="action",sequence=sequence,action=action}));
    runner.SendReliableDataToServer(ReliableKey.FromInts(0x50555A,sequence,0,0),bytes);
+   choiceDraft.Remember(sequence,action,latest);
+   if(latest!=null)Accept(JsonUtility.FromJson<RoomSnapshot>(JsonUtility.ToJson(latest)));
   }
   void Apply(PlayerRef sender,RoomAction action){
    if(authority==null)return;
    if(!authority.Apply(Id(sender),action,out var error)){
-    var view=authority.View(Id(sender));view.error=error;
+    var view=ViewFor(sender);view.error=error;
     if(sender==runner.LocalPlayer)Accept(view);else SendPacket(sender,new Packet{type="state",state=view});
     return;
    }
    Broadcast();
+  }
+  RoomSnapshot ViewFor(PlayerRef player){
+   var view=authority.View(Id(player));view.ackSequence=actionSerials.TryGetValue(player.RawEncoded,out int acknowledged)?acknowledged:0;return view;
   }
   void SendPacket(PlayerRef player,Packet packet){
    if(!runner||!runner.IsRunning)return;
@@ -160,13 +166,13 @@ namespace Together {
     // Fusion can expose a peer in ActivePlayers before its OnPlayerJoined
     // callback. Only admitted peers can be interpreted as authority removals.
     if(rejected.Contains(player.RawEncoded)||!admitted.Contains(player.RawEncoded))continue;
-    var view=authority.View(Id(player));
+    var view=ViewFor(player);
     if(!view.connected&&player!=runner.LocalPlayer){admitted.Remove(player.RawEncoded);rejected.Add(player.RawEncoded);SendPacket(player,new Packet{type="closed",error="老師已將你移出房間。"});StartCoroutine(RejectLater(runner,player));continue;}
     if(player==runner.LocalPlayer)Accept(view);else SendPacket(player,new Packet{type="state",state=view});
    }
   }
   void Accept(RoomSnapshot state){
-   if(state==null)return;latest=state;Connected=state.connected;IsHost=state.isHost;
+   if(state==null)return;if(!IsHost)choiceDraft.Apply(state);latest=state;Connected=state.connected;IsHost=state.isHost;
    Error=state.error??"";lastReceive=Time.realtimeSinceStartup;StateChanged?.Invoke(state);
   }
   void NotifyError(){

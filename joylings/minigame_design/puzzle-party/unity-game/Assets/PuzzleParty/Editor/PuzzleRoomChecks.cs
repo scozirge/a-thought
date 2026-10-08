@@ -5,6 +5,7 @@ using Together;
 using UnityEngine;
 
 public static class PuzzleRoomChecks {
+ sealed class FirstOrderRandom:System.Random {public override int Next(int maxValue)=>0;}
  static int checks;
  static void Need(bool condition,string message){checks++;if(!condition)throw new Exception("連線房間驗證失敗："+message);}
  static Level[] Fixtures() {
@@ -31,7 +32,7 @@ public static class PuzzleRoomChecks {
  }
 
  public static void Check() {
-  checks=0;var room=new RoomAuthority(Fixtures(),"ABC123","teacher","老師");
+  checks=0;var room=new RoomAuthority(Fixtures(),"ABC123","teacher","老師",new FirstOrderRandom());
   Need(room.View("teacher").myGroup==3&&room.View("teacher").isHost,"老師固定第四組");
   Need(room.View("teacher").settings.Length==4&&room.View("teacher").game=="","初始四格及遊戲選單");
   Need(!room.View("unknown").connected&&room.View("unknown").myGroup==-1,"未知身分沒有席位");
@@ -144,8 +145,8 @@ public static class PuzzleRoomChecks {
    var allocation=new RoomAuthority(Fixtures(),"123456","teacher","老師");
    for(int i=0;i<count;i++)Need(allocation.TryJoin("s"+i,"同學"+i,out _),"加入開題人數");
    Yes(allocation,"teacher",Action(allocation,"open",g),"依人數開題："+g);
-   Need(allocation.View("teacher").slotGroups.SequenceEqual(Enumerable.Range(0,4).Select(i=>i<count?i:3)),"學生在前、老師包辦後段");
-   for(int i=0;i<count;i++)Need(allocation.View("s"+i).mySlot==i,"學生作答位置");
+   Need(allocation.View("teacher").slotGroups.Take(count).OrderBy(i=>i).SequenceEqual(Enumerable.Range(0,count))&&allocation.View("teacher").slotGroups.Skip(count).All(i=>i==3),"學生隨機在前、老師包辦後段");
+   for(int i=0;i<count;i++)Need(allocation.View("s"+i).mySlot>=0&&allocation.View("s"+i).mySlot<count,"學生取得前段作答位置");
    if(count<3){
     Need(allocation.TryJoin("late","晚到",out _),"途中加入");
     Need(allocation.View("late").mySlot==-1,"途中加入等下題");
@@ -153,10 +154,10 @@ public static class PuzzleRoomChecks {
     Yes(allocation,"teacher",Action(allocation,"clear"),"清空不重新分工");
     Need(allocation.View("late").mySlot==-1,"清空維持分工");
     Yes(allocation,"teacher",Action(allocation,"open",g),"下題重算人數");
-    Need(allocation.View("late").mySlot==count,"晚到在下題取得學生步驟");
+    Need(allocation.View("late").mySlot>=0&&allocation.View("late").mySlot<=count,"晚到在下題取得學生步驟");
    }
   }
-  var gaps=new RoomAuthority(Fixtures(),"123456","teacher","老師");
+  var gaps=new RoomAuthority(Fixtures(),"123456","teacher","老師",new FirstOrderRandom());
   gaps.TryJoin("first","甲",out _);gaps.TryJoin("second","乙",out _);
   Yes(gaps,"teacher",Action(gaps,"open","sticker"),"兩組開題");
   gaps.Remove("first");Need(gaps.View("second").mySlot==1&&gaps.View("teacher").slotGroups[0]==3,"離場原位交老師，不移動他人");
@@ -180,7 +181,75 @@ public static class PuzzleRoomChecks {
   Yes(sync,"teacher",Action(sync,"remove",playerId:"student"),"老師踢出學生");
   Need(!sync.View("student").connected&&sync.View("teacher").slotNames[0]=="大象","被踢者失去房間，空步驟交房主");
   CheckHomeScroll();
+  CheckRandomAssignments(book);
+  CheckRapidChoices();
   Debug.Log("PUZZLE_ROOMS_OK "+checks+" authority checks (four groups, permissions, simultaneous answers, timing and reconnect)");
+ }
+ static void CheckRapidChoices(){
+  RoomSnapshot State(int ack=0,int round=8,int slot=1,string value=null,string phase="planning")=>new RoomSnapshot{connected=true,roundId=round,mySlot=slot,ackSequence=ack,phase=phase,settings=new[]{(string)null,value,null,null}};
+  var draft=new ClientChoiceDraft();var first=State();
+  draft.Remember(1,new RoomAction{type="set",roundId=8,slot=1,value="red|"},first);draft.Apply(first);
+  Need(first.settings[1]=="red|","學生第一次選色立即保留");
+  var colors=Rules.ColorParts(first.settings[1]);colors[1]="blue";
+  draft.Remember(2,new RoomAction{type="set",roundId=8,slot=1,value=string.Join("|",colors)},first);
+  var stale=State();draft.Apply(stale);Need(stale.settings[1]=="red|blue","快速選 A、B 不被舊廣播蓋掉");
+  var ackFirst=State(1,value:"red|");draft.Apply(ackFirst);Need(ackFirst.settings[1]=="red|blue","第一筆回覆仍保留第二筆選色");
+  var ackLatest=State(2,value:"red|blue");draft.Apply(ackLatest);Need(ackLatest.settings[1]=="red|blue","最新回覆完成確認");
+  var teacher=State(2,value:"blue|red");draft.Apply(teacher);Need(teacher.settings[1]=="blue|red","確認後老師代填正常同步");
+  draft.Remember(3,new RoomAction{type="set",roundId=8,slot=1,value="blue|blue"},teacher);
+  var rejected=State(3,value:"blue|red");rejected.error="拒絕";draft.Apply(rejected);Need(rejected.settings[1]=="blue|red","拒絕回覆撤回未確認草稿");
+  draft.Remember(4,new RoomAction{type="set",roundId=8,slot=1,value="red|red"},teacher);
+  var next=State(round:9);draft.Apply(next);Need(next.settings.All(v=>v==null),"換題不帶入未確認選色");
+  draft.Remember(5,new RoomAction{type="set",roundId=8,slot=0,value="red|red"},teacher);
+  var other=State();draft.Apply(other);Need(other.settings.All(v=>v==null),"別人的步驟不可產生本機假選擇");
+  draft.Remember(6,new RoomAction{type="set",roundId=8,slot=1,value="red|red"},teacher);
+  var playing=State(value:"blue|red",phase:"playing");draft.Apply(playing);Need(playing.settings[1]=="blue|red"&&playing.phase=="playing","播放採用老師已確認答案");
+ }
+ static void CheckRandomAssignments(Level[] book){
+  var firstOrders=new System.Collections.Generic.HashSet<string>();
+  for(int seed=0;seed<12;seed++){
+   var randomRoom=new RoomAuthority(book,"123456","teacher","老師",new System.Random(seed));
+   for(int i=0;i<3;i++)randomRoom.TryJoin("s"+i,"同學"+i,out _);
+   Yes(randomRoom,"teacher",Action(randomRoom,"open","sticker"),"隨機初次開題");
+   firstOrders.Add(string.Join(",",randomRoom.View("teacher").slotGroups));
+  }
+  Need(firstOrders.Count>1,"首次分工不固定依加入順序");
+  for(int count=0;count<=3;count++){
+   var randomRoom=new RoomAuthority(book,"123456","teacher","老師",new System.Random(40+count));
+   for(int i=0;i<count;i++)randomRoom.TryJoin("s"+i,"同學"+i,out _);
+   int[] previous=null;
+   foreach(var l in book){
+    var stale=Action(randomRoom,"set",slot:0,value:l.options[0]);
+    Yes(randomRoom,"teacher",Action(randomRoom,"open",l.game,l.index),"隨機切關／切遊戲："+l.id);
+    var host=randomRoom.View("teacher");var assigned=Enumerable.Range(0,count).Select(i=>randomRoom.View("s"+i).mySlot).ToArray();
+    Need(host.settings.All(v=>v==null),"每次開題清空上一題的選擇");
+    Need(assigned.OrderBy(i=>i).SequenceEqual(Enumerable.Range(0,count))&&host.slotGroups.Skip(count).All(g=>g==3),"每位學生恰有一步，老師固定後段");
+    if(count>1&&previous!=null)Need(assigned.Where((slot,i)=>slot==previous[i]).Count()==0,"重新開題後每位學生都換步驟");
+    previous=assigned;
+    No(randomRoom,"teacher",stale,"前題延遲封包不能污染新題");
+    for(int i=0;i<count;i++){
+     string id="s"+i;var student=randomRoom.View(id);
+     Need(student.game==l.game&&student.index==l.index&&student.roundId==host.roundId&&student.settings.SequenceEqual(randomRoom.View("teacher").settings),"每位學生同步遊戲、關卡與目前選擇");
+     for(int slot=0;slot<4;slot++){
+      var action=Action(randomRoom,"set",slot:slot,value:l.options[0]);action.group=3;action.playerId="teacher";
+      if(slot==student.mySlot)Yes(randomRoom,id,action,"本人作答有效");
+      else No(randomRoom,id,action,"學生不能冒用老師或改其他人的步驟");
+     }
+     foreach(string command in new[]{"open","home","play","clear","stop","speed","remove","answer"})
+      No(randomRoom,id,Action(randomRoom,command,l.game,l.index,playerId:"teacher"),"學生不能操作老師控制："+command);
+    }
+    foreach(string id in Enumerable.Range(0,count).Select(i=>"s"+i))Need(randomRoom.View(id).settings.SequenceEqual(randomRoom.View("teacher").settings),"所有學生都能看到相同的全部選擇");
+    No(randomRoom,"teacher",Action(randomRoom,"play"),"老師未完成後段前禁止播放");
+    var owners=(int[])randomRoom.View("teacher").slotGroups.Clone();
+    Yes(randomRoom,"teacher",Action(randomRoom,"clear"),"清空不抽籤");
+    Need(randomRoom.View("teacher").slotGroups.SequenceEqual(owners),"清空保持分工");
+    Fill(randomRoom,Rules.Solve(l));Yes(randomRoom,"teacher",Action(randomRoom,"play"),"所有題目多人完成可播放");
+    randomRoom.Advance(99999);
+    Need(randomRoom.View("teacher").success&&Enumerable.Range(0,count).All(i=>randomRoom.View("s"+i).success),"全部玩家同步成功結果");
+    Yes(randomRoom,"teacher",Action(randomRoom,"stop"),"停止不抽籤");
+    Need(randomRoom.View("teacher").slotGroups.SequenceEqual(owners),"停止保持分工");
+   }
+  }
  }
  static void CheckHomeScroll(){
   // Reproduce returning from level 20: the lobby snapshot has index 0 while the local level index is 19.

@@ -5,6 +5,12 @@ namespace Together {
  public partial class PuzzleParty {
   string StepNumber(int i)=>new[]{"①","②","③","④"}[Mathf.Clamp(i,0,3)];
   string ShortOwner(int i)=>Online&&room.slotNames!=null&&i<room.slotNames.Length?room.slotNames[i]:"";
+  bool OtherStep(int i)=>Online&&!room.isHost&&room.mySlot!=i;
+  bool MyStep(int i)=>Online&&!room.isHost&&room.mySlot==i;
+  void StepPanel(Rect r,int i){
+   Panel(r,active==i?gold:OtherStep(i)?C("e6e8e3"):MyStep(i)||selected==i?C("e5efde"):C("f1f3ea"));
+   if(MyStep(i))Border(r,green,3);
+  }
   bool SlotReady(int i)=>level!=null&&settings[i]!=null&&level.options.Contains(settings[i]);
   string ShortIdentity()=>Online&&!room.isHost&&room.mySlot<0?"等下一題":"";
   float OwnerExtra(float width)=>!Online?0:Mathf.Max(0,Enumerable.Range(0,4).Max(i=>TextHeight(ShortOwner(i),width,18))-28);
