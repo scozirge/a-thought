@@ -19,10 +19,11 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  assert.ok((await state()).textPixelSize>=18);
  await shot('unity-home-v10');await click('game:sticker');await page.waitForFunction(()=>puzzleUnityState.game==='sticker');
  assert.equal((await state()).role,'你是老師組');
- assert.equal((await state()).controls.filter(b=>b.id.startsWith('level:')).length,20);
+ assert.equal((await state()).controls.filter(b=>b.id.startsWith('level:')).length,0);
+ await click('level-picker');assert.equal((await state()).controls.filter(b=>b.id.startsWith('level:')).length,20);await click('level-picker');
  await shot('unity-sticker-v10-945');
  const first=R.solutions('sticker',games.sticker.levels[0])[0];
- for(let i=0;i<4;i++){await click('choose:'+i+':'+first[i]);assert.equal((await state()).role,'你是'+R.groups[i]);}
+ for(let i=0;i<4;i++){await click('choose:'+i+':'+first[i]);assert.equal((await state()).role,'你是老師組');}
  await click('role:0');assert.equal((await state()).role,'你是老師組');
  await shot('unity-role-v10');await click('play');await page.waitForFunction(()=>puzzleUnityState.playing);await page.waitForFunction(()=>puzzleUnityState.finished,{},{timeout:20000});assert.equal((await state()).success,true);
  await command('speed');
@@ -55,8 +56,8 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  await page.setViewportSize({width:1365,height:1100});await command('open:penguin:9');await page.waitForTimeout(300);await shot('unity-penguin-v10-wide');
  await page.setViewportSize({width:390,height:844});await command('open:sticker:9');await page.waitForTimeout(400);await shot('unity-mobile-v10');
  assert.ok((await state()).textPixelSize>=18);
- await click('choose:0:red');assert.equal((await state()).role,'你是老師組');await shot('unity-mobile-controls-v10');
- await click('choose:3:blue');
+ await click('role:0');await click('choose:0:red');assert.equal((await state()).role,'你是老師組');await shot('unity-mobile-controls-v10');
+ await click('role:3');await click('choose:3:blue');
  const client=await page.context().newCDPSession(page),oldY=(await state()).controls.find(c=>c.id==='play').y;
  await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:200,y:350}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:200,y:600}]});

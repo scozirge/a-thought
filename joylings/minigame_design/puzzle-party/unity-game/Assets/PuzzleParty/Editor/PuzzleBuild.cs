@@ -42,7 +42,7 @@ public static class PuzzleBuild {
   var camera=new GameObject("Camera").AddComponent<Camera>();camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.96f,.96f,.92f);camera.orthographic=true;
   new GameObject("PuzzleParty").AddComponent<PuzzleParty>();
   Directory.CreateDirectory("Assets/PuzzleParty/Scenes");EditorSceneManager.SaveScene(scene,"Assets/PuzzleParty/Scenes/Playground.unity");
-  PlayerSettings.companyName="AThought";PlayerSettings.productName="一起想想";PlayerSettings.bundleVersion="0.12.0";
+  PlayerSettings.companyName="AThought";PlayerSettings.productName="一起想想";PlayerSettings.bundleVersion="0.12.1";
   PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Disabled;PlayerSettings.WebGL.decompressionFallback=false;
   PlayerSettings.WebGL.dataCaching=false;PlayerSettings.WebGL.nameFilesAsHashes=false;
   PlayerSettings.WebGL.initialMemorySize=128;PlayerSettings.WebGL.maximumMemorySize=512;PlayerSettings.WebGL.template="PROJECT:PuzzleParty";

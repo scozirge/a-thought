@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Together {
  public partial class PuzzleParty : MonoBehaviour {
   Level[] levels;Level level;string game="";int levelIndex,selected;string[] settings=new string[4];
-  bool playing,paused;float speed=1,scale=1,viewWidth;Vector2 scroll;Result result;
+  bool levelPicker;bool playing,paused;float speed=1,scale=1,viewWidth;Vector2 scroll;Result result;
   string cue="準備出發",detail="四組選好，再按播放。",tone="ready";
   int active=-1,currentStep=-1;bool rotating;float rotation;string[] stickerBoard;
   HeroState hero;Vector2 heroPosition,monsterPosition;float heroAlpha=1;string portalPhase="";
@@ -54,12 +54,14 @@ namespace Together {
    maxScroll=Mathf.Max(0,total-vh);scroll.x=0;scroll.y=Mathf.Clamp(scroll.y,0,maxScroll);
    scroll=GUI.BeginScrollView(new Rect(0,0,viewWidth,vh),scroll,new Rect(0,0,viewWidth-10,Mathf.Max(vh,total)),false,false,GUIStyle.none,GUIStyle.none);
    float w=viewWidth-40;
+   if(game==""){
    Text(new Rect(24,20,w-158,44),"一起想想",28,ink,true);
    GUI.enabled=CanLead;if(game!=""&&Button(new Rect(viewWidth-185,22,160,44),"← 遊戲選單","home"))GoHome();GUI.enabled=true;
    if(Button(new Rect(viewWidth-185,game==""?22:76,160,44),Online?"房間 / 離開":"連線教室","room"))ShowRoom();
    Text(new Rect(24,76,w-174,56),Online?"房號 "+room.code:"每組選一次\n老師可代填",18,muted);
    headerExtra=Online?TextHeight(RoleIdentity(),viewWidth-48,22)+12:0;
    if(Online)Text(new Rect(24,132,viewWidth-48,headerExtra),RoleIdentity(),22,green,true);
+   }
    roleExtra=Mathf.Max(0,TextHeight(RoleIdentity(),(narrow?viewWidth-48:(viewWidth-68)/2)-52,26)-39);
    if(game=="")DrawHome(narrow);else DrawGame(narrow);
    GUI.EndScrollView();DrawAnswer(vh);if(maxScroll>0){Round(new Rect(viewWidth-7,0,5,vh),C("e5e8db"),3);float thumb=vh*vh/total;Round(new Rect(viewWidth-7,(vh-thumb)*scroll.y/maxScroll,5,thumb),C("a9b9a0"),3);}GUI.matrix=Matrix4x4.identity;
@@ -86,16 +88,9 @@ namespace Together {
    contentHeight=bottom+140;
   }
   void DrawGame(bool narrow){
-   Text(new Rect(24,138+headerExtra,viewWidth-48,42),GameName(game),30,ink,true);
-   if(CanReveal&&Button(new Rect(viewWidth-76,136+headerExtra,48,44),"?","answer"))ToggleAnswer();
+   float boardY=DrawCompactHeader(narrow);
    var available=levels.Where(l=>l.game==game).ToArray();
-   int perRow=Math.Min(available.Length,narrow?5:10);
-   for(int i=0;i<available.Length;i++){
-    bool done=PlayerPrefs.GetInt("done:"+available[i].id,0)==1;
-    Rect b=new Rect(24+i%perRow*52,190+headerExtra+i/perRow*52,44,44);
-    GUI.enabled=CanLead;if(Button(b,(i+1).ToString(),"level:"+i,i==levelIndex?green:done?C("dcebd0"):C("e9ede2"),i==levelIndex?Color.white:ink))Open(game,i);GUI.enabled=true;
-   }
-   float boardY=190+headerExtra+Mathf.Ceil(available.Length/(float)perRow)*52+16;
+   if(game=="sticker"){DrawStickerOverview(boardY,narrow,available.Length);return;}
    float column=narrow?viewWidth-48:(viewWidth-68)/2;
    float gridSize=game=="animal"?0:game=="sticker"?Mathf.Min(235,(column-54)/2):Mathf.Min(level.boards.Length==1?320:265,(column-45)/level.boards.Length-8);
    int flowColumns=Math.Max(1,Mathf.FloorToInt((column-28)/136));
