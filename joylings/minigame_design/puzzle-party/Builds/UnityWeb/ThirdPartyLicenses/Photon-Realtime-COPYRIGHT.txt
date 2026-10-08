@@ -1,0 +1,9 @@
+// -----------------------------------------------------------------------
+// <copyright file="RealtimeClient.cs" company="Exit Games GmbH">
+// Photon Realtime API - Copyright (C) 2022 Exit Games GmbH
+// </copyright>
+// <summary>
+// Provides state and operations for the Photon Realtime API.
+// </summary>
+// <author>developer@photonengine.com</author>
+// ----------------------------------------------------------------------------

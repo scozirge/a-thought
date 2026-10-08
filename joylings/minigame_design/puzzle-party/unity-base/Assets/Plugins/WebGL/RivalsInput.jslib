@@ -1,0 +1,29 @@
+mergeInto(LibraryManager.library, {
+  RivalsReportLearning: function(json) { var state=JSON.parse(UTF8ToString(json));if(window.rivalsReceiveLearning)window.rivalsReceiveLearning(state); },
+  RivalsHudMetric: function(metric) { var v=window.rivalsViewport;return v?v[metric]||0:0; },
+  RivalsLookX: function() { var s=window.rivalsLook; if(!s)return 0;var value=s.x;s.x=0;return value; },
+  RivalsLookY: function() { var s=window.rivalsLook; if(!s)return 0;var value=s.y;s.y=0;return value; },
+  RivalsCanvasFocused: function() { return window.rivalsLook && window.rivalsLook.active ? 1 : 0; },
+  RivalsResumeLook: function() { if(window.rivalsLook)window.rivalsLook.resume(); },
+  RivalsReleaseLook: function() { if(window.rivalsLook)window.rivalsLook.release(); },
+  RivalsSuspendForRespawn: function() { if(window.rivalsLook)window.rivalsLook.suspendForRespawn(); },
+  RivalsTouchMode: function() { return window.rivalsTouch && window.rivalsTouch.mode ? 1 : 0; },
+  RivalsTouchMoveX: function() { return window.rivalsTouch ? window.rivalsTouch.moveX : 0; },
+  RivalsTouchMoveY: function() { return window.rivalsTouch ? window.rivalsTouch.moveY : 0; },
+  RivalsTouchHeld: function() { return window.rivalsTouch ? window.rivalsTouch.readHeld() : 0; },
+  RivalsTouchPressed: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.pressed;s.pressed=0;return value; },
+  RivalsTouchFirePress: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.firePress;s.firePress=0;return value; },
+  RivalsTouchAltPress: function() { var s=window.rivalsTouch;if(!s)return 0;var value=s.altPress||0;s.altPress=0;return value; },
+  RivalsResetTouch: function() { if(window.rivalsTouch)window.rivalsTouch.reset(); },
+  RivalsTouchState: function(state) { if(window.rivalsTouch)window.rivalsTouch.setState(state); },
+  RivalsLookEnabled: function(enabled) { var s=window.rivalsLook;if(s){s.enabled=!!enabled;if(!enabled){s.x=0;s.y=0;}} },
+  RivalsDiagnosticsEnabled: function() { return window.rivalsDiagnostics ? 1 : 0; },
+  RivalsReportLobby: function(json) { var state=JSON.parse(UTF8ToString(json));window.rivalsLobbyState=state;if(window.rivalsReceiveLobby)window.rivalsReceiveLobby(state); },
+  RivalsReportState: function(json) { if(window.rivalsDiagnostics)window.rivalsDiagnostics=JSON.parse(UTF8ToString(json)); },
+  RivalsClearDiagnostics: function() { if(window.rivalsDiagnostics)window.rivalsDiagnostics={};window.rivalsShotEvents=[]; },
+  RivalsReportShot: function(count) {
+    if(!window.rivalsDiagnostics)return;
+    var events=window.rivalsShotEvents||(window.rivalsShotEvents=[]);
+    events.push({count:count,time:performance.now()});if(events.length>128)events.shift();
+  }
+});

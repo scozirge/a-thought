@@ -1,0 +1,170 @@
+[
+  {
+    "name": "blocky-characters",
+    "page": "https://kenney.nl/assets/blocky-characters",
+    "download": "https://kenney.nl/media/pages/assets/blocky-characters/8369c0cf30-1749547469/kenney_blocky-characters_20.zip",
+    "sha256": "5e123859aa0c1598342b600c6db197024a1d63eb9ec531398b310725f589887e",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "prototype-textures",
+    "page": "https://kenney.nl/assets/prototype-textures",
+    "download": "https://kenney.nl/media/pages/assets/prototype-textures/a88c69fa18-1677578307/kenney_prototype-textures.zip",
+    "sha256": "a1d3e0ea60194b3fc3cc95b9d296af6551e879eef8a9497c914cc85705326cb6",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "impact-sounds",
+    "page": "https://kenney.nl/assets/impact-sounds",
+    "download": "https://kenney.nl/media/pages/assets/impact-sounds/87b4ddecda-1677589768/kenney_impact-sounds.zip",
+    "sha256": "029d734af1582474edf3a694d1b0cebc97c1c152f2f39fa34d4c2bafc5de77f8",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "sci-fi-sounds",
+    "page": "https://kenney.nl/assets/sci-fi-sounds",
+    "download": "https://kenney.nl/media/pages/assets/sci-fi-sounds/6b296f9ecf-1677589334/kenney_sci-fi-sounds.zip",
+    "sha256": "119340f351a5098ad814f78719438c0da355a9ce8a4c8a3af6a8d48aa3d49e04",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "blaster-kit",
+    "page": "https://kenney.nl/assets/blaster-kit",
+    "download": "https://kenney.nl/media/pages/assets/blaster-kit/261d80a716-1753959510/kenney_blaster-kit_2.1.zip",
+    "sha256": "91e3093e95427d59625e7e2ce2d0399b861600160fd0b4ada7714796b67cea8c",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "crosshair-pack",
+    "page": "https://kenney.nl/assets/crosshair-pack",
+    "download": "https://kenney.nl/media/pages/assets/crosshair-pack/5ef74bd405-1785950072/kenney_crosshair-pack.zip",
+    "sha256": "26cf8f3e135f8c9a3354a8a6e6c2576e78bd8e2db01c841f93ab43ad3205a78f",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "Quaternius Ultimate Guns",
+    "author": "Quaternius",
+    "page": "https://quaternius.com/packs/ultimategun.html",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "file": "AssaultRifle_1.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1jhBwTCDW-gF6NsRmq3HdGQ4w9Lop7QA0",
+        "sha256": "a972c9aa37fb15b0905c2f61f8163c45dc98bac63b7c0a17fa5e8f0659b929a5"
+      },
+      {
+        "file": "AssaultRifle_3.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1LO2DM2jcYhxtwcWlSKfGm-DG2hWU1adT",
+        "sha256": "2d940c2aa2b43416c329cce68c2d61e3b9c0480d2389357885c5f2cc1b6d501f"
+      },
+      {
+        "file": "Pistol_1.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1p_BUZNSwSpZPkDORqMowXqpImA_l2uce",
+        "sha256": "4a1f77b488f23e1758a4e9a5289cf076c876e3455a176dc8e0f4abea613aae1d"
+      },
+      {
+        "file": "Shotgun_1.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1VNVqPzeE7tRpVE7Yy9SOmrZ4WHi5Dgs5",
+        "sha256": "af7d88bb19ab533cb763516ff06b6c355336dcf4b2987f9c378d291ea12ab501"
+      },
+      {
+        "file": "SniperRifle_1.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=15iOCbvwHwFu7KDrbHurlzpMp9FBpUlsu",
+        "sha256": "d2191ecfe672362d20faaaed90639f34ea6c4ac6332c96d3b90e13518515d4a5"
+      },
+      {
+        "file": "License.txt",
+        "download": "https://drive.google.com/uc?export=download&id=13L56XcV3IlLxMUqoDyqvcYVEfe0y_sie",
+        "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+      }
+    ]
+  },
+  {
+    "name": "gunshot-sounds",
+    "author": "Vincent Sevedge (Tabasco)",
+    "page": "https://opengameart.org/content/gunshot-sounds",
+    "download": "https://opengameart.org/sites/default/files/sounds.zip",
+    "license": "CC-BY-3.0",
+    "license_note": "Landing page says CC0; bundled copyright file says CC BY 3.0. Attribution follows bundled license.",
+    "modifications": "First shot extracted, mixed to mono, normalized, faded."
+  },
+  {
+    "name": "gun-reload-sounds",
+    "author": "SpringySpringo",
+    "page": "https://opengameart.org/content/gun-reload-sounds",
+    "download": "https://opengameart.org/sites/default/files/assaultriflereload1_0.wav",
+    "license": "CC0-1.0"
+  },
+  {
+    "name": "QuaterniusToonGuns",
+    "author": "Quaternius",
+    "page": "https://quaternius.com/packs/toonshootergamekit.html",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Pistol.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1M_jZ6XvVkt-NJ7fPR_aN51gW7RCrSefh",
+        "bytes": 37900,
+        "sha256": "22d3b5736ae1c204c29e84ad00fd8333db5e3964565e2576fde03c3c57e8359b",
+        "used": false
+      },
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Shotgun.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=16ggr9o2ZlkYZLoDxv_ocDj96qTFIQJdF",
+        "bytes": 43628,
+        "sha256": "aa400b2aa6eaf59178f02dce10d85022e4ef7f19349b0a703a008ac3aa152a23",
+        "used": false
+      },
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Sniper.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=13lty41L5rprYRT5cFoigYqXb1K81OS4t",
+        "bytes": 46588,
+        "sha256": "ae60a707335ac1b75515d8815b132cd8f0fa97bc19ce01e2b5ea353400ba1815",
+        "used": false
+      },
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Sniper_2.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=13BwhyXSs2-kGd23x27eR2Q5MVtmE25Ce",
+        "bytes": 48124,
+        "sha256": "6048fe5fe2ce1d2b57b7862b7f812f0cbf1e6c017bbba4f53e84ac36b6018fdb",
+        "used": false
+      },
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Knife_1.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1G2sVjI9vN6GSrKdRNJPDE8oqIFO6Z4uJ",
+        "bytes": 33820,
+        "sha256": "0df13ce68726b12a1d803b5d35b59867e8a2f18ac90752453ce316a7948489b8",
+        "used": true
+      },
+      {
+        "pack": "QuaterniusToonGuns",
+        "file": "Knife_2.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1srKEty6F5DlPKWnE0UwD0JBH5Vsl3IGO",
+        "bytes": 33980,
+        "sha256": "fa0932d35cd1295e9378474b0868505725451691d6c6387d506325ced1122179",
+        "used": false
+      }
+    ]
+  },
+  {
+    "name": "QuaterniusAnimatedGuns",
+    "author": "Quaternius",
+    "page": "https://quaternius.com/packs/animatedguns.html",
+    "license": "CC0-1.0",
+    "files": [
+      {
+        "pack": "QuaterniusAnimatedGuns",
+        "file": "Rifle.fbx",
+        "download": "https://drive.google.com/uc?export=download&id=1esjBjubgTfwjL0n6ewygINOdm_aOAXHM",
+        "bytes": 133788,
+        "sha256": "e9b645b553bd3dd6083dd33a9952d1040c51a252b5d036c5e7c142938a0f00e0",
+        "used": false
+      }
+    ]
+  }
+]

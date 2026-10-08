@@ -1,0 +1,985 @@
+{
+  "method": "分析目前開放的 40 關；完整列舉設定，各指標分開呈現，不合成未經實測的難度分數。",
+  "games": {
+    "sticker": [
+      {
+        "id": "sticker-v5-1",
+        "title": "四組各貼一格",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "combinations": 16,
+        "solutions": 1,
+        "cells": 4,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 0,
+        "maxDepth": 1,
+        "visiblePerLayer": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "id": "sticker-v5-2",
+        "title": "後貼的蓋一格",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "combinations": 16,
+        "solutions": 1,
+        "cells": 4,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 1,
+        "maxDepth": 2,
+        "visiblePerLayer": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "id": "sticker-v5-3",
+        "title": "四組依序接力",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "combinations": 16,
+        "solutions": 1,
+        "cells": 4,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 2,
+        "maxDepth": 2,
+        "visiblePerLayer": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "id": "sticker-v5-4",
+        "title": "九宮格拼布",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "cells": 9,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 1,
+        "maxDepth": 2,
+        "visiblePerLayer": [
+          3,
+          2,
+          3,
+          1
+        ]
+      },
+      {
+        "id": "sticker-v8-5",
+        "title": "沿著邊緣接力",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "cells": 9,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 2,
+        "maxDepth": 2,
+        "visiblePerLayer": [
+          2,
+          2,
+          3,
+          2
+        ]
+      },
+      {
+        "id": "sticker-v8-6",
+        "title": "拼起四個角",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "cells": 9,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 5,
+        "maxDepth": 2,
+        "visiblePerLayer": [
+          2,
+          1,
+          3,
+          3
+        ]
+      },
+      {
+        "id": "sticker-v8-7",
+        "title": "底色也有線索",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "cells": 9,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 8,
+        "maxDepth": 3,
+        "visiblePerLayer": [
+          2,
+          2,
+          3,
+          2
+        ]
+      },
+      {
+        "id": "sticker-v8-8",
+        "title": "只露出一小角",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "cells": 9,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 10,
+        "maxDepth": 3,
+        "visiblePerLayer": [
+          1,
+          3,
+          3,
+          2
+        ]
+      },
+      {
+        "id": "sticker-v8-9",
+        "title": "四種顏色的拼布",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 19,
+        "maxDepth": 3,
+        "visiblePerLayer": [
+          2,
+          4,
+          6,
+          4
+        ]
+      },
+      {
+        "id": "sticker-v8-10",
+        "title": "最後一層偵探",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 23,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          6,
+          4,
+          5
+        ]
+      },
+      {
+        "id": "sticker-v10-11",
+        "title": "交錯的四張貼紙",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 24,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          3,
+          2,
+          4,
+          7
+        ]
+      },
+      {
+        "id": "sticker-v10-12",
+        "title": "重疊裡找線索",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 25,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          2,
+          3,
+          2,
+          9
+        ]
+      },
+      {
+        "id": "sticker-v10-13",
+        "title": "沿著小缺口找",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 26,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          2,
+          2,
+          4,
+          8
+        ]
+      },
+      {
+        "id": "sticker-v10-14",
+        "title": "四層交會處",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 27,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          2,
+          4,
+          3,
+          7
+        ]
+      },
+      {
+        "id": "sticker-v10-15",
+        "title": "藏在同色裡",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 28,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          2,
+          2,
+          2,
+          10
+        ]
+      },
+      {
+        "id": "sticker-v10-16",
+        "title": "被遮住的輪廓",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 29,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          1,
+          2,
+          12
+        ]
+      },
+      {
+        "id": "sticker-v10-17",
+        "title": "小角落的證據",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 30,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          2,
+          2,
+          11
+        ]
+      },
+      {
+        "id": "sticker-v10-18",
+        "title": "從最後一張倒推",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 31,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          1,
+          2,
+          12
+        ]
+      },
+      {
+        "id": "sticker-v10-19",
+        "title": "兩種顏色四張貼紙",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 32,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          1,
+          1,
+          13
+        ]
+      },
+      {
+        "id": "sticker-v10-20",
+        "title": "四張貼紙大偵探",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 33,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          1,
+          1,
+          1,
+          13
+        ]
+      }
+    ],
+    "penguin": [
+      {
+        "id": "penguin-v5-1",
+        "title": "四組沿著冰道走",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "combinations": 16,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 1,
+        "soloSolutions": [
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
+        "playbackMs": 2200
+      },
+      {
+        "id": "penguin-v5-2",
+        "title": "同方向，滑得更遠",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "combinations": 16,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 1,
+        "soloSolutions": [
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
+        "playbackMs": 2420
+      },
+      {
+        "id": "penguin-v5-3",
+        "title": "轉彎再接回家",
+        "stage": "暖身",
+        "decisions": 4,
+        "choices": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "combinations": 81,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 1,
+        "soloSolutions": [
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
+        "playbackMs": 2420
+      },
+      {
+        "id": "penguin-v5-4",
+        "title": "四組接力滑",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 1,
+        "soloSolutions": [
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
+        "playbackMs": 2530
+      },
+      {
+        "id": "penguin-v5-5",
+        "title": "兩隻一起出發",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          2,
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2860
+      },
+      {
+        "id": "penguin-v5-6",
+        "title": "兩邊都要看",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          2,
+          10
+        ],
+        "blockedActions": 0,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2860
+      },
+      {
+        "id": "penguin-v5-7",
+        "title": "你停下，我繼續",
+        "stage": "進階",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          9,
+          8
+        ],
+        "blockedActions": 1,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2420
+      },
+      {
+        "id": "penguin-v5-8",
+        "title": "第一步先等等",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          37,
+          20
+        ],
+        "blockedActions": 1,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2640
+      },
+      {
+        "id": "penguin-v5-9",
+        "title": "回家還會再出門",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          29,
+          7
+        ],
+        "blockedActions": 1,
+        "differentDistances": 4,
+        "homeDepartures": 1,
+        "playbackMs": 2750
+      },
+      {
+        "id": "penguin-v5-10",
+        "title": "兩邊的最後約定",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          27,
+          9
+        ],
+        "blockedActions": 3,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2530
+      },
+      {
+        "id": "penguin-v10-11",
+        "title": "冰牆的新停點",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          7,
+          21
+        ],
+        "blockedActions": 2,
+        "differentDistances": 4,
+        "homeDepartures": 0,
+        "playbackMs": 3080
+      },
+      {
+        "id": "penguin-v10-12",
+        "title": "同方向，不同終點",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          20,
+          13
+        ],
+        "blockedActions": 2,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2750
+      },
+      {
+        "id": "penguin-v10-13",
+        "title": "借冰塊停一下",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          28,
+          8
+        ],
+        "blockedActions": 2,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2750
+      },
+      {
+        "id": "penguin-v10-14",
+        "title": "兩邊輪流前進",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          7,
+          20
+        ],
+        "blockedActions": 2,
+        "differentDistances": 3,
+        "homeDepartures": 0,
+        "playbackMs": 2970
+      },
+      {
+        "id": "penguin-v10-15",
+        "title": "家在冰場裡面",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          85,
+          13
+        ],
+        "blockedActions": 4,
+        "differentDistances": 4,
+        "homeDepartures": 0,
+        "playbackMs": 2530
+      },
+      {
+        "id": "penguin-v10-16",
+        "title": "看清中途停在哪",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          9,
+          20
+        ],
+        "blockedActions": 3,
+        "differentDistances": 4,
+        "homeDepartures": 0,
+        "playbackMs": 2640
+      },
+      {
+        "id": "penguin-v10-17",
+        "title": "一邊停，一邊走",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          35,
+          8
+        ],
+        "blockedActions": 3,
+        "differentDistances": 4,
+        "homeDepartures": 0,
+        "playbackMs": 2640
+      },
+      {
+        "id": "penguin-v10-18",
+        "title": "四步雙重推理",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          13,
+          37
+        ],
+        "blockedActions": 4,
+        "differentDistances": 4,
+        "homeDepartures": 0,
+        "playbackMs": 2750
+      },
+      {
+        "id": "penguin-v10-19",
+        "title": "先到家，還要再出發",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          55,
+          66
+        ],
+        "blockedActions": 4,
+        "differentDistances": 4,
+        "homeDepartures": 1,
+        "playbackMs": 2200
+      },
+      {
+        "id": "penguin-v10-20",
+        "title": "最後一步一起到家",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 2,
+        "soloSolutions": [
+          28,
+          28
+        ],
+        "blockedActions": 3,
+        "differentDistances": 4,
+        "homeDepartures": 1,
+        "playbackMs": 2750
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "puzzle-party",
+  "version": "0.10.1",
+  "private": true,
+  "description": "一起想想：國小二、三年級的四組合作解謎，Unity 跨網連線與 H5 本地版",
+  "scripts": {
+    "build": "node tools/build.cjs",
+    "build:unity": "powershell -ExecutionPolicy Bypass -File tools/build-unity.ps1",
+    "start:unity": "node tools/serve.cjs 8190 --unity",
+    "start": "node tools/serve.cjs",
+    "test": "node --test tests/rules.test.cjs",
+    "test:online": "node tests/online-browser.cjs",
+    "test:resilience": "node tests/online-resilience.cjs",
+    "test:published": "node tests/published-browser.cjs",
+    "analyze": "node tools/analyze.cjs"
+  }
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Pistol.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=1M_jZ6XvVkt-NJ7fPR_aN51gW7RCrSefh",
+    "bytes": 37900,
+    "sha256": "22d3b5736ae1c204c29e84ad00fd8333db5e3964565e2576fde03c3c57e8359b"
+  },
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Shotgun.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=16ggr9o2ZlkYZLoDxv_ocDj96qTFIQJdF",
+    "bytes": 43628,
+    "sha256": "aa400b2aa6eaf59178f02dce10d85022e4ef7f19349b0a703a008ac3aa152a23"
+  },
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Sniper.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=13lty41L5rprYRT5cFoigYqXb1K81OS4t",
+    "bytes": 46588,
+    "sha256": "ae60a707335ac1b75515d8815b132cd8f0fa97bc19ce01e2b5ea353400ba1815"
+  },
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Sniper_2.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=13BwhyXSs2-kGd23x27eR2Q5MVtmE25Ce",
+    "bytes": 48124,
+    "sha256": "6048fe5fe2ce1d2b57b7862b7f812f0cbf1e6c017bbba4f53e84ac36b6018fdb"
+  },
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Knife_1.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=1G2sVjI9vN6GSrKdRNJPDE8oqIFO6Z4uJ",
+    "bytes": 33820,
+    "sha256": "0df13ce68726b12a1d803b5d35b59867e8a2f18ac90752453ce316a7948489b8"
+  },
+  {
+    "pack": "QuaterniusToonGuns",
+    "file": "Knife_2.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=1srKEty6F5DlPKWnE0UwD0JBH5Vsl3IGO",
+    "bytes": 33980,
+    "sha256": "fa0932d35cd1295e9378474b0868505725451691d6c6387d506325ced1122179"
+  },
+  {
+    "pack": "QuaterniusAnimatedGuns",
+    "file": "Rifle.fbx",
+    "download": "https://drive.google.com/uc?export=download&id=1esjBjubgTfwjL0n6ewygINOdm_aOAXHM",
+    "bytes": 133788,
+    "sha256": "e9b645b553bd3dd6083dd33a9952d1040c51a252b5d036c5e7c142938a0f00e0"
+  }
+]
