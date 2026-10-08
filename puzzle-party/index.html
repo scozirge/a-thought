@@ -37,9 +37,9 @@ dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overfl
  const code=new URL(location.href).searchParams.get('room');if(code&&/^[0-9]{6}$/.test(code)){el('room-code').value=code;window.addEventListener('puzzle-ready',()=>window.puzzleOpenRoom());}
 })();
 </script>
-<script src="Build/UnityWeb.loader.js"></script><script>
+<script src="Build/UnityWeb.loader.js?v=833175818595"></script><script>
 const canvas=document.getElementById('unity-canvas');
-createUnityInstance(canvas,{dataUrl:'Build/UnityWeb.data',frameworkUrl:'Build/UnityWeb.framework.js',codeUrl:'Build/UnityWeb.wasm',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'一起想想',productVersion:'0.10.1',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
+createUnityInstance(canvas,{dataUrl:'Build/UnityWeb.data?v=d3bdc149eee7',frameworkUrl:'Build/UnityWeb.framework.js?v=f1babedf4176',codeUrl:'Build/UnityWeb.wasm?v=da8b812ba451',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'一起想想',productVersion:'0.10.1',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
 canvas.addEventListener('wheel',e=>{instance.SendMessage('PuzzleParty','Scroll',String(e.deltaY));e.preventDefault();},{passive:false});
 let lastTouchY=null;
 canvas.addEventListener('touchstart',e=>{lastTouchY=e.touches[0]?.clientY??null;},{passive:true});
