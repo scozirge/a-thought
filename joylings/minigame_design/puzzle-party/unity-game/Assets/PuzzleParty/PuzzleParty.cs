@@ -43,7 +43,7 @@ namespace Together {
   void Stop(){if(Route(new RoomAction{type="stop"}))return;StopAllCoroutines();playing=false;paused=false;ResetScene();}
   void Play(){if(Route(new RoomAction{type="play"}))return;if(playing||level==null||!Rules.Complete(level,settings))return;ResetScene();scroll.y=stageScrollY;playing=true;paused=false;StartCoroutine(Playback(Rules.Run(level,(string[])settings.Clone())));}
   public void Command(string s){var p=s.Split(':');switch(p[0]){case "open":Open(p[1],int.Parse(p[2]));break;case "set":Set(int.Parse(p[1]),p[2]);break;case "play":Play();break;case "stop":Stop();break;case "pause":TogglePause();break;case "speed":ChangeSpeed();break;case "clear":ClearChoices();break;case "home":GoHome();break;case "answer":ToggleAnswer();break;}}
-  public void Scroll(string delta){if(float.TryParse(delta,System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var d)){scroll.y=Mathf.Clamp(scroll.y+d/scale,0,maxScroll);scroll.x=0;cancelPointer=true;}}
+  public void Scroll(string delta){if(answerVisible)return;if(float.TryParse(delta,System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var d)){scroll.y=Mathf.Clamp(scroll.y+d/scale,0,maxScroll);scroll.x=0;cancelPointer=true;}}
   void OnGUI(){
    if(font==null||levels==null)return;
    GUI.skin.font=font;labelStyle=new GUIStyle(GUI.skin.label){font=font,wordWrap=true,richText=false,alignment=TextAnchor.UpperLeft};labelStyle.normal.textColor=ink;
@@ -52,7 +52,24 @@ namespace Together {
    GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));hits.Clear();if(cancelPointer){GUIUtility.hotControl=0;cancelPointer=false;}
    float total=contentHeight;
    maxScroll=Mathf.Max(0,total-vh);scroll.x=0;scroll.y=Mathf.Clamp(scroll.y,0,maxScroll);
-   scroll=GUI.BeginScrollView(new Rect(0,0,viewWidth,vh),scroll,new Rect(0,0,viewWidth-10,Mathf.Max(vh,total)),false,false,GUIStyle.none,GUIStyle.none);
+   // WebGL wheel/touch input already arrives through Scroll; avoid a second scroll-view state.
+   if(Event.current.type==EventType.ScrollWheel){
+    #if !UNITY_WEBGL || UNITY_EDITOR
+    if(!answerVisible)scroll.y=Mathf.Clamp(scroll.y+Event.current.delta.y*20,0,maxScroll);
+    #endif
+    Event.current.Use();
+   }
+   GUI.enabled=!answerVisible;
+   if(maxScroll>0){
+    scroll.y=GUI.VerticalScrollbar(new Rect(viewWidth-18,0,18,vh),scroll.y,vh,0,total);
+    Round(new Rect(viewWidth-18,0,18,vh),C("f6f6ec"),0);
+    Round(new Rect(viewWidth-16,0,14,vh),C("e5e8db"),6);
+    float thumb=vh*vh/total;
+    Round(new Rect(viewWidth-16,(vh-thumb)*scroll.y/maxScroll,14,thumb),C("a9b9a0"),6);
+   }
+   GUI.enabled=true;
+   GUI.BeginGroup(new Rect(0,0,viewWidth-18,vh));
+   GUI.BeginGroup(new Rect(0,-scroll.y,viewWidth-18,Mathf.Max(vh,total)));
    float w=viewWidth-40;
    if(game==""){
    Text(new Rect(24,20,w-158,44),"一起想想",28,ink,true);
@@ -64,7 +81,7 @@ namespace Together {
    }
    roleExtra=Mathf.Max(0,TextHeight(RoleIdentity(),(narrow?viewWidth-48:(viewWidth-68)/2)-52,26)-39);
    if(game=="")DrawHome(narrow);else DrawGame(narrow);
-   GUI.EndScrollView();DrawAnswer(vh);if(maxScroll>0){Round(new Rect(viewWidth-7,0,5,vh),C("e5e8db"),3);float thumb=vh*vh/total;Round(new Rect(viewWidth-7,(vh-thumb)*scroll.y/maxScroll,5,thumb),C("a9b9a0"),3);}GUI.matrix=Matrix4x4.identity;
+   GUI.EndGroup();GUI.EndGroup();DrawAnswer(vh);GUI.matrix=Matrix4x4.identity;
    if(Event.current.type==EventType.Repaint&&Time.realtimeSinceStartup>nextSnapshot){Publish();nextSnapshot=Time.realtimeSinceStartup+.12f;}
   }
   float TextHeight(string text,float width,int size){labelStyle.fontSize=size;labelStyle.fontStyle=FontStyle.Bold;return labelStyle.CalcHeight(new GUIContent(text),width);}

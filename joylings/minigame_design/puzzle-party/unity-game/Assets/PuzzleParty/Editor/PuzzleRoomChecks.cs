@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Together;
 using UnityEngine;
 
@@ -178,6 +179,26 @@ public static class PuzzleRoomChecks {
   No(sync,"student",Action(sync,"remove",playerId:"late"),"學生不能踢人");
   Yes(sync,"teacher",Action(sync,"remove",playerId:"student"),"老師踢出學生");
   Need(!sync.View("student").connected&&sync.View("teacher").slotNames[0]=="大象","被踢者失去房間，空步驟交房主");
+  CheckHomeScroll();
   Debug.Log("PUZZLE_ROOMS_OK "+checks+" authority checks (four groups, permissions, simultaneous answers, timing and reconnect)");
+ }
+ static void CheckHomeScroll(){
+  // Reproduce returning from level 20: the lobby snapshot has index 0 while the local level index is 19.
+  var go=new GameObject("Scroll regression");go.SetActive(false);
+  try{
+   var ui=go.AddComponent<PuzzleParty>();var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+   var type=typeof(PuzzleParty);var offset=type.GetField("scroll",flags);
+   type.GetField("levelIndex",flags).SetValue(ui,19);
+   type.GetField("game",flags).SetValue(ui,"sticker");
+   var apply=type.GetMethod("ApplyRoom",flags);
+   var authority=new RoomAuthority(Fixtures(),"123456","teacher","老師");
+   offset.SetValue(ui,new Vector2(0,120));apply.Invoke(ui,new object[]{authority.View("teacher")});
+   Need(((Vector2)offset.GetValue(ui)).y==0,"回選單時重設一次捲動位置");
+   offset.SetValue(ui,new Vector2(0,120));
+   for(int i=0;i<5;i++)apply.Invoke(ui,new object[]{authority.View("teacher")});
+   Need(((Vector2)offset.GetValue(ui)).y==120,"重複大廳快照不得將捲動位置彈回頂端");
+   authority.TryJoin("student","小兔",out _);apply.Invoke(ui,new object[]{authority.View("teacher")});
+   Need(((Vector2)offset.GetValue(ui)).y==120,"成員加入不得重設大廳捲動位置");
+  }finally{UnityEngine.Object.DestroyImmediate(go);}
  }
 }

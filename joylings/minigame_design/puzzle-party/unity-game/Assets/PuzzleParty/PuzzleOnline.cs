@@ -41,7 +41,7 @@ namespace Together {
   }
   void ApplyRoom(RoomSnapshot next){
    if(next==null||!next.connected){bool was=room!=null;room=null;roomPlan=null;paintedRun=-1;if(was){applyingRoom=true;Stop();game="";scroll=Vector2.zero;applyingRoom=false;}return;}
-   bool changed=room==null||next.roundId!=room.roundId||next.game!=game||next.index!=levelIndex;
+   bool changed=room==null||next.roundId!=room.roundId||next.game!=game||(!string.IsNullOrEmpty(next.game)&&next.index!=levelIndex);
    bool settingsChanged=room==null||!settings.SequenceEqual(next.settings);
    string oldPhase=room?.phase;room=next;receivedAt=Time.realtimeSinceStartup;
    applyingRoom=true;
