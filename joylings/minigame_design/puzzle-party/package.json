@@ -1,6 +1,6 @@
 {
   "name": "puzzle-party",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "private": true,
   "description": "合作挑戰遊戲：國小二、三年級的四組合作解謎，Unity WebGL 單機與跨網連線",
   "scripts": {

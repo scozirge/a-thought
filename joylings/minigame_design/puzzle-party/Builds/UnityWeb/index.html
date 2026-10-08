@@ -23,6 +23,13 @@ dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overfl
 (()=>{const el=id=>document.getElementById(id),dialog=el('room-dialog');let lastConnected=false,returningSolo=false,selectedCode='',listKey='',memberKey='',lastState={};
  const send=request=>{if(!window.unityInstance)return;window.unityInstance.SendMessage('PuzzleParty','RoomCommand',JSON.stringify(request));};
  const browse=()=>send({type:'browse'});
+ let screenLock=null,lockPending=false;
+ async function keepScreenAwake(){
+  if(!lastState.connected||document.visibilityState!=='visible'||!navigator.wakeLock||screenLock||lockPending)return;
+  lockPending=true;
+  try{const lock=await navigator.wakeLock.request('screen');if(!lastState.connected){await lock.release();return;}screenLock=lock;lock.addEventListener('release',()=>{if(screenLock===lock)screenLock=null;});}catch{}finally{lockPending=false;}
+ }
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')keepScreenAwake();});
  window.puzzleOpenRoom=()=>{if(!dialog.open)dialog.showModal();if(!lastState.connected&&!lastState.busy)browse();};
  el('room-close').onclick=()=>{dialog.close();el('unity-canvas').focus();};
  const name=()=>{const value=el('room-name').value.trim();if(!value){el('room-error').textContent='請輸入組別名稱。';el('room-name').focus();return null;}return value;};
@@ -44,6 +51,8 @@ dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overfl
  }
  window.puzzleRenderRoom=s=>{
   lastState=s;el('room-solo').disabled=returningSolo;
+  if(s.connected&&!lastConnected)keepScreenAwake();
+  if(!s.connected&&screenLock){const lock=screenLock;screenLock=null;lock.release().catch(()=>{});}
   if(returningSolo&&!s.busy&&!s.connected){returningSolo=false;lastConnected=false;dialog.close();el('unity-canvas').focus();el('room-solo').disabled=false;}
   el('room-form').hidden=s.connected;el('room-connected').hidden=!s.connected;
   if(s.error)el('room-error').textContent=s.error;else if(s.connected)el('room-error').textContent='';
@@ -65,9 +74,9 @@ dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overfl
  const code=new URL(location.href).searchParams.get('room');if(code&&/^[0-9]{6}$/.test(code)){selectedCode=code;window.addEventListener('puzzle-ready',()=>window.puzzleOpenRoom());}
 })();
 </script>
-<script src="Build/UnityWeb.loader.js?v=9e2e7361e6ab"></script><script>
+<script src="Build/UnityWeb.loader.js?v=0fc54b841eed"></script><script>
 const canvas=document.getElementById('unity-canvas');
-createUnityInstance(canvas,{dataUrl:'Build/UnityWeb.data?v=3de350c8b7ef',frameworkUrl:'Build/UnityWeb.framework.js?v=7137962cd2ff',codeUrl:'Build/UnityWeb.wasm?v=8352fa93a8b4',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'合作挑戰遊戲',productVersion:'0.16.1',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
+createUnityInstance(canvas,{dataUrl:'Build/UnityWeb.data?v=c0eb96e18f43',frameworkUrl:'Build/UnityWeb.framework.js?v=7137962cd2ff',codeUrl:'Build/UnityWeb.wasm?v=b0778049e72f',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'合作挑戰遊戲',productVersion:'0.16.2',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
 canvas.addEventListener('wheel',e=>{instance.SendMessage('PuzzleParty','Scroll',String(e.deltaY));e.preventDefault();},{passive:false});
 let lastTouchY=null;
 canvas.addEventListener('touchstart',e=>{lastTouchY=e.touches[0]?.clientY??null;},{passive:true});

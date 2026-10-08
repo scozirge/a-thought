@@ -191,7 +191,9 @@ namespace Together {
     if(Busy&&!Connected){lastUpdate=now;return;}
     // Browser suspension is not a dead teacher. Resume with a fresh grace period.
     if(now-lastUpdate>2)lastReceive=now;
-    if(now-lastReceive>20){Error="老師連線已中斷，請重新加入房間。";FailConnection();}
+    // A missing application snapshot can be a throttled teacher tab or a slow
+    // reliable transfer. Let Fusion's transport report an actual disconnection;
+    // never tear down a still-live classroom merely because 20 seconds passed.
    }
    lastUpdate=now;
   }
