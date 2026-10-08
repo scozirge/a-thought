@@ -13,6 +13,7 @@ namespace Together {
    GUI.enabled=CanLead;if(CanLead&&Button(new Rect(x+184,y,66,40),"選單","home"))GoHome();GUI.enabled=true;
    if(CanReveal&&Button(new Rect(x+258,y,44,40),"?","answer"))ToggleAnswer();
    y+=50;
+   if(CanLead){GUI.enabled=!playing;if(Button(new Rect(20,y,136,40),"查看教學","tutorial-current"))ShowTutorial(game,0);GUI.enabled=true;y+=50;}
    if(levelPicker&&CanLead){
     var list=levels.Where(l=>l.game==game).ToArray();int cols=Math.Max(1,(int)((viewWidth-40)/52));
     for(int i=0;i<list.Length;i++){

@@ -40,12 +40,13 @@ namespace Together {
    #endif
   }
   void ApplyRoom(RoomSnapshot next){
-   if(next==null||!next.connected){bool was=room!=null;room=null;roomPlan=null;paintedRun=-1;if(was){applyingRoom=true;Stop();game="";scroll=Vector2.zero;applyingRoom=false;}return;}
+   if(next==null||!next.connected){bool was=room!=null;room=null;roomPlan=null;paintedRun=-1;if(was){SyncTutorial("",0);applyingRoom=true;Stop();game="";scroll=Vector2.zero;applyingRoom=false;}return;}
    bool changed=room==null||next.roundId!=room.roundId||next.game!=game||(!string.IsNullOrEmpty(next.game)&&next.index!=levelIndex);
    bool settingsChanged=room==null||!settings.SequenceEqual(next.settings);
    string oldPhase=room?.phase;room=next;receivedAt=Time.realtimeSinceStartup;
    applyingRoom=true;
    if(changed){if(string.IsNullOrEmpty(next.game)){Stop();game="";scroll=Vector2.zero;}else Open(next.game,next.index);roomPlan=null;paintedRun=-1;}
+   SyncTutorial(next.tutorialGame,next.tutorialPage);
    settings=(string[])next.settings.Clone();speed=next.speed;selected=next.isHost?Mathf.Clamp(selected,0,3):Mathf.Max(0,next.mySlot);
    if(string.IsNullOrEmpty(game)){applyingRoom=false;return;}
    if(next.phase=="planning"){

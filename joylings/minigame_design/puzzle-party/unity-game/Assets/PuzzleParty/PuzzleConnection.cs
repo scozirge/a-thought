@@ -15,7 +15,7 @@ namespace Together {
  // The same Photon Host/Client transport as RIVALS. Only the teacher owns room
  // state; clients submit actions and receive a snapshot made for their identity.
  public sealed class PuzzleConnection : MonoBehaviour, INetworkRunnerCallbacks {
-  public const string NetworkVersion="puzzle-party-v14-shuffle";
+  public const string NetworkVersion="puzzle-party-v15-tutorial";
   public bool Busy {get;private set;}
   public bool Connected {get;private set;}
   public bool IsHost {get;private set;}

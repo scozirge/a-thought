@@ -67,7 +67,7 @@ dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 28px);overfl
 </script>
 <script src="Build/{{{ LOADER_FILENAME }}}"></script><script>
 const canvas=document.getElementById('unity-canvas');
-createUnityInstance(canvas,{dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'合作挑戰遊戲',productVersion:'0.14.0',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
+createUnityInstance(canvas,{dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'合作挑戰遊戲',productVersion:'0.15.0',devicePixelRatio:1},p=>document.getElementById('progress').value=p).then(instance=>{window.unityInstance=instance;
 canvas.addEventListener('wheel',e=>{instance.SendMessage('PuzzleParty','Scroll',String(e.deltaY));e.preventDefault();},{passive:false});
 let lastTouchY=null;
 canvas.addEventListener('touchstart',e=>{lastTouchY=e.touches[0]?.clientY??null;},{passive:true});

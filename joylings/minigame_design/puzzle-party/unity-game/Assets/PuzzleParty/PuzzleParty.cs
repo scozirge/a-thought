@@ -42,7 +42,7 @@ namespace Together {
   void Set(int i,string s){if(Route(new RoomAction{type="set",slot=i,value=s}))return;if(playing||i<0||i>=settings.Length||!Rules.ValidChoice(level,s))return;settings[i]=s;PlayerPrefs.SetString(level.id+":"+i,s);PlayerPrefs.Save();ResetScene();selected=i;}
   void Stop(){if(Route(new RoomAction{type="stop"}))return;StopAllCoroutines();playing=false;paused=false;ResetScene();}
   void Play(){if(Route(new RoomAction{type="play"}))return;if(playing||level==null||!Rules.Complete(level,settings))return;ResetScene();scroll.y=stageScrollY;playing=true;paused=false;StartCoroutine(Playback(Rules.Run(level,(string[])settings.Clone())));}
-  public void Command(string s){var p=s.Split(':');switch(p[0]){case "open":Open(p[1],int.Parse(p[2]));break;case "set":Set(int.Parse(p[1]),p[2]);break;case "play":Play();break;case "stop":Stop();break;case "pause":TogglePause();break;case "speed":ChangeSpeed();break;case "clear":ClearChoices();break;case "home":GoHome();break;case "answer":ToggleAnswer();break;}}
+  public void Command(string s){var p=s.Split(':');if(p[0]=="tutorial"){if(p.Length==3&&int.TryParse(p[2],out int page))ShowTutorial(p[1],page);return;}if(p[0]=="tutorial-close"){CloseTutorial();return;}if(TutorialVisible)return;switch(p[0]){case "open":Open(p[1],int.Parse(p[2]));break;case "set":Set(int.Parse(p[1]),p[2]);break;case "play":Play();break;case "stop":Stop();break;case "pause":TogglePause();break;case "speed":ChangeSpeed();break;case "clear":ClearChoices();break;case "home":GoHome();break;case "answer":ToggleAnswer();break;}}
   public void Scroll(string delta){if(answerVisible)return;if(float.TryParse(delta,System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var d)){scroll.y=Mathf.Clamp(scroll.y+d/scale,0,maxScroll);scroll.x=0;cancelPointer=true;}}
   void OnGUI(){
    if(font==null||levels==null)return;
@@ -50,7 +50,7 @@ namespace Together {
    buttonStyle=new GUIStyle(labelStyle){alignment=TextAnchor.MiddleCenter,fontSize=16,padding=new RectOffset(5,5,3,3)};
    viewWidth=Mathf.Clamp(Screen.width,360,1360);bool narrow=viewWidth<820;scale=Screen.width/viewWidth;float vh=Screen.height/scale;
    GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));hits.Clear();if(cancelPointer){GUIUtility.hotControl=0;cancelPointer=false;}
-   float total=contentHeight;
+   float total=TutorialVisible?TutorialHeight:contentHeight;
    maxScroll=Mathf.Max(0,total-vh);scroll.x=0;scroll.y=Mathf.Clamp(scroll.y,0,maxScroll);
    // WebGL wheel/touch input already arrives through Scroll; avoid a second scroll-view state.
    if(Event.current.type==EventType.ScrollWheel){
@@ -68,6 +68,11 @@ namespace Together {
     Round(new Rect(viewWidth-16,(vh-thumb)*scroll.y/maxScroll,14,thumb),C("a9b9a0"),6);
    }
    GUI.enabled=true;
+   if(TutorialVisible){
+    GUI.BeginGroup(new Rect(0,0,viewWidth-18,vh));GUI.BeginGroup(new Rect(0,-scroll.y,viewWidth-18,Mathf.Max(vh,total)));
+    DrawTutorial();GUI.EndGroup();GUI.EndGroup();GUI.matrix=Matrix4x4.identity;
+    if(Event.current.type==EventType.Repaint&&Time.realtimeSinceStartup>nextSnapshot){Publish();nextSnapshot=Time.realtimeSinceStartup+.12f;}return;
+   }
    GUI.BeginGroup(new Rect(0,0,viewWidth-18,vh));
    GUI.BeginGroup(new Rect(0,-scroll.y,viewWidth-18,Mathf.Max(vh,total)));
    float w=viewWidth-40;
@@ -99,7 +104,9 @@ namespace Together {
     else for(int k=0;k<4;k++)Round(new Rect(r.x+28+k%2*46,r.y+22+k/2*46,41,41),ColorOf(new[]{"red","blue","green","yellow"}[k]),7);
     Text(new Rect(r.x+22,r.y+135,r.width-44,42),GameName(gs[i]),28,ink,true);
     Text(new Rect(r.x+22,r.y+184,r.width-44,65),notes[i],20,muted);
-    GUI.enabled=CanLead;if(Button(new Rect(r.x+18,r.yMax-62,r.width-36,46),"開始","game:"+gs[i],green,Color.white))Open(gs[i],0);GUI.enabled=true;
+    GUI.enabled=CanLead;float bw=(r.width-44)/2;
+    if(Button(new Rect(r.x+18,r.yMax-62,bw,46),"查看教學","tutorial:"+gs[i]))ShowTutorial(gs[i],0);
+    if(Button(new Rect(r.x+26+bw,r.yMax-62,bw,46),"開始","game:"+gs[i],green,Color.white))Open(gs[i],0);GUI.enabled=true;
    }
    float bottom=headerExtra+(narrow?1040:710);
    Text(new Rect(24,bottom,viewWidth-48,110),"",20,muted);
@@ -196,11 +203,11 @@ namespace Together {
   void Image(Rect r,string name,float alpha=1,float angle=0){if(!art.TryGetValue(name,out var t)||t==null)return;var m=GUI.matrix;var c=GUI.color;GUI.color=new Color(1,1,1,alpha);if(angle!=0)RotateLocal(angle,r.center);GUI.DrawTexture(r,t,ScaleMode.ScaleToFit);GUI.color=c;GUI.matrix=m;}
   Color ColorOf(string c){switch(c){case "red":return C("ed7064");case "blue":return C("6b9fdd");case "yellow":return C("f2c85b");case "green":return C("67b49b");default:return C("f4f5eb");}}
   [Serializable] class Hit {public string id;public float x,y,w,h;public bool enabled;}
-  [Serializable] class Snapshot {public RoomSnapshot room;public string game,level,cue,detail,tone,role;public float textPixelSize;public int index,active,step,attempt,decisions;public bool playing,paused,finished,success,rotating;public float rotation;public string[] settings,board,animals;public Vector2[] animalPositions;public HeroState hero;public Cell[] fire;public Vector2 heroPosition,monsterPosition;public Vector2[] penguins;public Hit[] controls;}
+  [Serializable] class Snapshot {public RoomSnapshot room;public string tutorialGame;public int tutorialPage;public string game,level,cue,detail,tone,role;public float textPixelSize;public int index,active,step,attempt,decisions;public bool playing,paused,finished,success,rotating;public float rotation;public string[] settings,board,animals;public Vector2[] animalPositions;public HeroState hero;public Cell[] fire;public Vector2 heroPosition,monsterPosition;public Vector2[] penguins;public Hit[] controls;}
   [DllImport("__Internal")] static extern void PuzzleSnapshot(string json);
   void Publish(){
    #if UNITY_WEBGL && !UNITY_EDITOR
-   PuzzleSnapshot(JsonUtility.ToJson(new Snapshot{room=room,attempt=Rules.Attempt(selected),decisions=settings.Length,role=RoleIdentity(),textPixelSize=18*scale,game=game,level=level?.id,index=levelIndex,cue=cue,detail=detail,tone=tone,active=active,step=currentStep,playing=playing,paused=paused,finished=result!=null,success=result?.success??false,rotating=rotating,rotation=rotation,settings=settings,board=stickerBoard,animals=animalOrder,animalPositions=animalPositions,hero=hero,fire=fire,heroPosition=heroPosition,monsterPosition=monsterPosition,penguins=icePositions,controls=hits.ToArray()}));
+   PuzzleSnapshot(JsonUtility.ToJson(new Snapshot{room=room,tutorialGame=tutorialGame,tutorialPage=tutorialPage,attempt=Rules.Attempt(selected),decisions=settings.Length,role=RoleIdentity(),textPixelSize=18*scale,game=game,level=level?.id,index=levelIndex,cue=cue,detail=detail,tone=tone,active=active,step=currentStep,playing=playing,paused=paused,finished=result!=null,success=result?.success??false,rotating=rotating,rotation=rotation,settings=settings,board=stickerBoard,animals=animalOrder,animalPositions=animalPositions,hero=hero,fire=fire,heroPosition=heroPosition,monsterPosition=monsterPosition,penguins=icePositions,controls=hits.ToArray()}));
    #endif
   }
  }

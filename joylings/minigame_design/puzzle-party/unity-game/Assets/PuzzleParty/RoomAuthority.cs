@@ -14,7 +14,8 @@ namespace Together {
   public bool isHost;
  }
  [Serializable] public class RoomSnapshot {
-  public string code,game,phase,error;
+  public string code,game,phase,error,tutorialGame;
+  public int tutorialPage;
   public int revision,roundId,runId,index,myGroup,mySlot,ackSequence;
   public int[] slotGroups;
   public string[] slotNames;public bool[] ready;
@@ -47,6 +48,7 @@ namespace Together {
   readonly Random random;
   readonly List<RoomMember> members=new List<RoomMember>();
   string game="",phase="planning";
+  string tutorialGame="";int tutorialPage;
   int index,revision=1,roundId=1,runId;
   bool paused,closed;
   float speed=1,elapsedMs,durationMs;
@@ -124,17 +126,24 @@ namespace Together {
    if(action==null)return Reject(out error,"沒有收到操作，請再試一次。");
    if(action.roundId!=roundId)return Reject(out error,"題目已更新，請依目前畫面重新操作。");
    if(action.type!="set"&&!member.isHost)return Reject(out error,"這個操作交給老師。");
+   if(tutorialGame!=""&&action.type!="tutorial"&&action.type!="tutorial-close"&&action.type!="home"&&action.type!="open"&&action.type!="remove")return Reject(out error,"先一起看教學，關閉後再作答。");
 
    switch(action.type) {
+    case "tutorial":
+     if(phase=="playing")return Reject(out error,"先停止播放，再看教學。");
+     if((action.game!="sticker"&&action.game!="penguin")||action.index<0||action.index>2)return Reject(out error,"找不到這一頁教學。");
+     tutorialGame=action.game;tutorialPage=action.index;break;
+    case "tutorial-close":
+     tutorialGame="";tutorialPage=0;break;
     case "open": {
      if(action.game!="sticker"&&action.game!="penguin")return Reject(out error,"找不到這個遊戲。");
      var next=levels.FirstOrDefault(l=>l.game==action.game&&l.index==action.index);
      if(next==null||next.Decisions!=4||next.options==null||next.options.Length<2||next.rotateAfter!=0)
       return Reject(out error,"找不到可供四組作答的題目。");
-     level=next;game=next.game;index=next.index;settings=new string[4];AssignSlots();NextRound();break;
+     tutorialGame="";tutorialPage=0;level=next;game=next.game;index=next.index;settings=new string[4];AssignSlots();NextRound();break;
     }
     case "home":
-     game="";level=null;index=0;settings=new string[4];NextRound();break;
+     tutorialGame="";tutorialPage=0;game="";level=null;index=0;settings=new string[4];NextRound();break;
     case "set":
      if(level==null)return Reject(out error,"請等老師選擇題目。");
      if(phase=="playing")return Reject(out error,"正在播放，先看完再修改。");
@@ -182,7 +191,7 @@ namespace Together {
   public RoomSnapshot View(string playerId) {
    var player=members.FirstOrDefault(m=>m.id==playerId);
    return new RoomSnapshot {
-    code=code,game=game,phase=phase,error="",revision=revision,roundId=roundId,runId=runId,index=index,
+    code=code,game=game,phase=phase,error="",tutorialGame=tutorialGame,tutorialPage=tutorialPage,revision=revision,roundId=roundId,runId=runId,index=index,
     mySlot=player==null?-1:Array.IndexOf(slotOwners,playerId),slotGroups=slotOwners.Select(id=>members.FirstOrDefault(m=>m.id==id)?.group??3).ToArray(),
     slotNames=slotOwners.Select(id=>members.FirstOrDefault(m=>m.id==id)?.name??"" ).ToArray(),ready=settings.Select(s=>level!=null&&s!=null&&level.options.Contains(s)).ToArray(),
     myGroup=player==null?-1:player.group,isHost=player!=null&&player.isHost,connected=!closed&&player!=null,

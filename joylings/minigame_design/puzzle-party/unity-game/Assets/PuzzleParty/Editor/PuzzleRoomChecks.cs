@@ -32,7 +32,7 @@ public static class PuzzleRoomChecks {
  }
 
  public static void Check() {
-  checks=0;var room=new RoomAuthority(Fixtures(),"ABC123","teacher","老師",new FirstOrderRandom());
+  checks=0;CheckTutorial();var room=new RoomAuthority(Fixtures(),"ABC123","teacher","老師",new FirstOrderRandom());
   Need(room.View("teacher").myGroup==3&&room.View("teacher").isHost,"老師固定第四組");
   Need(room.View("teacher").settings.Length==4&&room.View("teacher").game=="","初始四格及遊戲選單");
   Need(!room.View("unknown").connected&&room.View("unknown").myGroup==-1,"未知身分沒有席位");
@@ -250,6 +250,30 @@ public static class PuzzleRoomChecks {
     Need(randomRoom.View("teacher").slotGroups.SequenceEqual(owners),"停止保持分工");
    }
   }
+ }
+ static void CheckTutorial(){
+  var room=new RoomAuthority(Fixtures(),"TEACH","teacher","老師");room.TryJoin("student","小兔",out _);
+  foreach(string game in new[]{"sticker","penguin"}){
+   Yes(room,"teacher",Action(room,"open",game),"開啟教學對應遊戲");
+   Yes(room,"student",Action(room,"set",slot:0,value:game=="sticker"?"red":"right"),"教學前設定");
+   var before=room.View("student");
+   for(int page=0;page<3;page++){
+    Yes(room,"teacher",Action(room,"tutorial",game,page),"老師翻教學");
+    var now=room.View("student");Need(now.tutorialGame==game&&now.tutorialPage==page,"學生同步教學遊戲與頁碼");
+    Need(now.roundId==before.roundId&&now.mySlot==before.mySlot&&now.settings.SequenceEqual(before.settings),"教學不更動分工與答案");
+    No(room,"student",Action(room,"tutorial",game,2),"學生不能翻頁");
+    No(room,"student",Action(room,"tutorial-close"),"學生不能關閉教學");
+    No(room,"student",Action(room,"set",slot:0,value:game=="sticker"?"blue":"down"),"教學擋住背景作答");
+    No(room,"teacher",Action(room,"play"),"教學期間不能播放");
+   }
+   Need(room.TryJoin("late","晚加入",out _),"教學中可加入");Need(room.View("late").tutorialPage==2&&room.View("late").tutorialGame==game,"晚加入跟隨目前教學");room.Remove("late");
+   No(room,"teacher",Action(room,"tutorial",game,3),"拒絕不存在的教學頁");
+   Yes(room,"teacher",Action(room,"tutorial-close"),"老師關閉教學");
+   Need(room.View("student").tutorialGame==""&&room.View("student").settings.SequenceEqual(before.settings),"全房關閉並保留答案");
+  }
+  Yes(room,"teacher",Action(room,"tutorial","sticker"),"選單前開教學");Yes(room,"teacher",Action(room,"home"),"回選單");Need(room.View("student").tutorialGame=="","回選單清除教學");
+  Yes(room,"teacher",Action(room,"tutorial","penguin"),"從遊戲選單看教學");Yes(room,"teacher",Action(room,"open","sticker"),"換遊戲");Need(room.View("student").tutorialGame=="","換遊戲清除教學");
+  Fill(room,new[]{"red","blue","blue","red"});Yes(room,"teacher",Action(room,"play"),"開始播放");No(room,"teacher",Action(room,"tutorial","sticker"),"播放中不可開教學");
  }
  static void CheckHomeScroll(){
   // Reproduce returning from level 20: the lobby snapshot has index 0 while the local level index is 19.

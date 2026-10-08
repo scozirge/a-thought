@@ -1,4 +1,4 @@
-﻿Unity WebGL v0.14.0 第三方聲明與授權資料
+﻿Unity WebGL v0.15.0 第三方聲明與授權資料
 
 NanoSockets-LICENSE.txt：直接複製 Photon Fusion SDK 隨附的 NanoSockets MIT 授權全文。
 Photon-WebSocket-README.txt：直接複製 SDK 隨附的 websocket-sharp 來源與授權說明。

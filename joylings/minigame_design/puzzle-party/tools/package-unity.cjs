@@ -26,7 +26,7 @@ fs.mkdirSync(licenses,{recursive:true});
 for(const [source,target]of sdkDocuments)fs.copyFileSync(path.join(sdk,source),path.join(licenses,target));
 fs.writeFileSync(path.join(licenses,'Photon-Realtime-COPYRIGHT.txt'),photonHeader+'\n');
 fs.writeFileSync(path.join(licenses,'README.txt'),'\uFEFF'+[
- 'Unity WebGL v0.14.0 第三方聲明與授權資料',
+ 'Unity WebGL v0.15.0 第三方聲明與授權資料',
  '',
  'NanoSockets-LICENSE.txt：直接複製 Photon Fusion SDK 隨附的 NanoSockets MIT 授權全文。',
  'Photon-WebSocket-README.txt：直接複製 SDK 隨附的 websocket-sharp 來源與授權說明。',
@@ -55,7 +55,7 @@ Start-Process "http://127.0.0.1:$port/"
 `);
 fs.writeFileSync(out+'/START.cmd','@echo off\r\ncd /d "%~dp0"\r\npowershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0start.ps1"\r\nif errorlevel 1 pause\r\n');
 fs.writeFileSync(out+'/使用說明.txt','\uFEFF'+[
- '合作挑戰遊戲｜Unity WebGL v0.14.0：本地教師＋跨網連線',
+ '合作挑戰遊戲｜Unity WebGL v0.15.0：本地教師＋跨網連線',
  '',
  '這是真正的 Unity WebGL 輸出，含 .wasm、.data 與 C# 遊戲規則。',
  '解壓後雙擊 START.cmd，再於瀏覽器開啟 http://127.0.0.1:8190/。',
@@ -81,7 +81,7 @@ fs.writeFileSync(out+'/使用說明.txt','\uFEFF'+[
  '4. 老師選遊戲與關卡。學生可同時填答案，但只能修改開題時分配到的步驟；老師設定老師組及代答缺席組。',
  '5. 四格填完由老師播放；切關、清空、播放、暫停／繼續、停止及速度由老師控制。',
  '6. 學生離開會保留答案，新加入者補入最前空組，其他組不重編；老師離房即結束本次連線。',
- 'Photon 使用 asia 區域與獨立 puzzle-party-v14-shuffle 版本，不加入原 RIVALS 房間；不需要同一個區域網路。',
+ 'Photon 使用 asia 區域與獨立 puzzle-party-v15-tutorial 版本，不加入原 RIVALS 房間；不需要同一個區域網路。',
  '127.0.0.1 是各自電腦的本地地址，不能當作遠方學生的下載連結。',
  '公開連線版：https://scozirge.github.io/a-thought/puzzle-party/；直接開啟網頁即可，不需本地伺服器。',
  '公開頁與本地 Unity 分享包使用相同建置，同版本可選取同一房間一起玩。',
