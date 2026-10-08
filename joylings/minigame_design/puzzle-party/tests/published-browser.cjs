@@ -1,18 +1,28 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
+const {createHash}=require('node:crypto');
 const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
 const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 // Verify the published Unity assets and a real room spanning two web origins.
 (async()=>{
- const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+ const startedAt=new Date().toISOString();
+ const chrome=process.env.PUZZLE_CHROME||'C:/Program Files/Google/Chrome/Application/chrome.exe';
+ const edge='C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
+ const studentExecutable=process.env.PUZZLE_STUDENT_BROWSER||(fs.existsSync(edge)?edge:chrome);
+ const launch=executablePath=>chromium.launch({executablePath,headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+ const browser=await launch(chrome);let studentBrowser;
  const errors=[],sockets=[],ttlReadbacks=[],artifacts=path.resolve(__dirname,'../artifacts');
+ fs.mkdirSync(artifacts,{recursive:true});
  try{
-  const hostContext=await browser.newContext({viewport:{width:1365,height:900}}),studentContext=await browser.newContext({viewport:{width:945,height:800}});
+  studentBrowser=await launch(studentExecutable);
+  const hostContext=await browser.newContext({viewport:{width:1365,height:900}}),studentContext=await studentBrowser.newContext({viewport:{width:945,height:800}});
   await studentContext.addInitScript(()=>{
    const Native=window.WebSocket;window.__publishedSockets=[];
    window.WebSocket=class extends Native {constructor(...args){super(...args);window.__publishedSockets.push(this);}};
   });
   const host=await hostContext.newPage(),student=await studentContext.newPage();
+  const assetFiles=['UnityWeb.loader.js','UnityWeb.framework.js','UnityWeb.data','UnityWeb.wasm'];
+  const assetResponses=assetFiles.map(file=>host.waitForResponse(response=>new URL(response.url()).pathname.endsWith('/Build/'+file),{timeout:180000}).catch(error=>error));
   for(const [label,page] of [['published-host',host],['local-student',student]]){
    page.on('pageerror',e=>errors.push(e.message));page.on('websocket',s=>sockets.push(new URL(s.url()).host));
    page.on('console',m=>{if(/PUZZLE_ROOM_PLAYER_TTL 0\b/.test(m.text()))ttlReadbacks.push(label);});
@@ -26,10 +36,23 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   const version=require('../package.json').version;
   assert.ok((await response.text()).includes("productVersion:'"+version+"'"),'公開頁必須是本次發布版本 '+version);
   await ready(host);
+  const assets=[];
+  for(const [i,result] of (await Promise.all(assetResponses)).entries()){
+   if(result instanceof Error)throw result;
+   assert.equal(result.status(),200);
+   const file=assetFiles[i],digest=data=>createHash('sha256').update(data).digest('hex');
+   // Large WASM/data bodies can be evicted from Chromium's inspector cache.
+   // Fetch the exact URL loaded by Unity through the request context instead.
+   const asset=await hostContext.request.get(result.url());assert.equal(asset.status(),200);
+   const sha256=digest(await asset.body());await asset.dispose();
+   assert.equal(sha256,digest(fs.readFileSync(path.resolve(__dirname,'../Builds/UnityWeb/Build',file))),'公開與本地遊戲資源必須相同：'+file);
+   assets.push({file,sha256});
+  }
   await room(host,{type:'create',name:'公開網頁老師',group:3});
   await wait(host,()=>puzzleRoomState.connected&&puzzleRoomState.isHost);
   const code=await host.evaluate(()=>puzzleRoomState.code);
-  await student.goto('http://127.0.0.1:8191/?room='+code);await ready(student);
+  const localStudent=process.env.PUZZLE_UNITY_URL||'http://127.0.0.1:8191/';
+  await student.goto(localStudent+'?room='+code);await ready(student);
   await student.locator('#room-dialog[open]').waitFor();
   await student.waitForFunction(code=>window.puzzleRoomState?.rooms?.some(r=>r.code===code&&r.open),code,{timeout:65000});
   assert.equal(await student.locator('[data-code="'+code+'"]').getAttribute('aria-pressed'),'true','分享連結應自動選取房間');
@@ -42,7 +65,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   await cmd(host,'play');for(const page of [host,student])await wait(page,()=>puzzleUnityState.finished&&puzzleUnityState.success);
   assert.ok(sockets.some(s=>/photon|exitgames/i.test(s)));assert.deepEqual(errors,[]);
   assert.ok(ttlReadbacks.includes('published-host')&&ttlReadbacks.includes('local-student'),'公開老師房間與學生伺服器回讀的席位保留時間都必須是 0');
-  await host.screenshot({path:path.join(artifacts,'published-v10-success.png')});
+  await host.screenshot({path:path.join(artifacts,'published-v14-success.png')});
   const cut=await student.evaluate(()=>{const active=__publishedSockets.filter(s=>s.readyState===WebSocket.OPEN);active.forEach(s=>s.close(4001,'published reconnect verification'));return active.length;});
   assert.ok(cut>0,'必須真的中斷學生的原生連線');
   await wait(student,()=>!puzzleRoomState.connected&&!puzzleRoomState.busy&&!!puzzleRoomState.error);
@@ -53,7 +76,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   await wait(student,()=>puzzleRoomState.connected&&puzzleUnityState.finished&&puzzleUnityState.success);
   assert.ok(ttlReadbacks.filter(label=>label==='local-student').length>=2);assert.deepEqual(errors,[]);
   await room(host,{type:'leave'});await wait(student,()=>!puzzleRoomState.connected&&!!puzzleRoomState.error);
-  fs.writeFileSync(path.join(artifacts,'published-v10-report.json'),JSON.stringify({published,version,localStudent:'http://127.0.0.1:8191/',passed:true,sockets,ttlReadbacks,disconnectMessage,rejoinedAfterNativeSocketClose:true,errors},null,2));
+  fs.writeFileSync(path.join(artifacts,'published-v14-report.json'),JSON.stringify({startedAt,finishedAt:new Date().toISOString(),published,version,localStudent,browsers:{teacher:chrome,student:studentExecutable},assets,passed:true,sockets,ttlReadbacks,disconnectMessage,rejoinedAfterNativeSocketClose:true,errors},null,2));
   console.log('PASS 公開 Unity 載入與開房、兩端同步通關、學生原生連線中斷的正確提示與重入、老師關房');
- }finally{await browser.close();}
+ }finally{await Promise.all([browser.close(),studentBrowser?.close()]);}
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,4 +1,4 @@
-﻿一起想想｜Unity WebGL v0.10.1：本地教師＋跨網連線
+﻿合作挑戰遊戲｜Unity WebGL v0.14.0：本地教師＋跨網連線
 
 這是真正的 Unity WebGL 輸出，含 .wasm、.data 與 C# 遊戲規則。
 解壓後雙擊 START.cmd，再於瀏覽器開啟 http://127.0.0.1:8190/。

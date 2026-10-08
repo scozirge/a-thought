@@ -89,15 +89,21 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  async function members(list,count){await allWait(list,n=>window.puzzleRoomState?.members?.length===n,count);}
  async function answers(list,values){await allWait(list,v=>window.puzzleUnityState?.settings?.join(',')===v.join(','),values);}
  async function open(host,game,index,list=live()){
+  const previous=(await state(host)).room.roundId;
   await command(host,'open:'+game+':'+index);
-  await allWait(list,x=>puzzleUnityState.game===x.game&&puzzleUnityState.index===x.index&&puzzleUnityState.room?.phase==='planning',{game,index});
+  await allWait(list,x=>puzzleUnityState.game===x.game&&puzzleUnityState.index===x.index&&puzzleUnityState.room?.phase==='planning'&&puzzleUnityState.room.roundId>x.previous,{game,index,previous});
+  for(const a of list)a.slot=(await state(a)).room.mySlot;
   return R.solutions(game,games[game].levels[index])[0];
  }
  async function fillBurst(list,game,index,answer){
   const options=R.optionsFor(game,games[game].levels[index]);
   await Promise.all(list.map(async a=>{
-   const slot=a.group,values=[options[slot][0],options[slot].at(-1),answer[slot]];
-   await a.page.evaluate(({slot,values})=>{for(const value of values)unityInstance.SendMessage('PuzzleParty','Command','set:'+slot+':'+value);},{slot,values});
+   const snapshot=await state(a);
+   const slots=snapshot.room.slotGroups.flatMap((group,slot)=>group===a.group?[slot]:[]);
+   for(const slot of slots){
+    const values=[options[slot][0],options[slot].at(-1),answer[slot]];
+    await a.page.evaluate(({slot,values})=>{for(const value of values)unityInstance.SendMessage('PuzzleParty','Command','set:'+slot+':'+value);},{slot,values});
+   }
   }));
   await answers(list,answer);
  }
@@ -151,15 +157,16 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 
   // Withhold real inbound packets briefly; the Unity client still holds round A
   // while the teacher opens round B, so its real outgoing action is stale.
-  const oldAnswer=await open(host,'sticker',18),oldRound=(await state(a)).room.roundId;
+  const oldAnswer=await open(host,'sticker',18),oldRound=(await state(a)).room.roundId,oldSlot=a.slot;
   const sentBefore=await a.page.evaluate(()=>{__resilience.hold=true;return __resilience.sent;});
   await open(host,'sticker',19,[host,b,c]);assert.equal((await state(a)).room.roundId,oldRound);
-  await command(a,'set:0:'+oldAnswer[0]);await wait(a,n=>__resilience.sent>n,sentBefore);await delay(650);
+  await command(a,'set:'+oldSlot+':'+oldAnswer[oldSlot]);await wait(a,n=>__resilience.sent>n,sentBefore);await delay(650);
   assert.ok((await state(host)).settings.every(v=>!v),'舊 round 作答不可寫入新題');
   const withheld=await a.page.evaluate(()=>__resilience.release());assert.ok(withheld>0,'必須確實延遲收到的原始封包');
   await allWait(actors,r=>puzzleUnityState.room.roundId>r&&puzzleUnityState.index===19,oldRound);
   await answers(actors,['','','','']);
-  const stickerAnswer=R.solutions('sticker',games.sticker.levels[19])[0];await command(a,'set:0:'+stickerAnswer[0]);await answers(actors,[stickerAnswer[0],'','','']);
+  const stickerAnswer=R.solutions('sticker',games.sticker.levels[19])[0];a.slot=(await state(a)).room.mySlot;
+  await command(a,'set:'+a.slot+':'+stickerAnswer[a.slot]);await answers(actors,stickerAnswer.map((v,i)=>i===a.slot?v:''));
   faults.push({kind:'stale-round',oldRound,withheldNativeMessages:withheld,newRound:(await state(host)).room.roundId});
   note('延遲真實封包使學生停留舊 round；舊作答遭拒，恢復後新作答正常');
   await fillBurst(actors,'sticker',19,stickerAnswer);
@@ -173,14 +180,14 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
 
   // Browser refresh tears down the real WebSocket; no in-game leave is sent.
   const reloadAt=Date.now();await b.page.reload();await ready(b);await departed(host,b.group,[host,a,c]);
-  const modified=stickerAnswer.slice();modified[b.group]=R.optionsFor("sticker",games.sticker.levels[19])[0].find(v=>v!==modified[b.group]);
-  await command(host,'set:'+b.group+':'+modified[b.group]);await answers([host,a,c],modified);
+  const modified=stickerAnswer.slice();modified[b.slot]=R.optionsFor("sticker",games.sticker.levels[19])[b.slot].find(v=>v!==modified[b.slot]);
+  await command(host,'set:'+b.slot+':'+modified[b.slot]);await answers([host,a,c],modified);
   await join(b,code);await members(actors,4);await answers(actors,modified);
   faults.push({kind:'student-refresh',milliseconds:Date.now()-reloadAt,group:b.group});
   note('學生直接重新整理造成真離線，老師接手修改，新載入頁重加接續答案');
 
   const closedAt=Date.now();await c.page.close();await departed(host,c.group,[host,a,b]);
-  await command(host,'set:'+c.group+':'+stickerAnswer[c.group]);await attachPage(c);await join(c,code);await members(actors,4);
+  await command(host,'set:'+c.slot+':'+stickerAnswer[c.slot]);await attachPage(c);await join(c,code);await members(actors,4);
   assert.equal((await state(c)).room.game,'sticker');assert.equal((await state(c)).index,19);
   faults.push({kind:'student-tab-close',milliseconds:Date.now()-closedAt,group:c.group});
   note('學生直接關閉頁籤後釋放席位，新頁可以重新加入原組');
@@ -195,7 +202,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   });assert.ok(cut.count>0,'需切斷真實仍開啟的 Photon WSS');
   await wait(a,n=>__resilience.closed>n,cut.before);
   await Promise.all([departed(host,a.group,[host,b,c]),finished([host,b,c],'sticker',19),wait(a,()=>!puzzleRoomState.connected&&!puzzleRoomState.busy&&!!puzzleRoomState.error,null,50000)]);
-  const disconnected=await ui(a);await a.page.screenshot({path:path.join(dir,'resilience-v10-wss-disconnected.png')});
+  const disconnected=await ui(a);await a.page.screenshot({path:path.join(dir,'resilience-v14-wss-disconnected.png')});
   await join(a,code);await members(actors,4);await finished(actors,'sticker',19);
   faults.push({kind:'native-websocket-close',count:cut.count,milliseconds:Date.now()-cut.time,error:disconnected.error});
   note('播放中真正中斷學生 WSS，其餘三端繼續完成；同頁無需 Leave 重入並同步成功結果');
@@ -220,14 +227,14 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
    faults.push({kind:'teacher-tab-close-immediate-new-room',round:turn+1,milliseconds:Date.now()-closeAt,cleanupBusyObserved:evidence.busyObserved,createSentAt:evidence.sentAt});
    note('第 '+(turn+1)+' 輪老師直接關頁，學生看到離房提示並立即新建房；四組重聚後可通關');
   }
-  await host.page.screenshot({path:path.join(dir,'resilience-v10-recovered-room.png')});
+  await host.page.screenshot({path:path.join(dir,'resilience-v14-recovered-room.png')});
   assert.deepEqual(errors,[],'真實斷線與重連不應產生 JavaScript 未處理例外');
-  fs.writeFileSync(path.join(dir,'resilience-v10-report.json'),JSON.stringify(report({success:true}),null,2));
+  fs.writeFileSync(path.join(dir,'resilience-v14-report.json'),JSON.stringify(report({success:true}),null,2));
   console.log('PASS RESILIENCE 全部真實多人穩定性測試通過');
  }catch(error){
   const snapshots=await Promise.all(live().map(async a=>({label:a.label,group:a.group,state:await state(a).catch(()=>null),ui:await ui(a).catch(()=>null)})));
-  await Promise.all(live().map(a=>a.page.screenshot({path:path.join(dir,'resilience-v10-failure-group-'+a.group+'.png')}).catch(()=>{})));
-  fs.writeFileSync(path.join(dir,'resilience-v10-failure.json'),JSON.stringify(report({success:false,error:error.stack,snapshots}),null,2));
+  await Promise.all(live().map(a=>a.page.screenshot({path:path.join(dir,'resilience-v14-failure-group-'+a.group+'.png')}).catch(()=>{})));
+  fs.writeFileSync(path.join(dir,'resilience-v14-failure.json'),JSON.stringify(report({success:false,error:error.stack,snapshots}),null,2));
   throw error;
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

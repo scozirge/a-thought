@@ -26,7 +26,7 @@ fs.mkdirSync(licenses,{recursive:true});
 for(const [source,target]of sdkDocuments)fs.copyFileSync(path.join(sdk,source),path.join(licenses,target));
 fs.writeFileSync(path.join(licenses,'Photon-Realtime-COPYRIGHT.txt'),photonHeader+'\n');
 fs.writeFileSync(path.join(licenses,'README.txt'),'\uFEFF'+[
- 'Unity WebGL v0.10.1 第三方聲明與授權資料',
+ 'Unity WebGL v0.14.0 第三方聲明與授權資料',
  '',
  'NanoSockets-LICENSE.txt：直接複製 Photon Fusion SDK 隨附的 NanoSockets MIT 授權全文。',
  'Photon-WebSocket-README.txt：直接複製 SDK 隨附的 websocket-sharp 來源與授權說明。',
@@ -55,7 +55,7 @@ Start-Process "http://127.0.0.1:$port/"
 `);
 fs.writeFileSync(out+'/START.cmd','@echo off\r\ncd /d "%~dp0"\r\npowershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0start.ps1"\r\nif errorlevel 1 pause\r\n');
 fs.writeFileSync(out+'/使用說明.txt','\uFEFF'+[
- '一起想想｜Unity WebGL v0.10.1：本地教師＋跨網連線',
+ '合作挑戰遊戲｜Unity WebGL v0.14.0：本地教師＋跨網連線',
  '',
  '這是真正的 Unity WebGL 輸出，含 .wasm、.data 與 C# 遊戲規則。',
  '解壓後雙擊 START.cmd，再於瀏覽器開啟 http://127.0.0.1:8190/。',

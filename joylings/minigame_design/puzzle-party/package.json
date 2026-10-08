@@ -2,7 +2,7 @@
   "name": "puzzle-party",
   "version": "0.14.0",
   "private": true,
-  "description": "一起想想：國小二、三年級的四組合作解謎，Unity WebGL 單機與跨網連線",
+  "description": "合作挑戰遊戲：國小二、三年級的四組合作解謎，Unity WebGL 單機與跨網連線",
   "scripts": {
     "build": "powershell -ExecutionPolicy Bypass -File tools/build-unity.ps1",
     "build:unity": "powershell -ExecutionPolicy Bypass -File tools/build-unity.ps1",

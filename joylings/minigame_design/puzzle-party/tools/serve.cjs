@@ -17,6 +17,6 @@ http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': mime[path.extname(target)]||'application/octet-stream', 'Cache-Control': 'no-store', 'Content-Length': fs.statSync(target).size });
   if(req.method === 'HEAD')res.end();else fs.createReadStream(target).pipe(res);
 }).listen(port, host, () => {
-  console.log(`一起想想：http://127.0.0.1:${port}/`);
+  console.log(`合作挑戰遊戲：http://127.0.0.1:${port}/`);
   if (host === '0.0.0.0') console.log('已開放區域網路；手機可使用這台電腦的區網 IP 與上述連接埠。');
 });

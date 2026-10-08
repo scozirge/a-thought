@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { FOOLISH_HERO_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -16,6 +16,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={PUZZLE_PARTY_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <Gamepad2 size={20} aria-hidden="true" />
+                玩合作挑戰遊戲
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={RED_BLUE_GAME_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Crosshair size={20} aria-hidden="true" />
                 玩紅藍槍戰
@@ -53,55 +58,6 @@ export default function ClassroomHome() {
         </section>
 
         <nav aria-label="課程目錄" className="course-catalog">
-          <div className="featured-unit current-course" id="fourth-course">
-            <div className="featured-heading">
-              <a className="featured-link" href={FOOLISH_HERO_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
-                <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
-                <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">第四次課程</span>傻瓜勇者</span>
-                </span>
-                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-
-
-          <details className="featured-unit" id="third-course">
-            <summary className="featured-heading">
-              <a className="featured-link" href={assetUrl('/classroom/weapon-logic/')}>
-                <span className="unit-icon tint-purple"><UnitIcon name="code" /></span>
-                <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">第三次課程</span>紅藍槍戰・武器邏輯</span>
-                  <span className="unit-meta">15 題 · 完整題目與選項</span>
-                </span>
-                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
-              </a>
-              <span className="activity-toggle">
-                <span className="toggle-label-closed">展開題目與選項</span>
-                <span className="toggle-label-open">收起題目與選項</span>
-                <ChevronDown size={19} aria-hidden="true" />
-              </span>
-            </summary>
-            <div className="activity-content">
-              <ol className="activity-list weapon-catalog-list">
-                {weaponQuestions.stages.flatMap((stage, stageIndex) => stage.questions.map((question, index) => (
-                  <li key={`${stage.weapon}-${index}`}>
-                    <a href={assetUrl(`/classroom/weapon-logic/#weapon-question-${stage.weapon}-${index + 1}`)}>
-                      <span>{String(stageIndex * 3 + index + 1).padStart(2, '0')}</span>
-                      {question.title}
-                      <ArrowUpRight size={16} aria-hidden="true" />
-                    </a>
-                    {'context' in question && <p className="catalog-question-context">{question.context}</p>}
-                    <ol className="catalog-question-options">
-                      {question.options.map((option) => <li key={option}>{option}</li>)}
-                    </ol>
-                  </li>
-                )))}
-                <li><a href={assetUrl('/classroom/weapon-logic/#game-updates')}><span>★</span>解鎖與復活規則<ArrowUpRight size={16} aria-hidden="true" /></a></li>
-              </ol>
-            </div>
-          </details>
-
           <details className="featured-unit">
             <summary className="featured-heading">
               <a
@@ -198,6 +154,56 @@ export default function ClassroomHome() {
               第二堂課・課後復盤
               <ArrowUpRight size={18} aria-hidden="true" />
             </a>
+          </div>
+
+          <details className="featured-unit" id="third-course">
+            <summary className="featured-heading">
+              <a className="featured-link" href={assetUrl('/classroom/weapon-logic/')}>
+                <span className="unit-icon tint-purple"><UnitIcon name="code" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第三次課程</span>紅藍槍戰・武器邏輯</span>
+                  <span className="unit-meta">15 題 · 完整題目與選項</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+              <span className="activity-toggle">
+                <span className="toggle-label-closed">展開題目與選項</span>
+                <span className="toggle-label-open">收起題目與選項</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </span>
+            </summary>
+            <div className="activity-content">
+              <ol className="activity-list weapon-catalog-list">
+                {weaponQuestions.stages.flatMap((stage, stageIndex) => stage.questions.map((question, index) => (
+                  <li key={`${stage.weapon}-${index}`}>
+                    <a href={assetUrl(`/classroom/weapon-logic/#weapon-question-${stage.weapon}-${index + 1}`)}>
+                      <span>{String(stageIndex * 3 + index + 1).padStart(2, '0')}</span>
+                      {question.title}
+                      <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                    {'context' in question && <p className="catalog-question-context">{question.context}</p>}
+                    <ol className="catalog-question-options">
+                      {question.options.map((option) => <li key={option}>{option}</li>)}
+                    </ol>
+                  </li>
+                )))}
+                <li><a href={assetUrl('/classroom/weapon-logic/#game-updates')}><span>★</span>解鎖與復活規則<ArrowUpRight size={16} aria-hidden="true" /></a></li>
+              </ol>
+            </div>
+          </details>
+
+          <div className="featured-unit current-course" id="fourth-course">
+            <div className="featured-heading">
+              <a className="featured-link" href={PUZZLE_PARTY_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第四次課程</span>合作挑戰遊戲</span>
+                  <span className="unit-meta">貼紙工廠・帶企鵝回家 · 各 20 關</span>
+                  <span className="unit-meta">老師開房，學生選房加入 · 依加入順序自動編組</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+            </div>
           </div>
 
           <div className="unit-grid">

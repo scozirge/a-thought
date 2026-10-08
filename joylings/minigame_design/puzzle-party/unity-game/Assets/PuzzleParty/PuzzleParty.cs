@@ -72,9 +72,10 @@ namespace Together {
    GUI.BeginGroup(new Rect(0,-scroll.y,viewWidth-18,Mathf.Max(vh,total)));
    float w=viewWidth-40;
    if(game==""){
-   Text(new Rect(24,20,w-158,44),"一起想想",28,ink,true);
+   bool stackedTitle=viewWidth<480;
+   Text(new Rect(24,20,stackedTitle?viewWidth-48:w-158,44),"合作挑戰遊戲",28,ink,true);
    GUI.enabled=CanLead;if(game!=""&&Button(new Rect(viewWidth-185,22,160,44),"← 遊戲選單","home"))GoHome();GUI.enabled=true;
-   if(Button(new Rect(viewWidth-185,game==""?22:76,160,44),Online?"房間 / 離開":"連線教室","room"))ShowRoom();
+   if(Button(new Rect(viewWidth-185,stackedTitle?76:22,160,44),Online?"房間 / 離開":"連線教室","room"))ShowRoom();
    Text(new Rect(24,76,w-174,56),Online?"房號 "+room.code:"一起玩",18,muted);
    headerExtra=Online?TextHeight(RoleIdentity(),viewWidth-48,22)+12:0;
    if(Online)Text(new Rect(24,132,viewWidth-48,headerExtra),RoleIdentity(),22,green,true);
