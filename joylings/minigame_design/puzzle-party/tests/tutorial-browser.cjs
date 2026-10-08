@@ -25,18 +25,19 @@ const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
  try{
   const host=await player();
   for(const game of ['sticker','penguin']){
+   const count=game==='sticker'?5:4;
    await click(host,'tutorial:'+game);await tutorial(host,game,0);
    for(const width of [360,390,945,1365]){
     await host.setViewportSize({width,height:820});await host.waitForTimeout(350);
-    for(let page=0;page<3;page++){
+    for(let page=0;page<count;page++){
      await cmd(host,`tutorial:${game}:${page}`);await tutorial(host,game,page);
      const current=await state(host);assert.ok(current.controls.every(c=>c.id.startsWith('tutorial-')));
      await host.screenshot({path:path.join(artifacts,`tutorial-${game}-${page}-${width}.png`)});
     }
    }
-   await click(host,'tutorial-prev');await tutorial(host,game,1);await click(host,'tutorial-next');await tutorial(host,game,2);await click(host,'tutorial-next');await tutorial(host,'',0);
+   await click(host,'tutorial-prev');await tutorial(host,game,count-2);await click(host,'tutorial-next');await tutorial(host,game,count-1);await click(host,'tutorial-next');await tutorial(host,'',0);
   }
-  checks.push('兩款三頁圖文、360/390/945/1365px、真實點擊翻頁及完成');
+  checks.push('貼紙五頁、企鵝四頁、360/390/945/1365px、真實點擊翻頁及完成');
   await host.setViewportSize({width:945,height:820});await room(host,{type:'create',name:'教學老師'});await wait(host,()=>puzzleRoomState.connected&&puzzleRoomState.isHost);
   const code=await host.evaluate(()=>puzzleRoomState.code),student=await player();
   await room(student,{type:'join',code,name:'小兔'});await wait(student,()=>puzzleRoomState.connected);
@@ -53,6 +54,9 @@ const {chromium}=require(process.env.PUZZLE_PLAYWRIGHT_MODULE||'playwright');
     const late=await player();await room(late,{type:'join',code,name:'晚到小熊'});await wait(late,()=>puzzleRoomState.connected);await tutorial(late,game,1);
     await click(host,'tutorial-next');await tutorial(late,game,2);await tutorial(student,game,2);await room(late,{type:'leave'});await wait(late,()=>!puzzleRoomState.connected);await tutorial(late,'',0);
     checks.push('晚加入跟隨目前頁，離房清除教學');
+   }
+   for(let page=(await state(host)).tutorialPage+1;page<(game==='sticker'?5:4);page++){
+    await click(host,'tutorial-next');await tutorial(student,game,page);
    }
    await click(host,'tutorial-close');await tutorial(student,'',0);const after=await state(host);assert.deepEqual(after.settings,before.settings);assert.equal(after.room.roundId,before.room.roundId);assert.deepEqual(after.room.slotGroups,before.room.slotGroups);
    checks.push(game+' 老師開啟／翻頁／關閉全房同步，學生不可越權，保留作答與分工');

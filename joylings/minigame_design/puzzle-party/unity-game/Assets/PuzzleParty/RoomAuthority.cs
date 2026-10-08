@@ -131,7 +131,7 @@ namespace Together {
    switch(action.type) {
     case "tutorial":
      if(phase=="playing")return Reject(out error,"先停止播放，再看教學。");
-     if((action.game!="sticker"&&action.game!="penguin")||action.index<0||action.index>2)return Reject(out error,"找不到這一頁教學。");
+     if(action.index<0||action.index>=TutorialGuide.PageCount(action.game))return Reject(out error,"找不到這一頁教學。");
      tutorialGame=action.game;tutorialPage=action.index;break;
     case "tutorial-close":
      tutorialGame="";tutorialPage=0;break;

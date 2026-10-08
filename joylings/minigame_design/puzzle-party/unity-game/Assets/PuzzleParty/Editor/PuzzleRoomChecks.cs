@@ -257,7 +257,9 @@ public static class PuzzleRoomChecks {
    Yes(room,"teacher",Action(room,"open",game),"開啟教學對應遊戲");
    Yes(room,"student",Action(room,"set",slot:0,value:game=="sticker"?"red":"right"),"教學前設定");
    var before=room.View("student");
-   for(int page=0;page<3;page++){
+   int pageCount=TutorialGuide.PageCount(game);
+   Need(pageCount==(game=="sticker"?5:4),"貼紙五頁、企鵝四頁，單頁只教一件事");
+   for(int page=0;page<pageCount;page++){
     Yes(room,"teacher",Action(room,"tutorial",game,page),"老師翻教學");
     var now=room.View("student");Need(now.tutorialGame==game&&now.tutorialPage==page,"學生同步教學遊戲與頁碼");
     Need(now.roundId==before.roundId&&now.mySlot==before.mySlot&&now.settings.SequenceEqual(before.settings),"教學不更動分工與答案");
@@ -266,8 +268,8 @@ public static class PuzzleRoomChecks {
     No(room,"student",Action(room,"set",slot:0,value:game=="sticker"?"blue":"down"),"教學擋住背景作答");
     No(room,"teacher",Action(room,"play"),"教學期間不能播放");
    }
-   Need(room.TryJoin("late","晚加入",out _),"教學中可加入");Need(room.View("late").tutorialPage==2&&room.View("late").tutorialGame==game,"晚加入跟隨目前教學");room.Remove("late");
-   No(room,"teacher",Action(room,"tutorial",game,3),"拒絕不存在的教學頁");
+   Need(room.TryJoin("late","晚加入",out _),"教學中可加入");Need(room.View("late").tutorialPage==pageCount-1&&room.View("late").tutorialGame==game,"晚加入跟隨目前教學");room.Remove("late");
+   No(room,"teacher",Action(room,"tutorial",game,pageCount),"拒絕不存在的教學頁");
    Yes(room,"teacher",Action(room,"tutorial-close"),"老師關閉教學");
    Need(room.View("student").tutorialGame==""&&room.View("student").settings.SequenceEqual(before.settings),"全房關閉並保留答案");
   }
