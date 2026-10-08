@@ -23,7 +23,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  await shot('unity-sticker-v10-945');
  const first=R.solutions('sticker',games.sticker.levels[0])[0];
  for(let i=0;i<4;i++){await click('choose:'+i+':'+first[i]);assert.equal((await state()).role,'你是'+R.groups[i]);}
- await click('role:0');assert.equal((await state()).role,'你是'+R.groups[0]);
+ await click('role:0');assert.equal((await state()).role,'你是老師組');
  await shot('unity-role-v10');await click('play');await page.waitForFunction(()=>puzzleUnityState.playing);await page.waitForFunction(()=>puzzleUnityState.finished,{},{timeout:20000});assert.equal((await state()).success,true);
  await command('speed');
  for(const [game,info]of Object.entries(games))for(let index=0;index<info.levels.length;index++){
@@ -55,7 +55,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  await page.setViewportSize({width:1365,height:1100});await command('open:penguin:9');await page.waitForTimeout(300);await shot('unity-penguin-v10-wide');
  await page.setViewportSize({width:390,height:844});await command('open:sticker:9');await page.waitForTimeout(400);await shot('unity-mobile-v10');
  assert.ok((await state()).textPixelSize>=18);
- await click('choose:0:red');assert.equal((await state()).role,'你是'+R.groups[0]);await shot('unity-mobile-controls-v10');
+ await click('choose:0:red');assert.equal((await state()).role,'你是老師組');await shot('unity-mobile-controls-v10');
  await click('choose:3:blue');
  const client=await page.context().newCDPSession(page),oldY=(await state()).controls.find(c=>c.id==='play').y;
  await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:200,y:350}]});
@@ -68,7 +68,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  const answer=R.solutions('sticker',games.sticker.levels[19])[0],bad=answer.slice();bad[2]=R.optionsFor("sticker",games.sticker.levels[19])[0].find(v=>v!==answer[2]);
  for(let i=0;i<4;i++){
    if(i===3){await command('play');await page.waitForTimeout(200);assert.equal((await state()).playing,false);assert.equal((await state()).finished,false);}
-   await click('color:'+i+':0:'+bad[i].split('|')[0]);await click('color:'+i+':1:'+bad[i].split('|')[1]);assert.equal((await state()).role,'你是'+R.groupFor(i));assert.equal((await state()).decisions,4);
+   await click('color:'+i+':0:'+bad[i].split('|')[0]);await click('color:'+i+':1:'+bad[i].split('|')[1]);assert.equal((await state()).role,'你是老師組');assert.equal((await state()).decisions,4);
  }
  assert.equal((await state()).finished,false);assert.deepEqual((await state()).settings,bad);assert.ok((await state()).board.every(v=>!v));
  await command('play');await page.waitForFunction(()=>puzzleUnityState.playing);await page.waitForFunction(()=>puzzleUnityState.finished);

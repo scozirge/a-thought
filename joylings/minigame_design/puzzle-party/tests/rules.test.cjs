@@ -4,11 +4,11 @@ const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 const R = require('../rules/rules.js');
 
-test('最後五張雙色題：A、B 都連通且可見，八個選色缺一不可',()=>{
+test('最後三張雙色題：A、B 都連通且可見，八個選色缺一不可',()=>{
  const levels=require('../rules/catalog.js').games.sticker.levels;
- assert.ok(levels.slice(0,15).every(l=>!l.twoColor));
- for(const [k,l]of levels.slice(15).entries()){
-  assert.equal(l.id,'sticker-v11-'+(16+k));assert.equal(l.twoColor,true);
+ assert.ok(levels.slice(0,17).every(l=>!l.twoColor));
+ for(const [k,l]of levels.slice(17).entries()){
+  assert.equal(l.id,'sticker-v12-'+(18+k));assert.equal(l.twoColor,true);assert.equal(l.palette.length,k===0?2:3);assert.deepEqual(l.masks.map(m=>m.length),[16,12,8,4]);
   const answer=R.solutions('sticker',l);assert.equal(answer.length,1);
   const result=R.run('sticker',l,answer[0]);assert.equal(result.frames.length,4);
   l.masks.forEach((mask,i)=>{
@@ -17,7 +17,7 @@ test('最後五張雙色題：A、B 都連通且可見，八個選色缺一不�
     assert.ok(region.length>0&&region.every(c=>mask.includes(c)));
     const seen=new Set([region[0]]),queue=[region[0]];
     for(const c of queue)for(const n of region)if(Math.abs(c%4-n%4)+Math.abs((c/4|0)-(n/4|0))===1&&!seen.has(n)){seen.add(n);queue.push(n);}
-    assert.equal(seen.size,region.length);assert.ok(region.some(c=>result.owners[c]===i));
+    assert.equal(seen.size,region.length);assert.ok(region.filter(c=>result.owners[c]===i).length>=2);
     const changed=answer[0].slice(),parts=changed[i].split('|');parts[area]=l.palette.find(v=>v!==parts[area]);changed[i]=parts.join('|');
     assert.equal(R.run('sticker',l,changed).success,false);
     parts[area]='';changed[i]=parts.join('|');assert.throws(()=>R.run('sticker',l,changed),/設定/);

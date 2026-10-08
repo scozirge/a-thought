@@ -408,98 +408,71 @@
         ]
       },
       {
-        "id": "sticker-v11-16",
-        "title": "雙色貼紙",
+        "id": "sticker-v10-16",
+        "title": "被遮住的輪廓",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
-          16,
-          16,
-          16,
-          16
-        ],
-        "combinations": 65536,
-        "solutions": 1,
-        "cells": 16,
-        "colorChoices": 8,
-        "twoColor": true,
-        "systemRotationAfter": null,
-        "rotationCount": 0,
-        "overpaint": 23,
-        "maxDepth": 4,
-        "visiblePerLayer": [
-          2,
-          5,
           4,
-          5
-        ]
-      },
-      {
-        "id": "sticker-v11-17",
-        "title": "兩區一起想",
-        "stage": "挑戰",
-        "decisions": 4,
-        "choices": [
-          16,
-          16,
-          16,
-          16
+          4,
+          4,
+          4
         ],
-        "combinations": 65536,
+        "combinations": 256,
         "solutions": 1,
         "cells": 16,
-        "colorChoices": 8,
-        "twoColor": true,
+        "colorChoices": 4,
+        "twoColor": false,
         "systemRotationAfter": null,
         "rotationCount": 0,
-        "overpaint": 26,
+        "overpaint": 29,
         "maxDepth": 4,
         "visiblePerLayer": [
+          1,
+          1,
           2,
-          3,
-          5,
-          6
+          12
         ]
       },
       {
-        "id": "sticker-v11-18",
-        "title": "找到露出的兩色",
+        "id": "sticker-v10-17",
+        "title": "小角落的證據",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
-          16,
-          16,
-          16,
-          16
+          4,
+          4,
+          4,
+          4
         ],
-        "combinations": 65536,
+        "combinations": 256,
         "solutions": 1,
         "cells": 16,
-        "colorChoices": 8,
-        "twoColor": true,
+        "colorChoices": 4,
+        "twoColor": false,
         "systemRotationAfter": null,
         "rotationCount": 0,
-        "overpaint": 27,
+        "overpaint": 30,
         "maxDepth": 4,
         "visiblePerLayer": [
+          1,
           2,
           2,
-          5,
-          7
+          11
         ]
       },
       {
-        "id": "sticker-v11-19",
-        "title": "藏在後面的線索",
+        "id": "sticker-v12-18",
+        "title": "雙色小階梯",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
-          16,
-          16,
-          16,
-          16
+          4,
+          4,
+          4,
+          4
         ],
-        "combinations": 65536,
+        "combinations": 256,
         "solutions": 1,
         "cells": 16,
         "colorChoices": 8,
@@ -509,37 +482,64 @@
         "overpaint": 24,
         "maxDepth": 4,
         "visiblePerLayer": [
-          3,
-          3,
-          5,
-          5
+          4,
+          4,
+          4,
+          4
         ]
       },
       {
-        "id": "sticker-v11-20",
-        "title": "雙色工廠大挑戰",
+        "id": "sticker-v12-19",
+        "title": "雙色排排站",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
-          16,
-          16,
-          16,
-          16
+          9,
+          9,
+          9,
+          9
         ],
-        "combinations": 65536,
+        "combinations": 6561,
         "solutions": 1,
         "cells": 16,
         "colorChoices": 8,
         "twoColor": true,
         "systemRotationAfter": null,
         "rotationCount": 0,
-        "overpaint": 25,
+        "overpaint": 24,
         "maxDepth": 4,
         "visiblePerLayer": [
-          3,
-          3,
           4,
-          6
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "id": "sticker-v12-20",
+        "title": "雙色往上貼",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          9,
+          9,
+          9,
+          9
+        ],
+        "combinations": 6561,
+        "solutions": 1,
+        "cells": 16,
+        "colorChoices": 8,
+        "twoColor": true,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 24,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          4,
+          4,
+          4,
+          4
         ]
       }
     ],

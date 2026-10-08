@@ -18,12 +18,12 @@ namespace Together {
    float width=Mathf.Min(480,viewWidth-32),h=Mathf.Min(430,height-24);
    Rect box=new Rect((viewWidth-width)/2,(height-h)/2,width,h);Panel(box);
    Text(new Rect(box.x+20,box.y+18,width-40,38),"老師參考答案",26,ink,true);
-   for(int i=0;i<(answer?.Length??0);i++)Text(new Rect(box.x+20,box.y+72+i*48,width-40,44),(i+1)+". "+Rules.Group(i)+"："+Rules.Label(answer[i]),20,ink);
+   for(int i=0;i<(answer?.Length??0);i++)Text(new Rect(box.x+20,box.y+72+i*48,width-40,44),(i+1)+". "+StepGroup(i)+"："+Rules.Label(answer[i]),20,ink);
    Text(new Rect(box.x+20,box.y+274,width-40,70),game=="penguin"?"同一方向讓兩邊一起滑。到家後仍繼續，四步結束才算通關。":level.twoColor?"A、B 各選一色，依四張順序貼上。":"每張選一色，後貼蓋前貼。",18,muted);
    if(Button(new Rect(box.x+20,box.yMax-66,width-40,46),"收起答案","answer-close"))answerVisible=false;
   }
   void DrawTwoColor(Rect r,int i){
-   Text(new Rect(r.x+10,r.y+8,r.width-20,32),Rules.Group(i)+" · 第 "+(i+1)+" 張",20,ink,true);
+   Text(new Rect(r.x+10,r.y+8,r.width-20,32),StepGroup(i)+" · 第 "+(i+1)+" 張",20,ink,true);
    float cell=26;var parts=Rules.ColorParts(settings[i]);
    for(int c=0;c<level.cols*level.rows;c++){
     Rect t=new Rect(r.x+10+c%level.cols*cell,r.y+46+c/level.cols*cell,cell-2,cell-2);

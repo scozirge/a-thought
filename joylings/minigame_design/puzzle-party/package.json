@@ -1,6 +1,6 @@
 {
   "name": "puzzle-party",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "private": true,
   "description": "一起想想：國小二、三年級的四組合作解謎，Unity WebGL 單機與跨網連線",
   "scripts": {
@@ -10,6 +10,7 @@
     "start": "node tools/serve.cjs",
     "test": "node --test tests/rules.test.cjs",
     "test:online": "node tests/online-browser.cjs",
+    "test:rooms": "node tests/room-browser.cjs",
     "test:resilience": "node tests/online-resilience.cjs",
     "test:published": "node tests/published-browser.cjs",
     "analyze": "node tools/analyze.cjs",

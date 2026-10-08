@@ -18,7 +18,7 @@ namespace Together {
    Tiles(new Rect(left,y,size,size),level.target,level.cols);
    var m=GUI.matrix;if(rotating)RotateLocal(rotation,new Vector2(right+size/2,y+size/2));Tiles(new Rect(right,y,size,size),stickerBoard,level.cols,result!=null);GUI.matrix=m;
    float fx=r.x+18,fy=y+size+30;
-   for(int i=0;i<settings.Length;i++)Flow("第 "+(i+1)+" 張\n"+Rules.Group(i),active==i,ref fx,ref fy,r);
+   for(int i=0;i<settings.Length;i++)Flow("第 "+(i+1)+" 張\n"+StepGroup(i),active==i,ref fx,ref fy,r);
    CueBox(new Rect(r.x+16,fy+90,r.width-32,176));
    Text(new Rect(r.x+20,fy+288,r.width-40,142),level.note+"\n\n亮黃色表示目前正在貼哪一張。",18,muted);
   }
@@ -75,7 +75,7 @@ namespace Together {
     }
     Vector2 pos=icePositions[b];Image(new Rect(left+5+(pos.x-.13f)*cell,y+5+(pos.y-.21f)*cell,cell*1.22f,cell*1.22f),b==0?"penguinRed":"penguinBlue");
    }
-   float fx=r.x+18,fy=y+size+37;for(int i=0;i<settings.Length;i++)Flow("第 "+(i+1)+" 步 · "+Rules.Group(i)+"\n"+Rules.Icon(settings[i]),active==i,ref fx,ref fy,r);
+   float fx=r.x+18,fy=y+size+37;for(int i=0;i<settings.Length;i++)Flow("第 "+(i+1)+" 步 · "+StepGroup(i)+"\n"+Rules.Icon(settings[i]),active==i,ref fx,ref fy,r);
    CueBox(new Rect(r.x+16,fy+90,r.width-32,176));Text(new Rect(r.x+18,fy+282,r.width-36,110),"在家也會繼續讀下一個方向。全部 "+settings.Length+" 步播完，都停在家裡才成功。",18,muted);
   }
  }

@@ -15,7 +15,8 @@ namespace Together {
  }
  [Serializable] public class RoomSnapshot {
   public string code,game,phase,error;
-  public int revision,roundId,runId,index,myGroup;
+  public int revision,roundId,runId,index,myGroup,mySlot;
+  public int[] slotGroups;
   public bool isHost,connected,paused,success;
   public float speed,elapsedMs,durationMs;
   public string[] settings;
@@ -33,37 +34,41 @@ namespace Together {
   bool paused,closed;
   float speed=1,elapsedMs,durationMs;
   string[] settings=new string[4];
+  string[] slotOwners;
   Result result;
   Level level;
 
   public RoomAuthority(Level[] levels,string code,string hostId,string hostName) {
    if(levels==null)throw new ArgumentNullException(nameof(levels));
    if(string.IsNullOrWhiteSpace(hostId))throw new ArgumentException("老師身分不可留空。",nameof(hostId));
-   this.levels=levels;this.code=code??"";this.hostId=hostId;
-   members.Add(new RoomMember{id=hostId,name=Name(hostName,"老師"),group=3,isHost=true});
+   this.levels=levels;this.code=code??"";this.hostId=hostId;slotOwners=Enumerable.Repeat(hostId,4).ToArray();
+   string name=CleanName(hostName);
+   if(name.Length==0)throw new ArgumentException("請輸入組別名稱。",nameof(hostName));
+   members.Add(new RoomMember{id=hostId,name=name,group=3,isHost=true});
   }
 
-  static string Name(string value,string fallback) {
+  public static string CleanName(string value) {
    string name=new string((value??"").Where(c=>!char.IsControl(c)).ToArray()).Trim();
-   return name.Length==0?fallback:name.Substring(0,Math.Min(16,name.Length));
+   return name.Substring(0,Math.Min(16,name.Length));
   }
+  public static string TeamLabel(RoomMember member)=>member.name+" 小隊("+(member.isHost?"老師組":"第"+(member.group+1)+"組")+")";
   static bool Reject(out string error,string message){error=message;return false;}
   static bool Finite(float value)=>!float.IsNaN(value)&&!float.IsInfinity(value);
   void ResetPlayback(){phase="planning";paused=false;elapsedMs=0;durationMs=0;result=null;}
+  void AssignSlots(){var students=members.Where(m=>!m.isHost).ToArray();slotOwners=Enumerable.Range(0,4).Select(i=>i<students.Length?students[i].id:hostId).ToArray();}
   void NextRound(){roundId++;ResetPlayback();}
 
-  public bool TryJoin(string id,string name,int group,out string error) {
+  public bool TryJoin(string id,string name,out string error) {
    error=null;
    if(closed)return Reject(out error,"老師已結束房間，請重新加入。");
    if(string.IsNullOrWhiteSpace(id))return Reject(out error,"無法確認連線身分。");
    var existing=members.FirstOrDefault(m=>m.id==id);
-   if(existing!=null) {
-    if(existing.group!=group)return Reject(out error,"已加入的裝置不能直接更換組別。");
-    return true;
-   }
-   if(group<0||group>2)return Reject(out error,"請選擇第 1、2 或 3 組。");
-   if(members.Any(m=>m.group==group))return Reject(out error,"這一組已有人加入，請選擇其他組。");
-   members.Add(new RoomMember{id=id,name=Name(name,"第 "+(group+1)+" 組"),group=group,isHost=false});
+   if(existing!=null)return true;
+   name=CleanName(name);
+   if(name.Length==0)return Reject(out error,"請輸入組別名稱。");
+   int group=Enumerable.Range(0,3).Where(g=>!members.Any(m=>m.group==g)).DefaultIfEmpty(-1).First();
+   if(group<0)return Reject(out error,"房間已滿，請選擇其他房間。");
+   members.Add(new RoomMember{id=id,name=name,group=group,isHost=false});
    revision++;return true;
   }
 
@@ -72,7 +77,7 @@ namespace Together {
   public void Remove(string id) {
    if(!members.Any(m=>m.id==id))return;
    if(id==hostId){closed=true;members.Clear();NextRound();}
-   else members.RemoveAll(m=>m.id==id);
+   else {members.RemoveAll(m=>m.id==id);for(int i=0;i<slotOwners.Length;i++)if(slotOwners[i]==id)slotOwners[i]=hostId;}
    revision++;
   }
 
@@ -91,7 +96,7 @@ namespace Together {
      var next=levels.FirstOrDefault(l=>l.game==action.game&&l.index==action.index);
      if(next==null||next.Decisions!=4||next.options==null||next.options.Length<2||next.rotateAfter!=0)
       return Reject(out error,"找不到可供四組作答的題目。");
-     level=next;game=next.game;index=next.index;settings=new string[4];NextRound();break;
+     level=next;game=next.game;index=next.index;settings=new string[4];AssignSlots();NextRound();break;
     }
     case "home":
      game="";level=null;index=0;settings=new string[4];NextRound();break;
@@ -99,7 +104,7 @@ namespace Together {
      if(level==null)return Reject(out error,"請等老師選擇題目。");
      if(phase=="playing")return Reject(out error,"正在播放，先看完再修改。");
      if(action.slot<0||action.slot>=4)return Reject(out error,"找不到這個作答位置。");
-     if(!member.isHost&&action.slot!=member.group)return Reject(out error,"你只能設定自己這一組。");
+     if(!member.isHost&&slotOwners[action.slot]!=sender)return Reject(out error,"你只能設定自己這一組。");
      if(!Rules.ValidChoice(level,action.value))return Reject(out error,"請選擇畫面上的選項。");
      settings[action.slot]=action.value;ResetPlayback();break;
     case "play":
@@ -143,6 +148,7 @@ namespace Together {
    var player=members.FirstOrDefault(m=>m.id==playerId);
    return new RoomSnapshot {
     code=code,game=game,phase=phase,error="",revision=revision,roundId=roundId,runId=runId,index=index,
+    mySlot=player==null?-1:Array.IndexOf(slotOwners,playerId),slotGroups=slotOwners.Select(id=>members.FirstOrDefault(m=>m.id==id)?.group??3).ToArray(),
     myGroup=player==null?-1:player.group,isHost=player!=null&&player.isHost,connected=!closed&&player!=null,
     paused=paused,speed=speed,elapsedMs=elapsedMs,durationMs=durationMs,
     settings=(string[])settings.Clone(),members=members.OrderBy(m=>m.group).Select(m=>new RoomMember{id=m.id,name=m.name,group=m.group,isHost=m.isHost}).ToArray(),

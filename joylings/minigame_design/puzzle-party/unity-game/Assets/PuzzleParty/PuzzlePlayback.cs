@@ -9,7 +9,7 @@ namespace Together {
   IEnumerator Playback(Result plan){
    foreach(var f in plan.frames){
     if(game=="sticker"){
-     if(f.type=="stamp"){active=f.machine;Cue("第 "+(active+1)+" 張 · "+Rules.Group(active),"貼上"+Rules.Label(settings[active])+"色，後貼蓋前貼。","hero");yield return Animate(.3f);stickerBoard=f.board;yield return Animate(.6f);}
+     if(f.type=="stamp"){active=f.machine;Cue("第 "+(active+1)+" 張 · "+StepGroup(active),"貼上"+Rules.Label(settings[active])+"色，後貼蓋前貼。","hero");yield return Animate(.3f);stickerBoard=f.board;yield return Animate(.6f);}
      else{active=-1;rotating=true;Cue("系統：整張作品向右轉一次","第 "+f.after+" 張貼完 → 轉 90 度 → 再繼續下一組。","portal");yield return Animate(1.05f,p=>rotation=90*p);stickerBoard=f.board;rotation=0;yield return Animate(.35f);rotating=false;}
     }else if(game=="animal"){
      active=f.index;
@@ -24,7 +24,7 @@ namespace Together {
      });
      animalOrder=f.board;yield return Animate(.3f);
     }else if(game=="penguin"){
-     active=f.index;Cue("第 "+(f.index+1)+" 步 · "+Rules.Group(f.index),"一起"+Rules.Label(f.command)+"滑，碰冰塊或邊界才停。","hero");float max=Math.Max(1,f.distances.Max());
+     active=f.index;Cue("第 "+(f.index+1)+" 步 · "+StepGroup(f.index),"一起"+Rules.Label(f.command)+"滑，碰冰塊或邊界才停。","hero");float max=Math.Max(1,f.distances.Max());
      yield return Animate(.18f+.11f*max,p=>{for(int i=0;i<icePositions.Length;i++)icePositions[i]=Vector2.Lerp(f.from[i].Vec(),f.positions[i].Vec(),f.distances[i]==0?0:Mathf.Min(1,p*max/f.distances[i]));});
      for(int i=0;i<icePositions.Length;i++)icePositions[i]=f.positions[i].Vec();
      Cue("第 "+(f.index+1)+" 次滑行結束",string.Join("；",f.distances.Select((d,i)=>(i==0?"小紅":"小藍")+(d==0?"被擋住，留在原地":"滑了 "+d+" 格"))),"safe");yield return Animate(.26f);

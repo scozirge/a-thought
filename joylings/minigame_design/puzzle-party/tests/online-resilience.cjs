@@ -128,7 +128,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
  try{
   let host=await make('穩定性老師',3),code=await create(host);
   const a=await make('穩定性第1組',0),b=await make('穩定性第2組',1),c=await make('穩定性第3組',2);
-  await Promise.all([join(a,code),join(b,code),join(c,code)]);await members(actors,4);
+  await join(a,code);await join(b,code);await join(c,code);await members(actors,4);
   assert.ok(sockets.some(s=>s.protocol==='wss:'&&/(photon|exitgames)/i.test(s.host)));
   note('四個隔離頁面同時加入真正 Photon 雲端');
 
@@ -215,7 +215,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
    const evidence=await candidate.page.evaluate(()=>__resilienceRecovery);await delay(1000);
    assert.ok((await ui(candidate)).connected&&(await ui(candidate)).isHost,'舊斷線清理不可覆蓋新建房間');
    candidate.group=3;oldHost.group=vacantGroup;host=candidate;code=(await ui(host)).code;
-   await attachPage(oldHost);await Promise.all(actors.filter(x=>x!==host).map(x=>join(x,code)));await members(actors,4);
+   await attachPage(oldHost);for(const a of actors.filter(x=>x!==host).sort((a,b)=>a.group-b.group))await join(a,code);await members(actors,4);
    const again=await open(host,'penguin',19);await fillBurst(actors,'penguin',19,again);await command(host,'play');await finished(actors,'penguin',19);
    faults.push({kind:'teacher-tab-close-immediate-new-room',round:turn+1,milliseconds:Date.now()-closeAt,cleanupBusyObserved:evidence.busyObserved,createSentAt:evidence.sentAt});
    note('第 '+(turn+1)+' 輪老師直接關頁，學生看到離房提示並立即新建房；四組重聚後可通關');

@@ -15,7 +15,7 @@ namespace Together {
   Cell[] fire=new Cell[0];Effect breath;float breathProgress,charge;string facing="right";
   Vector2[] icePositions;Dictionary<int,string> eventStates=new Dictionary<int,string>();List<string> log=new List<string>();
   Font font;Dictionary<string,Texture2D> art=new Dictionary<string,Texture2D>();GUIStyle labelStyle,buttonStyle;
-  readonly List<Hit> hits=new List<Hit>();float nextSnapshot,maxScroll,contentHeight=1100,stageScrollY;bool cancelPointer;
+  readonly List<Hit> hits=new List<Hit>();float nextSnapshot,maxScroll,contentHeight=1100,stageScrollY,headerExtra,roleExtra;bool cancelPointer;
   Color ink=C("294e45"),green=C("306d5c"),muted=C("778572"),paper=C("fffef8"),line=C("d9dfd0"),gold=C("ffe183");
   public static Color C(string s){ColorUtility.TryParseHtmlString("#"+s,out var c);return c;}
   string GameName(string g)=>g=="hero"?"傻瓜勇者":g=="sticker"?"貼紙工廠":g=="animal"?"動物拍照隊":"帶企鵝回家";
@@ -57,19 +57,23 @@ namespace Together {
    Text(new Rect(24,20,w-158,44),"一起想想",28,ink,true);
    GUI.enabled=CanLead;if(game!=""&&Button(new Rect(viewWidth-185,22,160,44),"← 遊戲選單","home"))GoHome();GUI.enabled=true;
    if(Button(new Rect(viewWidth-185,game==""?22:76,160,44),Online?"房間 / 離開":"連線教室","room"))ShowRoom();
-   Text(new Rect(24,76,w-174,56),Online?"房號 "+room.code+"\n"+RoleIdentity():"每組選一次\n老師可代填",18,muted);
+   Text(new Rect(24,76,w-174,56),Online?"房號 "+room.code:"每組選一次\n老師可代填",18,muted);
+   headerExtra=Online?TextHeight(RoleIdentity(),viewWidth-48,22)+12:0;
+   if(Online)Text(new Rect(24,132,viewWidth-48,headerExtra),RoleIdentity(),22,green,true);
+   roleExtra=Mathf.Max(0,TextHeight(RoleIdentity(),(narrow?viewWidth-48:(viewWidth-68)/2)-52,26)-39);
    if(game=="")DrawHome(narrow);else DrawGame(narrow);
    GUI.EndScrollView();DrawAnswer(vh);if(maxScroll>0){Round(new Rect(viewWidth-7,0,5,vh),C("e5e8db"),3);float thumb=vh*vh/total;Round(new Rect(viewWidth-7,(vh-thumb)*scroll.y/maxScroll,5,thumb),C("a9b9a0"),3);}GUI.matrix=Matrix4x4.identity;
    if(Event.current.type==EventType.Repaint&&Time.realtimeSinceStartup>nextSnapshot){Publish();nextSnapshot=Time.realtimeSinceStartup+.12f;}
   }
-  string RoleIdentity()=>"你是"+Rules.Group(Online?room.myGroup:selected);
+  float TextHeight(string text,float width,int size){labelStyle.fontSize=size;labelStyle.fontStyle=FontStyle.Bold;return labelStyle.CalcHeight(new GUIContent(text),width);}
+  string RoleIdentity(){var member=Online?room.members.FirstOrDefault(m=>m.group==room.myGroup):null;return member==null?"你是老師組":RoomAuthority.TeamLabel(member);}
   void DrawHome(bool narrow){
-   Text(new Rect(24,148,viewWidth-48,100),"先想一想，\n再看看會發生什麼。",32,ink,true);
-   Text(new Rect(24,264,viewWidth-48,72),Online&&!room.isHost?"等老師選擇遊戲與關卡，你只需設定自己的那一格。":"四組各選一次 → 播放 → 看結果 → 修改",20,muted);
+   Text(new Rect(24,148+headerExtra,viewWidth-48,100),"先想一想，\n再看看會發生什麼。",32,ink,true);
+   Text(new Rect(24,264+headerExtra,viewWidth-48,72),Online&&!room.isHost?"等老師選擇遊戲與關卡，你只需設定自己的那一格。":"四組各選一次 → 播放 → 看結果 → 修改",20,muted);
    string[] gs={"sticker","penguin"},notes={"選好每張貼紙的顏色，\n一層一層貼出目標圖案。","同一組方向，\n讓企鵝滑回自己的家。"};
    float cardWidth=narrow?viewWidth-48:(viewWidth-68)/2;
    for(int i=0;i<gs.Length;i++){
-    Rect r=new Rect(24+(narrow?0:i%2*(cardWidth+20)),350+(narrow?i*340:i/2*340),cardWidth,320);Panel(r);
+    Rect r=new Rect(24+(narrow?0:i%2*(cardWidth+20)),350+headerExtra+(narrow?i*340:i/2*340),cardWidth,320);Panel(r);
     if(gs[i]=="penguin")Image(new Rect(r.x+20,r.y+12,120,120),"penguinRed");
     else if(gs[i]=="animal"){AnimalFace(new Rect(r.x+20,r.y+16,94,94),"cat");AnimalFace(new Rect(r.x+120,r.y+16,94,94),"rabbit");}
     else for(int k=0;k<4;k++)Round(new Rect(r.x+28+k%2*46,r.y+22+k/2*46,41,41),ColorOf(new[]{"red","blue","green","yellow"}[k]),7);
@@ -77,21 +81,21 @@ namespace Together {
     Text(new Rect(r.x+22,r.y+184,r.width-44,65),notes[i],20,muted);
     GUI.enabled=CanLead;if(Button(new Rect(r.x+18,r.yMax-62,r.width-36,46),"開始挑戰 · "+levels.Count(l=>l.game==gs[i])+" 關","game:"+gs[i],green,Color.white))Open(gs[i],0);GUI.enabled=true;
    }
-   float bottom=narrow?1040:710;
+   float bottom=headerExtra+(narrow?1040:710);
    Text(new Rect(24,bottom,viewWidth-48,110),"不足三組學生時，由老師代填全部四組。\n每組只選一次，四組填好後才播放。",20,muted);
    contentHeight=bottom+140;
   }
   void DrawGame(bool narrow){
-   Text(new Rect(24,138,viewWidth-48,42),GameName(game),30,ink,true);
-   if(CanReveal&&Button(new Rect(viewWidth-76,136,48,44),"?","answer"))ToggleAnswer();
+   Text(new Rect(24,138+headerExtra,viewWidth-48,42),GameName(game),30,ink,true);
+   if(CanReveal&&Button(new Rect(viewWidth-76,136+headerExtra,48,44),"?","answer"))ToggleAnswer();
    var available=levels.Where(l=>l.game==game).ToArray();
    int perRow=Math.Min(available.Length,narrow?5:10);
    for(int i=0;i<available.Length;i++){
     bool done=PlayerPrefs.GetInt("done:"+available[i].id,0)==1;
-    Rect b=new Rect(24+i%perRow*52,190+i/perRow*52,44,44);
+    Rect b=new Rect(24+i%perRow*52,190+headerExtra+i/perRow*52,44,44);
     GUI.enabled=CanLead;if(Button(b,(i+1).ToString(),"level:"+i,i==levelIndex?green:done?C("dcebd0"):C("e9ede2"),i==levelIndex?Color.white:ink))Open(game,i);GUI.enabled=true;
    }
-   float boardY=190+Mathf.Ceil(available.Length/(float)perRow)*52+16;
+   float boardY=190+headerExtra+Mathf.Ceil(available.Length/(float)perRow)*52+16;
    float column=narrow?viewWidth-48:(viewWidth-68)/2;
    float gridSize=game=="animal"?0:game=="sticker"?Mathf.Min(235,(column-54)/2):Mathf.Min(level.boards.Length==1?320:265,(column-45)/level.boards.Length-8);
    int flowColumns=Math.Max(1,Mathf.FloorToInt((column-28)/136));
@@ -103,9 +107,9 @@ namespace Together {
    if(game=="sticker")DrawSticker(board);else if(game=="animal")DrawAnimal(board);else DrawIce(board);
    Panel(config);Text(new Rect(config.x+16,config.y+14,config.width-32,40),"設定你的計畫",26,ink,true);
    Text(new Rect(config.x+16,config.y+59,config.width-32,32),"共 "+settings.Length+(game=="sticker"?" 張":" 步")+" · 老師可代答全部",18,muted);
-   Panel(new Rect(config.x+14,config.y+99,config.width-28,84),C("e4efe0"));
-   Text(new Rect(config.x+26,config.y+106,config.width-52,39),RoleIdentity(),26,green,true);
-   Text(new Rect(config.x+26,config.y+148,config.width-52,29),Online?(room.isHost?"你可以代填全部四組":"只需設定第 "+(room.myGroup+1)+" 個選擇"):"每組選一次 · 第 "+(selected+1)+(game=="sticker"?" 張貼紙":" 步"),18,ink);
+   Panel(new Rect(config.x+14,config.y+99,config.width-28,84+roleExtra),C("e4efe0"));
+   Text(new Rect(config.x+26,config.y+106,config.width-52,39+roleExtra),RoleIdentity(),26,green,true);
+   Text(new Rect(config.x+26,config.y+148+roleExtra,config.width-52,29),AssignmentHint(),18,ink);
    float cy=config.y+DrawChoiceControls(config)+12;
    float inner=config.width-30;
    if(playing){
@@ -131,16 +135,16 @@ namespace Together {
    contentHeight=bottom+36;
   }
   float ChoiceRow(float width)=>level.twoColor?344:game=="animal"?154:level.options.Length>2&&width<520&&(game=="penguin"||level.options.Length==4)?184:138;
-  float ChoiceHeight(float width)=>200+settings.Length*ChoiceRow(width)+190;
+  float ChoiceHeight(float width)=>200+roleExtra+settings.Length*ChoiceRow(width)+190;
   float DrawChoiceControls(Rect r){
-   float y=r.y+200,row=ChoiceRow(r.width);
+   float y=r.y+200+roleExtra,row=ChoiceRow(r.width);
    for(int i=0;i<settings.Length;i++){
     Rect rr=new Rect(r.x+14,y,r.width-28,row-10);Panel(rr,active==i?gold:selected==i?C("eaf2e3"):C("f6f7ef"));
     if(level.twoColor){DrawTwoColor(rr,i);y+=row;continue;}
     float left=rr.x+10;
     if(game=="sticker"){MiniMask(new Rect(left,rr.y+42,52,52),level.masks[i].cells,level.cols);left+=64;}
     Rect heading=new Rect(left,rr.y+8,rr.xMax-left-8,32);
-    Text(heading,Rules.Group(i)+(Online&&room.myGroup==i?" · 你":""),20,ink,true);
+    Text(heading,StepGroup(i)+(Online&&room.mySlot==i?" · 你":""),20,ink,true);
     Text(new Rect(left,rr.y+38,rr.xMax-left-8,28),"第 "+(i+1)+(game=="sticker"?" 張貼紙":" 步方向"),18,muted);
     HitBox(heading,"role:"+i);if(!answerVisible&&CanChoose(i)&&GUI.Button(heading,"",GUIStyle.none))selected=i;
     int cols=ChoiceRow(r.width)>138?2:level.options.Length;

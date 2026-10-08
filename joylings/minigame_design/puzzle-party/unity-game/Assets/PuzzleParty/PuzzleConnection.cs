@@ -15,7 +15,7 @@ namespace Together {
  // The same Photon Host/Client transport as RIVALS. Only the teacher owns room
  // state; clients submit actions and receive a snapshot made for their identity.
  public sealed class PuzzleConnection : MonoBehaviour, INetworkRunnerCallbacks {
-  public const string NetworkVersion="puzzle-party-v11";
+  public const string NetworkVersion="puzzle-party-v12-steps";
   public bool Busy {get;private set;}
   public bool Connected {get;private set;}
   public bool IsHost {get;private set;}
@@ -23,35 +23,67 @@ namespace Together {
   public string Code {get;private set;}="";
   public event Action<RoomSnapshot> StateChanged;
   NetworkRunner runner;RoomAuthority authority;Level[] levels;
-  RoomSnapshot latest;string displayName="老師";int requestedGroup=3,epoch,serial,receivedSerial;
+  RoomSnapshot latest;string displayName="";int epoch,serial,receivedSerial;
+  NetworkRunner lobbyRunner;int lobbyEpoch;CancellationTokenSource lobbyTimeout;
+  public bool LobbyBusy {get;private set;}
+  public bool LobbyReady {get;private set;}
+  public string LobbyError {get;private set;}="";
+  [Serializable] public class RoomListing {public string code,name;public int students;public bool open;}
+  public RoomListing[] Rooms {get;private set;}=new RoomListing[0];
   float lastTick,nextSend,lastReceive,lastUpdate;bool leaving;
   readonly HashSet<int> rejected=new HashSet<int>();
   readonly HashSet<int> admitted=new HashSet<int>();
   readonly Dictionary<int,int> actionSerials=new Dictionary<int,int>();
-  [Serializable] sealed class Hello {public string name;public int group;}
+  [Serializable] sealed class Hello {public string name;}
   [Serializable] sealed class Packet {public string type,error;public int sequence;public RoomAction action;public RoomSnapshot state;}
 
   public void Initialize(Level[] book){levels=book;Application.runInBackground=true;}
   static string Id(PlayerRef player)=>player.RawEncoded.ToString();
-  static string CleanName(string name){name=(name??"").Trim();return name.Length==0?"小組":name.Substring(0,Math.Min(16,name.Length));}
+  Fusion.Photon.Realtime.FusionAppSettings AppSettings(){
+   var app=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
+   app.FixedRegion="asia";app.AppVersion=NetworkVersion;return app;
+  }
+  public async void Browse(){
+   if(Busy||Connected||leaving||LobbyBusy)return;
+   LobbyBusy=true;LobbyError="";int request=lobbyEpoch+1;await CloseLobby();
+   if(request!=lobbyEpoch||Busy||Connected||leaving)return;
+   int attempt=++lobbyEpoch;LobbyBusy=true;
+   var active=new GameObject("Puzzle room browser").AddComponent<NetworkRunner>();lobbyRunner=active;active.AddCallbacks(this);
+   var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(25));lobbyTimeout=timeout;
+   try{
+    var result=await active.JoinSessionLobby(SessionLobby.ClientServer,customAppSettings:AppSettings(),cancellationToken:timeout.Token);
+    if(attempt!=lobbyEpoch)return;
+    LobbyReady=result.Ok;if(!result.Ok)LobbyError="無法取得房間清單，請按重新整理。";
+   }catch(Exception){if(attempt==lobbyEpoch)LobbyError="暫時無法取得房間清單，請按重新整理。";}
+   finally{
+    timeout.Dispose();
+    if(attempt==lobbyEpoch){lobbyTimeout=null;LobbyBusy=false;if(!LobbyReady)await CloseLobby();}
+   }
+  }
+  async Task CloseLobby(){
+   int closing=++lobbyEpoch;var active=lobbyRunner;lobbyRunner=null;
+   lobbyTimeout?.Cancel();lobbyTimeout=null;LobbyReady=false;Rooms=new RoomListing[0];
+   await Cleanup(active);if(closing==lobbyEpoch)LobbyBusy=false;
+  }
 
-  public async void Connect(bool host,string roomCode,string name,int group){
+  public async void Connect(bool host,string roomCode,string name){
    if(Busy||leaving||runner){Error="請先離開目前的房間。";NotifyError();return;}
    if(levels==null||levels.Length==0){Error="題庫還在載入，請稍後再試。";NotifyError();return;}
    roomCode=(roomCode??"").Trim();
    if(!host&&(roomCode.Length!=6||roomCode.Any(c=>c<'0'||c>'9'))){Error="請輸入老師的六位房號。";NotifyError();return;}
-   if(!host&&(group<0||group>2)){Error="請選擇第 1、2 或 3 組。";NotifyError();return;}
+   name=RoomAuthority.CleanName(name);
+   if(name.Length==0){Error="請輸入組別名稱。";NotifyError();return;}
    int attempt=++epoch;Busy=true;Connected=false;IsHost=host;Error="";leaving=false;latest=null;authority=null;rejected.Clear();admitted.Clear();actionSerials.Clear();receivedSerial=0;
    lastTick=lastReceive=lastUpdate=Time.realtimeSinceStartup;nextSend=0;
    Code=host?UnityEngine.Random.Range(100000,1000000).ToString():roomCode;
-   displayName=CleanName(name);requestedGroup=host?3:group;
+   displayName=name;
+   await CloseLobby();if(attempt!=epoch)return;
    // Fusion may mark its runner DontDestroyOnLoad, which requires a root object.
    var go=new GameObject("Puzzle Photon connection");
    var active=go.AddComponent<NetworkRunner>();runner=active;active.ProvideInput=false;active.AddCallbacks(this);
    var sceneManager=go.AddComponent<NetworkSceneManagerDefault>();
    try {
-    var app=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-    app.FixedRegion="asia";app.AppVersion=NetworkVersion;
+    var app=AppSettings();
     // A classroom keeps its six-digit room identity. Handle a lost connection
     // explicitly instead of Fusion silently moving everyone into a new room.
     NetworkRunner.CloudConnectionLostCurrentMode=NetworkRunner.CloudConnectionLostMode.Disabled;
@@ -60,9 +92,9 @@ namespace Together {
     using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(35))){
      var result=await active.StartGame(new StartGameArgs {
       GameMode=host?GameMode.Host:GameMode.Client,SessionName="puzzle-"+Code,
-      PlayerCount=4,IsVisible=false,IsOpen=true,EnableClientSessionCreation=false,
+      PlayerCount=4,IsVisible=true,IsOpen=true,EnableClientSessionCreation=false,
       SessionProperties=host?new Dictionary<string,SessionProperty>{{"host",displayName}}:null,
-      ConnectionToken=Encoding.UTF8.GetBytes(JsonUtility.ToJson(new Hello{name=displayName,group=requestedGroup})),
+      ConnectionToken=Encoding.UTF8.GetBytes(JsonUtility.ToJson(new Hello{name=displayName})),
       Scene=SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex),SceneManager=sceneManager,
       Config=config,CustomPhotonAppSettings=app,RealtimeClient=realtime,StartGameCancellationToken=timeout.Token
      });
@@ -97,7 +129,7 @@ namespace Together {
    if(leaving)return;leaving=true;++epoch;Busy=true;
    var active=runner;
    if(active&&active.IsRunning&&IsHost)foreach(var player in active.ActivePlayers.Where(p=>p!=active.LocalPlayer))SendPacket(player,new Packet{type="closed",error="老師已關閉房間。"});
-   await Cleanup(active);Connected=false;IsHost=false;Busy=false;Code="";Error="";latest=null;leaving=false;
+   await CloseLobby();await Cleanup(active);Connected=false;IsHost=false;Busy=false;Code="";Error="";latest=null;leaving=false;LobbyError="";
    StateChanged?.Invoke(new RoomSnapshot{connected=false,phase="offline",myGroup=3,error=""});
   }
   public void Send(RoomAction action){
@@ -138,7 +170,7 @@ namespace Together {
    Error=state.error??"";lastReceive=Time.realtimeSinceStartup;StateChanged?.Invoke(state);
   }
   void NotifyError(){
-   var state=latest==null?new RoomSnapshot{myGroup=requestedGroup,phase="offline"}:JsonUtility.FromJson<RoomSnapshot>(JsonUtility.ToJson(latest));
+   var state=latest==null?new RoomSnapshot{myGroup=-1,phase="offline"}:JsonUtility.FromJson<RoomSnapshot>(JsonUtility.ToJson(latest));
    state.error=Error;state.connected=Connected;StateChanged?.Invoke(state);
   }
   void Update(){
@@ -175,9 +207,9 @@ namespace Together {
    EnsureAuthority(active);
    if(player==active.LocalPlayer){Connected=true;return;}
    if(admitted.Contains(player.RawEncoded)||rejected.Contains(player.RawEncoded))return;
-   string error="加入資訊不完整，請重新選擇組別。";Hello hello=null;
+   string error="加入資訊不完整，請輸入組別名稱後重新加入。";Hello hello=null;
    try{var token=active.GetPlayerConnectionToken(player);if(token!=null&&token.Length<512)hello=JsonUtility.FromJson<Hello>(Encoding.UTF8.GetString(token));}catch(ArgumentException){}
-   if(hello==null||!authority.TryJoin(Id(player),CleanName(hello.name),hello.group,out error)){
+   if(hello==null||!authority.TryJoin(Id(player),hello.name,out error)){
     rejected.Add(player.RawEncoded);SendPacket(player,new Packet{type="closed",error=error??"請重新加入房間。"});StartCoroutine(RejectLater(active,player));return;
    }
    admitted.Add(player.RawEncoded);Broadcast();
@@ -204,6 +236,7 @@ namespace Together {
    }
   }
   public void OnShutdown(NetworkRunner active,ShutdownReason reason){
+   if(active==lobbyRunner){lobbyRunner=null;LobbyReady=false;LobbyBusy=false;Rooms=new RoomListing[0];LobbyError="房間清單連線已中斷，請按重新整理。";active.RemoveCallbacks(this);Destroy(active.gameObject);return;}
    if(active!=runner)return;runner=null;authority=null;Connected=false;Busy=false;
    if(!leaving){Error=string.IsNullOrEmpty(Error)?ConnectionMessage(reason,IsHost):Error;IsHost=false;NotifyError();}
    if(active)Destroy(active.gameObject);
@@ -224,7 +257,11 @@ namespace Together {
   public void OnConnectFailed(NetworkRunner active,NetAddress address,NetConnectFailedReason reason){if(active==runner)Error="目前無法連線，請確認房號後再試。";}
   public void OnInput(NetworkRunner active,NetworkInput input){}
   public void OnInputMissing(NetworkRunner active,PlayerRef player,NetworkInput input){}
-  public void OnSessionListUpdated(NetworkRunner active,List<SessionInfo> rooms){}
+  public void OnSessionListUpdated(NetworkRunner active,List<SessionInfo> rooms){
+   if(active!=lobbyRunner)return;
+   Rooms=rooms.Where(r=>r.IsVisible&&r.Name.StartsWith("puzzle-")&&r.Name.Length==13&&r.Name.Substring(7).All(char.IsDigit))
+    .OrderBy(r=>r.Name).Select(r=>new RoomListing{code=r.Name.Substring(7),name=r.Properties.TryGetValue("host",out var host)?(string)host:"老師",students=Math.Max(0,r.PlayerCount-1),open=r.IsOpen&&r.PlayerCount<r.MaxPlayers}).ToArray();
+  }
   public void OnCustomAuthenticationResponse(NetworkRunner active,Dictionary<string,object> data){}
   public void OnHostMigration(NetworkRunner active,HostMigrationToken token){}
   public void OnReliableDataProgress(NetworkRunner active,PlayerRef player,ReliableKey key,float progress){}
