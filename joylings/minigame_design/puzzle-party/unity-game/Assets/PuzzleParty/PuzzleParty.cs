@@ -103,6 +103,7 @@ namespace Together {
    Panel(config);Text(new Rect(config.x+16,config.y+12,config.width-32,50),ShortIdentity(),20,green,true);
    float cy=config.y+DrawChoiceControls(config)+12;
    float inner=config.width-30;
+   if(CanLead){
    if(playing){
     GUI.enabled=CanLead;if(Button(new Rect(config.x+15,cy,inner*.70f-8,48),"停止","stop",green,Color.white))Stop();
     if(Button(new Rect(config.x+15+inner*.70f,cy,inner*.30f,48),paused?"繼續":"暫停","pause"))TogglePause();GUI.enabled=true;
@@ -113,6 +114,7 @@ namespace Together {
    }
    GUI.enabled=!playing&&CanLead;
    if(Button(new Rect(config.x+15,cy+60,130,44),"清空","clear"))ClearChoices();GUI.enabled=true;
+   }
    Text(new Rect(config.x+15,cy+116,inner,58),ShortStatus(),18,muted);
    float bottom=Mathf.Max(board.yMax,config.yMax);
    if(result!=null){
@@ -120,12 +122,12 @@ namespace Together {
     Text(new Rect(rr.x+16,rr.y+14,rr.width-32,65),result.success?"成功！":"再試試",24,ink,true);
     Text(new Rect(rr.x+16,rr.y+80,rr.width-32,97),"",18,ink);
     bool last=levelIndex==available.Length-1;
-    GUI.enabled=CanLead;if(result.success&&Button(new Rect(rr.x+16,rr.yMax-58,rr.width-32,44),last?"回遊戲選單":"下一關 →","next")){if(!last)Open(game,levelIndex+1);else GoHome();}GUI.enabled=true;
+    GUI.enabled=CanLead;if(CanLead&&result.success&&Button(new Rect(rr.x+16,rr.yMax-58,rr.width-32,44),last?"回遊戲選單":"下一關 →","next")){if(!last)Open(game,levelIndex+1);else GoHome();}GUI.enabled=true;
     bottom=Mathf.Max(bottom,rr.yMax);
    }
    contentHeight=bottom+36;
   }
-  float ChoiceRow(float width)=>level.twoColor?344:game=="animal"?154:level.options.Length>2&&width<520&&(game=="penguin"||level.options.Length==4)?154:110;
+  float ChoiceRow(float width)=>level.twoColor?344:game=="animal"?154:level.options.Length>2&&width<520&&(game=="penguin"||level.options.Length==4)?154+OwnerExtra(width-130):110+OwnerExtra(width-130);
   float ChoiceHeight(float width)=>70+settings.Length*ChoiceRow(width)+190;
   float DrawChoiceControls(Rect r){
    float y=r.y+70,row=ChoiceRow(r.width);
@@ -134,15 +136,17 @@ namespace Together {
     if(level.twoColor){DrawTwoColor(rr,i);y+=row;continue;}
     float left=rr.x+10;
     if(game=="sticker"){MiniMask(new Rect(left,rr.y+42,52,52),level.masks[i].cells,level.cols);left+=64;}
-    Rect heading=new Rect(left,rr.y+8,rr.xMax-left-8,32);
+    float nameExtra=OwnerExtra(r.width-130);
+    Rect heading=new Rect(left,rr.y+8,rr.xMax-left-58,32+nameExtra);
+    ReadyBadge(new Rect(rr.xMax-44,rr.y+6,34,32),i);
     Text(heading,StepNumber(i)+" "+ShortOwner(i),20,ink,true);
 
     HitBox(heading,"role:"+i);if(!answerVisible&&CanChoose(i)&&GUI.Button(heading,"",GUIStyle.none))selected=i;
-    int cols=ChoiceRow(r.width)>110?2:level.options.Length;
+    int cols=level.options.Length>2&&r.width<520?2:level.options.Length;
     float width=(rr.xMax-left-4)/cols;
     for(int j=0;j<level.options.Length;j++){
      string op=level.options[j];bool chosen=settings[i]==op;GUI.enabled=CanChoose(i);
-     Rect option=new Rect(left+j%cols*width,rr.y+44+j/cols*51,width-6,44);
+     Rect option=new Rect(left+j%cols*width,rr.y+44+nameExtra+j/cols*51,width-6,44);
      if(game=="penguin"){if(DirectionButton(option,op,$"choose:{i}:{op}",chosen))Set(i,op);}
      else if(Button(option,Rules.Label(op),$"choose:{i}:{op}",chosen?ColorOf(op):paper))Set(i,op);
      GUI.enabled=true;

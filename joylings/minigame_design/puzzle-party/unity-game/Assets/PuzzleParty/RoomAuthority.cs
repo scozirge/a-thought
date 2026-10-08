@@ -17,6 +17,7 @@ namespace Together {
   public string code,game,phase,error;
   public int revision,roundId,runId,index,myGroup,mySlot;
   public int[] slotGroups;
+  public string[] slotNames;public bool[] ready;
   public bool isHost,connected,paused,success;
   public float speed,elapsedMs,durationMs;
   public string[] settings;
@@ -51,7 +52,7 @@ namespace Together {
    string name=new string((value??"").Where(c=>!char.IsControl(c)).ToArray()).Trim();
    return name.Substring(0,Math.Min(16,name.Length));
   }
-  public static string TeamLabel(RoomMember member)=>member.name+" 小隊("+(member.isHost?"老師組":"第"+(member.group+1)+"組")+")";
+  public static string TeamLabel(RoomMember member)=>member.name;
   static bool Reject(out string error,string message){error=message;return false;}
   static bool Finite(float value)=>!float.IsNaN(value)&&!float.IsInfinity(value);
   void ResetPlayback(){phase="planning";paused=false;elapsedMs=0;durationMs=0;result=null;}
@@ -149,6 +150,7 @@ namespace Together {
    return new RoomSnapshot {
     code=code,game=game,phase=phase,error="",revision=revision,roundId=roundId,runId=runId,index=index,
     mySlot=player==null?-1:Array.IndexOf(slotOwners,playerId),slotGroups=slotOwners.Select(id=>members.FirstOrDefault(m=>m.id==id)?.group??3).ToArray(),
+    slotNames=slotOwners.Select(id=>members.FirstOrDefault(m=>m.id==id)?.name??"" ).ToArray(),ready=settings.Select(s=>level!=null&&s!=null&&level.options.Contains(s)).ToArray(),
     myGroup=player==null?-1:player.group,isHost=player!=null&&player.isHost,connected=!closed&&player!=null,
     paused=paused,speed=speed,elapsedMs=elapsedMs,durationMs=durationMs,
     settings=(string[])settings.Clone(),members=members.OrderBy(m=>m.group).Select(m=>new RoomMember{id=m.id,name=m.name,group=m.group,isHost=m.isHost}).ToArray(),

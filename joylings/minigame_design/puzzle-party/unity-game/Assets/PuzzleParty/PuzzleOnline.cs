@@ -17,9 +17,9 @@ namespace Together {
   void TogglePause(){if(Route(new RoomAction{type=paused?"resume":"pause"}))return;if(playing)paused=!paused;}
   void ChangeSpeed(){float next=speed==1?2:1;if(Route(new RoomAction{type="speed",speed=next}))return;speed=next;PlayerPrefs.SetFloat("speed",speed);PlayerPrefs.Save();}
   void ClearChoices(){if(Route(new RoomAction{type="clear"}))return;if(playing||level==null)return;for(int i=0;i<settings.Length;i++)PlayerPrefs.DeleteKey(level.id+":"+i);settings=new string[level.Decisions];selected=3;ResetScene();PlayerPrefs.Save();}
-  [Serializable] class RoomRequest {public string type,code,name;}
+  [Serializable] class RoomRequest {public string type,code,name,playerId;}
   public void RoomCommand(string json){
-   try{var request=JsonUtility.FromJson<RoomRequest>(json);if(request.type=="leave"){answerVisible=false;connection.Leave();return;}
+   try{var request=JsonUtility.FromJson<RoomRequest>(json);if(request.type=="remove"){if(Online&&room.isHost)Route(new RoomAction{type="remove",playerId=request.playerId});return;}if(request.type=="leave"){answerVisible=false;connection.Leave();return;}
     if(request.type=="browse"){connection.Browse();return;}
     if(request.type=="create"||request.type=="join"){answerVisible=false;StopAllCoroutines();playing=false;paused=false;connection.Connect(request.type=="create",request.code,request.name);}
    }catch(Exception){Debug.LogWarning("無法讀取連線操作，請重新按一次。");}
@@ -31,12 +31,12 @@ namespace Together {
    PuzzleOpenRoom();
    #endif
   }
-  [Serializable] class RoomUi {public bool ready,busy,connected,isHost,lobbyBusy,lobbyReady;public string code,error,lobbyError;public int myGroup,mySlot;public RoomMember[] members;public PuzzleConnection.RoomListing[] rooms;}
+  [Serializable] class RoomUi {public bool ready,busy,connected,isHost,lobbyBusy,lobbyReady;public string code,error,lobbyError;public int myGroup,mySlot;public RoomMember[] members;public int[] slotGroups;public bool[] slotReady;public PuzzleConnection.RoomListing[] rooms;}
   void Update(){
    if(Online&&room.phase=="playing")PaintRoom();
    if(Time.realtimeSinceStartup<nextRoomUi)return;nextRoomUi=Time.realtimeSinceStartup+.15f;
    #if UNITY_WEBGL && !UNITY_EDITOR
-   PuzzleRoomStatus(JsonUtility.ToJson(new RoomUi{ready=true,busy=connection.Busy,connected=Online,isHost=Online&&room.isHost,code=Online?room.code:connection.Code,error=connection.Error,myGroup=Online?room.myGroup:3,mySlot=Online?room.mySlot:-1,members=Online?room.members:new RoomMember[0],lobbyBusy=connection.LobbyBusy,lobbyReady=connection.LobbyReady,lobbyError=connection.LobbyError,rooms=connection.Rooms}));
+   PuzzleRoomStatus(JsonUtility.ToJson(new RoomUi{ready=true,busy=connection.Busy,connected=Online,isHost=Online&&room.isHost,code=Online?room.code:connection.Code,error=connection.Error,myGroup=Online?room.myGroup:3,mySlot=Online?room.mySlot:-1,members=Online?room.members:new RoomMember[0],lobbyBusy=connection.LobbyBusy,lobbyReady=connection.LobbyReady,lobbyError=connection.LobbyError,rooms=connection.Rooms,slotGroups=Online?room.slotGroups:new int[0],slotReady=Online?room.ready:new bool[0]}));
    #endif
   }
   void ApplyRoom(RoomSnapshot next){

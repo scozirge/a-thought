@@ -246,8 +246,8 @@
         ]
       },
       {
-        "id": "sticker-v8-10",
-        "title": "最後一層偵探",
+        "id": "sticker-v13-10",
+        "title": "交錯貼紙 1",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -266,15 +266,15 @@
         "overpaint": 23,
         "maxDepth": 4,
         "visiblePerLayer": [
-          1,
-          6,
-          4,
-          5
+          3,
+          2,
+          3,
+          8
         ]
       },
       {
-        "id": "sticker-v10-11",
-        "title": "交錯的四張貼紙",
+        "id": "sticker-v13-11",
+        "title": "交錯貼紙 2",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -293,15 +293,15 @@
         "overpaint": 24,
         "maxDepth": 4,
         "visiblePerLayer": [
-          3,
           2,
-          4,
-          7
+          3,
+          3,
+          8
         ]
       },
       {
-        "id": "sticker-v10-12",
-        "title": "重疊裡找線索",
+        "id": "sticker-v13-12",
+        "title": "交錯貼紙 3",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -322,13 +322,13 @@
         "visiblePerLayer": [
           2,
           3,
-          2,
-          9
+          3,
+          8
         ]
       },
       {
-        "id": "sticker-v10-13",
-        "title": "沿著小缺口找",
+        "id": "sticker-v13-13",
+        "title": "交錯貼紙 4",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -348,14 +348,14 @@
         "maxDepth": 4,
         "visiblePerLayer": [
           2,
-          2,
-          4,
+          3,
+          3,
           8
         ]
       },
       {
-        "id": "sticker-v10-14",
-        "title": "四層交會處",
+        "id": "sticker-v13-14",
+        "title": "交錯貼紙 5",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -376,8 +376,8 @@
         "visiblePerLayer": [
           2,
           4,
-          3,
-          7
+          2,
+          8
         ]
       },
       {
@@ -408,62 +408,8 @@
         ]
       },
       {
-        "id": "sticker-v10-16",
-        "title": "被遮住的輪廓",
-        "stage": "挑戰",
-        "decisions": 4,
-        "choices": [
-          4,
-          4,
-          4,
-          4
-        ],
-        "combinations": 256,
-        "solutions": 1,
-        "cells": 16,
-        "colorChoices": 4,
-        "twoColor": false,
-        "systemRotationAfter": null,
-        "rotationCount": 0,
-        "overpaint": 29,
-        "maxDepth": 4,
-        "visiblePerLayer": [
-          1,
-          1,
-          2,
-          12
-        ]
-      },
-      {
-        "id": "sticker-v10-17",
-        "title": "小角落的證據",
-        "stage": "挑戰",
-        "decisions": 4,
-        "choices": [
-          4,
-          4,
-          4,
-          4
-        ],
-        "combinations": 256,
-        "solutions": 1,
-        "cells": 16,
-        "colorChoices": 4,
-        "twoColor": false,
-        "systemRotationAfter": null,
-        "rotationCount": 0,
-        "overpaint": 30,
-        "maxDepth": 4,
-        "visiblePerLayer": [
-          1,
-          2,
-          2,
-          11
-        ]
-      },
-      {
-        "id": "sticker-v12-18",
-        "title": "雙色小階梯",
+        "id": "sticker-v13-16",
+        "title": "雙色練習",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -489,8 +435,35 @@
         ]
       },
       {
-        "id": "sticker-v12-19",
-        "title": "雙色排排站",
+        "id": "sticker-v13-17",
+        "title": "雙色練習",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "cells": 16,
+        "colorChoices": 8,
+        "twoColor": true,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 24,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "id": "sticker-v13-18",
+        "title": "雙色交錯 1",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -516,8 +489,35 @@
         ]
       },
       {
-        "id": "sticker-v12-20",
-        "title": "雙色往上貼",
+        "id": "sticker-v13-19",
+        "title": "雙色交錯 2",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          9,
+          9,
+          9,
+          9
+        ],
+        "combinations": 6561,
+        "solutions": 1,
+        "cells": 16,
+        "colorChoices": 8,
+        "twoColor": true,
+        "systemRotationAfter": null,
+        "rotationCount": 0,
+        "overpaint": 24,
+        "maxDepth": 4,
+        "visiblePerLayer": [
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "id": "sticker-v13-20",
+        "title": "雙色交錯 3",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -637,9 +637,9 @@
         "playbackMs": 2530
       },
       {
-        "id": "penguin-v5-5",
-        "title": "兩隻一起出發",
-        "stage": "進階",
+        "id": "penguin-v13-5",
+        "title": "小企鵝回家 1",
+        "stage": "挑戰",
         "decisions": 4,
         "choices": [
           4,
@@ -650,20 +650,19 @@
         "combinations": 256,
         "solutions": 1,
         "steps": 4,
-        "boards": 2,
+        "boards": 1,
         "soloSolutions": [
-          2,
           1
         ],
         "blockedActions": 0,
-        "differentDistances": 3,
+        "differentDistances": 0,
         "homeDepartures": 0,
-        "playbackMs": 2860
+        "playbackMs": 2310
       },
       {
-        "id": "penguin-v5-6",
-        "title": "兩邊都要看",
-        "stage": "進階",
+        "id": "penguin-v13-6",
+        "title": "小企鵝回家 2",
+        "stage": "挑戰",
         "decisions": 4,
         "choices": [
           4,
@@ -674,43 +673,18 @@
         "combinations": 256,
         "solutions": 1,
         "steps": 4,
-        "boards": 2,
+        "boards": 1,
         "soloSolutions": [
-          2,
-          10
+          1
         ],
         "blockedActions": 0,
-        "differentDistances": 3,
-        "homeDepartures": 0,
-        "playbackMs": 2860
-      },
-      {
-        "id": "penguin-v5-7",
-        "title": "你停下，我繼續",
-        "stage": "進階",
-        "decisions": 4,
-        "choices": [
-          4,
-          4,
-          4,
-          4
-        ],
-        "combinations": 256,
-        "solutions": 1,
-        "steps": 4,
-        "boards": 2,
-        "soloSolutions": [
-          9,
-          8
-        ],
-        "blockedActions": 1,
-        "differentDistances": 3,
+        "differentDistances": 0,
         "homeDepartures": 0,
         "playbackMs": 2420
       },
       {
-        "id": "penguin-v5-8",
-        "title": "第一步先等等",
+        "id": "penguin-v13-7",
+        "title": "小企鵝回家 3",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -722,19 +696,41 @@
         "combinations": 256,
         "solutions": 1,
         "steps": 4,
-        "boards": 2,
+        "boards": 1,
         "soloSolutions": [
-          37,
-          20
+          1
         ],
-        "blockedActions": 1,
-        "differentDistances": 3,
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
+        "playbackMs": 2310
+      },
+      {
+        "id": "penguin-v13-8",
+        "title": "小企鵝回家 4",
+        "stage": "挑戰",
+        "decisions": 4,
+        "choices": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "combinations": 256,
+        "solutions": 1,
+        "steps": 4,
+        "boards": 1,
+        "soloSolutions": [
+          1
+        ],
+        "blockedActions": 0,
+        "differentDistances": 0,
         "homeDepartures": 0,
         "playbackMs": 2640
       },
       {
-        "id": "penguin-v5-9",
-        "title": "回家還會再出門",
+        "id": "penguin-v13-9",
+        "title": "小企鵝回家 5",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -746,19 +742,18 @@
         "combinations": 256,
         "solutions": 1,
         "steps": 4,
-        "boards": 2,
+        "boards": 1,
         "soloSolutions": [
-          29,
-          7
+          1
         ],
-        "blockedActions": 1,
-        "differentDistances": 4,
-        "homeDepartures": 1,
+        "blockedActions": 0,
+        "differentDistances": 0,
+        "homeDepartures": 0,
         "playbackMs": 2750
       },
       {
-        "id": "penguin-v5-10",
-        "title": "兩邊的最後約定",
+        "id": "penguin-v13-10",
+        "title": "小企鵝回家 6",
         "stage": "挑戰",
         "decisions": 4,
         "choices": [
@@ -770,13 +765,12 @@
         "combinations": 256,
         "solutions": 1,
         "steps": 4,
-        "boards": 2,
+        "boards": 1,
         "soloSolutions": [
-          27,
-          9
+          1
         ],
-        "blockedActions": 3,
-        "differentDistances": 3,
+        "blockedActions": 0,
+        "differentDistances": 0,
         "homeDepartures": 0,
         "playbackMs": 2530
       },

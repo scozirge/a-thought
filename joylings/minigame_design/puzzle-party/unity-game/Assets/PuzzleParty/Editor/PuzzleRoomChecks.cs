@@ -34,12 +34,14 @@ public static class PuzzleRoomChecks {
   Need(room.View("teacher").myGroup==3&&room.View("teacher").isHost,"老師固定第四組");
   Need(room.View("teacher").settings.Length==4&&room.View("teacher").game=="","初始四格及遊戲選單");
   Need(!room.View("unknown").connected&&room.View("unknown").myGroup==-1,"未知身分沒有席位");
+  Need(room.View("teacher").slotNames.All(n=>n=="老師"),"單獨開房四步都顯示房主取的名稱");
+  Need(room.View("teacher").ready.All(v=>!v),"尚未作答均顯示未選");
   No(room,"stranger",Action(room,"open","sticker"),"未加入者不能操作");
   Need(!room.TryJoin("blank"," \n\t",out _),"空白名稱不能占用席位");
   Need(room.View("teacher").members.Length==1,"空白加入不影響加入順序");
   bool blankHostRejected=false;try{new RoomAuthority(Fixtures(),"123456","teacher","  ");}catch(ArgumentException){blankHostRejected=true;}
   Need(blankHostRejected,"老師也必須輸入組別名稱");
-  Need(RoomAuthority.TeamLabel(room.View("teacher").members[0])=="老師 小隊(老師組)","老師小隊顯示名稱");
+  Need(RoomAuthority.TeamLabel(room.View("teacher").members[0])=="老師","老師小隊顯示名稱");
   Need(room.TryJoin("a","甲",out _),"第一組加入");
   Need(room.TryJoin("b","乙",out _),"第二組加入");
   Need(room.TryJoin("c","丙",out _),"第三組加入");
@@ -48,7 +50,7 @@ public static class PuzzleRoomChecks {
   Need(room.TryJoin("a","甲重連",out _)&&room.View("a").members.Length==4,"同身分重連不新增席位");
   Need(room.TryJoin("a","甲",out _)&&room.View("a").myGroup==0,"同身分重複加入不更換組別");
   Need(room.View("a").myGroup==0&&!room.View("a").isHost,"每位收到自己的組別");
-  Need(RoomAuthority.TeamLabel(room.View("a").members[0])=="甲 小隊(第1組)","學生小隊顯示名稱");
+  Need(RoomAuthority.TeamLabel(room.View("a").members[0])=="甲","學生小隊顯示名稱");
   No(room,"a",Action(room,"open","sticker"),"只有老師可選關");
   No(room,"teacher",Action(room,"open","hero"),"舊遊戲不能進入連線");
   No(room,"teacher",Action(room,"open","penguin",1),"八次作答舊題不能進入");
@@ -161,6 +163,21 @@ public static class PuzzleRoomChecks {
   Need(gaps.View("second").myGroup==1&&gaps.View("second").mySlot==0,"保留小隊身分，但學生步驟向前排列");
   Yes(gaps,"second",Action(gaps,"set",slot:0,value:"right"),"權限依步驟分配而非組號");
   No(gaps,"second",Action(gaps,"set",slot:1,value:"right"),"原組號不再是可修改步驟");
+  var sync=new RoomAuthority(Fixtures(),"123456","teacher","大象");
+  Need(sync.TryJoin("student","小兔",out _),"同步測試學生加入");
+  Yes(sync,"teacher",Action(sync,"open","sticker"),"同步貼紙開題");
+  Need(sync.View("student").slotNames.SequenceEqual(new[]{"小兔","大象","大象","大象"}),"每步顯示真實名稱，不附加老師");
+  Fill(sync,new[]{"red","blue","blue","red"});
+  Need(sync.View("student").ready.All(v=>v),"學生看見四步全選好");
+  Yes(sync,"teacher",Action(sync,"clear"),"同步清空");
+  No(sync,"teacher",Action(sync,"play"),"缺一人未選不得播放");
+  Yes(sync,"teacher",Action(sync,"open","penguin"),"同步切企鵝");
+  Need(sync.View("student").game=="penguin"&&sync.View("student").index==0&&sync.View("student").ready.All(v=>!v),"學生跟隨遊戲、關卡與清空狀態");
+  Need(sync.TryJoin("late","小貓",out _),"晚加入學生");
+  Need(sync.View("late").game=="penguin"&&sync.View("late").mySlot==-1,"晚加入也顯示老師當題");
+  No(sync,"student",Action(sync,"remove",playerId:"late"),"學生不能踢人");
+  Yes(sync,"teacher",Action(sync,"remove",playerId:"student"),"老師踢出學生");
+  Need(!sync.View("student").connected&&sync.View("teacher").slotNames[0]=="大象","被踢者失去房間，空步驟交房主");
   Debug.Log("PUZZLE_ROOMS_OK "+checks+" authority checks (four groups, permissions, simultaneous answers, timing and reconnect)");
  }
 }

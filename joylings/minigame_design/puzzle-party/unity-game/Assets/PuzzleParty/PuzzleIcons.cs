@@ -1,10 +1,14 @@
+using System.Linq;
 using UnityEngine;
 
 namespace Together {
  public partial class PuzzleParty {
   string StepNumber(int i)=>new[]{"①","②","③","④"}[Mathf.Clamp(i,0,3)];
-  string ShortOwner(int i)=>!Online?"":room.mySlot==i?"你":StepGroup(i)=="老師組"?"老師":StepGroup(i).Replace("第 ","").Replace(" 組","組");
-  string ShortIdentity()=>!Online?"":room.isHost?"老師":room.mySlot<0?"等下一題":"你："+StepNumber(room.mySlot);
+  string ShortOwner(int i)=>Online&&room.slotNames!=null&&i<room.slotNames.Length?room.slotNames[i]:"";
+  bool SlotReady(int i)=>level!=null&&settings[i]!=null&&level.options.Contains(settings[i]);
+  string ShortIdentity()=>Online&&!room.isHost&&room.mySlot<0?"等下一題":"";
+  float OwnerExtra(float width)=>!Online?0:Mathf.Max(0,Enumerable.Range(0,4).Max(i=>TextHeight(ShortOwner(i),width,18))-28);
+  void ReadyBadge(Rect r,int i){Text(r,SlotReady(i)?"✓":"…",22,SlotReady(i)?green:C("af6a28"),true,TextAnchor.MiddleCenter);}
   string ShortStatus()=>playing?(paused?"暫停":active>=0?StepNumber(active):"▶"):result!=null?(result.success?"成功！":"再試試"):Online&&!room.isHost&&room.mySlot<0?"等下一題":"";
   void DrawDirection(Rect r,string direction,Color color){
    if(string.IsNullOrEmpty(direction)){Text(r,"?",28,color,true,TextAnchor.MiddleCenter);return;}

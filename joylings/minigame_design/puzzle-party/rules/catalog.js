@@ -1,5 +1,4 @@
-// 兩款各二十題；每關固定四組各選一次，後段透過題目結構增加難度。
-(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory(require('./rules.js'),require('./sticker-more.js'),require('./advanced-levels.js'),require('./two-color-levels.js'));else root.PuzzleCatalog=factory(root.PuzzleRules,root.StickerMore,root.AdvancedLevels,root.TwoColorLevels);})(typeof globalThis!=='undefined'?globalThis:this,function(R,more,advanced,twoColor){
- const games={sticker:{...R.games.sticker,subtitle:'一層一層，想出最後的模樣',levels:[...R.games.sticker.levels.slice(0,4),...more,...advanced.sticker.slice(0,7),...twoColor]},penguin:{...R.games.penguin,levels:[...R.games.penguin.levels,...advanced.penguin]}};
- return {games};
-});
+// 四步合作題庫；新增題目使用新 ID，避免舊草稿混用。
+const R=require('./rules.js'),more=require('./sticker-more.js'),advanced=require('./advanced-levels.js'),classroom=require('./classroom-levels.js');
+const games={sticker:{...R.games.sticker,levels:[...R.games.sticker.levels.slice(0,4),...more.slice(0,5),...classroom.sticker,advanced.sticker[4],...classroom.twoColor]},penguin:{...R.games.penguin,levels:[...R.games.penguin.levels.slice(0,4),...classroom.penguin,...advanced.penguin]}};
+module.exports={games};

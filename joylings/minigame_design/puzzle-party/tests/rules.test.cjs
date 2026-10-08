@@ -4,11 +4,11 @@ const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 const R = require('../rules/rules.js');
 
-test('最後三張雙色題：A、B 都連通且可見，八個選色缺一不可',()=>{
+test('最後五張雙色題：A、B 都連通且可見，八個選色缺一不可',()=>{
  const levels=require('../rules/catalog.js').games.sticker.levels;
- assert.ok(levels.slice(0,17).every(l=>!l.twoColor));
- for(const [k,l]of levels.slice(17).entries()){
-  assert.equal(l.id,'sticker-v12-'+(18+k));assert.equal(l.twoColor,true);assert.equal(l.palette.length,k===0?2:3);assert.deepEqual(l.masks.map(m=>m.length),[16,12,8,4]);
+ assert.ok(levels.slice(0,15).every(l=>!l.twoColor));
+ for(const [k,l]of levels.slice(15).entries()){
+  assert.equal(l.id,'sticker-v13-'+(16+k));assert.equal(l.twoColor,true);assert.equal(l.palette.length,k<2?2:3);assert.deepEqual(l.masks.map(m=>m.length),[16,12,8,4]);
   const answer=R.solutions('sticker',l);assert.equal(answer.length,1);
   const result=R.run('sticker',l,answer[0]);assert.equal(result.frames.length,4);
   l.masks.forEach((mask,i)=>{
@@ -85,13 +85,13 @@ test('目前選單：兩款各二十題，每關四個有效選擇', () => {
     if(game==='sticker') assert.ok(!R.run(game,l,R.solutions(game,l)[0]).frames.some(f=>f.type==='rotate'));
   }
 });
-test('四次作答新題保留前十關；後段用形狀與地形遞進，不增加規則',()=>{
+test('新題保留早期暖身，後段用形狀與地形遞進，不增加規則',()=>{
   const {games}=require('../rules/catalog.js');
-  assert.deepEqual(games.sticker.levels.slice(0,10),[...R.games.sticker.levels.slice(0,4),...require('../rules/sticker-more.js')]);
-  assert.deepEqual(games.penguin.levels.slice(0,10),R.games.penguin.levels);
+  assert.deepEqual(games.sticker.levels.slice(0,9),[...R.games.sticker.levels.slice(0,4),...require('../rules/sticker-more.js').slice(0,5)]);
+  assert.deepEqual(games.penguin.levels.slice(0,4),R.games.penguin.levels.slice(0,4));
   const adjacent=(c,n)=>[c%n?c-1:-1,c%n<n-1?c+1:-1,c>=n?c-n:-1,c<n*(n-1)?c+n:-1].filter(v=>v>=0);
   for(const [k,l]of games.sticker.levels.slice(10,15).entries()){
-    assert.equal(l.id,'sticker-v10-'+(k+11));assert.ok(!l.rotateAfter);
+    assert.equal(l.id,(k<4?'sticker-v13-':'sticker-v10-')+(k+11));assert.ok(!l.rotateAfter);
     assert.equal(l.masks.reduce((sum,m)=>sum+m.length,0)-l.cols*l.rows,24+k);
     for(const mask of l.masks){
       const seen=new Set([mask[0]]),queue=[mask[0]];
@@ -379,3 +379,19 @@ test('第六步先攻擊會阻止噴火，等待則被火燒到；取消必須�
   const bad=solution.slice();bad[3]='wait';const fail=R.run('hero',l,bad);
   assert.equal(fail.frames.length,6);assert.equal(fail.frames[5].effects[0].kind,'fire');assert.equal(fail.frames[5].effects[0].hit,true);
 });
+
+ test('企鵝前十題單隻，後十題雙隻；新單隻題唯一四步且每步移動',()=>{
+  const levels=require('../rules/catalog.js').games.penguin.levels;
+  assert.ok(levels.slice(0,10).every(l=>l.boards.length===1));assert.ok(levels.slice(10).every(l=>l.boards.length===2));
+  for(const l of levels.slice(4,10)){
+   const answer=R.solutions('penguin',l);assert.equal(answer.length,1);
+   assert.ok(R.run('penguin',l,answer[0]).frames.every(f=>f.slides[0].distance>0));
+   for(let steps=1;steps<4;steps++)assert.equal(R.solutions('penguin',{...l,steps}).length,0);
+  }
+ });
+ test('交錯邊界循序增加，最後三張雙色不是整排或方塊',()=>{
+  const levels=require('../rules/catalog.js').games.sticker.levels;
+  const edges=l=>{const o=R.run('sticker',l,R.solutions('sticker',l)[0]).owners;let n=0;for(let c=0;c<16;c++){if(c%4<3&&o[c]!==o[c+1])n++;if(c<12&&o[c]!==o[c+4])n++;}return n;};
+  assert.deepEqual(levels.slice(9,14).map(edges),[13,14,15,16,17]);assert.deepEqual(levels.slice(17).map(edges),[14,16,18]);
+  for(const l of levels.slice(17)){const m=l.masks[3],x=m.map(c=>c%4),y=m.map(c=>c/4|0);assert.ok((Math.max(...x)-Math.min(...x)+1)*(Math.max(...y)-Math.min(...y)+1)>m.length);}
+ });
