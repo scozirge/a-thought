@@ -1,13 +1,15 @@
 const fs=require('node:fs'),path=require('node:path');
 const out=path.resolve(__dirname,'../Builds/UnityWeb');
-if(!fs.existsSync(out+'/Build/UnityWeb.wasm'))throw new Error('請先執行 npm run build:unity');
 // 公開站沿用相同檔名，以內容雜湊避免新頁面混用瀏覽器快取的舊引擎檔。
 let webIndex=fs.readFileSync(path.join(out,'index.html'),'utf8').replace(/\r\n/g,'\n');
 for(const name of ['UnityWeb.loader.js','UnityWeb.framework.js','UnityWeb.data','UnityWeb.wasm']){
- const digest=require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(out,'Build',name))).digest('hex').slice(0,12);
- const pattern=new RegExp('Build/'+name.replaceAll('.','\\.')+'(?:\\?v=[a-f0-9]+)?','g');
- if(!webIndex.includes('Build/'+name))throw new Error('Unity 頁面缺少資源：'+name);
- webIndex=webIndex.replace(pattern,'Build/'+name+'?v='+digest);
+ const pattern=new RegExp('Build/('+name.replaceAll('.','\\.')+'(?:\\.unityweb|\\.gz|\\.br)?)(?:\\?v=[a-f0-9]+)?','g');
+ if(!pattern.test(webIndex))throw new Error('Unity 頁面缺少資源：'+name);
+ pattern.lastIndex=0;
+ webIndex=webIndex.replace(pattern,(_,file)=>{
+  const digest=require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(out,'Build',file))).digest('hex').slice(0,12);
+  return 'Build/'+file+'?v='+digest;
+ });
 }
 fs.writeFileSync(path.join(out,'index.html'),webIndex);
 fs.copyFileSync(path.resolve(__dirname,'../unity-game/Assets/Resources/NotoSansTC-OFL.txt'),out+'/NotoSansTC-OFL.txt');
@@ -26,7 +28,7 @@ fs.mkdirSync(licenses,{recursive:true});
 for(const [source,target]of sdkDocuments)fs.copyFileSync(path.join(sdk,source),path.join(licenses,target));
 fs.writeFileSync(path.join(licenses,'Photon-Realtime-COPYRIGHT.txt'),photonHeader+'\n');
 fs.writeFileSync(path.join(licenses,'README.txt'),'\uFEFF'+[
- 'Unity WebGL v0.16.2 第三方聲明與授權資料',
+ 'Unity WebGL v0.16.3 第三方聲明與授權資料',
  '',
  'NanoSockets-LICENSE.txt：直接複製 Photon Fusion SDK 隨附的 NanoSockets MIT 授權全文。',
  'Photon-WebSocket-README.txt：直接複製 SDK 隨附的 websocket-sharp 來源與授權說明。',
@@ -55,7 +57,7 @@ Start-Process "http://127.0.0.1:$port/"
 `);
 fs.writeFileSync(out+'/START.cmd','@echo off\r\ncd /d "%~dp0"\r\npowershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0start.ps1"\r\nif errorlevel 1 pause\r\n');
 fs.writeFileSync(out+'/使用說明.txt','\uFEFF'+[
- '合作挑戰遊戲｜Unity WebGL v0.16.2：本地教師＋跨網連線',
+ '合作挑戰遊戲｜Unity WebGL v0.16.3：本地教師＋跨網連線',
  '',
  '這是真正的 Unity WebGL 輸出，含 .wasm、.data 與 C# 遊戲規則。',
  '解壓後雙擊 START.cmd，再於瀏覽器開啟 http://127.0.0.1:8190/。',

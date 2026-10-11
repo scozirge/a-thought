@@ -42,9 +42,11 @@ public static class PuzzleBuild {
   var camera=new GameObject("Camera").AddComponent<Camera>();camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.96f,.96f,.92f);camera.orthographic=true;
   new GameObject("PuzzleParty").AddComponent<PuzzleParty>();
   Directory.CreateDirectory("Assets/PuzzleParty/Scenes");EditorSceneManager.SaveScene(scene,"Assets/PuzzleParty/Scenes/Playground.unity");
-  PlayerSettings.companyName="AThought";PlayerSettings.productName="合作挑戰遊戲";PlayerSettings.bundleVersion="0.16.2";
-  PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Disabled;PlayerSettings.WebGL.decompressionFallback=false;
-  PlayerSettings.WebGL.dataCaching=false;PlayerSettings.WebGL.nameFilesAsHashes=false;
+  PlayerSettings.companyName="AThought";PlayerSettings.productName="合作挑戰遊戲";PlayerSettings.bundleVersion="0.16.3";
+  // GitHub Pages cannot set custom Content-Encoding headers: use Unity's
+  // built-in gzip fallback so compressed files also work in the local package.
+  PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Gzip;PlayerSettings.WebGL.decompressionFallback=true;
+  PlayerSettings.WebGL.dataCaching=true;PlayerSettings.WebGL.nameFilesAsHashes=false;
   PlayerSettings.WebGL.initialMemorySize=128;PlayerSettings.WebGL.maximumMemorySize=512;PlayerSettings.WebGL.template="PROJECT:PuzzleParty";
   PlayerSettings.SplashScreen.show=false;PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Gamma;
   PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.WebGL,ManagedStrippingLevel.Low);

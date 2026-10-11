@@ -22,7 +22,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   });
   const host=await hostContext.newPage(),student=await studentContext.newPage();
   const assetFiles=['UnityWeb.loader.js','UnityWeb.framework.js','UnityWeb.data','UnityWeb.wasm'];
-  const assetResponses=assetFiles.map(file=>host.waitForResponse(response=>new URL(response.url()).pathname.endsWith('/Build/'+file),{timeout:180000}).catch(error=>error));
+  const assetResponses=assetFiles.map(file=>host.waitForResponse(response=>['','.unityweb'].some(suffix=>new URL(response.url()).pathname.endsWith('/Build/'+file+suffix)),{timeout:180000}).catch(error=>error));
   for(const [label,page] of [['published-host',host],['local-student',student]]){
    page.on('pageerror',e=>errors.push(e.message));page.on('websocket',s=>sockets.push(new URL(s.url()).host));
    page.on('console',m=>{if(/PUZZLE_ROOM_PLAYER_TTL 0\b/.test(m.text()))ttlReadbacks.push(label);});
@@ -40,7 +40,7 @@ const R=require('../rules/rules.js'),{games}=require('../rules/catalog.js');
   for(const [i,result] of (await Promise.all(assetResponses)).entries()){
    if(result instanceof Error)throw result;
    assert.equal(result.status(),200);
-   const file=assetFiles[i],digest=data=>createHash('sha256').update(data).digest('hex');
+   const file=path.posix.basename(new URL(result.url()).pathname),digest=data=>createHash('sha256').update(data).digest('hex');
    // Large WASM/data bodies can be evicted from Chromium's inspector cache.
    // Fetch the exact URL loaded by Unity through the request context instead.
    const asset=await hostContext.request.get(result.url());assert.equal(asset.status(),200);
