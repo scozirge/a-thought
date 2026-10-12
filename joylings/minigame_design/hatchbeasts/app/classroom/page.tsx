@@ -218,7 +218,7 @@ export default function ClassroomHome() {
                 <span className="featured-copy">
                   <span className="unit-title"><span className="catalog-lesson-number">第五次課程</span>女巫的藥水訂單</span>
                   <span className="unit-meta">月見藥水舖 · 4 張訂單 · 單機倒水益智遊戲</span>
-                  <span className="unit-meta">用沒有刻度的量杯，調出客人需要的 A、B、C 配方</span>
+                  <span className="unit-meta">看圖選原料，調出客人想要的魔法藥水</span>
                 </span>
                 <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
               </a>
@@ -229,7 +229,7 @@ export default function ClassroomHome() {
               </span>
             </summary>
             <div className="activity-content">
-              <p className="catalog-question-context">A＝玫瑰露、B＝月光水、C＝幽靈黏液。先點來源，再點目的地；倒到來源空或接收杯滿才停止，不同原料只在大鍋裡混合。</p>
+              <p className="catalog-question-context">🌹 玫瑰露、🌙 月光水、👻 幽靈黏液。點原料，再點量杯；點量杯，再倒進大鍋。</p>
               <ol className="activity-list weapon-catalog-list">
                 {potionChallenges.map((challenge, index) => (
                   <li key={challenge.title}>
@@ -242,7 +242,7 @@ export default function ClassroomHome() {
                   </li>
                 ))}
               </ol>
-              <p className="catalog-question-context">配方要每種原料都剛好，交給客人後看魔法結果。倒錯可回上一步，也可查看提示或重來；不需開房或連線。</p>
+              <p className="catalog-question-context">調好後按「完成」，看看魔法效果！想再試一次就按「重新開始」，女巫小提示就在遊戲下方。</p>
             </div>
           </details>
 

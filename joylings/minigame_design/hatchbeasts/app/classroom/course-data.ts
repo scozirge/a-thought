@@ -16,10 +16,10 @@ export const activities = [
 ] as const;
 
 export const potionChallenges = [
-  { title: '戀愛藥水', customer: '想赴約的狼人', cups: '5、3', recipe: '2A＋3B' },
-  { title: '除草毒藥', customer: '骷髏園丁', cups: '3、2', recipe: '3B＋1C' },
-  { title: '青蛙變身藥水', customer: '掉了戒指的騎士', cups: '3、2', recipe: '1A＋2B＋3C' },
-  { title: '黑貓變身藥水', customer: '想溜進城堡的南瓜精', cups: '4、3', recipe: '2A＋1B' },
+  { title: '可愛藥水', customer: '想變可愛的狼人', cups: '5、3', recipe: '🌹×2＋🌙×3' },
+  { title: '除草毒藥', customer: '骷髏園丁', cups: '3、2', recipe: '🌙×3＋👻×1' },
+  { title: '青蛙變身藥水', customer: '掉了戒指的騎士', cups: '3、2', recipe: '🌹×1＋🌙×2＋👻×3' },
+  { title: '黑貓變身藥水', customer: '想溜進城堡的南瓜精', cups: '4、3', recipe: '🌹×2＋🌙×1' },
 ] as const;
 
 export const prompts = [

@@ -1,11 +1,12 @@
 {
   "name": "witch-potions",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "女巫的藥水訂單：單機倒水益智遊戲",
   "scripts": {
     "start": "node serve.cjs",
     "build:h5": "node scripts/build-h5.cjs",
-    "test": "node --test tests/game.test.cjs"
+    "test": "node --test tests/game.test.cjs",
+    "test:browser": "node tests/browser.cjs"
   }
 }

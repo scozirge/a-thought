@@ -62,7 +62,7 @@ export function verifyH5(output, basePath) {
       classroom.includes('href="https://scozirge.github.io/a-thought/witch-potions/"'),
     'Missing fifth lesson or published potion game link',
   );
-  for (const potion of ['戀愛藥水', '除草毒藥', '青蛙變身藥水', '黑貓變身藥水']) {
+  for (const potion of ['可愛藥水', '除草毒藥', '青蛙變身藥水', '黑貓變身藥水']) {
     assert.ok(classroom.includes(potion), `Missing potion order: ${potion}`);
   }
   assert.ok(
