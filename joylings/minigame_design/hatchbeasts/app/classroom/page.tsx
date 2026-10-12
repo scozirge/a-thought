@@ -1,8 +1,8 @@
-import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, Gamepad2, Music2 } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
-import { activities, redBlueQuestions, units } from './course-data';
+import { activities, potionChallenges, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
 
 export default function ClassroomHome() {
@@ -16,6 +16,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <FlaskConical size={20} aria-hidden="true" />
+                玩女巫藥水
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={PUZZLE_PARTY_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
                 玩合作挑戰遊戲
@@ -192,7 +197,7 @@ export default function ClassroomHome() {
             </div>
           </details>
 
-          <div className="featured-unit current-course" id="fourth-course">
+          <div className="featured-unit" id="fourth-course">
             <div className="featured-heading">
               <a className="featured-link" href={PUZZLE_PARTY_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
@@ -205,6 +210,41 @@ export default function ClassroomHome() {
               </a>
             </div>
           </div>
+
+          <details className="featured-unit current-course" id="fifth-course">
+            <summary className="featured-heading">
+              <a className="featured-link" href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-purple"><FlaskConical size={28} strokeWidth={1.6} aria-hidden="true" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第五次課程</span>女巫的藥水訂單</span>
+                  <span className="unit-meta">月見藥水舖 · 4 張訂單 · 單機倒水益智遊戲</span>
+                  <span className="unit-meta">用沒有刻度的量杯，調出客人需要的 A、B、C 配方</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+              <span className="activity-toggle">
+                <span className="toggle-label-closed">展開藥水訂單</span>
+                <span className="toggle-label-open">收起藥水訂單</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </span>
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">A＝玫瑰露、B＝月光水、C＝幽靈黏液。先點來源，再點目的地；倒到來源空或接收杯滿才停止，不同原料只在大鍋裡混合。</p>
+              <ol className="activity-list weapon-catalog-list">
+                {potionChallenges.map((challenge, index) => (
+                  <li key={challenge.title}>
+                    <a href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      {challenge.title} · {challenge.customer}
+                      <ArrowUpRight size={16} aria-hidden="true" />
+                    </a>
+                    <p className="catalog-question-context">量杯容量：{challenge.cups} 份；目標配方：{challenge.recipe}。</p>
+                  </li>
+                ))}
+              </ol>
+              <p className="catalog-question-context">配方要每種原料都剛好，交給客人後看魔法結果。倒錯可回上一步，也可查看提示或重來；不需開房或連線。</p>
+            </div>
+          </details>
 
           <div className="unit-grid">
             {units.slice(1).map((unit) => (

@@ -64,6 +64,12 @@ export function verifyClassroom(output) {
     'utf8',
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
+  assert.ok(
+    catalog.includes('id="fifth-course"') &&
+      catalog.includes('第五次課程') &&
+      catalog.includes('href="https://scozirge.github.io/a-thought/witch-potions/"'),
+    'Missing fifth lesson or published potion game link',
+  );
   const rhythm = readFileSync(join(root, 'rhythm/index.html'), 'utf8');
   const editor = readFileSync(
     join(root, 'rhythm/editor/index.html'),

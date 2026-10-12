@@ -15,6 +15,13 @@ export const activities = [
   { title: '拿起紙筆動手設計', anchor: 'sketch' },
 ] as const;
 
+export const potionChallenges = [
+  { title: '戀愛藥水', customer: '想赴約的狼人', cups: '5、3', recipe: '2A＋3B' },
+  { title: '除草毒藥', customer: '骷髏園丁', cups: '3、2', recipe: '3B＋1C' },
+  { title: '青蛙變身藥水', customer: '掉了戒指的騎士', cups: '3、2', recipe: '1A＋2B＋3C' },
+  { title: '黑貓變身藥水', customer: '想溜進城堡的南瓜精', cups: '4、3', recipe: '2A＋1B' },
+] as const;
+
 export const prompts = [
   { tag: '選項', text: '還可以增加哪個新地點？' },
   { tag: '角色', text: '怪物長什麼樣、有什麼特徵？' },

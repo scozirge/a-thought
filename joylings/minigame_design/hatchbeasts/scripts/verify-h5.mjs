@@ -56,6 +56,16 @@ export function verifyH5(output, basePath) {
   );
   assert.ok(classroom.includes('遊戲設計'), 'Missing classroom catalog');
   assert.ok(
+    classroom.includes('id="fifth-course"') &&
+      classroom.includes('第五次課程') &&
+      classroom.includes('女巫的藥水訂單') &&
+      classroom.includes('href="https://scozirge.github.io/a-thought/witch-potions/"'),
+    'Missing fifth lesson or published potion game link',
+  );
+  for (const potion of ['戀愛藥水', '除草毒藥', '青蛙變身藥水', '黑貓變身藥水']) {
+    assert.ok(classroom.includes(potion), `Missing potion order: ${potion}`);
+  }
+  assert.ok(
     !classroom.includes('我們的創作課'),
     'Classroom catalog still contains the removed eyebrow',
   );
