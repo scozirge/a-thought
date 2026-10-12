@@ -38,10 +38,10 @@
           <button class="vessel" data-cup="0" id="cup-0" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-0"></span><span class="cup-art" id="cup-art-0" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-0">空杯</span></button>
           <button class="vessel" data-cup="1" id="cup-1" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-1"></span><span class="cup-art" id="cup-art-1" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-1">空杯</span></button>
           <div class="pot-wrap"><button class="vessel cauldron" id="pot" type="button" aria-describedby="pot-tooltip"><span class="vessel-label">大鍋 <small>整杯加入</small></span><span class="pot-art" id="pot-art" aria-hidden="true"></span><span class="vessel-contents" id="pot-contents">等你加入魔法</span></button><div id="pot-tooltip" class="pot-tooltip" role="tooltip"><strong>鍋裡有</strong><span id="pot-recipe" class="pot-recipe"></span></div></div>
+          <button class="waste-button" id="waste" type="button"><svg class="trash-icon" viewBox="0 0 40 44" aria-hidden="true" focusable="false"><path d="M8 13H32L29.5 37Q29 40 26 40H14Q11 40 10.5 37Z" fill="#e2d7ec" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 8V5Q15 3 17 3H23Q25 3 25 5V8" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="5" y="8" width="30" height="6" rx="3" fill="#b39ac8" stroke="currentColor" stroke-width="2.5"/><path d="M16 21L17 33M24 21L23 33" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>倒進廢液桶</button>
         </div>
         <div class="bench-edge" aria-hidden="true"></div>
         <div class="workshop-actions">
-          <button class="waste-button" id="waste" type="button"><span aria-hidden="true">♜</span> 倒進廢液桶</button>
           <button class="brew-button" id="brew" type="button"><span aria-hidden="true">✦</span> 完成</button>
         </div>
         <div id="status" class="status" role="status" aria-live="polite">原料可以補滿；每次倒到來源空，或接收杯滿。</div>
