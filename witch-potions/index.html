@@ -17,7 +17,7 @@
         <span class="brand-moon" aria-hidden="true">☾</span>
         <span><strong>月見藥水舖</strong><small>女巫的四張訂單</small></span>
       </a>
-      <div class="header-actions"><span class="solo-label">單人練習</span><button class="quiet-button" id="help-button" type="button">？ 怎麼玩</button></div>
+      <div class="header-actions"><span class="solo-label">單人練習</span></div>
     </header>
     <nav class="orders" aria-label="選擇客人的訂單" id="orders"></nav>
     <main class="shop-floor">
@@ -27,42 +27,32 @@
         <span id="customer-name" class="customer-name"></span>
         <h1 id="order-name"></h1>
         <p id="customer-quote" class="customer-quote"></p>
-        <div class="recipe-area"><span class="eyebrow">這次的配方</span><div id="recipe" class="recipe" aria-label="所需的原料份量"></div><span class="recipe-note">數字是份量，要剛剛好。</span></div>
-        <button class="hint-button" id="hint-button" type="button"><span aria-hidden="true">✧</span> 看女巫的小提示</button>
+        <div class="recipe-area"><span class="eyebrow">這次的配方</span><div id="target-potion" class="target-potion" role="img"></div><div id="recipe" class="recipe" aria-label="所需的原料份量"></div></div>
       </aside>
       <section class="workshop" aria-labelledby="workshop-title">
-        <div class="workshop-heading"><div><span class="eyebrow">調藥工作臺</span><h2 id="workshop-title">點來源，再點要倒入的地方</h2></div><span class="step-count" id="step-count">0 次操作</span></div>
+        <div class="workshop-heading"><div><span class="eyebrow">調藥工作臺</span><h2 id="workshop-title">點來源，再點要倒入的地方</h2></div></div>
         <div class="ingredients" id="ingredients" aria-label="原料桶"></div>
         <div class="shelf" aria-hidden="true"></div>
         <div class="selection-guide" id="selection-guide" aria-live="polite">先選一種原料，再點量杯裝滿。</div>
         <div class="pouring-area">
           <button class="vessel" data-cup="0" id="cup-0" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-0"></span><span class="cup-art" id="cup-art-0" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-0">空杯</span></button>
           <button class="vessel" data-cup="1" id="cup-1" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-1"></span><span class="cup-art" id="cup-art-1" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-1">空杯</span></button>
-          <button class="vessel cauldron" id="pot" type="button"><span class="vessel-label">大鍋 <small>整杯加入</small></span><span class="pot-art" id="pot-art" aria-hidden="true"></span><span class="vessel-contents" id="pot-contents">等你加入魔法</span></button>
+          <div class="pot-wrap"><button class="vessel cauldron" id="pot" type="button" aria-describedby="pot-tooltip"><span class="vessel-label">大鍋 <small>整杯加入</small></span><span class="pot-art" id="pot-art" aria-hidden="true"></span><span class="vessel-contents" id="pot-contents">等你加入魔法</span></button><div id="pot-tooltip" class="pot-tooltip" role="tooltip"><strong>鍋裡有</strong><span id="pot-recipe" class="pot-recipe"></span></div></div>
         </div>
         <div class="bench-edge" aria-hidden="true"></div>
         <div class="workshop-actions">
           <button class="waste-button" id="waste" type="button"><span aria-hidden="true">♜</span> 倒進廢液桶</button>
-          <button class="brew-button" id="brew" type="button"><span aria-hidden="true">✦</span> 調好，交給客人！</button>
+          <button class="brew-button" id="brew" type="button"><span aria-hidden="true">✦</span> 完成</button>
         </div>
         <div id="status" class="status" role="status" aria-live="polite">原料可以補滿；每次倒到來源空，或接收杯滿。</div>
-        <div class="bottom-actions"><div><button id="undo" class="text-button" type="button" disabled>↶ 上一步</button><button id="reset" class="text-button" type="button">↺ 這單重來</button></div><button id="cancel" class="text-button" type="button" hidden>取消選取</button></div>
+        <div class="bottom-actions"><div><button id="undo" class="text-button" type="button" disabled>↶ 上一步</button><button id="reset" class="text-button" type="button">↺ 重新開始</button></div><button id="cancel" class="text-button" type="button" hidden>取消選取</button></div>
       </section>
     </main>
-    <details class="journal"><summary>調藥紀錄 <span id="journal-count">尚未開始</span></summary><ol id="journal-list"></ol></details>
-    <footer class="shop-footer"><span>不趕時間，想一想，再倒一倒。</span><span>單機試玩版 · v0.1</span></footer>
+    <section class="witch-hints" aria-labelledby="hint-title"><div class="hint-heading"><span aria-hidden="true">✧</span><div><h2 id="hint-title">女巫小提示</h2><p id="hint-lesson"></p></div></div><p id="hint-text"></p><h3>可以這樣倒</h3><p class="hint-start">從兩個空杯、空鍋開始。</p><ul id="solution-list" class="solution-steps"></ul></section>
+    <footer class="shop-footer"><span>不趕時間，想一想，再倒一倒。</span><span>單機試玩版 · v0.2</span></footer>
   </div>
-  <dialog id="help-dialog" aria-labelledby="help-title">
-    <button class="dialog-close" data-close type="button" aria-label="關閉玩法">×</button>
-    <span class="eyebrow">女巫的調藥筆記</span><h2 id="help-title">三個動作，就能開始</h2>
-    <ol class="howto"><li><b>裝滿</b><span>點 A、B 或 C，再點大杯或小杯。原料會補到杯子滿。</span></li><li><b>倒一倒</b><span>點有藥液的杯子，再點另一杯。一定倒到來源空，或接收杯滿，不能中途停。</span></li><li><b>加入鍋裡</b><span>點杯子，再點大鍋。整杯倒空，所有原料正好符合配方就成功！</span></li></ol>
-    <div class="rule-note">杯子只有容量、沒有刻度。不同原料只在鍋裡混合；杯子倒空就能換原料。大鍋不能倒回來，也不能用它量份量。</div>
-    <p class="dialog-secondary">多餘的藥液可整杯倒進廢液桶。倒錯了，可以回上一步。所有角色與藥水都是魔法故事。</p>
-    <button class="brew-button" data-close type="button">知道了，開始調藥</button>
-    <details class="solution"><summary>重新開始四張訂單</summary><p>清除這個瀏覽器裡的四關草稿與完成紀錄，回到第一張訂單。</p><button id="clear-progress" class="quiet-button" type="button">確認清除，全部重新開始</button></details>
-  </dialog>
-  <dialog id="hint-dialog" aria-labelledby="hint-title"><button class="dialog-close" data-close type="button" aria-label="關閉提示">×</button><span class="eyebrow">女巫的小提示</span><h2 id="hint-title"></h2><p id="hint-text"></p><details class="solution"><summary>查看從空杯開始的完整解法</summary><p>這份解法從兩個空杯、空鍋開始。現在的操作會保留。</p><ol id="solution-list"></ol></details></dialog>
   <dialog id="result-dialog" aria-labelledby="result-title"><button class="dialog-close" data-close type="button" aria-label="關閉結果">×</button><div id="result-art" class="result-art" aria-hidden="true"></div><span class="eyebrow" id="result-label"></span><h2 id="result-title"></h2><p id="result-story"></p><div id="result-feedback" class="result-feedback"></div><div class="result-actions"><button id="result-back" class="quiet-button" data-close type="button">回工作臺</button><button id="result-next" class="brew-button" type="button">接下一張訂單 →</button></div></dialog>
+  <div id="carry-cursor" class="carry-cursor" aria-hidden="true" hidden></div><div id="pour-flight" class="pour-flight" aria-hidden="true" hidden></div><div id="pour-stream" class="pour-stream" aria-hidden="true" hidden></div>
   <noscript>這個遊戲需要啟用瀏覽器的 JavaScript。</noscript>
 </body>
 </html>
