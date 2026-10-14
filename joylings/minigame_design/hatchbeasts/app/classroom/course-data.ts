@@ -81,6 +81,18 @@ export const redBlueRetrospective = [
   { tag: '遊戲內提問', text: '下次也要把題目加在遊戲中，強迫他們思考，試試看。' },
 ] as const;
 
+export const weaponLogicRetrospective = [
+  { tag: '新武器與解鎖', text: '這次把學生第二週發想的新武器放進遊戲中，學生要答對武器設計邏輯的問題，才能解鎖新武器。' },
+  { tag: '答題狀況', text: '這樣的安排對一些學生很有幫助，但部分學生沒有耐心專心看完選項，或偏好用猜的方式作答。' },
+  { tag: '兩人一組', text: '另外觀察到，兩人一組時會出現只有一個人在思考的情況。' },
+] as const;
+
+export const puzzlePartyRetrospective = [
+  { tag: '遊戲形式', text: '這次的遊戲比較偏靜態益智。' },
+  { tag: '投入與解題', text: '有些學生解題速度蠻快，也很進入狀況；但有些學生沒有耐心，遇到問題容易放棄。' },
+  { tag: '陪伴與試錯', text: '部分學生需要家長或志工在旁邊監督，才會用心思考；否則會偏向用連續試錯的方式解題。' },
+] as const;
+
 export const eggDesigns = [
   { code: '11', name: '小花熊', egg: '蛋頂部有一朵小花，佈滿粉色的毛茸茸。' },
   { code: '12', name: '香草兔', egg: '蛋上佈滿不同深淺的粉色草皮。' },

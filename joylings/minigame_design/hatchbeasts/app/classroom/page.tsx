@@ -2,7 +2,7 @@ import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Game
 import { assetUrl } from '@/lib/assets';
 import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
-import { activities, potionChallenges, redBlueQuestions, units } from './course-data';
+import { activities, potionChallenges, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
 
 export default function ClassroomHome() {
@@ -197,6 +197,14 @@ export default function ClassroomHome() {
             </div>
           </details>
 
+          <div className="lesson-review-action">
+            <a className="course-button" href={assetUrl('/classroom/weapon-logic/#retrospective')}>
+              <ClipboardList size={20} aria-hidden="true" />
+              第三堂課・課後復盤
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </a>
+          </div>
+
           <div className="featured-unit" id="fourth-course">
             <div className="featured-heading">
               <a className="featured-link" href={PUZZLE_PARTY_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
@@ -210,6 +218,25 @@ export default function ClassroomHome() {
               </a>
             </div>
           </div>
+
+          <details className="lesson-review-action" id="fourth-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第四堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <ol className="prompt-list">
+              {puzzlePartyRetrospective.map((entry, index) => (
+                <li key={entry.tag}>
+                  <span className="prompt-number">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <span className="prompt-tag">{entry.tag}</span>
+                    <p>{entry.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </details>
 
           <details className="featured-unit current-course" id="fifth-course">
             <summary className="featured-heading">

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { ArrowLeft, ArrowUpRight, Play } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, ClipboardList, Play } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
 import { RED_BLUE_GAME_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader } from '../course-ui';
 import { WeaponChallenges } from '../weapon-challenges';
+import { weaponLogicRetrospective } from '../course-data';
 import weaponQuestions from '../red-blue-battle/weapon-questions.json';
 
 export const metadata: Metadata = {
@@ -38,12 +39,33 @@ export default function WeaponLogicLesson() {
                 {stage.name}・3 題
               </a>
             ))}
+            <a href="#retrospective">課後復盤</a>
           </nav>
           <p className="section-note">
             先想想自己的答案，再打開說明。試著說：「如果……，而且……，遊戲就會……。」
           </p>
         </div>
         <WeaponChallenges />
+        <section id="retrospective" className="lesson-section" aria-labelledby="weapon-retrospective-title">
+          <div className="lesson-section-heading">
+            <h2 id="weapon-retrospective-title">
+              <ClipboardList size={26} strokeWidth={1.5} aria-hidden="true" />
+              課後復盤
+            </h2>
+          </div>
+          <p>第三堂課的課堂觀察</p>
+          <ol className="prompt-list">
+            {weaponLogicRetrospective.map((entry, index) => (
+              <li key={entry.tag}>
+                <span className="prompt-number">{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <span className="prompt-tag">{entry.tag}</span>
+                  <p>{entry.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
         <a
           className="lesson-bottom-back course-back"
           href={assetUrl('/classroom/')}

@@ -280,6 +280,14 @@ body:has(.classroom-shell) {
   justify-content: flex-end;
   margin-top: 14px;
 }
+details.lesson-review-action {
+  display: block;
+}
+details.lesson-review-action > summary {
+  width: fit-content;
+  margin-left: auto;
+  cursor: pointer;
+}
 .unit-grid {
   display: grid;
   grid-template-columns: 1fr;
