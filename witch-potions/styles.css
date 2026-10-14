@@ -26,3 +26,70 @@
 @media(hover:none),(pointer:coarse){.pot-tooltip{position:static;width:auto;max-width:100%;opacity:1;visibility:visible;box-shadow:none;padding:8px;margin-top:3px;pointer-events:auto}.pot-tooltip>strong{font-size:11px;margin-bottom:4px}.pot-recipe .recipe-term{font-size:13px}.pot-recipe .ingredient-icon{width:21px;height:21px}.pot-recipe .recipe-plus{display:none}.pouring-area{align-items:start}.carry-cursor{display:none!important}.carrying,.carrying button,.carrying a{cursor:auto!important}}
 .touch-input .pot-tooltip{position:static;width:auto;max-width:100%;opacity:1;visibility:visible;box-shadow:none;padding:8px;margin-top:3px;pointer-events:auto}.touch-input .pot-tooltip>strong{font-size:11px;margin-bottom:4px}.touch-input .pot-recipe .recipe-term{font-size:13px}.touch-input .pot-recipe .ingredient-icon{width:21px;height:21px}.touch-input .pot-recipe .recipe-plus{display:none}.touch-input .pouring-area{align-items:start}
 .waste-button{display:inline-flex;align-items:center;gap:8px;grid-column:1/-1;justify-self:center;padding:6px 12px}.workshop-actions{justify-content:flex-end}.waste-button .trash-icon{width:32px;height:36px;flex:none;color:var(--plum)}
+
+@media(min-width:1080px){.orders{grid-template-columns:repeat(5,minmax(0,1fr))}.order-tab{padding:11px 12px;font-size:14px}}
+
+.cups{display:contents}
+.pouring-area[data-cups="3"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pouring-area[data-cups="4"],.pouring-area[data-cups="5"]{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;row-gap:16px}
+.pouring-area[data-cups="4"] .pot-wrap{grid-column:3;grid-row:1/3;align-self:center}
+@media(max-width:650px){.pouring-area[data-cups="3"]{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;row-gap:14px}.pouring-area[data-cups="4"] .cup-art,.pouring-area[data-cups="5"] .cup-art{height:112px}}
+
+/* Keep the workshop controls together above the bench edge. */
+.pouring-area{padding-top:14px}
+.shop-footer{justify-content:flex-end}
+.workshop-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:10px;padding:12px 20px 18px;background:#faf6ef}
+.workshop-actions .waste-button,.workshop-actions .text-button{min-height:48px;padding:8px 12px;border:1px solid #e0d7e3;border-radius:12px;background:#f3edf5;color:var(--plum);white-space:nowrap}
+.workshop-actions .brew-button{min-height:48px;margin-left:auto}
+.workshop-actions .trash-icon{width:28px;height:32px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:1080px){.workshop-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px}.workshop-actions .waste-button{grid-column:1/3;grid-row:1;justify-self:stretch;justify-content:center}.workshop-actions .brew-button{grid-column:3;grid-row:1;margin-left:0;padding:10px 6px}.workshop-actions #undo{grid-column:1;grid-row:2}.workshop-actions #reset{grid-column:2;grid-row:2}.workshop-actions #cancel{grid-column:3;grid-row:2}.workshop-actions .text-button{padding:8px 3px;font-size:12px}}
+
+/* 課堂字級：一般文字清楚可讀，配方、容量與主要操作更醒目。 */
+:root{font-size:100%;--text-body:1.125rem;--text-label:1rem;--text-action:1.25rem;--text-key:1.375rem;--text-recipe:1.75rem;--text-title:1.875rem}
+body{font-size:var(--text-body);line-height:1.6}
+.brand strong{font-size:var(--text-title)}
+.order-tab{font-size:var(--text-body);font-weight:600;line-height:1.5;min-width:0;min-height:60px}
+.order-tab>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
+.order-tab .tab-number{font-size:var(--text-label);width:28px;height:28px}
+.tab-done{font-size:var(--text-label)}
+.eyebrow,.complete-mark,.customer-name{font-size:var(--text-label);letter-spacing:.5px}
+.order-heading{flex-wrap:wrap}
+h1,dialog h2{font-size:var(--text-title);font-weight:750}
+.customer-quote,dialog p{font-size:var(--text-body);line-height:1.8}
+.workshop-heading h2,.hint-heading h2{font-size:var(--text-key);font-weight:750;line-height:1.5}
+.ingredient-info b{font-size:var(--text-action);line-height:1.5;margin:0}
+.recipe-term{font-size:var(--text-recipe);font-weight:750;gap:5px}
+.recipe .ingredient-icon{width:36px;height:36px}
+.recipe-plus{font-size:var(--text-body)}
+.vessel-label,.vessel-label small{font-size:var(--text-key);font-weight:750;line-height:1.5;color:var(--ink)}
+.vessel-contents{font-size:var(--text-body);line-height:1.6;min-height:32px;flex-wrap:wrap}
+.vessel-contents .ingredient-icon{width:30px;height:30px}
+.pot-tooltip>strong,.touch-input .pot-tooltip>strong,.empty-pot{font-size:var(--text-label)}
+.pot-recipe .recipe-term,.touch-input .pot-recipe .recipe-term{font-size:var(--text-action)}
+.pot-recipe .ingredient-icon,.touch-input .pot-recipe .ingredient-icon{width:28px;height:28px}
+.pot-recipe .recipe-plus{font-size:var(--text-label)}
+.workshop-actions .waste-button,.workshop-actions .text-button,.result-actions .quiet-button{font-size:var(--text-action);font-weight:600;line-height:1.5;min-height:52px}
+.brew-button,.workshop-actions .brew-button{font-size:var(--text-key);font-weight:750;line-height:1.5;min-height:54px}
+.witch-hints>#hint-text,.solution-steps li{font-size:var(--text-body);line-height:1.8}
+.witch-hints h3{font-size:var(--text-action)}
+.hint-start{font-size:var(--text-label)}
+.feedback-chip{font-size:var(--text-action);font-weight:650}
+.shop-footer{font-size:.875rem}
+@media(max-width:1080px){
+  .ingredient{flex-direction:column;gap:6px}
+  .ingredient-info{text-align:center}
+}
+@media(max-width:650px){
+  :root{--text-title:1.75rem;--text-key:1.25rem;--text-action:1.125rem}
+  .ingredient{min-width:0;padding:10px 3px}
+  .ingredients{padding:0 12px;gap:6px}
+  .order-tab{padding:10px 8px;gap:6px}
+  .order-tab .tab-number{width:24px;height:24px}
+  .workshop-actions .brew-button{padding:10px 6px}
+}
+@media(max-width:420px){
+  .workshop-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .workshop-actions .waste-button,.workshop-actions #undo,.workshop-actions #reset,.workshop-actions #cancel{grid-column:auto;grid-row:auto}
+  .workshop-actions .brew-button{grid-column:1/-1;grid-row:3}
+}
