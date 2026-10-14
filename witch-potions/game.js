@@ -173,7 +173,7 @@
     return '';
   }
   function apply(level, state, action) {
-    const fail = message => ({ ok: false, state, message });
+    const fail = (message, code) => ({ ok: false, state, message, ...(code ? { code } : {}) });
     if (!Array.isArray(action)) return fail('請先選擇來源。');
     const [kind, index, other] = action;
     const validCup = value => Number.isInteger(value) && value >= 0 && value < level.capacities.length;
@@ -183,7 +183,7 @@
     let moved = 0;
     if (kind === 'fill') {
       if (![0, 1, 2].includes(other)) return fail('請選擇原料。');
-      if (source.amount && source.ingredient !== other) return fail(`杯裡還有${ingredients[source.ingredient].name}，先倒空才能換原料。`);
+      if (source.amount && source.ingredient !== other) return fail('不同配方不能倒入同一個杯子喔!', 'mixed-ingredients');
       moved = level.capacities[index] - source.amount;
       if (moved <= 0) return fail('這個杯子已經滿了。');
       source.ingredient = other;
@@ -192,7 +192,7 @@
       if (!validCup(other) || other === index) return fail('請選另一個杯子。');
       const target = next.cups[other];
       if (!source.amount) return fail('這個杯子是空的，先裝一點原料吧。');
-      if (target.amount && target.ingredient !== source.ingredient) return fail('不同原料要在大鍋裡混合；請先把接收的杯子倒空。');
+      if (target.amount && target.ingredient !== source.ingredient) return fail('不同配方不能倒入同一個杯子喔!', 'mixed-ingredients');
       moved = Math.min(source.amount, level.capacities[other] - target.amount);
       if (moved <= 0) return fail('接收的杯子已經滿了。');
       target.ingredient = source.ingredient;
