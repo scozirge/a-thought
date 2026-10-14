@@ -14,4 +14,4 @@ for (const name of files) copyFileSync(path.join(root, name), path.join(output, 
 for (const match of readFileSync(path.join(output, 'index.html'), 'utf8').matchAll(/(?:src|href)="([^"]+)"/g)) {
   assert.ok(files.includes(match[1]), `Unexpected external or missing reference: ${match[1]}`);
 }
-console.log(`Verified 4 potion orders and local references. H5 ready: ${output}`);
+console.log(`Verified ${game.levels.length} potion orders and local references. H5 ready: ${output}`);

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#473c62">
-  <meta name="description" content="在女巫的藥水舖，用沒有刻度的量杯調出客人的願望。四道單機倒水益智挑戰。">
+  <meta name="description" content="在女巫的藥水舖，用沒有刻度的量杯調出客人的願望。十道單機倒水益智挑戰。">
   <title>月見藥水舖 · 女巫的藥水訂單</title>
   <link rel="stylesheet" href="styles.css">
   <script src="game.js" defer></script>
@@ -15,9 +15,8 @@
     <header class="shop-header">
       <a class="brand" href="index.html" aria-label="月見藥水舖首頁">
         <span class="brand-moon" aria-hidden="true">☾</span>
-        <span><strong>月見藥水舖</strong><small>女巫的四張訂單</small></span>
+        <span><strong>月見藥水舖</strong></span>
       </a>
-      <div class="header-actions"><span class="solo-label">單人練習</span></div>
     </header>
     <nav class="orders" aria-label="選擇客人的訂單" id="orders"></nav>
     <main class="shop-floor">
@@ -27,31 +26,31 @@
         <span id="customer-name" class="customer-name"></span>
         <h1 id="order-name"></h1>
         <p id="customer-quote" class="customer-quote"></p>
-        <div class="recipe-area"><span class="eyebrow">這次的配方</span><div id="target-potion" class="target-potion" role="img"></div><div id="recipe" class="recipe" aria-label="所需的原料份量"></div></div>
+        <div class="recipe-area"><span class="eyebrow">配方</span><div id="target-potion" class="target-potion" role="img"></div><div id="recipe" class="recipe" aria-label="所需的原料份量"></div></div>
       </aside>
       <section class="workshop" aria-labelledby="workshop-title">
-        <div class="workshop-heading"><div><span class="eyebrow">調藥工作臺</span><h2 id="workshop-title">點來源，再點要倒入的地方</h2></div></div>
-        <div class="ingredients" id="ingredients" aria-label="原料桶"></div>
+        <div class="workshop-heading"><div><span class="eyebrow">工作臺</span><h2 id="workshop-title">點擊配方倒入杯中</h2></div></div>
+        <div class="ingredients" id="ingredients" aria-label="原料"></div>
         <div class="shelf" aria-hidden="true"></div>
-        <div class="selection-guide" id="selection-guide" aria-live="polite">先選一種原料，再點量杯裝滿。</div>
         <div class="pouring-area">
-          <button class="vessel" data-cup="0" id="cup-0" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-0"></span><span class="cup-art" id="cup-art-0" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-0">空杯</span></button>
-          <button class="vessel" data-cup="1" id="cup-1" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-1"></span><span class="cup-art" id="cup-art-1" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-1">空杯</span></button>
-          <div class="pot-wrap"><button class="vessel cauldron" id="pot" type="button" aria-describedby="pot-tooltip"><span class="vessel-label">大鍋 <small>整杯加入</small></span><span class="pot-art" id="pot-art" aria-hidden="true"></span><span class="vessel-contents" id="pot-contents">等你加入魔法</span></button><div id="pot-tooltip" class="pot-tooltip" role="tooltip"><strong>鍋裡有</strong><span id="pot-recipe" class="pot-recipe"></span></div></div>
-          <button class="waste-button" id="waste" type="button"><svg class="trash-icon" viewBox="0 0 40 44" aria-hidden="true" focusable="false"><path d="M8 13H32L29.5 37Q29 40 26 40H14Q11 40 10.5 37Z" fill="#e2d7ec" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 8V5Q15 3 17 3H23Q25 3 25 5V8" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="5" y="8" width="30" height="6" rx="3" fill="#b39ac8" stroke="currentColor" stroke-width="2.5"/><path d="M16 21L17 33M24 21L23 33" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>倒進廢液桶</button>
+          <div class="cups" id="cups"></div>
+          <div class="pot-wrap"><button class="vessel cauldron" id="pot" type="button" aria-describedby="pot-tooltip"><span class="vessel-label">大鍋</span><span class="pot-art" id="pot-art" aria-hidden="true"></span><span class="vessel-contents" id="pot-contents">空鍋</span></button><div id="pot-tooltip" class="pot-tooltip" role="tooltip"><strong>鍋裡有</strong><span id="pot-recipe" class="pot-recipe"></span></div></div>
         </div>
-        <div class="bench-edge" aria-hidden="true"></div>
-        <div class="workshop-actions">
+        <div class="workshop-actions" role="group" aria-label="調藥操作">
+          <button class="waste-button" id="waste" type="button"><svg class="trash-icon" viewBox="0 0 40 44" aria-hidden="true" focusable="false"><path d="M8 13H32L29.5 37Q29 40 26 40H14Q11 40 10.5 37Z" fill="#e2d7ec" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 8V5Q15 3 17 3H23Q25 3 25 5V8" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="5" y="8" width="30" height="6" rx="3" fill="#b39ac8" stroke="currentColor" stroke-width="2.5"/><path d="M16 21L17 33M24 21L23 33" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>垃圾桶</button>
+          <button id="undo" class="text-button" type="button" disabled>↶ 上一步</button>
+          <button id="reset" class="text-button" type="button">↺ 重新開始</button>
+          <button id="cancel" class="text-button" type="button" hidden>取消</button>
           <button class="brew-button" id="brew" type="button"><span aria-hidden="true">✦</span> 完成</button>
         </div>
-        <div id="status" class="status" role="status" aria-live="polite">原料可以補滿；每次倒到來源空，或接收杯滿。</div>
-        <div class="bottom-actions"><div><button id="undo" class="text-button" type="button" disabled>↶ 上一步</button><button id="reset" class="text-button" type="button">↺ 重新開始</button></div><button id="cancel" class="text-button" type="button" hidden>取消選取</button></div>
+        <div class="bench-edge" aria-hidden="true"></div>
+        <div id="status" class="sr-only" role="status" aria-live="polite"></div>
       </section>
     </main>
-    <section class="witch-hints" aria-labelledby="hint-title"><div class="hint-heading"><span aria-hidden="true">✧</span><div><h2 id="hint-title">女巫小提示</h2><p id="hint-lesson"></p></div></div><p id="hint-text"></p><h3>可以這樣倒</h3><p class="hint-start">從兩個空杯、空鍋開始。</p><ul id="solution-list" class="solution-steps"></ul></section>
-    <footer class="shop-footer"><span>不趕時間，想一想，再倒一倒。</span><span>單機試玩版 · v0.2</span></footer>
+    <section class="witch-hints" aria-labelledby="hint-title"><div class="hint-heading"><span aria-hidden="true">✧</span><div><h2 id="hint-title">女巫小提示</h2></div></div><p id="hint-text"></p><h3>可以這樣倒</h3><p class="hint-start">從空杯、空鍋開始。</p><ul id="solution-list" class="solution-steps"></ul></section>
+    <footer class="shop-footer"><span>v0.5.1</span></footer>
   </div>
-  <dialog id="result-dialog" aria-labelledby="result-title"><button class="dialog-close" data-close type="button" aria-label="關閉結果">×</button><div id="result-art" class="result-art" aria-hidden="true"></div><span class="eyebrow" id="result-label"></span><h2 id="result-title"></h2><p id="result-story"></p><div id="result-feedback" class="result-feedback"></div><div class="result-actions"><button id="result-back" class="quiet-button" data-close type="button">回工作臺</button><button id="result-next" class="brew-button" type="button">接下一張訂單 →</button></div></dialog>
+  <dialog id="result-dialog" aria-labelledby="result-title"><button class="dialog-close" data-close type="button" aria-label="關閉結果">×</button><div id="result-art" class="result-art" aria-hidden="true"></div><h2 id="result-title"></h2><p id="result-story"></p><div id="result-feedback" class="result-feedback"></div><div class="result-actions"><button id="result-back" class="quiet-button" data-close type="button">回工作臺</button><button id="result-next" class="brew-button" type="button">下一關 →</button></div></dialog>
   <div id="carry-cursor" class="carry-cursor" aria-hidden="true" hidden></div><div id="pour-flight" class="pour-flight" aria-hidden="true" hidden></div><div id="pour-stream" class="pour-stream" aria-hidden="true" hidden></div>
   <noscript>這個遊戲需要啟用瀏覽器的 JavaScript。</noscript>
 </body>

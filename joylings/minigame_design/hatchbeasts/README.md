@@ -16,7 +16,7 @@
 
 [第四次課程：合作挑戰遊戲](https://scozirge.github.io/classroom/#fourth-course) · [Unity 遊戲](https://scozirge.github.io/a-thought/puzzle-party/)：貼紙工廠、帶企鵝回家各 20 關。老師開房，學生選房加入；雙方填寫組別名稱，學生依加入順序自動編為第 1～3 組。
 
-[第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：四張訂單，用無刻度量杯量出 圖示配方。支援撤回、提示、客人結果與進度保存。
+[第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
 [2026-09-24 紅藍槍戰課堂復盤](docs/課堂復盤/2026-09-24-紅藍槍戰.md)：保留授課者原話，記錄連線互動、提問狀況，以及每個人都完成的新武器紙上設計與強弱思考。[線上復盤](https://scozirge.github.io/classroom/red-blue-battle/#retrospective) 也記下次將新武器想法與題目加入遊戲的安排。
 

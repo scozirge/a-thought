@@ -216,20 +216,20 @@ export default function ClassroomHome() {
               <a className="featured-link" href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-purple"><FlaskConical size={28} strokeWidth={1.6} aria-hidden="true" /></span>
                 <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">第五次課程</span>女巫的藥水訂單</span>
-                  <span className="unit-meta">月見藥水舖 · 4 張訂單 · 單機倒水益智遊戲</span>
-                  <span className="unit-meta">看圖選原料，調出客人想要的魔法藥水</span>
+                  <span className="unit-title"><span className="catalog-lesson-number">第 5 週課程</span>女巫的藥水訂單</span>
+                  <span className="unit-meta">月見藥水舖 · 10 關</span>
+                  <span className="unit-meta">兩人一組，調出魔法藥水</span>
                 </span>
                 <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
               </a>
               <span className="activity-toggle">
-                <span className="toggle-label-closed">展開藥水訂單</span>
-                <span className="toggle-label-open">收起藥水訂單</span>
+                <span className="toggle-label-closed">看關卡</span>
+                <span className="toggle-label-open">收起</span>
                 <ChevronDown size={19} aria-hidden="true" />
               </span>
             </summary>
             <div className="activity-content">
-              <p className="catalog-question-context">🌹 玫瑰露、🌙 月光水、👻 幽靈黏液。點原料，再點量杯；點量杯，再倒進大鍋。</p>
+              <p className="catalog-question-context">第一關先試玩，第 5 關起進階，最後三關挑戰。</p>
               <ol className="activity-list weapon-catalog-list">
                 {potionChallenges.map((challenge, index) => (
                   <li key={challenge.title}>
@@ -238,11 +238,10 @@ export default function ClassroomHome() {
                       {challenge.title} · {challenge.customer}
                       <ArrowUpRight size={16} aria-hidden="true" />
                     </a>
-                    <p className="catalog-question-context">量杯容量：{challenge.cups} 份；目標配方：{challenge.recipe}。</p>
+                    <p className="catalog-question-context">杯子：{challenge.cups} 份 · 配方：{challenge.recipe}</p>
                   </li>
                 ))}
               </ol>
-              <p className="catalog-question-context">調好後按「完成」，看看魔法效果！想再試一次就按「重新開始」，女巫小提示就在遊戲下方。</p>
             </div>
           </details>
 

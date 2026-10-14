@@ -16,10 +16,16 @@ export const activities = [
 ] as const;
 
 export const potionChallenges = [
-  { title: '可愛藥水', customer: '想變可愛的狼人', cups: '5、3', recipe: '🌹×2＋🌙×3' },
+  { title: '戀愛藥水', customer: '準備告白的狼人', cups: '5、3', recipe: '🌹×5＋🌙×3' },
   { title: '除草毒藥', customer: '骷髏園丁', cups: '3、2', recipe: '🌙×3＋👻×1' },
-  { title: '青蛙變身藥水', customer: '掉了戒指的騎士', cups: '3、2', recipe: '🌹×1＋🌙×2＋👻×3' },
-  { title: '黑貓變身藥水', customer: '想溜進城堡的南瓜精', cups: '4、3', recipe: '🌹×2＋🌙×1' },
+  { title: '好夢藥水', customer: '睡不好的貓頭鷹', cups: '3、2', recipe: '🌹×1＋🌙×2＋👻×3' },
+  { title: '黑貓變身藥水', customer: '想溜進城堡的南瓜精', cups: '5、2', recipe: '🌹×3＋🌙×2' },
+  { title: '人魚藥水', customer: '想游進珊瑚礁的水手', cups: '7、4、2', recipe: '🌹×3＋🌙×2＋👻×5' },
+  { title: '漂浮藥水', customer: '想摘蘋果的史萊姆', cups: '8、5、2', recipe: '🌹×3＋🌙×6＋👻×2' },
+  { title: '誠實藥水', customer: '想說實話的小狐狸', cups: '9、6、4、2', recipe: '🌹×5＋🌙×2＋👻×3' },
+  { title: '隱身藥水', customer: '想玩捉迷藏的白兔', cups: '13、8、5、3', recipe: '🌹×1＋🌙×8＋👻×2' },
+  { title: '發光藥水', customer: '找回亮光的螢火蟲', cups: '12、10、7、5、2', recipe: '🌹×6＋🌙×3＋👻×8' },
+  { title: '年輕藥水', customer: '想再冒險的老魔法師', cups: '14、11、8、5、3', recipe: '🌹×4＋🌙×7＋👻×1' },
 ] as const;
 
 export const prompts = [

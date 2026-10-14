@@ -952,3 +952,10 @@ body:has(.classroom-shell) {
 }
 
 #weapon-challenges{scroll-margin-top:7rem}.weapon-question-group{margin-top:2rem}.weapon-question-content{padding:1.25rem 1.5rem}.weapon-question-content h4{font-size:1.1rem;line-height:1.7;margin:0 0 .75rem}.weapon-question-content ol{padding-left:1.75rem;line-height:1.9;list-style:decimal}.weapon-question-content details{margin-top:1rem}.weapon-question-content details summary{padding:.5rem 0;font-size:1rem;font-weight:600;cursor:pointer}.weapon-question-content details p{line-height:1.8}
+
+/* 第 5 週以短句及大字呈現十關，方便兩人共看。 */
+#fifth-course .unit-title{font-size:1.75rem;line-height:1.5}
+#fifth-course .catalog-lesson-number{font-size:1rem}
+#fifth-course .unit-meta,#fifth-course .catalog-question-context,#fifth-course .activity-toggle{font-size:1.125rem;line-height:1.8}
+#fifth-course .activity-list a{font-size:1.25rem;line-height:1.6;min-height:48px}
+#fifth-course .featured-copy{min-width:0}
