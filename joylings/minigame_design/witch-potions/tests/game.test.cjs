@@ -32,6 +32,24 @@ test('管理員情境符合遊戲真實規則：混料、空杯、滿杯停止�
   assert.equal(G.verdict(level,{cups:[],pot:[4,1,0]}).success,false);
 });
 
+test('管理員第五題：大鍋累加原料，答案符合實際倒入結果', () => {
+  const question = M.questions[4];
+  assert.equal(question.id,'pot');
+  const result = G.apply({capacities:[3]}, {cups:[{ingredient:0,amount:2}],pot:[1,2,0]}, ['pot',0]);
+  assert.equal(result.ok,true);
+  assert.deepEqual(result.state.cups,[{ingredient:null,amount:0}]);
+  const results = question.choices.map(({expression})=>{
+    const pot = [0,0,0];
+    for(const [ingredient,amount] of expression.inside) pot[ingredient] += amount;
+    if(expression.add) pot[expression.add[0]] += expression.add[1];
+    if(expression.multiply) return pot.map(amount=>amount*expression.multiply);
+    return pot;
+  });
+  assert.equal(question.answer,1);
+  assert.deepEqual(results[question.answer],result.state.pot);
+  assert.equal(results.filter(pot=>JSON.stringify(pot)===JSON.stringify(result.state.pot)).length,1);
+});
+
 for (const level of G.levels) {
   test(`${level.name}：實際解法符合容量、停止條件與正確配方`, () => {
     let state = G.initial(level);

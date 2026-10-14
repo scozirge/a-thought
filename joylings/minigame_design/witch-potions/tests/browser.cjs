@@ -42,6 +42,37 @@ fs.mkdirSync(output, { recursive: true });
     assert.equal(await tips.locator('#solution-list li').count(), G.levels[9].solution.length);
     await tips.reload();assert.equal(await tips.locator('#witch-hints').isVisible(), true);
     await tips.close();
+    const preview = await browser.newPage({viewport:{width:1365,height:1000}});
+    for(const query of ['?gm=false','?gm=1','?gm=True']) {
+      const url = new URL(base); url.search = query;
+      await preview.goto(url.href);
+      assert.equal(await preview.locator('#manager-panel').isVisible(),false);
+      assert.equal(await preview.locator('#manager-entry').isDisabled(),true);
+    }
+    const previewURL = new URL(base); previewURL.search = '?v=0.6.0&tip=true&gm=true';
+    await preview.goto(previewURL.href);
+    assert.equal(await preview.locator('#manager-panel').isVisible(),true);
+    assert.equal(await preview.locator('#manager-subtitle').innerText(),'你現在是遊戲管理員');
+    await preview.waitForFunction(()=>!document.getElementById('manager-quiz').hidden);
+    assert.equal(await preview.locator('.manager-pour-source>svg').count(),1);
+    assert.equal(await preview.locator('[data-choice="0"] .ingredient-icon').count(),2);
+    assert.equal(await preview.locator('[data-choice="2"] .ingredient-icon').count(),1);
+    for(const width of [320,390,945,1365]) {
+      await preview.setViewportSize({width,height:1000});
+      assert.equal(await preview.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+      await preview.locator('#manager-panel').screenshot({path:path.join(output,`manager-outcomes-${width}.png`)});
+    }
+    await preview.locator('[data-choice="1"]').click();
+    await preview.waitForFunction(()=>document.getElementById('manager-progress').textContent==='2 / 5');
+    const previewSave = await preview.evaluate(()=>JSON.parse(localStorage.getItem('witch-potions-v1')));
+    assert.deepEqual(previewSave.completed,[]);
+    assert.equal(previewSave.manager.answered,0);
+    await preview.locator('#manager-back').click();
+    assert.equal(await preview.locator('#witch-hints').isVisible(),true);
+    await preview.goto(base);
+    assert.equal(await preview.locator('#manager-entry').isDisabled(),true);
+    await preview.close();
+    checks.push('gm=true 直接播放管理員開場、圖像結果選項、試玩不改正式成績、移除參數恢復十關解鎖限制');
     checks.push('原料與目標配方使用圖示，女巫提示與完整解法只有 tip=true 才顯示');
     await page.locator('[data-ingredient="0"]').click();
     await page.mouse.move(700, 390);

@@ -6,6 +6,8 @@
   const pale = ['#f4c8d7', '#f5e4ad', '#c8e4d1'];
   const storageKey = 'witch-potions-v1';
   const showTips = new URLSearchParams(window.location.search).get('tip') === 'true';
+  const directManager = new URLSearchParams(window.location.search).get('gm') === 'true';
+  let previewManagerProgress = 0;
   const M = window.PotionManager;
   let managerProgress = 0;
   let managerController;
@@ -373,15 +375,19 @@
   state = G.replay(G.levels[current], games[current]);
   renderLevel();
   managerController = M.mount({
-    isUnlocked: () => M.unlocked(G.levels,completed),
-    getProgress: () => managerProgress,
-    setProgress: value => { managerProgress = M.validProgress(value); save(); },
+    isUnlocked: () => directManager || M.unlocked(G.levels,completed),
+    getProgress: () => directManager ? previewManagerProgress : managerProgress,
+    setProgress: value => {
+      if (directManager) previewManagerProgress = M.validProgress(value);
+      else { managerProgress = M.validProgress(value); save(); }
+    },
     onEnter: () => {
       finishAnimation(); games[current] = []; state = G.initial(G.levels[current]);
       selection = null; render(); save();
     },
     onExit: renderLevel,
-    icon, characterArt
+    icon, characterArt, bottleArt, potArt
   });
   if (games[current].length) status('歡迎回來，已保留你上次的調藥進度。');
+  if (directManager) managerController.open();
 })();
