@@ -386,6 +386,7 @@
       selection = null; render(); save();
     },
     onExit: renderLevel,
+    onLocked: () => openDialog('manager-lock-dialog'),
     icon, characterArt, bottleArt, potArt
   });
   if (games[current].length) status('歡迎回來，已保留你上次的調藥進度。');

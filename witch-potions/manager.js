@@ -29,13 +29,32 @@
       {expression:{add:[0,2],inside:[[0,2],[1,1]]}},
       {expression:{add:[0,2],inside:[[0,1],[1,2]]}},
       {expression:{multiply:2,inside:[[0,1],[1,2]]}}
-    ], answer:1, explanation:'杯裡的 2 份玫瑰露，加上鍋裡原本的配方。' }
+    ], answer:1, explanation:'杯裡的 2 份玫瑰露，加上鍋裡原本的配方。' },
+    { id:'missing', title:'還要加入多少，才會剛剛好？', scene:'missing', choices:[
+      {math:['2X + 3Y']},{math:['2X + 2Y']},{math:['3X + 2Y']}
+    ], answer:1, explanation:'需要的減掉已經有的，還差 2X + 2Y。' },
+    { id:'repeat', title:'做完後，鍋裡有多少？', scene:'repeat', choices:[
+      {math:['3X + 2Y']},{math:['X + 6Y']},{math:['3X + 6Y']}
+    ], answer:2, explanation:'做 3 次，每種原料都要算 3 次。' },
+    { id:'capacity', title:'倒完後，兩杯各有多少？', scene:'capacity', choices:[
+      {cups:[{label:'來源杯',amounts:[[0,2]]},{label:'接收杯',amounts:[[0,4]]}]},
+      {cups:[{label:'來源杯',amounts:[[0,1]]},{label:'接收杯',amounts:[[0,5]]}]},
+      {cups:[{label:'來源杯',empty:true},{label:'接收杯',amounts:[[0,6]]}]}
+    ], answer:1, explanation:'只剩 3 份空間，倒入 3 份，來源杯剩 1 份。' },
+    { id:'condition', title:'哪個規則才能確定配方正確？', scene:'condition', choices:[
+      {math:['x+y=5']},{math:['x=3 或是 y=2']},{math:['x=3 且 y=2']}
+    ], answer:2, explanation:'兩種份量都要對，才能過關。' },
+    { id:'equations', title:'哪個算式最符合以上描述？', scene:'equations', choices:[
+      {math:['X + Y = 5','Y − X = 1']},
+      {math:['X − Y = 5','X + Y = 1']},
+      {math:['X + Y = 5','X − Y = 1']}
+    ], answer:2, explanation:'一共 5 份用加法；玫瑰露多 1 份，用 X − Y = 1。' }
   ];
   function unlocked(levels, completed) { return levels.length > 0 && levels.every(level => completed.includes(level.id)); }
   function correct(index, choice) { return !!questions[index] && questions[index].answer === choice; }
   function validProgress(value) { return Number.isInteger(value) && value >= 0 && value <= questions.length ? value : 0; }
 
-  function mount({isUnlocked, getProgress, setProgress, onEnter, onExit, icon, characterArt, bottleArt, potArt}) {
+  function mount({isUnlocked, getProgress, setProgress, onEnter, onExit, onLocked, icon, characterArt, bottleArt, potArt}) {
     const $ = id => document.getElementById(id);
     let active = false, locked = false, timer, questionIndex = 0;
     const badge = '<svg viewBox="0 0 120 130" aria-hidden="true"><path d="M60 6L108 24V66Q106 100 60 123Q14 100 12 66V24Z" fill="#eee1b2" stroke="#aa8648" stroke-width="5"/><path d="M60 26L70 48L95 51L77 68L82 94L60 81L38 94L43 68L25 51L50 48Z" fill="#76618a"/><path d="M48 60L57 69L74 49" fill="none" stroke="#fff9e7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -44,18 +63,28 @@
       return `<div class="manager-vessel"><strong>${label}</strong><svg viewBox="0 0 120 130" aria-hidden="true"><defs><clipPath id="manager-cup-${id}"><path d="M25 25H95L88 110Q87 119 78 119H42Q33 119 32 110Z"/></clipPath></defs><path d="M25 25H95L88 110Q87 119 78 119H42Q33 119 32 110Z" fill="#f6f0f7" stroke="#a899b1" stroke-width="3"/><rect x="27" y="${116-height}" width="66" height="${height}" fill="${['#ce577b','#dfb24f','#80b497'][ingredient]}" clip-path="url(#manager-cup-${id})"/><path d="M39 38L43 98" stroke="white" stroke-width="4" stroke-linecap="round"/></svg><span>${amount ? icon(ingredient) + ` ${amount} 份` : '空杯'}</span></div>`;
     }
     const arrow = '<span class="manager-arrow" aria-label="倒向">→</span>';
+    function variableKey(counts = false, lowercase = false) {
+      const labels = lowercase ? ['x','y'] : ['X','Y'];
+      return `<div class="manager-variable-key"><span><b>${labels[0]}</b>＝${icon(0)} ${counts ? '玫瑰露的份數' : '1 份玫瑰露'}</span><span><b>${labels[1]}</b>＝${icon(1)} ${counts ? '月光水的份數' : '1 份月光水'}</span></div>`;
+    }
     function scene(type) {
+      if(type === 'missing') return `${variableKey()}<div class="manager-math-cards"><div><strong>客人要</strong><b>4X + 3Y</b></div><div><strong>鍋裡有</strong><b>2X + Y</b></div></div>`;
+      if(type === 'repeat') return `${variableKey()}<div class="manager-story"><p>從空鍋開始</p><p>每次加入 <b>X + 2Y</b></p><p>重複 <b>3 次</b></p></div>`;
+      if(type === 'capacity') return `${cup(4,5,0,'來源杯','capacity-a')}${arrow}${cup(2,5,0,'接收杯・5 份杯','capacity-b')}`;
+      if(type === 'condition') return `${variableKey(true,true)}<div class="manager-story"><p>客人要</p><div class="manager-pot-contents">${amountsMarkup([[0,3],[1,2]])}</div></div>`;
+      if(type === 'equations') return `${variableKey(true)}<div class="manager-story"><p>兩種原料一共 <b>5 份</b></p><p>玫瑰露比月光水多 <b>1 份</b></p></div>`;
       if(type === 'mix') return `<div class="manager-vessel"><strong>月光水</strong><div class="manager-source manager-pour-source">${bottleArt(1)}</div></div>${arrow}${cup(2,5,0,'5 份杯','mix')}`;
       if(type === 'empty') return `${cup(0,3,0,'3 份杯','empty-a')}${arrow}${cup(2,5,0,'5 份杯','empty-b')}`;
       if(type === 'full') return `${cup(5,5,0,'5 份杯','full-a')}${arrow}${cup(2,3,0,'3 份杯','full-b')}`;
       if(type === 'recipe') return `<div class="manager-recipe"><strong>客人要</strong><span>${icon(0)} × 3</span><span>${icon(1)} × 2</span></div><span class="manager-arrow">≟</span><div class="manager-recipe"><strong>鍋裡有</strong><span>${icon(0)} × 4</span><span>${icon(1)} × 1</span></div>`;
-      if(type === 'pot') return `<div class="manager-pot-operation">${cup(2,3,0,'3 份杯','pot')}${arrow}<div class="manager-vessel manager-pot"><strong>大鍋</strong>${potArt({pot:[1,2,0]})}<div class="manager-pot-contents">${amountsMarkup([[0,1],[1,2]])}</div></div></div><div class="manager-pot-result"><strong>倒入後</strong>${amountsMarkup([[0,3],[1,2]])}</div>`;
+      if(type === 'pot') return `<div class="manager-variable-key"><span><b>X</b>＝${icon(0)} 1 份玫瑰露</span><span><b>Y</b>＝${icon(1)} 1 份月光水</span></div><div class="manager-pot-operation">${cup(2,3,0,'3 份杯','pot')}${arrow}<div class="manager-vessel manager-pot"><strong>大鍋</strong>${potArt({pot:[1,2,0]})}<div class="manager-pot-contents">${amountsMarkup([[0,1],[1,2]])}</div></div></div><div class="manager-pot-result"><strong>倒入後</strong><span class="manager-amount">3X ＋ 2Y</span></div>`;
       return '';
     }
     function refresh() {
       const available = isUnlocked();
-      $('manager-entry').disabled = !available;
-      $('manager-entry-status').textContent = !available ? '10 關後開放' : getProgress() === questions.length ? '✓ 已完成' : '開始 →';
+      $('manager-entry').dataset.locked = String(!available);
+      $('manager-entry-lock').toggleAttribute('hidden',available);
+      $('manager-entry-status').textContent = !available ? '尚未解鎖' : getProgress() === questions.length ? '✓ 已完成' : '開始 →';
       $('manager-entry').classList.toggle('is-unlocked', available);
     }
     function focusTitle() { $('manager-title').focus({preventScroll:true}); }
@@ -63,9 +92,10 @@
       return amounts.map(([ingredient,amount])=>`<span class="manager-amount">${icon(ingredient)} × ${amount}</span>`).join('<span class="manager-plus" aria-label="加">＋</span>');
     }
     function choiceMarkup(choice) {
+      if(choice.math) return `<span class="manager-math-lines">${choice.math.map(line=>`<span>${line}</span>`).join('')}</span>`;
       if(choice.expression) {
         const expression = choice.expression;
-        const term = ([ingredient,amount]) => `<span class="manager-amount">${amount} ${icon(ingredient)}</span>`;
+        const term = ([ingredient,amount]) => `<span class="manager-amount">${amount}${['X','Y'][ingredient]}</span>`;
         const start = expression.add ? term(expression.add) + '<span>＋</span>' : `<span>${expression.multiply} ×</span>`;
         return `<span class="manager-expression">${start}<span class="manager-expression-group"><span>(</span>${expression.inside.map(term).join('<span>＋</span>')}<span>)</span></span></span>`;
       }
@@ -81,7 +111,8 @@
       $('manager-progress').textContent = `${questionIndex + 1} / ${questions.length}`;
       $('manager-question').textContent = q.title;
       $('manager-scene').innerHTML = scene(q.scene);
-      $('manager-scene').classList.toggle('is-pot-question',q.scene === 'pot');
+      $('manager-scene').classList.toggle('is-pot-question',['pot','missing','repeat','condition','equations'].includes(q.scene));
+      $('manager-quiz').classList.toggle('is-description-question',q.scene === 'equations');
       $('manager-feedback').textContent = '';
       $('manager-feedback').className = 'manager-feedback';
       $('manager-choices').innerHTML = q.choices.map((choice,i)=>`<button type="button" class="manager-choice" data-choice="${i}"><span class="manager-choice-number">${i+1}</span><span class="manager-choice-content">${choiceMarkup(choice)}</span></button>`).join('');
@@ -99,7 +130,7 @@
       if(questionIndex === questions.length) finish(); else showQuestion();
     }
     function open() {
-      if(!isUnlocked()) return;
+      if(!isUnlocked()) { onLocked(); return; }
       clearTimeout(timer); locked = false; active = true;
       onEnter();
       document.querySelector('.shop-floor').hidden = true;
