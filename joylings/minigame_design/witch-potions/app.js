@@ -5,6 +5,10 @@
   const colors = ['#ce577b', '#d9ac47', '#559173'];
   const pale = ['#f4c8d7', '#f5e4ad', '#c8e4d1'];
   const storageKey = 'witch-potions-v1';
+  const showTips = new URLSearchParams(window.location.search).get('tip') === 'true';
+  const M = window.PotionManager;
+  let managerProgress = 0;
+  let managerController;
   let current = 0;
   let games = G.levels.map(() => []);
   let completed = [];
@@ -57,7 +61,7 @@
 
   const levelSignature = level => JSON.stringify([level.capacities, level.recipe]);
   function save() {
-    try { localStorage.setItem(storageKey, JSON.stringify({ version: 3, signatures: G.levels.map(levelSignature), current, games, completed })); } catch (_) { /* The game also works when browser storage is unavailable. */ }
+    try { localStorage.setItem(storageKey, JSON.stringify({ version: 3, signatures: G.levels.map(levelSignature), current, games, completed, manager: { version: 1, answered: managerProgress } })); } catch (_) { /* The game also works when browser storage is unavailable. */ }
   }
   function load() {
     try {
@@ -66,6 +70,7 @@
       const compatible = (level, i) => data.version === 3 ? data.signatures?.[i] === levelSignature(level) : data.version === 2 ? i < 3 : i === 1 || i === 2;
       if (Number.isInteger(data.current) && data.current >= 0 && data.current < G.levels.length) current = data.current;
       completed = Array.isArray(data.completed) ? [...new Set(data.completed.filter(id => G.levels.some((level, i) => level.id === id && compatible(level, i))))] : [];
+      managerProgress = M.unlocked(G.levels,completed) && data.manager?.version === 1 ? M.validProgress(data.manager.answered) : 0;
       if (Array.isArray(data.games)) data.games.slice(0, G.levels.length).forEach((actions, i) => {
         if (!compatible(G.levels[i], i) || !Array.isArray(actions) || actions.length > 5000) return;
         try { G.replay(G.levels[i], actions); games[i] = actions; } catch (_) { /* Ignore an incompatible draft. */ }
@@ -136,6 +141,7 @@
     $('status').classList.toggle('error', !!error);
   }
   function renderOrders() {
+    managerController?.refresh();
     $('orders').innerHTML = G.levels.map((level, i) => `<button class="order-tab" type="button" data-level="${i}" ${i === current ? 'aria-current="step"' : ''}><span class="tab-number">${i + 1}</span><span>${level.name}</span>${completed.includes(level.id) ? '<span class="tab-done" aria-label="已完成">✓</span>' : ''}</button>`).join('');
   }
   function renderLevel() {
@@ -150,8 +156,11 @@
     $('recipe').setAttribute('aria-label', level.recipe.map((amount, i) => amount ? `${G.ingredients[i].name} ${amount} 份` : '').filter(Boolean).join('，'));
     $('target-potion').innerHTML = potionArt(level.effect || level.id);
     $('target-potion').setAttribute('aria-label', level.name + '：藥水瓶與魔法效果');
-    $('hint-text').innerHTML = iconText(level.hint);
-    $('solution-list').innerHTML = level.solution.map(action => `<li>${iconText(G.describe(action, level))}</li>`).join('');
+    $('witch-hints').hidden = !showTips;
+    if (showTips) {
+      $('hint-text').innerHTML = iconText(level.hint);
+      $('solution-list').innerHTML = level.solution.map(action => `<li>${iconText(G.describe(action, level))}</li>`).join('');
+    }
     $('cups').innerHTML = level.capacities.map((capacity, i) => `<button class="vessel" data-cup="${i}" id="cup-${i}" type="button" aria-pressed="false"><span class="vessel-label" id="cup-label-${i}">${G.cupName(i, level)}${level.capacities.length === 2 ? ` <small>${capacity} 份</small>` : ''}</span><span class="cup-art" id="cup-art-${i}" aria-hidden="true"></span><span class="vessel-contents" id="cup-contents-${i}"></span></button>`).join('');
     $('cups').parentElement.dataset.cups = level.capacities.length;
     render();
@@ -246,7 +255,11 @@
   function act(action) {
     if (busy) return;
     const result = G.apply(G.levels[current], state, action);
-    if (!result.ok) { status(result.message, true); return; }
+    if (!result.ok) {
+      if (result.code === 'mixed-ingredients') openDialog('mix-dialog');
+      else status(result.message, true);
+      return;
+    }
     const before = state;
     games[current].push(action);
     state = result.state;
@@ -266,12 +279,15 @@
     selection = { kind: 'cup', index: i }; render();
   }
   function switchLevel(index) {
+    managerController?.close();
     finishAnimation();
+    games[current] = [];
     current = index;
-    state = G.replay(G.levels[current], games[current]);
+    games[current] = [];
+    state = G.initial(G.levels[current]);
     selection = null;
     renderLevel();
-    status(games[current].length ? '已接回這張訂單的調藥進度。' : '先看看客人的配方，再選原料裝杯。');
+    status('');
     save();
   }
   function openDialog(id) { finishAnimation(); selection = null; render(); $(id).showModal(); moveCursor(); }
@@ -292,11 +308,11 @@
       return `<span class="feedback-chip${diff ? ' wrong' : ''}">${icon(i)} ${diff === 0 ? '剛剛好 ✓' : diff > 0 ? (level.recipe[i] ? '太多了' : '不需要') : '還不夠'}</span>`;
     }).join('');
     $('result-next').hidden = !result.success;
-    $('result-next').textContent = current < G.levels.length - 1 ? '下一關 →' : completed.length === G.levels.length ? '再玩一次' : '選關';
+    $('result-next').textContent = M.unlocked(G.levels,completed) ? '遊戲管理員 →' : current < G.levels.length - 1 ? '下一關 →' : '選關';
     $('result-back').textContent = result.success ? '回工作臺' : '再試一次';
     if (!result.success) {
       games[current] = []; state = G.initial(G.levels[current]); save();
-      status('這張訂單已清空。看看女巫小提示，再試一次。');
+      status('杯子和大鍋已清空。');
     }
     openDialog('result-dialog');
   }
@@ -311,7 +327,7 @@
   });
   $('orders').addEventListener('click', event => {
     const button = event.target.closest('[data-level]');
-    if (button && Number(button.dataset.level) !== current) switchLevel(Number(button.dataset.level));
+    if (button && (Number(button.dataset.level) !== current || !$('manager-panel').hidden)) switchLevel(Number(button.dataset.level));
   });
   $('cups').addEventListener('click', event => { const button = event.target.closest('[data-cup]'); if (button) chooseCup(Number(button.dataset.cup)); });
   $('pot').addEventListener('click', () => selection?.kind === 'cup' ? act(['pot', selection.index]) : status('先點有藥液的杯子，再點大鍋。原料要先用量杯量好。'));
@@ -330,6 +346,7 @@
   $('brew').addEventListener('click', brew);
   $('result-next').addEventListener('click', () => {
     $('result-dialog').close();
+    if (M.unlocked(G.levels,completed)) { managerController.open(); return; }
     let next = current < G.levels.length - 1 ? current + 1 : G.levels.findIndex(level => !completed.includes(level.id));
     if (next === -1) next = 0;
     if (completed.length === G.levels.length && current === G.levels.length - 1) games[next] = [];
@@ -355,5 +372,16 @@
   load();
   state = G.replay(G.levels[current], games[current]);
   renderLevel();
+  managerController = M.mount({
+    isUnlocked: () => M.unlocked(G.levels,completed),
+    getProgress: () => managerProgress,
+    setProgress: value => { managerProgress = M.validProgress(value); save(); },
+    onEnter: () => {
+      finishAnimation(); games[current] = []; state = G.initial(G.levels[current]);
+      selection = null; render(); save();
+    },
+    onExit: renderLevel,
+    icon, characterArt
+  });
   if (games[current].length) status('歡迎回來，已保留你上次的調藥進度。');
 })();

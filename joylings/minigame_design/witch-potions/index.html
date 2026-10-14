@@ -6,9 +6,10 @@
   <meta name="theme-color" content="#473c62">
   <meta name="description" content="在女巫的藥水舖，用沒有刻度的量杯調出客人的願望。十道單機倒水益智挑戰。">
   <title>月見藥水舖 · 女巫的藥水訂單</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="game.js" defer></script>
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=0.6.0">
+  <script src="game.js?v=0.6.0" defer></script>
+  <script src="manager.js?v=0.6.0" defer></script>
+  <script src="app.js?v=0.6.0" defer></script>
 </head>
 <body>
   <div class="shop">
@@ -19,6 +20,13 @@
       </a>
     </header>
     <nav class="orders" aria-label="選擇客人的訂單" id="orders"></nav>
+    <button id="manager-entry" class="manager-entry" type="button" disabled><span class="manager-entry-star" aria-hidden="true">✧</span><span><small>最終關卡</small><strong>遊戲管理員</strong></span><span id="manager-entry-status">10 關後開放</span></button>
+    <section id="manager-panel" class="manager-panel" aria-labelledby="manager-title" hidden>
+      <header class="manager-heading"><h1 id="manager-title" tabindex="-1">遊戲管理員</h1><button id="manager-back" type="button" class="quiet-button">回藥水舖</button></header>
+      <div id="manager-intro" class="manager-intro"><div id="manager-hero" class="manager-hero" aria-hidden="true"></div><p id="manager-subtitle" aria-live="polite"></p></div>
+      <div id="manager-quiz" hidden><div id="manager-progress" class="manager-progress" aria-label="題目進度"></div><h2 id="manager-question" tabindex="-1"></h2><div id="manager-scene" class="manager-scene"></div><div id="manager-choices" class="manager-choices" role="group" aria-labelledby="manager-question"></div><p id="manager-feedback" class="manager-feedback" role="status" aria-live="polite"></p></div>
+      <div id="manager-finish" class="manager-finish" hidden><div id="manager-award" class="manager-award" aria-hidden="true"></div><h2 id="manager-finish-title" tabindex="-1">遊戲管理員，過關！</h2><p>五個規則都選對了！</p><div class="result-actions"><button id="manager-replay" class="brew-button" type="button">再玩一次</button><button id="manager-finish-back" class="quiet-button" type="button">回藥水舖</button></div></div>
+    </section>
     <main class="shop-floor">
       <aside class="order-card" aria-labelledby="order-name">
         <div class="order-heading"><span id="order-number" class="eyebrow"></span><span id="order-complete" class="complete-mark" hidden>✓ 已完成</span></div>
@@ -47,10 +55,11 @@
         <div id="status" class="sr-only" role="status" aria-live="polite"></div>
       </section>
     </main>
-    <section class="witch-hints" aria-labelledby="hint-title"><div class="hint-heading"><span aria-hidden="true">✧</span><div><h2 id="hint-title">女巫小提示</h2></div></div><p id="hint-text"></p><h3>可以這樣倒</h3><p class="hint-start">從空杯、空鍋開始。</p><ul id="solution-list" class="solution-steps"></ul></section>
-    <footer class="shop-footer"><span>v0.5.1</span></footer>
+    <section class="witch-hints" id="witch-hints" aria-labelledby="hint-title" hidden><div class="hint-heading"><span aria-hidden="true">✧</span><div><h2 id="hint-title">女巫小提示</h2></div></div><p id="hint-text"></p><h3>可以這樣倒</h3><p class="hint-start">從空杯、空鍋開始。</p><ul id="solution-list" class="solution-steps"></ul></section>
+    <footer class="shop-footer"><span>v0.6.0</span></footer>
   </div>
   <dialog id="result-dialog" aria-labelledby="result-title"><button class="dialog-close" data-close type="button" aria-label="關閉結果">×</button><div id="result-art" class="result-art" aria-hidden="true"></div><h2 id="result-title"></h2><p id="result-story"></p><div id="result-feedback" class="result-feedback"></div><div class="result-actions"><button id="result-back" class="quiet-button" data-close type="button">回工作臺</button><button id="result-next" class="brew-button" type="button">下一關 →</button></div></dialog>
+  <dialog id="mix-dialog" aria-labelledby="mix-message"><p id="mix-message">不同配方不能倒入同一個杯子喔!</p><button class="brew-button" data-close type="button" autofocus>好</button></dialog>
   <div id="carry-cursor" class="carry-cursor" aria-hidden="true" hidden></div><div id="pour-flight" class="pour-flight" aria-hidden="true" hidden></div><div id="pour-stream" class="pour-stream" aria-hidden="true" hidden></div>
   <noscript>這個遊戲需要啟用瀏覽器的 JavaScript。</noscript>
 </body>

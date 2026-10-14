@@ -1,7 +1,36 @@
 'use strict';
+const M = require('../manager.js');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../game.js');
+
+test('管理員關卡需十個不同關卡全數完成，五題各有唯一正解', () => {
+  const ids = G.levels.map(level=>level.id);
+  assert.equal(M.unlocked(G.levels,ids.slice(0,-1)),false);
+  assert.equal(M.unlocked(G.levels,Array(10).fill(ids[0])),false);
+  assert.equal(M.unlocked(G.levels,ids),true);
+  assert.equal(M.questions.length,5);
+  assert.equal(new Set(M.questions.map(q=>q.id)).size,5);
+  for(const [index,q] of M.questions.entries()) {
+    assert.ok(q.choices.length>=1 && q.choices.length<=3);
+    assert.equal(q.choices.filter((_,choice)=>M.correct(index,choice)).length,1);
+  }
+  for(const value of [-1,6,1.5,'5',null,NaN]) assert.equal(M.validProgress(value),0);
+  assert.equal(M.validProgress(3),3);
+  assert.equal(M.validProgress(5),5);
+});
+
+test('管理員情境符合遊戲真實規則：混料、空杯、滿杯停止、逐色驗收', () => {
+  const level = {capacities:[5,3],recipe:[3,2,0]};
+  const mixed = G.replay(level,[['fill',0,0]]);
+  assert.equal(G.apply(level,mixed,['fill',0,1]).code,'mixed-ingredients');
+  assert.equal(G.apply(level,G.initial(level),['pour',1,0]).ok,false);
+  const almostFull = {cups:[{ingredient:0,amount:5},{ingredient:0,amount:2}],pot:[0,0,0]};
+  const result=G.apply(level,almostFull,['pour',0,1]);
+  assert.equal(result.moved,1);
+  assert.deepEqual(result.state.cups.map(c=>c.amount),[4,3]);
+  assert.equal(G.verdict(level,{cups:[],pot:[4,1,0]}).success,false);
+});
 
 for (const level of G.levels) {
   test(`${level.name}：實際解法符合容量、停止條件與正確配方`, () => {
@@ -55,6 +84,20 @@ test('大鍋整杯收下，不會為目標配方自動停倒；多一份也失�
   assert.deepEqual(state.pot, [5, 3, 0]);
   assert.deepEqual(G.verdict(level, state), { success: false, differences: [1, 0, 0] });
   assert.equal(G.verdict(level, { cups: G.initial().cups, pot: [2, 3, 1] }).success, false);
+});
+
+test('瓶子與杯子混入不同原料回傳可辨識錯誤，保持原狀且允許同料互倒', () => {
+  const level = G.levels[0];
+  const state = G.replay(level, [['fill',0,0],['fill',1,1]]);
+  for (const action of [['fill',0,1],['pour',0,1]]) {
+    const result = G.apply(level,state,action);
+    assert.equal(result.code,'mixed-ingredients');
+    assert.equal(result.message,'不同配方不能倒入同一個杯子喔!');
+    assert.deepEqual(result.state,state);
+  }
+  const same = G.replay(level,[['fill',0,0],['pour',0,1]]);
+  assert.equal(G.apply(level,same,['pour',1,0]).ok,true);
+  assert.equal(G.apply(level,state,['fill',0,0]).code,undefined);
 });
 test('倒掉全部後能換料，撤回動作能恢復杯子和鍋內所有原料', () => {
   const level = G.levels[0];
