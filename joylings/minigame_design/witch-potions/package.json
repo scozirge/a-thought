@@ -1,6 +1,6 @@
 {
   "name": "witch-potions",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "private": true,
   "description": "女巫的藥水訂單：單機倒水益智遊戲",
   "scripts": {

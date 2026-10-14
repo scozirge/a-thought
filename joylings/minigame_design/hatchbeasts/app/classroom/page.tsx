@@ -244,7 +244,7 @@ export default function ClassroomHome() {
                 <span className="unit-icon tint-purple"><FlaskConical size={28} strokeWidth={1.6} aria-hidden="true" /></span>
                 <span className="featured-copy">
                   <span className="unit-title"><span className="catalog-lesson-number">第 5 週課程</span>女巫的藥水訂單</span>
-                  <span className="unit-meta">月見藥水舖 · 10 關</span>
+                  <span className="unit-meta">藥水 10 關 · 管理員 10 題</span>
                   <span className="unit-meta">兩人一組，調出魔法藥水</span>
                 </span>
                 <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
@@ -257,6 +257,12 @@ export default function ClassroomHome() {
             </summary>
             <div className="activity-content">
               <p className="catalog-question-context">第一關先試玩，第 5 關起進階，最後三關挑戰。</p>
+              <div className="potion-teacher-links">
+                <strong>老師試玩</strong>
+                <p>女巫小提示：網址最後加 <code>?tip=true</code>，顯示提示與解法。<a href={`${WITCH_POTIONS_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟女巫提示 ↗</a></p>
+                <p>成為管理員：網址最後加 <code>?gm=true</code>，直接進入 10 題。<a href={`${WITCH_POTIONS_PUBLIC_URL}?gm=true`} target="_blank" rel="noopener noreferrer">直接試玩管理員 ↗</a></p>
+                <p>已有「?」時改用「&amp;」，例如 <code>?tip=true&amp;gm=true</code>。</p>
+              </div>
               <ol className="activity-list weapon-catalog-list">
                 {potionChallenges.map((challenge, index) => (
                   <li key={challenge.title}>

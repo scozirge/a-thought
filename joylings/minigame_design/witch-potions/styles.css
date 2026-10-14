@@ -52,6 +52,17 @@
 .manager-entry{width:100%;display:flex;align-items:center;gap:14px;text-align:left;margin:0 0 22px;padding:15px 20px;border:1px solid #d7cbdc;border-radius:18px;background:#f2edf4;color:var(--plum)}
 .manager-entry:disabled{opacity:1;color:#766d7e;background:#eeebe7}
 .manager-entry-star{font-size:42px;line-height:1;color:#a78545}
+#manager-entry-lock{width:28px;height:28px;flex:none;color:var(--plum)}
+#manager-lock-dialog p{font-size:22px;line-height:1.6}
+.manager-math-lines{display:grid;gap:8px;font-size:28px;font-weight:750;line-height:1.5}
+.manager-math-cards{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;width:100%}
+.manager-math-cards>div{display:grid;gap:10px;text-align:center;padding:16px;background:#fffaf5;border-radius:14px;min-width:180px}
+.manager-math-cards strong{font-size:20px}.manager-math-cards b,.manager-story b{font-size:28px}
+.manager-story{text-align:center;font-size:22px;line-height:1.6}.manager-story p{margin:8px 0}
+#manager-quiz.is-description-question{display:flex;flex-direction:column}
+.is-description-question .manager-progress{order:0}.is-description-question .manager-scene{order:1;width:100%;margin-top:16px}
+.is-description-question #manager-question{order:2}.is-description-question .manager-choices{order:3;width:100%}
+.is-description-question .manager-feedback{order:4}
 .manager-entry small{display:block;font-size:16px}.manager-entry strong{font-size:24px}
 #manager-entry-status{margin-left:auto;font-size:18px;flex-shrink:0}
 .manager-entry.is-unlocked{border:2px solid #ac8c50;background:linear-gradient(110deg,#fff4ce,#f0e8f7);box-shadow:0 4px 16px #a7854515}
@@ -76,6 +87,9 @@
 .manager-recipe{display:grid;gap:12px;justify-items:center;min-width:0}.manager-recipe>span{display:flex;align-items:center;gap:8px;font-size:28px;font-weight:700}
 .manager-pot-contents{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 8px}
 .manager-scene.is-pot-question{flex-direction:column;gap:16px}
+.manager-variable-key{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 24px;font-size:18px;width:100%}
+.manager-variable-key>span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.manager-variable-key b{font-size:28px}
 .manager-pot-operation{display:flex;align-items:center;justify-content:center;gap:24px;width:100%}
 .manager-pot-result{display:flex;align-items:center;justify-content:center;gap:8px 12px;flex-wrap:wrap;border-top:1px solid #dbcfdf;padding-top:14px;width:100%}
 .manager-pot-result>strong{font-size:20px}

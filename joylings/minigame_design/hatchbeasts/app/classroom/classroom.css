@@ -241,6 +241,9 @@ body:has(.classroom-shell) {
 .activity-toggle:hover {
   background: #efe6d8;
 }
+.potion-teacher-links{padding:18px;border:1px solid #d8c9dc;border-radius:12px;background:#faf6ff;font-size:18px;line-height:1.8;margin-bottom:20px}
+.potion-teacher-links p{margin:8px 0}.potion-teacher-links a{display:inline-block;margin-left:8px;text-decoration:underline}
+.potion-teacher-links code{overflow-wrap:anywhere}
 .activity-toggle svg {
   transition: transform 0.2s;
 }

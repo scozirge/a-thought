@@ -7,7 +7,7 @@ const manager = require('../manager.js');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'dist', 'h5');
 const files = ['index.html', 'styles.css', 'game.js', 'manager.js', 'app.js'];
-assert.equal(manager.questions.length, 5);
+assert.equal(manager.questions.length, 10);
 for (const [index, question] of manager.questions.entries()) {
   assert.ok(question.choices.length >= 1 && question.choices.length <= 3);
   assert.equal(question.choices.filter((_, choice) => manager.correct(index, choice)).length, 1);

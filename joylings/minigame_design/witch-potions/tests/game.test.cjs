@@ -4,18 +4,18 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../game.js');
 
-test('管理員關卡需十個不同關卡全數完成，五題各有唯一正解', () => {
+test('管理員關卡需十個不同關卡全數完成，十題各有唯一正解', () => {
   const ids = G.levels.map(level=>level.id);
   assert.equal(M.unlocked(G.levels,ids.slice(0,-1)),false);
   assert.equal(M.unlocked(G.levels,Array(10).fill(ids[0])),false);
   assert.equal(M.unlocked(G.levels,ids),true);
-  assert.equal(M.questions.length,5);
-  assert.equal(new Set(M.questions.map(q=>q.id)).size,5);
+  assert.equal(M.questions.length,10);
+  assert.equal(new Set(M.questions.map(q=>q.id)).size,10);
   for(const [index,q] of M.questions.entries()) {
     assert.ok(q.choices.length>=1 && q.choices.length<=3);
     assert.equal(q.choices.filter((_,choice)=>M.correct(index,choice)).length,1);
   }
-  for(const value of [-1,6,1.5,'5',null,NaN]) assert.equal(M.validProgress(value),0);
+  for(const value of [-1,11,1.5,'5',null,NaN]) assert.equal(M.validProgress(value),0);
   assert.equal(M.validProgress(3),3);
   assert.equal(M.validProgress(5),5);
 });
@@ -48,6 +48,21 @@ test('管理員第五題：大鍋累加原料，答案符合實際倒入結果',
   assert.equal(question.answer,1);
   assert.deepEqual(results[question.answer],result.state.pot);
   assert.equal(results.filter(pot=>JSON.stringify(pot)===JSON.stringify(result.state.pot)).length,1);
+});
+
+test('新增數學題的答案符合缺額、重複、容量與雙條件', () => {
+  assert.deepEqual([4-2,3-1],[2,2]);
+  assert.deepEqual([1*3,2*3],[3,6]);
+  assert.equal(M.questions[5].choices[M.questions[5].answer].math[0],'2X + 2Y');
+  assert.equal(M.questions[6].choices[M.questions[6].answer].math[0],'3X + 6Y');
+  const result=G.apply({capacities:[5,5]},{cups:[{ingredient:0,amount:4},{ingredient:0,amount:2}],pot:[0,0,0]},['pour',0,1]);
+  assert.deepEqual(result.state.cups.map(c=>c.amount),M.questions[7].choices[M.questions[7].answer].cups.map(c=>c.amounts[0][1]));
+  const candidates=[(x,y)=>x+y===5,(x,y)=>x===3||y===2,(x,y)=>x===3&&y===2];
+  for(let x=0;x<=5;x++) for(let y=0;y<=5;y++) assert.equal(candidates[M.questions[8].answer](x,y),G.verdict({recipe:[3,2,0]},{pot:[x,y,0]}).success);
+  assert.deepEqual(M.questions[9].choices[M.questions[9].answer].math,['X + Y = 5','X − Y = 1']);
+  const matches=[];
+  for(let x=0;x<=5;x++) for(let y=0;y<=5;y++) if(x+y===5&&x-y===1) matches.push([x,y]);
+  assert.deepEqual(matches,[[3,2]]);
 });
 
 for (const level of G.levels) {

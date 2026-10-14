@@ -15,8 +15,16 @@ fs.mkdirSync(output, { recursive: true });
     const page = await browser.newPage({ viewport: { width: 1365, height: 1000 } });
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(base);
-    assert.equal(await page.locator('#manager-entry').isDisabled(),true);
+    assert.equal(await page.locator('#manager-entry').getAttribute('data-locked'),'true');
     const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem('witch-potions-v1')));
+    const beforeLockedEntry = await saved();
+    assert.equal(await page.locator('#manager-entry-lock').isVisible(),true);
+    await page.locator('#manager-entry').click();
+    assert.equal(await page.locator('#manager-lock-dialog').isVisible(),true);
+    assert.equal(await page.locator('#manager-lock-message').innerText(),'要先完成10題藥水問題才能成為管理員');
+    assert.equal(await page.locator('#manager-panel').isVisible(),false);
+    await page.locator('#manager-lock-dialog [data-close]').click();
+    assert.deepEqual(await saved(),beforeLockedEntry);
     async function settled() { await page.waitForFunction(() => !document.getElementById('cup-0').disabled); }
     async function action([kind, from, to]) {
       if (kind === 'fill') { await page.locator(`[data-ingredient="${to}"]`).click(); await page.locator('#cup-' + from).click(); }
@@ -34,7 +42,7 @@ fs.mkdirSync(output, { recursive: true });
       const url = new URL(base); url.search = query;
       await tips.goto(url.href);
       const visible = query.endsWith('tip=true');
-      assert.equal(await tips.locator('#manager-entry').isDisabled(),true);
+      assert.equal(await tips.locator('#manager-entry').getAttribute('data-locked'),'true');
       assert.equal(await tips.locator('#witch-hints').isVisible(), visible);
       assert.equal(await tips.locator('#solution-list li').count(), visible ? G.levels[0].solution.length : 0);
     }
@@ -47,11 +55,12 @@ fs.mkdirSync(output, { recursive: true });
       const url = new URL(base); url.search = query;
       await preview.goto(url.href);
       assert.equal(await preview.locator('#manager-panel').isVisible(),false);
-      assert.equal(await preview.locator('#manager-entry').isDisabled(),true);
+      assert.equal(await preview.locator('#manager-entry').getAttribute('data-locked'),'true');
     }
     const previewURL = new URL(base); previewURL.search = '?v=0.6.0&tip=true&gm=true';
     await preview.goto(previewURL.href);
     assert.equal(await preview.locator('#manager-panel').isVisible(),true);
+    assert.equal(await preview.locator('#manager-entry-lock').isVisible(),false);
     assert.equal(await preview.locator('#manager-subtitle').innerText(),'你現在是遊戲管理員');
     await preview.waitForFunction(()=>!document.getElementById('manager-quiz').hidden);
     assert.equal(await preview.locator('.manager-pour-source>svg').count(),1);
@@ -63,14 +72,14 @@ fs.mkdirSync(output, { recursive: true });
       await preview.locator('#manager-panel').screenshot({path:path.join(output,`manager-outcomes-${width}.png`)});
     }
     await preview.locator('[data-choice="1"]').click();
-    await preview.waitForFunction(()=>document.getElementById('manager-progress').textContent==='2 / 5');
+    await preview.waitForFunction(()=>document.getElementById('manager-progress').textContent==='2 / 10');
     const previewSave = await preview.evaluate(()=>JSON.parse(localStorage.getItem('witch-potions-v1')));
     assert.deepEqual(previewSave.completed,[]);
     assert.equal(previewSave.manager.answered,0);
     await preview.locator('#manager-back').click();
     assert.equal(await preview.locator('#witch-hints').isVisible(),true);
     await preview.goto(base);
-    assert.equal(await preview.locator('#manager-entry').isDisabled(),true);
+    assert.equal(await preview.locator('#manager-entry').getAttribute('data-locked'),'true');
     await preview.close();
     checks.push('gm=true 直接播放管理員開場、圖像結果選項、試玩不改正式成績、移除參數恢復十關解鎖限制');
     checks.push('原料與目標配方使用圖示，女巫提示與完整解法只有 tip=true 才顯示');
@@ -154,7 +163,7 @@ fs.mkdirSync(output, { recursive: true });
       for (const a of G.levels[i].solution) await action(a);
       await page.locator('#brew').click();
       assert.equal(await page.locator('#result-title').innerText(),'就是這個配方！');
-      assert.equal(await page.locator('#manager-entry').isDisabled(),i < G.levels.length-1);
+      assert.equal(await page.locator('#manager-entry').getAttribute('data-locked'),String(i < G.levels.length-1));
       gallery.push({name:G.levels[i].name,customer:G.levels[i].customer,portrait,potion,result:await page.locator('#result-art').innerHTML()});
       await page.locator('#result-back').click();
       checks.push(G.levels[i].name+'：實際按鈕通關');
@@ -183,6 +192,11 @@ fs.mkdirSync(output, { recursive: true });
     for (const [index,q] of M.questions.entries()) {
       assert.equal(await page.locator('#manager-question').innerText(),q.title);
       assert.equal(await page.locator('[data-choice]').count(),q.choices.length);
+      if(index===8) assert.deepEqual(await page.locator('.manager-math-lines').allTextContents(),['x+y=5','x=3 或是 y=2','x=3 且 y=2']);
+      if(index===9) {
+        assert.deepEqual(await page.locator('[data-choice="2"] .manager-math-lines span').allTextContents(),['X + Y = 5','X − Y = 1']);
+        assert.ok((await page.locator('#manager-scene').boundingBox()).y<(await page.locator('#manager-question').boundingBox()).y);
+      }
       await page.locator(`[data-choice="${(q.answer+1)%q.choices.length}"]`).click();
       assert.equal(await page.locator('#manager-feedback').innerText(),'再想一想！');
       assert.equal((await saved()).manager.answered,index);
@@ -210,7 +224,7 @@ fs.mkdirSync(output, { recursive: true });
     assert.equal(await page.locator('.shop-floor').isVisible(),true);
     await page.reload();
     assert.equal(await page.locator('#manager-entry-status').innerText(),'✓ 已完成');
-    checks.push('十關解鎖管理員、兩段開場字幕、離開取消動畫、五題答錯重選與答對換題、答題存檔及重玩、四種寬度');
+    checks.push('十關解鎖管理員、兩段開場字幕、離開取消動畫、十題答錯重選與答對換題、答題存檔及重玩、四種寬度');
     await page.locator('[data-level="0"]').click();
     assert.equal(await page.locator('#order-complete').isVisible(),true);
     assert.equal(await page.locator('#cup-contents-0').innerText(),'空杯');
