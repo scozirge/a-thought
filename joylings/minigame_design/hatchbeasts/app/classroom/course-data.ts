@@ -93,6 +93,13 @@ export const puzzlePartyRetrospective = [
   { tag: '陪伴與試錯', text: '部分學生需要家長或志工在旁邊監督，才會用心思考；否則會偏向用連續試錯的方式解題。' },
 ] as const;
 
+export const potionRetrospective = [
+  { tag: '課堂投入', text: '這次的課程較靜態，但小朋友意外地投入，也願意深入思考。' },
+  { tag: '數學理解', text: '後面的二元一次方程式問題，小朋友也能理解。' },
+  { tag: '程度差異', text: '不過，題目難度越高，學生之間的程度差異就越明顯。' },
+  { tag: '後續方向', text: '未來可考慮依學生能力調整遊戲課程與題目難度，讓不同程度的學生都有適合的挑戰。' },
+] as const;
+
 export const eggDesigns = [
   { code: '11', name: '小花熊', egg: '蛋頂部有一朵小花，佈滿粉色的毛茸茸。' },
   { code: '12', name: '香草兔', egg: '蛋上佈滿不同深淺的粉色草皮。' },

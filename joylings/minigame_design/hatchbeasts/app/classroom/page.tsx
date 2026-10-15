@@ -2,7 +2,7 @@ import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Game
 import { assetUrl } from '@/lib/assets';
 import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
-import { activities, potionChallenges, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
+import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
 
 export default function ClassroomHome() {
@@ -276,6 +276,25 @@ export default function ClassroomHome() {
                 ))}
               </ol>
             </div>
+          </details>
+
+          <details className="lesson-review-action" id="fifth-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第五堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <ol className="prompt-list">
+              {potionRetrospective.map((entry, index) => (
+                <li key={entry.tag}>
+                  <span className="prompt-number">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <span className="prompt-tag">{entry.tag}</span>
+                    <p>{entry.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </details>
 
           <div className="unit-grid">
