@@ -1,0 +1,1 @@
+const fs=require('node:fs'),path=require('node:path'),out=path.join(__dirname,'dist/h5');fs.mkdirSync(out,{recursive:true});for(const f of ['index.html','styles.css','levels.js','core.js','app.js'])fs.copyFileSync(path.join(__dirname,f),path.join(out,f));console.log('已輸出到 '+out);

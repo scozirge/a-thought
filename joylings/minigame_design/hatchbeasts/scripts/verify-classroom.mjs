@@ -65,8 +65,14 @@ export function verifyClassroom(output) {
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
   assert.ok(
+    catalog.includes('id="sixth-course"') && catalog.includes('第 6 週課程') &&
+      catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&
+      catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/?tip=true"'),
+    'Missing sixth lesson or teacher answer link',
+  );
+  assert.ok(
     catalog.includes('id="fifth-course"') &&
-      catalog.includes('第五次課程') &&
+      catalog.includes('第 5 週課程') &&
       catalog.includes('href="https://scozirge.github.io/a-thought/witch-potions/"'),
     'Missing fifth lesson or published potion game link',
   );

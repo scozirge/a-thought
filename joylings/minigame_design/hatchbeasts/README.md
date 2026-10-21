@@ -8,7 +8,7 @@
 
 [第二次課程：紅藍槍戰](https://scozirge.github.io/classroom/red-blue-battle/)：四個簡單的課堂提問，答案範例可展開／收起，附 [最新版紅藍槍戰遊戲](https://scozirge.github.io/a-thought/rivals/?v=bot-aim-respawn-20261001) 連結，支援手機觸控與鍵盤滑鼠。手機瞄準點一下開啟、再點一下關閉，可邊瞄準邊射擊；所有版本皆已移除跳躍與滑行。
 
-[課程清單與設計單](docs/課程清單.md)：目前進度、前五堂課程入口，以及第一堂 60 分鐘的遊戲開發體驗與設計單。
+[課程清單與設計單](docs/課程清單.md)：目前進度、前六堂課程入口，以及第一堂 60 分鐘的遊戲開發體驗與設計單。
 
 [跨領域教師提問庫](docs/教師提問庫.md)：12 個面向、48 個探索問題，附選項組合的計算說明及第一課可直接使用的八個主問句。
 
@@ -17,6 +17,8 @@
 [第四次課程：合作挑戰遊戲](https://scozirge.github.io/classroom/#fourth-course) · [Unity 遊戲](https://scozirge.github.io/a-thought/puzzle-party/)：貼紙工廠、帶企鵝回家各 20 關。老師開房，學生選房加入；雙方填寫組別名稱，學生依加入順序自動編為第 1～3 組。
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
+
+[第六次課程：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/) · [老師答案版](https://scozirge.github.io/a-thought/wood-exit/?tip=true)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
 
 [2026-09-24 紅藍槍戰課堂復盤](docs/課堂復盤/2026-09-24-紅藍槍戰.md)：保留授課者原話，記錄連線互動、提問狀況，以及每個人都完成的新武器紙上設計與強弱思考。[線上復盤](https://scozirge.github.io/classroom/red-blue-battle/#retrospective) 也記下次將新武器想法與題目加入遊戲的安排。
 
@@ -46,7 +48,7 @@ npm test
 
 ## 課堂短網址發布
 
-正式課堂目錄：https://scozirge.github.io/classroom/ 。課程依第一至第五堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
+正式課堂目錄：https://scozirge.github.io/classroom/ 。課程依第一至第六堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
 
 執行 `npm run build:classroom-site`，輸出 `dist/classroom-site/`；將內容發布到 `scozirge/scozirge.github.io` 的 `main` 分支根目錄，Pages 來源為 `main` 的 `/`。此輸出使用根路徑，教材內返回目錄及各課連結維持 `/classroom/`；遊戲入口繼續指向既有的公開遊戲。`npm run build:h5` 仍建置原本 `/a-thought/hatchbeasts` 前綴版本。
 

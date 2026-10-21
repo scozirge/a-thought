@@ -1,0 +1,3 @@
+const fs=require('node:fs'),levels=require('../levels.js'),{solve}=require('../tests/solver.cjs');
+for(let n=2;n<5;n++){const l=levels[n];let changed=true;while(changed){changed=false;for(let i=l.blocks.length-1;i>0;i--){const candidate={...l,blocks:l.blocks.filter((_,j)=>i!==j)};try{if(solve(candidate).length===l.minMoves){l.blocks=candidate.blocks;changed=true;break;}}catch(_){}}}console.log('Simplified level',n+1,'to',l.blocks.length,'blocks;',solve(l).length,'moves');}
+fs.writeFileSync('levels.js','(function(r){const levels='+JSON.stringify(levels,null,2)+';if(typeof module==="object"&&module.exports)module.exports=levels;else r.WoodLevels=levels;})(globalThis);\n');

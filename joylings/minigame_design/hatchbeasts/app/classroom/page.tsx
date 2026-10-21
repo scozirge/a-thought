@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -16,6 +16,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <Gamepad2 size={20} aria-hidden="true" />
+                玩木塊出走
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <FlaskConical size={20} aria-hidden="true" />
                 玩女巫藥水
@@ -238,7 +243,7 @@ export default function ClassroomHome() {
             </ol>
           </details>
 
-          <details className="featured-unit current-course" id="fifth-course">
+          <details className="featured-unit" id="fifth-course">
             <summary className="featured-heading">
               <a className="featured-link" href={WITCH_POTIONS_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-purple"><FlaskConical size={28} strokeWidth={1.6} aria-hidden="true" /></span>
@@ -295,6 +300,34 @@ export default function ClassroomHome() {
                 </li>
               ))}
             </ol>
+          </details>
+
+          <details className="featured-unit current-course" id="sixth-course">
+            <summary className="featured-heading">
+              <a className="featured-link" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
+                <span className="featured-copy">
+                  <span className="unit-title"><span className="catalog-lesson-number">第 6 週課程</span>木塊出走</span>
+                  <span className="unit-meta">10 關挑戰 · 2 關隱藏關</span>
+                  <span className="unit-meta">移開木塊，讓紅色木塊到出口</span>
+                </span>
+                <ArrowUpRight className="enter-arrow" size={24} aria-hidden="true" />
+              </a>
+              <span className="activity-toggle">
+                <span className="toggle-label-closed">看關卡</span>
+                <span className="toggle-label-open">收起</span>
+                <ChevronDown size={19} aria-hidden="true" />
+              </span>
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">第 1～3 關先試玩，第 4～7 關想想順序，第 8～10 關進階挑戰。完成前 10 關，解鎖第 11、12 關。</p>
+              <p className="catalog-question-context">兩人一組：一人想順序，一人移木塊；過一關交換。</p>
+              <div className="potion-teacher-links">
+                <strong>老師答案版</strong>
+                <p>網址最後加 <code>?tip=true</code>，開啟全部 12 關、木塊編號和目前盤面的解法。<a href={`${WOOD_EXIT_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟答案版 ↗</a></p>
+                <p>已有「?」時改加 <code>&amp;tip=true</code>。移動或退一步後，答案會更新。</p>
+              </div>
+            </div>
           </details>
 
           <div className="unit-grid">

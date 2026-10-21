@@ -56,6 +56,12 @@ export function verifyH5(output, basePath) {
   );
   assert.ok(classroom.includes('遊戲設計'), 'Missing classroom catalog');
   assert.ok(
+    classroom.includes('id="sixth-course"') && classroom.includes('第 6 週課程') &&
+      classroom.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&
+      classroom.includes('href="https://scozirge.github.io/a-thought/wood-exit/?tip=true"'),
+    'Missing sixth lesson or teacher answer link',
+  );
+  assert.ok(
     classroom.includes('id="fifth-course"') &&
       classroom.includes('第 5 週課程') &&
       classroom.includes('女巫的藥水訂單') &&
