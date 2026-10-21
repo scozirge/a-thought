@@ -293,6 +293,7 @@ details.lesson-review-action {
   display: block;
 }
 details.lesson-review-action > summary {
+  display: flex;
   width: fit-content;
   margin-left: auto;
   cursor: pointer;
