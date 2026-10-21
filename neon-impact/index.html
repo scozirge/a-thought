@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Neon Impact</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#10172b;color:#eee8d6;font-family:system-ui,sans-serif;overflow:hidden}#unity-canvas{width:100%;height:100%;display:block;outline:none}#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;padding:24px;background:#10172b}h1{font-size:clamp(32px,6vw,64px);letter-spacing:.08em;margin:0 0 32px;color:#d8bd72}progress{width:min(340px,80vw);height:8px;accent-color:#d8bd72}p{font-size:18px}button{font:inherit;font-size:22px;font-weight:600;min-height:56px;background:#d8bd72;color:#151b2d;border:0;border-radius:4px;padding:12px 36px;cursor:pointer}button:disabled{opacity:.45;cursor:wait}a{color:#d8bd72;font-size:18px;margin-top:28px}#error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}#loading[hidden]{display:none}
+</style></head><body>
+<canvas id="unity-canvas" tabindex="0" aria-label="Neon Impact 遊戲"></canvas>
+<div id="loading"><h1>NEON IMPACT</h1><progress id="progress" max="1" value="0" aria-label="載入進度"></progress><p id="status" role="status">載入中…</p><button id="start" disabled>開始遊戲</button><p id="error" role="alert" hidden></p><a href="https://scozirge.github.io/classroom/#sixth-course">返回第 6 堂課</a></div>
+<script src="Build/deb6a196756ae771aca91c6808646be1.loader.js"></script><script>
+const canvas=document.getElementById('unity-canvas'),start=document.getElementById('start'),status=document.getElementById('status');
+window.neonLoadStarted=performance.now();
+createUnityInstance(canvas,{
+dataUrl:'Build/df6796b4cf4c73435755eca4709d9d89.data.unityweb',frameworkUrl:'Build/177c73d11756ceef1a6b88cdd4c4e5d8.framework.js.unityweb',codeUrl:'Build/5c7fd561903909d7132335c2a6a8809c.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.0-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
+},p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
+window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
+start.disabled=false;status.textContent='準備完成';
+start.onclick=()=>{instance.SendMessage('NeonWebBridge','StartGame');document.getElementById('loading').hidden=true;canvas.focus();};
+}).catch(error=>{const message=document.getElementById('error');message.hidden=false;message.textContent='載入失敗，請重新整理或使用電腦版 Chrome／Edge。';status.textContent='無法載入';console.error(error);});
+</script></body></html>
