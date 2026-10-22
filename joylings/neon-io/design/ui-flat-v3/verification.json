@@ -1,0 +1,2845 @@
+{
+  "type": "HTML/CSS UI prototype, not Unity or multiplayer validation",
+  "url": "http://127.0.0.1:8198/",
+  "checks": [
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "lobby",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 903,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "22px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "battle",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "collection",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "loadout",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "tutorial",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "18px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "settings",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "desktop",
+      "view": "result",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 414,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "phone",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "lobby",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "22px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "battle",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "collection",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "loadout",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "tutorial",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "18px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "settings",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "desktop",
+      "view": "result",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 442,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 416,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "phone",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "lobby",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 903,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "22px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "battle",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "collection",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "loadout",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "tutorial",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "18px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "settings",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "desktop",
+      "view": "result",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 900,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 413,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 551,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "phone",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "lobby",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "battle",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "collection",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "loadout",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 411,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "tutorial",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "settings",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "667x375",
+      "view": "result",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "lobby",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "16px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "battle",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "collection",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 442,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "loadout",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 411,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "tutorial",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "settings",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "667x375",
+      "view": "result",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "lobby",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "battle",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "collection",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "loadout",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 411,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "tutorial",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 375,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "settings",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 535,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "667x375",
+      "view": "result",
+      "size": [
+        667,
+        375
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 386,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "lobby",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 367,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "battle",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 300,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "collection",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "loadout",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 414,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "tutorial",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 352,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "settings",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x300",
+      "view": "result",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 357,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "lobby",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 336,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "battle",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 300,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "collection",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 442,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "loadout",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 416,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "tutorial",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 352,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "settings",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x300",
+      "view": "result",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 358,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "lobby",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 359,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "battle",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 300,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "collection",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "loadout",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 413,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "tutorial",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 337,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "settings",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 551,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x300",
+      "view": "result",
+      "size": [
+        844,
+        300
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 386,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "lobby",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 367,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "battle",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 240,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "collection",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "loadout",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 414,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "tutorial",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 352,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "settings",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "844x240",
+      "view": "result",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 357,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "lobby",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 336,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "battle",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 240,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "collection",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 442,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "loadout",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 416,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "tutorial",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 352,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "settings",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "844x240",
+      "view": "result",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 358,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "lobby",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 359,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "battle",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 240,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "collection",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "loadout",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 413,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "tutorial",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 337,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "settings",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 551,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "844x240",
+      "view": "result",
+      "size": [
+        844,
+        240
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 386,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "lobby",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "battle",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "collection",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "loadout",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "tutorial",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "settings",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "390x844",
+      "view": "result",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "lobby",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "battle",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "collection",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "loadout",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "tutorial",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "settings",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "390x844",
+      "view": "result",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "lobby",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "battle",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "collection",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "loadout",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "tutorial",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "settings",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 867,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "390x844",
+      "view": "result",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 844,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "lobby",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 762,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "battle",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 640,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "collection",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 797,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "loadout",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "tutorial",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 692,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "settings",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 726,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "a",
+      "device": "320x640",
+      "view": "result",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 640,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "lobby",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 818,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "battle",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 640,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "collection",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 797,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "loadout",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "tutorial",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 692,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "settings",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 726,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "b",
+      "device": "320x640",
+      "view": "result",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 640,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "lobby",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 758,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "20px",
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "battle",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 640,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "collection",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 797,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "loadout",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 972,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "tutorial",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 713,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "settings",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 867,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "variant": "c",
+      "device": "320x640",
+      "view": "result",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 700,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "page": "gallery",
+      "device": "1440x900",
+      "size": [
+        1440,
+        900
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 3885,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "page": "gallery",
+      "device": "844x390",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 3499,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "page": "gallery",
+      "device": "390x844",
+      "size": [
+        390,
+        844
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 5156,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "page": "gallery",
+      "device": "320x640",
+      "size": [
+        320,
+        640
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 5056,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 414,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "a",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 442,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 416,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 513,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "b",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "lobby",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": "18px",
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "battle",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "collection",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 446,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "loadout",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 413,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "tutorial",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": "16px",
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "settings",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 551,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    },
+    {
+      "engine": "WebKit",
+      "variant": "c",
+      "view": "result",
+      "size": [
+        844,
+        390
+      ],
+      "horizontalOverflow": false,
+      "documentHeight": 390,
+      "smallTargets": [],
+      "missingImages": [],
+      "guideFont": null,
+      "primaryFont": null,
+      "touchingPanels": false
+    }
+  ],
+  "errors": [],
+  "interactions": "3 variants passed catalogue, loadout, modal, tutorial, viewport rotation, range input",
+  "webkit": "completed",
+  "failures": [],
+  "galleryFollowup": [
+    {
+      "size": [
+        1440,
+        900
+      ],
+      "cards": [
+        {
+          "variant": "a",
+          "clipped": false
+        },
+        {
+          "variant": "b",
+          "clipped": false
+        },
+        {
+          "variant": "c",
+          "clipped": false
+        }
+      ],
+      "navigation": "passed"
+    },
+    {
+      "size": [
+        844,
+        390
+      ],
+      "cards": [
+        {
+          "variant": "a",
+          "clipped": false
+        },
+        {
+          "variant": "b",
+          "clipped": false
+        },
+        {
+          "variant": "c",
+          "clipped": false
+        }
+      ],
+      "navigation": "passed"
+    },
+    {
+      "size": [
+        390,
+        844
+      ],
+      "cards": [
+        {
+          "variant": "a",
+          "clipped": false
+        },
+        {
+          "variant": "b",
+          "clipped": false
+        },
+        {
+          "variant": "c",
+          "clipped": false
+        }
+      ],
+      "navigation": "passed"
+    },
+    {
+      "size": [
+        320,
+        640
+      ],
+      "cards": [
+        {
+          "variant": "a",
+          "clipped": false
+        },
+        {
+          "variant": "b",
+          "clipped": false
+        },
+        {
+          "variant": "c",
+          "clipped": false
+        }
+      ],
+      "navigation": "passed"
+    }
+  ],
+  "finalNote": "Four gallery layouts rechecked after fixing card-image height; all card copy is visible and all three iframe variants can be navigated."
+}
