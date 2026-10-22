@@ -43,7 +43,7 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
   <button id="landscape" hidden>切換橫向全螢幕</button>
  </section>
 </main>
-<script src="Build/de39accef34c8ce5898415ed5ee90dbd.loader.js"></script>
+<script src="Build/3bffdbb0babcafd9d714f3b2f0ebf278.loader.js"></script>
 <script>
 const canvas=document.getElementById('unity-canvas'),start=document.getElementById('start'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
@@ -94,8 +94,8 @@ landscape.onclick=requestLandscape;
 updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
- dataUrl:'Build/6ad7574ee433bfeb0a7986cf0a1b92c6.data.unityweb',frameworkUrl:'Build/ce66a6e18ae5950bd2958d1bc82bc526.framework.js.unityweb',codeUrl:'Build/cf4da16d9ebc26e5c61a173b05c2f27a.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
- companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.4-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+ dataUrl:'Build/c5c36950f6896a4a16048833b0d35035.data.unityweb',frameworkUrl:'Build/e07549a1d4795f4de95227e7a0659800.framework.js.unityweb',codeUrl:'Build/a7459c216be05a8984b1a7ca2b9492de.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.5-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
  window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
