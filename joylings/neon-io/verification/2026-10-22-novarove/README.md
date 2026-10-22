@@ -1,6 +1,6 @@
 # 星際遊俠 NOVAROVE 1.1.6 驗證
 
-工作始於 2026-10-22，2026-10-23 完成兩平台建置及本機遊戲驗證。使用 Unity 6000.3.11f1；Windows 為 `1.1.6-fusion`，WebGL 為 `1.1.6-web`。公開入口沿用 https://scozirge.github.io/a-thought/neon-impact/ 。
+工作始於 2026-10-22，2026-10-23 完成兩平台建置、本機遊戲及公開網址驗證。使用 Unity 6000.3.11f1；Windows 為 `1.1.6-fusion`，WebGL 為 `1.1.6-web`。公開入口沿用 https://scozirge.github.io/a-thought/neon-impact/ 。
 
 ## 本輪變更
 
@@ -31,8 +31,8 @@
 
 - `build-checks.json` 保存兩平台正式建置及資源、RPC 協定、核心檢查。
 - `build-identity.json` 記錄首載 **32,869,419 bytes**，原版為 32,028,426 bytes；722 個其他發布檔案完全未變。舊雜湊版本保留供快取 HTML 使用。
-- GitHub Pages 部署尚在排程中；完成後以 `deployment.json` 記錄工作結果，並以 `public-files.json` 比對公開 HTML 與四個 Unity 載入檔的長度及 SHA-256。
-- 公開網址的操作回歸將另存 `web-mobile-public.json`；完整選單矩陣已由正式包測試完成。
+- `deployment.json` 記錄 Pages 部署成功日誌：2026-10-22 16:39:02 UTC 回報成功；`public-files.json` 確認公開 HTML 與四個 Unity 載入檔的長度及 SHA-256 全部符合正式包。GitHub 官方當時標示 Actions 服務降級，jobs API 狀態回報仍落後，因此另保存實際部署成功日誌與公開檔案證據。
+- `web-mobile-public.json` 已通過公開網址的 11 組觸控、旋轉、安全區與結算回歸，0 個執行錯誤；完整選單矩陣另見正式包測試。
 - `windows-package.json` 保存 Windows ZIP 大小及 SHA-256，封裝工具也完成 187 個檔案的 CRC 檢查。
 - `screens/` 為本版實際遊戲截圖；`guardian-original-palette.png` 使用明確建立的離線造星神 fixture 檢查外觀與層級。
 
