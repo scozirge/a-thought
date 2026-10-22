@@ -85,9 +85,14 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   assert.ok(exit&&leave&&exit.w<=leave.w*.55&&!leave.text,'Desktop exit is a small icon with a larger hit area');
   assert.ok(hud.some(e=>e.name==='Level')&&hud.some(e=>e.name==='Experience'),'Compact level and experience are present');
   report.checks.push('Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, compact level and experience');
+  report.mouseMovement={start:{x:mouseBefore.playerX,y:mouseBefore.playerY}};
   await mousePage.mouse.move(950,400);await ready(mousePage,()=>neonState.velocityX>1);
-  await mousePage.waitForTimeout(700);
-  assert.ok((await state(mousePage)).playerX>mouseBefore.playerX+1,'Desktop mouse moves the real player');
+  // Live combat can interrupt motion; observe displacement rather than assuming
+  // the next 700 ms sample is already past any knockback or state-update delay.
+  await mousePage.waitForFunction(x=>neonState.playerAlive&&neonState.playerX>x+1,mouseBefore.playerX,{timeout:8000});
+  const mouseAfter=await state(mousePage);
+  report.mouseMovement.end={x:mouseAfter.playerX,y:mouseAfter.playerY};
+  assert.ok(mouseAfter.playerX>mouseBefore.playerX+1,'Desktop mouse moves the real player');
   await mousePage.mouse.move(640,400);
   report.checks.push('Desktop keeps mouse movement and never displays the mobile joystick');
   const slot=(await state(mousePage)).elements.find(e=>e.name==='Slot'),cssRatio=mouseBefore.cssWidth/mouseBefore.screenWidth;

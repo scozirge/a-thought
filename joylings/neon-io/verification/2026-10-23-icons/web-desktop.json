@@ -1,0 +1,93 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "errors": [],
+  "loads": [
+    {
+      "milliseconds": 2109.899999999907,
+      "resources": [
+        {
+          "file": "cf6ee175dc01154f1a1502eac1bc9c14.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "c74efaae4578736e3148b33cd7c694f4.wasm.unityweb",
+          "transfer": 11735371,
+          "encoded": 11735071
+        },
+        {
+          "file": "bce988aca121aabff606a723047fd532.data.unityweb",
+          "transfer": 21004382,
+          "encoded": 21004082
+        }
+      ]
+    },
+    {
+      "milliseconds": 1898.1000000000931,
+      "resources": [
+        {
+          "file": "cf6ee175dc01154f1a1502eac1bc9c14.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "c74efaae4578736e3148b33cd7c694f4.wasm.unityweb",
+          "transfer": 11735371,
+          "encoded": 11735071
+        },
+        {
+          "file": "bce988aca121aabff606a723047fd532.data.unityweb",
+          "transfer": 21004382,
+          "encoded": 21004082
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "peer 0: original intro reached; 95 features owned on fresh profile",
+    "peer 1: original intro reached; 95 features owned on fresh profile",
+    "Equipped formerly paid head skill 11 without charging stars",
+    "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+    "Two real browser clients joined the same Photon room",
+    "Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, compact level and experience",
+    "Desktop keeps mouse movement and never displays the mobile joystick",
+    "Desktop skill descriptions retain hover and close when the mouse leaves",
+    "Both peers remained connected beyond the connection timeout"
+  ],
+  "sockets": [
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1217.exitgames.com",
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1217.exitgames.com"
+  ],
+  "introAudioRms": 0.0066829832931938225,
+  "room": "neon-web-check-mvjvru22-0",
+  "region": "asia",
+  "peerCounts": [
+    2,
+    2
+  ],
+  "mouseMovement": {
+    "start": {
+      "x": -2891.386962890625,
+      "y": -857.8226318359375
+    },
+    "end": {
+      "x": -2818.996337890625,
+      "y": -851.1941528320312
+    }
+  }
+}

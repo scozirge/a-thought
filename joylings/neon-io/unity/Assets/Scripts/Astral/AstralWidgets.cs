@@ -49,7 +49,7 @@ namespace Neon.Astral
         public static Button IconButton(Transform p,string name,AstralGraphic.Shape shape,float x,float y,float size,UnityAction action)
         {
             var button=Button(p,name,"",x,y,size,size,action);
-            var icon=Graphic(button.transform,name+" icon",0,0,size*.48f,size*.48f,shape,Gold);icon.thickness=size<60?1.7f:2.4f;
+            Graphic(button.transform,name+" icon",0,0,size*.6f,size*.6f,shape,Gold);
             button.navigation=new Navigation{mode=Navigation.Mode.None};
             return button;
         }

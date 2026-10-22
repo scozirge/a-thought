@@ -1,0 +1,180 @@
+{
+  "scene": "Battle",
+  "room": "neon-web-check-mvjvoy6j-0",
+  "region": "asia",
+  "error": "",
+  "features": 95,
+  "owned": 95,
+  "peers": 2,
+  "stars": 0,
+  "level": 1,
+  "experience": 0,
+  "experienceRequired": 1,
+  "started": true,
+  "connected": true,
+  "controls": [
+    {
+      "name": "Leave arena",
+      "text": "",
+      "type": "Button",
+      "x": 1214.666748046875,
+      "y": 13.33331298828125,
+      "w": 44,
+      "h": 44,
+      "clipX": 0,
+      "clipY": 0,
+      "clipW": 1280,
+      "clipH": 800,
+      "enabled": true,
+      "scroll": false
+    }
+  ],
+  "loadout": [
+    11,
+    103,
+    213,
+    102,
+    17
+  ],
+  "screenWidth": 1280,
+  "screenHeight": 800,
+  "cssWidth": 1280,
+  "cssHeight": 800,
+  "touch": false,
+  "legacyPopupVisible": false,
+  "guidePage": "",
+  "guideText": "",
+  "view": "battle",
+  "inputBlocked": false,
+  "stickDragging": false,
+  "playerAlive": true,
+  "stickX": 0,
+  "stickY": 0,
+  "playerX": -1785.146240234375,
+  "playerY": 1097.5,
+  "velocityX": -0.30708611011505127,
+  "velocityY": 0.08019287139177322,
+  "elements": [
+    {
+      "name": "Exit icon",
+      "x": 1225.666748046875,
+      "y": 24.33331298828125,
+      "w": 22,
+      "h": 22,
+      "opacity": 1,
+      "borderOpacity": 0.6499999761581421,
+      "fontSize": 0
+    },
+    {
+      "name": "Vitality",
+      "x": 21.333290100097656,
+      "y": 726.6666870117188,
+      "w": 170.66668701171875,
+      "h": 52,
+      "opacity": 0,
+      "borderOpacity": 0,
+      "fontSize": 0
+    },
+    {
+      "name": "Health",
+      "x": 21.333290100097656,
+      "y": 725.3333129882812,
+      "w": 170.66668701171875,
+      "h": 21.333332061767578,
+      "opacity": 0.8799999952316284,
+      "borderOpacity": 0,
+      "fontSize": 22
+    },
+    {
+      "name": "Level",
+      "x": 21.33329200744629,
+      "y": 758,
+      "w": 46.66667175292969,
+      "h": 20,
+      "opacity": 0.8999999761581421,
+      "borderOpacity": 0,
+      "fontSize": 19
+    },
+    {
+      "name": "Experience",
+      "x": 73.33332061767578,
+      "y": 762.6666870117188,
+      "w": 118.66667938232422,
+      "h": 10.666666030883789,
+      "opacity": 0,
+      "borderOpacity": 0,
+      "fontSize": 0
+    },
+    {
+      "name": "Skill dock",
+      "x": 1076,
+      "y": 709.3333129882812,
+      "w": 182.666748046875,
+      "h": 69.33334350585938,
+      "opacity": 0,
+      "borderOpacity": 0,
+      "fontSize": 0
+    },
+    {
+      "name": "Slot",
+      "x": 1077.3333740234375,
+      "y": 710.6666870117188,
+      "w": 49.333251953125,
+      "h": 49.33333969116211,
+      "opacity": 0.10000000149011612,
+      "borderOpacity": 0.20000000298023224,
+      "fontSize": 0
+    },
+    {
+      "name": "Slot",
+      "x": 1142.666748046875,
+      "y": 710.6666870117188,
+      "w": 49.333251953125,
+      "h": 49.33333969116211,
+      "opacity": 0.10000000149011612,
+      "borderOpacity": 0.20000000298023224,
+      "fontSize": 0
+    },
+    {
+      "name": "Slot",
+      "x": 1208.0001220703125,
+      "y": 710.6666870117188,
+      "w": 49.333251953125,
+      "h": 49.33333969116211,
+      "opacity": 0.10000000149011612,
+      "borderOpacity": 0.20000000298023224,
+      "fontSize": 0
+    },
+    {
+      "name": "Leaderboard",
+      "x": 1077.3333740234375,
+      "y": 64,
+      "w": 181.333251953125,
+      "h": 140,
+      "opacity": 0.2199999988079071,
+      "borderOpacity": 0,
+      "fontSize": 0
+    },
+    {
+      "name": "Combat feed",
+      "x": 21.33331298828125,
+      "y": 21.33331298828125,
+      "w": 360,
+      "h": 120,
+      "opacity": 1,
+      "borderOpacity": 0,
+      "fontSize": 20
+    }
+  ],
+  "gameplayAudit": {
+    "passed": false,
+    "allocationCounterAvailable": false,
+    "failure": "",
+    "checks": [],
+    "legacySearchBytes": 0,
+    "registrySearchBytes": 0,
+    "legacySearchMilliseconds": 0,
+    "registrySearchMilliseconds": 0
+  },
+  "audioContextState": "running"
+}

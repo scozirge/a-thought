@@ -40,7 +40,7 @@ namespace Neon.Astral
             // A real mesh star cannot disappear when the Chinese font is subsetted.
             float width=touch?108:150,height=touch?36:50;
             var row=Rect(parent,"Currency",x,y,width,height);
-            var star=Graphic(row,"Currency star",-width*.5f+height*.3f,0,height*.44f,height*.44f,AstralGraphic.Shape.Star,Gold);
+            Graphic(row,"Currency star",-width*.5f+height*.3f,0,height*.5f,height*.5f,AstralGraphic.Shape.Currency,Gold);
             balance=Text(row,"Stars","",height*.25f,0,width-height*.7f,height,touch?16:26,Gold,TextAnchor.MiddleLeft);
         }
     }

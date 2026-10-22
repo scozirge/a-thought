@@ -6,14 +6,16 @@ namespace Neon.Astral
     // Resolution-independent ornaments: a few UI triangles, no rasterised mockup panels.
     public sealed class AstralGraphic : MaskableGraphic
     {
-        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit, Back, Gear, Infinity, Duel, Collection, Book }
+        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit, Back, Gear, Infinity, Duel, Collection, Book, Currency }
         public Shape shape;
         public Color border = new Color(.76f, .65f, .43f, .65f);
         public float thickness = 1.4f;
         public float ornament = 0;
+        public override Texture mainTexture => AstralSymbols.IsSymbol(shape) ? AstralSymbols.Atlas : base.mainTexture;
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear(); var r = rectTransform.rect;
+            if (AstralSymbols.IsSymbol(shape)) { AstralSymbols.Populate(vh, r, shape, color); return; }
             if (shape == Shape.Plate || shape == Shape.Frame)
             {
                 float cut = Mathf.Min(8, Mathf.Min(r.width, r.height) * .09f);
@@ -30,40 +32,6 @@ namespace Neon.Astral
                     foreach(float x in new[]{r.xMin+20,r.xMax-20}) foreach(float y in new[]{r.yMin+20,r.yMax-20}) Star(vh,new Vector2(x,y),4,border);
                     Line(vh,new Vector2(r.xMin+38,r.yMax-9),new Vector2(r.xMax-38,r.yMax-9),.5f,new Color(border.r,border.g,border.b,border.a*.45f));
                 }
-            }
-            else if(shape>=Shape.Back)
-            {
-                float s=Mathf.Min(r.width,r.height);var c=r.center;
-                System.Action<Vector2,Vector2> stroke=(a,b)=>Line(vh,c+a*s,c+b*s,thickness,color);
-                if(shape==Shape.Back)
-                {stroke(new Vector2(.36f,0),new Vector2(-.34f,0));stroke(new Vector2(-.34f,0),new Vector2(-.06f,.28f));stroke(new Vector2(-.34f,0),new Vector2(-.06f,-.28f));}
-                else if(shape==Shape.Gear)
-                {
-                    Ring(vh,c,s*.14f,thickness,color);
-                    for(int i=0;i<64;i++)
-                    {float a=i*Mathf.PI*2/64,b=(i+1)*Mathf.PI*2/64;float ra=i%8<4?.37f:.28f,rb=(i+1)%8<4?.37f:.28f;stroke(new Vector2(Mathf.Cos(a),Mathf.Sin(a))*ra,new Vector2(Mathf.Cos(b),Mathf.Sin(b))*rb);}
-                }
-                else if(shape==Shape.Infinity)
-                {for(int i=0;i<96;i++){float a=i*Mathf.PI*2/96,b=(i+1)*Mathf.PI*2/96;stroke(new Vector2(Mathf.Cos(a)*.43f,Mathf.Sin(a*2)*.23f),new Vector2(Mathf.Cos(b)*.43f,Mathf.Sin(b*2)*.23f));}}
-                else if(shape==Shape.Duel)
-                {
-                    foreach(float side in new[]{-1f,1f})
-                    {stroke(new Vector2(-.32f*side,-.34f),new Vector2(.32f*side,.34f));stroke(new Vector2(.32f*side,.34f),new Vector2(.13f*side,.30f));stroke(new Vector2(.32f*side,.34f),new Vector2(.28f*side,.13f));stroke(new Vector2(-.31f*side,-.10f),new Vector2(-.09f*side,-.32f));}
-                }
-                else if(shape==Shape.Collection)
-                {stroke(new Vector2(-.3f,-.37f),new Vector2(-.3f,.37f));stroke(new Vector2(-.3f,.37f),new Vector2(.3f,.37f));stroke(new Vector2(.3f,.37f),new Vector2(.3f,-.37f));stroke(new Vector2(.3f,-.37f),new Vector2(0,-.2f));stroke(new Vector2(0,-.2f),new Vector2(-.3f,-.37f));Star(vh,c+Vector2.up*s*.07f,s*.14f,color);}
-                else if(shape==Shape.Book)
-                {foreach(float side in new[]{-1f,1f}){stroke(Vector2.zero,new Vector2(.37f*side,.12f));stroke(new Vector2(.37f*side,.12f),new Vector2(.37f*side,-.3f));stroke(new Vector2(.37f*side,-.3f),new Vector2(0,-.4f));stroke(Vector2.zero,new Vector2(0,-.4f));}}
-            }
-            else if(shape==Shape.Exit)
-            {
-                float s=Mathf.Min(r.width,r.height);
-                Vector2 a=r.center+new Vector2(-.1f,.38f)*s,b=r.center+new Vector2(-.38f,.38f)*s,c=r.center+new Vector2(-.38f,-.38f)*s,d=r.center+new Vector2(-.1f,-.38f)*s;
-                Line(vh,a,b,thickness,color);Line(vh,b,c,thickness,color);Line(vh,c,d,thickness,color);
-                var tip=r.center+new Vector2(.38f,0)*s;
-                Line(vh,r.center+new Vector2(-.12f,0)*s,tip,thickness,color);
-                Line(vh,r.center+new Vector2(.16f,.22f)*s,tip,thickness,color);
-                Line(vh,r.center+new Vector2(.16f,-.22f)*s,tip,thickness,color);
             }
             else if(shape==Shape.Disc)
             {

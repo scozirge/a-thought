@@ -24,10 +24,11 @@ namespace Neon.Editor
                 if (importer == null) continue; // Keep the original PSB rig and slice data.
                 var web = importer.GetPlatformTextureSettings("WebGL");
                 // Thin lettering needs lossless alpha and full source resolution.
-                if(path.StartsWith("Assets/Resources/Astral/Titles/"))
+                if(path.StartsWith("Assets/Resources/Astral/Titles/")||path.StartsWith("Assets/Resources/Astral/Symbols/"))
                 {
-                    if(web.overridden&&web.maxTextureSize==4096&&web.format==TextureImporterFormat.RGBA32&&!web.crunchedCompression)continue;
-                    web.name="WebGL";web.overridden=true;web.maxTextureSize=4096;
+                    int uiSize=path.StartsWith("Assets/Resources/Astral/Symbols/")?1024:4096;
+                    if(web.overridden&&web.maxTextureSize==uiSize&&web.format==TextureImporterFormat.RGBA32&&!web.crunchedCompression)continue;
+                    web.name="WebGL";web.overridden=true;web.maxTextureSize=uiSize;
                     web.format=TextureImporterFormat.RGBA32;web.textureCompression=TextureImporterCompression.Uncompressed;web.crunchedCompression=false;
                     importer.SetPlatformTextureSettings(web);importer.SaveAndReimport();continue;
                 }
@@ -77,7 +78,7 @@ namespace Neon.Editor
             PlayerSettings.WebGL.initialMemorySize = 256;
             PlayerSettings.WebGL.maximumMemorySize = 1024;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-            PlayerSettings.bundleVersion = "1.1.6-web";
+            PlayerSettings.bundleVersion = "1.1.7-web";
             // Preserve the original indices for Windows/Web Fusion interoperability.
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             string output = Path.GetFullPath("../Builds/WebGL");

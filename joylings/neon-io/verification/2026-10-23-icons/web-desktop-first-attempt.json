@@ -1,0 +1,80 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": false,
+  "errors": [],
+  "loads": [
+    {
+      "milliseconds": 2289.2999999998137,
+      "resources": [
+        {
+          "file": "cf6ee175dc01154f1a1502eac1bc9c14.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "c74efaae4578736e3148b33cd7c694f4.wasm.unityweb",
+          "transfer": 11735371,
+          "encoded": 11735071
+        },
+        {
+          "file": "bce988aca121aabff606a723047fd532.data.unityweb",
+          "transfer": 21004382,
+          "encoded": 21004082
+        }
+      ]
+    },
+    {
+      "milliseconds": 1985.3000000002794,
+      "resources": [
+        {
+          "file": "cf6ee175dc01154f1a1502eac1bc9c14.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "c74efaae4578736e3148b33cd7c694f4.wasm.unityweb",
+          "transfer": 11735371,
+          "encoded": 11735071
+        },
+        {
+          "file": "bce988aca121aabff606a723047fd532.data.unityweb",
+          "transfer": 21004382,
+          "encoded": 21004082
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "peer 0: original intro reached; 95 features owned on fresh profile",
+    "peer 1: original intro reached; 95 features owned on fresh profile",
+    "Equipped formerly paid head skill 11 without charging stars",
+    "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+    "Two real browser clients joined the same Photon room",
+    "Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, compact level and experience"
+  ],
+  "sockets": [
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1208.exitgames.com",
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1208.exitgames.com"
+  ],
+  "introAudioRms": 0.06631179357331782,
+  "room": "neon-web-check-mvjvoy6j-0",
+  "region": "asia",
+  "peerCounts": [
+    2,
+    2
+  ]
+}

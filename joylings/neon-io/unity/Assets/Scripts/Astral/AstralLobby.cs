@@ -21,7 +21,7 @@ namespace Neon.Astral
             ModeCard(menu.transform,"Infinity",L("無際戰場","INFINITY WAR"),L("收集星星，取得技能並生存。","Collect stars. Evolve. Survive."),0,73,()=>lobby.Connect(),AstralGraphic.Shape.Infinity);
             ModeCard(menu.transform,"Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Duel."),0,-77,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},AstralGraphic.Shape.Duel);
             var collection=Button(menu.transform,"Collection",L("收藏","COLLECTION"),0,-207,480,66,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
-            Graphic(collection.transform,"Collection icon",-194,0,30,30,AstralGraphic.Shape.Collection,Gold);
+            Graphic(collection.transform,"Collection icon",-194,0,36,36,AstralGraphic.Shape.Collection,Gold);
             var team=Button(menu.transform,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),0,-293,480,54,null,false,21);team.interactable=false;
             var settings=IconButton(menu.transform,"Settings",AstralGraphic.Shape.Gear,-207,-385,66,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});
             settings.gameObject.AddComponent<AstralHover>().content=()=>L("設定","Settings");
