@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "scope": "95 skills and original particle catalog; final guardian presentation is checked separately in windows-ui.json",
+  "palette": {
+    "passed": true,
+    "failure": "",
+    "renderers": 28761,
+    "particlePrefabs": 258,
+    "skills": 95,
+    "reflections": 1,
+    "actors": [
+      {
+        "id": -15400,
+        "renderers": 9,
+        "local": true,
+        "force": "Player"
+      }
+    ],
+    "originalShaders": [
+      "Legacy Shaders/Particles/Alpha Blended Premultiply",
+      "FY/SubAdd",
+      "Legacy Shaders/Particles/Alpha Blended",
+      "FY/ParticleAlphaBlend",
+      "Legacy Shaders/Particles/Additive",
+      "Particles/Standard Unlit",
+      "Legacy Shaders/Particles/Additive (Soft)",
+      "Mobile/Particles/Additive",
+      "Sprites/Default"
+    ]
+  }
+}

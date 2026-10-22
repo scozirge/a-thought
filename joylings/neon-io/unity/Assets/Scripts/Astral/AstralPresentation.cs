@@ -73,6 +73,7 @@ namespace Neon.Astral
                 {
                     // Keep the actual animated background and its original timeline alive.
                     // Only suppress the old controls; disabling this world canvas hid the art.
+                    GodAppearance.LayerHead(c.transform);
                     c.enabled=true;var r=c.GetComponent<GraphicRaycaster>();if(r)r.enabled=false;
                     foreach(Transform child in c.transform)
                     {
@@ -115,7 +116,7 @@ namespace Neon.Astral
             }
             SetView(v); foreach(var update in live)update();
             if(UnityEngine.Input.GetKeyDown(KeyCode.Escape))BackKey();
-            if(balance)balance.text="✦  "+MyPlayer.Star.ToString("N0");
+            if(balance)balance.text=MyPlayer.Star.ToString("N0");
             if(tooltip.gameObject.activeSelf)
             {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(safe,UnityEngine.Input.mousePosition,null,out var p);
@@ -198,13 +199,13 @@ namespace Neon.Astral
             else if(CurrentView=="settings"||CurrentView=="clamor"||CurrentView=="credits"||CurrentView=="collection"||CurrentView=="loadout")Home();
             else if(CurrentView=="battle")PopupUI.ShowConfirmCancel(L("確定離開目前的戰場？","Leave the current arena?"),()=>battle.LeaveRoom(),null);
         }
-        void Header(string title,string subtitle,Action back=null,bool stars=true)
+        void Header(string title,string subtitle,Action back=null,bool stars=false)
         {
-            if(back!=null){var button=Button(page,"Back",L("‹  返回","‹  BACK"),735,464,265,56,()=>back(),false,24);Pin(button.transform,Vector2.one,new Vector2(24,34));}
-            var heading=Text(page,"Page title",title,-480,464,840,76,48);Pin(heading.transform,new Vector2(0,1),new Vector2(24,24));
-            if(!string.IsNullOrWhiteSpace(subtitle))Text(page,"Subtitle",subtitle,-400,351,1000,56,23,Muted);
-            var rule=Graphic(page,"Header rule",0,410,safe.rect.width/Mathf.Max(.001f,page.localScale.x)-48,2,AstralGraphic.Shape.Rule,new Color(Gold.r,Gold.g,Gold.b,.45f));Pin(rule.transform,new Vector2(.5f,1),new Vector2(0,112));
-            if(stars){balance=Text(page,"Stars","",710,352,320,55,28,Gold,TextAnchor.MiddleRight);Pin(balance.transform,Vector2.one,new Vector2(back!=null?330:24,35));}
+            // Keep section titles aligned with the centered content area on wide displays.
+            var heading=TitleArt(page,"Page title",title,0,461,900,74);heading.anchoredPosition=new Vector2(-900+heading.rect.width*.5f,461);
+            if(back!=null)IconButton(page,"Back",AstralGraphic.Shape.Back,858,465,72,()=>back());
+            if(!string.IsNullOrWhiteSpace(subtitle))Text(page,"Subtitle",subtitle,-400,351,1000,56,24,Muted);
+            var rule=Graphic(page,"Header rule",0,410,1800,1,AstralGraphic.Shape.Rule,new Color(Gold.r,Gold.g,Gold.b,.3f));rule.thickness=1;
         }
         void Home(){lobby.ActiveShopUI(false);lobby.ActiveSettingUI(false);if(challenge)challenge.SetActive(false);lobby.ActiveControlPanel(true);selected=null;}
         void Invoke(Transform root,string name)

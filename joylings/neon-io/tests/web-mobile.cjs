@@ -37,12 +37,12 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-mobil
    report.sizes.push(info);await page.screenshot({path:path.join(output,label+'.png'),scale:'css'});
   }
   await page.goto(url+'?neonQA=1&neonRoom=neon-web-check-mobile-'+Date.now().toString(36));
-  await page.locator('#rotate').waitFor({state:'visible'});await page.locator('#start:enabled').waitFor({timeout:240000});
+  await page.locator('#rotate').waitFor({state:'visible'});await page.waitForFunction(()=>!!window.unityInstance,null,{timeout:300000});
   await ready(()=>window.neonState?.scene==='Init'&&!neonState.started);
   assert.ok(await page.locator('canvas').evaluate(c=>c.inert));
   await page.screenshot({path:path.join(output,'portrait-start.png'),scale:'css'});
   report.checks.push('Portrait start shows rotation prompt; original intro remains at its initial state');
-  await resize(844,390);await page.locator('#rotate').waitFor({state:'hidden'});await page.locator('#start').tap();
+  await resize(844,390);await page.locator('#rotate').waitFor({state:'hidden'});
   await ready(()=>window.neonState?.scene==='Init'&&neonState.started);await page.waitForTimeout(2500);
   await page.screenshot({path:path.join(output,'intro-landscape.png'),scale:'css'});
   await ready(()=>neonState.scene==='Lobby'&&neonState.controls.some(c=>c.name==='Settings'));

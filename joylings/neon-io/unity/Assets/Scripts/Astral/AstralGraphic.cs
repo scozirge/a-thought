@@ -6,22 +6,22 @@ namespace Neon.Astral
     // Resolution-independent ornaments: a few UI triangles, no rasterised mockup panels.
     public sealed class AstralGraphic : MaskableGraphic
     {
-        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit }
+        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit, Back, Gear, Infinity, Duel, Collection, Book }
         public Shape shape;
         public Color border = new Color(.76f, .65f, .43f, .65f);
-        public float thickness = 2.4f;
-        public float ornament = 1;
+        public float thickness = 1.4f;
+        public float ornament = 0;
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear(); var r = rectTransform.rect;
             if (shape == Shape.Plate || shape == Shape.Frame)
             {
-                float cut = Mathf.Min(18, Mathf.Min(r.width, r.height) * .15f);
+                float cut = Mathf.Min(8, Mathf.Min(r.width, r.height) * .09f);
                 Vector2[] p = { new Vector2(r.xMin+cut,r.yMin),new Vector2(r.xMax-cut,r.yMin),new Vector2(r.xMax,r.yMin+cut),new Vector2(r.xMax,r.yMax-cut),new Vector2(r.xMax-cut,r.yMax),new Vector2(r.xMin+cut,r.yMax),new Vector2(r.xMin,r.yMax-cut),new Vector2(r.xMin,r.yMin+cut) };
                 if(shape==Shape.Plate) for(int i=0;i<p.Length;i++)
                 {
-                    int k=vh.currentVertCount;vh.AddVert(r.center,Shade(color,1.04f),Vector2.zero);
-                    foreach(var point in new[]{p[i],p[(i+1)%p.Length]})vh.AddVert(point,Shade(color,Mathf.Lerp(.86f,1.12f,Mathf.InverseLerp(r.yMin,r.yMax,point.y))),Vector2.zero);
+                    int k=vh.currentVertCount;vh.AddVert(r.center,color,Vector2.zero);
+                    foreach(var point in new[]{p[i],p[(i+1)%p.Length]})vh.AddVert(point,color,Vector2.zero);
                     vh.AddTriangle(k,k+1,k+2);
                 }
                 for(int i=0;i<p.Length;i++) Line(vh,p[i],p[(i+1)%p.Length],thickness,border);
@@ -30,6 +30,30 @@ namespace Neon.Astral
                     foreach(float x in new[]{r.xMin+20,r.xMax-20}) foreach(float y in new[]{r.yMin+20,r.yMax-20}) Star(vh,new Vector2(x,y),4,border);
                     Line(vh,new Vector2(r.xMin+38,r.yMax-9),new Vector2(r.xMax-38,r.yMax-9),.5f,new Color(border.r,border.g,border.b,border.a*.45f));
                 }
+            }
+            else if(shape>=Shape.Back)
+            {
+                float s=Mathf.Min(r.width,r.height);var c=r.center;
+                System.Action<Vector2,Vector2> stroke=(a,b)=>Line(vh,c+a*s,c+b*s,thickness,color);
+                if(shape==Shape.Back)
+                {stroke(new Vector2(.36f,0),new Vector2(-.34f,0));stroke(new Vector2(-.34f,0),new Vector2(-.06f,.28f));stroke(new Vector2(-.34f,0),new Vector2(-.06f,-.28f));}
+                else if(shape==Shape.Gear)
+                {
+                    Ring(vh,c,s*.14f,thickness,color);
+                    for(int i=0;i<64;i++)
+                    {float a=i*Mathf.PI*2/64,b=(i+1)*Mathf.PI*2/64;float ra=i%8<4?.37f:.28f,rb=(i+1)%8<4?.37f:.28f;stroke(new Vector2(Mathf.Cos(a),Mathf.Sin(a))*ra,new Vector2(Mathf.Cos(b),Mathf.Sin(b))*rb);}
+                }
+                else if(shape==Shape.Infinity)
+                {for(int i=0;i<96;i++){float a=i*Mathf.PI*2/96,b=(i+1)*Mathf.PI*2/96;stroke(new Vector2(Mathf.Cos(a)*.43f,Mathf.Sin(a*2)*.23f),new Vector2(Mathf.Cos(b)*.43f,Mathf.Sin(b*2)*.23f));}}
+                else if(shape==Shape.Duel)
+                {
+                    foreach(float side in new[]{-1f,1f})
+                    {stroke(new Vector2(-.32f*side,-.34f),new Vector2(.32f*side,.34f));stroke(new Vector2(.32f*side,.34f),new Vector2(.13f*side,.30f));stroke(new Vector2(.32f*side,.34f),new Vector2(.28f*side,.13f));stroke(new Vector2(-.31f*side,-.10f),new Vector2(-.09f*side,-.32f));}
+                }
+                else if(shape==Shape.Collection)
+                {stroke(new Vector2(-.3f,-.37f),new Vector2(-.3f,.37f));stroke(new Vector2(-.3f,.37f),new Vector2(.3f,.37f));stroke(new Vector2(.3f,.37f),new Vector2(.3f,-.37f));stroke(new Vector2(.3f,-.37f),new Vector2(0,-.2f));stroke(new Vector2(0,-.2f),new Vector2(-.3f,-.37f));Star(vh,c+Vector2.up*s*.07f,s*.14f,color);}
+                else if(shape==Shape.Book)
+                {foreach(float side in new[]{-1f,1f}){stroke(Vector2.zero,new Vector2(.37f*side,.12f));stroke(new Vector2(.37f*side,.12f),new Vector2(.37f*side,-.3f));stroke(new Vector2(.37f*side,-.3f),new Vector2(0,-.4f));stroke(Vector2.zero,new Vector2(0,-.4f));}}
             }
             else if(shape==Shape.Exit)
             {
@@ -51,21 +75,12 @@ namespace Neon.Astral
             else if(shape==Shape.Orbit)
             {
                 float radius=Mathf.Min(r.width,r.height)*.46f;
-                Ring(vh,r.center,radius,2.2f,color); Ring(vh,r.center,radius*.86f,1.8f,new Color(color.r,color.g,color.b,color.a*.6f));
-                if(radius>120)Ring(vh,r.center,radius*.57f,1.5f,new Color(color.r,color.g,color.b,color.a*.35f));
-                int ticks=radius>120?60:12;
-                for(int i=0;i<ticks;i++)
-                {
-                    float a=i*Mathf.PI*2/ticks;var d=new Vector2(Mathf.Cos(a),Mathf.Sin(a));
-                    Line(vh,r.center+d*(radius+(i%5==0?-7:-3)),r.center+d*(radius+3),i%5==0?2:1.5f,color);
-                }
-                if(radius>120)for(int i=0;i<8;i++) { float a=i*Mathf.PI/4; Star(vh,r.center+new Vector2(Mathf.Cos(a),Mathf.Sin(a))*radius,i%2==0?8:4,color); }
+                Ring(vh,r.center,radius,1.4f,new Color(color.r,color.g,color.b,color.a*.38f));
             }
             else if(shape==Shape.Star) Star(vh,r.center,Mathf.Min(r.width,r.height)*.49f,color);
             else if(shape==Shape.Rule)
             {
                 Line(vh,new Vector2(r.xMin,r.center.y),new Vector2(r.xMax,r.center.y),thickness,color);
-                Star(vh,r.center,5,color);
             }
             else if(shape==Shape.Glow)
             {

@@ -34,12 +34,12 @@ namespace Neon.Astral
         {
             return Button(parent,name,label,x,y,width,height,action==null?(UnityEngine.Events.UnityAction)null:()=>action(),primary,size);
         }
-        void TouchHeader(string title,Action back,bool stars=true)
+        void TouchHeader(string title,Action back,bool stars=false)
         {
-            Text(page,"Page title",title,-ViewWidth*.5f+154,TouchTop-34,284,44,22,Pearl);
-            if(back!=null){var b=TouchButton(page,"Back",L("‹  返回","‹  BACK"),0,0,112,back);Pin(b.transform,Vector2.one,new Vector2(12,12));}
-            if(stars){balance=Text(page,"Stars","",ViewWidth*.5f-190,TouchTop-34,108,44,16,Gold,TextAnchor.MiddleRight);}
-            var rule=Graphic(page,"Header rule",0,TouchTop-65,ViewWidth-24,1,AstralGraphic.Shape.Rule,new Color(Gold.r,Gold.g,Gold.b,.4f));rule.thickness=1;
+            var heading=TitleArt(page,"Page title",title,0,0,ViewWidth-100,36);
+            Pin(heading,new Vector2(0,1),new Vector2(20,17));
+            if(back!=null){var b=IconButton(page,"Back",AstralGraphic.Shape.Back,0,0,44,()=>back());Pin(b.transform,Vector2.one,new Vector2(16,12));}
+            var rule=Graphic(page,"Header rule",0,TouchTop-65,ViewWidth-40,1,AstralGraphic.Shape.Rule,new Color(Gold.r,Gold.g,Gold.b,.28f));rule.thickness=1;
         }
         void TopContent(RectTransform t,float y){t.anchorMin=t.anchorMax=new Vector2(.5f,1);t.anchoredPosition=new Vector2(t.anchoredPosition.x,y);}
         Text TouchParagraph(Transform parent,string name,string value,float width,int size,TextAnchor align=TextAnchor.UpperLeft)
@@ -50,23 +50,31 @@ namespace Neon.Astral
         }
         void BuildTouchLobby()
         {
-            Text(page,"Brand","NEON IMPACT",-ViewWidth*.5f+172,TouchTop-34,320,44,26,Gold,TextAnchor.MiddleLeft,true);
-            balance=Text(page,"Stars","",ViewWidth*.5f-180,TouchTop-34,88,44,16,Gold,TextAnchor.MiddleRight);
-            var settings=TouchButton(page,"Settings",L("設定","SETTINGS"),0,0,112,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});Pin(settings.transform,Vector2.one,new Vector2(12,12));
-            float w=Mathf.Clamp(ViewWidth*.44f,286,420),h=Mathf.Max(140,ViewHeight-84),x=-ViewWidth*.5f+12+w*.5f;
-            var backing=Plate(page,"Menu backing",x,-30,w,h);backing.color=new Color(Night.r,Night.g,Night.b,.88f);backing.ornament=0;
-            Scroll(page,"Lobby actions",x,-30,w,h,out var content);content.sizeDelta=new Vector2(0,286);
-            float inner=w-28;
+            float w=Mathf.Clamp(ViewWidth*.40f,286,380),h=Mathf.Max(180,ViewHeight-24),x=-ViewWidth*.5f+16+w*.5f;
+            var backing=Plate(page,"Menu backing",x,0,w,h);backing.color=new Color(Night.r,Night.g,Night.b,.7f);backing.border=new Color(Gold.r,Gold.g,Gold.b,.25f);
+            var scroll=Scroll(backing.transform,"Lobby actions",0,29,w-8,h-66,out var content);content.sizeDelta=new Vector2(0,286);scroll.GetComponent<Image>().color=Color.clear;
+            float inner=w-32;
+            var brand=TitleArt(content,"Brand",L("星際遊俠","NOVAROVE"),0,0,inner,42);TopContent(brand,-28);
             var original=Field<InputField>(lobby,"NameInputField");
-            var input=Input(content,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,-26,inner,44,v=>{if(original)original.text=v;},24);TopContent((RectTransform)input.transform,-26);input.textComponent.fontSize=16;((Text)input.placeholder).fontSize=16;
+            var input=Input(content,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,-79,inner,44,v=>{if(original)original.text=v;},24);TopContent((RectTransform)input.transform,-79);input.textComponent.fontSize=16;((Text)input.placeholder).fontSize=16;
             input.onEndEdit.AddListener(v=>{if(!string.IsNullOrWhiteSpace(v))MyPlayer.SetName(v.Trim());});
-            var infinity=TouchButton(content,"Infinity",L("無際戰場","INFINITY WAR"),0,-88,inner,()=>lobby.Connect(),true,64,20);TopContent((RectTransform)infinity.transform,-88);
-            var duel=TouchButton(content,"Challenge",L("頂尖對決","CHALLENGE"),0,-154,inner,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,52,18);TopContent((RectTransform)duel.transform,-154);
-            float half=(inner-10)*.5f;
-            var collection=TouchButton(content,"Collection",L("收藏","COLLECTION"),-(half+10)*.5f,-210,half,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,44,14);TopContent((RectTransform)collection.transform,-210);
-            var tutorial=TouchButton(content,"Tutorial",L("遊玩教學","HOW TO PLAY"),(half+10)*.5f,-210,half,()=>lobby.WatchTutorial(),false,44,14);TopContent((RectTransform)tutorial.transform,-210);
-            var team=Text(content,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),0,-256,inner,28,12,Muted,TextAnchor.MiddleCenter);TopContent(team.rectTransform,-256);
-            var quit=TouchButton(page,"Quit",L("離開遊戲","QUIT"),0,0,112,()=>lobby.ExitGame(),false,44,14);Pin(quit.transform,new Vector2(1,0),new Vector2(12,12));
+            var infinity=TouchButton(content,"Infinity",L("無際戰場","INFINITY WAR"),0,-139,inner,()=>lobby.Connect(),false,54,18);TopContent((RectTransform)infinity.transform,-139);
+            var duel=TouchButton(content,"Challenge",L("頂尖對決","CHALLENGE"),0,-203,inner,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,54,18);TopContent((RectTransform)duel.transform,-203);
+            foreach(var b in new[]{infinity,duel}){var label=b.GetComponentInChildren<Text>();label.rectTransform.anchoredPosition=new Vector2(23,0);label.rectTransform.sizeDelta=new Vector2(inner-68,46);label.alignment=TextAnchor.MiddleLeft;var icon=Graphic(b.transform,"Mode icon",-inner*.5f+27,0,28,28,b==infinity?AstralGraphic.Shape.Infinity:AstralGraphic.Shape.Duel,Gold);icon.thickness=1.7f;}
+            var collection=TouchButton(content,"Collection",L("收藏","COLLECTION"),0,-261,inner,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,44,16);TopContent((RectTransform)collection.transform,-261);
+            Graphic(collection.transform,"Collection icon",-inner*.5f+27,0,23,23,AstralGraphic.Shape.Collection,Gold);
+            if(ViewHeight<330)
+            {
+                // Prioritize the two playable modes when browser chrome leaves a short viewport.
+                brand.sizeDelta=new Vector2(Mathf.Min(inner,32*brand.rect.width/brand.rect.height),32);TopContent(brand,-18);
+                foreach(var b in new[]{infinity,duel}){var r=(RectTransform)b.transform;r.sizeDelta=new Vector2(inner,44);TopContent(r,b==infinity?-62:-114);}
+                TopContent((RectTransform)input.transform,-170);TopContent((RectTransform)collection.transform,-224);content.sizeDelta=new Vector2(0,252);
+            }
+            float footer=-h*.5f+32,left=-w*.5f+38;
+            IconButton(backing.transform,"Settings",AstralGraphic.Shape.Gear,left,footer,44,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});
+            IconButton(backing.transform,"Tutorial",AstralGraphic.Shape.Book,left+50,footer,44,()=>lobby.WatchTutorial());
+            IconButton(backing.transform,"Quit",AstralGraphic.Shape.Exit,left+100,footer,44,()=>lobby.ExitGame());
+            CurrencyRow(backing.transform,w*.5f-66,footer,true);
         }
         void BuildTouchCollection(bool choosing)
         {
@@ -108,7 +116,7 @@ namespace Neon.Astral
         void BuildTouchLoadout()
         {
             bool searching=CurrentView=="matching",versus=CurrentView=="versus";
-            TouchHeader(versus?L("對手已就緒","OPPONENT READY"):searching?L("正在尋找對手","FINDING OPPONENT"):L("頂尖對決","CHALLENGE"),searching||versus?(Action)null:Home,false);
+            TouchHeader(versus?L("對手已就緒","OPPONENT READY"):searching?L("正在尋找對手","FINDING AN OPPONENT"):L("頂尖對決","CHALLENGE"),searching||versus?(Action)null:Home,false);
             var features=Field<FeatureData[]>(challenge,"P1Features");
             float width=ViewWidth-24,bodyHeight=Mathf.Max(64,ViewHeight-(versus?88:144));
             Scroll(page,"Loadout list",0,TouchTop-76-bodyHeight*.5f,width,bodyHeight,out var content);
@@ -177,8 +185,8 @@ namespace Neon.Astral
             if(!source)return;var shade=Scrim(page,"Choice overlay",new Color(0,0,0,.82f));
             float w=Mathf.Min(600,ViewWidth-24),h=Mathf.Min(480,ViewHeight-24);
             var panel=Plate(shade.transform,"Choices",0,0,w,h).transform;
-            Text(panel,"Choose title",L("選擇設定","SELECT OPTION"),-60,h*.5f-34,w-160,44,20,Gold);
-            TouchButton(panel,"Close choices",L("關閉","CLOSE"),w*.5f-68,h*.5f-34,112,()=>Destroy(shade.gameObject));
+            TitleAt(panel,"Choose title",L("選擇設定","SELECT OPTION"),-w*.5f+16,h*.5f-34,w-100,32);
+            IconButton(panel,"Close choices",AstralGraphic.Shape.Back,w*.5f-38,h*.5f-34,44,()=>Destroy(shade.gameObject));
             float bodyHeight=h-84;Scroll(panel,"Options",0,-30,w-24,bodyHeight,out var c);c.sizeDelta=new Vector2(0,Mathf.Max(bodyHeight,source.options.Count*52));
             for(int i=0;i<source.options.Count;i++){int index=i;var b=TouchButton(c,"Option "+i,source.options[i].text,0,-24-i*52,w-56,()=>{source.value=index;Destroy(shade.gameObject);},i==source.value);TopContent((RectTransform)b.transform,-24-i*52);}
         }
@@ -208,7 +216,7 @@ namespace Neon.Astral
         {
             float w=Mathf.Min(600,ViewWidth-24),h=Mathf.Min(340,ViewHeight-24);
             var box=Plate(parent,"Dialog",0,0,w,h).transform;
-            Text(box,"Title",string.IsNullOrEmpty(title)?kind=="confirm"?L("確認操作","CONFIRM"):kind=="loading"?L("正在處理","PLEASE WAIT"):L("提示","NOTICE"):title,0,h*.5f-34,w-32,44,20,Gold);
+            TitleAt(box,"Title",string.IsNullOrEmpty(title)?kind=="confirm"?L("確認操作","CONFIRM"):kind=="loading"?L("正在處理","PLEASE WAIT"):L("提示","NOTICE"):title,-w*.5f+16,h*.5f-34,w-32,32);
             float bodyHeight=Mathf.Max(32,h-136);Scroll(box,"Message",0,0,w-32,bodyHeight,out var c);
             var text=TouchParagraph(c,"Content",message,w-64,16);c.sizeDelta=new Vector2(0,Mathf.Max(bodyHeight,text.rectTransform.rect.height));
             float buttonWidth=(w-44)*.5f,y=-h*.5f+34;

@@ -23,12 +23,16 @@ const output=path.resolve(__dirname,'../logs/web-viewport');fs.mkdirSync(output,
     });
     await page.route('https://neon.test/**',route=>route.fulfill({contentType:'text/html',body:template.replace(/<script src="Build\/[^>]+><\/script>/,'')}));
     await page.goto('https://neon.test/');await page.locator('#rotate').waitFor({state:'visible'});
-    assert.deepEqual(errors,[]);await page.locator('#start:enabled').waitFor({timeout:5000});
+    assert.deepEqual(errors,[]);await page.waitForFunction(()=>!!window.unityInstance,null,{timeout:5000});
+    assert.equal(await page.locator('#start').count(),0);assert.equal(await page.locator('a').count(),0);
     await page.locator('#landscape').tap();assert.ok(await page.locator('#rotate').isVisible());
     assert.equal(await page.evaluate(()=>sent.some(a=>a[1]==='StartGame')),false);
-    await page.setViewportSize({width:844,height:390});await page.locator('#rotate').waitFor({state:'hidden'});await page.locator('#start').tap();
+    await page.setViewportSize({width:844,height:390});await page.locator('#rotate').waitFor({state:'hidden'});
     assert.equal(await page.evaluate(()=>sent.filter(a=>a[1]==='StartGame').length),1);
     assert.ok(await page.locator('#loading').isHidden());
+    await page.evaluate(()=>{window.neonAudioState='suspended';dispatchEvent(new Event('neon-audio-state'));});await page.locator('#sound').tap();
+    assert.ok(await page.evaluate(()=>sent.some(a=>a[1]==='UnlockAudio')));
+    await page.evaluate(()=>{window.neonAudioState='running';dispatchEvent(new Event('neon-audio-state'));});assert.ok(await page.locator('#sound').isHidden());
     // Model a keyboard/toolbar changing only the visual viewport, without a
     // window resize or a physical orientation change.
     await page.evaluate(()=>{

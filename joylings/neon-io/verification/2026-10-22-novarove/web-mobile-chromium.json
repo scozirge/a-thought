@@ -1,0 +1,3498 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "physicalDevice": false,
+  "inputOnly": false,
+  "checks": [
+    "Four mobile landscape sizes: lobby, all three collection parts, loadout, skill selection, settings, options, shouts, credits and tutorial; visible controls retain 44 CSS pixels",
+    "Real CDP touch drag moves the actual Photon player right",
+    "Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction",
+    "Mobile skill description appears only while pressed and disappears on release or touchcancel",
+    "Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement",
+    "Lightweight HUD at four sizes: translucent rank and joystick, inset controls, small exit icon with 44-pixel hit area, compact skills and player level beside actual experience progress",
+    "Battle controls retain their inner spacing in addition to simulated notch and bottom gesture safe areas",
+    "Result layout checked with explicitly synthetic zero-reward fixture, then left the room"
+  ],
+  "layouts": [
+    {
+      "label": "lobby-844x390",
+      "view": "lobby",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 337.6000061035156,
+          "h": 366,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 111.46666717529297,
+          "y": 23,
+          "w": 146.66665649414062,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 43.44000244140625,
+          "y": 335.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 324,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 233.60000610351562,
+          "y": 328,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x390",
+      "view": "loadout",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 28.999984741210938,
+          "y": 156,
+          "w": 139.60000610351562,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 190.59999084472656,
+          "y": 156,
+          "w": 139.6000213623047,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 352.20001220703125,
+          "y": 156,
+          "w": 139.5999755859375,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 513.7999877929688,
+          "y": 156,
+          "w": 139.5999755859375,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 675.4000244140625,
+          "y": 156,
+          "w": 139.5999755859375,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "selection-844x390",
+      "view": "select",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 314,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x390",
+      "view": "clamor",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "credits-844x390",
+      "view": "credits",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 314,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 366,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 230,
+          "y": 94,
+          "w": 568,
+          "h": 210,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-667x375",
+      "view": "lobby",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 286,
+          "h": 351,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 85.66666412353516,
+          "y": 22,
+          "w": 146.66668701171875,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 43.44000244140625,
+          "y": 320.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 309,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 182,
+          "y": 313,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.8900146484375,
+          "y": 76,
+          "w": 220.1099853515625,
+          "h": 287,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.8900146484375,
+          "y": 76,
+          "w": 220.1099853515625,
+          "h": 287,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.8900146484375,
+          "y": 76,
+          "w": 220.1099853515625,
+          "h": 287,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-667x375",
+      "view": "loadout",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 29.00000762939453,
+          "y": 156,
+          "w": 104.20000457763672,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 155.20001220703125,
+          "y": 156,
+          "w": 104.19998168945312,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 281.3999938964844,
+          "y": 156,
+          "w": 104.20001220703125,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 407.6000061035156,
+          "y": 156,
+          "w": 104.20001220703125,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Slot",
+          "x": 533.800048828125,
+          "y": 156,
+          "w": 104.199951171875,
+          "h": 24,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "selection-667x375",
+      "view": "select",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.8900146484375,
+          "y": 76,
+          "w": 220.1099853515625,
+          "h": 287,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.5,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.5,
+          "y": 299,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-667x375",
+      "view": "clamor",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "credits-667x375",
+      "view": "credits",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "tutorial-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 618.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.5,
+          "y": 299,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 643,
+          "h": 351,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46,
+          "y": 94,
+          "w": 575,
+          "h": 195,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-844x300",
+      "view": "lobby",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 337.6000061035156,
+          "h": 276,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 128.92698669433594,
+          "y": 18,
+          "w": 111.74603271484375,
+          "h": 32,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 43.44000244140625,
+          "y": 245.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 234,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 233.60000610351562,
+          "y": 238,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x300",
+      "view": "loadout",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "selection-844x300",
+      "view": "select",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 297.8706970214844,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x300",
+      "view": "clamor",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "credits-844x300",
+      "view": "credits",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 224,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 276,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46,
+          "y": 94,
+          "w": 752,
+          "h": 127,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-844x240",
+      "view": "lobby",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 337.6000061035156,
+          "h": 216,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 128.92698669433594,
+          "y": 18,
+          "w": 111.74603271484375,
+          "h": 32,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 43.44000244140625,
+          "y": 185.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 174,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 233.60000610351562,
+          "y": 178,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x240",
+      "view": "loadout",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "selection-844x240",
+      "view": "select",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.000015258789062,
+          "y": 17,
+          "w": 133.60824584960938,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 259.74884033203125,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x240",
+      "view": "clamor",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "credits-844x240",
+      "view": "credits",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 20.00000762939453,
+          "y": 17,
+          "w": 64.65306091308594,
+          "h": 36,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Back icon",
+          "x": 795.4400024414062,
+          "y": 23.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 164,
+          "w": 200,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 216,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46,
+          "y": 94,
+          "w": 752,
+          "h": 127,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-notch",
+      "view": "lobby",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 302.3999938964844,
+          "h": 345,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 93.86666107177734,
+          "y": 16,
+          "w": 146.66665649414062,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 43.44000244140625,
+          "y": 314.44000244140625,
+          "w": 21.1199951171875,
+          "h": 21.1199951171875,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 303,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 198.39999389648438,
+          "y": 307,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "leave-confirm",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Dialog",
+          "x": 122,
+          "y": 25,
+          "w": 600,
+          "h": 340,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x390",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-667x375",
+      "view": "battle",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 231,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 265,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 610,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 199,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 204,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 475,
+          "y": 283,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 477,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 537,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 597,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 487,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-844x300",
+      "view": "battle",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 176,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 205,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 144,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 149,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 220,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-844x240",
+      "view": "battle",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 116,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 145,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 84,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 89,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 160,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-notch",
+      "view": "battle",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 225,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 259,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 699,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 165,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 165,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 193,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 198,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 564,
+          "y": 277,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 566,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 626,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 686,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 576,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x390",
+      "view": "result",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 68,
+          "w": 800,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-667x375",
+      "view": "result",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 231,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 265,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 610,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 199,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 204,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 475,
+          "y": 283,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 477,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 537,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 597,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 487,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 12,
+          "y": 60.5,
+          "w": 643,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x300",
+      "view": "result",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 176,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 205,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 144,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 149,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 220,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 23,
+          "w": 800,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x240",
+      "view": "result",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 116,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 145,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 84,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 89,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 160,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 12,
+          "w": 800,
+          "h": 216,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "movement": {
+    "start": {
+      "x": -950.58203125,
+      "y": -60.55519104003906
+    },
+    "end": {
+      "x": -946.6669921875,
+      "y": 82.28775787353516
+    },
+    "velocity": {
+      "x": 399.9754638671875,
+      "y": -4.44417142868042
+    }
+  }
+}

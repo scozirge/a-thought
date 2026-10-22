@@ -30,6 +30,9 @@ namespace Starbro.NeonIO
         public Canvas BattleObjsUICanvas = null;
         AnimationPlayer CameraPlayer = null;
         int Exp = 0;
+        public int Experience => Exp;
+        public int ExperienceToNextLevel => NeedExpList != null && NeedExpList.Length >= 4 && LV > 0 ? LVUpExp : 1;
+        public float ExperienceRatio => Mathf.Clamp01((float)Exp / Mathf.Max(1, ExperienceToNextLevel));
         [SerializeField]
         int[] NeedExpList = null;
         int LVUpExp
@@ -82,19 +85,16 @@ namespace Starbro.NeonIO
             {
                 if (photonView.IsMine)
                 {
-                    EffectEmitter.EmitParticleFromDic("PlayerLight_green", Vector2.zero, Vector2.zero, AppearanceObj.transform, MyForce);
                     gameObject.AddComponent<ClearSight>();
                     MyForce = Force.Player;
                 }
                 else
                 {
-                    EffectEmitter.EmitParticleFromDic("PlayerLight_red", Vector2.zero, Vector2.zero, AppearanceObj.transform, MyForce);
                     MyForce = Force.Opponent;
                 }
             }
             else
             {
-                EffectEmitter.EmitParticleFromDic("PlayerLight_green", Vector2.zero, Vector2.zero, AppearanceObj.transform, MyForce);
                 MyForce = Force.Player;
                 gameObject.AddComponent<ClearSight>();
             }

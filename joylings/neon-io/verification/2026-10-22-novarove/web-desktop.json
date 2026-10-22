@@ -1,0 +1,101 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "errors": [],
+  "loads": [
+    {
+      "milliseconds": 1287.8999999761581,
+      "resources": [
+        {
+          "file": "26782eab68e72e9a6a47d065809f8272.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "1dd0a9596cad45462a35c8e9702267d2.wasm.unityweb",
+          "transfer": 11736298,
+          "encoded": 11735998
+        },
+        {
+          "file": "51962c5790b063866c2ef659bc9bab65.data.unityweb",
+          "transfer": 20983761,
+          "encoded": 20983461
+        }
+      ]
+    },
+    {
+      "milliseconds": 1156.6999999284744,
+      "resources": [
+        {
+          "file": "26782eab68e72e9a6a47d065809f8272.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "9e88cfdbc1deade90600425a016781f4.framework.js.unityweb",
+          "transfer": 93486,
+          "encoded": 93186
+        },
+        {
+          "file": "1dd0a9596cad45462a35c8e9702267d2.wasm.unityweb",
+          "transfer": 11736298,
+          "encoded": 11735998
+        },
+        {
+          "file": "51962c5790b063866c2ef659bc9bab65.data.unityweb",
+          "transfer": 20983761,
+          "encoded": 20983461
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "peer 0: original intro reached; 95 features owned on fresh profile",
+    "peer 1: original intro reached; 95 features owned on fresh profile",
+    "Equipped formerly paid head skill 11 without charging stars",
+    "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+    "Two real browser clients joined the same Photon room",
+    "Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, compact level and experience",
+    "Desktop keeps mouse movement and never displays the mobile joystick",
+    "Desktop skill descriptions retain hover and close when the mouse leaves",
+    "Gameplay regressions executed inside the WebGL player",
+    "Both peers remained connected beyond the connection timeout"
+  ],
+  "sockets": [
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1207.exitgames.com",
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1207.exitgames.com"
+  ],
+  "introAudioRms": 0.08116022554839103,
+  "room": "neon-web-check-mvjr09zv-0",
+  "region": "asia",
+  "peerCounts": [
+    2,
+    2
+  ],
+  "gameplayAudit": {
+    "passed": true,
+    "allocationCounterAvailable": false,
+    "failure": "",
+    "checks": [
+      "Cooldown boundaries and periodic damage under slow/fast frames",
+      "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+      "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+      "Main-thread connection timeout while paused; connected sessions excluded",
+      "Live-target registry, disable/re-enable, homing retarget and 1000-query allocation comparison",
+      "Music pool selection, volume restoration and duplicate loop key"
+    ],
+    "legacySearchBytes": 0,
+    "registrySearchBytes": 0,
+    "legacySearchMilliseconds": 1.9000000000000001,
+    "registrySearchMilliseconds": 2.2
+  }
+}

@@ -68,8 +68,6 @@ namespace Starbro.NeonIO
             base.Init();
             if (GetComponent<AIRoleMove>() != null)
                 GetComponent<AIRoleMove>().enabled = true;
-            if (PhotonLauncher.SelectGameType == GameType.InfinityWar)
-                EffectEmitter.EmitParticleFromDic("PlayerLight_red", Vector2.zero, Vector2.zero, AppearanceObj.transform, MyForce);
 
         }
         protected override void Update()
@@ -306,8 +304,6 @@ namespace Starbro.NeonIO
                 CurSelectFeatureID++;
             }
             ChangeFeatureTimer = new MyTimer(GameSettingData.ChangeFeatureTime_C, ChangeFeature_C, true, true);
-            //改紅色
-            EffectEmitter.EmitParticleFromDic("PlayerLight_red", Vector2.zero, Vector2.zero, AppearanceObj.transform, MyForce);
             MaxHealth = GameSettingData.Health_C;
             Health = MaxHealth;
             BaseDamage = GameSettingData.Damage_C;

@@ -11,30 +11,32 @@ namespace Neon.Astral
     {
         void BuildLobby()
         {
-            // The original lobby scene supplies the guardian, meteors and entrance burst.
-            // A quiet panel supports readable controls without covering that presentation.
-            var menu=Plate(page,"Menu backing",-555,-20,650,970);menu.color=new Color(Night.r,Night.g,Night.b,.87f);menu.border=new Color(Gold.r,Gold.g,Gold.b,.26f);menu.ornament=0;
-            balance=Text(page,"Stars","",535,468,300,45,25,Gold,TextAnchor.MiddleRight);Pin(balance.transform,Vector2.one,new Vector2(204,29));
-            var settings=Button(page,"Settings",L("設定","SETTINGS"),780,468,150,54,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);},false,22);Pin(settings.transform,Vector2.one,new Vector2(24,24));
-            Text(page,"NEON","NEON",-555,335,600,135,90,Pearl,TextAnchor.MiddleCenter,true);
-            Text(page,"IMPACT","IMPACT",-555,230,600,135,85,Gold,TextAnchor.MiddleCenter,true);
+            // The original animated guardian, meteors and entrance burst remain visible.
+            var menu=Plate(page,"Menu backing",0,0,560,920);menu.color=new Color(Night.r,Night.g,Night.b,.68f);menu.border=new Color(Gold.r,Gold.g,Gold.b,.24f);
+            Pin(menu.transform,new Vector2(0,.5f),new Vector2(32,0));
+            var brand=TitleArt(menu.transform,"Brand",L("星際遊俠","NOVAROVE"),0,328,480,150);
             var original=Field<InputField>(lobby,"NameInputField");
-            var nameInput=Input(page,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),-555,105,550,62,v=>{if(original)original.text=v;},24);
+            var nameInput=Input(menu.transform,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,205,480,62,v=>{if(original)original.text=v;},24);
             nameInput.onEndEdit.AddListener(v=>{if(!string.IsNullOrWhiteSpace(v))MyPlayer.SetName(v.Trim());});
-            ModeCard("Infinity",L("無際戰場","INFINITY WAR"),L("收集星星，取得技能並生存。","Collect stars. Evolve your skills. Survive the arena."),-555,-30,()=>lobby.Connect(),true,"∞");
-            ModeCard("Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Challenge an opponent."),-555,-185,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,"II");
-            Button(page,"Collection",L("收 藏","COLLECTION"),-555,-330,550,70,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
-            var team=Button(page,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),-555,-425,550,60,null,false,22);team.interactable=false;
-            var quit=Button(page,"Quit",L("離開遊戲","QUIT"),786,-491,150,52,()=>lobby.ExitGame(),false,20);Pin(quit.transform,new Vector2(1,0),new Vector2(24,24));
+            ModeCard(menu.transform,"Infinity",L("無際戰場","INFINITY WAR"),L("收集星星，取得技能並生存。","Collect stars. Evolve. Survive."),0,73,()=>lobby.Connect(),AstralGraphic.Shape.Infinity);
+            ModeCard(menu.transform,"Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Duel."),0,-77,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},AstralGraphic.Shape.Duel);
+            var collection=Button(menu.transform,"Collection",L("收藏","COLLECTION"),0,-207,480,66,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
+            Graphic(collection.transform,"Collection icon",-194,0,30,30,AstralGraphic.Shape.Collection,Gold);
+            var team=Button(menu.transform,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),0,-293,480,54,null,false,21);team.interactable=false;
+            var settings=IconButton(menu.transform,"Settings",AstralGraphic.Shape.Gear,-207,-385,66,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});
+            settings.gameObject.AddComponent<AstralHover>().content=()=>L("設定","Settings");
+            var tutorial=IconButton(menu.transform,"Tutorial",AstralGraphic.Shape.Book,-123,-385,66,()=>lobby.WatchTutorial());
+            tutorial.gameObject.AddComponent<AstralHover>().content=()=>L("遊玩教學","How to play");
+            var quit=IconButton(menu.transform,"Quit",AstralGraphic.Shape.Exit,-39,-385,66,()=>lobby.ExitGame());
+            quit.gameObject.AddComponent<AstralHover>().content=()=>L("離開遊戲","Quit game");
+            CurrencyRow(menu.transform,150,-385,false);
         }
-        void ModeCard(string name,string title,string desc,float x,float y,UnityEngine.Events.UnityAction action,bool primary,string mark)
+        void ModeCard(Transform parent,string name,string title,string desc,float x,float y,UnityEngine.Events.UnityAction action,AstralGraphic.Shape symbol)
         {
-            var b=Button(page,name,"",x,y,550,128,action,primary);
-            var c=primary?Night:Gold;Graphic(b.transform,"Medallion",-215,0,80,80,AstralGraphic.Shape.Orbit,c);
-            Text(b.transform,"Symbol",mark,-215,0,70,65,40,c,TextAnchor.MiddleCenter,true);
-            Text(b.transform,"Title",title,32,23,360,48,32,primary?Night:Pearl);
-            Text(b.transform,"Description",desc,32,-25,360,44,20,primary?Night:Muted);
-            Text(b.transform,"Arrow","›",239,0,30,65,42,c,TextAnchor.MiddleCenter);
+            var b=Button(parent,name,"",x,y,480,126,action,false);
+            var icon=Graphic(b.transform,"Mode icon",-188,0,54,54,symbol,Gold);icon.thickness=2.6f;
+            Text(b.transform,"Title",title,38,21,330,44,31,Pearl);
+            Text(b.transform,"Description",desc,38,-25,330,40,20,Muted);
         }
         string PartName(int index)=>index==0?L("頭部","HEAD"):index==1?L("身體","BODY"):L("背部","BACK");
         void BuildCollection(bool choosing)

@@ -32,11 +32,12 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
    page.on('pageerror',e=>report.errors.push(e.message));
    page.on('console',m=>{const s=m.text().replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'[redacted-id]');if(/Exception:|abort\(|shader.*error|NullReferenceException/i.test(s))report.errors.push(s.slice(0,500));fs.appendFileSync(path.join(output,'peer-'+i+'.log'),s+'\n');});
    page.on('websocket',s=>report.sockets.push(new URL(s.url()).hostname));
-   await page.goto(url+'?neonQA=1&neonRoom='+validationRoom);await page.locator('#start:enabled').waitFor({timeout:300000});
-   await ready(page,()=>window.neonState?.scene==='Init'&&!neonState.started);
+   await page.goto(url+'?neonQA=1&neonRoom='+validationRoom);await page.waitForFunction(()=>!!window.unityInstance,null,{timeout:300000});
+   await ready(page,()=>window.neonState?.scene==='Init'&&neonState.started);
    report.loads.push(await page.evaluate(()=>({milliseconds:neonLoadMilliseconds,resources:performance.getEntriesByType('resource').filter(r=>r.name.includes('/Build/')).map(r=>({file:r.name.split('/').pop(),transfer:r.transferSize,encoded:r.encodedBodySize}))})));
-   await page.locator('#start').click();await ready(page,()=>window.neonState?.scene==='Init');
+   await ready(page,()=>window.neonState?.scene==='Init');
    if(i===0){
+    await page.locator('#unity-canvas').click({position:{x:16,y:16}});
     await page.waitForTimeout(3000);assert.equal((await state(page)).audioContextState,'running');
     report.introAudioRms=await page.evaluate(()=>{const a=window.neonAudioMeter;if(!a)return 0;const samples=new Float32Array(a.fftSize);a.getFloatTimeDomainData(samples);return Math.sqrt(samples.reduce((sum,n)=>sum+n*n,0)/samples.length);});
     assert.ok(report.introAudioRms>0.0001,'Original intro must produce actual audible audio samples');
@@ -56,7 +57,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   await button(pages[0],'Part 0');await button(pages[0],'Skill 11');await button(pages[0],'Use skill');
   await ready(pages[0],()=>neonState.loadout?.[0]===11);assert.equal((await state(pages[0])).stars,beforeStars);
   report.checks.push('Equipped formerly paid head skill 11 without charging stars');
-  await pages[0].reload();await pages[0].locator('#start:enabled').waitFor({timeout:180000});await pages[0].locator('#start').click();
+  await pages[0].reload();await pages[0].waitForFunction(()=>!!window.unityInstance,null,{timeout:180000});
   await ready(pages[0],()=>neonState.scene==='Lobby'&&neonState.controls.some(c=>c.name==='Infinity'));
   assert.equal((await state(pages[0])).loadout[0],11);assert.equal((await state(pages[0])).owned,95);
   report.checks.push('Reloading an existing browser profile preserves loadout and all 95 unlocked skills');
@@ -82,8 +83,8 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   const leave=mouseBefore.controls.find(c=>c.name==='Leave arena');
   assert.ok(rank&&rank.opacity<=.3,'Desktop leaderboard stays translucent');
   assert.ok(exit&&leave&&exit.w<=leave.w*.55&&!leave.text,'Desktop exit is a small icon with a larger hit area');
-  assert.ok(!hud.some(e=>['Level','Level label','Level orbit'].includes(e.name)),'Desktop persistent level display removed');
-  report.checks.push('Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, no persistent level display');
+  assert.ok(hud.some(e=>e.name==='Level')&&hud.some(e=>e.name==='Experience'),'Compact level and experience are present');
+  report.checks.push('Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, compact level and experience');
   await mousePage.mouse.move(950,400);await ready(mousePage,()=>neonState.velocityX>1);
   await mousePage.waitForTimeout(700);
   assert.ok((await state(mousePage)).playerX>mouseBefore.playerX+1,'Desktop mouse moves the real player');

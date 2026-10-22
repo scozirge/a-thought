@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "url": "http://127.0.0.1:8200/",
+  "checks": [
+    "Blocked audio: original intro and lobby run automatically without a pointer gesture",
+    "Tap-to-enable audio produces samples (RMS 0.09041) without restarting the intro",
+    "Allowed audio: original intro and lobby run automatically without a pointer gesture",
+    "Automatic audio produces samples (RMS 0.05322) without restarting the intro"
+  ],
+  "errors": []
+}

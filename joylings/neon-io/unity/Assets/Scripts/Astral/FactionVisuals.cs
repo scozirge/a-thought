@@ -14,6 +14,7 @@ namespace Neon.Astral
         static readonly int Side=Shader.PropertyToID("_NeonSide");
         static readonly MaterialPropertyBlock block=new MaterialPropertyBlock();
         public static readonly Color Friendly=new Color(.28f,.70f,1f), Hostile=new Color(1f,.30f,.36f);
+        public static bool PreservesGuardian(Renderer renderer)=>renderer.GetComponentInParent<GodRole>()&&!renderer.GetComponentInParent<Ammo>();
         public static bool TryForce(Transform source,out Force force)
         {
             if(source)
@@ -31,6 +32,9 @@ namespace Neon.Astral
             foreach(var renderer in root.GetComponentsInChildren<Renderer>(true))
             {
                 if(!(renderer is SpriteRenderer)&&!(renderer is ParticleSystemRenderer)&&!(renderer is TrailRenderer)&&!(renderer is LineRenderer))continue;
+                // The guardian uses the same cyan/gold artwork as the lobby.
+                // Its independently spawned attacks still convey their hostile ownership.
+                if(PreservesGuardian(renderer))continue;
                 // Respect nested ammunition which may have been reflected to the other side.
                 var ammo=renderer.GetComponentInParent<Ammo>();
                 Set(renderer,ammo?ammo.VisualForce:force);

@@ -1,0 +1,54 @@
+{
+  "brand": [
+    "星際遊俠",
+    "NOVAROVE"
+  ],
+  "duel": [
+    "頂尖對決",
+    "CHALLENGE"
+  ],
+  "infinity": [
+    "無際戰場",
+    "INFINITY WAR"
+  ],
+  "collection": [
+    "收藏",
+    "COLLECTION"
+  ],
+  "skills": [
+    "選擇技能",
+    "CHOOSE A SKILL"
+  ],
+  "settings": [
+    "設定",
+    "SETTINGS"
+  ],
+  "matching": [
+    "正在尋找對手",
+    "FINDING AN OPPONENT"
+  ],
+  "ready": [
+    "對手已就緒",
+    "OPPONENT READY"
+  ],
+  "tutorial": [
+    "遊玩教學",
+    "HOW TO PLAY"
+  ],
+  "confirm": [
+    "確認操作",
+    "CONFIRM"
+  ],
+  "notice": [
+    "提示",
+    "NOTICE"
+  ],
+  "processing": [
+    "正在處理",
+    "PLEASE WAIT"
+  ],
+  "options": [
+    "選擇設定",
+    "SELECT OPTION"
+  ]
+}

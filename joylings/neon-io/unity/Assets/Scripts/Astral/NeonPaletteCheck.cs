@@ -115,6 +115,8 @@ namespace Neon.Astral
             foreach(var r in root.GetComponentsInChildren<Renderer>(true))
             {
                 if(!(r is SpriteRenderer)&&!(r is ParticleSystemRenderer)&&!(r is TrailRenderer)&&!(r is LineRenderer))continue;
+                if(FactionVisuals.PreservesGuardian(r))
+                {foreach(var m in r.sharedMaterials)if(m)Require(!m.shader.name.StartsWith("Neon/Faction/"),"Guardian preserves lobby palette: "+r.name);continue;}
                 var ammo=r.GetComponentInParent<Ammo>();Force expected=ammo?ammo.VisualForce:force;
                 foreach(var m in r.sharedMaterials)if(m)Require(m.shader.name.StartsWith("Neon/Faction/")&&m.shader.isSupported,"Palette shader missing/unsupported: "+r.name);
                 r.GetPropertyBlock(block);Require(Mathf.Approximately(block.GetFloat("_NeonSide"),expected==Force.Player?0:1),"Wrong viewer side: "+r.name);block.Clear();count++;

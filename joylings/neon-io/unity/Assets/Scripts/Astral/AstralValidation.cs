@@ -90,6 +90,20 @@ namespace Neon.Astral
             MyPlayer.SetLanguage(Language.Chinese);PhotonLauncher.SelectGameType=GameType.InfinityWar;SceneManager.LoadScene("Battle");
             until=Time.realtimeSinceStartup+30;while((!BattleManager.BM||!BattleManager.BM.MyPlayerRole||!BattleManager.BM.MyPlayerRole.IsInitialized)&&Time.realtimeSinceStartup<until)yield return null;
             Require(BattleManager.BM&&BattleManager.BM.MyPlayerRole,"offline arena spawn");
+            var own=BattleManager.BM.MyPlayerRole;int oldLevel=own.LV;
+            own.GainExp(own.ExperienceToNextLevel-own.Experience+1);
+            Require(own.LV==oldLevel+1&&own.Experience==1&&own.ExperienceRatio>0&&own.ExperienceRatio<1,"Experience carries across level-up and exposes real remaining progress");
+            var haloCandidates=FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None).Where(p=>p.name.StartsWith("PlayerLight_")).ToArray();
+            foreach(var p in haloCandidates)report.checks.Add("Halo inspection: "+p.name+" parent="+(p.transform.parent?p.transform.parent.name:"none")+" playing="+p.isPlaying+" role="+(p.GetComponentInParent<Role>()?p.GetComponentInParent<Role>().name:"none"));
+            Require(!CombatRegistry.Roles.Where(r=>r&&r.IsInitialized).SelectMany(r=>r.GetComponentsInChildren<ParticleSystem>()).Any(p=>p.name.StartsWith("PlayerLight_")&&p.isPlaying),"Player and NPC persistent red/blue light halos are absent");
+            var guardian=Instantiate(Resources.Load<GameObject>("God"),own.transform.position+new Vector3(300,-80,0),Quaternion.identity).GetComponent<GodRole>();guardian.Init();
+            var head=guardian.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(r=>r.sprite&&r.sprite.name=="head");
+            Require(head,"Guardian retains original articulated head sprite");
+            Require(head.transform.parent.GetComponentsInChildren<SpriteRenderer>().Where(r=>r!=head&&r.sortingLayerID==head.sortingLayerID).All(r=>r.sortingOrder<head.sortingOrder),"Guardian head renders above body and limbs");
+            Require(guardian.GetComponentsInChildren<Renderer>().Where(FactionVisuals.PreservesGuardian).SelectMany(r=>r.sharedMaterials).Where(m=>m).All(m=>!m.shader.name.StartsWith("Neon/Faction/")),"Guardian retains lobby artwork without hostile tint");
+            Require(guardian.GetComponentsInChildren<Image>().Where(i=>i.name=="health").All(i=>i.color.g>i.color.r&&i.rectTransform.rect.height==10&&i.type==Image.Type.Filled&&i.fillMethod==Image.FillMethod.Horizontal),"Guardian uses a compact cyan health line");
+            Require(guardian.GetComponentsInChildren<SpriteRenderer>().Where(r=>r.name=="healthFrame"||r.name=="healthBottom").All(r=>!r.enabled),"Guardian has no old red health disc or frame");
+            yield return new WaitForSeconds(.2f);Capture("guardian-original-palette");Destroy(guardian.gameObject);
             foreach(FeaturePart p in Enum.GetValues(typeof(FeaturePart))){var feature=FeatureData.GetAllFeatureDatas(p).First(f=>f.Owned);BattleManager.BM.MyPlayerRole.GetFeature(p,feature.ID);}
             yield return new WaitForSeconds(2);Capture("18-battle-hud");
             foreach(var size in new[]{new Vector2Int(1920,1080),new Vector2Int(2560,1080),new Vector2Int(1024,768),new Vector2Int(960,540)})
@@ -113,6 +127,15 @@ namespace Neon.Astral
         {
             Canvas.ForceUpdateCanvases();var corners=new Vector3[4];
             foreach(var t in UI.GetComponentsInChildren<Text>())Require(!t.text.Contains("ASTRAL SANCTUM")&&!t.text.Contains("星儀神殿")&&!t.text.Contains("星際征途告一段落"),"No added lore: "+t.name);
+            var title=UI.GetComponentsInChildren<Image>().FirstOrDefault(t=>t.name=="Page title"||t.name=="Brand");
+            if(title)Require(title.sprite&&title.sprite.name.EndsWith(UI.Chinese?"-zh":"-en"),"Localized outlined title artwork is loaded");
+            if(UI.CurrentView=="lobby")
+            {
+                var settings=UI.GetComponentsInChildren<Button>().First(b=>b.name=="Settings");var quit=UI.GetComponentsInChildren<Button>().First(b=>b.name=="Quit");
+                Require(settings.transform.position.x<Screen.width*.5f&&quit.transform.position.x<Screen.width*.5f,"Settings and quit stay in the left navigation");
+                Require(settings.transform.Find("Settings icon").GetComponent<AstralGraphic>().shape==AstralGraphic.Shape.Gear,"Settings uses gear icon");
+            }
+            else if(UI.CurrentView!="loading")Require(!UI.GetComponentsInChildren<Text>().Any(t=>t.name=="Stars"),"No unrelated naked currency balance in page headers");
             if(UI.CurrentView=="battle"||UI.CurrentView=="result")
             {
                 foreach(var pin in UI.GetComponentsInChildren<AstralCorner>())
@@ -124,7 +147,16 @@ namespace Neon.Astral
                     if(pin.name!="Leaderboard")Require(edgeY>=0&&edgeY<=40,"HUD follows vertical edge: "+pin.name);
                 }
                 Require(!UI.GetComponentsInChildren<Text>().Any(t=>t.text=="NEON IMPACT"),"No redundant battle logo");
-                Require(!UI.GetComponentsInChildren<RectTransform>().Any(t=>t.name=="Level"||t.name=="Level orbit"||t.name=="Level label"),"No persistent level display");
+                var level=UI.GetComponentsInChildren<RectTransform>().FirstOrDefault(t=>t.name=="Level");
+                var experience=UI.GetComponentsInChildren<RectTransform>().FirstOrDefault(t=>t.name=="Experience");
+                Require(level&&experience&&level.parent==experience.parent&&level.anchoredPosition.x+level.rect.width*.5f<experience.anchoredPosition.x-experience.rect.width*.5f,"Compact player level sits beside experience without overlap");
+                foreach(var fill in UI.GetComponentsInChildren<Image>().Where(i=>i.name=="Experience fill"||i.name=="Health fill"))
+                {
+                    Require(fill.sprite&&fill.type==Image.Type.Filled,"Progress has a renderable filled sprite: "+fill.name);
+                    var mesh=fill.canvasRenderer.GetMesh();var vertices=mesh?mesh.vertices:new Vector3[0];
+                    float visibleWidth=vertices.Length>0?vertices.Max(v=>v.x)-vertices.Min(v=>v.x):0;
+                    Require(Mathf.Abs(visibleWidth-fill.rectTransform.rect.width*fill.fillAmount)<1,"Rendered progress width matches its fraction: "+fill.name);
+                }
                 var rank=UI.GetComponentsInChildren<Graphic>().FirstOrDefault(g=>g.name=="Leaderboard");
                 if(rank)Require(rank.color.a<=.3f&&!rank.raycastTarget,"Leaderboard stays translucent and does not intercept input");
                 var leave=UI.GetComponentsInChildren<Button>().FirstOrDefault(b=>b.name=="Leave arena");

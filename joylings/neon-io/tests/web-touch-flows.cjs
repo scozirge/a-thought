@@ -15,12 +15,13 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-touch
   const click=n=>gestures.click(page,n);
   for(const [i,p] of [page,desktop].entries()){
    p.on('pageerror',e=>report.errors.push(e.message));p.on('console',m=>{const s=m.text().replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'[redacted-id]');if(/Exception:|abort\(|shader.*error|NullReferenceException/i.test(s))report.errors.push(s.slice(0,500));fs.appendFileSync(path.join(output,'peer-'+i+'.log'),s+'\n');});
-   await p.goto(url+'?neonQA=1&neonRoom='+room);await p.locator('#start:enabled').waitFor({timeout:300000});await p.locator('#start').click();await ready(p,()=>neonState.view==='lobby');
+   await p.goto(url+'?neonQA=1&neonRoom='+room);await p.waitForFunction(()=>!!window.unityInstance,null,{timeout:300000});await ready(p,()=>neonState.view==='lobby');
   }
   async function layout(label){
    await page.waitForTimeout(650);const s=await page.evaluate(()=>neonState),r=s.cssWidth/s.screenWidth;
    for(const c of s.controls.filter(c=>c.type!=='Scrollbar')){assert.ok(c.w*r>=43.4&&c.h*r>=43.4,label+': small '+c.name);if(!c.scroll)assert.ok(c.x*r>=-1&&c.y*r>=-1&&(c.x+c.w)*r<=s.cssWidth+1&&(c.y+c.h)*r<=s.cssHeight+1,label+': clipped '+c.name);}
    if(s.view==='battle')assert.ok(!s.elements.some(e=>e.name==='Tooltip'),label+': no stale hover description after scene change or rotation');
+   for(const title of s.elements.filter(e=>e.name==='Page title'||e.name==='Brand'))assert.equal(title.fontSize,0,label+': heading uses localized title artwork');
    report.layouts.push({label,view:s.view,size:[s.cssWidth,s.cssHeight]});await page.screenshot({path:path.join(output,label+'.png'),scale:'css'});console.log('Layout complete',label);
   }
   async function closeGuide(p=page,mobile=true){if(await p.evaluate(()=>neonState.controls.some(c=>c.name==='Close tutorial')))await gestures.click(p,'Close tutorial',mobile);}

@@ -19,7 +19,7 @@ namespace Neon.Astral
                 var role=roles[i];if(!role)continue;
                 if(!role.RoleCanvas)continue;
                 StyleWorldText(role.RoleCanvas.transform);
-                var health=Field<Image>(role,"HealthImage");if(health)health.color=role.MyForce==Force.Player?FactionVisuals.Friendly:FactionVisuals.Hostile;
+                var health=Field<Image>(role,"HealthImage");if(health)health.color=role is GodRole?HudColor(Teal,.75f):role.MyForce==Force.Player?FactionVisuals.Friendly:FactionVisuals.Hostile;
             }
         }
         void StyleWorldText(Transform root)
@@ -49,12 +49,17 @@ namespace Neon.Astral
             if(!touch)leave.gameObject.AddComponent<AstralHover>().content=()=>L("離開戰場","Leave arena");
             Pin(leave.transform,Vector2.one,new Vector2(edge,touch?12:20));
 
-            float healthWidth=touch?144:256,healthHeight=touch?30:48;
+            float healthWidth=touch?144:256,healthHeight=touch?48:78;
             var life=Rect(page,"Vitality",0,0,healthWidth,healthHeight);Pin(life,Vector2.zero,new Vector2(32,healthBottom));
-            var hp=HudText(life,"Health","",0,touch?5:8,healthWidth,touch?20:32,touch?13:22,HudColor(Pearl,.88f));
-            Image(life,"Health track",0,touch?-11:-18,healthWidth,touch?3:5,null,HudColor(Deep,.6f));
-            var fill=Image(life,"Health fill",0,touch?-11:-18,healthWidth,touch?3:5,null,HudColor(Teal,.9f));fill.type=UnityEngine.UI.Image.Type.Filled;fill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
-            live.Add(()=>{var p=BattleManager.BM?BattleManager.BM.MyPlayerRole:null;if(!p)return;hp.text=p.Health+" / "+p.MaxHealth;fill.fillAmount=p.HealthRatio;});
+            var hp=HudText(life,"Health","",0,touch?14:25,healthWidth,touch?20:32,touch?13:22,HudColor(Pearl,.88f));
+            Image(life,"Health track",0,touch?1:5,healthWidth,touch?3:5,null,HudColor(Deep,.6f));
+            var fill=Image(life,"Health fill",0,touch?1:5,healthWidth,touch?3:5,Solid,HudColor(Teal,.9f));fill.preserveAspect=false;fill.type=UnityEngine.UI.Image.Type.Filled;fill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
+            float levelWidth=touch?42:70,expWidth=healthWidth-levelWidth-8;
+            var level=HudText(life,"Level","",-healthWidth*.5f+levelWidth*.5f,touch?-14:-23,levelWidth,touch?20:30,touch?12:19,HudColor(Gold,.9f));
+            var experience=Rect(life,"Experience",(levelWidth+8)*.5f,touch?-14:-23,expWidth,touch?10:16);
+            Image(experience,"Experience track",0,0,expWidth,touch?3:5,null,HudColor(Gold,.18f));
+            var expFill=Image(experience,"Experience fill",0,0,expWidth,touch?3:5,Solid,HudColor(Gold,.78f));expFill.preserveAspect=false;expFill.type=UnityEngine.UI.Image.Type.Filled;expFill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
+            live.Add(()=>{var p=BattleManager.BM?BattleManager.BM.MyPlayerRole:null;if(!p)return;hp.text=p.Health+" / "+p.MaxHealth;fill.fillAmount=p.HealthRatio;level.text="LV "+p.LV;expFill.fillAmount=p.ExperienceRatio;});
 
             var skills=Field<Dictionary<int,Skill>>(battle,"SkillDic");
             float slotWidth=touch?48:78,slotHeight=touch?(compact?56:64):104,gap=touch?(compact?8:12):20;

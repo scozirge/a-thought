@@ -19,7 +19,9 @@ async function click(page,name,mobile=true){
    await page.waitForTimeout(650);return;
   }
   const down=r.y+r.h>r.clipY+r.clipH;
-  const x=r.clipX+Math.min(24,r.clipW*.1),startY=r.clipY+r.clipH*(down ? .82 : .18),endY=r.clipY+r.clipH*(down ? .18 : .82);
+  // Use the scroll gutter: dragging through an InputField selects text instead
+  // of scrolling its parent (the compact lobby places the name field here).
+  const x=r.clipX+1.5,startY=r.clipY+r.clipH*(down ? .82 : .18),endY=r.clipY+r.clipH*(down ? .18 : .82);
   // Wait for inertia and the 500 ms QA snapshot before targeting the moved row.
   await drag(page,x,startY,x,endY,mobile);await page.waitForTimeout(1100);
  }

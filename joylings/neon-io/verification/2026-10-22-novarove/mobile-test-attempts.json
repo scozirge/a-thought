@@ -1,0 +1,23 @@
+[
+  {
+    "passed": false,
+    "layouts": 23,
+    "failure": "AssertionError [ERR_ASSERTION]: Could not scroll into view: Collection\n    at Object.click (E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-controls.cjs:26:9)\n    at async E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:56:4",
+    "errors": [],
+    "explanation": "自動滑動手勢落在姓名 InputField，拖曳變成文字選取。改用捲動區空白邊緣執行真實觸控，未改遊戲捲動行為。"
+  },
+  {
+    "passed": false,
+    "layouts": 45,
+    "failure": "AssertionError [ERR_ASSERTION]: Stick moves the real player right\n    at E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:80:119",
+    "errors": [],
+    "explanation": "四種尺寸選單通過；固定等待 700 ms 後比較位置失敗，記錄中的搖桿向右且速度約 +400。改為在 8 秒期限內等待實際位置向右改變並記錄起終點，不跳過實際移動斷言。"
+  },
+  {
+    "passed": false,
+    "layouts": 46,
+    "failure": "page.waitForFunction: Timeout 120000ms exceeded.\n    at ready (E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:15:35)\n    at E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:98:210",
+    "errors": [],
+    "explanation": "角色在離場確認窗期間死亡，取消後原版結算教學仍阻擋輸入。記錄為 result、guidePage=1/1、playerAlive=false、connected=true。測試改為先確認對話窗關閉，再處理教學／再次出戰後檢查操作；不暫停線上戰鬥。"
+  }
+]

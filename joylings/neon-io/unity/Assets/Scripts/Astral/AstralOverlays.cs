@@ -39,7 +39,7 @@ namespace Neon.Astral
             Destroy(measure.gameObject);
             float height=messageHeight+236;
             ((RectTransform)box).sizeDelta=new Vector2(1000,height);
-            Text(box,"Title",string.IsNullOrEmpty(title)?kind=="confirm"?L("確認操作","CONFIRM"):kind=="loading"?L("正在處理","PLEASE WAIT"):L("提示","NOTICE"):title,0,height*.5f-57,880,62,34,Gold,TextAnchor.MiddleLeft);
+            TitleAt(box,"Title",string.IsNullOrEmpty(title)?kind=="confirm"?L("確認操作","CONFIRM"):kind=="loading"?L("正在處理","PLEASE WAIT"):L("提示","NOTICE"):title,-440,height*.5f-57,880,52);
             Scroll(box,"Message",0,8,880,messageHeight,out var c);
             var text=Text(c,"Content",message,0,-messageHeight*.5f,830,messageHeight,28,Pearl,TextAnchor.UpperLeft);text.rectTransform.anchorMin=text.rectTransform.anchorMax=new Vector2(.5f,1);
             float h=Mathf.Max(messageHeight,text.preferredHeight+10);text.rectTransform.sizeDelta=new Vector2(830,h);text.rectTransform.anchoredPosition=new Vector2(0,-h*.5f);c.sizeDelta=new Vector2(0,h);
@@ -56,8 +56,8 @@ namespace Neon.Astral
             if(TouchUI)
             {BuildTouchBook(parent,book,value);return;}
             var box=Plate(parent,"Tutorial",0,0,1600,930).transform;
-            Text(box,"Title",L("遊玩教學","HOW TO PLAY"),-340,373,760,90,48,Gold);
-            Button(box,"Close tutorial",L("關閉教學","CLOSE GUIDE"),588,381,290,62,()=>book.OpenBook(false),false,23);
+            TitleAt(box,"Title",L("遊玩教學","HOW TO PLAY"),-720,373,760,74);
+            IconButton(box,"Close tutorial",AstralGraphic.Shape.Back,688,381,72,()=>book.OpenBook(false));
             Graphic(box,"Rule",0,302,1460,2,AstralGraphic.Shape.Rule,Gold);
             Scroll(box,"Guide text",275,12,855,506,out var c);
             var text=Text(c,"Guide content",value,0,-240,790,480,30,Pearl,TextAnchor.UpperLeft);text.rectTransform.anchorMin=text.rectTransform.anchorMax=new Vector2(.5f,1);float h=Mathf.Max(480,text.preferredHeight+20);text.rectTransform.sizeDelta=new Vector2(790,h);text.rectTransform.anchoredPosition=new Vector2(0,-h*.5f);c.sizeDelta=new Vector2(0,h);
@@ -84,7 +84,7 @@ namespace Neon.Astral
                 }
             }
             if(string.IsNullOrWhiteSpace(value))value=L("收集星星並取得技能。技能會依原有規則自動施放。\n\n在收藏中查看技能，再於頂尖對決選擇五項技能出戰。","Collect stars and skills. Skills activate automatically.\n\nBrowse skills in Collection, then choose five for Challenge.");
-            return value;
+            return value.Replace("NEON IMPACT",L("星際遊俠","NOVAROVE"));
         }
         void BuildTouchBook(Transform parent,Book book,string value)
         {
@@ -93,8 +93,8 @@ namespace Neon.Astral
             float w=Mathf.Min(960,ViewWidth-24),h=Mathf.Min(540,ViewHeight-24);
             var box=Plate(parent,"Tutorial",0,0,w,h).rectTransform;
             box.localScale=Vector3.one*(ratio/Mathf.Max(.001f,parent.lossyScale.x));
-            Text(box,"Title",L("遊玩教學","HOW TO PLAY"),-w*.5f+16+(w-160)*.5f,h*.5f-38,w-160,44,20,Gold);
-            Button(box,"Close tutorial",L("關閉教學","CLOSE"),w*.5f-72,h*.5f-38,112,44,()=>book.OpenBook(false),false,16);
+            TitleAt(box,"Title",L("遊玩教學","HOW TO PLAY"),-w*.5f+20,h*.5f-38,w-100,32);
+            IconButton(box,"Close tutorial",AstralGraphic.Shape.Back,w*.5f-38,h*.5f-38,44,()=>book.OpenBook(false));
             Graphic(box,"Rule",0,h*.5f-68,w-32,1,AstralGraphic.Shape.Rule,Gold);
             bool illustration=w>=760&&h>=340;
             float artWidth=illustration?184:0,bodyHeight=Mathf.Max(48,h-156),bodyWidth=w-32-artWidth;

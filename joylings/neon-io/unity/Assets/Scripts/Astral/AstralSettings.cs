@@ -50,8 +50,8 @@ namespace Neon.Astral
             if(TouchUI){OpenTouchChoices(source);return;}
             if(!source)return;var shade=Scrim(page,"Choice overlay",new Color(0,0,0,.82f));
             var panel=Plate(shade.transform,"Choices",0,0,800,850).transform;
-            Button(panel,"Close choices",L("關閉","CLOSE"),250,355,220,55,()=>Destroy(shade.gameObject),false,22);
-            Text(panel,"Choose title",L("選擇設定","SELECT OPTION"),-160,355,400,65,30,Gold);
+            IconButton(panel,"Close choices",AstralGraphic.Shape.Back,310,355,66,()=>Destroy(shade.gameObject));
+            TitleAt(panel,"Choose title",L("選擇設定","SELECT OPTION"),-360,355,540,52);
             Scroll(panel,"Options",0,-40,730,650,out var c);c.sizeDelta=new Vector2(0,Mathf.Max(650,source.options.Count*78));
             for(int i=0;i<source.options.Count;i++)
             {int index=i;var b=Button(c,"Option "+i,source.options[i].text,0,-40-i*78,670,65,()=>{source.value=index;Destroy(shade.gameObject);},i==source.value,25);b.GetComponent<RectTransform>().anchorMin=b.GetComponent<RectTransform>().anchorMax=new Vector2(.5f,1);}

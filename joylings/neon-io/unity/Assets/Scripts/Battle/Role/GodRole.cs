@@ -33,6 +33,7 @@ namespace Starbro.NeonIO
             tag = MyForce.ToString();
             DetectTargetTimer = new MyTimer(DetectTargetInterval, ExecuteDetectTarget, true, true);
             base.Init();
+            Neon.Astral.GodAppearance.Apply(transform);
             // Offline spawning has no player-data RPC; initialize the same localized identity.
             if (string.IsNullOrWhiteSpace(Name))
                 SetPlayerData("", StringData.GetString("Creator"));

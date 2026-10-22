@@ -30,14 +30,14 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
     assert.ok(stick&&hp&&skills&&rank&&feed,'All mobile HUD groups present');
     for(const e of [stick,hp,skills,rank,feed])assert.ok(e.x>=10&&e.y>=10&&e.x+e.w<=s.cssWidth-9&&e.y+e.h<=s.cssHeight-9,`${label}: HUD ${e.name} outside safe edges`);
     assert.ok(stick.x>=28&&s.cssHeight-stick.y-stick.h>=23,'Joystick has breathing room inside bottom-left safe area');
-    assert.ok(hp.y+hp.h<=stick.y-10&&hp.h<=32,'Minimal health bar above joystick');
+    assert.ok(hp.y+hp.h<=stick.y-10&&hp.h<=50,'Compact health and experience above joystick');
     assert.ok(Math.abs(s.cssWidth-skills.x-skills.w-24)<1&&s.cssHeight-skills.y-skills.h>=23,'Skills inset at bottom right');
     assert.ok(Math.abs(feed.x-12)<1&&Math.abs(feed.y-12)<1,'Combat feed upper left');
     assert.ok(Math.abs(s.cssWidth-rank.x-rank.w-24)<1&&rank.y>=58,'Rank upper right below leave');
     assert.ok(rank.y+rank.h<=skills.y+1,'Rank and skills do not overlap');
     assert.ok(rank.opacity>0&&rank.opacity<=.3,'Leaderboard is translucent');
     assert.ok(stick.opacity<=.25&&by('Thumb').opacity<=.55,'Joystick and thumb remain translucent');
-    assert.ok(!elements.some(e=>['Level','Level label','Level orbit'].includes(e.name)),'Persistent level display removed');
+    const level=by('Level'),exp=by('Experience');assert.ok(level&&exp&&level.x+level.w<exp.x&&Math.abs(level.y+level.h/2-exp.y-exp.h/2)<1,'Level sits beside experience');
     const exit=by('Exit icon'),leave=controls.find(c=>c.name==='Leave arena');
     assert.ok(exit&&exit.w<=24&&exit.h<=24&&leave.w>=43.4&&leave.h>=43.4,'Small exit icon retains accessible hit area');
     assert.ok(!leave.text,'Exit has no large text label');
@@ -48,8 +48,8 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
    report.layouts.push({label,view:s.view,css:[s.cssWidth,s.cssHeight],controls:controls.length,elements});await shot(label);
   }
   await page.goto(url+'?neonQA=1&neonRoom=neon-web-check-stick-'+Date.now().toString(36));
-  await page.locator('#rotate').waitFor({state:'visible'});await page.locator('#start:enabled').waitFor({timeout:300000});await ready(()=>window.neonState?.scene==='Init'&&!neonState.started);await shot('portrait-start');
-  await resize(844,390);await page.locator('#rotate').waitFor({state:'hidden'});await page.locator('#start').tap();await ready(()=>neonState.scene==='Lobby'&&neonState.view==='lobby');
+  await page.locator('#rotate').waitFor({state:'visible'});await page.waitForFunction(()=>!!window.unityInstance,null,{timeout:300000});await ready(()=>window.neonState?.scene==='Init'&&!neonState.started);await shot('portrait-start');
+  await resize(844,390);await page.locator('#rotate').waitFor({state:'hidden'});await ready(()=>neonState.scene==='Lobby'&&neonState.view==='lobby');
   const originalLoad=await page.evaluate(()=>neonLoadStarted);
   for(const [w,h] of (inputOnly?[]:[[844,390],[667,375],[844,300],[844,240]])){
    await resize(w,h);await checkLayout(`lobby-${w}x${h}`);
@@ -77,7 +77,11 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
   await ensureAlive();
   let s=await state(),stick=s.elements.find(e=>e.name==='Touch joystick'),r=await gestures.cssRect(page,stick);const x=r.x+r.w/2,y=r.y+r.h/2;
   const start={x:s.playerX,y:s.playerY};await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+45,y}]);
-  await ready(()=>neonState.stickX>.7&&neonState.stickDragging);await page.waitForTimeout(700);s=await state();assert.ok(s.playerX>start.x+1,'Stick moves the real player right');report.checks.push('Real CDP touch drag moves the actual Photon player right');
+  await ready(()=>neonState.stickX>.7&&neonState.stickDragging);
+  // Live opponents can briefly knock the player back; wait for observed movement,
+  // rather than assuming one 500 ms QA snapshot already reflects the gesture.
+  await page.waitForFunction(p=>neonState.playerAlive&&neonState.playerX>p.x+1,start,{timeout:8000});
+  s=await state();report.movement={start,end:{x:s.playerX,y:s.playerY},velocity:{x:s.velocityX,y:s.velocityY}};report.checks.push('Real CDP touch drag moves the actual Photon player right');
   await gestures.touch(page,'touchStart',[{id:1,x:x+45,y},{id:2,x:420,y:180}]);await ready(()=>neonState.stickX>.7);await gestures.touch(page,'touchEnd',[{id:1,x:x+45,y}]);await ready(()=>neonState.stickX>.7&&neonState.stickDragging);
   await gestures.touch(page,'touchEnd',[]);await ready(()=>!neonState.stickDragging&&neonState.stickX===0&&neonState.stickY===0);await page.waitForTimeout(300);s=await state();assert.ok(Math.hypot(s.velocityX,s.velocityY)<1,'Release stops movement');
   await page.touchscreen.tap(440,200);await page.waitForTimeout(600);assert.equal((await state()).stickX,0,'Tap outside joystick cannot steer');
@@ -91,10 +95,14 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
   await gestures.touch(page,'touchCancel',[]);await ready(()=>!neonState.elements.some(e=>e.name==='Tooltip'));
   report.checks.push('Mobile skill description appears only while pressed and disappears on release or touchcancel');
   await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+40,y}]);await ready(()=>neonState.stickX>.7);await resize(390,844);await ready(()=>!neonState.stickDragging);await gestures.touch(page,'touchEnd',[]);await resize(844,390);assert.equal((await state()).stickX,0);assert.ok((await state()).connected);
-  await click('Leave arena');await ready(()=>neonState.controls.some(c=>c.name==='Cancel dialog'));assert.ok((await state()).inputBlocked);await checkLayout('leave-confirm');await click('Cancel dialog');await ready(()=>!neonState.inputBlocked);
+  await click('Leave arena');await ready(()=>neonState.controls.some(c=>c.name==='Cancel dialog'));assert.ok((await state()).inputBlocked);await checkLayout('leave-confirm');await click('Cancel dialog');
+  await ready(()=>!neonState.controls.some(c=>c.name==='Cancel dialog'));
+  // Online combat continues while the confirmation is open. A death can open
+  // the original post-game guide; complete that flow before testing movement.
+  await ensureAlive();await ready(()=>!neonState.inputBlocked);
   report.checks.push('Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement');
   for(const [w,h] of [[844,390],[667,375],[844,300],[844,240]]){await resize(w,h);await ensureAlive();await checkLayout(`hud-${w}x${h}`);}
-  report.checks.push('Lightweight HUD at four sizes: translucent rank and joystick, inset controls, small exit icon with 44-pixel hit area, compact skills and no persistent level display');
+  report.checks.push('Lightweight HUD at four sizes: translucent rank and joystick, inset controls, small exit icon with 44-pixel hit area, compact skills and player level beside actual experience progress');
   await resize(844,390);await ensureAlive();
   await page.evaluate(()=>{for(const [k,v] of Object.entries({left:44,right:44,bottom:21}))document.documentElement.style.setProperty('--safe-'+k,v+'px');dispatchEvent(new Event('resize'));});
   await ready(()=>neonState.cssWidth===756&&neonState.cssHeight===369);await page.waitForTimeout(700);await ensureAlive();await checkLayout('hud-notch');

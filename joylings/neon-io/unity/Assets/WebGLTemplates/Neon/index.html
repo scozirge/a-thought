@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-visual">
 <meta name="theme-color" content="#10172b">
-<title>Neon Impact</title>
+<title>星際遊俠 NOVAROVE</title>
 <style>
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
 *{box-sizing:border-box}
@@ -16,9 +16,11 @@ html,body{margin:0;width:100%;height:100%;background:#10172b;color:#eee8d6;font-
 h1{font-size:clamp(28px,6vw,56px);letter-spacing:.08em;margin:0 0 20px;color:#d8bd72}
 progress{width:min(340px,80vw);height:8px;accent-color:#d8bd72;justify-self:center}
 p{font-size:16px;line-height:1.6;margin:12px 0}
-button{font:inherit;font-size:18px;font-weight:600;min-height:48px;background:#d8bd72;color:#151b2d;border:0;border-radius:4px;padding:10px 28px;cursor:pointer;touch-action:manipulation}
+button{font:inherit;font-size:16px;font-weight:500;min-height:44px;background:#18223a;color:#eee8d6;border:1px solid #bca56d;border-radius:3px;padding:10px 20px;cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.45;cursor:wait}
 a{color:#d8bd72;font-size:16px;margin-top:20px}
+#sound{position:absolute;z-index:1;top:max(12px,var(--safe-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:#10172bd9;font-size:13px;padding:8px 14px}
+#sound svg{width:20px;height:20px;fill:none;stroke:#cbb477;stroke-width:1.6}
 #error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}
 #rotate{z-index:2;padding:max(24px,var(--safe-top)) max(24px,var(--safe-right)) max(24px,var(--safe-bottom)) max(24px,var(--safe-left))}
 #rotate h2{font-size:26px;font-weight:600;color:#d8bd72;margin:24px 0 8px}
@@ -31,12 +33,13 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
 </head>
 <body>
 <main id="viewport">
- <div id="game"><canvas id="unity-canvas" tabindex="0" aria-label="Neon Impact 遊戲"></canvas></div>
+ <div id="game"><canvas id="unity-canvas" tabindex="0" aria-label="星際遊俠 NOVAROVE 遊戲"></canvas></div>
  <section id="loading" class="screen" aria-label="載入遊戲">
-  <h1>NEON IMPACT</h1><progress id="progress" max="1" value="0" aria-label="載入進度"></progress>
-  <p id="status" role="status">載入中…</p><button id="start" disabled>開始遊戲</button>
-  <p id="error" role="alert" hidden></p><a href="https://scozirge.github.io/classroom/#sixth-course">返回第 6 堂課</a>
+  <progress id="progress" max="1" value="0" aria-label="載入進度"></progress>
+  <p id="status" role="status">載入中…</p>
+  <p id="error" role="alert" hidden></p>
  </section>
+ <button id="sound" aria-label="開啟遊戲聲音" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5 5 9H2v6h3l5 4Z M15 9l7 6m0-6-7 6"/></svg><span>點一下開啟聲音</span></button>
  <section id="rotate" class="screen" role="dialog" aria-modal="true" aria-labelledby="rotate-title" hidden>
   <div class="phone" aria-hidden="true"></div><h2 id="rotate-title">請將手機橫放</h2>
   <p>橫向後會自動調整畫面。<br>若畫面沒有旋轉，請關閉手機的直向鎖定。</p>
@@ -45,12 +48,23 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
 </main>
 <script src="Build/{{{ LOADER_FILENAME }}}"></script>
 <script>
-const canvas=document.getElementById('unity-canvas'),start=document.getElementById('start'),status=document.getElementById('status');
+const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
 // Touchscreen Windows laptops still use the desktop mouse controls. iPadOS can
 // identify itself as a Mac when requesting a desktop website.
 const touchDevice=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-let scheduled=false,lastViewport='',portrait=false;
+let scheduled=false,lastViewport='',portrait=false,started=false;
+function maybeStart(){
+ if(!window.unityInstance||portrait||started)return;
+ started=true;loading.hidden=true;canvas.focus();
+ window.unityInstance.SendMessage('NeonWebBridge','StartGame');
+}
+function audioState(){sound.hidden=!started||portrait||window.neonAudioState==='running';}
+function unlockAudio(){window.unityInstance?.SendMessage('NeonWebBridge','UnlockAudio');}
+window.addEventListener('neon-audio-state',audioState);
+sound.addEventListener('click',()=>{unlockAudio();canvas.focus();});
+canvas.addEventListener('pointerdown',unlockAudio,{passive:true});
+canvas.addEventListener('keydown',unlockAudio);
 function updateViewport(){
  scheduled=false;
  const visual=window.visualViewport;
@@ -66,6 +80,7 @@ function updateViewport(){
  window.neonViewport={...metrics,portrait,visibleWidth:width,visibleHeight:height};
  const json=JSON.stringify(metrics);
  if(window.unityInstance&&json!==lastViewport){window.unityInstance.SendMessage('NeonWebBridge','SetViewport',json);lastViewport=json;}
+ maybeStart();audioState();
 }
 function scheduleViewport(){if(!scheduled){scheduled=true;requestAnimationFrame(updateViewport);}}
 window.addEventListener('resize',scheduleViewport);
@@ -95,17 +110,12 @@ updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
  dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',
- companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.5-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+ // Keep the storage identity so existing local profiles and loadouts survive the rename.
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.6-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
  window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
- updateViewport();start.disabled=false;status.textContent='準備完成';
- start.onclick=()=>{
-  if(portrait)return;
-  // Unlock audio within the tap, before awaiting optional browser APIs.
-  instance.SendMessage('NeonWebBridge','StartGame');loading.hidden=true;canvas.focus();
-  requestLandscape();
- };
+ updateViewport();
 }).catch(error=>{
  const message=document.getElementById('error');message.hidden=false;
  message.textContent='載入失敗，請重新整理或使用電腦版 Chrome／Edge。';status.textContent='無法載入';console.error(error);

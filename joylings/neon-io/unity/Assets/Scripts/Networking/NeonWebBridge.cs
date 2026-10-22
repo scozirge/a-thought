@@ -8,7 +8,8 @@ using Scoz.Func;
 
 namespace Neon.Networking
 {
-    // Hold time/audio until a browser gesture. Original scenes, clips and their indices stay intact.
+    // Start the original intro automatically when the browser viewport is ready.
+    // Audio can be unlocked independently without restarting the scene timeline.
     public sealed class NeonWebBridge : MonoBehaviour
     {
         [DllImport("__Internal")] static extern void NeonWebAudioUnlock();
@@ -33,6 +34,12 @@ namespace Neon.Networking
             }
         }
         public void ReleaseInput() { Neon.Astral.NeonTouchStick.Release(); Neon.Astral.AstralPresentation.Instance?.ShowTooltip(null); }
+        public void UnlockAudio()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            NeonWebAudioUnlock();
+#endif
+        }
         Neon.Validation.NeonGameplayAudit.Result audit;
         public void RunGameplayAudit()
         {
@@ -81,7 +88,7 @@ namespace Neon.Networking
         [Serializable] class Element { public string name; public float x,y,w,h,opacity,borderOpacity; public int fontSize; }
         [Serializable] class State
         {
-            public string scene, room, region, error; public int features, owned, peers, stars;
+            public string scene, room, region, error; public int features, owned, peers, stars, level, experience, experienceRequired;
             public bool started, connected; public Control[] controls;
             public int[] loadout;
             public int screenWidth, screenHeight;
@@ -113,6 +120,7 @@ namespace Neon.Networking
                 view=presentation?presentation.CurrentView:"",inputBlocked=Neon.Astral.AstralPresentation.InputBlocked||!InputAvailable,
                 stickDragging=stick&&stick.Dragging,stickX=Neon.Astral.NeonTouchStick.Direction.x,stickY=Neon.Astral.NeonTouchStick.Direction.y,
                 playerAlive=player&&player.IsAlive,playerX=player?player.transform.position.x:0,playerY=player?player.transform.position.y:0,velocityX=velocity.x,velocityY=velocity.y,
+                level=player?player.LV:0,experience=player?player.Experience:0,experienceRequired=player?player.ExperienceToNextLevel:0,
                 connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length, gameplayAudit=audit,
                 room=PhotonNetwork.InRoom ? PhotonNetwork.Runner.SessionInfo.Name : "", error=PhotonNetwork.LastError,
                 region=PhotonNetwork.CloudRegion,
@@ -126,7 +134,7 @@ namespace Neon.Networking
                             clipX=scroll?clip[0].x:0,clipY=scroll?Screen.height-clip[1].y:0,clipW=scroll?clip[2].x-clip[0].x:Screen.width,clipH=scroll?clip[2].y-clip[0].y:Screen.height,
                             x=c[0].x,y=Screen.height-c[1].y,w=c[2].x-c[0].x,h=c[2].y-c[0].y};}).ToArray()
                 ,elements=presentation?presentation.GetComponentsInChildren<RectTransform>().Where(t=>
-                    new[]{"Touch joystick","Thumb","Vitality","Skill dock","Leaderboard","Combat feed","Skill notification","Dialog","Tutorial","Guide content","Result panel","Health","Page title","Skill detail","Exit icon","Level","Level label","Level orbit","Slot","Tooltip"}.Contains(t.name))
+                    new[]{"Touch joystick","Thumb","Vitality","Skill dock","Leaderboard","Combat feed","Skill notification","Dialog","Tutorial","Guide content","Result panel","Health","Page title","Brand","Skill detail","Exit icon","Level","Experience","Level orbit","Slot","Tooltip","Menu backing","Currency","Settings icon","Back icon"}.Contains(t.name))
                     .Select(t=>{var c=new Vector3[4];t.GetWorldCorners(c);var text=t.GetComponent<Text>();var graphic=t.GetComponent<Graphic>();var ornament=t.GetComponent<Neon.Astral.AstralGraphic>();return new Element{name=t.name,x=c[0].x,y=Screen.height-c[1].y,w=c[2].x-c[0].x,h=c[2].y-c[0].y,fontSize=text?text.fontSize:0,opacity=graphic?graphic.color.a:0,borderOpacity=ornament?ornament.border.a:0};}).ToArray():new Element[0]
             };
             NeonWebState(JsonUtility.ToJson(state));

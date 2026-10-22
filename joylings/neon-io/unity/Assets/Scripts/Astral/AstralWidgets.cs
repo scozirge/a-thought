@@ -9,7 +9,9 @@ namespace Neon.Astral
     public static class AstralWidgets
     {
         public static readonly Color Night = Hex("10172D"), Panel = Hex("18223A"), Deep = Hex("0B1121"), Gold = Hex("C7AD70"), Pearl = Hex("ECE8DA"), Muted = Hex("A6B0C5"), Teal = Hex("91C8CA"), Red = Hex("D98985");
-        static Font body, title;
+        static Font body, title;static Sprite solid;
+        // Image.Type.Filled renders a full quad when its sprite is null.
+        public static Sprite Solid => solid?solid:solid=Sprite.Create(Texture2D.whiteTexture,new Rect(0,0,Texture2D.whiteTexture.width,Texture2D.whiteTexture.height),Vector2.one*.5f);
         public static Font Body => body ? body : body = Resources.Load<Font>("Astral/Fonts/NotoSansTC-Medium") ?? Resources.Load<Font>("Font/NotoSansCJKtc-Black");
         public static Font Title => title ? title : title = Resources.Load<Font>("Astral/Fonts/Cinzel-SemiBold") ?? Body;
         public static Color Hex(string h){ColorUtility.TryParseHtmlString("#"+h,out var c);return c;}
@@ -25,7 +27,7 @@ namespace Neon.Astral
         }
         public static AstralGraphic Plate(Transform p,string name,float x,float y,float w,float h,bool primary=false,bool block=false)
         {
-            var g=Graphic(p,name,x,y,w,h,AstralGraphic.Shape.Plate,primary?Gold:Panel,block);g.border=primary?Pearl:new Color(Gold.r,Gold.g,Gold.b,.55f);return g;
+            var g=Graphic(p,name,x,y,w,h,AstralGraphic.Shape.Plate,Panel,block);g.border=new Color(Gold.r,Gold.g,Gold.b,primary?.85f:.45f);return g;
         }
         public static Image Image(Transform parent,string name,float x,float y,float w,float h,Sprite sprite,Color color)
         {
@@ -39,10 +41,17 @@ namespace Neon.Astral
         public static Button Button(Transform p,string name,string label,float x,float y,float w,float h,UnityAction action,bool primary=false,int size=28)
         {
             var g=Plate(p,name,x,y,w,h,primary,true);g.ornament=0;var b=g.gameObject.AddComponent<Button>();b.targetGraphic=g;b.transition=Selectable.Transition.None;
-            var t=Text(g.transform,"Label",label,0,0,w-36,h-8,size,primary?Night:Pearl,TextAnchor.MiddleCenter);
+            var t=Text(g.transform,"Label",label,0,0,w-36,h-8,size,primary?Gold:Pearl,TextAnchor.MiddleCenter);
             var state=g.gameObject.AddComponent<AstralButtonState>();state.face=g;state.label=t;state.primary=primary;
             if(action!=null)b.onClick.AddListener(action);
             return b;
+        }
+        public static Button IconButton(Transform p,string name,AstralGraphic.Shape shape,float x,float y,float size,UnityAction action)
+        {
+            var button=Button(p,name,"",x,y,size,size,action);
+            var icon=Graphic(button.transform,name+" icon",0,0,size*.48f,size*.48f,shape,Gold);icon.thickness=size<60?1.7f:2.4f;
+            button.navigation=new Navigation{mode=Navigation.Mode.None};
+            return button;
         }
         public static InputField Input(Transform p,string name,string value,string placeholder,float x,float y,float w,float h,UnityAction<string> changed,int max=32)
         {
@@ -89,9 +98,9 @@ namespace Neon.Astral
     {
         public AstralGraphic face;public Text label;public bool primary;bool hover,focus;bool? last;bool lastHover;
         void Update(){var b=GetComponent<Selectable>();bool enabled=b&&b.IsInteractable();bool hot=hover||focus;if(last==enabled&&lastHover==hot)return;last=enabled;lastHover=hot;
-            face.color=primary?(enabled?(hot?AstralWidgets.Pearl:AstralWidgets.Gold):new Color(.35f,.34f,.31f,1)):(hot&&enabled?new Color(.17f,.22f,.32f,1):AstralWidgets.Panel);
-            face.border=new Color(AstralWidgets.Gold.r,AstralWidgets.Gold.g,AstralWidgets.Gold.b,enabled?(hot?1:.6f):.22f);face.SetVerticesDirty();
-            if(label)label.color=primary?AstralWidgets.Night:(enabled?AstralWidgets.Pearl:AstralWidgets.Muted*.75f);
+            face.color=hot&&enabled?new Color(.14f,.19f,.29f,1):AstralWidgets.Panel;
+            face.border=new Color(AstralWidgets.Gold.r,AstralWidgets.Gold.g,AstralWidgets.Gold.b,enabled?(hot?1:primary?.85f:.45f):.22f);face.SetVerticesDirty();
+            if(label)label.color=enabled?(primary?AstralWidgets.Gold:AstralWidgets.Pearl):AstralWidgets.Muted*.75f;
         }
         public void OnPointerEnter(PointerEventData e){hover=true;}public void OnPointerExit(PointerEventData e){hover=false;}
         public void OnSelect(BaseEventData e){focus=true;}public void OnDeselect(BaseEventData e){focus=false;}
