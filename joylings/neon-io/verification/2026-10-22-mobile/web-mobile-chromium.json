@@ -1,0 +1,291 @@
+{
+  "url": "http://127.0.0.1:8197/",
+  "engine": "chromium",
+  "passed": true,
+  "checks": [
+    "Portrait start shows rotation prompt; original intro remains at its initial state",
+    "Two portrait/landscape round trips preserve page and player instance; next/previous work after rotation",
+    "44 CSS-pixel tutorial controls fit 844x390, 667x375 and 844x300; simulated notch/home-indicator insets remain clear",
+    "First-game tutorial uses the same touch layout; live Photon battle stays connected through rotation and returns to lobby"
+  ],
+  "errors": [],
+  "sizes": [
+    {
+      "label": "guide-landscape",
+      "screen": [
+        1266,
+        585
+      ],
+      "css": [
+        844,
+        390
+      ],
+      "page": "2/10",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Next page",
+          "x": 646,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Previous page",
+          "x": 28,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Close tutorial",
+          "x": 704,
+          "y": 28,
+          "w": 112,
+          "h": 44
+        }
+      ],
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "right": 844,
+        "bottom": 390
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    },
+    {
+      "label": "guide-after-rotations",
+      "screen": [
+        1266,
+        585
+      ],
+      "css": [
+        844,
+        390
+      ],
+      "page": "2/10",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Next page",
+          "x": 646,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Close tutorial",
+          "x": 704,
+          "y": 28,
+          "w": 112,
+          "h": 44
+        },
+        {
+          "name": "Previous page",
+          "x": 28,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        }
+      ],
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "right": 844,
+        "bottom": 390
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    },
+    {
+      "label": "guide-notch-insets",
+      "screen": [
+        1134,
+        554
+      ],
+      "css": [
+        756,
+        369
+      ],
+      "page": "2/10",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Close tutorial",
+          "x": 616,
+          "y": 28.14124548736462,
+          "w": 112,
+          "h": 43.96028880866426
+        },
+        {
+          "name": "Next page",
+          "x": 558,
+          "y": 296.8984657039711,
+          "w": 170,
+          "h": 43.96028880866426
+        },
+        {
+          "name": "Previous page",
+          "x": 28,
+          "y": 296.8984657039711,
+          "w": 170,
+          "h": 43.96028880866426
+        }
+      ],
+      "canvas": {
+        "x": 44,
+        "y": 0,
+        "right": 800,
+        "bottom": 369
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    },
+    {
+      "label": "guide-small-phone",
+      "screen": [
+        1001,
+        563
+      ],
+      "css": [
+        667,
+        375
+      ],
+      "page": "2/10",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Close tutorial",
+          "x": 527.0000187190739,
+          "y": 28.062010743054785,
+          "w": 112.00001756056443,
+          "h": 43.98287676579152
+        },
+        {
+          "name": "Previous page",
+          "x": 27.99995355291681,
+          "y": 302.95511249115367,
+          "w": 170.00001358199904,
+          "h": 43.982897092775175
+        },
+        {
+          "name": "Next page",
+          "x": 469.0000328650841,
+          "y": 302.95511249115367,
+          "w": 170.0000034145542,
+          "h": 43.982897092775175
+        }
+      ],
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "right": 667,
+        "bottom": 375
+      },
+      "viewport": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "guide-short-viewport",
+      "screen": [
+        1266,
+        450
+      ],
+      "css": [
+        844,
+        300
+      ],
+      "page": "2/10",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Previous page",
+          "x": 28.00000508626302,
+          "y": 228,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Next page",
+          "x": 646,
+          "y": 228,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Close tutorial",
+          "x": 704,
+          "y": 28,
+          "w": 112,
+          "h": 44
+        }
+      ],
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "right": 844,
+        "bottom": 300
+      },
+      "viewport": [
+        844,
+        300
+      ]
+    },
+    {
+      "label": "first-game-guide",
+      "screen": [
+        1266,
+        585
+      ],
+      "css": [
+        844,
+        390
+      ],
+      "page": "2/7",
+      "legacyPopupVisible": false,
+      "controls": [
+        {
+          "name": "Close tutorial",
+          "x": 704,
+          "y": 28,
+          "w": 112,
+          "h": 44
+        },
+        {
+          "name": "Next page",
+          "x": 646,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        },
+        {
+          "name": "Previous page",
+          "x": 28,
+          "y": 318,
+          "w": 170,
+          "h": 44
+        }
+      ],
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "right": 844,
+        "bottom": 390
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    }
+  ],
+  "physicalDevice": false
+}

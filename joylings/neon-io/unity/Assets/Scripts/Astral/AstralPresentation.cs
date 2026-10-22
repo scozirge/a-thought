@@ -59,7 +59,7 @@ namespace Neon.Astral
             foreach(var c in FindObjectsByType<Canvas>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {
                 if(c==canvas||c.transform.IsChildOf(transform))continue;
-                if(c.name=="LobbyUI")
+                if(c.GetComponent<LobbyUI>())
                 {
                     // Keep the actual animated background and its original timeline alive.
                     // Only suppress the old controls; disabling this world canvas hid the art.
@@ -73,7 +73,9 @@ namespace Neon.Astral
                         else HideLegacyControls(child);
                     }
                 }
-                else if(c.name=="BattleUI"||c.name=="PopupUI")
+                // Instantiated persistent popups are named PopupUI(Clone). Match their
+                // controller, including child canvases, instead of the prefab name.
+                else if(c.GetComponent<BattleUI>()||c.GetComponentInParent<PopupUI>())
                 {c.enabled=false;var r=c.GetComponent<GraphicRaycaster>();if(r)r.enabled=false;}
                 else if(c.name=="BattleObjsUICanvas")StyleWorldText(c.transform);
             }
@@ -100,7 +102,7 @@ namespace Neon.Astral
                 {var panels=Field<GameObject[]>(lobby,"SettingSubObjs");v="settings";if(panels!=null&&panels.Length>2)v=Active(panels[1])?"clamor":Active(panels[2])?"credits":"settings";}
                 else if(Is(lobby,"ControlPanel"))v="lobby";
             }
-            SetView(v); foreach(var update in live)update(); UpdatePopup();
+            SetView(v); foreach(var update in live)update();
             if(UnityEngine.Input.GetKeyDown(KeyCode.Escape))BackKey();
             if(balance)balance.text="✦  "+MyPlayer.Star.ToString("N0");
             if(tooltip.gameObject.activeSelf)
@@ -115,6 +117,8 @@ namespace Neon.Astral
             var a=Screen.safeArea;safe.anchorMin=new Vector2(a.x/Screen.width,a.y/Screen.height);safe.anchorMax=new Vector2(a.xMax/Screen.width,a.yMax/Screen.height);safe.offsetMin=safe.offsetMax=Vector2.zero;
             float fit=Mathf.Min(safe.rect.width/1920,safe.rect.height/1080);page.localScale=modal.localScale=Vector3.one*fit;
             pageFade.alpha=Mathf.MoveTowards(pageFade.alpha,1,Time.unscaledDeltaTime*7);
+            // Lay out popups after the canvas and safe area have followed a resize.
+            if(GameDictionary.IsInit)UpdatePopup();
         }
         public void Refresh(){viewKey=null;popupKey=null;}
         void SetView(string value)

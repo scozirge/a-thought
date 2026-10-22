@@ -15,6 +15,17 @@ namespace Neon.Networking
         [DllImport("__Internal")] static extern void NeonWebState(string json);
         bool started, diagnostics; float next;
         public static string ValidationRoom { get; private set; }
+        [Serializable] class Viewport { public float width, height; public bool touch; }
+        static Viewport viewport;
+        public static float CssWidth => viewport?.width > 0 ? viewport.width : Screen.width;
+        public static float CssHeight => viewport?.height > 0 ? viewport.height : Screen.height;
+        public static bool TouchLayout => viewport?.touch ?? Application.isMobilePlatform;
+        // Browser CSS pixels differ from the WebGL render buffer on Retina devices.
+        public void SetViewport(string json)
+        {
+            var value = JsonUtility.FromJson<Viewport>(json);
+            if(value != null && value.width > 0 && value.height > 0)viewport=value;
+        }
         Neon.Validation.NeonGameplayAudit.Result audit;
         public void RunGameplayAudit()
         {
@@ -59,6 +70,10 @@ namespace Neon.Networking
             public string scene, room, region, error; public int features, owned, peers, stars;
             public bool started, connected; public Control[] controls;
             public int[] loadout;
+            public int screenWidth, screenHeight;
+            public float cssWidth, cssHeight;
+            public bool touch, legacyPopupVisible;
+            public string guidePage, guideText;
             public Neon.Validation.NeonGameplayAudit.Result gameplayAudit;
         }
         void Update()
@@ -66,7 +81,14 @@ namespace Neon.Networking
 #if UNITY_WEBGL && !UNITY_EDITOR
             if (!diagnostics || Time.unscaledTime < next) return;
             next = Time.unscaledTime + .5f;
+            var popup=FindFirstObjectByType<PopupUI>(FindObjectsInactive.Include);
+            var presentation=Neon.Astral.AstralPresentation.Instance;
+            var guide=presentation?presentation.GetComponentsInChildren<RectTransform>().FirstOrDefault(t=>t.name=="Tutorial"&&!t.GetComponent<Button>()):null;
             var state = new State { scene=SceneManager.GetActiveScene().name, started=started,
+                screenWidth=Screen.width,screenHeight=Screen.height,cssWidth=CssWidth,cssHeight=CssHeight,touch=TouchLayout,
+                legacyPopupVisible=popup&&popup.GetComponentsInChildren<Canvas>().Any(c=>c.isActiveAndEnabled),
+                guidePage=guide?guide.GetComponentsInChildren<Text>().FirstOrDefault(t=>t.name=="Page")?.text:"",
+                guideText=guide?guide.GetComponentsInChildren<Text>().FirstOrDefault(t=>t.name=="Guide content")?.text:"",
                 connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length, gameplayAudit=audit,
                 room=PhotonNetwork.InRoom ? PhotonNetwork.Runner.SessionInfo.Name : "", error=PhotonNetwork.LastError,
                 region=PhotonNetwork.CloudRegion,

@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "scope": "HTML host only; Unity is stubbed",
+  "checks": [
+    "chromium: denied fullscreen/orientation APIs, repeated rotation, visualViewport-only resize/scroll and single start passed",
+    "webkit: denied fullscreen/orientation APIs, repeated rotation, visualViewport-only resize/scroll and single start passed"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "url": "http://127.0.0.1:8197/",
+  "engine": "webkit",
+  "passed": false,
+  "checks": [
+    "Portrait start shows rotation prompt; original intro remains at its initial state"
+  ],
+  "errors": [],
+  "sizes": [],
+  "physicalDevice": false,
+  "failure": "TypeError: Cannot read properties of undefined (reading 'x')\n    at click (E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-mobile.cjs:21:38)\n    at async E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-mobile.cjs:52:97",
+  "lastState": {
+    "scene": "Lobby",
+    "room": "",
+    "region": "asia",
+    "error": "",
+    "features": 95,
+    "owned": 95,
+    "peers": 0,
+    "stars": 0,
+    "started": true,
+    "connected": false,
+    "controls": [
+      {
+        "name": "Settings tab 2",
+        "text": "製作名單",
+        "x": 800.9166870117188,
+        "y": 112.66665649414062,
+        "w": 308.75006103515625,
+        "h": 32.5,
+        "enabled": true
+      },
+      {
+        "name": "Back",
+        "text": "‹  返回",
+        "x": 959.3541870117188,
+        "y": 25.99993896484375,
+        "w": 143.54168701171875,
+        "h": 30.3333740234375,
+        "enabled": true
+      },
+      {
+        "name": "Settings tab 1",
+        "text": "喊話設定",
+        "x": 478.625,
+        "y": 112.66665649414062,
+        "w": 308.75,
+        "h": 32.5,
+        "enabled": true
+      },
+      {
+        "name": "Close dialog",
+        "text": "我知道了",
+        "x": 473.20831298828125,
+        "y": 377.5,
+        "w": 319.5833740234375,
+        "h": 36.833343505859375,
+        "enabled": true
+      },
+      {
+        "name": "Tutorial",
+        "text": "遊玩教學",
+        "x": 195.60414123535156,
+        "y": 340.70831298828125,
+        "w": 165.20835876464844,
+        "h": 33.583343505859375,
+        "enabled": true
+      },
+      {
+        "name": "Settings tab 0",
+        "text": "一般設定",
+        "x": 156.33331298828125,
+        "y": 112.66665649414062,
+        "w": 308.75,
+        "h": 32.5,
+        "enabled": true
+      },
+      {
+        "name": "BattleSongDropDown",
+        "text": "Warped  ▾",
+        "x": 838.8333740234375,
+        "y": 331.5,
+        "w": 211.25,
+        "h": 32.5,
+        "enabled": true
+      },
+      {
+        "name": "Fullscreen",
+        "text": "切換全螢幕",
+        "x": 195.60414123535156,
+        "y": 293.5833435058594,
+        "w": 165.20835876464844,
+        "h": 33.58331298828125,
+        "enabled": true
+      },
+      {
+        "name": "LanguageDropDown",
+        "text": "Chinese  ▾",
+        "x": 838.8333740234375,
+        "y": 378.0833435058594,
+        "w": 211.25,
+        "h": 32.5,
+        "enabled": true
+      },
+      {
+        "name": "RegionDropDown",
+        "text": "Asia  ▾",
+        "x": 838.8333740234375,
+        "y": 424.66668701171875,
+        "w": 211.25,
+        "h": 32.5,
+        "enabled": true
+      }
+    ],
+    "loadout": [
+      5,
+      103,
+      213,
+      102,
+      17
+    ],
+    "screenWidth": 1266,
+    "screenHeight": 585,
+    "cssWidth": 844,
+    "cssHeight": 390,
+    "touch": true,
+    "legacyPopupVisible": false,
+    "guidePage": "",
+    "guideText": "",
+    "gameplayAudit": {
+      "passed": false,
+      "allocationCounterAvailable": false,
+      "failure": "",
+      "checks": [],
+      "legacySearchBytes": 0,
+      "registrySearchBytes": 0,
+      "legacySearchMilliseconds": 0,
+      "registrySearchMilliseconds": 0
+    },
+    "audioContextState": "unavailable"
+  }
+}

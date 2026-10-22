@@ -1,6 +1,6 @@
 # Neon IO 移植紀錄與驗證範圍
 
-最新交付為文末「1.1.1 遊戲錯誤修正與程式整理」。前面各節保留各版本當時的驗證與限制，不能視為最新版狀態。
+最新網頁交付為文末「手機旋轉與教學修正（1.1.3-web）」；Windows 安裝包仍為 1.1.1-fusion。前面各節保留各版本當時的驗證與限制，不能視為最新版狀態。
 
 日期：2026-10-22。來源：`scozirge/Neon-IO`，提交 `396e4f8`。原始下載保留於 `E:/Projects/Neon-IO`。
 
@@ -237,3 +237,22 @@ Web Timer 的背景原因可參考 [Unity 官方問題紀錄](https://issuetrack
 遊戲網址仍為 [Neon Impact](https://scozirge.github.io/a-thought/neon-impact/)，[第 6 堂課](https://scozirge.github.io/classroom/#sixth-course) 的雙遊戲選單繼續使用同一入口。`gh-pages` 發布提交為 `a1a567e35f8a216f074a396a5f9a77d05f504a94`；部署結果與公開資源 SHA256 另存 `public-deployment.json`。更新只涉及 Neon，516 個其他發布檔案逐一比對未變；保留先前雜湊建置檔，避免快取中的舊 HTML 失去資源。
 
 此版啟動核心檔合計 **31,836,526 bytes**，延續既有 Web 圖音壓縮與快取設定。Windows ZIP 由 `tools/package_windows.py` 打包並檢查 CRC，附使用說明、此報告及第三方授權。實機畫面索引為 `design/gameplay-audit/index.html`。
+
+## 2026-10-22 手機旋轉與教學修正（1.1.3-web）
+
+修正手機直向時教學縮成小視窗，以及執行時 `PopupUI(Clone)` 未被舊名稱判斷隱藏的問題。Canvas 改以瀏覽器可視區域及 CSS 安全區決定尺寸，監聽旋轉、視窗、全螢幕及 `visualViewport` 事件。手機直向顯示橫放提示，橫向後自動顯示遊戲；點擊開始時嘗試瀏覽器支援的全螢幕／橫向鎖定，遭拒不阻擋遊戲。網頁無法解除 iPhone 系統直向鎖定。
+
+手機教學以 CSS 像素排版，內文 16、關閉／翻頁按鈕 44 像素；窄畫面省略裝飾圖，較短畫面可捲動。原教學控制器仍負責頁數與本機進度，旋轉只重新排版。觸控操作頁改顯示手指操作說明。Init 場景、Logo 動畫與控制器逐位元比對原版一致。
+
+本次證據保存在 `verification/2026-10-22-mobile/`：
+
+- Unity 6000.3.11f1 正式 WebGL 建置成功；327 貼圖、94 音訊沿用壓縮設定。當前入口與四個核心檔合計 **32,006,240 bytes**，比前版增加 8,036 bytes。
+- Chrome 的 iPhone 尺寸／觸控模擬實際執行 WebGL：844 × 390、667 × 375、844 × 300，以及左右各 44／底部 21 像素的模擬安全區通過。翻頁按鈕實測約 44 CSS 像素，兩輪橫直切換保留第 2 頁；初次遊玩教學與設定內教學均無舊畫面重疊。
+- 手機模擬端實際加入 Photon Asia，旋轉後仍連線，能離開戰場返回大廳。桌機兩個獨立 Chrome context 同房，43 秒後仍連線；95 技能、新舊存檔配裝、原開場音訊通過。
+- HTML 宿主另在 Chromium 與 WebKit 驗證全螢幕／方向 API 拒絕、連續旋轉及只有可視區域改變的情境。此項使用 Unity stub，不能當成完整 WebKit 遊戲驗證。
+- Windows 的 Playwright WebKit 完整遊戲測試**未通過**：日誌出現音訊 FSB 載入失敗、AudioContext unavailable，操作流程中控制項改變而中斷，保留失敗報告。沒有把它推論成 iPhone 必然故障，也沒有宣稱 iPhone／Safari 實機通過；仍需實機驗證音訊、觸控與系統旋轉鎖定。
+- 470 個原媒體／動畫／Shader（含已核准的 20 個平面美術替換）、548 Prefab、95 技能及開場來源檔比對通過；648 個 Neon 以外的發布檔案雜湊不變。
+
+遊戲沿用 [Neon Impact](https://scozirge.github.io/a-thought/neon-impact/) 與原第 6 堂課入口。Pages 提交 `0effad16b0c0d662c2e5a92e703f0c7fced6f0ec` 的建置與部署成功；公開入口及四個核心檔均回應 200 且 SHA256 與建置一致。`build-identity.json`、`deployment.json`、`public-files.json` 記錄完整結果。舊內容雜湊建置保留，讓快取舊 HTML 的瀏覽器仍能載入。
+
+公開網址再次執行手機 WebGL 回歸通過，另加入 844 × 240 的低高度情境，模擬瀏覽器工具列佔用空間；翻頁／關閉按鈕仍為 44 像素，教學內文可捲動。兩輪旋轉保留頁數、初次教學無重疊、Photon 戰場旋轉後連線及返回大廳皆通過，沒有 JS／Unity 執行例外。完整結果為 `web-mobile-public.json`。

@@ -1,20 +1,108 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Neon Impact</title>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-visual">
+<meta name="theme-color" content="#10172b">
+<title>Neon Impact</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#10172b;color:#eee8d6;font-family:system-ui,sans-serif;overflow:hidden}#unity-canvas{width:100%;height:100%;display:block;outline:none}#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;padding:24px;background:#10172b}h1{font-size:clamp(32px,6vw,64px);letter-spacing:.08em;margin:0 0 32px;color:#d8bd72}progress{width:min(340px,80vw);height:8px;accent-color:#d8bd72}p{font-size:18px}button{font:inherit;font-size:22px;font-weight:600;min-height:56px;background:#d8bd72;color:#151b2d;border:0;border-radius:4px;padding:12px 36px;cursor:pointer}button:disabled{opacity:.45;cursor:wait}a{color:#d8bd72;font-size:18px;margin-top:28px}#error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}#loading[hidden]{display:none}
-</style></head><body>
-<canvas id="unity-canvas" tabindex="0" aria-label="Neon Impact 遊戲"></canvas>
-<div id="loading"><h1>NEON IMPACT</h1><progress id="progress" max="1" value="0" aria-label="載入進度"></progress><p id="status" role="status">載入中…</p><button id="start" disabled>開始遊戲</button><p id="error" role="alert" hidden></p><a href="https://scozirge.github.io/classroom/#sixth-course">返回第 6 堂課</a></div>
-<script src="Build/{{{ LOADER_FILENAME }}}"></script><script>
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:#10172b;color:#eee8d6;font-family:system-ui,sans-serif;overflow:hidden;overscroll-behavior:none}
+#viewport{position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;overflow:hidden}
+#game{position:absolute;top:var(--safe-top);right:var(--safe-right);bottom:var(--safe-bottom);left:var(--safe-left)}
+#unity-canvas{width:100%;height:100%;display:block;outline:none;touch-action:none;-webkit-user-select:none;user-select:none}
+.screen{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;overflow:auto;background:#10172b}
+h1{font-size:clamp(28px,6vw,56px);letter-spacing:.08em;margin:0 0 20px;color:#d8bd72}
+progress{width:min(340px,80vw);height:8px;accent-color:#d8bd72;justify-self:center}
+p{font-size:16px;line-height:1.6;margin:12px 0}
+button{font:inherit;font-size:18px;font-weight:600;min-height:48px;background:#d8bd72;color:#151b2d;border:0;border-radius:4px;padding:10px 28px;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.45;cursor:wait}
+a{color:#d8bd72;font-size:16px;margin-top:20px}
+#error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}
+#rotate{z-index:2;padding:max(24px,var(--safe-top)) max(24px,var(--safe-right)) max(24px,var(--safe-bottom)) max(24px,var(--safe-left))}
+#rotate h2{font-size:26px;font-weight:600;color:#d8bd72;margin:24px 0 8px}
+#rotate p{max-width:26em;color:#b8c2d5}
+.phone{justify-self:center;width:96px;height:52px;border:2px solid #d8bd72;border-radius:8px;position:relative}
+.phone:after{content:'';position:absolute;right:6px;top:18px;width:3px;height:12px;border-radius:2px;background:#d8bd72}
+[hidden]{display:none!important}
+@media(max-height:420px) and (orientation:landscape){#loading{padding:12px}#loading h1{font-size:28px;margin:0 0 8px}#loading p{margin:8px 0}#loading a{margin-top:12px}}
+</style>
+</head>
+<body>
+<main id="viewport">
+ <div id="game"><canvas id="unity-canvas" tabindex="0" aria-label="Neon Impact 遊戲"></canvas></div>
+ <section id="loading" class="screen" aria-label="載入遊戲">
+  <h1>NEON IMPACT</h1><progress id="progress" max="1" value="0" aria-label="載入進度"></progress>
+  <p id="status" role="status">載入中…</p><button id="start" disabled>開始遊戲</button>
+  <p id="error" role="alert" hidden></p><a href="https://scozirge.github.io/classroom/#sixth-course">返回第 6 堂課</a>
+ </section>
+ <section id="rotate" class="screen" role="dialog" aria-modal="true" aria-labelledby="rotate-title" hidden>
+  <div class="phone" aria-hidden="true"></div><h2 id="rotate-title">請將手機橫放</h2>
+  <p>橫向後會自動調整畫面。<br>若畫面沒有旋轉，請關閉手機的直向鎖定。</p>
+  <button id="landscape" hidden>切換橫向全螢幕</button>
+ </section>
+</main>
+<script src="Build/{{{ LOADER_FILENAME }}}"></script>
+<script>
 const canvas=document.getElementById('unity-canvas'),start=document.getElementById('start'),status=document.getElementById('status');
+const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
+const touchDevice=(navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches)||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+let scheduled=false,lastViewport='',portrait=false;
+function updateViewport(){
+ scheduled=false;
+ const visual=window.visualViewport;
+ const width=Math.max(1,Math.round(visual?visual.width:innerWidth)),height=Math.max(1,Math.round(visual?visual.height:innerHeight));
+ viewport.style.width=width+'px';viewport.style.height=height+'px';
+ viewport.style.left=(visual?visual.offsetLeft:0)+'px';viewport.style.top=(visual?visual.offsetTop:0)+'px';
+ // A keyboard can reduce visualViewport without rotating the phone. Use the
+ // layout viewport for orientation, and keep it stable during text entry.
+ const editing=/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||'');
+ if(!editing)portrait=touchDevice&&innerHeight>innerWidth;
+ rotate.hidden=!portrait;canvas.inert=portrait;loading.inert=portrait;
+ const metrics={width:canvas.clientWidth,height:canvas.clientHeight,touch:touchDevice};
+ window.neonViewport={...metrics,portrait,visibleWidth:width,visibleHeight:height};
+ const json=JSON.stringify(metrics);
+ if(window.unityInstance&&json!==lastViewport){window.unityInstance.SendMessage('NeonWebBridge','SetViewport',json);lastViewport=json;}
+}
+function scheduleViewport(){if(!scheduled){scheduled=true;requestAnimationFrame(updateViewport);}}
+window.addEventListener('resize',scheduleViewport);
+window.addEventListener('pageshow',scheduleViewport);
+window.addEventListener('orientationchange',()=>{scheduleViewport();setTimeout(scheduleViewport,150);setTimeout(scheduleViewport,400);});
+document.addEventListener('fullscreenchange',scheduleViewport);
+document.addEventListener('focusout',()=>setTimeout(scheduleViewport,100));
+window.visualViewport?.addEventListener('resize',scheduleViewport);
+window.visualViewport?.addEventListener('scroll',scheduleViewport);
+screen.orientation?.addEventListener('change',scheduleViewport);
+async function requestLandscape(){
+ if(!touchDevice)return;
+ // Optional enhancement: normal rotation still works when either API is denied.
+ try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();}catch(_error){}
+ try{if(screen.orientation?.lock)await screen.orientation.lock('landscape');}catch(_error){}
+ scheduleViewport();
+}
+const landscape=document.getElementById('landscape');
+landscape.hidden=!(touchDevice&&document.documentElement.requestFullscreen);
+landscape.onclick=requestLandscape;
+updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
-dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',
-companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.2-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
-cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
+ dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.3-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+ cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
-window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
-start.disabled=false;status.textContent='準備完成';
-start.onclick=()=>{instance.SendMessage('NeonWebBridge','StartGame');document.getElementById('loading').hidden=true;canvas.focus();};
-}).catch(error=>{const message=document.getElementById('error');message.hidden=false;message.textContent='載入失敗，請重新整理或使用電腦版 Chrome／Edge。';status.textContent='無法載入';console.error(error);});
-</script></body></html>
+ window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
+ updateViewport();start.disabled=false;status.textContent='準備完成';
+ start.onclick=()=>{
+  if(portrait)return;
+  // Unlock audio within the tap, before awaiting optional browser APIs.
+  instance.SendMessage('NeonWebBridge','StartGame');loading.hidden=true;canvas.focus();
+  requestLandscape();
+ };
+}).catch(error=>{
+ const message=document.getElementById('error');message.hidden=false;
+ message.textContent='載入失敗，請重新整理或使用電腦版 Chrome／Edge。';status.textContent='無法載入';console.error(error);
+});
+</script>
+</body>
+</html>
