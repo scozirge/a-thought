@@ -28,11 +28,11 @@ namespace Neon.Networking
             if(value != null && value.width > 0 && value.height > 0)
             {
                 if(viewport==null || value.blocked || value.width!=viewport.width || value.height!=viewport.height)
-                    Neon.Astral.NeonTouchStick.Release();
+                    ReleaseInput();
                 viewport=value;
             }
         }
-        public void ReleaseInput() { Neon.Astral.NeonTouchStick.Release(); }
+        public void ReleaseInput() { Neon.Astral.NeonTouchStick.Release(); Neon.Astral.AstralPresentation.Instance?.ShowTooltip(null); }
         Neon.Validation.NeonGameplayAudit.Result audit;
         public void RunGameplayAudit()
         {
@@ -78,7 +78,7 @@ namespace Neon.Networking
             AudioListener.pause = false;
         }
         [Serializable] class Control { public string name, text, type; public float x,y,w,h,clipX,clipY,clipW,clipH; public bool enabled, scroll; }
-        [Serializable] class Element { public string name; public float x,y,w,h; public int fontSize; }
+        [Serializable] class Element { public string name; public float x,y,w,h,opacity,borderOpacity; public int fontSize; }
         [Serializable] class State
         {
             public string scene, room, region, error; public int features, owned, peers, stars;
@@ -126,8 +126,8 @@ namespace Neon.Networking
                             clipX=scroll?clip[0].x:0,clipY=scroll?Screen.height-clip[1].y:0,clipW=scroll?clip[2].x-clip[0].x:Screen.width,clipH=scroll?clip[2].y-clip[0].y:Screen.height,
                             x=c[0].x,y=Screen.height-c[1].y,w=c[2].x-c[0].x,h=c[2].y-c[0].y};}).ToArray()
                 ,elements=presentation?presentation.GetComponentsInChildren<RectTransform>().Where(t=>
-                    new[]{"Touch joystick","Thumb","Vitality","Skill dock","Leaderboard","Combat feed","Skill notification","Dialog","Tutorial","Guide content","Result panel","Health","Page title","Skill detail"}.Contains(t.name))
-                    .Select(t=>{var c=new Vector3[4];t.GetWorldCorners(c);var text=t.GetComponent<Text>();return new Element{name=t.name,x=c[0].x,y=Screen.height-c[1].y,w=c[2].x-c[0].x,h=c[2].y-c[0].y,fontSize=text?text.fontSize:0};}).ToArray():new Element[0]
+                    new[]{"Touch joystick","Thumb","Vitality","Skill dock","Leaderboard","Combat feed","Skill notification","Dialog","Tutorial","Guide content","Result panel","Health","Page title","Skill detail","Exit icon","Level","Level label","Level orbit","Slot","Tooltip"}.Contains(t.name))
+                    .Select(t=>{var c=new Vector3[4];t.GetWorldCorners(c);var text=t.GetComponent<Text>();var graphic=t.GetComponent<Graphic>();var ornament=t.GetComponent<Neon.Astral.AstralGraphic>();return new Element{name=t.name,x=c[0].x,y=Screen.height-c[1].y,w=c[2].x-c[0].x,h=c[2].y-c[0].y,fontSize=text?text.fontSize:0,opacity=graphic?graphic.color.a:0,borderOpacity=ornament?ornament.border.a:0};}).ToArray():new Element[0]
             };
             NeonWebState(JsonUtility.ToJson(state));
 #endif

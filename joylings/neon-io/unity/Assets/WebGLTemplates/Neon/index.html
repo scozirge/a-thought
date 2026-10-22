@@ -95,7 +95,7 @@ updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
  dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',
- companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.4-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.5-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
  window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;

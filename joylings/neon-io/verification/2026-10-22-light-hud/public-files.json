@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "version": "1.1.5-web",
+  "files": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "bytes": 8021,
+      "sha256": "4e918020a98452a56320aa4adf8bf2a709fb542aed793822c1cbfb2cae6f2cbe",
+      "matches_build": true
+    },
+    {
+      "file": "Build/3bffdbb0babcafd9d714f3b2f0ebf278.loader.js",
+      "status": 200,
+      "bytes": 47866,
+      "sha256": "1cdd8ae334fde905b8d216ad6ca4b669c57a3ead435dfc64aef49b0923b66e35",
+      "matches_build": true
+    },
+    {
+      "file": "Build/a7459c216be05a8984b1a7ca2b9492de.wasm.unityweb",
+      "status": 200,
+      "bytes": 11728872,
+      "sha256": "85620a0255b97d714de04ff439003d4d07834ecadce148d485fc41c966f12621",
+      "matches_build": true
+    },
+    {
+      "file": "Build/c5c36950f6896a4a16048833b0d35035.data.unityweb",
+      "status": 200,
+      "bytes": 20150629,
+      "sha256": "604f3002bfa11e95664f48d43a53bbd0d273b691680389d5acc2866946fb7d47",
+      "matches_build": true
+    },
+    {
+      "file": "Build/e07549a1d4795f4de95227e7a0659800.framework.js.unityweb",
+      "status": 200,
+      "bytes": 93038,
+      "sha256": "78331e03d126a6ff6be776cd969e02e53de2392df9e59bc73be815718dc975ec",
+      "matches_build": true
+    }
+  ]
+}

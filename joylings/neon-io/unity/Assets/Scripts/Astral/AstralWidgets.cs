@@ -96,11 +96,17 @@ namespace Neon.Astral
         public void OnPointerEnter(PointerEventData e){hover=true;}public void OnPointerExit(PointerEventData e){hover=false;}
         public void OnSelect(BaseEventData e){focus=true;}public void OnDeselect(BaseEventData e){focus=false;}
     }
-    public sealed class AstralHover : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+    public sealed class AstralHover : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerDownHandler,IPointerUpHandler
     {
-        public Func<string> content;
-        public void OnPointerEnter(PointerEventData e){if(content!=null)AstralPresentation.Instance?.ShowTooltip(content());}
-        public void OnPointerExit(PointerEventData e){AstralPresentation.Instance?.ShowTooltip(null);}
-        void OnDisable(){AstralPresentation.Instance?.ShowTooltip(null);}
+        public Func<string> content;int? touchPointer;
+        void Show(){if(content!=null)AstralPresentation.Instance?.ShowTooltip(content());}
+        void Hide(){touchPointer=null;AstralPresentation.Instance?.ShowTooltip(null);}
+        // A released touch can leave an emulated mouse over newly created HUD elements.
+        // Mobile descriptions require a real press; desktop descriptions retain hover.
+        public void OnPointerEnter(PointerEventData e){if(!Neon.Networking.NeonWebBridge.TouchLayout)Show();}
+        public void OnPointerDown(PointerEventData e){if(Neon.Networking.NeonWebBridge.TouchLayout&&Neon.Networking.NeonWebBridge.InputAvailable&&!AstralPresentation.InputBlocked){touchPointer=e.pointerId;Show();}}
+        public void OnPointerUp(PointerEventData e){if(touchPointer==e.pointerId)Hide();}
+        public void OnPointerExit(PointerEventData e){if(!Neon.Networking.NeonWebBridge.TouchLayout||touchPointer==e.pointerId)Hide();}
+        void OnDisable(){Hide();}
     }
 }

@@ -29,12 +29,20 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
     const stick=by('Touch joystick'),hp=by('Vitality'),skills=by('Skill dock'),rank=by('Leaderboard'),feed=by('Combat feed');
     assert.ok(stick&&hp&&skills&&rank&&feed,'All mobile HUD groups present');
     for(const e of [stick,hp,skills,rank,feed])assert.ok(e.x>=10&&e.y>=10&&e.x+e.w<=s.cssWidth-9&&e.y+e.h<=s.cssHeight-9,`${label}: HUD ${e.name} outside safe edges`);
-    assert.ok(Math.abs(stick.x-12)<1&&Math.abs(s.cssHeight-stick.y-stick.h-12)<1,'Joystick bottom left');
-    assert.ok(hp.y+hp.h<=stick.y-6,'Health above joystick');
-    assert.ok(Math.abs(s.cssWidth-skills.x-skills.w-12)<1&&Math.abs(s.cssHeight-skills.y-skills.h-12)<1,'Skills bottom right');
+    assert.ok(stick.x>=28&&s.cssHeight-stick.y-stick.h>=23,'Joystick has breathing room inside bottom-left safe area');
+    assert.ok(hp.y+hp.h<=stick.y-10&&hp.h<=32,'Minimal health bar above joystick');
+    assert.ok(Math.abs(s.cssWidth-skills.x-skills.w-24)<1&&s.cssHeight-skills.y-skills.h>=23,'Skills inset at bottom right');
     assert.ok(Math.abs(feed.x-12)<1&&Math.abs(feed.y-12)<1,'Combat feed upper left');
-    assert.ok(Math.abs(s.cssWidth-rank.x-rank.w-12)<1&&rank.y>=62,'Rank upper right below leave');
+    assert.ok(Math.abs(s.cssWidth-rank.x-rank.w-24)<1&&rank.y>=58,'Rank upper right below leave');
     assert.ok(rank.y+rank.h<=skills.y+1,'Rank and skills do not overlap');
+    assert.ok(rank.opacity>0&&rank.opacity<=.3,'Leaderboard is translucent');
+    assert.ok(stick.opacity<=.25&&by('Thumb').opacity<=.55,'Joystick and thumb remain translucent');
+    assert.ok(!elements.some(e=>['Level','Level label','Level orbit'].includes(e.name)),'Persistent level display removed');
+    const exit=by('Exit icon'),leave=controls.find(c=>c.name==='Leave arena');
+    assert.ok(exit&&exit.w<=24&&exit.h<=24&&leave.w>=43.4&&leave.h>=43.4,'Small exit icon retains accessible hit area');
+    assert.ok(!leave.text,'Exit has no large text label');
+    assert.ok(skills.w<=172&&skills.h<=66&&elements.filter(e=>e.name==='Slot').every(e=>e.opacity<=.2&&e.borderOpacity<=.25),'Skill slots are small and translucent');
+    assert.ok(!by('Tooltip'),'No stale hover tooltip obscures the mobile arena');
    }
    assert.equal(s.legacyPopupVisible,false);
    report.layouts.push({label,view:s.view,css:[s.cssWidth,s.cssHeight],controls:controls.length,elements});await shot(label);
@@ -75,10 +83,23 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
   await page.touchscreen.tap(440,200);await page.waitForTimeout(600);assert.equal((await state()).stickX,0,'Tap outside joystick cannot steer');
   await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x,y:y-40}]);await ready(()=>neonState.stickY>.7);await gestures.touch(page,'touchCancel',[]);await ready(()=>!neonState.stickDragging&&neonState.stickY===0);
   report.checks.push('Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction');
+  await ensureAlive();
+  const slot=(await state()).elements.find(e=>e.name==='Slot'),sr=await gestures.cssRect(page,slot);
+  await gestures.touch(page,'touchStart',[{id:9,x:sr.x+sr.w/2,y:sr.y+sr.h/2}]);await ready(()=>neonState.elements.some(e=>e.name==='Tooltip'));
+  await gestures.touch(page,'touchEnd',[]);await ready(()=>!neonState.elements.some(e=>e.name==='Tooltip'));
+  await gestures.touch(page,'touchStart',[{id:9,x:sr.x+sr.w/2,y:sr.y+sr.h/2}]);await ready(()=>neonState.elements.some(e=>e.name==='Tooltip'));
+  await gestures.touch(page,'touchCancel',[]);await ready(()=>!neonState.elements.some(e=>e.name==='Tooltip'));
+  report.checks.push('Mobile skill description appears only while pressed and disappears on release or touchcancel');
   await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+40,y}]);await ready(()=>neonState.stickX>.7);await resize(390,844);await ready(()=>!neonState.stickDragging);await gestures.touch(page,'touchEnd',[]);await resize(844,390);assert.equal((await state()).stickX,0);assert.ok((await state()).connected);
   await click('Leave arena');await ready(()=>neonState.controls.some(c=>c.name==='Cancel dialog'));assert.ok((await state()).inputBlocked);await checkLayout('leave-confirm');await click('Cancel dialog');await ready(()=>!neonState.inputBlocked);
   report.checks.push('Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement');
   for(const [w,h] of [[844,390],[667,375],[844,300],[844,240]]){await resize(w,h);await ensureAlive();await checkLayout(`hud-${w}x${h}`);}
+  report.checks.push('Lightweight HUD at four sizes: translucent rank and joystick, inset controls, small exit icon with 44-pixel hit area, compact skills and no persistent level display');
+  await resize(844,390);await ensureAlive();
+  await page.evaluate(()=>{for(const [k,v] of Object.entries({left:44,right:44,bottom:21}))document.documentElement.style.setProperty('--safe-'+k,v+'px');dispatchEvent(new Event('resize'));});
+  await ready(()=>neonState.cssWidth===756&&neonState.cssHeight===369);await page.waitForTimeout(700);await ensureAlive();await checkLayout('hud-notch');
+  await page.evaluate(()=>{for(const side of ['left','right','bottom'])document.documentElement.style.removeProperty('--safe-'+side);dispatchEvent(new Event('resize'));});await resize(844,390);
+  report.checks.push('Battle controls retain their inner spacing in addition to simulated notch and bottom gesture safe areas');
   await page.evaluate(()=>unityInstance.SendMessage('NeonWebBridge','PreviewResultLayout'));await ready(()=>neonState.view==='result');
   for(const [w,h] of [[844,390],[667,375],[844,300],[844,240]]){await resize(w,h);await closeGuide();await checkLayout(`result-fixture-${w}x${h}`);assert.ok((await state()).inputBlocked);}
   await closeGuide();await click('Return to lobby');await ready(()=>neonState.scene==='Lobby');report.checks.push('Result layout checked with explicitly synthetic zero-reward fixture, then left the room');

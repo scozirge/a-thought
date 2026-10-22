@@ -6,7 +6,7 @@ namespace Neon.Astral
     // Resolution-independent ornaments: a few UI triangles, no rasterised mockup panels.
     public sealed class AstralGraphic : MaskableGraphic
     {
-        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc }
+        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit }
         public Shape shape;
         public Color border = new Color(.76f, .65f, .43f, .65f);
         public float thickness = 2.4f;
@@ -30,6 +30,16 @@ namespace Neon.Astral
                     foreach(float x in new[]{r.xMin+20,r.xMax-20}) foreach(float y in new[]{r.yMin+20,r.yMax-20}) Star(vh,new Vector2(x,y),4,border);
                     Line(vh,new Vector2(r.xMin+38,r.yMax-9),new Vector2(r.xMax-38,r.yMax-9),.5f,new Color(border.r,border.g,border.b,border.a*.45f));
                 }
+            }
+            else if(shape==Shape.Exit)
+            {
+                float s=Mathf.Min(r.width,r.height);
+                Vector2 a=r.center+new Vector2(-.1f,.38f)*s,b=r.center+new Vector2(-.38f,.38f)*s,c=r.center+new Vector2(-.38f,-.38f)*s,d=r.center+new Vector2(-.1f,-.38f)*s;
+                Line(vh,a,b,thickness,color);Line(vh,b,c,thickness,color);Line(vh,c,d,thickness,color);
+                var tip=r.center+new Vector2(.38f,0)*s;
+                Line(vh,r.center+new Vector2(-.12f,0)*s,tip,thickness,color);
+                Line(vh,r.center+new Vector2(.16f,.22f)*s,tip,thickness,color);
+                Line(vh,r.center+new Vector2(.16f,-.22f)*s,tip,thickness,color);
             }
             else if(shape==Shape.Disc)
             {

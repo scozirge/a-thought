@@ -27,56 +27,79 @@ namespace Neon.Astral
             foreach(var t in root.GetComponentsInChildren<Text>(true))
             {if(styledWorldText.Add(t.GetInstanceID())){t.font=Body;t.fontStyle=FontStyle.Normal;var shadow=t.GetComponent<Shadow>();if(!shadow)shadow=t.gameObject.AddComponent<Shadow>();shadow.effectColor=new Color(.03f,.04f,.09f,.8f);shadow.effectDistance=new Vector2(1,-1);}}
         }
-        void BuildBattle()
+        static Color HudColor(Color color,float alpha)=>new Color(color.r,color.g,color.b,alpha);
+        Text HudText(Transform parent,string name,string value,float x,float y,float width,float height,int size,Color color,TextAnchor align=TextAnchor.MiddleLeft)
         {
+            var text=Text(parent,name,value,x,y,width,height,size,color,align);
+            var shadow=text.gameObject.AddComponent<Shadow>();shadow.effectColor=HudColor(Deep,.75f);shadow.effectDistance=new Vector2(0,TouchUI?-1:-1.5f);
+            return text;
+        }
+        void BuildBattle()=>BuildBattleHud(false,32);
+        void BuildBattleHud(bool touch,float healthBottom)
+        {
+            bool compact=touch&&ViewHeight<330;
+            float edge=touch?24:32,leaveSize=touch?44:66;
+            // The visible icon is small; its transparent hit area stays comfortable on a phone.
+            var leaveHit=Image(page,"Leave arena",0,0,leaveSize,leaveSize,null,Color.clear);leaveHit.raycastTarget=true;
+            var exit=Graphic(leaveHit.transform,"Exit icon",0,0,touch?22:33,touch?22:33,AstralGraphic.Shape.Exit,Color.white);exit.thickness=touch?1.6f:2.4f;
+            var leave=leaveHit.gameObject.AddComponent<Button>();leave.targetGraphic=exit;
+            var colors=leave.colors;colors.normalColor=HudColor(Pearl,.7f);colors.highlightedColor=Gold;colors.pressedColor=Pearl;colors.selectedColor=Gold;colors.fadeDuration=.12f;leave.colors=colors;
+            leave.navigation=new Navigation{mode=Navigation.Mode.None};
+            leave.onClick.AddListener(()=>PopupUI.ShowConfirmCancel(L("確定離開目前的戰場？","Leave the current arena?"),()=>battle.LeaveRoom(),null));
+            if(!touch)leave.gameObject.AddComponent<AstralHover>().content=()=>L("離開戰場","Leave arena");
+            Pin(leave.transform,Vector2.one,new Vector2(edge,touch?12:20));
 
-            var leave=Button(page,"Leave arena",L("離開戰場","LEAVE"),765,475,230,52,()=>PopupUI.ShowConfirmCancel(L("確定離開目前的戰場？","Leave the current arena?"),()=>battle.LeaveRoom(),null),false,21);
-            Pin(leave.transform,Vector2.one,new Vector2(24,24));
-            var life=Plate(page,"Vitality",-635,-436,500,130).transform;
-            Pin(life,Vector2.zero,new Vector2(24,24));
-            Graphic(life,"Level orbit",-176,0,100,100,AstralGraphic.Shape.Orbit,Gold);
-            Text(life,"Level label","LV",-176,25,90,35,16,Gold,TextAnchor.MiddleCenter,true);
-            var level=Text(life,"Level","",-176,-10,90,70,32,Gold,TextAnchor.MiddleCenter,true);
-            var hp=Text(life,"Health","",32,24,295,40,24,Pearl);
-            Image(life,"Health track",32,-16,295,12,null,new Color(.3f,.32f,.4f,.7f));
-            var fill=Image(life,"Health fill",32,-16,295,12,null,Teal);fill.type=UnityEngine.UI.Image.Type.Filled;fill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
-            var stars=Text(life,"Earned stars","",32,-44,295,32,20,Gold);
-            live.Add(()=>{var p=BattleManager.BM?BattleManager.BM.MyPlayerRole:null;if(!p)return;level.text=p.LV.ToString();hp.text=p.Health+" / "+p.MaxHealth;fill.fillAmount=p.HealthRatio;stars.text="✦ "+p.Star;});
+            float healthWidth=touch?144:256,healthHeight=touch?30:48;
+            var life=Rect(page,"Vitality",0,0,healthWidth,healthHeight);Pin(life,Vector2.zero,new Vector2(32,healthBottom));
+            var hp=HudText(life,"Health","",0,touch?5:8,healthWidth,touch?20:32,touch?13:22,HudColor(Pearl,.88f));
+            Image(life,"Health track",0,touch?-11:-18,healthWidth,touch?3:5,null,HudColor(Deep,.6f));
+            var fill=Image(life,"Health fill",0,touch?-11:-18,healthWidth,touch?3:5,null,HudColor(Teal,.9f));fill.type=UnityEngine.UI.Image.Type.Filled;fill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
+            live.Add(()=>{var p=BattleManager.BM?BattleManager.BM.MyPlayerRole:null;if(!p)return;hp.text=p.Health+" / "+p.MaxHealth;fill.fillAmount=p.HealthRatio;});
+
             var skills=Field<Dictionary<int,Skill>>(battle,"SkillDic");
-            var skillDock=Rect(page,"Skill dock",0,0,492,164);
-            Pin(skillDock,new Vector2(1,0),new Vector2(24,24));
+            float slotWidth=touch?48:78,slotHeight=touch?(compact?56:64):104,gap=touch?(compact?8:12):20;
+            var skillDock=Rect(page,"Skill dock",0,0,slotWidth*3+gap*2,slotHeight);
+            Pin(skillDock,new Vector2(1,0),new Vector2(edge,touch?(compact?24:28):32));
             for(int i=0;i<3;i++)
             {
-                int index=i;float x=-172+i*172;
-                var box=Plate(skillDock,"Skill HUD "+i,x,0,148,164).transform;
-                Graphic(box,"Orbit",0,15,120,120,AstralGraphic.Shape.Orbit,Gold);
-                var icon=Image(box,"Icon",0,15,83,83,null,Color.white);
+                int index=i;float iconSize=touch?(compact?30:36):58,iconY=touch?8:13;
+                var hit=Image(skillDock,"Skill HUD "+i,(i-1)*(slotWidth+gap),0,slotWidth,slotHeight,null,Color.clear);hit.raycastTarget=true;var box=hit.transform;
+                var ring=Graphic(box,"Slot",0,iconY,slotWidth-4,slotWidth-4,AstralGraphic.Shape.Disc,HudColor(Night,.1f));ring.border=HudColor(Gold,.2f);ring.thickness=touch ? .8f : 1.2f;
+                var icon=Image(box,"Icon",0,iconY,iconSize,iconSize,null,Color.white);
                 icon.material=AstralIcons.Material;
-                var cd=Image(box,"Cooldown",0,15,96,96,null,new Color(.03f,.05f,.1f,.75f));cd.type=UnityEngine.UI.Image.Type.Filled;cd.fillMethod=UnityEngine.UI.Image.FillMethod.Radial360;
-                Text(box,"Part",PartName(i),0,-57,136,34,20,Muted,TextAnchor.MiddleCenter);
-                var hover=box.gameObject.AddComponent<AstralHover>();box.GetComponent<AstralGraphic>().raycastTarget=true;
+                var cd=Image(box,"Cooldown",0,iconY,iconSize,iconSize,null,HudColor(Deep,.78f));cd.material=AstralIcons.Material;cd.type=UnityEngine.UI.Image.Type.Filled;cd.fillMethod=UnityEngine.UI.Image.FillMethod.Radial360;
+                HudText(box,"Part",PartName(i),0,-slotHeight*.5f+(touch?9:15),slotWidth,touch?18:30,touch?11:18,HudColor(Muted,.75f),TextAnchor.MiddleCenter);
+                var hover=box.gameObject.AddComponent<AstralHover>();
                 hover.content=()=>skills!=null&&skills.TryGetValue(index,out var s)&&s?FeatureData.GetDescription(s.MyFeatureDataID):L("尚未取得技能","No skill yet");
-                live.Add(()=>{bool present=skills!=null&&skills.TryGetValue(index,out var s0)&&s0;icon.enabled=present;cd.enabled=present;if(present){var s=skills[index];icon.sprite=AstralIcons.Crop(FeatureData.GetIconSprite(s.MyFeatureDataID));cd.fillAmount=1-Mathf.Clamp01(s.GetCDRatio());}});
+                live.Add(()=>{bool present=skills!=null&&skills.TryGetValue(index,out var s0)&&s0;icon.enabled=present;cd.enabled=present;if(present){var s=skills[index];icon.sprite=AstralIcons.Crop(FeatureData.GetIconSprite(s.MyFeatureDataID));cd.sprite=icon.sprite;cd.fillAmount=1-Mathf.Clamp01(s.GetCDRatio());}});
             }
-            var rankPanel=Plate(page,"Leaderboard",669,257,430,320).transform;
-            Pin(rankPanel,Vector2.one,new Vector2(24,100));
-            Text(rankPanel,"Title",L("排行榜","LEADERBOARD"),0,126,376,40,23,Gold);
-            Text[] names=new Text[5],scores=new Text[5];
-            for(int i=0;i<5;i++){Text(rankPanel,"Rank "+i,(i+1).ToString("00"),-170,70-i*48,45,40,21,Gold);names[i]=Text(rankPanel,"Name "+i,"",-4,70-i*48,260,40,22);scores[i]=Text(rankPanel,"Score "+i,"",167,70-i*48,60,40,22,Gold,TextAnchor.MiddleRight);}
-            var log=Text(page,"Combat feed","",-577,335,620,220,22,Muted,TextAnchor.UpperLeft);
-            Pin(log.transform,new Vector2(0,1),new Vector2(24,24));
-            var notification=Plate(page,"Skill notification",0,435,640,85).gameObject;
-            var notice=Text(notification.transform,"Notice","",0,0,590,70,24,Gold,TextAnchor.MiddleCenter);
-            float next=0,noticeUntil=0;var initialSkill=Field<Text>(battle,"GetSkillText");string lastSkill=initialSkill?initialSkill.text:"";int lastLevel=0;
+
+            int rowCount=compact?3:5;float rankWidth=touch?156:272,rankHeight=touch?(compact?82:124):210;
+            var rankPanel=Image(page,"Leaderboard",0,0,rankWidth,rankHeight,null,HudColor(Night,.22f)).transform;
+            Pin(rankPanel,Vector2.one,new Vector2(edge,touch?60:96));
+            HudText(rankPanel,"Title",L("排行榜","LEADERBOARD"),0,rankHeight*.5f-(touch?12:20),rankWidth-(touch?16:28),touch?20:32,touch?11:18,HudColor(Gold,.75f));
+            var names=new Text[rowCount];var scores=new Text[rowCount];
+            for(int i=0;i<rowCount;i++)
+            {
+                float y=rankHeight*.5f-(touch?32:54)-i*(touch?(compact?17:19):32),rowHeight=touch?20:32;
+                HudText(rankPanel,"Rank "+i,(i+1).ToString(),touch?-63:-111,y,touch?14:24,rowHeight,touch?11:18,HudColor(Muted,.75f));
+                names[i]=HudText(rankPanel,"Name "+i,"",touch?-2:-3,y,touch?98:174,rowHeight,touch?12:20,HudColor(Pearl,.88f));
+                scores[i]=HudText(rankPanel,"Score "+i,"",touch?58:101,y,touch?24:42,rowHeight,touch?11:18,HudColor(Gold,.8f),TextAnchor.MiddleRight);
+            }
+            var log=HudText(page,"Combat feed","",0,0,touch?208:540,touch?(compact?42:84):180,touch?12:20,Muted,TextAnchor.UpperLeft);
+            Pin(log.transform,new Vector2(0,1),new Vector2(touch?12:32,touch?12:32));
+            float noticeWidth=touch?Mathf.Clamp(ViewWidth-452,170,360):540;
+            var notification=Image(page,"Skill notification",0,touch?TouchTop-30:435,noticeWidth,touch?36:60,null,HudColor(Night,.3f)).gameObject;
+            var notice=HudText(notification.transform,"Notice","",0,0,noticeWidth-(touch?16:28),touch?30:48,touch?14:22,Gold,TextAnchor.MiddleCenter);
+            float next=0,noticeUntil=0;var initialSkill=Field<Text>(battle,"GetSkillText");string lastSkill=initialSkill?initialSkill.text:"";
             live.Add(()=>
             {
                 if(Time.unscaledTime<next)return;next=Time.unscaledTime+.15f;
-                var rows=LeaderBoardUI.ItemDic.Values.Where(r=>r).OrderBy(r=>r.Rank).Take(5).ToArray();
-                for(int i=0;i<5;i++){names[i].text=i<rows.Length?rows[i].Name:"—";scores[i].text=i<rows.Length?rows[i].Score.ToString():"";}
-                var logs=battle.GetComponentsInChildren<LogItem>().Where(r=>r.gameObject.activeInHierarchy).TakeLast(4).Select(r=>r.Log);log.text=string.Join("\n",logs);
-                var source=Field<Text>(battle,"GetSkillText");var player=BattleManager.BM?BattleManager.BM.MyPlayerRole:null;
+                var rows=LeaderBoardUI.ItemDic.Values.Where(r=>r).OrderBy(r=>r.Rank).Take(rowCount).ToArray();
+                for(int i=0;i<rowCount;i++){names[i].text=i<rows.Length?rows[i].Name:"—";scores[i].text=i<rows.Length?rows[i].Score.ToString():"";}
+                var logs=battle.GetComponentsInChildren<LogItem>().Where(r=>r.gameObject.activeInHierarchy).TakeLast(compact?2:4).Select(r=>r.Log);log.text=string.Join("\n",logs);
+                var source=Field<Text>(battle,"GetSkillText");
                 if(source&&!string.IsNullOrEmpty(source.text)&&source.text!=lastSkill){lastSkill=source.text;notice.text=L("獲得技能 · ","SKILL ACQUIRED · ")+source.text;noticeUntil=Time.unscaledTime+4;}
-                if(player&&player.LV!=lastLevel){if(lastLevel>0){notice.text=L("升級 · 等級 ","LEVEL UP · ")+player.LV;noticeUntil=Time.unscaledTime+3;}lastLevel=player.LV;}
                 notification.SetActive(Time.unscaledTime<noticeUntil);
             });
         }

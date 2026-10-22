@@ -78,11 +78,21 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   await ready(mousePage,()=>neonState.playerAlive&&!neonState.inputBlocked);
   const mouseBefore=await state(mousePage);
   assert.equal(mouseBefore.touch,false);assert.ok(!mouseBefore.elements.some(e=>e.name==='Touch joystick'));
+  const hud=mouseBefore.elements,rank=hud.find(e=>e.name==='Leaderboard'),exit=hud.find(e=>e.name==='Exit icon');
+  const leave=mouseBefore.controls.find(c=>c.name==='Leave arena');
+  assert.ok(rank&&rank.opacity<=.3,'Desktop leaderboard stays translucent');
+  assert.ok(exit&&leave&&exit.w<=leave.w*.55&&!leave.text,'Desktop exit is a small icon with a larger hit area');
+  assert.ok(!hud.some(e=>['Level','Level label','Level orbit'].includes(e.name)),'Desktop persistent level display removed');
+  report.checks.push('Desktop shares the lightweight HUD: translucent leaderboard, small exit icon, no persistent level display');
   await mousePage.mouse.move(950,400);await ready(mousePage,()=>neonState.velocityX>1);
   await mousePage.waitForTimeout(700);
   assert.ok((await state(mousePage)).playerX>mouseBefore.playerX+1,'Desktop mouse moves the real player');
   await mousePage.mouse.move(640,400);
   report.checks.push('Desktop keeps mouse movement and never displays the mobile joystick');
+  const slot=(await state(mousePage)).elements.find(e=>e.name==='Slot'),cssRatio=mouseBefore.cssWidth/mouseBefore.screenWidth;
+  await mousePage.mouse.move((slot.x+slot.w/2)*cssRatio,(slot.y+slot.h/2)*cssRatio);await ready(mousePage,()=>neonState.elements.some(e=>e.name==='Tooltip'));
+  await mousePage.mouse.move(640,400);await ready(mousePage,()=>!neonState.elements.some(e=>e.name==='Tooltip'));
+  report.checks.push('Desktop skill descriptions retain hover and close when the mouse leaves');
   await pages[0].waitForTimeout(1500);
   for(const [i,page] of pages.entries())await page.screenshot({path:path.join(output,'battle-live-'+i+'.png')});
   if(process.env.NEON_AUDIT==='1'){

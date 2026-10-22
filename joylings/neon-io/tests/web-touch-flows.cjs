@@ -20,6 +20,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-touch
   async function layout(label){
    await page.waitForTimeout(650);const s=await page.evaluate(()=>neonState),r=s.cssWidth/s.screenWidth;
    for(const c of s.controls.filter(c=>c.type!=='Scrollbar')){assert.ok(c.w*r>=43.4&&c.h*r>=43.4,label+': small '+c.name);if(!c.scroll)assert.ok(c.x*r>=-1&&c.y*r>=-1&&(c.x+c.w)*r<=s.cssWidth+1&&(c.y+c.h)*r<=s.cssHeight+1,label+': clipped '+c.name);}
+   if(s.view==='battle')assert.ok(!s.elements.some(e=>e.name==='Tooltip'),label+': no stale hover description after scene change or rotation');
    report.layouts.push({label,view:s.view,size:[s.cssWidth,s.cssHeight]});await page.screenshot({path:path.join(output,label+'.png'),scale:'css'});console.log('Layout complete',label);
   }
   async function closeGuide(p=page,mobile=true){if(await p.evaluate(()=>neonState.controls.some(c=>c.name==='Close tutorial')))await gestures.click(p,'Close tutorial',mobile);}
@@ -46,6 +47,8 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-touch
   await ready(page,()=>neonState.scene==='Challenge'&&neonState.connected);await ready(desktop,()=>neonState.scene==='Challenge'&&neonState.connected);
   const a=await page.evaluate(()=>neonState),b=await desktop.evaluate(()=>neonState);assert.equal(a.room,b.room);assert.ok(a.peers>=2&&b.peers>=2);report.room=a.room;
   await closeGuide();await page.bringToFront();await layout('compact-duel-hud');
+  await page.setViewportSize({width:844,height:390});await ready(page,()=>neonState.cssHeight===390);await layout('duel-hud-844x390');
+  await page.setViewportSize({width:844,height:240});await ready(page,()=>neonState.cssHeight===240);
   report.checks.push('Actual mobile and desktop Photon peers show opponent loadouts and enter the same duel');
   await click('Leave arena');await ready(page,()=>neonState.controls.some(c=>c.name==='Confirm dialog'));await layout('compact-leave-confirm');await click('Confirm dialog');await ready(page,()=>neonState.scene==='Lobby'&&!neonState.connected);
   assert.deepEqual(report.errors,[]);report.passed=true;

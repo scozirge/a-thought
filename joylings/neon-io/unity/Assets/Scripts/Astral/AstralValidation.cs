@@ -120,10 +120,15 @@ namespace Neon.Astral
                     ((RectTransform)pin.transform).GetWorldCorners(corners);
                     float edgeX=pin.corner.x==0?corners[0].x:Screen.width-corners[2].x;
                     float edgeY=pin.corner.y==0?corners[0].y:Screen.height-corners[2].y;
-                    Require(edgeX>=0&&edgeX<=30,"HUD follows horizontal edge: "+pin.name);
-                    if(pin.name!="Leaderboard")Require(edgeY>=0&&edgeY<=30,"HUD follows vertical edge: "+pin.name);
+                    Require(edgeX>=0&&edgeX<=40,"HUD follows horizontal edge: "+pin.name);
+                    if(pin.name!="Leaderboard")Require(edgeY>=0&&edgeY<=40,"HUD follows vertical edge: "+pin.name);
                 }
                 Require(!UI.GetComponentsInChildren<Text>().Any(t=>t.text=="NEON IMPACT"),"No redundant battle logo");
+                Require(!UI.GetComponentsInChildren<RectTransform>().Any(t=>t.name=="Level"||t.name=="Level orbit"||t.name=="Level label"),"No persistent level display");
+                var rank=UI.GetComponentsInChildren<Graphic>().FirstOrDefault(g=>g.name=="Leaderboard");
+                if(rank)Require(rank.color.a<=.3f&&!rank.raycastTarget,"Leaderboard stays translucent and does not intercept input");
+                var leave=UI.GetComponentsInChildren<Button>().FirstOrDefault(b=>b.name=="Leave arena");
+                if(leave){var icon=leave.transform.Find("Exit icon") as RectTransform;Require(icon&&icon.rect.width<=((RectTransform)leave.transform).rect.width*.55f,"Small exit icon retains larger hit area");Require(!leave.GetComponentInChildren<Text>(),"Exit has no large text label");}
             }
             foreach(var s in UI.GetComponentsInChildren<Selectable>())
             {
