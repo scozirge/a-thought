@@ -1,0 +1,13 @@
+{
+  "equipmentCanvas": [
+    180,
+    180
+  ],
+  "equipmentOrder": [
+    "Back",
+    "Body",
+    "Head"
+  ],
+  "originalGodCompositeMeanColorError": 0.00003745184458846381,
+  "reverseLayerOrderMeanColorError": 0.5259243370597919
+}

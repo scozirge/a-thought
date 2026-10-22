@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "unity": "6000.3.11f1",
+  "assetFiles": 10,
+  "importedSprites": 17,
+  "godSprites": 8,
+  "godBones": 19,
+  "verifiedFields": [
+    "GUID",
+    "local file ID",
+    "sprite name",
+    "pixel rect",
+    "pivot",
+    "PPU",
+    "bounds",
+    "god vertex positions",
+    "god triangle indices",
+    "god bones",
+    "god bone weights",
+    "god bind poses"
+  ],
+  "errors": [],
+  "liveGameModified": false,
+  "before_snapshot_sha256": "4ec9f6c7276dd4fff918a5f74239c33eb6cc4e1609582579c3c2ab4baa38a5a0",
+  "after_snapshot_sha256": "4ec9f6c7276dd4fff918a5f74239c33eb6cc4e1609582579c3c2ab4baa38a5a0",
+  "scope": "Isolated Unity import and sprite/rig contract comparison; no live game replacement or gameplay test"
+}
