@@ -9,8 +9,8 @@
 const canvas=document.getElementById('unity-canvas'),start=document.getElementById('start'),status=document.getElementById('status');
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
-dataUrl:'Build/e2607fef15fc447bbed494e014d1be51.data.unityweb',frameworkUrl:'Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb',codeUrl:'Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
-companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.1-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
+dataUrl:'Build/1dfa96767444e64a5b01683eba41c6c3.data.unityweb',frameworkUrl:'Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb',codeUrl:'Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.2-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5),
 cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
 window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
