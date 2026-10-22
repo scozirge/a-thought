@@ -1,0 +1,322 @@
+{
+  "roleSprites": [
+    {
+      "key": "knight-head",
+      "file": "Head/knight.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        75,
+        52,
+        106,
+        84
+      ],
+      "candidateAlphaBounds": [
+        75,
+        52,
+        106,
+        84
+      ],
+      "sourceSha256": "b64f62d188b6d6b45ccab7827601ec15a0ed358b4a936c9c2f59e51d7c9c39e7",
+      "candidateSha256": "27827a3b15ceb1d0b919745a1ae8910edc8374c7eee3acb5c4b655dc224beb76",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "knight-body",
+      "file": "Body/knight.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        61,
+        73,
+        119,
+        150
+      ],
+      "candidateAlphaBounds": [
+        61,
+        73,
+        119,
+        150
+      ],
+      "sourceSha256": "caa42cb4943bed11f9d4ad7ae0df0ad94763d429f7a2548173ae14d0f10feccf",
+      "candidateSha256": "1ca7f839c88bb553cef0e417585880d63911c46af12f6e387ccb47bd54b5f433",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "knight-back",
+      "file": "Back/featherWing.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        5,
+        46,
+        175,
+        93
+      ],
+      "candidateAlphaBounds": [
+        5,
+        46,
+        175,
+        93
+      ],
+      "sourceSha256": "97ff9ada25f57394beb16c823d1d886d2887e6c8fd883fc2d457187ce14ee0d6",
+      "candidateSha256": "aaecaf7f572ee9e292093c5a16e50766dfa0c0f69893650190e0ae9a5eb2f26c",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "anubis-head",
+      "file": "Head/anubis.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        79,
+        61,
+        102,
+        87
+      ],
+      "candidateAlphaBounds": [
+        79,
+        61,
+        102,
+        87
+      ],
+      "sourceSha256": "c1d14c46b486eb9d55573aabed582829cd09fe4ebf44d26f8ae2411cefe01553",
+      "candidateSha256": "a9b8383beac891dd3ac539ad61fea01d0d1f09ac3582d8450f79f9f48abc72b6",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "anubis-body",
+      "file": "Body/anubis.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        40,
+        64,
+        138,
+        141
+      ],
+      "candidateAlphaBounds": [
+        40,
+        64,
+        138,
+        141
+      ],
+      "sourceSha256": "aff86ba00993a892d80f0505fe4be9dd537cc3dd391153ce2ede4b66239afe81",
+      "candidateSha256": "a8fa318ac0a18544b5bb7c84742f593a67513ddc9e18896dc33bfeecdf8b7d24",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "anubis-back",
+      "file": "Back/discWing.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        35,
+        35,
+        146,
+        101
+      ],
+      "candidateAlphaBounds": [
+        35,
+        35,
+        146,
+        101
+      ],
+      "sourceSha256": "cac59726b7d381ad68d0b2366f04e6fb2cc9e890b682e1ff93bb70144f41866e",
+      "candidateSha256": "d6698d6a6b68d33f7c3402ea73323c36d6158b46ed38325bfaf7fbb1826b1b56",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "beetle-head",
+      "file": "Head/beetle.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        79,
+        57,
+        101,
+        85
+      ],
+      "candidateAlphaBounds": [
+        79,
+        57,
+        101,
+        85
+      ],
+      "sourceSha256": "32cd543985e693e6dc8906686311cab623f597f26abdb9c9ebb40a796feb52c6",
+      "candidateSha256": "a8329e8bf9491fd503d171ca9df0e8bab3aa4f6f9b2c80fd263fc8d7526da402",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "beetle-body",
+      "file": "Body/beetle.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        55,
+        73,
+        134,
+        156
+      ],
+      "candidateAlphaBounds": [
+        55,
+        73,
+        134,
+        156
+      ],
+      "sourceSha256": "d84417f8a4136d10f803077c599881e5664805a6852cd6802ff106aa6e44c57f",
+      "candidateSha256": "6fda137610943cacf5da9c9c0dd911d39cb96945ee784c2d85e9db201b73d2da",
+      "metadataUnchanged": true
+    },
+    {
+      "key": "beetle-back",
+      "file": "Back/beetle.png",
+      "width": 180,
+      "height": 180,
+      "originalAlphaBounds": [
+        27,
+        72,
+        153,
+        104
+      ],
+      "candidateAlphaBounds": [
+        27,
+        72,
+        153,
+        104
+      ],
+      "sourceSha256": "1a571992279cef2cf1127f295f54765e59d57bf139efcd2775c471292745acca",
+      "candidateSha256": "f9a85593315fcc306d8641f753e5b1c5bcc9fa849d44c20c60a0c00625720f91",
+      "metadataUnchanged": true
+    }
+  ],
+  "god": {
+    "file": "god.psb",
+    "width": 1000,
+    "height": 1000,
+    "layers": [
+      {
+        "name": "blade2",
+        "layerId": 36,
+        "rect": [
+          61,
+          481,
+          390,
+          694
+        ],
+        "hidden": false,
+        "alphaSha256": "74f077918dfb7d220f93b18fa076ac0babcc84621c437df680832c267bb8adc7",
+        "alphaCompressedSha256": "2b7194247794b987f4d5f5ce9c9e44b198fd9fd762a21f5199de6c0896c985d5"
+      },
+      {
+        "name": "blade4",
+        "layerId": 40,
+        "rect": [
+          223,
+          639,
+          411,
+          886
+        ],
+        "hidden": false,
+        "alphaSha256": "a2ea6db9c6acda1bbe28139d0392d49b92e7e1b0590417f3156d752ece3dc5b0",
+        "alphaCompressedSha256": "a3bd8a8fb12745effef00eb933089e45a7b6fb13615d94aeebdd79c1e1849012"
+      },
+      {
+        "name": "blade1",
+        "layerId": 60,
+        "rect": [
+          610,
+          481,
+          939,
+          694
+        ],
+        "hidden": false,
+        "alphaSha256": "e11c58a2380260c1cf26909d736f74e9adbe4bdd5d6f202f2de7b4a5e10a21fb",
+        "alphaCompressedSha256": "9a2fa1d4ceb951cb8d1725885300466bef6a8936aa86aa26d9c2b8bdf47c28b7"
+      },
+      {
+        "name": "blade3",
+        "layerId": 64,
+        "rect": [
+          589,
+          639,
+          777,
+          886
+        ],
+        "hidden": false,
+        "alphaSha256": "0f522975ae4aa7d8c97982ec574cc1abaa6e531d799fdca8b3a9724833379eae",
+        "alphaCompressedSha256": "45c96d5a33007009128d14372fb3f778c8bbe98f14c012d11b3c09b0fc85b3e1"
+      },
+      {
+        "name": "Rhand",
+        "layerId": 74,
+        "rect": [
+          136,
+          112,
+          863,
+          477
+        ],
+        "hidden": false,
+        "alphaSha256": "59a3fb869f498aa4b4ecbec479e6a59a8ca4f87ff63452234e1e604b633d1081",
+        "alphaCompressedSha256": "5d1e8b9d28ceb4de4cd9a03937912fb0397992943df672572c1728d921a4ebd1"
+      },
+      {
+        "name": "圖層 1",
+        "layerId": 78,
+        "rect": [
+          411,
+          441,
+          588,
+          967
+        ],
+        "hidden": false,
+        "alphaSha256": "28bde52aaa2d46ac9333a7573a9d48c8d428ecb1d887883d241b16bb6580a6b3",
+        "alphaCompressedSha256": "006f6c70772a092d6af4524d8d6fed469f9c9245f24b990654c53e922ff0e0f2"
+      },
+      {
+        "name": "head",
+        "layerId": 21,
+        "rect": [
+          407,
+          9,
+          595,
+          177
+        ],
+        "hidden": false,
+        "alphaSha256": "cd44239e508dcf4a897f9ca5f0df26c013b1faac978b6a6dc4cc1828684d227e",
+        "alphaCompressedSha256": "93c9086163e12c98a17daf7dcd71aebd557d31e947ca517e673ab0e00a1f88c9"
+      },
+      {
+        "name": "star",
+        "layerId": 24,
+        "rect": [
+          362,
+          143,
+          638,
+          417
+        ],
+        "hidden": false,
+        "alphaSha256": "0bb3e935266c5d81b77d262be75249659cd0055f38821babdfa20dd82518f2a1",
+        "alphaCompressedSha256": "e5df9714c121c0f9750ddf5a586f4672f51b110ab257a189cd1a4588a487a20e"
+      },
+      {
+        "name": "circle",
+        "layerId": 7,
+        "rect": [
+          11,
+          11,
+          989,
+          989
+        ],
+        "hidden": true,
+        "alphaSha256": "06677d939f0877864ea5c9067b6f16b401a390a78d3fa08a0b4a7bd21eaed574",
+        "alphaCompressedSha256": "9866c42a1ed8fbc85eaa8577f182d08f6de9e90226d9933984c9806b37ffd751"
+      }
+    ],
+    "layerAlphaUnchanged": true,
+    "metadataUnchanged": true,
+    "sourceSha256": "2c6c2afb033c44068cd0b55134e4eea215d20b569f045c09bc1737dd4b11db93",
+    "candidateSha256": "6232ced5805af9484bb7aa1a5bc3dfd9afbac65fd1668fcef9369c05e47ae540"
+  },
+  "liveGameModified": false
+}

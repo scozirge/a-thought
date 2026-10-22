@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8199/",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "images": 25,
+      "nativeSize180": true,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "images": 25,
+      "nativeSize180": true,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "images": 25,
+      "nativeSize180": true,
+      "overflow": false,
+      "errors": []
+    }
+  ],
+  "zipBytes": 487676
+}

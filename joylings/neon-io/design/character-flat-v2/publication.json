@@ -1,0 +1,166 @@
+{
+  "verified_at_utc": "2026-10-22T04:36:46.627143+00:00",
+  "public_url": "https://scozirge.github.io/a-thought/neon-impact-design/flat-v2/",
+  "anonymous_access": true,
+  "pages_commit": "d4433822a14fa825ec66534aa41752e960291d45",
+  "workflow_url": "https://github.com/scozirge/a-thought/actions/runs/39723109799",
+  "workflow_conclusion": "success",
+  "files": [
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Head/knight.png",
+      "status": 200,
+      "bytes": 3580,
+      "sha256": "27827a3b15ceb1d0b919745a1ae8910edc8374c7eee3acb5c4b655dc224beb76",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Body/knight.png",
+      "status": 200,
+      "bytes": 9611,
+      "sha256": "1ca7f839c88bb553cef0e417585880d63911c46af12f6e387ccb47bd54b5f433",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Back/featherWing.png",
+      "status": 200,
+      "bytes": 11431,
+      "sha256": "aaecaf7f572ee9e292093c5a16e50766dfa0c0f69893650190e0ae9a5eb2f26c",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Head/anubis.png",
+      "status": 200,
+      "bytes": 2483,
+      "sha256": "a9b8383beac891dd3ac539ad61fea01d0d1f09ac3582d8450f79f9f48abc72b6",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Body/anubis.png",
+      "status": 200,
+      "bytes": 9687,
+      "sha256": "a8fa318ac0a18544b5bb7c84742f593a67513ddc9e18896dc33bfeecdf8b7d24",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Back/discWing.png",
+      "status": 200,
+      "bytes": 8387,
+      "sha256": "d6698d6a6b68d33f7c3402ea73323c36d6158b46ed38325bfaf7fbb1826b1b56",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Head/beetle.png",
+      "status": 200,
+      "bytes": 2660,
+      "sha256": "a8329e8bf9491fd503d171ca9df0e8bab3aa4f6f9b2c80fd263fc8d7526da402",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Body/beetle.png",
+      "status": 200,
+      "bytes": 12505,
+      "sha256": "6fda137610943cacf5da9c9c0dd911d39cb96945ee784c2d85e9db201b73d2da",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/Back/beetle.png",
+      "status": 200,
+      "bytes": 8370,
+      "sha256": "f9a85593315fcc306d8641f753e5b1c5bcc9fa849d44c20c60a0c00625720f91",
+      "matches_local": true
+    },
+    {
+      "file": "replacement/Assets/Resources/Images/Role/god.psb",
+      "status": 200,
+      "bytes": 754183,
+      "sha256": "6232ced5805af9484bb7aa1a5bc3dfd9afbac65fd1668fcef9369c05e47ae540",
+      "matches_local": true
+    },
+    {
+      "file": "neon-impact-flat-v2.zip",
+      "status": 200,
+      "bytes": 487676,
+      "sha256": "47d029cbea4adc302647d1bfe6335722d6c1475ade7f3f0676c18f96aff8ae49",
+      "matches_local": true
+    }
+  ],
+  "public_browser": {
+    "url": "https://scozirge.github.io/a-thought/neon-impact-design/flat-v2/",
+    "results": [
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "images": 25,
+        "nativeSize180": true,
+        "overflow": false,
+        "errors": []
+      }
+    ],
+    "zipBytes": 487676
+  },
+  "preservation": {
+    "existing_game_files_unchanged": true,
+    "game_files": [
+      {
+        "file": ".nojekyll",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": "Build/177c73d11756ceef1a6b88cdd4c4e5d8.framework.js.unityweb",
+        "sha256": "a57228d9449d7f6636b9fedd42c4eec81359a59497c01b9e91153bac8b450ce9"
+      },
+      {
+        "file": "Build/47e207321ee8b53ca8d777842a0af06b.loader.js",
+        "sha256": "bc9511bca51f840b0ac90b169fc81026efaeeeb0affa02b465d43f9be502dce4"
+      },
+      {
+        "file": "Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb",
+        "sha256": "bbc52a1427e196296ce1ec5cfc309a7ae48e0e23a8c7e9a684f6bab3049f8eef"
+      },
+      {
+        "file": "Build/5c7fd561903909d7132335c2a6a8809c.wasm.unityweb",
+        "sha256": "1082c5deb661776ca9f11dcf47a31bc08b7ffba4da138decc0f39b395d5a03c6"
+      },
+      {
+        "file": "Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb",
+        "sha256": "7c2f404baf7bc3fccc1010cb9f694a1e3a4904fe58972b36edba623d31e57064"
+      },
+      {
+        "file": "Build/deb6a196756ae771aca91c6808646be1.loader.js",
+        "sha256": "26c06c48e3ffc2b2253694950905e737372632aa7d69ef5d13e0db7b8ca90d0a"
+      },
+      {
+        "file": "Build/df6796b4cf4c73435755eca4709d9d89.data.unityweb",
+        "sha256": "2943327a18907270796b98da589ec6fd6646565e6dfc39ceb2233e5db8769768"
+      },
+      {
+        "file": "Build/e2607fef15fc447bbed494e014d1be51.data.unityweb",
+        "sha256": "7adad27bb08cc646057109e9227a359de9b0b001183e5824f68cb0e4a71e9877"
+      },
+      {
+        "file": "index.html",
+        "sha256": "c1cc7093871bfe532166522156143a8183844759483816da1574dca7c805baae"
+      },
+      {
+        "file": "ThirdPartyLicenses/cinzel-OFL.txt",
+        "sha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83"
+      },
+      {
+        "file": "ThirdPartyLicenses/Fusion/build_info.txt",
+        "sha256": "3e1e51eccbb68ad65f74acb8f55539c9507871fce0c16f50130933addc40fb24"
+      },
+      {
+        "file": "ThirdPartyLicenses/Fusion/Plugins/NanoSockets/libnanosockets_LICENSE.txt",
+        "sha256": "0311691f6fbb26ca5edda313175ce59e39986bf86a7fd2d0ad131537cf212a27"
+      },
+      {
+        "file": "ThirdPartyLicenses/notosanstc-OFL.txt",
+        "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+      }
+    ],
+    "source_assets_unchanged": true
+  },
+  "existing_design_url_redirects_to_v2": true
+}
