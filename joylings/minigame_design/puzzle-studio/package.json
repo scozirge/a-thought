@@ -1,0 +1,1 @@
+{"name":"puzzle-studio","version":"0.1.0","private":true,"scripts":{"start":"node serve.cjs","test":"node --test tests/core.test.cjs","build":"node build.cjs"}}

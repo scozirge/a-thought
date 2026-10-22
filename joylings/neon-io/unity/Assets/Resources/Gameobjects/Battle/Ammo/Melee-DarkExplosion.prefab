@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1774380269820589660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774380269820589656}
+  - component: {fileID: 1774380269820589657}
+  - component: {fileID: 1774380269820589663}
+  m_Layer: 0
+  m_Name: Melee-DarkExplosion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1774380269820589656
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774380269820589660}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7191102472393601657}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1774380269820589657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774380269820589660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092036f6f67bdbe4e80d316917572a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalParticles:
+  - {fileID: 8098154532800096469, guid: d721f4cde310f7d4d88b85826ec7868d, type: 3}
+  GlobalParticle: []
+  LocalAttackerParticles: []
+  DeadParticles:
+  - {fileID: 0}
+  HitTargetParticle: {fileID: 7701719287428706575, guid: 6271f6d77066e1b49bfa5407c5d9abc5,
+    type: 3}
+  HitTargetParticleRandomAngle: 1
+  AppearanceObjs: {fileID: 5947503085332228768}
+  HildinOpponentView: 0
+  SpawnSound: {fileID: 0}
+  HitTargetSound: {fileID: 8300000, guid: 225e6443a00fc344a9cb27f8cb60dcf6, type: 3}
+  ValuePercent: 0.5
+  VampireProportion: 0.5
+  LifeTime: 999999
+  KnockIntensity: -500
+  Gravity: 0
+  AmmoType: 1
+  TriggerTargetCD: 1
+  TriggerCD: 3
+  Buffers:
+  - Type: 0
+    Time: 0.5
+    Value: 0
+    Value2: 0
+  Value: 0
+  MyMeleeType: 0
+  MeleeTypeValue: 0.5
+  MyAni: {fileID: 0}
+  ReplaceAttack: 0
+--- !u!58 &1774380269820589663
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774380269820589660}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 250
+--- !u!1 &5947503085332228768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7191102472393601657}
+  m_Layer: 0
+  m_Name: Appearance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7191102472393601657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5947503085332228768}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1774380269820589656}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

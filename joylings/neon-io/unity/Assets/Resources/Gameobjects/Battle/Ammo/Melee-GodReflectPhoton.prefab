@@ -1,0 +1,207 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4329394819492742530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 961292795014307163}
+  - component: {fileID: 1670776514563757033}
+  m_Layer: 0
+  m_Name: Appearance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &961292795014307163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329394819492742530}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8503643103864969594}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1670776514563757033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329394819492742530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efccf2f148eb4b4eaf1b99c590ae477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EffectList:
+  - Name: DistortionPoint_God
+    Particle: {fileID: 4568610924769904371, guid: 030cebc29ee605e4caa4a641e233b640,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 961292795014307163}
+    Offset: {x: 0, y: 400}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1
+  - Name: DistortionPoint_God
+    Particle: {fileID: 4568610924769904371, guid: 030cebc29ee605e4caa4a641e233b640,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 961292795014307163}
+    Offset: {x: 0, y: -400}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1
+--- !u!1 &8503643103864969598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8503643103864969594}
+  - component: {fileID: 8503643103864969595}
+  - component: {fileID: 8503643103864969597}
+  - component: {fileID: 3679500668413776165}
+  - component: {fileID: 1195135083783672558}
+  - component: {fileID: 3147942275959014760}
+  m_Layer: 0
+  m_Name: Melee-GodReflectPhoton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8503643103864969594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 961292795014307163}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8503643103864969595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092036f6f67bdbe4e80d316917572a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalParticles: []
+  GlobalParticle: []
+  LocalAttackerParticles: []
+  DeadParticles: []
+  HitTargetParticle: {fileID: 198052019206992322, guid: 42f9ceb463d74f74e98bb96225b3f799,
+    type: 3}
+  HitTargetParticleRandomAngle: 0
+  AppearanceObjs: {fileID: 4329394819492742530}
+  HildinOpponentView: 0
+  SpawnSound: {fileID: 0}
+  HitTargetSound: {fileID: 8300000, guid: eaaacaa248deced499c5b767a9d7dff4, type: 3}
+  ValuePercent: 1
+  VampireProportion: 0
+  LifeTime: 99999
+  KnockIntensity: 2000
+  Gravity: 0
+  AmmoType: 1
+  TriggerTargetCD: 1
+  TriggerCD: 0
+  Buffers:
+  - Type: 0
+    Time: 0.5
+    Value: 0
+    Value2: 0
+  - Type: 11
+    Time: 5
+    Value: 0
+    Value2: 0
+  Value: 0
+  MyMeleeType: 0
+  MeleeTypeValue: 0
+  MyAni: {fileID: 1195135083783672558}
+  ReplaceAttack: 0
+--- !u!58 &8503643103864969597
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 400}
+  serializedVersion: 2
+  m_Radius: 80
+--- !u!95 &3679500668413776165
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 16b2939ae65a93e43b87a7e6e522b9eb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1195135083783672558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65069269a16a89543bc9015ab9a79cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyAni: {fileID: 3679500668413776165}
+--- !u!58 &3147942275959014760
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503643103864969598}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -400}
+  serializedVersion: 2
+  m_Radius: 80

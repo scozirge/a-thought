@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1321399362283226297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1834888011967973074}
+  - component: {fileID: 6149294554233864380}
+  m_Layer: 0
+  m_Name: Skill-QuadruplePoisonedBall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1834888011967973074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321399362283226297}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6149294554233864380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321399362283226297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f1f3a7e6b24db127fb13fd7f595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 8300000, guid: ba28fe8609a0503488064d4ef47c4766, type: 3}
+  SpawnedInSelf: 0
+  ConnectToAmmo: 0
+  LocalParticles: []
+  DetectedTargetType: 0
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  MyFeatureDataID: 0
+  FeaturePartSerialNumber: 0
+  DetecteRadius: 1000
+  AttackOnce: 0
+  SpawnAtTargetPos: 0
+  Interval: 1.5
+  FirstAttackNoWait: 1
+  Patetern: 0
+  RandomAngle: 0
+  StartAngle: 45
+  AttackPrefab: {fileID: 4728169849097202830, guid: bad8d535b561fce4e82116a11971f1fe,
+    type: 3}
+  AmmoNum: 4
+  AmmoInterval: 0
+  AngleInterval: 90
+  TriggerWall: 0

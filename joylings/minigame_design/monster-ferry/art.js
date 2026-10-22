@@ -1,0 +1,16 @@
+window.FerryArt={
+ actor(id){
+  const face=(x=50,y=49)=>`<circle cx="${x-10}" cy="${y}" r="3.3" fill="#423c4e"/><circle cx="${x+10}" cy="${y}" r="3.3" fill="#423c4e"/><path d="M${x-6} ${y+10}q6 6 12 0" fill="none" stroke="#685060" stroke-width="2.5" stroke-linecap="round"/>`;
+  const bodies={
+   fire:`<path d="M23 83C6 65 23 43 28 33l4 18C35 31 45 16 49 8c9 18 24 21 20 43l9-14c11 15 19 36 2 48-15 10-40 9-57-2" fill="#e49a67" stroke="#bd754e" stroke-width="2"/><path d="M34 85c-5-14 6-22 13-33 5 13 23 17 20 33" fill="#f8d398"/>${face(50,55)}`,
+   fuzz:`<path d="M21 32c-7-18 11-22 18-9 9-13 26-13 29 3 16-2 25 12 16 23 17 13 9 27-4 29 0 19-19 18-29 10-13 12-29 7-29-5C4 85 5 63 13 58 1 43 10 32 21 32" fill="#d89dad" stroke="#b87c95" stroke-width="2"/><ellipse cx="50" cy="70" rx="20" ry="13" fill="#f1c6cc"/>${face()}`,
+   cake:`<path d="m25 51 7 37h36l8-37" fill="#8da98b" stroke="#658770" stroke-width="2"/><path d="m36 57 4 24m10-23v24m14-25-4 24" stroke="#c4d5ac" stroke-width="3"/><path d="M19 48c-2-11 7-20 17-18-2-15 24-19 27-4 15-3 25 11 19 22 7 17-14 21-20 10-9 10-21 8-25 0-7 11-25 4-18-10" fill="#fff1d4" stroke="#c5b294" stroke-width="2"/><circle cx="51" cy="18" r="9" fill="#cf7f8f"/><path d="M52 9q0-8 9-8" stroke="#60866c" fill="none" stroke-width="3"/>${face(50,46)}`,
+   ice:`<path d="m21 36 18-21 25 2 17 23-8 43-22 10-26-11z" fill="#9bc9d2" stroke="#6e9cac" stroke-width="2"/><path d="m21 36 22 5 21-24m-21 24 8 52m-8-52 38-1" fill="none" stroke="#d2ebeb" stroke-width="3"/><path d="m28 34 12-14 10 5-8 11" fill="#ecf6ec" opacity=".7"/>${face(51,51)}`,
+   stone:`<path d="m50 8 30 17 6 44-36 25-36-25 6-44z" fill="#d3c58e" stroke="#a99b67" stroke-width="2"/><path d="m50 19 21 13 4 32-25 18-25-18 4-32z" fill="#9fc0a2"/><path d="M50 33c7 6 14 7 14 7v15c0 12-14 19-14 19s-14-7-14-19V40s7-1 14-7" fill="#e7efcf" stroke="#658872" stroke-width="2"/><path d="m43 53 5 5 10-12" fill="none" stroke="#658872" stroke-width="3" stroke-linecap="round"/>`,
+   captain:`<path d="M24 84V59c0-24 52-24 52 0v25" fill="#7fae9a" stroke="#537e71" stroke-width="2"/><ellipse cx="50" cy="54" rx="25" ry="23" fill="#d4dfaf"/><path d="M27 37h46l7-19H20z" fill="#fff1d7" stroke="#b8ae8d" stroke-width="2"/><path d="M26 33h48v10H26z" fill="#6b8da1"/><circle cx="50" cy="25" r="6" fill="#dfbc6d"/>${face(50,54)}<path d="m33 81 17-10 17 10" fill="#edf2db"/>`
+  };
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="90" rx="32" ry="5" fill="#263b4220"/><g class="actor-body">${bodies[id]||bodies.fuzz}</g></svg>`;
+ },
+ boat:`<svg viewBox="0 0 240 95" aria-hidden="true"><path d="M10 25h220l-27 50c-36 18-136 18-170 0z" fill="#a87d62" stroke="#795c50" stroke-width="3"/><path d="M23 45h193M32 64h174" stroke="#d1aa7c" stroke-width="3"/><path d="M8 23h224" stroke="#e2bf8d" stroke-width="10" stroke-linecap="round"/><path d="m57 28-8 45m143-45 8 45" stroke="#82614c" stroke-width="3"/><path d="m115 36 7 9-7 9-7-9z" fill="#dfc392"/></svg>`,
+ lantern:`<svg viewBox="0 0 50 60" aria-hidden="true"><path d="M18 14V9c0-10 14-10 14 0v5" stroke="#8a7551" stroke-width="3" fill="none"/><path d="M13 17h24v32H13z" fill="#f2d187" stroke="#9e8456" stroke-width="3"/><path d="M10 14h30M10 52h30" stroke="#9e8456" stroke-width="5" stroke-linecap="round"/><path d="M25 22v22" stroke="#fff2bb" stroke-width="8" stroke-linecap="round"/></svg>`
+};

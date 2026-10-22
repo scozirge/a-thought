@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3239836993960238650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2140368188106016483}
+  m_Layer: 0
+  m_Name: Appearance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2140368188106016483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3239836993960238650}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7412974926685078210}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7412974926685078214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7412974926685078210}
+  - component: {fileID: 7412974926685078211}
+  - component: {fileID: 7412974926685078213}
+  m_Layer: 0
+  m_Name: Melee-MagneticField
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7412974926685078210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7412974926685078214}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2140368188106016483}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7412974926685078211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7412974926685078214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092036f6f67bdbe4e80d316917572a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalParticles:
+  - {fileID: 2681073669414767856, guid: dad1894683a8d5e4aa490812d68d14c8, type: 3}
+  GlobalParticle: []
+  LocalAttackerParticles: []
+  DeadParticles:
+  - {fileID: 0}
+  HitTargetParticle: {fileID: 19808450, guid: 355dc21b3af9b7b41a75f2accc6fc1c8, type: 3}
+  HitTargetParticleRandomAngle: 1
+  AppearanceObjs: {fileID: 3239836993960238650}
+  HildinOpponentView: 0
+  SpawnSound: {fileID: 0}
+  HitTargetSound: {fileID: 8300000, guid: 8abf373a9823adc41bd8872993f3a965, type: 3}
+  ValuePercent: 0.35
+  VampireProportion: 0
+  LifeTime: 999999
+  KnockIntensity: 200
+  Gravity: 0
+  AmmoType: 1
+  TriggerTargetCD: 1
+  TriggerCD: 0
+  Buffers:
+  - Type: 0
+    Time: 0.1
+    Value: 0
+    Value2: 0
+  Value: 0
+  MyMeleeType: 0
+  MeleeTypeValue: 0
+  MyAni: {fileID: 0}
+  ReplaceAttack: 0
+--- !u!58 &7412974926685078213
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7412974926685078214}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 150

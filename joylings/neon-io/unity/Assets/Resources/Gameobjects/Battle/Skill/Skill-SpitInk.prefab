@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8175871128339944003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8815477609484488744}
+  - component: {fileID: 8882529573735011028}
+  m_Layer: 0
+  m_Name: Skill-SpitInk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8815477609484488744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175871128339944003}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8882529573735011028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175871128339944003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b145bb7b193be6e42950c67e204da54e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: 
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 0}
+  SpawnedInSelf: 0
+  ConnectToAmmo: 0
+  LocalParticles: []
+  DetectedTargetType: 0
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  MyFeatureDataID: 0
+  FeaturePartSerialNumber: 0
+  TriggerType: 0
+  ValueList:
+  - 12
+  - 0
+  - 0
+  SelfBuffers:
+  - Type: 10
+    Time: 0
+    Value: 0.1
+    Value2: 0
+  SpawnAtTargetPos: 0
+  AttackPrefab: {fileID: 7085680132201647255, guid: d828223865b0e2d4c801951b352928b0,
+    type: 3}
+  PrepareParticle: {fileID: 2671459657000464153, guid: bb3802c4864c2614dabe59e0fef3600a,
+    type: 3}
+  PrepareTime: 0.7
+  Suicide: 0

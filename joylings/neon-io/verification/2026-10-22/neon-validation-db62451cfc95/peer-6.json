@@ -1,0 +1,169 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證7",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 10,
+    "maxActors": 10,
+    "maxAi": 0,
+    "elapsed": 72.0335464477539,
+    "averageFrameMs": 17.430103302001954,
+    "actors": [
+        {
+            "name": "驗證3",
+            "id": 2622465,
+            "health": 750,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1864.041748046875,
+                "y": -1731.25,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證2",
+            "id": 1049601,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -541.9707641601563,
+                "y": -684.0841064453125,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證6",
+            "id": 2098177,
+            "health": 92,
+            "level": 2,
+            "skills": 1,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2707.380126953125,
+                "y": -2831.931884765625,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證7",
+            "id": 5243905,
+            "health": 1050,
+            "level": 2,
+            "skills": 1,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -622.7106323242188,
+                "y": 212.78392028808595,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證8",
+            "id": 4195329,
+            "health": 850,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2368.298095703125,
+                "y": -93.86041259765625,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證5",
+            "id": 1573889,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -638.6846923828125,
+                "y": -407.2582702636719,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證4",
+            "id": 3671041,
+            "health": 450,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2713.56591796875,
+                "y": -1694.409912109375,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證9",
+            "id": 3146753,
+            "health": 650,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2614.77978515625,
+                "y": -1068.27392578125,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證1",
+            "id": 4719617,
+            "health": 1050,
+            "level": 2,
+            "skills": 1,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1377.2947998046875,
+                "y": -904.11181640625,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    }
+}

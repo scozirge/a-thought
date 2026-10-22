@@ -70,6 +70,7 @@ export function verifyClassroom(output) {
       catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/?tip=true"'),
     'Missing sixth lesson or teacher answer link',
   );
+  assert.ok(catalog.includes('href="https://scozirge.github.io/a-thought/neon-impact/"'), 'Missing Neon Impact choice in lesson six');
   assert.ok(
     catalog.includes('id="fifth-course"') &&
       catalog.includes('第 5 週課程') &&

@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6773745511761334740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6134312757228917695}
+  - component: {fileID: 1801737605669524945}
+  m_Layer: 0
+  m_Name: Skill-WindShock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6134312757228917695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6773745511761334740}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1801737605669524945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6773745511761334740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f1f3a7e6b24db127fb13fd7f595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 8300000, guid: 41b00c1ca9d97ea4796281c66b69da09, type: 3}
+  SpawnedInSelf: 0
+  ConnectToAmmo: 0
+  LocalParticles: []
+  DetectedTargetType: 0
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  MyFeatureDataID: 0
+  FeaturePartSerialNumber: 0
+  DetecteRadius: 750
+  AttackOnce: 0
+  Interval: 2
+  FirstAttackNoWait: 1
+  Patetern: 4
+  RandomAngle: 0
+  StartAngle: 0
+  AttackPrefab: {fileID: 8570971457810625404, guid: ff1ae71b4df352942887caa54fd92e58,
+    type: 3}
+  AmmoNum: 2
+  AmmoInterval: 0.2
+  AngleInterval: 0
+  TriggerWall: 0

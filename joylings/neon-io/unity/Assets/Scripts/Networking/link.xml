@@ -1,0 +1,4 @@
+<linker>
+  <!-- Original skill RPCs and JSON state are discovered by name. Keep their methods for IL2CPP/WebGL. -->
+  <assembly fullname="Assembly-CSharp" preserve="all" />
+</linker>

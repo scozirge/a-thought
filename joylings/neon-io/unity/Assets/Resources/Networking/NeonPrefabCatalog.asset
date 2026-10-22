@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e43903e02f66bc64c84da4b4d9fc2775, type: 3}
+  m_Name: NeonPrefabCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::Neon.Networking.NeonPrefabCatalog
+  Prefabs:
+  - {fileID: 6601469728054186088, guid: 2cfe5909ab65e0b4faf1bb9c60e27da6, type: 3}
+  - {fileID: 7944981393979833396, guid: 5c911d5f6d7ea71499ffa51ef56405e2, type: 3}
+  - {fileID: 3696705010341876930, guid: 9ff68981b814bed46b2d451528153e74, type: 3}
+  - {fileID: 668850068859778900, guid: 6085edf9ffa3f784eb6145752748825b, type: 3}

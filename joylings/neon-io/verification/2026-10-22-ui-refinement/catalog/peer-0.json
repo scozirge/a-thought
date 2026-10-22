@@ -1,0 +1,84 @@
+{
+    "passed": true,
+    "connected": false,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 95,
+    "maxPeers": 0,
+    "maxActors": 1,
+    "maxAi": 0,
+    "elapsed": 27.16937828063965,
+    "averageFrameMs": 17.65786361694336,
+    "actors": [
+        {
+            "name": "GameDeveloper",
+            "id": -15360,
+            "health": 725,
+            "level": 1,
+            "skills": 3,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": 47.799530029296878,
+                "y": 61.63764190673828,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": true,
+        "failure": "",
+        "renderers": 29163,
+        "particlePrefabs": 258,
+        "skills": 95,
+        "reflections": 1,
+        "actors": [
+            {
+                "id": -15360,
+                "renderers": 32,
+                "local": true,
+                "force": "Player"
+            }
+        ],
+        "originalShaders": [
+            "Legacy Shaders/Particles/Alpha Blended Premultiply",
+            "FY/SubAdd",
+            "Legacy Shaders/Particles/Alpha Blended",
+            "FY/ParticleAlphaBlend",
+            "Legacy Shaders/Particles/Additive",
+            "Particles/Standard Unlit",
+            "Legacy Shaders/Particles/Additive (Soft)",
+            "Mobile/Particles/Additive",
+            "Sprites/Default"
+        ]
+    }
+}

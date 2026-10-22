@@ -1,0 +1,64 @@
+{
+  "game_url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "public_assets_match_local": true,
+  "assets": [
+    {
+      "path": "index.html",
+      "bytes": 2870,
+      "sha256": "dd230ef510e29aab0df3a1b618a6ba22dda189b7651f4df9442d8fcfa8bda10d",
+      "status": 200
+    },
+    {
+      "path": "Build/177c73d11756ceef1a6b88cdd4c4e5d8.framework.js.unityweb",
+      "bytes": 92921,
+      "sha256": "a57228d9449d7f6636b9fedd42c4eec81359a59497c01b9e91153bac8b450ce9",
+      "status": 200
+    },
+    {
+      "path": "Build/5c7fd561903909d7132335c2a6a8809c.wasm.unityweb",
+      "bytes": 11695023,
+      "sha256": "1082c5deb661776ca9f11dcf47a31bc08b7ffba4da138decc0f39b395d5a03c6",
+      "status": 200
+    },
+    {
+      "path": "Build/deb6a196756ae771aca91c6808646be1.loader.js",
+      "bytes": 47866,
+      "sha256": "26c06c48e3ffc2b2253694950905e737372632aa7d69ef5d13e0db7b8ca90d0a",
+      "status": 200
+    },
+    {
+      "path": "Build/df6796b4cf4c73435755eca4709d9d89.data.unityweb",
+      "bytes": 19986341,
+      "sha256": "2943327a18907270796b98da589ec6fd6646565e6dfc39ceb2233e5db8769768",
+      "status": 200
+    }
+  ],
+  "courses": [
+    {
+      "url": "https://scozirge.github.io/classroom/#sixth-course",
+      "status": 200,
+      "both_games_present": true
+    },
+    {
+      "url": "https://scozirge.github.io/a-thought/hatchbeasts/classroom/#sixth-course",
+      "status": 200,
+      "both_games_present": true
+    }
+  ],
+  "deployments": [
+    {
+      "repo": "a-thought",
+      "commit": "9059ec6d8cd8f262882653a5c75141ac366770b6",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/scozirge/a-thought/actions/runs/39687390245"
+    },
+    {
+      "repo": "scozirge.github.io",
+      "commit": "21a92cf6fa99ad25f69544f1d86946b06edbda45",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/scozirge/scozirge.github.io/actions/runs/39687400566"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "robot-supply",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node serve.cjs",
+    "test": "node --test tests/core.test.cjs tests/cards.test.cjs",
+    "build": "node scripts/build.cjs"
+  }
+}

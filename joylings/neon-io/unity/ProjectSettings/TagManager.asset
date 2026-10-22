@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Opponent
+  - AmmoParent
+  - ParticleParent
+  - PlayerAmmo
+  - OpponentAmmo
+  - Bullet
+  - Neutral
+  - Loot
+  - UICamera
+  - NeutralAmmo
+  - BattleObjsUICanvas
+  - SceneObj
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Debug
+  - BattleObjectsUI
+  - PopupUI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 448450543
+    locked: 0
+  - name: Main
+    uniqueID: 4294009575
+    locked: 0
+  - name: Foreground
+    uniqueID: 2617355573
+    locked: 0
+  - name: UI
+    uniqueID: 1092529981
+    locked: 0
+  - name: Debug
+    uniqueID: 2969140141
+    locked: 0
+  - name: PopupUI
+    uniqueID: 3093631971
+    locked: 0

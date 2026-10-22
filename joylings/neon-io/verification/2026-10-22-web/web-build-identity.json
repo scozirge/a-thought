@@ -1,0 +1,58 @@
+{
+  "initial_download_bytes": 31825021,
+  "first_build_download_bytes": 42347877,
+  "saved_bytes": 10522856,
+  "saved_percent": 24.85,
+  "files": [
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "index.html",
+      "bytes": 2870,
+      "sha256": "dd230ef510e29aab0df3a1b618a6ba22dda189b7651f4df9442d8fcfa8bda10d"
+    },
+    {
+      "path": "Build\\177c73d11756ceef1a6b88cdd4c4e5d8.framework.js.unityweb",
+      "bytes": 92921,
+      "sha256": "a57228d9449d7f6636b9fedd42c4eec81359a59497c01b9e91153bac8b450ce9"
+    },
+    {
+      "path": "Build\\5c7fd561903909d7132335c2a6a8809c.wasm.unityweb",
+      "bytes": 11695023,
+      "sha256": "1082c5deb661776ca9f11dcf47a31bc08b7ffba4da138decc0f39b395d5a03c6"
+    },
+    {
+      "path": "Build\\deb6a196756ae771aca91c6808646be1.loader.js",
+      "bytes": 47866,
+      "sha256": "26c06c48e3ffc2b2253694950905e737372632aa7d69ef5d13e0db7b8ca90d0a"
+    },
+    {
+      "path": "Build\\df6796b4cf4c73435755eca4709d9d89.data.unityweb",
+      "bytes": 19986341,
+      "sha256": "2943327a18907270796b98da589ec6fd6646565e6dfc39ceb2233e5db8769768"
+    },
+    {
+      "path": "ThirdPartyLicenses\\cinzel-OFL.txt",
+      "bytes": 4383,
+      "sha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83"
+    },
+    {
+      "path": "ThirdPartyLicenses\\notosanstc-OFL.txt",
+      "bytes": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "path": "ThirdPartyLicenses\\Fusion\\build_info.txt",
+      "bytes": 81,
+      "sha256": "3e1e51eccbb68ad65f74acb8f55539c9507871fce0c16f50130933addc40fb24"
+    },
+    {
+      "path": "ThirdPartyLicenses\\Fusion\\Plugins\\NanoSockets\\libnanosockets_LICENSE.txt",
+      "bytes": 1117,
+      "sha256": "0311691f6fbb26ca5edda313175ce59e39986bf86a7fd2d0ad131537cf212a27"
+    }
+  ]
+}

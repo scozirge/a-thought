@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7505384384298216904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7135991000487653283}
+  - component: {fileID: 1404173544820188976}
+  m_Layer: 0
+  m_Name: Skill-SoundWave
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7135991000487653283
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505384384298216904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1404173544820188976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505384384298216904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d51ff43f4f2a15c45b55bbca6d530f8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 0}
+  SpawnedInSelf: 1
+  ConnectToAmmo: 0
+  LocalParticles: []
+  DetectedTargetType: 2
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  MyFeatureDataID: 0
+  FeaturePartSerialNumber: 0
+  DetecteRadius: 300
+  AttackOnce: 0
+  Interval: 6
+  FirstAttackNoWait: 1
+  Patetern: 0
+  RandomAngle: 0
+  StartAngle: 0
+  AttackPrefab: {fileID: 4937640518539075687, guid: a4fe877aeb367d44c85f66fc4e1f32d0,
+    type: 3}
+  AttackRadius: 0

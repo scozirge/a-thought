@@ -1,0 +1,183 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證4",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 10,
+    "maxActors": 10,
+    "maxAi": 1,
+    "elapsed": 27.522647857666017,
+    "averageFrameMs": 19.13938331604004,
+    "actors": [
+        {
+            "name": "驗證10",
+            "id": 1049601,
+            "health": 750,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1206.5279541015625,
+                "y": -2119.70556640625,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證4",
+            "id": 525313,
+            "health": 850,
+            "level": 1,
+            "skills": 0,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -2276.173583984375,
+                "y": -310.5721435546875,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證2",
+            "id": 2622465,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -990.4060668945313,
+                "y": -812.4707641601563,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證9",
+            "id": 1573889,
+            "health": 250,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2514.382568359375,
+                "y": -2357.18896484375,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證7",
+            "id": 3146753,
+            "health": 650,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1965.326171875,
+                "y": -1836.253662109375,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證1",
+            "id": 3671041,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1025.77880859375,
+                "y": -172.92245483398438,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證3",
+            "id": 4195329,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": 457.65814208984377,
+                "y": -413.7771911621094,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證5",
+            "id": 2098177,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -327.6058044433594,
+                "y": 483.5047607421875,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證6",
+            "id": 4719617,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -924.4683837890625,
+                "y": 326.18572998046877,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證8",
+            "id": 5243905,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -448.3070373535156,
+                "y": -970.0161743164063,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    }
+}

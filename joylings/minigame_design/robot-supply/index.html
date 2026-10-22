@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f1e8"><title>機器人補給站</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><script src="core.js" defer></script><script src="art.js" defer></script><script src="app.js" defer></script></head>
+<body><main class="app">
+  <header class="top"><div class="brand"><span id="brand-icon"></span><h1>機器人補給站</h1></div><nav id="levels" aria-label="任務"></nav></header>
+  <h2 id="task"></h2>
+  <div class="workspace">
+    <section class="world panel" aria-label="機器人">
+      <div id="cases" class="cases" aria-label="三台機器人"></div>
+      <div class="stage"><div id="battery-inputs"></div><div id="robot" class="robot"></div><div id="destinations"></div></div>
+      <div class="energy-display">電量 <strong id="energy">0</strong> 格</div>
+      <div id="readout" class="readout" role="status" aria-live="polite"></div>
+    </section>
+    <section class="workshop panel" aria-label="拼方塊">
+      <div id="board" class="board"></div>
+      <div class="tray"><p>把方塊放進空格</p><div id="palette"></div></div>
+      <div class="controls"><button id="reset" class="secondary"></button><button id="play" class="secondary"></button></div>
+      <div id="success" class="success" hidden><strong>全部完成！</strong><button id="next" class="primary">下一關 →</button></div>
+    </section>
+  </div>
+  <footer>v0.2 · 本地試玩</footer>
+</main></body></html>

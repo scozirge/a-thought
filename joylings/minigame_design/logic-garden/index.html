@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f4efe4"><title>找寶石 · 青蛙換位</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><script defer src="core.js"></script><script defer src="art.js"></script><script defer src="app.js"></script></head>
+<body><main class="app">
+ <header><a class="brand" href="?game=scale"><span>✦</span> 小小思考所</a><nav aria-label="選遊戲"><button data-game="scale">找寶石</button><button data-game="frogs">青蛙換位</button></nav></header>
+ <section class="heading"><div><p id="eyebrow"></p><h1 id="title"></h1></div><div id="levels" class="levels" aria-label="選難度"></div></section>
+ <section id="scale-game">
+  <div class="scale-layout"><div class="scale-play paper">
+   <div class="play-top"><span id="scale-instruction">點寶石，再點天平</span><span class="badge">只有 1 顆比較重</span></div>
+   <div class="balance-scene"><div id="balance-art"></div><div id="comparison" class="comparison" aria-live="polite">?</div>
+    <section class="pan left" data-drop="-1"><button class="pan-label" data-place="-1">左邊</button><div id="left-gems" class="pan-gems"></div></section>
+    <section class="pan right" data-drop="1"><button class="pan-label" data-place="1">右邊</button><div id="right-gems" class="pan-gems"></div></section>
+   </div>
+   <section class="rack" data-drop="0" aria-label="寶石盒"><button class="rack-label" data-place="0">寶石盒</button><div id="rack-gems"></div></section>
+   <div class="actions"><button id="clear" class="secondary">放回盒子</button><button id="weigh" class="primary">秤一秤</button><button id="guess" class="accent">找到了</button></div>
+   <p id="scale-message" class="message" role="status"></p>
+  </div><aside class="journal paper"><h2>秤重紀錄</h2><div id="weigh-log"></div></aside></div>
+ </section>
+ <section id="frogs-game" hidden>
+  <div class="pond paper"><div class="play-top"><span>點青蛙，交換兩隊的位置</span><span class="badge">只能往前</span></div>
+   <div class="team-signs"><span class="green">皇冠隊 →</span><span class="purple">← 花朵隊</span></div>
+   <div class="water"><div class="water-decoration blossom one"></div><div class="water-decoration blossom two"></div><div class="board-scroll"><div id="frog-board"></div></div><div class="ripple r1"></div><div class="ripple r2"></div></div>
+   <div class="frog-goal"><span>目標</span><span class="purple">花朵隊</span><span class="goal-space">·</span><span class="green">皇冠隊</span></div>
+   <div class="actions"><button id="undo" class="secondary">↶ 退一步</button><button id="frog-reset" class="secondary">重新開始</button></div>
+   <p id="frog-message" class="message" role="status"></p>
+  </div>
+ </section>
+ <footer>本地試玩 · 0.1</footer>
+</main><dialog id="modal" aria-labelledby="modal-title"><div id="modal-art"></div><h2 id="modal-title"></h2><p id="modal-text"></p><div class="actions"><button id="modal-close" class="secondary">留在這關</button><button id="modal-next" class="primary">下一關 →</button></div></dialog></body></html>

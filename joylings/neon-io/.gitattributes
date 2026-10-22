@@ -1,0 +1,2 @@
+# Preserve original Unity asset bytes when cloning on Windows or other platforms.
+unity/Assets/** -text

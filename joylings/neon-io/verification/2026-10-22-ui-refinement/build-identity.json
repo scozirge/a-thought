@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-22",
+  "platform": "Windows x64",
+  "unity": "6000.3.11f1",
+  "fusion": "2.1.2 Shared",
+  "runs": {
+    "ui": "ui-refinement-release",
+    "catalog": "neon-validation-ce41590ae534",
+    "multiplayer": "neon-validation-0b08406e419f",
+    "combat": "neon-validation-2eecdae46947"
+  },
+  "uiScreens": 71,
+  "uiChecks": 4133,
+  "catalog": {
+    "passed": true,
+    "failure": "",
+    "renderers": 29163,
+    "particlePrefabs": 258,
+    "skills": 95,
+    "reflections": 1,
+    "actors": [
+      {
+        "id": -15360,
+        "renderers": 32,
+        "local": true,
+        "force": "Player"
+      }
+    ],
+    "originalShaders": [
+      "Legacy Shaders/Particles/Alpha Blended Premultiply",
+      "FY/SubAdd",
+      "Legacy Shaders/Particles/Alpha Blended",
+      "FY/ParticleAlphaBlend",
+      "Legacy Shaders/Particles/Additive",
+      "Particles/Standard Unlit",
+      "Legacy Shaders/Particles/Additive (Soft)",
+      "Mobile/Particles/Additive",
+      "Sprites/Default"
+    ]
+  },
+  "oppositeViewerColorsVerified": true,
+  "sha256": {
+    "NeonImpact.exe": "cd15fa37bb7e739d07debbd6862bb617c9d6d85c1f44f78e370739b5265c1e2a",
+    "NeonImpact_Data/Managed/Assembly-CSharp.dll": "892d250d3383f1a1d7c6d2843559a65500a05d30469656a8f235665b9c014773",
+    "NeonImpact_Data/resources.assets": "b86a619fa42e721ab837a05aaddca37acb6824a8d0785f4d4798da22a78586ef",
+    "NeonImpact_Data/globalgamemanagers": "61a768bb52901a5e41342fed578b886d1ab1477c7e8f06dc8a9ec9056cda6792"
+  },
+  "scope": "95 skills attached on both factions; all 258 original particle prefabs checked in both palettes; live projectile reflection; two actual Photon peers with opposite viewer colors; real challenge combat. Catalog and result layout captures are explicit fixtures, not exhaustive 95-skill PvP balance testing. No new ten-player benchmark in this revision."
+}

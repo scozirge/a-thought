@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-22",
+  "theme": "B / Astral Sanctum",
+  "unity": "6000.3.11f1",
+  "fusion": "2.1.2 Stable 2279 Shared",
+  "platform": "Windows x64",
+  "developmentBuild": false,
+  "runs": {
+    "ui": "astral-ui-release",
+    "challenge": "neon-validation-85ece6b9025a",
+    "multiplayer10": "neon-validation-31ffdf2ddc3f",
+    "reconnect": "neon-validation-e1c80621f326",
+    "offline95": "neon-validation-1b9f4273660e"
+  },
+  "uiScreens": 67,
+  "uiChecks": 751,
+  "sha256": {
+    "NeonImpact.exe": "cd15fa37bb7e739d07debbd6862bb617c9d6d85c1f44f78e370739b5265c1e2a",
+    "NeonImpact_Data/Managed/Assembly-CSharp.dll": "0bdd4ad4c3558a475513a4d16f49a41b76662c50bb91240251ca738d3269982c",
+    "NeonImpact_Data/globalgamemanagers": "8f84b51fddf6037832310a48c3569680a8967550125011c6c147659bb18bac17",
+    "NeonImpact_Data/resources.assets": "13ab83ec9f769eae53d06d0a37d5f39e624b5dc4937a6cafbd519a28895eeabc"
+  },
+  "scope": "UI resolution and interaction checks; real Photon challenge, ten peers and reconnect; 95 offline skill attachments. UI result-fixture images contain explicitly synthetic layout values. Not a WebGL/mobile build or exhaustive 95-skill multiplayer test."
+}

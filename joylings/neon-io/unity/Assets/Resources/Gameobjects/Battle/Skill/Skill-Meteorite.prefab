@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3715533091472427406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4084871505606134757}
+  - component: {fileID: 5868877727822435085}
+  m_Layer: 0
+  m_Name: Skill-Meteorite
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4084871505606134757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3715533091472427406}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5868877727822435085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3715533091472427406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91622d248ee865744a5de227b5ecb88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 0}
+  SpawnedInSelf: 0
+  ConnectToAmmo: 0
+  LocalParticles: []
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  MyFeatureDataID: 0
+  FeaturePartSerialNumber: 0
+  DetecteRadius: 700
+  AttackOnce: 0
+  Interval: 2
+  FirstAttackNoWait: 1
+  Patetern: 0
+  RandomAngle: 0
+  StartAngle: 0
+  SpawnAtTargetPos: 1
+  PrepareParticle: []
+  AttackPrefab: {fileID: 2925144697417893803, guid: 8992f89228e626e46bf7d94ad2250fee,
+    type: 3}
+  PrepareTime: 0
+  Suicide: 0

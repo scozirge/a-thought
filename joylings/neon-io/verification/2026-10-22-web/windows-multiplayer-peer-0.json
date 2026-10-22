@@ -1,0 +1,67 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "撽?1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 2,
+    "maxActors": 2,
+    "maxAi": 5,
+    "elapsed": 24.790081024169923,
+    "averageFrameMs": 22.15801429748535,
+    "actors": [
+        {
+            "name": "撽?1",
+            "id": 1049601,
+            "health": 100,
+            "level": 1,
+            "skills": 0,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -2554.402587890625,
+                "y": -2199.413818359375,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    }
+}

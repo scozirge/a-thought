@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#242b47"><title>骰子魔法冒險</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><script src="core.js" defer></script><script src="art.js" defer></script><script src="app.js" defer></script></head>
+<body><main class="app">
+  <header><div class="brand"><span id="brand-icon"></span><h1>骰子魔法冒險</h1></div><nav id="journey" aria-label="冒險進度"></nav><button id="restart" class="quiet">重新冒險</button></header>
+  <section id="arena" class="arena" aria-label="戰鬥">
+    <div class="stars" aria-hidden="true"></div><div class="hills" aria-hidden="true"></div>
+    <div class="fighter hero"><div class="fighter-hud"><div class="fighter-name">小魔法師 <span id="shield-badge"></span></div><div class="hp-track"><i id="hero-bar"></i><strong id="hero-hp"></strong></div></div><div id="hero-art" class="character"></div><div id="hero-floats" class="float-layer" aria-hidden="true"></div></div>
+    <div class="round-marker"><span>回合</span><strong id="round"></strong><div id="relics"></div></div>
+    <div class="fighter enemy"><div class="fighter-hud"><div class="fighter-name" id="enemy-name"></div><div class="hp-track enemy-hp"><i id="enemy-bar"></i><strong id="enemy-hp"></strong></div></div><div id="intent" class="intent"></div><div id="enemy-art" class="character"></div><div id="enemy-floats" class="float-layer" aria-hidden="true"></div></div>
+    <div id="trait" class="trait" hidden></div><div id="projectile" class="projectile" aria-hidden="true" hidden></div>
+  </section>
+  <section class="workbench" aria-label="骰子與魔法">
+    <div class="dice-row"><div class="dice-area"><div class="dice-label" id="dice-hint">選骰子，放進魔法卡</div><div id="dice" class="dice"></div></div><div id="tools" class="tools"></div></div>
+    <div id="cards" class="cards"></div>
+    <div class="bottom"><div id="message" role="status" aria-live="polite"></div><div class="controls"><button id="undo" class="secondary">↶ 撤回</button><button id="end-turn" class="primary">結束回合 →</button></div></div>
+  </section><footer>本地試玩 · 0.1</footer>
+</main>
+<dialog id="modal" aria-labelledby="modal-title"><div id="modal-content"></div></dialog>
+</body></html>

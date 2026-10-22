@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>寶物背包</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><script defer src="core.js"></script><script defer src="app.js"></script></head>
+<body><div class="map-decoration" aria-hidden="true"></div><main class="app">
+<header><a class="brand" href="./"><span aria-hidden="true">✦</span> 寶物背包</a><span class="edition">本地試玩</span></header>
+<nav id="levels" aria-label="選關卡"></nav>
+<section class="heading"><div><div id="difficulty"></div><h1 id="title"></h1></div><p>點寶物放入背包，再點拿出</p></section>
+<div class="layout">
+<section class="treasure-area" aria-label="寶物"><div class="shelf-title"><h2>選寶物</h2><span id="count"></span></div><div id="items" class="items"></div></section>
+<aside class="bag-panel" id="bag" aria-label="背包，拖到這裡放入寶物"><div class="bag-top"><span class="compass" aria-hidden="true">N<br>✧</span><div id="bag-picture"></div><h2>我的背包</h2></div>
+<div class="meters"><div class="metric weight"><div class="metric-label"><span id="weight-icon"></span>重量</div><div><strong id="weight">0</strong><span class="limit"> / <span id="capacity"></span></span></div><div class="track"><i id="weight-bar"></i></div><span id="weight-note" class="note"></span></div>
+<div class="metric gold"><div class="metric-label"><span id="coin-icon"></span>金幣</div><div><strong id="value">0</strong><span class="limit"> / <span id="target"></span></span></div><div class="track"><i id="gold-bar"></i></div><span id="gold-note" class="note"></span></div></div>
+<div id="packed" class="packed" aria-label="已放入的寶物"></div>
+<div class="actions"><button id="undo" class="quiet">↶ 退一步</button><button id="reset" class="quiet">重新開始</button><button id="finish" class="primary">帶走寶物 <span aria-hidden="true">→</span></button></div>
+<p id="status" role="status" aria-live="polite"></p></aside></div>
+</main><dialog id="win" aria-labelledby="win-title"><div class="win-art" aria-hidden="true">✦</div><p id="win-kicker">裝得剛剛好</p><h2 id="win-title">寶物帶走了！</h2><div id="win-loot"></div><p id="win-text"></p><div class="dialog-actions"><button id="stay" class="quiet">再看看</button><button id="next" class="primary">下一關 →</button></div></dialog></body></html>

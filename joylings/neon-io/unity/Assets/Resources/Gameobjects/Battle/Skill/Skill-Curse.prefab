@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7860233165159498583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7364917284482777404}
+  - component: {fileID: -7869916396951430854}
+  m_Layer: 0
+  m_Name: Skill-Curse
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7364917284482777404
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860233165159498583}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7869916396951430854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7860233165159498583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d51ff43f4f2a15c45b55bbca6d530f8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 0}
+  SpawnedInSelf: 1
+  ConnectToAmmo: 1
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  DamagePercent: 0.15
+  DetecteRadius: 0
+  VampireProportion: 0
+  AttackOnce: 1
+  Interval: 1
+  FirstAttackNoWait: 1
+  Patetern: 0
+  RandomAngle: 0
+  StartAngle: 0
+  AttackPrefab: {fileID: 1320029537402488533, guid: 66be17cd876366748a8cfc9bfcbe0a32,
+    type: 3}
+  AttackRadius: 0

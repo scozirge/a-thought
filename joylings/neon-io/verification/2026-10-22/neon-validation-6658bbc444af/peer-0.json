@@ -1,0 +1,33 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Challenge",
+    "failure": "",
+    "name": "驗證1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 1,
+    "maxActors": 1,
+    "maxAi": 1,
+    "elapsed": 52.969825744628909,
+    "averageFrameMs": 17.62990379333496,
+    "actors": [],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "failure": ""
+    }
+}

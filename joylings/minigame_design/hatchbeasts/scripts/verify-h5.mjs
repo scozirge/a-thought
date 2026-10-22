@@ -61,6 +61,7 @@ export function verifyH5(output, basePath) {
       classroom.includes('href="https://scozirge.github.io/a-thought/wood-exit/?tip=true"'),
     'Missing sixth lesson or teacher answer link',
   );
+  assert.ok(classroom.includes('href="https://scozirge.github.io/a-thought/neon-impact/"'), 'Missing Neon Impact choice in lesson six');
   assert.ok(
     classroom.includes('id="fifth-course"') &&
       classroom.includes('第 5 週課程') &&

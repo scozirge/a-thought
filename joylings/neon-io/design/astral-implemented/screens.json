@@ -1,0 +1,158 @@
+[
+  {
+    "file": "ui-01-lobby-1280x800.png",
+    "title": "主選單／原角色金色線稿",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-02-collection-head.png",
+    "title": "收藏／頭部技能",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-03-collection-body.png",
+    "title": "收藏／身體技能",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-04-collection-back.png",
+    "title": "收藏／背部技能",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-06-loadout.png",
+    "title": "頂尖對決／五格配裝",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-07-select-skill.png",
+    "title": "技能選擇與說明",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-08-matchmaking.png",
+    "title": "實際 Photon 配對等待",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-09-settings.png",
+    "title": "音量、音樂、語言與地區",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-10-region-options.png",
+    "title": "地區選項",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-11-shouts.png",
+    "title": "喊話設定",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-12-credits.png",
+    "title": "製作名單",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-13-tutorial.png",
+    "title": "遊玩教學",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-guide-page-5.png",
+    "title": "附加狀態教學／長內容捲動",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-05-purchase-confirm.png",
+    "title": "原價格購買確認／測試中取消",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-15-connection-notice.png",
+    "title": "通知與錯誤視窗／訊息排版測試",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-18-battle-hud.png",
+    "title": "戰鬥 HUD／原技能與特效",
+    "group": "主要介面",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "challenge-peer-0.versus.png",
+    "title": "真實雙端配對／VS",
+    "group": "主要介面",
+    "note": "兩個 Windows 程序透過 Photon 配對"
+  },
+  {
+    "file": "challenge-peer-0.png",
+    "title": "對決勝利結算",
+    "group": "主要介面",
+    "note": "實際多人傷害與勝負回歸測試結果"
+  },
+  {
+    "file": "challenge-peer-1.png",
+    "title": "對決失敗結算",
+    "group": "主要介面",
+    "note": "同一場測試的另一端結果"
+  },
+  {
+    "file": "ui-lobby-2560x1080.png",
+    "title": "2560 × 1080／超寬螢幕",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-lobby-1920x1080.png",
+    "title": "1920 × 1080／16:9",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-loadout-1024x768.png",
+    "title": "1024 × 768／4:3 配裝",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-settings-960x540.png",
+    "title": "960 × 540／小視窗設定",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-guide-960x540.png",
+    "title": "960 × 540／教學與遮罩",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-16-lobby-english.png",
+    "title": "英文主選單",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  },
+  {
+    "file": "ui-collection-english.png",
+    "title": "英文收藏與技能說明",
+    "group": "比例與語言",
+    "note": "Windows 執行檔實際渲染"
+  }
+]

@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -16,6 +16,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={NEON_IMPACT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <Gamepad2 size={20} aria-hidden="true" />
+                玩 Neon Impact
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
                 玩木塊出走
@@ -302,12 +307,26 @@ export default function ClassroomHome() {
             </ol>
           </details>
 
-          <details className="featured-unit current-course" id="sixth-course">
+          <section className="sixth-course" id="sixth-course" aria-labelledby="sixth-course-title">
+            <h2 id="sixth-course-title">第 6 週課程</h2>
+            <div className="sixth-game-choices">
+              <a className="unit-card card-green" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-green"><Gamepad2 size={28} aria-hidden="true" /></span>
+                <span className="sixth-game-copy"><span className="unit-title">木塊出走</span><span className="unit-meta">移開木塊，找到出口</span></span>
+                <ArrowUpRight size={22} aria-hidden="true" />
+              </a>
+              <a className="unit-card card-blue" href={NEON_IMPACT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-blue"><Gamepad2 size={28} aria-hidden="true" /></span>
+                <span className="sixth-game-copy"><span className="unit-title">Neon Impact</span><span className="unit-meta">選擇部位技能，一起連線對戰</span></span>
+                <ArrowUpRight size={22} aria-hidden="true" />
+              </a>
+            </div>
+          <details className="featured-unit current-course">
             <summary className="featured-heading">
               <a className="featured-link" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
                 <span className="featured-copy">
-                  <span className="unit-title"><span className="catalog-lesson-number">第 6 週課程</span>木塊出走</span>
+                  <span className="unit-title">木塊出走・關卡與答案</span>
                   <span className="unit-meta">10 關挑戰 · 2 關隱藏關</span>
                   <span className="unit-meta">移開木塊，讓紅色木塊到出口</span>
                 </span>
@@ -329,6 +348,7 @@ export default function ClassroomHome() {
               </div>
             </div>
           </details>
+          </section>
 
           <div className="unit-grid">
             {units.slice(1).map((unit) => (

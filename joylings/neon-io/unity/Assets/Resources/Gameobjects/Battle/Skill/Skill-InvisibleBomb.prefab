@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2816893031217270386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1014098491507781192}
+  - component: {fileID: 2425018140285412050}
+  m_Layer: 0
+  m_Name: Skill-InvisibleBomb
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1014098491507781192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2816893031217270386}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2425018140285412050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2816893031217270386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91622d248ee865744a5de227b5ecb88a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: FeatureSkill
+  BehaviorSkill: 0
+  AttackStopMove: 0
+  StopMoveTime: 0
+  SpellSound: {fileID: 8300000, guid: ba28fe8609a0503488064d4ef47c4766, type: 3}
+  SpawnedInSelf: 0
+  MyFeaturePart: 0
+  MyFeatureType: 0
+  DamagePercent: 0.5
+  DetecteRadius: 0
+  VampireProportion: 0
+  AttackOnce: 0
+  Interval: 3
+  FirstAttackNoWait: 1
+  Patetern: 0
+  RandomAngle: 0
+  StartAngle: 0
+  PrepareParticle: []
+  AttackPrefab: {fileID: 2654898393344499829, guid: 0fbd4634c9e8590479a6c9cb1b98e64f,
+    type: 3}
+  PrepareTime: 0
+  Suicide: 0

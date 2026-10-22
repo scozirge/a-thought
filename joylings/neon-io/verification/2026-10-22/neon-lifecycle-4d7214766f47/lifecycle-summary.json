@@ -1,0 +1,208 @@
+{
+  "passed": true,
+  "room": "neon-lifecycle-4d7214766f47",
+  "lateJoin": true,
+  "masterTransfer": true,
+  "joinAfterTransfer": true,
+  "reports": [
+    {
+      "passed": true,
+      "connected": true,
+      "contentReady": true,
+      "reconnected": false,
+      "scene": "Battle",
+      "failure": "",
+      "name": "Lifecycle-A",
+      "errors": 0,
+      "features": 95,
+      "testedSkills": 0,
+      "maxPeers": 2,
+      "maxActors": 2,
+      "maxAi": 6,
+      "elapsed": 38.1568603515625,
+      "averageFrameMs": 18.638540267944336,
+      "actors": [
+        {
+          "name": "Lifecycle-B",
+          "id": 1049601,
+          "health": 600,
+          "level": 1,
+          "skills": 0,
+          "local": false,
+          "alive": true,
+          "position": {
+            "x": -1555.5546875,
+            "y": -1777.59326171875,
+            "z": 0.0
+          }
+        },
+        {
+          "name": "Lifecycle-A",
+          "id": 525313,
+          "health": 750,
+          "level": 1,
+          "skills": 0,
+          "local": true,
+          "alive": true,
+          "position": {
+            "x": -431.3563232421875,
+            "y": -2228.6201171875,
+            "z": 0.0
+          }
+        }
+      ],
+      "errorMessages": [],
+      "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+      },
+      "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+      }
+    },
+    {
+      "passed": true,
+      "connected": true,
+      "contentReady": true,
+      "reconnected": false,
+      "scene": "Battle",
+      "failure": "",
+      "name": "Lifecycle-B",
+      "errors": 0,
+      "features": 95,
+      "testedSkills": 0,
+      "maxPeers": 2,
+      "maxActors": 2,
+      "maxAi": 8,
+      "elapsed": 96.06007385253906,
+      "averageFrameMs": 17.018943786621094,
+      "actors": [
+        {
+          "name": "Lifecycle-B",
+          "id": 1049601,
+          "health": 1000,
+          "level": 1,
+          "skills": 0,
+          "local": true,
+          "alive": true,
+          "position": {
+            "x": 1184.8868408203125,
+            "y": 567.9620971679688,
+            "z": 0.0
+          }
+        }
+      ],
+      "errorMessages": [],
+      "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+      },
+      "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+      }
+    },
+    {
+      "passed": true,
+      "connected": true,
+      "contentReady": true,
+      "reconnected": false,
+      "scene": "Battle",
+      "failure": "",
+      "name": "Lifecycle-C",
+      "errors": 0,
+      "features": 95,
+      "testedSkills": 0,
+      "maxPeers": 2,
+      "maxActors": 2,
+      "maxAi": 7,
+      "elapsed": 36.06454086303711,
+      "averageFrameMs": 17.664657592773438,
+      "actors": [
+        {
+          "name": "Lifecycle-C",
+          "id": 1573889,
+          "health": 720,
+          "level": 1,
+          "skills": 0,
+          "local": true,
+          "alive": true,
+          "position": {
+            "x": -2041.0377197265625,
+            "y": -138.65980529785156,
+            "z": 0.0
+          }
+        },
+        {
+          "name": "Lifecycle-B",
+          "id": 1049601,
+          "health": 150,
+          "level": 1,
+          "skills": 0,
+          "local": false,
+          "alive": true,
+          "position": {
+            "x": -3489.528076171875,
+            "y": -1327.50439453125,
+            "z": 0.0
+          }
+        }
+      ],
+      "errorMessages": [],
+      "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+      },
+      "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+      }
+    }
+  ]
+}

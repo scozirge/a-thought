@@ -1,0 +1,25 @@
+{
+  "version": "1.1.0-fusion",
+  "files": [
+    {
+      "path": "Builds/NeonImpact-Windows-Unity6-Fusion.zip",
+      "bytes": 69433937,
+      "sha256": "ee54126c434df078c61892cb113c39d21f6437dac1b775820e80c6171887947d"
+    },
+    {
+      "path": "Builds/Windows/NeonImpact.exe",
+      "bytes": 667648,
+      "sha256": "cd15fa37bb7e739d07debbd6862bb617c9d6d85c1f44f78e370739b5265c1e2a"
+    },
+    {
+      "path": "Builds/Windows/NeonImpact_Data/Managed/Assembly-CSharp.dll",
+      "bytes": 445440,
+      "sha256": "b324c3eb0c5247ef725b5d85ade7f89313b7ad104a6af95afa7641622211b5bf"
+    },
+    {
+      "path": "Builds/Windows/NeonImpact_Data/globalgamemanagers",
+      "bytes": 635044,
+      "sha256": "d81584bb003777bd0856136d4f640a60db231ca22d0e4ea3152cb0e8a3a4e8a1"
+    }
+  ]
+}

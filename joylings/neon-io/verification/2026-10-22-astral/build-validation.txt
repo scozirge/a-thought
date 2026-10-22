@@ -1,0 +1,5 @@
+ASTRAL_ICON_FRAMING_OK 95
+NEON_PREPARE_OK prefabs=4
+NEON_PROTOCOL_CHECKS_OK typed RPC, max Unicode/all buffs 771 bytes, packed state, GUID, aggregate loot, malformed data, hit validation
+NEON_CONTENT_OK 95 features; all resource prefabs and 4 scenes have scripts.
+NEON_WINDOWS_BUILD_OK E:\Projects\a-thought\joylings\neon-io\Builds\Windows\NeonImpact.exe

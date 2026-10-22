@@ -1,0 +1,253 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4490820809807241549
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4490820809807241545}
+  - component: {fileID: 4490820809807241544}
+  - component: {fileID: 4490820809807241550}
+  - component: {fileID: 8881570972167170326}
+  - component: {fileID: 6396346102825888477}
+  - component: {fileID: 2193314208425481951}
+  - component: {fileID: 6815907979109790749}
+  - component: {fileID: 4883068777718149607}
+  m_Layer: 0
+  m_Name: Melee-PhotonShell
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4490820809807241545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4973849028985103720}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4490820809807241544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 092036f6f67bdbe4e80d316917572a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalParticles: []
+  GlobalParticle: []
+  LocalAttackerParticles: []
+  DeadParticles: []
+  HitTargetParticle: {fileID: 7330803640845679355, guid: c2ae3b992a169ed49bc9dc136a636ba4,
+    type: 3}
+  HitTargetParticleRandomAngle: 0
+  AppearanceObjs: {fileID: 8377964438013377969}
+  HildinOpponentView: 0
+  SpawnSound: {fileID: 0}
+  HitTargetSound: {fileID: 8300000, guid: 8abf373a9823adc41bd8872993f3a965, type: 3}
+  ValuePercent: 0.3
+  VampireProportion: 0
+  LifeTime: 99999
+  KnockIntensity: 0
+  Gravity: 0
+  AmmoType: 1
+  TriggerTargetCD: 0.3
+  TriggerCD: 0
+  Buffers:
+  - Type: 0
+    Time: 0.2
+    Value: 0
+    Value2: 0
+  Value: 0
+  MyMeleeType: 0
+  MeleeTypeValue: 1
+  MyAni: {fileID: 6396346102825888477}
+  ReplaceAttack: 0
+--- !u!58 &4490820809807241550
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -350}
+  serializedVersion: 2
+  m_Radius: 30
+--- !u!95 &8881570972167170326
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 27659e2bdb3fa2342ba0c5f659f6c6a9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6396346102825888477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65069269a16a89543bc9015ab9a79cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyAni: {fileID: 8881570972167170326}
+--- !u!58 &2193314208425481951
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 350}
+  serializedVersion: 2
+  m_Radius: 30
+--- !u!58 &6815907979109790749
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 350, y: 0}
+  serializedVersion: 2
+  m_Radius: 30
+--- !u!58 &4883068777718149607
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4490820809807241549}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -350, y: 0}
+  serializedVersion: 2
+  m_Radius: 30
+--- !u!1 &8377964438013377969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4973849028985103720}
+  - component: {fileID: 7786378577914880400}
+  m_Layer: 0
+  m_Name: Appearance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4973849028985103720
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377964438013377969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4490820809807241545}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7786378577914880400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377964438013377969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efccf2f148eb4b4eaf1b99c590ae477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EffectList:
+  - Name: PhotonShell
+    Particle: {fileID: 2899313226652483967, guid: 28ca7d19f976bc74da5b55efd54c09b1,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 4973849028985103720}
+    Offset: {x: 350, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1
+  - Name: PhotonShell
+    Particle: {fileID: 2899313226652483967, guid: 28ca7d19f976bc74da5b55efd54c09b1,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 4973849028985103720}
+    Offset: {x: -350, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1
+  - Name: PhotonShell
+    Particle: {fileID: 2899313226652483967, guid: 28ca7d19f976bc74da5b55efd54c09b1,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 4973849028985103720}
+    Offset: {x: 0, y: 350}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1
+  - Name: PhotonShell
+    Particle: {fileID: 2899313226652483967, guid: 28ca7d19f976bc74da5b55efd54c09b1,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 4973849028985103720}
+    Offset: {x: 0, y: -350}
+    Roration: {x: 0, y: 0}
+    StartEmit: 1

@@ -1,0 +1,298 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8599275249390952880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8076880814927201678}
+  - component: {fileID: 2011676845777229698}
+  m_Layer: 0
+  m_Name: GameDictionary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8076880814927201678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8599275249390952880}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 418.73462, y: 294.7803, z: -3037}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2011676845777229698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8599275249390952880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca3989220c73f45439993cd801950a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpriteList:
+  - Name: Star
+    MySprite: {fileID: 21300000, guid: 3be3bb3d2b43b3347bd3e0e32e7ea275, type: 3}
+  - Name: Kred
+    MySprite: {fileID: 21300000, guid: fa22c804a027d4e43982775271b28d85, type: 3}
+  NumberIcons: []
+  EffectList:
+  - Name: Stun
+    Particle: {fileID: 198063869068057178, guid: edffd9c1784edc94989a833933ba67b4,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Freeze
+    Particle: {fileID: 198176649790183064, guid: 8a0d6a69b57aaff408ae8bdecc61c0ca,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 99fe3be0d0803994a8861d6798b17a9b, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Ghost
+    Particle: {fileID: 4382934321348123609, guid: 34df7e2953c71dd409545957fa0fc5e8,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Heal
+    Particle: {fileID: 198889853383162744, guid: b416d3cbed17605439ab332417f2d379,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 65d1116ce4b1161408a11ada2709f2d5, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Burn
+    Particle: {fileID: 198682381177258040, guid: 26372b3ba29515c45896c0f5a7b6c2b1,
+      type: 3}
+    Audio: {fileID: 8300000, guid: ea974f1b717e3204ba025760b3e3dbfe, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Bleed
+    Particle: {fileID: 2184672677270197939, guid: f3600d2c1cd81cb43a68f2f049b4fd31,
+      type: 3}
+    Audio: {fileID: 8300000, guid: fc274ce0d0fd8fb40b2e7557d54975e8, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Block
+    Particle: {fileID: 198853811207955838, guid: b4d4ebdfdacb8e64a873156266007ccf,
+      type: 3}
+    Audio: {fileID: 8300000, guid: da6a6610f225d5c498bfced84ec89d98, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: ShieldBreak
+    Particle: {fileID: 7325413229783261636, guid: f7dc99ead1a58ed4eb3ece54ac0b1b73,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Absorb
+    Particle: {fileID: 2605965060076182146, guid: ab7ee68bcecf1fc498ba1a5667f932fe,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: MeleeHit
+    Particle: {fileID: 198421084779393996, guid: 9d76221f8330c3e4e88f4600ea7c80bc,
+      type: 3}
+    Audio: {fileID: 8300000, guid: b0a584344db84444c9356f089a445c57, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: BumpHit
+    Particle: {fileID: 979854587543473268, guid: c6d5358050da35549a5131fed93acc84,
+      type: 3}
+    Audio: {fileID: 8300000, guid: b0a584344db84444c9356f089a445c57, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Teleport
+    Particle: {fileID: 4170924274321524025, guid: 9332440e9265fbc45b0362de5ab4fa62,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 074cee5e8624aa4428300be00e1d2bd2, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: SpeedUp
+    Particle: {fileID: 198124011897465664, guid: 93b517a4923930e45bf9a7cba303ae26,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 6ab294f628f9e514fbc91a162ee7aff7, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Sick
+    Particle: {fileID: 198106105346108706, guid: 81776a12614bb2b45a1c9c4b992bb50b,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 9f916e5e3d2ef194dba678b4c3e93a4a, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Immortal
+    Particle: {fileID: 198796042616351790, guid: 9cee33da8b3d059458361ee2c1d444c8,
+      type: 3}
+    Audio: {fileID: 8300000, guid: da6a6610f225d5c498bfced84ec89d98, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: DamageUp
+    Particle: {fileID: 198001080371431652, guid: 59b3bdab785296840b86c087aae64409,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 0fabe5d2285f4114c8cc99f9e5b2155a, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: SkillDamageUp
+    Particle: {fileID: 4969634282813593443, guid: 128e84764d5abf64aab9361a0c1b25f1,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 0fabe5d2285f4114c8cc99f9e5b2155a, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: MeleeDamageUp
+    Particle: {fileID: 8184019689769549140, guid: 36391ffba41b8eb469d41975a6edb770,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 0fabe5d2285f4114c8cc99f9e5b2155a, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Stable
+    Particle: {fileID: 6395618925238274851, guid: bbcd1fcd2f61d1440930ef54cacac7b2,
+      type: 3}
+    Audio: {fileID: 8300000, guid: da6a6610f225d5c498bfced84ec89d98, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: PowerfulMeleeHit
+    Particle: {fileID: 5214081679131701401, guid: ce423545f619b124e81bc7ab14f4bf2f,
+      type: 3}
+    Audio: {fileID: 8300000, guid: b0a584344db84444c9356f089a445c57, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: EagleEye
+    Particle: {fileID: 7364046161165082434, guid: 8976278d6a8d5fb48a558bf0ac80c7e2,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 2c40a338e9c302042bb0bbca3362b0f5, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: Upgrade
+    Particle: {fileID: 4575044161456424922, guid: b37b0fa1cc26f4440b0fb2ec0e11fad4,
+      type: 3}
+    Audio: {fileID: 8300000, guid: fac9fecdbd78a3d429bb04443d647193, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: GainExp
+    Particle: {fileID: 198889853383162744, guid: 62e80a188ca802a45b0ed415b26a7ff0,
+      type: 3}
+    Audio: {fileID: 8300000, guid: 512fec52917434d448de2b8d7c8ba5fb, type: 3}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: GodTeleport_loop
+    Particle: {fileID: 8553773986067498538, guid: 3709c2396256f0641970680a56cae45b,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: GodTeleport
+    Particle: {fileID: 5837500167081292948, guid: 9091ff7097bc9b548ba8a172daadcf1c,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: OutsideCurse
+    Particle: {fileID: 198682381177258040, guid: 4504dbfe7416d6c469643c93f9e34099,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: PlayerLight_red
+    Particle: {fileID: 9051375036252398934, guid: f72b69c05fe9d924793a5d73d85aae26,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  - Name: PlayerLight_green
+    Particle: {fileID: 3024919511118169687, guid: 099253a85e3576c4db1ee19cdd18acdc,
+      type: 3}
+    Audio: {fileID: 0}
+    TargetParent: {fileID: 0}
+    Offset: {x: 0, y: 0}
+    Roration: {x: 0, y: 0}
+    StartEmit: 0
+  MusicList:
+  - Name: Lobby
+    Audio: {fileID: 8300000, guid: 0e5a54b7bdd1a9f48901d98727ab07e2, type: 3}
+  - Name: Battle0
+    Audio: {fileID: 8300000, guid: 97edb3149baf611459c5546f5c6ab8c1, type: 3}
+  - Name: Battle1
+    Audio: {fileID: 8300000, guid: c9140c4e9c215ea44b7cbe7dca14e97d, type: 3}
+  SoundList:
+  - Name: ShieldHit
+    Audio: {fileID: 8300000, guid: 978680c9e10f16a4e934a9c32574edfb, type: 3}
+  - Name: Click
+    Audio: {fileID: 8300000, guid: 9b6af767f4731b749b978ebd5ca54d1b, type: 3}
+  - Name: Hover
+    Audio: {fileID: 8300000, guid: 5db593fd158ea8a4ea620ca30a67b33b, type: 3}
+  - Name: Popup
+    Audio: {fileID: 8300000, guid: 0ea740f60b3f54a4fac0f3eb1c011c72, type: 3}
+  - Name: Tab
+    Audio: {fileID: 8300000, guid: 90a1e0f4b453a2c4e8e9394c9da06baf, type: 3}
+  - Name: Edit
+    Audio: {fileID: 8300000, guid: 3174979218e2cb14f9040d97c1732031, type: 3}
+  - Name: Upgrade
+    Audio: {fileID: 8300000, guid: fac9fecdbd78a3d429bb04443d647193, type: 3}

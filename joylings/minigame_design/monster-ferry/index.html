@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eaf1e5"><title>怪獸渡船</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><script defer src="core.js"></script><script defer src="art.js"></script><script defer src="app.js"></script></head>
+<body><main class="app">
+ <header><div class="brand"><span class="brand-icon">≈</span><h1>怪獸渡船</h1></div><nav id="levels" aria-label="選關卡"></nav></header>
+ <div class="mission"><div><span class="eyebrow" id="level-name"></span><h2>把大家送到右岸</h2></div><div class="trip-info"><span id="seats"></span><span id="weight" hidden></span></div></div>
+ <section id="scene" class="scene" aria-label="渡船遊戲">
+  <div class="river"><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div><div class="wave w4"></div><div class="fish">➤</div></div>
+  <div class="island island-left"></div><div class="island island-right"></div><div class="dock dock-left"></div><div class="dock dock-right"></div>
+  <div class="fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <section id="bank-0" class="bank left" aria-label="左岸"><div class="bank-heading"><b>左岸</b><span class="guard"></span></div><div class="residents" id="people-0"></div></section>
+  <section id="bank-1" class="bank right" aria-label="右岸"><div class="bank-heading"><b>右岸</b><span class="guard"></span></div><div class="residents" id="people-1"></div></section>
+  <div class="arrival" aria-hidden="true">⌂<span>野餐小屋</span></div>
+  <div id="boat" class="boat"><div class="boat-bob"><div class="aboard"><span id="captain" class="captain" role="img" aria-label="船長"></span><div id="cargo"></div></div><div id="hull" class="hull"></div><div class="wake"></div><span class="oar"></span></div></div>
+  <div id="splash" class="splash" aria-hidden="true">✦ ✧ ✦</div>
+ </section>
+ <section class="control-panel"><div class="instruction" id="instruction">點角色上船，再按出發</div><div class="buttons"><button id="undo" class="secondary">↶ 退一趟</button><button id="reset" class="secondary">重新開始</button><button id="sail" class="primary">出發 →</button></div><p id="message" role="status" aria-live="polite"></p></section>
+ <section class="rules"><div class="rules-heading"><h2>船長不在時</h2><div id="stone-rule" hidden></div></div><div id="relations"></div></section>
+ <footer>本地試玩 · 0.1</footer>
+</main><dialog id="modal" aria-labelledby="modal-title"><div id="celebration"></div><h2 id="modal-title">大家都到啦！</h2><p>一起開野餐派對！</p><div class="buttons"><button id="stay" class="secondary">留在這關</button><button id="next" class="primary">下一關 →</button></div></dialog></body></html>

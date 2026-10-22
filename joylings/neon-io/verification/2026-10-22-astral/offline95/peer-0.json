@@ -1,0 +1,57 @@
+{
+    "passed": true,
+    "connected": false,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 95,
+    "maxPeers": 0,
+    "maxActors": 1,
+    "maxAi": 0,
+    "elapsed": 25.532533645629884,
+    "averageFrameMs": 17.75580596923828,
+    "actors": [
+        {
+            "name": "GameDeveloper",
+            "id": -15624,
+            "health": 600,
+            "level": 1,
+            "skills": 3,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -5244.015625,
+                "y": -3269.6025390625,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    }
+}

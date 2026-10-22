@@ -1,0 +1,74 @@
+[
+  {
+    "mode": "Offline",
+    "folder": "neon-validation-81d14e39d3c7",
+    "reports": 1,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "release-before-final-connection-fixes"
+  },
+  {
+    "mode": "CombatDevelopment",
+    "folder": "neon-validation-82d7751f43c4",
+    "reports": 2,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "development"
+  },
+  {
+    "mode": "ChallengeCombat",
+    "folder": "neon-validation-61d4af2ecb17",
+    "reports": 2,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "release-before-final-connection-fixes"
+  },
+  {
+    "mode": "LootStress",
+    "folder": "neon-validation-5d0a3b65fd5a",
+    "reports": 2,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "release-before-final-connection-fixes"
+  },
+  {
+    "mode": "Multiplayer10",
+    "folder": "neon-validation-db62451cfc95",
+    "reports": 10,
+    "passed": true,
+    "finalBuild": true,
+    "buildStage": "final-release"
+  },
+  {
+    "mode": "Reconnect",
+    "folder": "neon-validation-36bf94fcfd4a",
+    "reports": 2,
+    "passed": true,
+    "finalBuild": true,
+    "buildStage": "final-release"
+  },
+  {
+    "mode": "ChallengeDevelopment",
+    "folder": "neon-validation-97a99d69fa95",
+    "reports": 2,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "development"
+  },
+  {
+    "mode": "ChallengeAIDevelopment",
+    "folder": "neon-validation-6658bbc444af",
+    "reports": 1,
+    "passed": true,
+    "finalBuild": false,
+    "buildStage": "development"
+  },
+  {
+    "mode": "Lifecycle",
+    "folder": "neon-lifecycle-4d7214766f47",
+    "reports": 3,
+    "passed": true,
+    "finalBuild": true,
+    "buildStage": "final-release"
+  }
+]

@@ -1,0 +1,5 @@
+NEON_FUSION_JOINED mode=InfinityWar room=neon-lifecycle-4d7214766f47 region=asia
+NEON_FUSION_SCENE_READY Battle
+NEON_FUSION_MASTER_CHANGED actor=3 local=True entities=11
+NEON_SMOKE_OK 
+NEON_FUSION_SHUTDOWN reason=Ok current=False intentional=True joining=False startupCancelled=False ageSeconds=87.15 entities=0

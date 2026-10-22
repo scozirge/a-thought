@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-22",
+  "platform": "Windows x64",
+  "unity": "6000.3.11f1",
+  "fusion": "2.1.2 Stable 2279",
+  "development": false,
+  "files": [
+    {
+      "path": "Builds/Windows/NeonImpact.exe",
+      "bytes": 667648,
+      "sha256": "cd15fa37bb7e739d07debbd6862bb617c9d6d85c1f44f78e370739b5265c1e2a"
+    },
+    {
+      "path": "Builds/Windows/UnityPlayer.dll",
+      "bytes": 35830192,
+      "sha256": "a2022611884470ddab23927a3eb7bbaef3924c18972d30ba7b5330a8fd25bcc4"
+    },
+    {
+      "path": "Builds/Windows/NeonImpact_Data/Managed/Assembly-CSharp.dll",
+      "bytes": 360448,
+      "sha256": "6e130833eb0a7b6d01db4b973c97e0771a3b093a2a6502fbe9ada8cf2dc9b94b"
+    },
+    {
+      "path": "unity/Assets/Scripts/Lobby/PhotonLauncher.cs",
+      "bytes": 10423,
+      "sha256": "68843371d7e1b48afdaa9e559e7161cd0d9e842f66d8640d5321309cee961cb4"
+    },
+    {
+      "path": "unity/Assets/Scripts/Networking/NeonFusionRuntime.cs",
+      "bytes": 17572,
+      "sha256": "6519c3a33e52e1231384a3e326ab16200183a0e5e44fda09169d8a846fcd9bc9"
+    },
+    {
+      "path": "unity/Assets/Photon/Fusion/Resources/NetworkProjectConfig.fusion",
+      "bytes": 3119,
+      "sha256": "a8fef976c6e553bebcace8725d5aa7c7d00fd2cca468daa9e140b12d9334baea"
+    }
+  ]
+}
