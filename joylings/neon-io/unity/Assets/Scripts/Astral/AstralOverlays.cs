@@ -26,11 +26,12 @@ namespace Neon.Astral
                 else if(Is(popup,"LoadingGo")){kind="loading";message=PopupText("Loading_Value");}
                 else if(Is(popup,"RestartGo")){kind="restart";message=PopupText("Restart_Value");}
             }
-            string key=kind+"/"+title+"/"+message+"/"+MyPlayer.UseLanguage+"/"+Screen.width+"x"+Screen.height+"/"+NeonWebBridge.CssWidth+"x"+NeonWebBridge.CssHeight;
+            string key=kind+"/"+title+"/"+message+"/"+MyPlayer.UseLanguage+"/"+Screen.width+"x"+Screen.height+"/"+ViewWidth+"x"+ViewHeight+"/"+TouchUI;
             if(key==popupKey)return;popupKey=key;Clear(modal);ShowTooltip(null);
             if(kind=="")return;
             var shade=Scrim(modal,"Modal shade",new Color(.02f,.03f,.065f,.9f));
             if(kind=="book"){BuildBook(shade.transform,book,bookPage);return;}
+            if(TouchUI){BuildTouchDialog(shade.transform,kind,title,message);return;}
             // Size the message area to its actual text; long messages still scroll.
             var box=Plate(shade.transform,"Dialog",0,0,1000,400).transform;
             var measure=Text(box,"Measure",message,0,0,852,600,28);
@@ -52,7 +53,7 @@ namespace Neon.Astral
         void BuildBook(Transform parent,Book book,GameObject bookPage)
         {
             string value=BookText(bookPage);
-            if(NeonWebBridge.TouchLayout&&(NeonWebBridge.CssWidth<1100||NeonWebBridge.CssHeight<650))
+            if(TouchUI)
             {BuildTouchBook(parent,book,value);return;}
             var box=Plate(parent,"Tutorial",0,0,1600,930).transform;
             Text(box,"Title",L("遊玩教學","HOW TO PLAY"),-340,373,760,90,48,Gold);
@@ -75,7 +76,7 @@ namespace Neon.Astral
             {
                 var localized=bookPage.GetComponentsInChildren<MyText>();var names=localized.FirstOrDefault(t=>t.UIString=="Buffer");var descriptions=localized.FirstOrDefault(t=>t.UIString=="BufferDescription");
                 if(NeonWebBridge.TouchLayout&&localized.Any(t=>t.UIString=="P2_C1"))
-                    return L("角色操作\n\n按住畫面，角色會朝手指方向移動。\n\n將手指移回畫面中央，可停止移動。技能會自動施放。","MOVEMENT\n\nTouch and hold to move toward your finger.\n\nMove your finger back to the centre to stop. Skills activate automatically.");
+                    return L("角色操作\n\n拖曳左下角的蘑菇頭搖桿，控制移動方向。\n\n放開搖桿即可停止移動，技能會自動施放。","MOVEMENT\n\nDrag the thumbstick at the bottom left to move.\n\nRelease it to stop. Skills activate automatically.");
                 if(names&&descriptions)
                 {
                     var labels=names.text.Split('\n');var details=descriptions.text.Split('\n');var rows=labels.Select((label,i)=>label.Trim().TrimEnd(':','：')+"："+(i<details.Length?details[i]:""));
@@ -89,7 +90,7 @@ namespace Neon.Astral
         {
             // Size in CSS pixels, so Retina resolution cannot shrink touch targets.
             float ratio=Screen.width/NeonWebBridge.CssWidth;
-            float w=Mathf.Min(960,NeonWebBridge.CssWidth-24),h=Mathf.Min(540,NeonWebBridge.CssHeight-24);
+            float w=Mathf.Min(960,ViewWidth-24),h=Mathf.Min(540,ViewHeight-24);
             var box=Plate(parent,"Tutorial",0,0,w,h).rectTransform;
             box.localScale=Vector3.one*(ratio/Mathf.Max(.001f,parent.lossyScale.x));
             Text(box,"Title",L("遊玩教學","HOW TO PLAY"),-w*.5f+16+(w-160)*.5f,h*.5f-38,w-160,44,20,Gold);

@@ -1,0 +1,678 @@
+{
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "passed": true,
+  "physicalDevice": false,
+  "inputOnly": true,
+  "checks": [
+    "Focused deployed-player input smoke; the full menu matrix is covered separately by the release verification",
+    "Real CDP touch drag moves the actual Photon player right",
+    "Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction",
+    "Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement",
+    "Result layout checked with explicitly synthetic zero-reward fixture, then left the room"
+  ],
+  "layouts": [
+    {
+      "label": "lobby-notch",
+      "view": "lobby",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 183.31998697916666,
+          "y": 259.3333333333333,
+          "w": 147.31998697916666,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "leave-confirm",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        },
+        {
+          "name": "Dialog",
+          "x": 122,
+          "y": 25,
+          "w": 600,
+          "h": 340,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x390",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-667x375",
+      "view": "battle",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 11.999999702750863,
+          "y": 227.14586289564926,
+          "w": 135.99998646373157,
+          "h": 136.00000679862129,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51.00000000762177,
+          "y": 266.1458632005202,
+          "w": 57.99999093771219,
+          "h": 58.00000110515705,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12.000004786473292,
+          "y": 151.1458596945047,
+          "w": 195.9999900612083,
+          "h": 63.99999841467126,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60.0000137649216,
+          "y": 155.14585451169924,
+          "w": 140.00001178326067,
+          "h": 28.000004390141108,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 478.99999957318073,
+          "y": 71.9999880490603,
+          "w": 176.0000159752357,
+          "h": 148.0000014176497,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12.000014953918152,
+          "y": 11.999984451583572,
+          "w": 207.99997451279188,
+          "h": 84.00001317042333,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 435.0000159142615,
+          "y": 275.14586170665274,
+          "w": 219.9999996341549,
+          "h": 88.00000798761785,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x300",
+      "view": "battle",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 184,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 213,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 124,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 126,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 220,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x240",
+      "view": "battle",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 124,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 153,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 64,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 66,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 160,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x390",
+      "view": "result",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 68,
+          "w": 800,
+          "h": 254,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-667x375",
+      "view": "result",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 11.999999702750863,
+          "y": 227.14586289564926,
+          "w": 135.99998646373157,
+          "h": 136.00000679862129,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51.00000000762177,
+          "y": 266.1458632005202,
+          "w": 57.99999093771219,
+          "h": 58.00000110515705,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12.000004786473292,
+          "y": 151.1458596945047,
+          "w": 195.9999900612083,
+          "h": 63.99999841467126,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60.0000137649216,
+          "y": 155.14585451169924,
+          "w": 140.00001178326067,
+          "h": 28.000004390141108,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 478.99999957318073,
+          "y": 71.9999880490603,
+          "w": 176.0000159752357,
+          "h": 148.0000014176497,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12.000014953918152,
+          "y": 11.999984451583572,
+          "w": 207.99997451279188,
+          "h": 84.00001317042333,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 435.0000159142615,
+          "y": 275.14586170665274,
+          "w": 219.9999996341549,
+          "h": 88.00000798761785,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 12.000004786473292,
+          "y": 60.57291878043831,
+          "w": 642.999949757274,
+          "h": 254.00001658497752,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x300",
+      "view": "result",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 184,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 213,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 124,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 126,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 220,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 23,
+          "w": 800,
+          "h": 254,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x240",
+      "view": "result",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 124,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 153,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 64,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 66,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 160,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 12,
+          "w": 800,
+          "h": 216,
+          "fontSize": 0
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

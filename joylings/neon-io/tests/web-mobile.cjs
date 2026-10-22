@@ -1,6 +1,7 @@
 // Actual WebGL player, touch events and repeated orientation changes.
 const {chromium,webkit,devices}=require('C:/Users/USER/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const gestures=require('./web-controls.cjs');
 const url=process.env.NEON_WEB_URL||'http://127.0.0.1:8197/';
 const engine=process.env.NEON_BROWSER||'chromium';
 const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-mobile-'+engine));fs.mkdirSync(output,{recursive:true});
@@ -15,10 +16,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-mobil
   page.on('console',m=>{const s=m.text().replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'[redacted-id]');if(/Exception:|abort\(|shader.*error|NullReferenceException/i.test(s))report.errors.push(s.slice(0,500));fs.appendFileSync(path.join(output,'browser.log'),s+'\n');});
   async function ready(fn,arg=null){await page.waitForFunction(fn,arg,{timeout:120000});}
   async function click(name){
-   await ready(n=>window.neonState?.controls.some(c=>c.name===n&&c.enabled),name);await page.waitForTimeout(650);
-   const b=await page.evaluate(n=>neonState.controls.find(c=>c.name===n&&c.enabled),name);
-   const r=await page.locator('canvas').boundingBox(),d=await page.locator('canvas').evaluate(c=>({w:c.width,h:c.height}));
-   await page.touchscreen.tap(r.x+(b.x+b.w/2)*r.width/d.w,r.y+(b.y+b.h/2)*r.height/d.h);
+   await gestures.click(page,name,engine==='chromium');
   }
   async function resize(width,height){
    await page.setViewportSize({width,height});
@@ -50,7 +48,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-mobil
   await ready(()=>neonState.scene==='Lobby'&&neonState.controls.some(c=>c.name==='Settings'));
   await page.screenshot({path:path.join(output,'lobby-landscape.png'),scale:'css'});
   await click('Settings');await click('Tutorial');await ready(()=>neonState.guidePage==='1/10');await click('Next page');await ready(()=>neonState.guidePage==='2/10');
-  assert.ok(await page.evaluate(()=>neonState.guideText.includes('手指')),'Touch device must show touch instructions');
+  assert.ok(await page.evaluate(()=>neonState.guideText.includes('蘑菇頭')),'Touch device must show thumbstick instructions');
   await checkGuide('guide-landscape');
   const loadStarted=await page.evaluate(()=>neonLoadStarted);
   for(let round=0;round<2;round++){

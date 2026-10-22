@@ -14,8 +14,8 @@ namespace Neon.Astral
             // The original lobby scene supplies the guardian, meteors and entrance burst.
             // A quiet panel supports readable controls without covering that presentation.
             var menu=Plate(page,"Menu backing",-555,-20,650,970);menu.color=new Color(Night.r,Night.g,Night.b,.87f);menu.border=new Color(Gold.r,Gold.g,Gold.b,.26f);menu.ornament=0;
-            balance=Text(page,"Stars","",535,468,300,45,25,Gold,TextAnchor.MiddleRight);
-            Button(page,"Settings",L("設定","SETTINGS"),780,468,150,54,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);},false,22);
+            balance=Text(page,"Stars","",535,468,300,45,25,Gold,TextAnchor.MiddleRight);Pin(balance.transform,Vector2.one,new Vector2(204,29));
+            var settings=Button(page,"Settings",L("設定","SETTINGS"),780,468,150,54,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);},false,22);Pin(settings.transform,Vector2.one,new Vector2(24,24));
             Text(page,"NEON","NEON",-555,335,600,135,90,Pearl,TextAnchor.MiddleCenter,true);
             Text(page,"IMPACT","IMPACT",-555,230,600,135,85,Gold,TextAnchor.MiddleCenter,true);
             var original=Field<InputField>(lobby,"NameInputField");
@@ -25,7 +25,7 @@ namespace Neon.Astral
             ModeCard("Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Challenge an opponent."),-555,-185,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,"II");
             Button(page,"Collection",L("收 藏","COLLECTION"),-555,-330,550,70,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
             var team=Button(page,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),-555,-425,550,60,null,false,22);team.interactable=false;
-            Button(page,"Quit",L("離開遊戲","QUIT"),786,-491,150,40,()=>lobby.ExitGame(),false,18);
+            var quit=Button(page,"Quit",L("離開遊戲","QUIT"),786,-491,150,52,()=>lobby.ExitGame(),false,20);Pin(quit.transform,new Vector2(1,0),new Vector2(24,24));
         }
         void ModeCard(string name,string title,string desc,float x,float y,UnityEngine.Events.UnityAction action,bool primary,string mark)
         {
@@ -61,6 +61,7 @@ namespace Neon.Astral
         }
         void BuildDetail(bool choosing)
         {
+            if(TouchUI){BuildTouchDetail(choosing);return;}
             var old=page.Find("Skill detail");if(old){old.gameObject.SetActive(false);Destroy(old.gameObject);}
             if(selected==null)return;var f=selected;
             var box=Plate(page,"Skill detail",574,-80,620,680).transform;

@@ -47,6 +47,7 @@ namespace Neon.Astral
         }
         void OpenChoices(Dropdown source)
         {
+            if(TouchUI){OpenTouchChoices(source);return;}
             if(!source)return;var shade=Scrim(page,"Choice overlay",new Color(0,0,0,.82f));
             var panel=Plate(shade.transform,"Choices",0,0,800,850).transform;
             Button(panel,"Close choices",L("關閉","CLOSE"),250,355,220,55,()=>Destroy(shade.gameObject),false,22);

@@ -1,0 +1,29 @@
+{
+  "version": "1.1.4-web",
+  "previous_initial_bytes": 32006240,
+  "initial_bytes": 32026095,
+  "protected_published_files": 722,
+  "protected_unchanged": true,
+  "files": {
+    "index.html": {
+      "bytes": 8021,
+      "sha256": "38ae566ea1d0df698d0423a71e21beeade40317e8f51e86765cbc2d3380cd831"
+    },
+    "Build/6ad7574ee433bfeb0a7986cf0a1b92c6.data.unityweb": {
+      "bytes": 20149784,
+      "sha256": "038afeb06122f01d113014a461a17109a449c7dc7bc4ac2f35474768a78b4a52"
+    },
+    "Build/ce66a6e18ae5950bd2958d1bc82bc526.framework.js.unityweb": {
+      "bytes": 93029,
+      "sha256": "2a8b2c96eb5a3740cd40c14766ba8454dc2dff142592d63db1d45a73f7f9bbd4"
+    },
+    "Build/cf4da16d9ebc26e5c61a173b05c2f27a.wasm.unityweb": {
+      "bytes": 11727395,
+      "sha256": "15836d4ec8c8873d1bb1333723ac152a6a3c89652a98ce8267c2df5b8713762d"
+    },
+    "Build/de39accef34c8ce5898415ed5ee90dbd.loader.js": {
+      "bytes": 47866,
+      "sha256": "944c198b06b21763d7e6bf3847fb709400b94b4f4f9123ff9f2a15bdadb405d5"
+    }
+  }
+}

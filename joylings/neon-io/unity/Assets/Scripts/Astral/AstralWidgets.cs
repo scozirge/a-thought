@@ -67,11 +67,13 @@ namespace Neon.Astral
             var rail=Rect(root,"Scrollbar",w*.5f-5,0,5,h);var railImage=rail.gameObject.AddComponent<Image>();railImage.color=new Color(Gold.r,Gold.g,Gold.b,.12f);
             var bar=rail.gameObject.AddComponent<Scrollbar>();bar.direction=Scrollbar.Direction.BottomToTop;
             var handle=Rect(rail,"Handle",0,0,5,70);Stretch(handle);var hi=handle.gameObject.AddComponent<Image>();hi.color=Gold;bar.handleRect=handle;bar.targetGraphic=hi;scroll.verticalScrollbar=bar;scroll.verticalScrollbarVisibility=ScrollRect.ScrollbarVisibility.AutoHide;
+            if(Neon.Networking.NeonWebBridge.TouchLayout){bar.interactable=false;bar.enabled=false;railImage.raycastTarget=false;hi.raycastTarget=false;}
             return scroll;
         }
         public static Slider Slider(Transform p,string name,float value,float x,float y,float w,UnityAction<float> changed)
         {
             var r=Rect(p,name,x,y,w,44);var slider=r.gameObject.AddComponent<Slider>();
+            var hit=r.gameObject.AddComponent<Image>();hit.color=Color.clear;hit.raycastTarget=true;
             var bg=Image(r,"Track",0,0,w,6,null,new Color(Gold.r,Gold.g,Gold.b,.2f));bg.raycastTarget=true;
             var area=Rect(r,"Fill area",0,0,w,6);var fill=Image(area,"Fill",0,0,w,6,null,Gold);Stretch(fill.rectTransform);slider.fillRect=fill.rectTransform;
             var handleArea=Rect(r,"Handle area",0,0,w,44);var handle=Graphic(handleArea,"Handle",0,0,25,25,AstralGraphic.Shape.Star,Pearl,true);slider.handleRect=handle.rectTransform;slider.targetGraphic=handle;

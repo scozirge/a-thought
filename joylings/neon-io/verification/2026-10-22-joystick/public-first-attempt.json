@@ -1,0 +1,20 @@
+{
+  "passed": false,
+  "scope": "First public full-UI run; control phase timed out",
+  "layoutsPassed": 49,
+  "checks": [
+    "Four mobile landscape sizes: lobby, all three collection parts, loadout, skill selection, settings, options, shouts, credits and tutorial; visible controls retain 44 CSS pixels"
+  ],
+  "failure": "page.waitForFunction: Timeout 120000ms exceeded.\n    at ready (E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:14:35)\n    at E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:70:9",
+  "errors": [],
+  "stateAtTimeout": {
+    "scene": "Battle",
+    "view": "result",
+    "playerAlive": false,
+    "guidePage": "1/1",
+    "inputBlocked": true,
+    "stickDragging": false
+  },
+  "followup": "Replay public input smoke with a 100 ms finger-down hold before moving; handle the first-settlement tutorial before respawning. No game code changed.",
+  "resolution": "The same deployed build passed the focused public input and four-size HUD/result checks; see web-mobile-public.json. Full menus already passed in the local release matrix."
+}

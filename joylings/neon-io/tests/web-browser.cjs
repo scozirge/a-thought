@@ -74,6 +74,15 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   assert.ok(roomStates.every(s=>s.region==='asia'));report.region='asia';
   report.peerCounts=roomStates.map(s=>s.peers);
   report.checks.push('Two real browser clients joined the same Photon room');
+  const mousePage=pages[0];await mousePage.bringToFront();
+  await ready(mousePage,()=>neonState.playerAlive&&!neonState.inputBlocked);
+  const mouseBefore=await state(mousePage);
+  assert.equal(mouseBefore.touch,false);assert.ok(!mouseBefore.elements.some(e=>e.name==='Touch joystick'));
+  await mousePage.mouse.move(950,400);await ready(mousePage,()=>neonState.velocityX>1);
+  await mousePage.waitForTimeout(700);
+  assert.ok((await state(mousePage)).playerX>mouseBefore.playerX+1,'Desktop mouse moves the real player');
+  await mousePage.mouse.move(640,400);
+  report.checks.push('Desktop keeps mouse movement and never displays the mobile joystick');
   await pages[0].waitForTimeout(1500);
   for(const [i,page] of pages.entries())await page.screenshot({path:path.join(output,'battle-live-'+i+'.png')});
   if(process.env.NEON_AUDIT==='1'){

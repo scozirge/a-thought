@@ -1,0 +1,126 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "physicalDevice": false,
+  "checks": [
+    "Actual mobile HTML keyboard entry survives a viewport resize and commits the player name",
+    "English mobile menus, settings, shout prompt without making a purchase, tutorial, collection and actual matchmaking cancellation",
+    "Actual mobile and desktop Photon peers show opponent loadouts and enter the same duel"
+  ],
+  "layouts": [
+    {
+      "label": "english-settings",
+      "view": "settings",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-shouts",
+      "view": "clamor",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-shout-prompt",
+      "view": "clamor",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-credits",
+      "view": "credits",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-lobby",
+      "view": "lobby",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-guide",
+      "view": "lobby",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-collection",
+      "view": "collection",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-collection-back",
+      "view": "collection",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-loadout",
+      "view": "loadout",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "english-matching",
+      "view": "matching",
+      "size": [
+        667,
+        375
+      ]
+    },
+    {
+      "label": "compact-matching",
+      "view": "matching",
+      "size": [
+        844,
+        240
+      ]
+    },
+    {
+      "label": "compact-versus",
+      "view": "versus",
+      "size": [
+        844,
+        240
+      ]
+    },
+    {
+      "label": "compact-duel-hud",
+      "view": "battle",
+      "size": [
+        844,
+        240
+      ]
+    },
+    {
+      "label": "compact-leave-confirm",
+      "view": "battle",
+      "size": [
+        844,
+        240
+      ]
+    }
+  ],
+  "errors": [],
+  "room": "neon-web-check-duel-mvjdyu1f-1"
+}

@@ -1,0 +1,1801 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "physicalDevice": false,
+  "checks": [
+    "Four mobile landscape sizes: lobby, all three collection parts, loadout, skill selection, settings, options, shouts, credits and tutorial; visible controls retain 44 CSS pixels",
+    "Real CDP touch drag moves the actual Photon player right",
+    "Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction",
+    "Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement",
+    "Result layout checked with explicitly synthetic zero-reward fixture, then left the room"
+  ],
+  "layouts": [
+    {
+      "label": "lobby-844x390",
+      "view": "lobby",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 202.67997233072916,
+          "y": 260,
+          "w": 166.68001302083331,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x390",
+      "view": "collection",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x390",
+      "view": "loadout",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "selection-844x390",
+      "view": "select",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 302,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 314,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x390",
+      "view": "clamor",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "credits-844x390",
+      "view": "credits",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x390",
+      "view": "settings",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 314,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 366,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 230,
+          "y": 94,
+          "w": 568,
+          "h": 210,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-667x375",
+      "view": "lobby",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 163.7400092888069,
+          "y": 259.9999884758796,
+          "w": 127.73999492938701,
+          "h": 44.000003993808924,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.89000416087816,
+          "y": 75.99998286625484,
+          "w": 220.10997071775878,
+          "h": 287.1458868280157,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.89000416087816,
+          "y": 75.99998286625484,
+          "w": 220.10997071775878,
+          "h": 287.1458868280157,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-667x375",
+      "view": "collection",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.89000416087816,
+          "y": 75.99998286625484,
+          "w": 220.10997071775878,
+          "h": 287.1458868280157,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-667x375",
+      "view": "loadout",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "selection-667x375",
+      "view": "select",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 434.89000416087816,
+          "y": 75.99998286625484,
+          "w": 220.10997071775878,
+          "h": 287.1458868280157,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.50000737787605,
+          "y": 483.999982927229,
+          "w": 199.99998487840284,
+          "h": 44.000003993808924,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.50000737787605,
+          "y": 299.145891614489,
+          "w": 199.99998487840284,
+          "h": 44.000003993808924,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-667x375",
+      "view": "clamor",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "credits-667x375",
+      "view": "credits",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "tutorial-667x375",
+      "view": "settings",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 283.99999804882617,
+          "h": 44.000003993808924,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 343.50000737787605,
+          "y": 299.1458712795993,
+          "w": 199.99998487840284,
+          "h": 44.000003993808924,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12.000004786473292,
+          "y": 11.999984451583572,
+          "w": 642.999949757274,
+          "h": 351.145885242687,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46.000001402406184,
+          "y": 93.99997987851991,
+          "w": 574.9999971951876,
+          "h": 195.14588402320337,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-844x300",
+      "view": "lobby",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 202.67997233072916,
+          "y": 190,
+          "w": 166.68001302083331,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x300",
+      "view": "collection",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x300",
+      "view": "loadout",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "selection-844x300",
+      "view": "select",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 212,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 310.3102823893229,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x300",
+      "view": "clamor",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "credits-844x300",
+      "view": "credits",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x300",
+      "view": "settings",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 224,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 276,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46,
+          "y": 94,
+          "w": 752,
+          "h": 128.66666666666666,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-844x240",
+      "view": "lobby",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 202.67997233072916,
+          "y": 260,
+          "w": 166.68001302083331,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part1-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 37,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "collection-part2-844x240",
+      "view": "collection",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 35,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "loadout-844x240",
+      "view": "loadout",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "selection-844x240",
+      "view": "select",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 38,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Skill detail",
+          "x": 553.47998046875,
+          "y": 76,
+          "w": 278.52001953125,
+          "h": 152,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "settings-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 11,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 484,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "options-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 25,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 263.64764404296875,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "shouts-844x240",
+      "view": "clamor",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 112,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "credits-844x240",
+      "view": "credits",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 4,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        }
+      ]
+    },
+    {
+      "label": "tutorial-844x240",
+      "view": "settings",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 14,
+      "elements": [
+        {
+          "name": "Page title",
+          "x": 12,
+          "y": 12,
+          "w": 284,
+          "h": 44,
+          "fontSize": 22
+        },
+        {
+          "name": "Tutorial",
+          "x": 432,
+          "y": 164,
+          "w": 200,
+          "h": 44,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 12,
+          "y": 12,
+          "w": 820,
+          "h": 216,
+          "fontSize": 0
+        },
+        {
+          "name": "Guide content",
+          "x": 46,
+          "y": 94,
+          "w": 752,
+          "h": 128.66665649414062,
+          "fontSize": 16
+        }
+      ]
+    },
+    {
+      "label": "lobby-notch",
+      "view": "lobby",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Tutorial",
+          "x": 183.31998697916666,
+          "y": 259.3333333333333,
+          "w": 147.31998697916666,
+          "h": 44,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x390",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-667x375",
+      "view": "battle",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 11.999999702750863,
+          "y": 227.14586289564926,
+          "w": 135.99998646373157,
+          "h": 136.00000679862129,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51.00000000762177,
+          "y": 266.1458632005202,
+          "w": 57.99999093771219,
+          "h": 58.00000110515705,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12.000004786473292,
+          "y": 151.1458596945047,
+          "w": 195.9999900612083,
+          "h": 63.99999841467126,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60.0000137649216,
+          "y": 155.14585451169924,
+          "w": 140.00001178326067,
+          "h": 28.000004390141108,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 478.99999957318073,
+          "y": 71.9999880490603,
+          "w": 176.0000159752357,
+          "h": 148.0000014176497,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12.000014953918152,
+          "y": 11.999984451583572,
+          "w": 207.99997451279188,
+          "h": 84.00001317042333,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 435.0000159142615,
+          "y": 275.14586170665274,
+          "w": 219.9999996341549,
+          "h": 88.00000798761785,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x300",
+      "view": "battle",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 184,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 213,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 124,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 126,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 220,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x240",
+      "view": "battle",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 124,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 153,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 64,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 66,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 160,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "leave-confirm",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        },
+        {
+          "name": "Dialog",
+          "x": 122,
+          "y": 25,
+          "w": 600,
+          "h": 340,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x390",
+      "view": "result",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 242,
+          "w": 136,
+          "h": 136,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51,
+          "y": 281,
+          "w": 58,
+          "h": 58,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 166,
+          "w": 196,
+          "h": 64,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 170,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 72,
+          "w": 176,
+          "h": 148,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 290,
+          "w": 220,
+          "h": 88,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 68,
+          "w": 800,
+          "h": 254,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-667x375",
+      "view": "result",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 11.999999702750863,
+          "y": 227.14586289564926,
+          "w": 135.99998646373157,
+          "h": 136.00000679862129,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 51.00000000762177,
+          "y": 266.1458632005202,
+          "w": 57.99999093771219,
+          "h": 58.00000110515705,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12.000004786473292,
+          "y": 151.1458596945047,
+          "w": 195.9999900612083,
+          "h": 63.99999841467126,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60.0000137649216,
+          "y": 155.14585451169924,
+          "w": 140.00001178326067,
+          "h": 28.000004390141108,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 478.99999957318073,
+          "y": 71.9999880490603,
+          "w": 176.0000159752357,
+          "h": 148.0000014176497,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12.000014953918152,
+          "y": 11.999984451583572,
+          "w": 207.99997451279188,
+          "h": 84.00001317042333,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 435.0000159142615,
+          "y": 275.14586170665274,
+          "w": 219.9999996341549,
+          "h": 88.00000798761785,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 12.000004786473292,
+          "y": 60.57291878043831,
+          "w": 642.999949757274,
+          "h": 254.00001658497752,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x300",
+      "view": "result",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 184,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 213,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 124,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 126,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 220,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 23,
+          "w": 800,
+          "h": 254,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x240",
+      "view": "result",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 12,
+          "y": 124,
+          "w": 104,
+          "h": 104,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 41,
+          "y": 153,
+          "w": 46,
+          "h": 46,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 12,
+          "y": 64,
+          "w": 196,
+          "h": 48,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 60,
+          "y": 66,
+          "w": 140,
+          "h": 28,
+          "fontSize": 18
+        },
+        {
+          "name": "Leaderboard",
+          "x": 656,
+          "y": 64,
+          "w": 176,
+          "h": 86,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "fontSize": 12
+        },
+        {
+          "name": "Skill dock",
+          "x": 612,
+          "y": 160,
+          "w": 220,
+          "h": 68,
+          "fontSize": 0
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 12,
+          "w": 800,
+          "h": 216,
+          "fontSize": 0
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

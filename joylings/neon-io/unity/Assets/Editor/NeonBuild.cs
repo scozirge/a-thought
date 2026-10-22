@@ -75,7 +75,7 @@ namespace Neon.Editor
             EditorBuildSettings.scenes = Scenes.Select(name => new EditorBuildSettingsScene("Assets/Scenes/" + name + ".unity", true)).ToArray();
             PlayerSettings.productName = "Neon Impact";
             PlayerSettings.companyName = "Starbro";
-            PlayerSettings.bundleVersion = "1.1.1-fusion";
+            PlayerSettings.bundleVersion = "1.1.4-fusion";
             PlayerSettings.defaultScreenWidth = 1280;
             PlayerSettings.defaultScreenHeight = 800;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;

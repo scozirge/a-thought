@@ -1,0 +1,99 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "errors": [],
+  "loads": [
+    {
+      "milliseconds": 1758.2999999523163,
+      "resources": [
+        {
+          "file": "de39accef34c8ce5898415ed5ee90dbd.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "ce66a6e18ae5950bd2958d1bc82bc526.framework.js.unityweb",
+          "transfer": 93329,
+          "encoded": 93029
+        },
+        {
+          "file": "cf4da16d9ebc26e5c61a173b05c2f27a.wasm.unityweb",
+          "transfer": 11727695,
+          "encoded": 11727395
+        },
+        {
+          "file": "6ad7574ee433bfeb0a7986cf0a1b92c6.data.unityweb",
+          "transfer": 20150084,
+          "encoded": 20149784
+        }
+      ]
+    },
+    {
+      "milliseconds": 1229.3999999761581,
+      "resources": [
+        {
+          "file": "de39accef34c8ce5898415ed5ee90dbd.loader.js",
+          "transfer": 48166,
+          "encoded": 47866
+        },
+        {
+          "file": "ce66a6e18ae5950bd2958d1bc82bc526.framework.js.unityweb",
+          "transfer": 93329,
+          "encoded": 93029
+        },
+        {
+          "file": "cf4da16d9ebc26e5c61a173b05c2f27a.wasm.unityweb",
+          "transfer": 11727695,
+          "encoded": 11727395
+        },
+        {
+          "file": "6ad7574ee433bfeb0a7986cf0a1b92c6.data.unityweb",
+          "transfer": 20150084,
+          "encoded": 20149784
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "peer 0: original intro reached; 95 features owned on fresh profile",
+    "peer 1: original intro reached; 95 features owned on fresh profile",
+    "Equipped formerly paid head skill 11 without charging stars",
+    "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+    "Two real browser clients joined the same Photon room",
+    "Desktop keeps mouse movement and never displays the mobile joystick",
+    "Gameplay regressions executed inside the WebGL player",
+    "Both peers remained connected beyond the connection timeout"
+  ],
+  "sockets": [
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1208.exitgames.com",
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1208.exitgames.com"
+  ],
+  "introAudioRms": 0.0066829832931938225,
+  "room": "neon-web-check-mvjdyuwy-0",
+  "region": "asia",
+  "peerCounts": [
+    2,
+    2
+  ],
+  "gameplayAudit": {
+    "passed": true,
+    "allocationCounterAvailable": false,
+    "failure": "",
+    "checks": [
+      "Cooldown boundaries and periodic damage under slow/fast frames",
+      "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+      "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+      "Main-thread connection timeout while paused; connected sessions excluded",
+      "Live-target registry, disable/re-enable, homing retarget and 1000-query allocation comparison",
+      "Music pool selection, volume restoration and duplicate loop key"
+    ],
+    "legacySearchBytes": 0,
+    "registrySearchBytes": 0,
+    "legacySearchMilliseconds": 2.6,
+    "registrySearchMilliseconds": 2.9000000000000004
+  }
+}

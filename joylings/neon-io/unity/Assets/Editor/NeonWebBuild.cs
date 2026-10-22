@@ -69,7 +69,7 @@ namespace Neon.Editor
             PlayerSettings.WebGL.initialMemorySize = 256;
             PlayerSettings.WebGL.maximumMemorySize = 1024;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-            PlayerSettings.bundleVersion = "1.1.3-web";
+            PlayerSettings.bundleVersion = "1.1.4-web";
             // Preserve the original indices for Windows/Web Fusion interoperability.
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             string output = Path.GetFullPath("../Builds/WebGL");
@@ -108,13 +108,18 @@ namespace Neon.Editor
             }
             finally
             {
+                // BuildPipeline may retain memory-mapped prefab handles on Windows.
+                // Release them before restoring source files, and replace each file
+                // atomically instead of truncating a file still held by an importer.
+                AssetDatabase.ReleaseCachedFileHandles();
                 if (File.Exists(excludedFont))
                 {
                     string moveError = AssetDatabase.MoveAsset(excludedFont, oldFontPath);
                     if (!string.IsNullOrEmpty(moveError)) throw new Exception(moveError);
                 }
-                foreach (var entry in originals) File.WriteAllBytes(entry.Key, entry.Value);
-                File.WriteAllBytes(oldFontPath + ".meta", originalFontSettings);
+                AssetDatabase.ReleaseCachedFileHandles();
+                foreach (var entry in originals) RestoreSourceBytes(entry.Key, entry.Value);
+                RestoreSourceBytes(oldFontPath + ".meta", originalFontSettings);
                 AssetDatabase.Refresh();
             }
             if (report.summary.result != BuildResult.Succeeded) throw new Exception("Web build failed: " + report.summary.result);
@@ -128,6 +133,17 @@ namespace Neon.Editor
             }
             File.WriteAllText(Path.Combine(output, ".nojekyll"), "");
             Debug.Log($"NEON_WEB_BUILD_OK textures={textures} audio={audio} bytes={report.summary.totalSize}");
+        }
+        static void RestoreSourceBytes(string path, byte[] bytes)
+        {
+            string temporary = path + ".neon-restore";
+            try
+            {
+                File.WriteAllBytes(temporary, bytes);
+                if (File.Exists(path)) File.Replace(temporary, path, null);
+                else File.Move(temporary, path);
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
     }
 }

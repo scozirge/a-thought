@@ -378,8 +378,10 @@ namespace Starbro.NeonIO
                 return;
             if (BuffersExist(RoleBuffer.Stun))//如果自己在暈眩狀態就不能進行移動
                 return;
-            //如果不是手機平台
-            if (!Application.isMobilePlatform)
+            // Browser touch layout also covers mobile WebGL; desktop keeps its cursor control.
+            if (!NeonWebBridge.InputAvailable || Neon.Astral.AstralPresentation.InputBlocked)
+            { StopControlledMovement(); return; }
+            if (!NeonWebBridge.TouchLayout)
             {
                 NotMobileControl();
             }
@@ -390,15 +392,18 @@ namespace Starbro.NeonIO
         }
         void MobileControl()
         {
-            if (Input.touchCount == 0 || DragTimer.StartRunTimer) return;
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) return;
-            Vector2 delta = touch.position - new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-            if (delta.sqrMagnitude <= CursorLimitDist * CursorLimitDist) return;
+            if (DragTimer.StartRunTimer) return;
+            Vector2 delta = Neon.Astral.NeonTouchStick.Direction;
+            if (delta == Vector2.zero) { StopControlledMovement(); return; }
             DragRecovery();
             Move(delta.normalized);
             ArrowAngle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg - 90;
             FaceMoveDirection();
+        }
+        void StopControlledMovement()
+        {
+            // A released stick stops voluntary movement, without cancelling knockback.
+            if (MyRigi && (DragTimer == null || !DragTimer.StartRunTimer)) MyRigi.linearVelocity = Vector2.zero;
         }
         public void Move(Vector3 _movetorward)
         {

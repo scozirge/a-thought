@@ -6,7 +6,7 @@ namespace Neon.Astral
     // Resolution-independent ornaments: a few UI triangles, no rasterised mockup panels.
     public sealed class AstralGraphic : MaskableGraphic
     {
-        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow }
+        public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc }
         public Shape shape;
         public Color border = new Color(.76f, .65f, .43f, .65f);
         public float thickness = 2.4f;
@@ -30,6 +30,13 @@ namespace Neon.Astral
                     foreach(float x in new[]{r.xMin+20,r.xMax-20}) foreach(float y in new[]{r.yMin+20,r.yMax-20}) Star(vh,new Vector2(x,y),4,border);
                     Line(vh,new Vector2(r.xMin+38,r.yMax-9),new Vector2(r.xMax-38,r.yMax-9),.5f,new Color(border.r,border.g,border.b,border.a*.45f));
                 }
+            }
+            else if(shape==Shape.Disc)
+            {
+                float radius=Mathf.Min(r.width,r.height)*.48f;
+                for(int i=0;i<64;i++)
+                {float a=i*Mathf.PI*2/64,b=(i+1)*Mathf.PI*2/64;Tri(vh,r.center,r.center+new Vector2(Mathf.Cos(a),Mathf.Sin(a))*radius,r.center+new Vector2(Mathf.Cos(b),Mathf.Sin(b))*radius,color);}
+                Ring(vh,r.center,radius,thickness,border);
             }
             else if(shape==Shape.Orbit)
             {

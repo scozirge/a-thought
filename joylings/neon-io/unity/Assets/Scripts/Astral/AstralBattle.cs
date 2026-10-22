@@ -83,7 +83,7 @@ namespace Neon.Astral
         string Value(string name){var t=Field<Text>(battle,name);return t?t.text:"—";}
         void Pin(Transform target,Vector2 corner,Vector2 inset)
         {
-            var pin=target.gameObject.AddComponent<AstralCorner>();pin.safe=safe;pin.corner=corner;pin.inset=inset;
+            var pin=target.GetComponent<AstralCorner>();if(!pin)pin=target.gameObject.AddComponent<AstralCorner>();pin.safe=safe;pin.corner=corner;pin.inset=inset;
         }
         string ResultTime()
         {

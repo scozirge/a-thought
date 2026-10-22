@@ -46,6 +46,13 @@ const output=path.resolve(__dirname,'../logs/web-viewport');fs.mkdirSync(output,
     assert.equal(await page.evaluate(()=>sent.filter(a=>a[1]==='StartGame').length),1,'Rotation must not restart the intro');
     assert.deepEqual(errors,[]);
     report.checks.push(engine+': denied fullscreen/orientation APIs, repeated rotation, visualViewport-only resize/scroll and single start passed');
+    const laptop=await browser.newPage({viewport:{width:800,height:1000},hasTouch:true,userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36'});
+    await laptop.addInitScript(()=>{window.sent=[];window.createUnityInstance=async()=>({SendMessage:(...args)=>sent.push(args)});});
+    await laptop.route('https://neon.test/**',route=>route.fulfill({contentType:'text/html',body:template.replace(/<script src="Build\/[^>]+><\/script>/,'')}));
+    await laptop.goto('https://neon.test/');await laptop.waitForFunction(()=>sent.some(a=>a[1]==='SetViewport'));
+    assert.ok(await laptop.locator('#rotate').isHidden());
+    assert.equal(await laptop.evaluate(()=>JSON.parse(sent.filter(a=>a[1]==='SetViewport').at(-1)[2]).touch),false);
+    report.checks.push(engine+': touchscreen Windows browser retains desktop mouse layout, including portrait windows');
    }finally{await browser.close();}
   }
   report.passed=true;
