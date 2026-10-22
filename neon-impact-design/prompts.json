@@ -1,0 +1,55 @@
+{
+  "generator": "built-in image_gen",
+  "use_case": "stylized-concept",
+  "scope": "concepts_only",
+  "game_modified": false,
+  "designs": [
+    {
+      "key": "knight",
+      "file": "01-knight-wings.png",
+      "title": "騎士與羽翼",
+      "references": [
+        "unity/Assets/Resources/Images/Role/Head/knight.png",
+        "unity/Assets/Resources/Images/Role/Body/knight.png",
+        "unity/Assets/Resources/Images/Role/Back/featherWing.png",
+        "design/gameplay-audit/lobby-0.png"
+      ],
+      "prompt": "Use case: stylized-concept. Create a refined but restrained 2D game character equipment redesign concept sheet, landscape 3:2, high resolution. This is a new presentation illustration based on the reference assets, not a game screenshot and not a change to a game.\nInput images 1, 2, 3 are ORIGINAL SHAPE references: the existing horned knight helmet, compact armored body and two feather wings from Neon Impact. Image 4 is a palette and visual language reference only: midnight navy, champagne-gold thin edging, pearl light, restrained luminous cyan; do not reproduce its UI or lettering.\nDesign: preserve the recognizable curled paired helmet horns, faceless narrow visor, broad compact segmented chest/shoulder silhouette and simple paired feather wings. Redesign as a polished astral knight with midnight-blue enamel armor, satin champagne-gold edges, a small icy cyan chest core and soft cyan light between separated armor segments. The wings should have 3 to 4 broad sculpted feather blades each, readable at small scale, not dense realistic bird feathers. Two arms, two legs, closed faceless helmet, gently levitating neutral pose. No added hand weapon. Stylized proportions, crisp readable contours, softly shaded 2.5D planes, moderate detail. It must still feel related to the simple original neon avatar, not a photorealistic MMO warrior.\nComposition: one dominant fully visible assembled front / subtle three-quarter character on the left two thirds; on the right, three separated equipment close-up studies (helmet, torso plate, paired wing assembly) arranged vertically with generous breathing room. Small cyan and coral-red material accent chips along lower right show faction light alternatives, without words. Keep all components within margins.\nBackdrop: dark smooth midnight-navy concept board, extremely faint thin circular gold construction lines, plenty of calm negative space, no landscape. Gold is a restrained trim, not a solid gold statue; clear highlights and subtle bloom, polished hand-painted game concept-art finish.\nText: absolutely no text, no logos, no captions, no typography, no watermark. No UI controls, no invented lore, no random symbols or microscopic filigree."
+    },
+    {
+      "key": "anubis",
+      "file": "02-anubis-discs.png",
+      "title": "阿努比斯與星盤",
+      "references": [
+        "unity/Assets/Resources/Images/Role/Head/anubis.png",
+        "unity/Assets/Resources/Images/Role/Body/anubis.png",
+        "unity/Assets/Resources/Images/Role/Back/discWing.png",
+        "design/gameplay-audit/lobby-0.png"
+      ],
+      "prompt": "Use case: stylized-concept. Create a refined but restrained 2D game character equipment redesign concept sheet, landscape 3:2, high resolution. A new concept illustration derived from the reference shapes, not a game screenshot.\nInput images 1, 2, 3 show ORIGINAL SHAPE references: Neon Impact's Anubis-like faceless mask, its lean hovering humanoid body and its five separate teardrop-ring satellite back ornaments. Preserve that identity. Image 4 is palette and finish reference only, midnight navy and champagne gold with luminous cyan, not its UI.\nDesign: an elegant slim astral Anubis avatar, angular jackal-inspired faceplate with two swept pointed ears, dark midnight-blue enamel and obsidian panels, restrained satin champagne-gold seams, ivory eye slits and cyan suspended light core. Keep the original athletic, tapering, levitating silhouette, two arms and two legs; avoid historical costume, fabric robes or human face. Five teardrop-shaped floating lens discs orbit behind the shoulders in an open fan, each with a cyan ring and thin gold casing. These five detachable units should clearly derive from the original ring-wing sprite; do not replace them with feather wings. Arms lightly extended, feet tapered, modular head/body/back understandable.\nComposition: one dominant fully visible assembled front / slight three-quarter figure on the left two thirds. On the right, three clear equipment detail studies vertically: mask, chest segment, the complete five-disc back assembly. Generous space, no cropped appendages. Small cyan and coral-red material accent chips along lower right indicate faction glow options with no lettering.\nStyle: premium stylized 2D/2.5D game concept art, crisp silhouette and broad shapes, soft painted surface facets, restrained edge glow. A tasteful detail upgrade of the simple neon original, not photorealism, not generic ornate fantasy armor.\nBackdrop: calm midnight-navy board with almost invisible fine circular gold guide lines; no scene, no temple or scenery.\nText: none at all. No logo, caption, watermark, decorative alphabets, hieroglyphics, UI or invented lore."
+    },
+    {
+      "key": "beetle",
+      "file": "03-beetle-elytra.png",
+      "title": "甲蟲與鞘翼",
+      "references": [
+        "unity/Assets/Resources/Images/Role/Head/beetle.png",
+        "unity/Assets/Resources/Images/Role/Body/beetle.png",
+        "unity/Assets/Resources/Images/Role/Back/beetle.png",
+        "design/gameplay-audit/lobby-0.png"
+      ],
+      "prompt": "Use case: stylized-concept. Create a refined but restrained 2D game equipment redesign concept sheet, landscape 3:2, high resolution. This is a new concept illustration based on original reference silhouettes.\nImages 1, 2, 3 are the original Neon Impact beetle head, beetle segmented armor body, and paired shell-wing back attachment. Preserve the distinctive forked V-shaped horn, angular faceless mask, broad shoulder shell, tapering segmented waist and paired beetle wing covers. Image 4 provides the current midnight-navy/champagne-gold UI palette, not text or layout to copy.\nDesign: a compact powerful floating beetle-armored avatar with TWO arms and TWO legs, shell-like indigo enamel plates with subtle blue iridescence, narrow champagne-gold bevels and small cool cyan luminous joints. The back has two wide smooth curved elytra, parted to reveal one thin geometric translucent blue flight panel under each. One short forked forward/upward crest grows from the helmet, consistent with the original, no excessive spikes, no animal flesh or many insect legs. Hands and feet simple tapered armored shapes. Preserve the clean segmented cartoon silhouette but add convincing layered plate construction and elegant edge highlights. No weapon.\nComposition: a dominant fully visible assembled frontal / slight three-quarter character on the left two thirds; on the right three vertically spaced isolated component studies: forked helmet, chest/shoulder shell, opened paired elytra. Every part is readable, generous breathing room, all within frame. Two small material accents at lower right in cyan and coral red to communicate possible faction glow colors, no words.\nStyle: premium stylized 2D/2.5D game concept art, broad simple forms and controlled painterly shading, clean contours and restrained bloom. Not photorealistic, not dense AAA greebles, not chibi comedy. Dark calm midnight navy backdrop with very faint fine gold circular guide geometry.\nAbsolutely no text, labels, logo, watermark, typography, invented lore or UI controls."
+    },
+    {
+      "key": "stargod",
+      "file": "04-star-forger.png",
+      "title": "造星神",
+      "references": [
+        "Arts/輸出元件/stargod.png",
+        "Arts/輸出元件/stargodblade.png",
+        "design/gameplay-audit/lobby-0.png"
+      ],
+      "prompt": "Use case: stylized-concept. Redesign the ORIGINAL STAR-FORGING GOD from Neon Impact into a more refined concept art sheet matching the current midnight-navy and champagne-gold visual style. Landscape 3:2, high resolution.\nReference 1 is the exact original boss identity: a tall floating faceless cosmic humanoid, EXACTLY SIX ARMS in THREE clearly separated symmetrical pairs, a whirling solar-disc head with a six-point star center, a large four-point star crossing the chest, tapering joined feet, thin circular halo, and FOUR floating star-blades near the hips and legs. Reference 2 shows original blade/chest-star geometry. Reference 3 is the current palette/UI reference only. Keep this recognizable silhouette and all those key motifs.\nRefinement: dark midnight-blue sculptural body plates, champagne-gold beveled outlines, pearl highlights, subtle internal starlight. The head is a separate floating whorled sun medallion, never a human face or helmet. Top two arms bend up around the head; middle two arms extend sideways with ring-like finger gestures; lowest two arms angle down with open palms. Three arm pairs attach cleanly to the torso, no extra arms. Four-point chest crystal has a luminous warm coral-red center and pale-gold rays; soft restrained hostile red light within joints and blade cores distinguishes this boss from cyan player concepts without painting the whole body red. Four hovering long diamond/star blades arranged around the lower body. Long slender floating legs ending in tapered points. A single thin incomplete golden orbit frames the silhouette.\nComposition: one large complete front-facing boss on the left two thirds, all hands and feet in frame. On the right three carefully spaced detail studies of solar head, four-point chest core, and one floating blade. Empty breathing room. A much more polished rendering of the original 2D graphic design, not a generic armored deity. Crisp stylized silhouette, soft 2.5D painted faceting, controlled luminous accents, moderately detailed elegant surfaces; no dense baroque filigree or photographic realism.\nBackdrop: dark midnight-navy plain presentation board, extremely faint fine gold construction circles, no temple, scenery, UI or unrelated effects.\nNo lettering, no text, no title, no logo, no watermark. Do not invent a new name or story."
+    }
+  ]
+}
