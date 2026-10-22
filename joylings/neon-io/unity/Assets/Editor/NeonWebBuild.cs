@@ -69,7 +69,7 @@ namespace Neon.Editor
             PlayerSettings.WebGL.initialMemorySize = 256;
             PlayerSettings.WebGL.maximumMemorySize = 1024;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-            PlayerSettings.bundleVersion = "1.1.1-web";
+            PlayerSettings.bundleVersion = "1.1.2-web";
             // Preserve the original indices for Windows/Web Fusion interoperability.
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             string output = Path.GetFullPath("../Builds/WebGL");

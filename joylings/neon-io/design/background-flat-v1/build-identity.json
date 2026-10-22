@@ -1,0 +1,50 @@
+{
+  "version": "1.1.2-web",
+  "previous_initial_bytes": 31836526,
+  "initial_bytes": 31998204,
+  "delta_bytes": 161678,
+  "protected_published_files": 516,
+  "protected_unchanged": true,
+  "files": {
+    ".nojekyll": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "index.html": {
+      "bytes": 2870,
+      "sha256": "b385c16c6ade586a4cf904dbcea3e2f837cbd0ea6e26622fb47f6d9f9069535e"
+    },
+    "Build/1dfa96767444e64a5b01683eba41c6c3.data.unityweb": {
+      "bytes": 20148363,
+      "sha256": "bdb6e6481675b70e6fb7ba520d77b9a9c65022d3815d14f45d1f8330073b5bc1"
+    },
+    "Build/47e207321ee8b53ca8d777842a0af06b.loader.js": {
+      "bytes": 47866,
+      "sha256": "bc9511bca51f840b0ac90b169fc81026efaeeeb0affa02b465d43f9be502dce4"
+    },
+    "Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb": {
+      "bytes": 11706093,
+      "sha256": "bbc52a1427e196296ce1ec5cfc309a7ae48e0e23a8c7e9a684f6bab3049f8eef"
+    },
+    "Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb": {
+      "bytes": 93012,
+      "sha256": "7c2f404baf7bc3fccc1010cb9f694a1e3a4904fe58972b36edba623d31e57064"
+    },
+    "ThirdPartyLicenses/cinzel-OFL.txt": {
+      "bytes": 4383,
+      "sha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83"
+    },
+    "ThirdPartyLicenses/notosanstc-OFL.txt": {
+      "bytes": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    "ThirdPartyLicenses/Fusion/build_info.txt": {
+      "bytes": 81,
+      "sha256": "3e1e51eccbb68ad65f74acb8f55539c9507871fce0c16f50130933addc40fb24"
+    },
+    "ThirdPartyLicenses/Fusion/Plugins/NanoSockets/libnanosockets_LICENSE.txt": {
+      "bytes": 1117,
+      "sha256": "0311691f6fbb26ca5edda313175ce59e39986bf86a7fd2d0ad131537cf212a27"
+    }
+  }
+}

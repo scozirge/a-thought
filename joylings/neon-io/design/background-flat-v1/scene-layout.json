@@ -1,0 +1,123 @@
+[
+  {
+    "asset": "cloud5-1.png",
+    "id": "454481188",
+    "name": "Cloud (2)",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 517, y: 538}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "cloud5-1.png",
+    "id": "536537526",
+    "name": "Cloud (4)",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: -1721, y: -846}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "hand-1.png",
+    "id": "650883400",
+    "name": "hand (4)",
+    "parent": "{fileID: 43761280}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 265, y: 620}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 0.8, y: 0.8, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "hand-4.png",
+    "id": "730568410",
+    "name": "hand (1)",
+    "parent": "{fileID: 43761280}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 265, y: -179}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 0.8, y: 0.8, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "cloud1-1.png",
+    "id": "1270048872",
+    "name": "Cloud",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: -468, y: 0}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "cloud5-2.png",
+    "id": "1361949007",
+    "name": "Cloud (5)",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: -724, y: -846}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "hand-2.png",
+    "id": "1433543528",
+    "name": "hand (3)",
+    "parent": "{fileID: 43761280}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 1055, y: 609}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 0.8, y: 0.8, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "hand-5.png",
+    "id": "1686794944",
+    "name": "hand",
+    "parent": "{fileID: 43761280}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 1062, y: -179}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 0.8, y: 0.8, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "hand-3.png",
+    "id": "2084950463",
+    "name": "hand (2)",
+    "parent": "{fileID: 43761280}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: -533, y: -179}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 0.8, y: 0.8, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "cloud1-2.png",
+    "id": "2090812574",
+    "name": "Cloud (1)",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 529, y: 0}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  },
+  {
+    "asset": "cloud5-2.png",
+    "id": "2104668229",
+    "name": "Cloud (3)",
+    "parent": "{fileID: 1611834691}",
+    "position": "{x: 0, y: 0, z: 0}",
+    "anchored": "{x: 1514, y: 538}",
+    "size": "{x: 1000, y: 1000}",
+    "scale": "{x: 1, y: 1, z: 1}",
+    "color": "{r: 1, g: 1, b: 1, a: 1}"
+  }
+]

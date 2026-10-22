@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "version": "1.1.2-web",
+  "pagesCommit": "b0c395cad3bbcce25cbbc2874b9003197ca1064a",
+  "workflowRun": 39726608508,
+  "game": "https://scozirge.github.io/a-thought/neon-impact/",
+  "gallery": "https://scozirge.github.io/a-thought/neon-impact-design/background-v1/",
+  "checks": [
+    "All published game files match the tested local build",
+    "Public native asset ZIP is HTTP 200 and byte-identical",
+    "Public WebGL player started through the original intro and reached the lobby with 95 skills unlocked",
+    "Public gallery 1440x1000: all 16 images loaded, no horizontal overflow",
+    "Public gallery 390x844: all 16 images loaded, no horizontal overflow",
+    "Public gallery 320x740: all 16 images loaded, no horizontal overflow"
+  ],
+  "errors": [],
+  "publicLoadMilliseconds": 1951.5,
+  "workflowConclusion": "success"
+}

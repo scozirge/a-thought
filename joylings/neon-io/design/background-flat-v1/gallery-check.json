@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "images": 16,
+      "allLoaded": true,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "images": 16,
+      "allLoaded": true,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "images": 16,
+      "allLoaded": true,
+      "overflow": false,
+      "errors": []
+    }
+  ]
+}

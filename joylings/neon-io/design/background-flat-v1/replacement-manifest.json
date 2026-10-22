@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-22",
+  "version": "1.1.2-web",
+  "sourceCommit": "a3e6afc68c542f3555cfce2c84d5d41605f3167c",
+  "scope": "Only approved Star God and background cloud/hand textures. Original metadata, scenes, animation, gameplay and audio unchanged.",
+  "files": [
+    {
+      "path": "Resources/Images/Scene/hand-1.png",
+      "originalSha256": "09e99b5695bfc91a496e0be15150892f146b9f67549e38a93bf0e272f158b246",
+      "replacementSha256": "138f2c1ee01372eaa117da1361f0a22b721db3af68d8434218a5dd62a629cd64",
+      "metadataSha256": "85a3d87f54e437ae91ee67f14ae1087ca63d820d05ca3b0fad16b89e82dbc3ee",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "b48c166866fc39cfe9ed81eb6f050f7bd20ec2a8657880f989028700c9d6fa5b",
+      "master": "hand",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-2.png",
+      "originalSha256": "f42e50e2ef300c1dc51232b59faced63b4cfd91da0c97fc64f851c3f94188be3",
+      "replacementSha256": "3e42dc584c2c23bb0a54f81cdd931335bf01e0558e70a4712fafc4d910a3d6be",
+      "metadataSha256": "d7e5825f3c891ea2f8b39d2e1ee1f48971fe13e1b3a9440f33e84e6d58f70398",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "4514dcc39b0df9834cc38be45adb48325512d0cd184a661f956dcdb2e01e9b50",
+      "master": "hand",
+      "crop": [
+        2000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-3.png",
+      "originalSha256": "cc433007d1273b4a4af610552369cb35b45891a7db2e87d250df460e5c5fffa4",
+      "replacementSha256": "315a34e31dc0f6b2a41a3bb7befd3986c3bd3cb698ec5d9e4a944967e8db90ba",
+      "metadataSha256": "30eb7196df2303239834c1176cca6b7e1bd7a8d88d00e07114e7b839e18d547d",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "960a586151a96103eafd754b454b5cb5f326057f37892959612e3103c9c82449",
+      "master": "hand",
+      "crop": [
+        0,
+        1000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-4.png",
+      "originalSha256": "64717929f32cc28160f5a2d3d3a8e541a0ade89047112140698758dc54ea18c3",
+      "replacementSha256": "a5556339eda4f361f53ae280e20dcfac459cd302558c7c4f455f604317943500",
+      "metadataSha256": "bbd931cd2449ae99976b6d4c41bebe054036cc6883bd9d2b94096b36f4ee6361",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "65f9a0797e146a1f703ef07b2f8f1a399f0a568733e1ff07e116c7cd729d1b1d",
+      "master": "hand",
+      "crop": [
+        1000,
+        1000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-5.png",
+      "originalSha256": "038b1959ec958bfa5acd1a6ec8089c886034ea4778f16b81d2eb08f0ae84ef60",
+      "replacementSha256": "6dfaab03e3b07cc7a278aa1d2bb840e4f9e91b6f41ead00bdb0e8247fbba9b69",
+      "metadataSha256": "6d3806a3bd310634e733593bb6f101ad212384dbd8da222220a1148ab921a768",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "b53fb9e795d570795de1212e0c13d06c3d6f33c7a6e01c82d24283e0ef7224be",
+      "master": "hand",
+      "crop": [
+        2000,
+        1000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-6.png",
+      "originalSha256": "df3cc44c3a56e594b4cacdb04e2ab3d46cff97b1d77768d6105ca046b2f3b97b",
+      "replacementSha256": "3a1339159afd5b7f99ff93cfbadecb6c6d29022e95f514d36cfa436d67b0caef",
+      "metadataSha256": "95a3c6179ff66ce08ab0d67cc4199c81a8273281bfb107df252fe3cc38e9bfcc",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "a873b4158b999a422bd835f52ec60a749f7cf7a8924a1c191a9019ac4a0f095f",
+      "master": "hand",
+      "crop": [
+        0,
+        2000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-7.png",
+      "originalSha256": "a23d8fa103422e80f942ad1361e255a8140c721ea780267033c6874c46691aff",
+      "replacementSha256": "7af991d3f1a679d996e7c61aac1612350b0d5fc3ae54074559311d58f9de85b9",
+      "metadataSha256": "5aa07c65a3a2c25b32acdcdfbacb4d85e816e6662b45dd5d61c47687f31b9375",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "7e8ae5227b154f9fefd5d89c4bd91f0649936d02c4dd6c6571c44fd61d9897f0",
+      "master": "hand",
+      "crop": [
+        1000,
+        2000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-8.png",
+      "originalSha256": "9be21745e437bf2dccc55abcf458d55025dce2de1a45d31405a9c19533d718e4",
+      "replacementSha256": "96e5343a42f548aa4785ccb21e69860835bb3e3edd9d6580fa44ac5535cdff10",
+      "metadataSha256": "62b821a4cd4f34e677a4aaf88780d5ca6880ee038fd476980066658903274134",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "5ef0b26e60e3a69d0c0f1a2e042d5a18809adda0e5a52547d5ca94f98e7a6e15",
+      "master": "hand",
+      "crop": [
+        2000,
+        2000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/hand-9.png",
+      "originalSha256": "250b12fcf51f0b360eb07d077f0f0d0114efa77c3292f6d60f0025c18507721d",
+      "replacementSha256": "e5f11df0f5f6949357201f7c1ed607f0338ed0fcd5f9d5c050eaa7ee81265319",
+      "metadataSha256": "9edec44d51797f1032e430afcc3c26b7ae6d7883068bb4eabab8299cfd48e774",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "4b7496c9630e1a922b0096039e9066ed0e07d042d0b73d1e567967fd3113437f",
+      "master": "hand",
+      "crop": [
+        1000,
+        3000,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud1-1.png",
+      "originalSha256": "bb388caa9678d9de69da5cd00fcb7f324aa5e7f89712e2199b194326d897908e",
+      "replacementSha256": "c84c123b1d5c923cead8a1458cd0a23f5448917b36cad68211698156e6993008",
+      "metadataSha256": "8fb679d1aea06f0f6c3ce92f1f3a486281856d49c6a9ba567ddc50519faff16b",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "444b9a865bc25d6c2511990db87c6a8d922e68db3336832983cf608308e7a4be",
+      "master": "cloud1",
+      "crop": [
+        0,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud1-2.png",
+      "originalSha256": "d122a7a7cb52f05143c29e29352e55493f44f06e5c361cc95aecee55898b2f1f",
+      "replacementSha256": "71a53f1a725e8191ed334a0f31c72379db30772471567545280765811c83dee2",
+      "metadataSha256": "ae5c2627e87277e266ce8c13bdf030801349a2c952f75e68f201f6e5fa19861a",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "e7a2d33278fb83a4c2a94a555a1f96ea8f70a6370bbec827391b29a85e3ba843",
+      "master": "cloud1",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud2-1.png",
+      "originalSha256": "307cd511e8ab9a2bd3ad4c7f45106a3b8544545922f9bd4cc79ec62cb0a4acb3",
+      "replacementSha256": "9ee232c6ab5ce41d0ce5182bad25b853fead91a55f2c8f60c423587a19d913b0",
+      "metadataSha256": "9f33b6a0329ddd77f01a374e171a2ea765314899c07d2e6b786d6792efdfcc53",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "bcba04df185e65faac29e05de540a585467686fc78f3288072a6498ab5188e46",
+      "master": "cloud2",
+      "crop": [
+        0,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud2-2.png",
+      "originalSha256": "c01978c87dc7663e7790dac8e8d6ae0efd0134249cea687a0ce896623d7d284f",
+      "replacementSha256": "534c011df3851aff2b81cabb7808807a1fbb3545b27a640adcb2fcb91a0f01d4",
+      "metadataSha256": "3c48da7b1ef6392da887f5dd58bd1b4137e542f49675aacd83287c6848d84312",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "9de23b4b71becedfd60194e358c44fc41ed62e7ca3a3405f0610f878c1a05d7a",
+      "master": "cloud2",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud3-1.png",
+      "originalSha256": "883e49c93ddda6f1e0bef8cb01dc8fd037d5ae99d3670c809ae9ad2e56fc69c2",
+      "replacementSha256": "91c7be5a4d9f80dac78cefe1d472ec7a467b208b29673a31d123247e6b1975d7",
+      "metadataSha256": "9d80645cd69dd393be74493e1c2782e4c2942e29656bd9e37104d6fdd6a90986",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "89236fcd51cd7bb80d1bbdf047f1c3e58909792c92a33a7c922e45b550295036",
+      "master": "cloud3",
+      "crop": [
+        0,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud3-2.png",
+      "originalSha256": "e10d221f10648067bf2560954602ae3151cdf67a22417b9ee28cf1454a7684ac",
+      "replacementSha256": "8b518b25f23aad2936ef5e08c676422e472dadb0087dbbaa564f21ca0fe2f326",
+      "metadataSha256": "b5d48c9dc8edbd3e08ec10292786bb0647e32309cabca7ad6f0b7d1ffc1ddd69",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "0beec3c0ed9bda4f698c4d86c92ec6d8e12f61291ff90c64dfd628d62f16100b",
+      "master": "cloud3",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud4-1.png",
+      "originalSha256": "fafb418d62d72ae27047eaab2f52d8bf065d4438807df5507986ce2d3dd0faa0",
+      "replacementSha256": "4209e877f70a84c75469dc64f145317c16c6ab3368377580cfb28d08e448ca2a",
+      "metadataSha256": "d45dfa27db603ea5aadbab14f482569dba5595487039e4a73a082e358700f891",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "194d4d435ae0ce97bb5e2728464d1a07c6129348bae614ddd7ed0b1451628930",
+      "master": "cloud4",
+      "crop": [
+        0,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud4-2.png",
+      "originalSha256": "54fdab83e0ae04cf25af8c22747733338f7adecdaf859dd52eb31973491e8e26",
+      "replacementSha256": "4cfb1241905cb0ce8f60a249235a3626d3c87bd122eefb2a98e9d696b10e51d2",
+      "metadataSha256": "5dce9a0779c8f20bac8bd2c2ac42c3de14f1ab51e7eef5a0a6bc2aef7b26eba7",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "5465538f43c8b1391a2b846b43f06a7b26309e29a6e097782d6b77162315c703",
+      "master": "cloud4",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud5-1.png",
+      "originalSha256": "9b2aacf51896b00fc6891c2d284badb83a3df1abf8b5d78ae5cb143bc927f697",
+      "replacementSha256": "8e9c24e3a8ea8b771b756b8092f6ae77a962b915dff2595e57ba556be36e7332",
+      "metadataSha256": "d1e95436a3167749852b6f7ca68aee9f915291d0e711c7b85902f833dfec95e3",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "3908238f980bc35f21c1c1537df395cd93a022db09182f81c2e71417c0b884b0",
+      "master": "cloud5",
+      "crop": [
+        0,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Scene/cloud5-2.png",
+      "originalSha256": "b3e655c475e2c204a114c1937d9d8b78f6dc74d14d6062fc0d597f43d84bc63f",
+      "replacementSha256": "9b968885e99d0425e63cf16d9ad8237cdb103927bf85644ad68e9f123709807b",
+      "metadataSha256": "6a1a97338c1bf12a59925d60d1bfbec564371ff824264946e8e1b56e991f010b",
+      "width": 1000,
+      "height": 1000,
+      "alphaUnchanged": true,
+      "alphaSha256": "47361bd1e73b9f0df36dcc9dfcbf22741042d5fa4845b1233297796b3ab78326",
+      "master": "cloud5",
+      "crop": [
+        1000,
+        0,
+        1000,
+        1000
+      ]
+    },
+    {
+      "path": "Resources/Images/Role/god.psb",
+      "originalSha256": "2c6c2afb033c44068cd0b55134e4eea215d20b569f045c09bc1737dd4b11db93",
+      "replacementSha256": "6232ced5805af9484bb7aa1a5bc3dfd9afbac65fd1668fcef9369c05e47ae540",
+      "metadataSha256": "9a6394e27dab51afda25caab300a5d97d34fd9a3457c6c86225108fc8d5800ff",
+      "width": 1000,
+      "height": 1000,
+      "layerAlphaUnchanged": true,
+      "layers": 9,
+      "visibleSprites": 8,
+      "approvedCandidate": "character-flat-v2"
+    }
+  ]
+}

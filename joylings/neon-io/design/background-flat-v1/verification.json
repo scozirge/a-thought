@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "version": "1.1.2-web",
+  "unity": "6000.3.11f1",
+  "scope": "Native asset contract checks, actual Unity WebGL build, and two real Chrome clients served locally using live Photon. Not an exhaustive gameplay or device compatibility audit.",
+  "static": {
+    "nativeAssets": 20,
+    "backgroundTiles": 19,
+    "backgroundAlphaUnchanged": true,
+    "metadataUnchanged": true,
+    "godLayers": 9,
+    "godVisibleSprites": 8,
+    "godLayerAlphaUnchanged": true,
+    "protectedFiles": 711,
+    "protectedUnchanged": true,
+    "sourceIntegrity": {
+      "passed": true,
+      "original_media_animation_shader_files": 470,
+      "approved_flat_art_replacements": 20,
+      "original_prefabs": 548,
+      "features": 95,
+      "failures": []
+    }
+  },
+  "unityBuild": {
+    "success": true,
+    "textures": 327,
+    "audioClips": 94,
+    "reportedBytes": 31998204
+  },
+  "runtime": {
+    "browsers": 2,
+    "viewports": [
+      [
+        1280,
+        800
+      ],
+      [
+        1024,
+        768
+      ]
+    ],
+    "region": "asia",
+    "peerCounts": [
+      2,
+      2
+    ],
+    "errors": [],
+    "introAudioRms": 0.008847250597770959,
+    "checks": [
+      "peer 0: original intro reached; 95 features owned on fresh profile",
+      "peer 1: original intro reached; 95 features owned on fresh profile",
+      "Equipped formerly paid head skill 11 without charging stars",
+      "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+      "Two real browser clients joined the same Photon room",
+      "Both peers remained connected beyond the connection timeout"
+    ],
+    "screenshotsVisuallyInspected": [
+      "intro.png",
+      "lobby.png",
+      "battle.png"
+    ]
+  },
+  "godRigImportBaseline": "../flat-v2/unity-verification.json",
+  "windowsPackage": "unchanged 1.1.1-fusion; Unity source updated"
+}
