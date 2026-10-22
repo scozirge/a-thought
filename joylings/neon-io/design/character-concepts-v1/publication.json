@@ -1,0 +1,168 @@
+{
+  "verified_at_utc": "2026-10-22T04:10:43.254912+00:00",
+  "public_url": "https://scozirge.github.io/a-thought/neon-impact-design/",
+  "anonymous_access": true,
+  "index_http_status": 200,
+  "pages_commit": "4c0ec47ea8e8dab5fce502f33ad0c26fad5c7a15",
+  "workflow_url": "https://github.com/scozirge/a-thought/actions/runs/39720538821",
+  "workflow_conclusion": "success",
+  "files": [
+    {
+      "file": "assets/01-knight-wings.png",
+      "status": 200,
+      "bytes": 2117259,
+      "sha256": "5eefa43db6f582199dbfbd0ef2ca1d75d876381b5b4d1da37707fb323141b703",
+      "matches_local": true
+    },
+    {
+      "file": "assets/02-anubis-discs.png",
+      "status": 200,
+      "bytes": 1951949,
+      "sha256": "f924263bf7451c389ebf004c60a8769c56cd111de7c8ab00e86f917fef4cc2b2",
+      "matches_local": true
+    },
+    {
+      "file": "assets/03-beetle-elytra.png",
+      "status": 200,
+      "bytes": 2194202,
+      "sha256": "b261ee53bd3a4a073e441447e831d6ee5fb36d77f8d123f4c0da387f8da2e7e1",
+      "matches_local": true
+    },
+    {
+      "file": "assets/04-star-forger.png",
+      "status": 200,
+      "bytes": 1942942,
+      "sha256": "e363eb6f40e94e79ba6e564582a8d6e9be05721e309a97262e171eef88aee050",
+      "matches_local": true
+    },
+    {
+      "file": "neon-impact-concepts-v1.zip",
+      "status": 200,
+      "bytes": 7724319,
+      "sha256": "a4e4d685f35f2f7e962a3ba1c8cb995edb823608708b7c0600e73c4bfb5281cc",
+      "matches_local": true
+    }
+  ],
+  "local_browser_checks": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "images": 15,
+      "dialogNavigation": true,
+      "responsive": true,
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "images": 15,
+      "dialogNavigation": true,
+      "responsive": true,
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "images": 15,
+      "dialogNavigation": true,
+      "responsive": true,
+      "errors": []
+    }
+  ],
+  "public_browser_checks": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "images": 15,
+      "dialogNavigation": true,
+      "responsive": true,
+      "errors": []
+    }
+  ],
+  "game_preservation": {
+    "previous_pages_commit": "a1a567e35f8a216f074a396a5f9a77d05f504a94",
+    "existing_game_unchanged": true,
+    "game_files": [
+      {
+        "file": ".nojekyll",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "Build/177c73d11756ceef1a6b88cdd4c4e5d8.framework.js.unityweb",
+        "sha256": "a57228d9449d7f6636b9fedd42c4eec81359a59497c01b9e91153bac8b450ce9",
+        "bytes": 92921
+      },
+      {
+        "file": "Build/47e207321ee8b53ca8d777842a0af06b.loader.js",
+        "sha256": "bc9511bca51f840b0ac90b169fc81026efaeeeb0affa02b465d43f9be502dce4",
+        "bytes": 47866
+      },
+      {
+        "file": "Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb",
+        "sha256": "bbc52a1427e196296ce1ec5cfc309a7ae48e0e23a8c7e9a684f6bab3049f8eef",
+        "bytes": 11706093
+      },
+      {
+        "file": "Build/5c7fd561903909d7132335c2a6a8809c.wasm.unityweb",
+        "sha256": "1082c5deb661776ca9f11dcf47a31bc08b7ffba4da138decc0f39b395d5a03c6",
+        "bytes": 11695023
+      },
+      {
+        "file": "Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb",
+        "sha256": "7c2f404baf7bc3fccc1010cb9f694a1e3a4904fe58972b36edba623d31e57064",
+        "bytes": 93012
+      },
+      {
+        "file": "Build/deb6a196756ae771aca91c6808646be1.loader.js",
+        "sha256": "26c06c48e3ffc2b2253694950905e737372632aa7d69ef5d13e0db7b8ca90d0a",
+        "bytes": 47866
+      },
+      {
+        "file": "Build/df6796b4cf4c73435755eca4709d9d89.data.unityweb",
+        "sha256": "2943327a18907270796b98da589ec6fd6646565e6dfc39ceb2233e5db8769768",
+        "bytes": 19986341
+      },
+      {
+        "file": "Build/e2607fef15fc447bbed494e014d1be51.data.unityweb",
+        "sha256": "7adad27bb08cc646057109e9227a359de9b0b001183e5824f68cb0e4a71e9877",
+        "bytes": 19986685
+      },
+      {
+        "file": "index.html",
+        "sha256": "c1cc7093871bfe532166522156143a8183844759483816da1574dca7c805baae",
+        "bytes": 2870
+      },
+      {
+        "file": "ThirdPartyLicenses/cinzel-OFL.txt",
+        "sha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83",
+        "bytes": 4383
+      },
+      {
+        "file": "ThirdPartyLicenses/Fusion/build_info.txt",
+        "sha256": "3e1e51eccbb68ad65f74acb8f55539c9507871fce0c16f50130933addc40fb24",
+        "bytes": 81
+      },
+      {
+        "file": "ThirdPartyLicenses/Fusion/Plugins/NanoSockets/libnanosockets_LICENSE.txt",
+        "sha256": "0311691f6fbb26ca5edda313175ce59e39986bf86a7fd2d0ad131537cf212a27",
+        "bytes": 1117
+      },
+      {
+        "file": "ThirdPartyLicenses/notosanstc-OFL.txt",
+        "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9",
+        "bytes": 4388
+      }
+    ],
+    "new_files": 20
+  },
+  "game_source_modified": false
+}

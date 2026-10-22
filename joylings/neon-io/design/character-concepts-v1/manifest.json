@@ -1,0 +1,62 @@
+{
+  "version": "v1",
+  "generator": "built-in image_gen",
+  "scope": "concept art only; no game files replaced",
+  "designs": [
+    {
+      "id": "knight",
+      "name": "騎士與羽翼",
+      "file": "assets/01-knight-wings.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2117259,
+      "sha256": "5eefa43db6f582199dbfbd0ef2ca1d75d876381b5b4d1da37707fb323141b703",
+      "references": [
+        "references/knight-1.png",
+        "references/knight-2.png",
+        "references/knight-3.png"
+      ]
+    },
+    {
+      "id": "anubis",
+      "name": "阿努比斯與星盤",
+      "file": "assets/02-anubis-discs.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1951949,
+      "sha256": "f924263bf7451c389ebf004c60a8769c56cd111de7c8ab00e86f917fef4cc2b2",
+      "references": [
+        "references/anubis-1.png",
+        "references/anubis-2.png",
+        "references/anubis-3.png"
+      ]
+    },
+    {
+      "id": "beetle",
+      "name": "甲蟲與鞘翼",
+      "file": "assets/03-beetle-elytra.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2194202,
+      "sha256": "b261ee53bd3a4a073e441447e831d6ee5fb36d77f8d123f4c0da387f8da2e7e1",
+      "references": [
+        "references/beetle-1.png",
+        "references/beetle-2.png",
+        "references/beetle-3.png"
+      ]
+    },
+    {
+      "id": "stargod",
+      "name": "造星神",
+      "file": "assets/04-star-forger.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1942942,
+      "sha256": "e363eb6f40e94e79ba6e564582a8d6e9be05721e309a97262e171eef88aee050",
+      "references": [
+        "references/stargod-1.png",
+        "references/stargod-2.png"
+      ]
+    }
+  ]
+}
