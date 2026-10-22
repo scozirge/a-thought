@@ -95,6 +95,9 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
   await gestures.touch(page,'touchCancel',[]);await ready(()=>!neonState.elements.some(e=>e.name==='Tooltip'));
   report.checks.push('Mobile skill description appears only while pressed and disappears on release or touchcancel');
   await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+40,y}]);await ready(()=>neonState.stickX>.7);await resize(390,844);await ready(()=>!neonState.stickDragging);await gestures.touch(page,'touchEnd',[]);await resize(844,390);assert.equal((await state()).stickX,0);assert.ok((await state()).connected);
+  // Rotation does not pause the live match; finish any resulting death flow
+  // before interacting with the arena controls behind the result overlay.
+  await ensureAlive();await ready(()=>neonState.playerAlive&&!neonState.inputBlocked);
   await click('Leave arena');await ready(()=>neonState.controls.some(c=>c.name==='Cancel dialog'));assert.ok((await state()).inputBlocked);await checkLayout('leave-confirm');await click('Cancel dialog');
   await ready(()=>!neonState.controls.some(c=>c.name==='Cancel dialog'));
   // Online combat continues while the confirmation is open. A death can open

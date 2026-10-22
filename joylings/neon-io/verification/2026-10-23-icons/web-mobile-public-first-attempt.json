@@ -1,0 +1,331 @@
+{
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "passed": false,
+  "physicalDevice": false,
+  "inputOnly": true,
+  "checks": [
+    "Focused deployed-player input smoke; the full menu matrix is covered separately by the release verification",
+    "Real CDP touch drag moves the actual Photon player right",
+    "Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction",
+    "Mobile skill description appears only while pressed and disappears on release or touchcancel"
+  ],
+  "layouts": [
+    {
+      "label": "lobby-notch",
+      "view": "lobby",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 302.3999938964844,
+          "h": 345,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 93.86666107177734,
+          "y": 16,
+          "w": 146.66665649414062,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 40.79999923706055,
+          "y": 311.79998779296875,
+          "w": 26.39999771118164,
+          "h": 26.400001525878906,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 303,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 198.39999389648438,
+          "y": 307,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "movement": {
+    "start": {
+      "x": -332.8132019042969,
+      "y": -92.82591247558594
+    },
+    "end": {
+      "x": -316.8141784667969,
+      "y": -93.00367736816406
+    },
+    "velocity": {
+      "x": 399.9754638671875,
+      "y": -4.44417142868042
+    }
+  },
+  "failure": "page.waitForFunction: Timeout 120000ms exceeded.\n    at ready (E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:15:35)\n    at E:\\Projects\\a-thought\\joylings\\neon-io\\tests\\web-joystick.cjs:98:36",
+  "lastState": {
+    "scene": "Battle",
+    "room": "neon-web-check-stick-mvjw9rv0-0",
+    "region": "asia",
+    "error": "",
+    "features": 95,
+    "owned": 95,
+    "peers": 1,
+    "stars": 0,
+    "level": 1,
+    "experience": 0,
+    "experienceRequired": 1,
+    "started": true,
+    "connected": true,
+    "controls": [
+      {
+        "name": "Leave arena",
+        "text": "",
+        "type": "Button",
+        "x": 1552,
+        "y": 24,
+        "w": 88,
+        "h": 88,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1688,
+        "clipH": 780,
+        "enabled": true,
+        "scroll": false
+      },
+      {
+        "name": "Return to lobby",
+        "text": "返回大廳",
+        "type": "Button",
+        "x": 856,
+        "y": 532,
+        "w": 756,
+        "h": 88,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1688,
+        "clipH": 780,
+        "enabled": true,
+        "scroll": false
+      },
+      {
+        "name": "Play again",
+        "text": "再次出戰",
+        "type": "Button",
+        "x": 76,
+        "y": 532,
+        "w": 756,
+        "h": 88,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1688,
+        "clipH": 780,
+        "enabled": true,
+        "scroll": false
+      }
+    ],
+    "loadout": [
+      5,
+      103,
+      213,
+      102,
+      17
+    ],
+    "screenWidth": 1688,
+    "screenHeight": 780,
+    "cssWidth": 844,
+    "cssHeight": 390,
+    "touch": true,
+    "legacyPopupVisible": false,
+    "guidePage": "",
+    "guideText": "",
+    "view": "result",
+    "inputBlocked": true,
+    "stickDragging": false,
+    "playerAlive": false,
+    "stickX": 0,
+    "stickY": 0,
+    "playerX": 93.89451599121094,
+    "playerY": 673.1661987304688,
+    "velocityX": 0,
+    "velocityY": 0,
+    "elements": [
+      {
+        "name": "Touch joystick",
+        "x": 64,
+        "y": 492,
+        "w": 232,
+        "h": 232,
+        "opacity": 0.14000000059604645,
+        "borderOpacity": 0.3199999928474426,
+        "fontSize": 0
+      },
+      {
+        "name": "Thumb",
+        "x": 132,
+        "y": 560,
+        "w": 96,
+        "h": 96,
+        "opacity": 0.41999998688697815,
+        "borderOpacity": 0.5199999809265137,
+        "fontSize": 0
+      },
+      {
+        "name": "Exit icon",
+        "x": 1574,
+        "y": 46,
+        "w": 44,
+        "h": 44,
+        "opacity": 1,
+        "borderOpacity": 0.6499999761581421,
+        "fontSize": 0
+      },
+      {
+        "name": "Vitality",
+        "x": 64,
+        "y": 372,
+        "w": 288,
+        "h": 96,
+        "opacity": 0,
+        "borderOpacity": 0,
+        "fontSize": 0
+      },
+      {
+        "name": "Health",
+        "x": 64,
+        "y": 372,
+        "w": 288,
+        "h": 40,
+        "opacity": 0.8799999952316284,
+        "borderOpacity": 0,
+        "fontSize": 13
+      },
+      {
+        "name": "Level",
+        "x": 64,
+        "y": 428,
+        "w": 84,
+        "h": 40,
+        "opacity": 0.8999999761581421,
+        "borderOpacity": 0,
+        "fontSize": 12
+      },
+      {
+        "name": "Experience",
+        "x": 164,
+        "y": 438,
+        "w": 188,
+        "h": 20,
+        "opacity": 0,
+        "borderOpacity": 0,
+        "fontSize": 0
+      },
+      {
+        "name": "Skill dock",
+        "x": 1304,
+        "y": 596,
+        "w": 336,
+        "h": 128,
+        "opacity": 0,
+        "borderOpacity": 0,
+        "fontSize": 0
+      },
+      {
+        "name": "Slot",
+        "x": 1308,
+        "y": 600,
+        "w": 88,
+        "h": 88,
+        "opacity": 0.10000000149011612,
+        "borderOpacity": 0.20000000298023224,
+        "fontSize": 0
+      },
+      {
+        "name": "Slot",
+        "x": 1428,
+        "y": 600,
+        "w": 88,
+        "h": 88,
+        "opacity": 0.10000000149011612,
+        "borderOpacity": 0.20000000298023224,
+        "fontSize": 0
+      },
+      {
+        "name": "Slot",
+        "x": 1548,
+        "y": 600,
+        "w": 88,
+        "h": 88,
+        "opacity": 0.10000000149011612,
+        "borderOpacity": 0.20000000298023224,
+        "fontSize": 0
+      },
+      {
+        "name": "Leaderboard",
+        "x": 1328,
+        "y": 120,
+        "w": 312,
+        "h": 248,
+        "opacity": 0.2199999988079071,
+        "borderOpacity": 0,
+        "fontSize": 0
+      },
+      {
+        "name": "Combat feed",
+        "x": 24,
+        "y": 24,
+        "w": 416,
+        "h": 168,
+        "opacity": 1,
+        "borderOpacity": 0,
+        "fontSize": 12
+      },
+      {
+        "name": "Result panel",
+        "x": 44,
+        "y": 136,
+        "w": 1600,
+        "h": 508,
+        "opacity": 1,
+        "borderOpacity": 0.44999998807907104,
+        "fontSize": 0
+      }
+    ],
+    "gameplayAudit": {
+      "passed": false,
+      "allocationCounterAvailable": false,
+      "failure": "",
+      "checks": [],
+      "legacySearchBytes": 0,
+      "registrySearchBytes": 0,
+      "legacySearchMilliseconds": 0,
+      "registrySearchMilliseconds": 0
+    },
+    "audioContextState": "running"
+  }
+}

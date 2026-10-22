@@ -13,7 +13,12 @@
 - `web-desktop.json`：兩個真實瀏覽器進入同一 Photon 房間，滑鼠實際位移、技能懸停、配裝保存及超過 43 秒持續連線通過，執行錯誤為 0。起終點保存在 `mouseMovement`。
 - `protected-content.json`、`original-intro.json`：比對上一版受保護檔案及原始雙星開場資料，均無變更。
 - `build-identity.json`：首載 32,889,113 bytes，比 1.1.6 增加 19,694 bytes；722 個其他發布檔案雜湊不變，保留舊內容雜湊檔供快取頁面載入。
+- `deployment.json`：Pages 提交 `3aa6d5f6c814484a61a3ed9a4435ed786a01a414` 的建置、部署與狀態回報均成功。
+- `public-files.json`：公開 HTML 與四個 Unity 載入檔皆回應 200，檔案大小及 SHA-256 全部符合 1.1.7 正式包。
+- `web-mobile-public.json`：公開網址完成 11 組手機操作與版面檢查，實際搖桿、旋轉、離場確認、安全區及結算排版通過，執行錯誤為 0。
 
 手機瀏覽器測試為裝置模擬，不代表 iPhone／Android 實機通過；結算排版使用既有零獎勵測試 fixture，並非完整對戰結算驗證。
 
 `web-desktop-first-attempt.json` 與 `web-desktop-first-state.json` 保留首次桌機測試：兩個玩家已進入相同 Photon 房間，但固定等待 700 ms 後的位移斷言失敗；最後快照仍存活、連線且輸入未被介面阻擋。工具改成最多等待 8 秒觀察實際向右位移並記錄起終點，仍要求超過同一個距離門檻，沒有略過移動檢查或修改遊戲輸入。
+
+`web-mobile-public-first-attempt.json` 保留首次公開網址測試：實際搖桿移動、多指、取消及技能說明已通過，但角色在旋轉後已死亡，結算遮罩擋住離場點擊，測試等待確認窗逾時。最後快照是 `view=result`、`playerAlive=false`、`inputBlocked=true`、`connected=true`。工具在旋轉後先完成既有結算／再出戰流程，確認存活且可操作才測試離場；未修改遊戲或略過確認窗檢查。
