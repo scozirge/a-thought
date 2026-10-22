@@ -76,6 +76,13 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||('web-brow
   report.checks.push('Two real browser clients joined the same Photon room');
   await pages[0].waitForTimeout(1500);
   for(const [i,page] of pages.entries())await page.screenshot({path:path.join(output,'battle-live-'+i+'.png')});
+  if(process.env.NEON_AUDIT==='1'){
+   await pages[0].evaluate(()=>window.unityInstance.SendMessage('NeonWebBridge','RunGameplayAudit'));
+   await ready(pages[0],()=>!!neonState.gameplayAudit?.checks?.length);
+   report.gameplayAudit=(await state(pages[0])).gameplayAudit;
+   assert.equal(report.gameplayAudit.passed,true,report.gameplayAudit.failure);
+   report.checks.push('Gameplay regressions executed inside the WebGL player');
+  }
   // Remain connected beyond the old 40-second startup token deadline.
   await pages[0].waitForTimeout(43000);
   for(const [i,page] of pages.entries()) {const s=await state(page);assert.ok(s.connected&&s.peers>=2);assert.equal(s.error,'');await page.screenshot({path:path.join(output,'battle-'+i+'.png')});}

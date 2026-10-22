@@ -1,4 +1,4 @@
-param([string]$RunName = ('astral-ui-' + (Get-Date -Format 'yyyyMMdd-HHmmss')))
+﻿param([string]$RunName = ('astral-ui-' + (Get-Date -Format 'yyyyMMdd-HHmmss')))
 $ErrorActionPreference = 'Stop'
 $neonRoot = Split-Path -Parent $PSScriptRoot
 $neonRun = Join-Path $neonRoot ('logs/' + $RunName)

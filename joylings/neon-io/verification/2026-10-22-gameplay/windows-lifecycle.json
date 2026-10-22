@@ -1,0 +1,298 @@
+﻿{
+    "passed":  true,
+    "room":  "neon-lifecycle-4448366b1f4c",
+    "lateJoin":  true,
+    "masterTransfer":  true,
+    "joinAfterTransfer":  true,
+    "reports":  [
+                    {
+                        "passed":  true,
+                        "connected":  true,
+                        "contentReady":  true,
+                        "reconnected":  false,
+                        "scene":  "Battle",
+                        "failure":  "",
+                        "name":  "Lifecycle-A",
+                        "errors":  0,
+                        "features":  95,
+                        "testedSkills":  0,
+                        "maxPeers":  2,
+                        "maxActors":  2,
+                        "maxAi":  5,
+                        "cancelledJoins":  0,
+                        "expectedCancellationMessages":  0,
+                        "elapsed":  39.94207763671875,
+                        "averageFrameMs":  19.741172790527345,
+                        "actors":  [
+                                       {
+                                           "name":  "Lifecycle-A",
+                                           "id":  525313,
+                                           "health":  1000,
+                                           "level":  1,
+                                           "skills":  0,
+                                           "local":  true,
+                                           "alive":  true,
+                                           "position":  {
+                                                            "x":  -136.4940643310547,
+                                                            "y":  -1043.7569580078125,
+                                                            "z":  0.0
+                                                        }
+                                       },
+                                       {
+                                           "name":  "Lifecycle-B",
+                                           "id":  1049601,
+                                           "health":  550,
+                                           "level":  1,
+                                           "skills":  0,
+                                           "local":  false,
+                                           "alive":  true,
+                                           "position":  {
+                                                            "x":  -2750.2138671875,
+                                                            "y":  -902.7905883789063,
+                                                            "z":  0.0
+                                                        }
+                                       }
+                                   ],
+                        "errorMessages":  [
+
+                                          ],
+                        "combat":  {
+                                       "passed":  false,
+                                       "damage":  false,
+                                       "lifeSteal":  false,
+                                       "immortal":  false,
+                                       "death":  false,
+                                       "singleKill":  false,
+                                       "challengeResult":  false,
+                                       "lateDeathDidNotFlipResult":  false,
+                                       "damagedHealth":  0,
+                                       "attackerAfterHealing":  0,
+                                       "protectedHealth":  0,
+                                       "finalVictimHealth":  0,
+                                       "kills":  0,
+                                       "observedPlayers":  0,
+                                       "failure":  ""
+                                   },
+                        "loot":  {
+                                     "passed":  false,
+                                     "count":  0,
+                                     "totalValue":  0,
+                                     "failure":  ""
+                                 },
+                        "palette":  {
+                                        "passed":  false,
+                                        "failure":  "",
+                                        "renderers":  0,
+                                        "particlePrefabs":  0,
+                                        "skills":  0,
+                                        "reflections":  0,
+                                        "actors":  [
+
+                                                   ],
+                                        "originalShaders":  [
+
+                                                            ]
+                                    },
+                        "gameplayAudit":  {
+                                              "passed":  false,
+                                              "allocationCounterAvailable":  false,
+                                              "failure":  "",
+                                              "checks":  [
+
+                                                         ],
+                                              "legacySearchBytes":  0,
+                                              "registrySearchBytes":  0,
+                                              "legacySearchMilliseconds":  0.0,
+                                              "registrySearchMilliseconds":  0.0
+                                          }
+                    },
+                    {
+                        "passed":  true,
+                        "connected":  true,
+                        "contentReady":  true,
+                        "reconnected":  false,
+                        "scene":  "Battle",
+                        "failure":  "",
+                        "name":  "Lifecycle-B",
+                        "errors":  0,
+                        "features":  95,
+                        "testedSkills":  0,
+                        "maxPeers":  2,
+                        "maxActors":  2,
+                        "maxAi":  7,
+                        "cancelledJoins":  0,
+                        "expectedCancellationMessages":  0,
+                        "elapsed":  96.55238342285156,
+                        "averageFrameMs":  22.03321075439453,
+                        "actors":  [
+                                       {
+                                           "name":  "Lifecycle-B",
+                                           "id":  1049601,
+                                           "health":  850,
+                                           "level":  1,
+                                           "skills":  0,
+                                           "local":  true,
+                                           "alive":  true,
+                                           "position":  {
+                                                            "x":  -1809.805908203125,
+                                                            "y":  -1346.328369140625,
+                                                            "z":  0.0
+                                                        }
+                                       }
+                                   ],
+                        "errorMessages":  [
+
+                                          ],
+                        "combat":  {
+                                       "passed":  false,
+                                       "damage":  false,
+                                       "lifeSteal":  false,
+                                       "immortal":  false,
+                                       "death":  false,
+                                       "singleKill":  false,
+                                       "challengeResult":  false,
+                                       "lateDeathDidNotFlipResult":  false,
+                                       "damagedHealth":  0,
+                                       "attackerAfterHealing":  0,
+                                       "protectedHealth":  0,
+                                       "finalVictimHealth":  0,
+                                       "kills":  0,
+                                       "observedPlayers":  0,
+                                       "failure":  ""
+                                   },
+                        "loot":  {
+                                     "passed":  false,
+                                     "count":  0,
+                                     "totalValue":  0,
+                                     "failure":  ""
+                                 },
+                        "palette":  {
+                                        "passed":  false,
+                                        "failure":  "",
+                                        "renderers":  0,
+                                        "particlePrefabs":  0,
+                                        "skills":  0,
+                                        "reflections":  0,
+                                        "actors":  [
+
+                                                   ],
+                                        "originalShaders":  [
+
+                                                            ]
+                                    },
+                        "gameplayAudit":  {
+                                              "passed":  false,
+                                              "allocationCounterAvailable":  false,
+                                              "failure":  "",
+                                              "checks":  [
+
+                                                         ],
+                                              "legacySearchBytes":  0,
+                                              "registrySearchBytes":  0,
+                                              "legacySearchMilliseconds":  0.0,
+                                              "registrySearchMilliseconds":  0.0
+                                          }
+                    },
+                    {
+                        "passed":  true,
+                        "connected":  true,
+                        "contentReady":  true,
+                        "reconnected":  false,
+                        "scene":  "Battle",
+                        "failure":  "",
+                        "name":  "Lifecycle-C",
+                        "errors":  0,
+                        "features":  95,
+                        "testedSkills":  0,
+                        "maxPeers":  2,
+                        "maxActors":  2,
+                        "maxAi":  6,
+                        "cancelledJoins":  0,
+                        "expectedCancellationMessages":  0,
+                        "elapsed":  37.877803802490237,
+                        "averageFrameMs":  25.224658966064454,
+                        "actors":  [
+                                       {
+                                           "name":  "Lifecycle-C",
+                                           "id":  1573889,
+                                           "health":  1000,
+                                           "level":  1,
+                                           "skills":  0,
+                                           "local":  true,
+                                           "alive":  true,
+                                           "position":  {
+                                                            "x":  258.896240234375,
+                                                            "y":  -1657.39404296875,
+                                                            "z":  0.0
+                                                        }
+                                       },
+                                       {
+                                           "name":  "Lifecycle-B",
+                                           "id":  1049601,
+                                           "health":  925,
+                                           "level":  1,
+                                           "skills":  0,
+                                           "local":  false,
+                                           "alive":  true,
+                                           "position":  {
+                                                            "x":  630.6395874023438,
+                                                            "y":  -1028.63232421875,
+                                                            "z":  0.0
+                                                        }
+                                       }
+                                   ],
+                        "errorMessages":  [
+
+                                          ],
+                        "combat":  {
+                                       "passed":  false,
+                                       "damage":  false,
+                                       "lifeSteal":  false,
+                                       "immortal":  false,
+                                       "death":  false,
+                                       "singleKill":  false,
+                                       "challengeResult":  false,
+                                       "lateDeathDidNotFlipResult":  false,
+                                       "damagedHealth":  0,
+                                       "attackerAfterHealing":  0,
+                                       "protectedHealth":  0,
+                                       "finalVictimHealth":  0,
+                                       "kills":  0,
+                                       "observedPlayers":  0,
+                                       "failure":  ""
+                                   },
+                        "loot":  {
+                                     "passed":  false,
+                                     "count":  0,
+                                     "totalValue":  0,
+                                     "failure":  ""
+                                 },
+                        "palette":  {
+                                        "passed":  false,
+                                        "failure":  "",
+                                        "renderers":  0,
+                                        "particlePrefabs":  0,
+                                        "skills":  0,
+                                        "reflections":  0,
+                                        "actors":  [
+
+                                                   ],
+                                        "originalShaders":  [
+
+                                                            ]
+                                    },
+                        "gameplayAudit":  {
+                                              "passed":  false,
+                                              "allocationCounterAvailable":  false,
+                                              "failure":  "",
+                                              "checks":  [
+
+                                                         ],
+                                              "legacySearchBytes":  0,
+                                              "registrySearchBytes":  0,
+                                              "legacySearchMilliseconds":  0.0,
+                                              "registrySearchMilliseconds":  0.0
+                                          }
+                    }
+                ]
+}

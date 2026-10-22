@@ -1,0 +1,135 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證9",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 10,
+    "maxActors": 10,
+    "maxAi": 2,
+    "cancelledJoins": 0,
+    "expectedCancellationMessages": 0,
+    "elapsed": 57.62118148803711,
+    "averageFrameMs": 18.018646240234376,
+    "actors": [
+        {
+            "name": "驗證3",
+            "id": 3671041,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -450.8421325683594,
+                "y": -1788.3411865234375,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證6",
+            "id": 3146753,
+            "health": 650,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -2109.0126953125,
+                "y": -1567.2879638671875,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證8",
+            "id": 5243905,
+            "health": 478,
+            "level": 2,
+            "skills": 1,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -3019.65966796875,
+                "y": -599.0612182617188,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證9",
+            "id": 4719617,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -595.9052734375,
+                "y": -579.0718994140625,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證5",
+            "id": 4195329,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -1312.2547607421875,
+                "y": -1096.6519775390625,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": false,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 0.0,
+        "registrySearchMilliseconds": 0.0
+    }
+}

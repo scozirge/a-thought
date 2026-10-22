@@ -197,6 +197,9 @@ namespace Starbro.NeonIO
 
         #region MonoBehaviour Func
 
+        public override void OnEnable() { base.OnEnable(); CombatRegistry.Add(this); }
+        public override void OnDisable() { CombatRegistry.Remove(this); base.OnDisable(); }
+
         protected virtual void Awake()
         {
             // Fusion assigns authority in Spawned, after Unity Awake.

@@ -1,4 +1,4 @@
-param([ValidateRange(15,60)][int]$MasterSeconds = 25)
+﻿param([ValidateRange(15,60)][int]$MasterSeconds = 25)
 $ErrorActionPreference = 'Stop'
 $neonRoot = Split-Path -Parent $PSScriptRoot
 $neonExe = Join-Path $neonRoot 'Builds/Windows/NeonImpact.exe'

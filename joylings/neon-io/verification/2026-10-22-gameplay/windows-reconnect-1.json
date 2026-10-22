@@ -1,0 +1,93 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": true,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證2",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 2,
+    "maxActors": 2,
+    "maxAi": 5,
+    "cancelledJoins": 0,
+    "expectedCancellationMessages": 0,
+    "elapsed": 28.849157333374025,
+    "averageFrameMs": 30.95421028137207,
+    "actors": [
+        {
+            "name": "驗證1",
+            "id": 1049601,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -579.5260620117188,
+                "y": -572.080322265625,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證2",
+            "id": 525313,
+            "health": 650,
+            "level": 1,
+            "skills": 0,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -2153.80810546875,
+                "y": -1529.16552734375,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": false,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 0.0,
+        "registrySearchMilliseconds": 0.0
+    }
+}

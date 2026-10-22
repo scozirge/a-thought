@@ -1,0 +1,98 @@
+{
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "passed": true,
+  "errors": [],
+  "loads": [
+    {
+      "milliseconds": 3199,
+      "resources": [
+        {
+          "file": "47e207321ee8b53ca8d777842a0af06b.loader.js",
+          "transfer": 17012,
+          "encoded": 16712
+        },
+        {
+          "file": "7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb",
+          "transfer": 93312,
+          "encoded": 93012
+        },
+        {
+          "file": "4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb",
+          "transfer": 11706393,
+          "encoded": 11706093
+        },
+        {
+          "file": "e2607fef15fc447bbed494e014d1be51.data.unityweb",
+          "transfer": 19986985,
+          "encoded": 19986685
+        }
+      ]
+    },
+    {
+      "milliseconds": 1891.7000000476837,
+      "resources": [
+        {
+          "file": "47e207321ee8b53ca8d777842a0af06b.loader.js",
+          "transfer": 17012,
+          "encoded": 16712
+        },
+        {
+          "file": "7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb",
+          "transfer": 93312,
+          "encoded": 93012
+        },
+        {
+          "file": "4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb",
+          "transfer": 11706393,
+          "encoded": 11706093
+        },
+        {
+          "file": "e2607fef15fc447bbed494e014d1be51.data.unityweb",
+          "transfer": 19986985,
+          "encoded": 19986685
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "peer 0: original intro reached; 95 features owned on fresh profile",
+    "peer 1: original intro reached; 95 features owned on fresh profile",
+    "Equipped formerly paid head skill 11 without charging stars",
+    "Reloading an existing browser profile preserves loadout and all 95 unlocked skills",
+    "Two real browser clients joined the same Photon room",
+    "Gameplay regressions executed inside the WebGL player",
+    "Both peers remained connected beyond the connection timeout"
+  ],
+  "sockets": [
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1218.exitgames.com",
+    "ns.photonengine.io",
+    "gcsing1089.exitgames.com",
+    "gcsing1218.exitgames.com"
+  ],
+  "introAudioRms": 0.0066829832931938225,
+  "room": "neon-web-check-mvixxjoe-0",
+  "region": "asia",
+  "peerCounts": [
+    2,
+    2
+  ],
+  "gameplayAudit": {
+    "passed": true,
+    "allocationCounterAvailable": false,
+    "failure": "",
+    "checks": [
+      "Cooldown boundaries and periodic damage under slow/fast frames",
+      "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+      "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+      "Main-thread connection timeout while paused; connected sessions excluded",
+      "Live-target registry, disable/re-enable, homing retarget and 1000-query allocation comparison",
+      "Music pool selection, volume restoration and duplicate loop key"
+    ],
+    "legacySearchBytes": 0,
+    "registrySearchBytes": 0,
+    "legacySearchMilliseconds": 1.3,
+    "registrySearchMilliseconds": 2.1
+  }
+}

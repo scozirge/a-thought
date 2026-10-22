@@ -15,6 +15,12 @@ namespace Neon.Networking
         [DllImport("__Internal")] static extern void NeonWebState(string json);
         bool started, diagnostics; float next;
         public static string ValidationRoom { get; private set; }
+        Neon.Validation.NeonGameplayAudit.Result audit;
+        public void RunGameplayAudit()
+        {
+            if (diagnostics && started && SceneManager.GetActiveScene().name == "Battle")
+                audit = Neon.Validation.NeonGameplayAudit.Run();
+        }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Boot()
         {
@@ -53,6 +59,7 @@ namespace Neon.Networking
             public string scene, room, region, error; public int features, owned, peers, stars;
             public bool started, connected; public Control[] controls;
             public int[] loadout;
+            public Neon.Validation.NeonGameplayAudit.Result gameplayAudit;
         }
         void Update()
         {
@@ -60,7 +67,7 @@ namespace Neon.Networking
             if (!diagnostics || Time.unscaledTime < next) return;
             next = Time.unscaledTime + .5f;
             var state = new State { scene=SceneManager.GetActiveScene().name, started=started,
-                connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length,
+                connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length, gameplayAudit=audit,
                 room=PhotonNetwork.InRoom ? PhotonNetwork.Runner.SessionInfo.Name : "", error=PhotonNetwork.LastError,
                 region=PhotonNetwork.CloudRegion,
                 features=GameDictionary.FeatureDic?.Count ?? 0,

@@ -85,18 +85,19 @@ namespace Starbro.NeonIO
         float DestructMargin_Left;
         float DestructMargin_Right;
         protected Role Attacker;
-        protected List<MyTimer> ReadyToTriggerTargetTimers;//針對每個腳色可以觸發傷害的CD
         protected MyTimer ReadyToTriggerTimer;//技能本身可以觸發傷害的CD
         List<GameObject> LocalParticleObjs;
         protected bool CanTrigger = true;
-        protected Dictionary<string, bool> ReadyToDamageTargets;
+        readonly HitCooldowns hitCooldowns = new HitCooldowns();
         protected bool AttackerPhotonViewIsMine = false;
         protected float RemainLag;//網路delay時間超過等待施法後仍剩餘的delay秒數
         public void OnDisable()
         {
+            if (this is ShootAmmo shot) CombatRegistry.Remove(shot);
         }
         public void OnEnable()
         {
+            if (this is ShootAmmo shot) CombatRegistry.Add(shot);
             if (SpawnSound)
                 AudioPlayer.PlaySound(SpawnSound);
         }
@@ -139,8 +140,7 @@ namespace Starbro.NeonIO
         Animation ani;
         public virtual void Init(Dictionary<string, object> _dic)
         {
-            ReadyToDamageTargets = new Dictionary<string, bool>();
-            ReadyToTriggerTargetTimers = new List<MyTimer>();
+            hitCooldowns.Clear();
             CanTrigger = true;
             if (TriggerCD > 0)
             {
@@ -253,34 +253,9 @@ namespace Starbro.NeonIO
                 if (role != null && role.IsAlive) TriggerTarget(role, transform.position);
             }
         }
-        protected void ReadyToTriggerTargets(object _key)
+        protected bool CheckReadyToTriggerTarget(GameObject target)
         {
-            string key = (string)_key;
-            if (ReadyToDamageTargets.ContainsKey(key))
-            {
-                ReadyToDamageTargets[key] = true;
-            }
-        }
-        protected bool CheckReadyToTriggerTarget(GameObject _obj)
-        {
-            string id = _obj.GetInstanceID().ToString();
-            if (ReadyToDamageTargets.ContainsKey(id))
-            {
-                if (ReadyToDamageTargets[id])
-                {
-                    ReadyToDamageTargets[id] = false;
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-            {
-                if (TriggerTargetCD > 0)
-                    ReadyToTriggerTargetTimers.Add(new MyTimer(TriggerTargetCD, ReadyToTriggerTargets, true, true, id));
-                ReadyToDamageTargets.Add(id, false);
-                return true;
-            }
+            return hitCooldowns.TryHit(target, Time.timeAsDouble, TriggerTargetCD);
         }
         protected bool CheckReadyToTrigger()
         {
@@ -370,10 +345,6 @@ namespace Starbro.NeonIO
             LifeTimerFunc();
             if (ReadyToTriggerTimer != null)
                 ReadyToTriggerTimer.RunTimer();
-            for (int i = 0; i < ReadyToTriggerTargetTimers.Count; i++)
-            {
-                ReadyToTriggerTargetTimers[i].RunTimer();
-            }
         }
         public virtual void SelfDestroy()
         {

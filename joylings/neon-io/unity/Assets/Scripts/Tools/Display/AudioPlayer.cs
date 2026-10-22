@@ -83,6 +83,7 @@ namespace Scoz.Func
             {
                 return;
             }
+            if (_fadeTime <= 0 || LoopMusicDic[_key].volume <= 0) { Myself.StopLoopMusic(_key); return; }
             if (MusicFadeDic.ContainsKey(_key))
             {
                 Myself.StopCoroutine(MusicFadeDic[_key]);
@@ -99,6 +100,12 @@ namespace Scoz.Func
             {
                 Myself.StopLoopMusic(_key);
             }
+            if (_fadeTime <= 0)
+            {
+                var immediate = PlayLoopMusic_Static(_ac, _key);
+                if (immediate) immediate.volume = Mathf.Clamp01(_volume);
+                return;
+            }
             if (MusicFadeDic.ContainsKey(_key))
             {
                 Myself.StopCoroutine(MusicFadeDic[_key]);
@@ -111,32 +118,35 @@ namespace Scoz.Func
         {
             if (LoopMusicDic.ContainsKey(_key))
             {
-                float startVolume = LoopMusicDic[_key].volume;
-                while (LoopMusicDic.ContainsKey(_key) && LoopMusicDic[_key].volume > 0)
+                AudioSource source = LoopMusicDic[_key];
+                float startVolume = source.volume;
+                while (source && LoopMusicDic.TryGetValue(_key, out var current) && current == source && source.volume > 0)
                 {
-                    LoopMusicDic[_key].volume -= startVolume * Time.deltaTime / _fadeTime;
-                    if (LoopMusicDic[_key].volume <= 0)
+                    source.volume = Mathf.Max(0, source.volume - startVolume * Time.deltaTime / _fadeTime);
+                    if (source.volume <= 0)
                     {
-                        StopLoopMusic(_key);
+                        source.Stop(); source.loop = false; LoopMusicDic.Remove(_key);
                         break;
                     }
                     yield return null;
                 }
             }
+            MusicFadeDic.Remove(_key);
         }
         IEnumerator FadeIn(AudioClip _ac, string _key, float _fadeTime, float _volume)
         {
-            if (PlayLoopMusic_Static(_ac, _key) != null)
+            AudioSource source = PlayLoopMusic_Static(_ac, _key);
+            if (source)
             {
-                CurPlayMusic = LoopMusicDic[_key];
-                LoopMusicDic[_key].Play();
-                LoopMusicDic[_key].volume = 0f;
-                while (LoopMusicDic.ContainsKey(_key) && LoopMusicDic[_key].volume < _volume)
+                source.volume = 0f;
+                float target = Mathf.Clamp01(_volume);
+                while (source && LoopMusicDic.TryGetValue(_key, out var current) && current == source && source.volume < target)
                 {
-                    LoopMusicDic[_key].volume += Time.deltaTime / _fadeTime;
+                    source.volume = Mathf.Min(target, source.volume + Time.deltaTime / _fadeTime);
                     yield return null;
                 }
             }
+            MusicFadeDic.Remove(_key);
         }
         public static float GetMusicVolume()
         {
@@ -249,10 +259,11 @@ namespace Scoz.Func
 
             if (!IsInit)
                 InstantiateAudioManager();
-            if (GetApplicableSoundSource() == null)
+            if (GetApplicableMusicSource() == null)
             {
                 GetNewMusicSource();
             }
+            CurPlayMusic.volume = 1f;
             CurPlayMusic.loop = false;
             CurPlayMusic.clip = Resources.Load<AudioClip>(string.Format("Musics/{0}", _MusicName));
             CurPlayMusic.Play(0);
@@ -266,10 +277,11 @@ namespace Scoz.Func
             }
             if (!IsInit)
                 InstantiateAudioManager();
-            if (GetApplicableSoundSource() == null)
+            if (GetApplicableMusicSource() == null)
             {
                 GetNewMusicSource();
             }
+            CurPlayMusic.volume = 1f;
             CurPlayMusic.loop = false;
             CurPlayMusic.clip = _ac;
             CurPlayMusic.Play(0);
@@ -283,10 +295,11 @@ namespace Scoz.Func
             }
             if (!IsInit)
                 InstantiateAudioManager();
-            if (GetApplicableSoundSource() == null)
+            if (GetApplicableMusicSource() == null)
             {
                 GetNewMusicSource();
             }
+            CurPlayMusic.volume = 1f;
             CurPlayMusic.loop = false;
             CurPlayMusic.clip = _ac;
             CurPlayMusic.Play(0);
@@ -376,6 +389,7 @@ namespace Scoz.Func
             {
                 GetNewMusicSource();
             }
+            CurPlayMusic.volume = 1f;
             CurPlayMusic.clip = _ac;
             CurPlayMusic.loop = true;
             CurPlayMusic.Play();
@@ -385,7 +399,7 @@ namespace Scoz.Func
         public static AudioSource PlayLoopMusicAtSecond_Static(AudioClip _ac, string _key, float _second)
         {
             AudioSource myAS = PlayLoopMusic_Static(_ac, _key);
-            myAS.time = _second;
+            if (myAS) myAS.time = Mathf.Clamp(_second, 0, Mathf.Max(0, _ac.length - .001f));
             return myAS;
         }
         public static AudioSource PlayLoopMusic_Static(AudioClip _ac, string _key)
@@ -406,6 +420,7 @@ namespace Scoz.Func
             {
                 GetNewMusicSource();
             }
+            CurPlayMusic.volume = 1f;
             CurPlayMusic.clip = _ac;
             CurPlayMusic.loop = true;
             CurPlayMusic.Play();
@@ -421,6 +436,11 @@ namespace Scoz.Func
         }
         public void StopLoopMusic(string _key)
         {
+            if (MusicFadeDic.TryGetValue(_key, out var fade))
+            {
+                if (fade != null) StopCoroutine(fade);
+                MusicFadeDic.Remove(_key);
+            }
             if (LoopMusicDic.ContainsKey(_key))
             {
                 LoopMusicDic[_key].Stop();
@@ -432,20 +452,23 @@ namespace Scoz.Func
         }
         public static void StopAllMusic()
         {
-            List<string> keys = new List<string>(LoopMusicDic.Keys);
-            for (int i = 0; i < keys.Count; i++)
+            if (!IsInit) return;
+            foreach (var fade in MusicFadeDic.Values)
+                if (fade != null && Myself) Myself.StopCoroutine(fade);
+            MusicFadeDic.Clear();
+            foreach (var source in LoopMusicDic.Values)
             {
-                LoopMusicDic[keys[i]].Stop();
-                LoopMusicDic[keys[i]].loop = false;
+                if (!source) continue;
+                source.Stop(); source.loop = false;
             }
-            LoopMusicDic = new Dictionary<string, AudioSource>();
+            LoopMusicDic.Clear();
         }
         static AudioSource GetApplicableSoundSource()
         {
             CurPlaySound = null;
             for (int i = 0; i < SoundList.Count; i++)
             {
-                if (!SoundList[i].isPlaying)
+                if (!SoundList[i].loop && !SoundList[i].isPlaying)
                 {
                     CurPlaySound = SoundList[i];
                     return CurPlaySound;
@@ -465,7 +488,7 @@ namespace Scoz.Func
             CurPlayMusic = null;
             for (int i = 0; i < MusicList.Count; i++)
             {
-                if (!MusicList[i].isPlaying)
+                if (!MusicList[i].loop && !MusicList[i].isPlaying)
                 {
                     CurPlayMusic = MusicList[i];
                     return CurPlayMusic;

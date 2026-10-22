@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "path": "Scenes/Init.unity",
+      "sha256": "6625f4661ec5260158e86927dec26ccd2d1620a4e05a6b415e007ab3967676c2",
+      "matches_original": true
+    },
+    {
+      "path": "Resources/Animator/Logo/Logo.controller",
+      "sha256": "55ce7563d57186cd4e171a813fecb4342ac5895023f1063c023ca14e9e066705",
+      "matches_original": true
+    },
+    {
+      "path": "Resources/Animator/Logo/Logo.controller.meta",
+      "sha256": "461d17f756cb4c8b1b4a3439a4ac1c0864ae5318f891c8830184bf2737aca3d1",
+      "matches_original": true
+    },
+    {
+      "path": "Resources/Animator/Logo/play.anim",
+      "sha256": "054238dba239974d75adb718b3017deacdef050a087d48333ffe6f88138d7d67",
+      "matches_original": true
+    },
+    {
+      "path": "Resources/Animator/Logo/play.anim.meta",
+      "sha256": "fd5e8a0e7cc9954b14b1e89571baf26b6efa040c8e8afeef97af2eade9d055b9",
+      "matches_original": true
+    }
+  ]
+}

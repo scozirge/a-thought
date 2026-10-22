@@ -36,6 +36,11 @@ public static class NeonContentValidation
         CheckCorruptLoadouts();
         CheckBufferReplacement();
         CheckParticleGroupBounds();
+        var gameplay = new Neon.Validation.NeonGameplayAudit.Result();
+        Neon.Validation.NeonGameplayAudit.CheckTimersAndGeometry(gameplay);
+        Neon.Validation.NeonGameplayAudit.CheckHitCooldowns(gameplay);
+        gameplay.passed = true;
+        Debug.Log("NEON_GAMEPLAY_CHECKS_OK " + JsonUtility.ToJson(gameplay));
         Require(!MyPlayer.IsValidClamorKey("-1") && !MyPlayer.IsValidClamorKey("6")
             && !MyPlayer.IsValidClamorKey(null), "Invalid clamor keys were accepted");
         Debug.Log("NEON_CONTENT_VALIDATION_PASSED: 95 features, character sprites, original roles/scenes, corrupt saves, buffer replacement and particle bounds.");

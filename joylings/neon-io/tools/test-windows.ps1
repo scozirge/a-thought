@@ -1,4 +1,4 @@
-param([ValidateSet('Offline','Multiplayer','Combat','Challenge','ChallengeAI','ChallengeCombat','LootStress','Reconnect')][string]$Mode = 'Multiplayer', [int]$Seconds = 35, [switch]$Render, [switch]$Palette, [ValidateRange(2,10)][int]$Clients = 2)
+﻿param([ValidateSet('Offline','Multiplayer','Combat','Challenge','ChallengeAI','ChallengeCombat','LootStress','Reconnect')][string]$Mode = 'Multiplayer', [int]$Seconds = 35, [switch]$Render, [switch]$Palette, [switch]$Audit, [switch]$CancelCheck, [ValidateRange(2,10)][int]$Clients = 2)
 $ErrorActionPreference = 'Stop'
 $neonRoot = Split-Path -Parent $PSScriptRoot
 $neonExe = Join-Path $neonRoot 'Builds/Windows/NeonImpact.exe'
@@ -23,6 +23,8 @@ for ($index = 0; $index -lt $neonCount; $index++) {
   if ($Mode -eq 'Reconnect') { $neonArgs += '-neonReconnect' }
   if ($Mode -eq 'LootStress') { $neonArgs += '-neonLootStress' }
   if ($Palette) { $neonArgs += '-neonPalette' }
+  if ($Audit) { $neonArgs += '-neonAudit' }
+  if ($CancelCheck) { $neonArgs += '-neonCancelCheck' }
   $neonProcesses += Start-Process -FilePath $neonExe -ArgumentList $neonArgs -WindowStyle Hidden -PassThru
 }
 Write-Output "測試輸出：$neonRun"

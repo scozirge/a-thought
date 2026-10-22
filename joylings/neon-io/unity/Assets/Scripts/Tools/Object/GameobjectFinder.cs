@@ -9,6 +9,28 @@ namespace Scoz.Func
         public static GameObject SelfGameobject;
         public static GameObject FindClosestGameobjectWithTags(GameObject _self, params string[] _tags)
         {
+            bool roleTags = _tags.Length > 0;
+            for (int i = 0; i < _tags.Length; i++)
+                roleTags &= _tags[i] == "Player" || _tags[i] == "Opponent" || _tags[i] == "Neutral";
+            if (roleTags)
+            {
+                Role closestRole = null;
+                float closestDistance = float.PositiveInfinity;
+                Vector2 origin = _self.transform.position;
+                var roles = CombatRegistry.Roles;
+                for (int i = 0; i < roles.Count; i++)
+                {
+                    Role role = roles[i];
+                    if (!CombatRegistry.IsTarget(role) || role.gameObject == _self) continue;
+                    bool matches = false;
+                    for (int j = 0; j < _tags.Length; j++) matches |= role.CompareTag(_tags[j]);
+                    if (!matches) continue;
+                    float squared = ((Vector2)role.transform.position - origin).sqrMagnitude;
+                    if (squared >= closestDistance) continue;
+                    closestDistance = squared; closestRole = role;
+                }
+                return closestRole ? closestRole.gameObject : null;
+            }
             List<GameObject> goList = new List<GameObject>();
             for(int i=0;i< _tags.Length;i++)
             {
@@ -138,15 +160,17 @@ namespace Scoz.Func
         }
         public static Role FindClosestRole(GameObject _self)
         {
-            var targets = FindObjectsOfType<Role>();
+            var targets = CombatRegistry.Roles;
             Vector2 position = _self.transform.position;
             float distance = Mathf.Infinity;
             Role closestRole = null;
-            foreach (Role role in targets)
+            for (int i = 0; i < targets.Count; i++)
             {
+                Role role = targets[i];
+                if (!CombatRegistry.IsTarget(role)) continue;
                 if (role.gameObject.GetInstanceID() == _self.GetInstanceID())
                     continue;
-                float curDistance = Vector2.Distance(role.transform.position, position);
+                float curDistance = ((Vector2)role.transform.position - position).sqrMagnitude;
                 if (curDistance < distance)
                 {
                     closestRole = role;
@@ -157,15 +181,17 @@ namespace Scoz.Func
         }
         public static ShootAmmo FindClosestShootAmmo(GameObject _self)
         {
-            var targets = FindObjectsOfType<ShootAmmo>();
+            var targets = CombatRegistry.Projectiles;
             Vector2 position = _self.transform.position;
             float distance = Mathf.Infinity;
             ShootAmmo closestAmmor = null;
-            foreach (ShootAmmo ammo in targets)
+            for (int i = 0; i < targets.Count; i++)
             {
+                ShootAmmo ammo = targets[i];
+                if (!ammo || !ammo.isActiveAndEnabled) continue;
                 if (ammo.gameObject.GetInstanceID() == _self.GetInstanceID())
                     continue;
-                float curDistance = Vector2.Distance(ammo.transform.position, position);
+                float curDistance = ((Vector2)ammo.transform.position - position).sqrMagnitude;
                 if (curDistance < distance)
                 {
                     closestAmmor = ammo;

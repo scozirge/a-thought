@@ -1,0 +1,46 @@
+{
+  "game_url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "public_assets_match_local": true,
+  "assets": [
+    {
+      "path": "index.html",
+      "bytes": 2870,
+      "sha256": "c1cc7093871bfe532166522156143a8183844759483816da1574dca7c805baae",
+      "status": 200
+    },
+    {
+      "path": "Build/47e207321ee8b53ca8d777842a0af06b.loader.js",
+      "bytes": 47866,
+      "sha256": "bc9511bca51f840b0ac90b169fc81026efaeeeb0affa02b465d43f9be502dce4",
+      "status": 200
+    },
+    {
+      "path": "Build/4b5103dff4de8d8a32a7d01f0757623d.wasm.unityweb",
+      "bytes": 11706093,
+      "sha256": "bbc52a1427e196296ce1ec5cfc309a7ae48e0e23a8c7e9a684f6bab3049f8eef",
+      "status": 200
+    },
+    {
+      "path": "Build/7930b5c79f378d1e460fd5a68d72f698.framework.js.unityweb",
+      "bytes": 93012,
+      "sha256": "7c2f404baf7bc3fccc1010cb9f694a1e3a4904fe58972b36edba623d31e57064",
+      "status": 200
+    },
+    {
+      "path": "Build/e2607fef15fc447bbed494e014d1be51.data.unityweb",
+      "bytes": 19986685,
+      "sha256": "7adad27bb08cc646057109e9227a359de9b0b001183e5824f68cb0e4a71e9877",
+      "status": 200
+    }
+  ],
+  "deployment": {
+    "id": 39712987101,
+    "head_sha": "a1a567e35f8a216f074a396a5f9a77d05f504a94",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/scozirge/a-thought/actions/runs/39712987101"
+  },
+  "protected_files": 516,
+  "protected_unchanged": true,
+  "previous_version_assets_retained": true
+}

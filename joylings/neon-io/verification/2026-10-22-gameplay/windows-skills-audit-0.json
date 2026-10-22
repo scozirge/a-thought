@@ -1,0 +1,86 @@
+{
+    "passed": true,
+    "connected": false,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 95,
+    "maxPeers": 0,
+    "maxActors": 1,
+    "maxAi": 0,
+    "cancelledJoins": 0,
+    "expectedCancellationMessages": 0,
+    "elapsed": 26.512109756469728,
+    "averageFrameMs": 17.67038917541504,
+    "actors": [
+        {
+            "name": "GameDeveloper",
+            "id": -15360,
+            "health": 300,
+            "level": 1,
+            "skills": 3,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": -5052.72119140625,
+                "y": -2800.01513671875,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": true,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [
+            "Cooldown boundaries and periodic damage under slow/fast frames",
+            "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+            "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+            "Main-thread connection timeout while paused; connected sessions excluded",
+            "Live-target registry, disable/re-enable, homing retarget and 1000-query allocation comparison",
+            "Music pool selection, volume restoration and duplicate loop key"
+        ],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 1.0588,
+        "registrySearchMilliseconds": 0.5384
+    }
+}

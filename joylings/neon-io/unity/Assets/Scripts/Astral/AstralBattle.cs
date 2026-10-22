@@ -13,8 +13,10 @@ namespace Neon.Astral
         readonly HashSet<int> styledWorldText=new HashSet<int>();
         void StyleWorldLabels()
         {
-            foreach(var role in FindObjectsByType<Role>(FindObjectsSortMode.None))
+            var roles=CombatRegistry.Roles;
+            for(int i=0;i<roles.Count;i++)
             {
+                var role=roles[i];if(!role)continue;
                 if(!role.RoleCanvas)continue;
                 StyleWorldText(role.RoleCanvas.transform);
                 var health=Field<Image>(role,"HealthImage");if(health)health.color=role.MyForce==Force.Player?FactionVisuals.Friendly:FactionVisuals.Hostile;

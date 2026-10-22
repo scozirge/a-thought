@@ -81,21 +81,24 @@ namespace Scoz.Func
         }
         public void RunTimer()
         {
-            if (CircleTime == 0)
-                return;
-            if (!StartRunTimer)
-                return;
+            RunTimer(Time.deltaTime);
+        }
+        public void RunTimer(float deltaTime)
+        {
+            if (CircleTime <= 0 || !StartRunTimer || deltaTime < 0 || float.IsNaN(deltaTime) || float.IsInfinity(deltaTime)) return;
             RunTimeFunc?.Invoke();
-            if (CurTimer > 0)
-                CurTimer -= Time.deltaTime;
-            else
+            if (!StartRunTimer) return;
+            CurTimer -= deltaTime;
+            if (CurTimer <= 0.000001f)
             {
-                CurTimer = CircleTime;
+                // Keep the fractional remainder so frame rate does not lengthen
+                // every cooldown. Gameplay callbacks fire at most once per frame.
+                CurTimer = Loop ? CircleTime - Mathf.Repeat(Mathf.Max(0, -CurTimer), CircleTime) : CircleTime;
                 StartRunTimer = Loop;
                 if (TimeOutFunc != null)
                     TimeOutFunc();
                 else 
-                    TimeOutFuncWithKey(Obj);
+                    TimeOutFuncWithKey?.Invoke(Obj);
             }
         }
     }

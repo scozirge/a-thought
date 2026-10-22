@@ -129,6 +129,9 @@ namespace Starbro.NeonIO
         protected override void Update()
         {
             base.Update();
+            // Dead roles remain in the arena for respawn; their Unity object is
+            // still valid, so testing Target alone makes homing shots chase corpses.
+            if (Target && !CombatRegistry.IsTarget(Target)) Target = null;
             if (TraceFactor > 0 && Attacker != null)
             {
                 if (!TraceSelf)

@@ -22,17 +22,19 @@ namespace Neon.Validation
             public bool passed, connected, contentReady, reconnected;
             public string scene, failure, name;
             public int errors, features, testedSkills, maxPeers, maxActors, maxAi;
+            public int cancelledJoins, expectedCancellationMessages;
             public float elapsed, averageFrameMs;
             public Actor[] actors;
             public string[] errorMessages;
             public NeonCombatCheck.Result combat;
             public NeonLootCheck.Result loot;
             public Neon.Astral.NeonPaletteCheck.Result palette;
+            public NeonGameplayAudit.Result gameplayAudit;
         }
         readonly Report report = new Report();
         readonly List<string> errors = new List<string>();
         float start, frameSeconds;
-        int frames;
+        int frames, cancellationRequests;
         string reportPath;
         string savedName;
         bool hadName;
@@ -68,6 +70,21 @@ namespace Neon.Validation
             MyPlayer.SetName(report.name);
             MyPlayer.SetLanguage(Language.Chinese);
             PhotonLauncher.SelectGameType = Has("-neonChallenge") ? GameType.Challenge : GameType.InfinityWar;
+            if (Has("-neonCancelCheck") && !Has("-neonOffline"))
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    PhotonNetwork.JoinRandomRoom();
+                    yield return null;
+                    cancellationRequests++;
+                    PhotonNetwork.Disconnect();
+                    float deadline = Time.realtimeSinceStartup + 15;
+                    while (PhotonNetwork.IsDisconnecting && Time.realtimeSinceStartup < deadline) yield return null;
+                    if (PhotonNetwork.IsDisconnecting || PhotonNetwork.IsConnecting || PhotonNetwork.InRoom)
+                    { Finish("Cancelled join left a pending runner."); yield break; }
+                    report.cancelledJoins++;
+                }
+            }
             if (Has("-neonOffline")) SceneManager.LoadScene("Battle");
             else
             {
@@ -93,6 +110,11 @@ namespace Neon.Validation
                 yield return null;
             }
             if (!BattleManager.BM || !BattleManager.BM.MyPlayerRole) { Finish("Battle player did not spawn."); yield break; }
+            if (Has("-neonAudit"))
+            {
+                report.gameplayAudit = NeonGameplayAudit.Run();
+                if (!report.gameplayAudit.passed) { Finish(report.gameplayAudit.failure); yield break; }
+            }
             if (Has("-neonCombatCheck"))
             {
                 var check = gameObject.AddComponent<NeonCombatCheck>();
@@ -168,6 +190,14 @@ namespace Neon.Validation
         void Log(string message, string stack, LogType type)
         {
             if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+            // Fusion logs an intentional startup cancellation as an Error. Account for
+            // only the cancellations this explicit test requested; all other errors fail.
+            if (Has("-neonCancelCheck") && report.expectedCancellationMessages < cancellationRequests &&
+                message.Contains("StartGame Failed:") && message.Contains("ShutdownReason: OperationCanceled"))
+            {
+                report.expectedCancellationMessages++;
+                return;
+            }
             report.errors++;
             if (errors.Count < 25) errors.Add(message + "\n" + stack);
         }

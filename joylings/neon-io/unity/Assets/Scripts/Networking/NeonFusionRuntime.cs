@@ -30,6 +30,7 @@ namespace Neon.Networking
         int generation;
         int previousMaster;
         float joinStartedAt;
+        const float ConnectionTimeoutSeconds = 40f;
         bool joined;
         bool intentionalDisconnect;
         bool leavingRoom;
@@ -76,20 +77,24 @@ namespace Neon.Networking
             PhotonNetwork.LastError = "";
             int attempt = ++generation;
             joinStartedAt = UnityEngine.Time.realtimeSinceStartup;
-            connectionCancellation?.Dispose();
-            connectionCancellation = new CancellationTokenSource(TimeSpan.FromSeconds(40));
-            await shutdownTask;
-            if (attempt != generation || !this) return;
-            IsDisconnecting = false;
-            var runnerObject = new GameObject("Neon Fusion Runner");
-            DontDestroyOnLoad(runnerObject);
-            var runner = runnerObject.AddComponent<NetworkRunner>();
-            Runner = runner;
-            runner.AddCallbacks(this);
-            runner.ProvideInput = false;
-            var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
+            // Web has no managed Timer callbacks. Update drives this deadline on
+            // the Unity thread; each attempt owns its token until its finally block.
+            var cancellation = new CancellationTokenSource();
+            connectionCancellation = cancellation;
+            NetworkRunner runner = null;
             try
             {
+                await shutdownTask;
+                if (attempt != generation || !this) return;
+                cancellation.Token.ThrowIfCancellationRequested();
+                IsDisconnecting = false;
+                var runnerObject = new GameObject("Neon Fusion Runner");
+                DontDestroyOnLoad(runnerObject);
+                runner = runnerObject.AddComponent<NetworkRunner>();
+                Runner = runner;
+                runner.AddCallbacks(this);
+                runner.ProvideInput = false;
+                var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
                 var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
                 settings.AppVersion = "neon-io/binary-2/" + PhotonNetwork.GameVersion;
                 settings.FixedRegion = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion.ToLowerInvariant();
@@ -105,7 +110,7 @@ namespace Neon.Networking
                     SessionProperties = new Dictionary<string, SessionProperty> { { "mode", mode }, { "schema", 2 } },
                     SceneManager = sceneManager,
                     EnableClientSessionCreation = true,
-                    StartGameCancellationToken = connectionCancellation.Token,
+                    StartGameCancellationToken = cancellation.Token,
                     IsOpen = true,
                     IsVisible = string.IsNullOrEmpty(NeonWebBridge.ValidationRoom)
                 });
@@ -115,7 +120,7 @@ namespace Neon.Networking
                 // The default Fusion provider intentionally refuses synchronous spawns during this interval.
                 while (runner.SceneManager.IsBusy)
                 {
-                    connectionCancellation.Token.ThrowIfCancellationRequested();
+                    cancellation.Token.ThrowIfCancellationRequested();
                     if (!runner.IsRunning || attempt != generation) throw new OperationCanceledException();
                     await Task.Yield();
                 }
@@ -127,9 +132,7 @@ namespace Neon.Networking
                 LocalSession.Publish();
                 // Fusion retains this token for startup/shutdown. Its deadline belongs
                 // only to connection establishment, never to an already playable session.
-                connectionCancellation.CancelAfter(Timeout.Infinite);
-                connectionCancellation.Dispose();
-                connectionCancellation = null;
+                cancellation.Token.ThrowIfCancellationRequested();
                 previousMaster = runner.GetMasterClient().RawEncoded;
                 PhotonNetwork.Connected = true;
                 joined = true; IsConnecting = false;
@@ -149,11 +152,18 @@ namespace Neon.Networking
                 await shutdownTask;
                 if (attempt != generation || !this) return;
                 if (Runner == runner) Runner = null;
+                LocalSession = null;
+                views.Clear(); viewOwners.Clear(); retiredViews.Clear(); notifiedPlayers.Clear();
                 PhotonNetwork.ResetRoom();
                 IsConnecting = false; IsDisconnecting = false;
                 PhotonNetwork.Dispatch(x => x.OnDisconnected(DisconnectCause.Exception));
             }
-            finally { if (attempt == generation) IsConnecting = false; }
+            finally
+            {
+                if (ReferenceEquals(connectionCancellation, cancellation)) connectionCancellation = null;
+                cancellation.Dispose();
+                if (attempt == generation) IsConnecting = false;
+            }
         }
         static async Task DisposeRunner(NetworkRunner runner)
         {
@@ -181,6 +191,7 @@ namespace Neon.Networking
         }
         void Update()
         {
+            CheckConnectionDeadline(UnityEngine.Time.realtimeSinceStartup);
             if (!Runner || !Runner.IsRunning || !joined) return;
             int master = Runner.GetMasterClient().RawEncoded;
             if (master != previousMaster)
@@ -190,6 +201,18 @@ namespace Neon.Networking
                 Debug.Log("NEON_FUSION_MASTER_CHANGED actor=" + master + " local=" + Runner.IsSharedModeMasterClient + " entities=" + views.Count);
                 PhotonNetwork.Dispatch(x => x.OnMasterClientSwitched(PhotonNetwork.MasterClient));
             }
+        }
+        internal void CheckConnectionDeadline(float now)
+        {
+            if (IsConnecting && connectionCancellation != null && !connectionCancellation.IsCancellationRequested &&
+                now - joinStartedAt >= ConnectionTimeoutSeconds)
+                connectionCancellation.Cancel();
+        }
+        void OnDestroy()
+        {
+            ++generation;
+            connectionCancellation?.Cancel();
+            if (PhotonNetwork.Runtime == this) PhotonNetwork.Runtime = null;
         }
         public void LoadLevel(string sceneName)
         {

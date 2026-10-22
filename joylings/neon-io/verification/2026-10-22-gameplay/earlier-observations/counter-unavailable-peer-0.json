@@ -1,0 +1,66 @@
+{
+    "passed": false,
+    "connected": false,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "",
+    "failure": "System.InvalidOperationException: Target search allocation did not decrease.\r\n  at Neon.Validation.NeonGameplayAudit.CheckTargets (Neon.Validation.NeonGameplayAudit+Result result) [0x0037b] in <086b51c1235a433b82cdaf3bd72b2f67>:0 \r\n  at Neon.Validation.NeonGameplayAudit.Run () [0x00018] in <086b51c1235a433b82cdaf3bd72b2f67>:0 ",
+    "name": "撽?1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 0,
+    "maxActors": 0,
+    "maxAi": 0,
+    "elapsed": 9.143440246582032,
+    "averageFrameMs": 19.478242874145509,
+    "actors": [],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": false,
+        "failure": "System.InvalidOperationException: Target search allocation did not decrease.\r\n  at Neon.Validation.NeonGameplayAudit.CheckTargets (Neon.Validation.NeonGameplayAudit+Result result) [0x0037b] in <086b51c1235a433b82cdaf3bd72b2f67>:0 \r\n  at Neon.Validation.NeonGameplayAudit.Run () [0x00018] in <086b51c1235a433b82cdaf3bd72b2f67>:0 ",
+        "checks": [
+            "Cooldown boundaries and periodic damage under slow/fast frames",
+            "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+            "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+            "Main-thread connection timeout while paused; connected sessions excluded"
+        ],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 1.0048000000000002,
+        "registrySearchMilliseconds": 0.5207
+    }
+}

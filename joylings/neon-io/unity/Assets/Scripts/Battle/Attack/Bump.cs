@@ -21,23 +21,10 @@ namespace Starbro.NeonIO
         [SerializeField]
         protected float DamageInterval = 0.3f;
 
-        protected List<MyTimer> ReadyToDamageTimers;
-        protected Dictionary<string, bool> ReadyToDamageTargets;
-        protected Dictionary<string, MyTimer> ReadyToDamageTimerDic;
+        readonly HitCooldowns hitCooldowns = new HitCooldowns();
         void Start()
         {
-            ReadyToDamageTargets = new Dictionary<string, bool>();
-            ReadyToDamageTimers = new List<MyTimer>();
-            ReadyToDamageTimerDic = new Dictionary<string, MyTimer>();
-            if (DamageInterval < 0.1f)
-                DamageInterval = 0.1f;
-        }
-        void Update()
-        {
-            for (int i = 0; i < ReadyToDamageTimers.Count; i++)
-            {
-                ReadyToDamageTimers[i].RunTimer();
-            }
+            if (DamageInterval < 0.1f) DamageInterval = 0.1f;
         }
         public void SetRange()
         {
@@ -70,39 +57,9 @@ namespace Starbro.NeonIO
             }
         }
 
-        protected bool CheckReadyToDamageTarget(Collider2D _target)
+        protected bool CheckReadyToDamageTarget(Collider2D target)
         {
-            string id = _target.GetInstanceID().ToString();
-            if (ReadyToDamageTargets.ContainsKey(id))
-            {
-                if (ReadyToDamageTargets[id])
-                {
-                    ReadyToDamageTargets[id] = false;
-                    ReadyToDamageTimerDic[id].StartRunTimer = true;
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-            {
-                if (DamageInterval > 0)
-                {
-                    MyTimer tiemr = new MyTimer(DamageInterval, ReadyToDamageTimeOutFunc, true, false, id);
-                    ReadyToDamageTimers.Add(tiemr);
-                    ReadyToDamageTargets.Add(id, false);
-                    ReadyToDamageTimerDic.Add(id, tiemr);
-                }
-                return true;
-            }
-        }
-        protected void ReadyToDamageTimeOutFunc(object _key)
-        {
-            string key = (string)_key;
-            if (ReadyToDamageTargets.ContainsKey(key))
-            {
-                ReadyToDamageTargets[key] = true;
-            }
+            return target && hitCooldowns.TryHit(target.gameObject, Time.timeAsDouble, DamageInterval);
         }
         public void AddStunBuffers(float _time)
         {

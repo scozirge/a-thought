@@ -1,0 +1,95 @@
+{
+    "passed": false,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "Runtime errors were recorded.",
+    "name": "驗證2",
+    "errors": 2,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 2,
+    "maxActors": 2,
+    "maxAi": 6,
+    "cancelledJoins": 2,
+    "elapsed": 56.82936477661133,
+    "averageFrameMs": 17.507402420043947,
+    "actors": [
+        {
+            "name": "驗證1",
+            "id": 1049601,
+            "health": 250,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": -3196.058837890625,
+                "y": -236.75535583496095,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證2",
+            "id": 525313,
+            "health": 1000,
+            "level": 1,
+            "skills": 0,
+            "local": true,
+            "alive": true,
+            "position": {
+                "x": 256.3480224609375,
+                "y": -656.480712890625,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [
+        "<color=#144078>[Fusion]</color> StartGame Failed: [StartGameResult: Ok:False, ShutdownReason: OperationCanceled, ErrorMessage=Operation canceled, StackTrace=  at Fusion.CloudServices.ConnectToCloud (Photon.Realtime.AppSettings appSettings, Photon.Realtime.AuthenticationValues authentication, System.Threading.CancellationToken cancellationToken) [0x00203] in <766720df767f43c6b2e311e65a63a557>:0 \r\n  at Fusion.NetworkRunner.StartGameModeCloud (Fusion.StartGameArgs args) [0x004c7] in <766720df767f43c6b2e311e65a63a557>:0 ]\n",
+        "<color=#144078>[Fusion]</color> StartGame Failed: [StartGameResult: Ok:False, ShutdownReason: OperationCanceled, ErrorMessage=Operation canceled, StackTrace=  at Fusion.CloudServices.ConnectToCloud (Photon.Realtime.AppSettings appSettings, Photon.Realtime.AuthenticationValues authentication, System.Threading.CancellationToken cancellationToken) [0x00203] in <766720df767f43c6b2e311e65a63a557>:0 \r\n  at Fusion.NetworkRunner.StartGameModeCloud (Fusion.StartGameArgs args) [0x004c7] in <766720df767f43c6b2e311e65a63a557>:0 ]\n"
+    ],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": false,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 0.0,
+        "registrySearchMilliseconds": 0.0
+    }
+}

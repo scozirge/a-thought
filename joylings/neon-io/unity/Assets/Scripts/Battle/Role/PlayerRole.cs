@@ -59,6 +59,7 @@ namespace Starbro.NeonIO
         bool Premium = false;
         int[] FeatureIDsBeforeDeeath = new int[3];
         float ArrowTargetAngle;
+        Camera indicatorCamera;
 
         //Challenge戰場時專用
         int CurSelectFeatureID = 0;
@@ -553,65 +554,29 @@ namespace Starbro.NeonIO
         }
         void FindAllOpponentAndShowIndicators()
         {
-            if (PhotonNetwork.IsConnected)
-                if (!photonView.IsMine)
-                    return;
-            Role[] targets = FindObjectsOfType<Role>();
-            if (targets == null)
-                return;
-            //如果箭頭數量不夠就追加
-            if (IndicatorTrans.Count < targets.Length)
+            if (!HasSimulationAuthority || !MyFollowCamera || !TargetIndicatorPrefab) return;
+            if (!indicatorCamera) indicatorCamera = MyFollowCamera.GetComponentInChildren<Camera>();
+            if (!indicatorCamera) { HideAllTargetIndicators(); return; }
+            var targets = CombatRegistry.Roles;
+            int used = 0;
+            for (int i = 0; i < targets.Count; i++)
             {
-                int needNumber = targets.Length - IndicatorTrans.Count;
-                for (int i = 0; i < needNumber; i++)
-                {
-                    IndicatorTrans.Add(Instantiate(TargetIndicatorPrefab.transform));
-                }
+                Role target = targets[i];
+                if (!CombatRegistry.IsTarget(target) || target == this || target.MyForce == MyForce) continue;
+                if (used == IndicatorTrans.Count) IndicatorTrans.Add(Instantiate(TargetIndicatorPrefab.transform));
+                var indicator = IndicatorTrans[used++];
+                indicator.position = GetDirectionIndicatorPos(indicatorCamera.transform.position, target.transform.position, indicator.gameObject);
+                indicator.localRotation = Quaternion.Euler(0, 0, 270 - MyMath.GetAngerFormTowPoint2D(indicatorCamera.transform.position, target.transform.position));
             }
-            //依照相對位置設定箭頭的位置與方向
-            for (int i = 0; i < targets.Length; i++)
-            {
-                IndicatorTrans[i].position = GetDirectionIndicatorPos(MyFollowCamera.transform.position, targets[i].transform.position, IndicatorTrans[i].gameObject);
-                IndicatorTrans[i].localRotation = Quaternion.Euler(0, 0, 270 - MyMath.GetAngerFormTowPoint2D(MyFollowCamera.transform.position, targets[i].transform.position));
-            }
+            // A dead/disconnected target must not leave its previous arrow visible.
+            for (int i = used; i < IndicatorTrans.Count; i++) IndicatorTrans[i].gameObject.SetActive(false);
         }
         Vector3 GetDirectionIndicatorPos(Vector3 _selfPos, Vector3 _targetPos, GameObject _arrowObj)
         {
-            //如果目標在視野範圍內就不用顯示方向箭頭
-            if (Mathf.Abs((_targetPos - _selfPos).x) < 960 && Mathf.Abs((_targetPos - _selfPos).y) < 540)
-            {
-                _arrowObj.SetActive(false);
-                return Vector3.zero;
-            }
-            _arrowObj.SetActive(true);
-            float dirX = 1;//1為目標在自己的右邊，-1為目標在自己的左邊
-            float dirY = 1;//1為目標在自己的上面，-1為目標在自己的下面
-            if (_targetPos.x < _selfPos.x)
-                dirX = -1;
-            if (_targetPos.y < _selfPos.y)
-                dirY = -1;
-
-            float tmpX = MyMath.GetPointXOnLineOfTwoPointByPointY(_selfPos, _targetPos, _selfPos.y + 540 * dirY);//540是因為1080/2
-            Vector2 resultPos = Vector2.zero;
-            if (tmpX >= (-960 + _selfPos.x) && tmpX < (960 + _selfPos.x))//960是因為1920/2
-            {
-                resultPos = new Vector2(tmpX, (_selfPos.y + 540 * dirY));
-                if (dirY > 0)
-                    resultPos += new Vector2(0, -25);
-                else
-                    resultPos += new Vector2(0, 25);
-            }
-            else
-            {
-                float tmpY = MyMath.GetPointYOnLineOfTwoPointByPointX(_selfPos, _targetPos, (_selfPos.x + 960 * dirX));//960是因為1920/2
-                resultPos = new Vector2((_selfPos.x + 960 * dirX), tmpY);
-                if (dirX > 0)
-                    resultPos += new Vector2(-25, 0);
-                else
-                    resultPos += new Vector2(25, 0);
-            }
-            return resultPos;
-
+            var halfView = new Vector2(indicatorCamera.orthographicSize * indicatorCamera.aspect, indicatorCamera.orthographicSize);
+            bool visible = CombatRegistry.TryIndicatorPosition(_targetPos - _selfPos, halfView, 25, out Vector2 offset);
+            _arrowObj.SetActive(visible);
+            return (Vector2)_selfPos + offset;
         }
         [PunRPC]
         public override void SelfDestroy()

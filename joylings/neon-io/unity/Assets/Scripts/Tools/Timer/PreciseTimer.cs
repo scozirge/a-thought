@@ -94,27 +94,30 @@ namespace Starbro.NeonIO
         }
         public void RunTimer(ref float _remainTime)
         {
-            if (CircleTime == 0)
-                return;
-            if (!StartRunTimer)
-                return;
+            RunTimer(ref _remainTime, Time.deltaTime);
+        }
+        public void RunTimer(ref float _remainTime, float deltaTime)
+        {
+            if (CircleTime <= 0 || !StartRunTimer || deltaTime < 0 || float.IsNaN(deltaTime) || float.IsInfinity(deltaTime)) return;
             RunTimeFunc?.Invoke();
-            if (CurTimer > 0)
-                CurTimer -= Time.deltaTime;
-            else
+            CurTimer -= deltaTime;
+            // Periodic damage must keep the same tick count on a slow frame.
+            // The original configured total is retained; a finished timer stops.
+            int limit = Mathf.Max(1, MaxTriggerTimes);
+            while (StartRunTimer && CurTimer <= 0.000001f && TriggerTimes < limit)
             {
                 TriggerTimes++;
-                CurTimer = CircleTime;
-                if (TriggerTimes < MaxTriggerTimes)
+                CurTimer += CircleTime;
+                if (TriggerTimes < limit)
                     _remainTime = DurationTime - (TriggerTimes * CircleTime);
                 else
                     _remainTime = 0;
                 //Debug.Log("_remainTime=" + _remainTime);
-                StartRunTimer = Loop;
+                StartRunTimer = Loop && TriggerTimes < limit;
                 if (TimeOutFunc != null)
                     TimeOutFunc();
                 else
-                    TimeOutFuncWithObj(Obj);
+                    TimeOutFuncWithObj?.Invoke(Obj);
             }
         }
     }
