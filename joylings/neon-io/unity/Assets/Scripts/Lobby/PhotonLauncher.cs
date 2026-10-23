@@ -81,6 +81,7 @@ namespace Starbro.NeonIO
         {
             Debug.LogWarning("Disconnected:" + cause);
             IsJoingTheRoom = false;
+            NeonArenaFlow.Disconnected();
             UnityAnalyst.SendDisconnected();
             var challenge = ChallengeUI.Myself as ChallengeUI;
             if (challenge != null && ChallengeUI.IsFindingOpponent) challenge.CancelChallenge();
@@ -100,7 +101,9 @@ namespace Starbro.NeonIO
             Debug.Log("No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-            if (SelectGameType == GameType.InfinityWar)            
+            if (SelectGameType == GameType.Arena)
+                PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 16 });
+            else if (SelectGameType == GameType.InfinityWar)
                 PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = GameSettingData.MaxPlayersPerRoom });
             else
                 PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = GameSettingData.MaxPlayersPerRoom_C });
@@ -108,6 +111,11 @@ namespace Starbro.NeonIO
 
         public override void OnJoinedRoom()
         {
+            if (SelectGameType == GameType.Arena)
+            {
+                if (!NeonArenaFlow.Searching) PhotonNetwork.Disconnect();
+                return;
+            }
             if (SelectGameType == GameType.Challenge && !ChallengeUI.IsFindingOpponent)
             {
                 PhotonNetwork.Disconnect();

@@ -75,6 +75,9 @@ namespace Starbro.NeonIO
         }
         void Move()
         {
+            if (NeonArenaFlow.CombatBlocked) { MyRigid.linearVelocity = Vector2.zero; return; }
+            if (NeonArenaFlow.Active && NeonArena.Instance && transform.position.sqrMagnitude > Mathf.Pow(Mathf.Max(0, NeonArena.Instance.Radius - 200), 2))
+                AwayFromBorderTowardCenter();
             if (!NRole.BuffersExist(RoleBuffer.Stun))
                 MyRigid.linearVelocity = CurrentToward * NRole.MoveSpeed;
             /*

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Neon.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 using Starbro.NeonIO;
@@ -96,12 +97,19 @@ namespace Neon.Astral
             float noticeWidth=touch?Mathf.Clamp(ViewWidth-452,170,360):540;
             var notification=Image(page,"Skill notification",0,touch?TouchTop-30:435,noticeWidth,touch?36:60,null,HudColor(Night,.3f)).gameObject;
             var notice=HudText(notification.transform,"Notice","",0,0,noticeWidth-(touch?16:28),touch?30:48,touch?14:22,Gold,TextAnchor.MiddleCenter);
+            if(NeonArenaFlow.Active)notification.transform.localPosition += new Vector3(0,touch?-48:-90,0);
             float next=0,noticeUntil=0;var initialSkill=Field<Text>(battle,"GetSkillText");string lastSkill=initialSkill?initialSkill.text:"";
             live.Add(()=>
             {
                 if(Time.unscaledTime<next)return;next=Time.unscaledTime+.15f;
                 var rows=LeaderBoardUI.ItemDic.Values.Where(r=>r).OrderBy(r=>r.Rank).Take(rowCount).ToArray();
                 for(int i=0;i<rowCount;i++){names[i].text=i<rows.Length?rows[i].Name:"—";scores[i].text=i<rows.Length?rows[i].Score.ToString():"";}
+                if(NeonArenaFlow.Active && NeonArena.Instance)
+                {
+                    var arena=NeonArena.Instance;
+                    var standings=Enumerable.Range(0,16).Select(i=>arena.Entries[i]).OrderBy(e=>(bool)e.Eliminated).ThenByDescending(e=>e.Kills).ThenByDescending(e=>e.Damage).Take(rowCount).ToArray();
+                    for(int i=0;i<rowCount;i++){names[i].text=standings[i].Name.ToString();scores[i].text=standings[i].Kills.ToString();}
+                }
                 var logs=battle.GetComponentsInChildren<LogItem>().Where(r=>r.gameObject.activeInHierarchy).TakeLast(compact?2:4).Select(r=>r.Log);log.text=string.Join("\n",logs);
                 var source=Field<Text>(battle,"GetSkillText");
                 if(source&&!string.IsNullOrEmpty(source.text)&&source.text!=lastSkill){lastSkill=source.text;notice.text=L("獲得技能 · ","SKILL ACQUIRED · ")+source.text;noticeUntil=Time.unscaledTime+4;}

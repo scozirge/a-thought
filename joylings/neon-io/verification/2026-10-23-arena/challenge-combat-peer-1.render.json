@@ -1,0 +1,222 @@
+{
+    "width": 1280,
+    "height": 800,
+    "frame": 1735,
+    "activeCameraCount": 4,
+    "nonBlackPixels": 1024000,
+    "captured": true,
+    "failure": "",
+    "cameras": [
+        {
+            "name": "Debugger(Clone)",
+            "hierarchy": "Debugger(Clone)",
+            "targetTexture": "",
+            "clearFlags": "Depth",
+            "enabled": true,
+            "active": true,
+            "selected": true,
+            "position": {
+                "x": 640.0,
+                "y": 400.0,
+                "z": 0.0
+            },
+            "z": 0.0,
+            "depth": 0.0,
+            "cullingMask": 256,
+            "targetDisplay": 0
+        },
+        {
+            "name": "BattleCamera",
+            "hierarchy": "BattleCamera(Clone)/BattleCamera",
+            "targetTexture": "",
+            "clearFlags": "SolidColor",
+            "enabled": true,
+            "active": true,
+            "selected": true,
+            "position": {
+                "x": 72.80029296875,
+                "y": -79.49988555908203,
+                "z": -10.0
+            },
+            "z": -10.0,
+            "depth": -1.0,
+            "cullingMask": 513,
+            "targetDisplay": 0
+        },
+        {
+            "name": "UICamera",
+            "hierarchy": "UICamera",
+            "targetTexture": "",
+            "clearFlags": "Depth",
+            "enabled": true,
+            "active": true,
+            "selected": true,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -10.0
+            },
+            "z": -10.0,
+            "depth": 0.0,
+            "cullingMask": 32,
+            "targetDisplay": 0
+        },
+        {
+            "name": "BattleCamera",
+            "hierarchy": "BattleCamera",
+            "targetTexture": "",
+            "clearFlags": "SolidColor",
+            "enabled": true,
+            "active": false,
+            "selected": false,
+            "position": {
+                "x": 136.0,
+                "y": 0.0,
+                "z": -10.0
+            },
+            "z": -10.0,
+            "depth": -1.0,
+            "cullingMask": 791,
+            "targetDisplay": 0
+        },
+        {
+            "name": "PopupUI(Clone)",
+            "hierarchy": "PopupUI(Clone)",
+            "targetTexture": "",
+            "clearFlags": "Depth",
+            "enabled": true,
+            "active": true,
+            "selected": true,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "z": 0.0,
+            "depth": 3.0,
+            "cullingMask": 1024,
+            "targetDisplay": 0
+        }
+    ],
+    "activeCanvases": [
+        {
+            "hierarchy": "BattleObjsUICanvas",
+            "renderMode": "WorldSpace",
+            "camera": "BattleCamera(Clone)/BattleCamera",
+            "root": true,
+            "sortingLayer": 1092529981,
+            "sortingOrder": 1,
+            "targetDisplay": 0
+        },
+        {
+            "hierarchy": "Debugger(Clone)",
+            "renderMode": "ScreenSpaceOverlay",
+            "camera": "Debugger(Clone)",
+            "root": true,
+            "sortingLayer": -1325827155,
+            "sortingOrder": 1000,
+            "targetDisplay": 0
+        },
+        {
+            "hierarchy": "Astral presentation/Astral canvas",
+            "renderMode": "ScreenSpaceOverlay",
+            "camera": "",
+            "root": true,
+            "sortingLayer": 0,
+            "sortingOrder": 100,
+            "targetDisplay": 0
+        }
+    ],
+    "transitionAndBlackImages": [
+        {
+            "hierarchy": "PopupUI(Clone)/Cutscene/black2",
+            "type": "Filled",
+            "enabled": true,
+            "active": true,
+            "color": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 1.0
+            },
+            "fillAmount": 0.0,
+            "rendererAlpha": 1.0,
+            "size": {
+                "x": 100.0,
+                "y": 100.0
+            }
+        },
+        {
+            "hierarchy": "PopupUI(Clone)/Cutscene/CutscenePlayer/Image",
+            "type": "Sliced",
+            "enabled": true,
+            "active": false,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "fillAmount": 1.0,
+            "rendererAlpha": 1.0,
+            "size": {
+                "x": 300.0,
+                "y": 1147.0
+            }
+        },
+        {
+            "hierarchy": "PopupUI(Clone)/Tutorials_buySkill/bg",
+            "type": "Sliced",
+            "enabled": true,
+            "active": true,
+            "color": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.7843137383460999
+            },
+            "fillAmount": 1.0,
+            "rendererAlpha": 1.0,
+            "size": {
+                "x": 1920.0,
+                "y": 1080.0
+            }
+        },
+        {
+            "hierarchy": "PopupUI(Clone)/Cutscene/black",
+            "type": "Sliced",
+            "enabled": true,
+            "active": false,
+            "color": {
+                "r": 0.11764706671237946,
+                "g": 0.19215688109397889,
+                "b": 0.34117648005485537,
+                "a": 1.0
+            },
+            "fillAmount": 0.9330000281333923,
+            "rendererAlpha": 1.0,
+            "size": {
+                "x": 100.0,
+                "y": 100.0
+            }
+        },
+        {
+            "hierarchy": "PopupUI(Clone)/Tutorials_buySkill/Page1/bg (1)",
+            "type": "Sliced",
+            "enabled": true,
+            "active": true,
+            "color": {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.501960813999176
+            },
+            "fillAmount": 1.0,
+            "rendererAlpha": 1.0,
+            "size": {
+                "x": 1920.0,
+                "y": 1080.0
+            }
+        }
+    ]
+}

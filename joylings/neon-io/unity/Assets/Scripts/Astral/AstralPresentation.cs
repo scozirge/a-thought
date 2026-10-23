@@ -20,7 +20,7 @@ namespace Neon.Astral
     {
         public static AstralPresentation Instance { get; private set; }
         public string CurrentView { get; private set; }
-        public static bool InputBlocked => Instance && (Instance.CurrentView!="battle" || Instance.ModalVisible);
+        public static bool InputBlocked => NeonArenaFlow.CombatBlocked || (Instance && (Instance.CurrentView!="battle" || Instance.ModalVisible));
         bool ModalVisible { get { if(!modal)return false;foreach(Transform child in modal)if(child.gameObject.activeSelf)return true;return false; } }
         bool TouchUI => NeonWebBridge.TouchLayout;
         float CssPixelRatio => Screen.width/Mathf.Max(1,NeonWebBridge.CssWidth);
@@ -105,10 +105,11 @@ namespace Neon.Astral
             if(Time.unscaledTime>=nextScan){Scan();nextScan=Time.unscaledTime+.5f;}
             if(!GameDictionary.IsInit){SetView("loading");return;}
             string v="loading";
-            if(battle)v=Is(battle,"SettlementUI")?"result":"battle";
+            if(battle)v=NeonArenaFlow.Active && NeonArena.Instance && NeonArena.Instance.HasLocalResult ? "arena-result" : Is(battle,"SettlementUI")?"result":"battle";
             else if(lobby)
             {
-                if(challenge&&challenge.gameObject.activeInHierarchy)v=Is(challenge,"SelectUI")?"select":Is(challenge,"VSObj")?"versus":ChallengeUI.IsFindingOpponent?"matching":"loadout";
+                if(NeonArenaFlow.Searching)v="arena-waiting";
+                else if(challenge&&challenge.gameObject.activeInHierarchy)v=Is(challenge,"SelectUI")?"select":Is(challenge,"VSObj")?"versus":ChallengeUI.IsFindingOpponent?"matching":"loadout";
                 else if(Is(lobby,"ShopUI"))v="collection";
                 else if(Is(lobby,"SettingUI"))
                 {var panels=Field<GameObject[]>(lobby,"SettingSubObjs");v="settings";if(panels!=null&&panels.Length>2)v=Active(panels[1])?"clamor":Active(panels[2])?"credits":"settings";}
@@ -168,7 +169,9 @@ namespace Neon.Astral
                 case "collection":case "select":BuildCollection(value=="select");break;
                 case "loadout":case "matching":case "versus":BuildLoadout();break;
                 case "settings":case "clamor":case "credits":BuildSettings(value);break;
-                case "battle":BuildBattle();break;
+                case "battle":BuildBattle();BuildArenaHud();break;
+                case "arena-waiting":BuildArenaWaiting();break;
+                case "arena-result":BuildArenaResult();break;
                 case "result":BuildBattle();BuildResult();break;
                 default:BuildLoading();break;
             }
@@ -195,6 +198,7 @@ namespace Neon.Astral
                 if(Is(popup,"LoadingGo")||Is(popup,"LoadingTitleGo"))return;
             }
             if(CurrentView=="select")challenge.ActiveSelectUI(false);
+            else if(CurrentView=="arena-waiting")NeonArenaFlow.Cancel();
             else if(CurrentView=="matching")challenge.CancelChallenge();
             else if(CurrentView=="settings"||CurrentView=="clamor"||CurrentView=="credits"||CurrentView=="collection"||CurrentView=="loadout")Home();
             else if(CurrentView=="battle")PopupUI.ShowConfirmCancel(L("確定離開目前的戰場？","Leave the current arena?"),()=>battle.LeaveRoom(),null);

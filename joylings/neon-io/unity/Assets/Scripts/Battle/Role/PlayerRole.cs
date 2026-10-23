@@ -232,7 +232,7 @@ namespace Starbro.NeonIO
         }
         public override void Die()//腳色死亡時隱藏
         {
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             FeatureIDsBeforeDeeath[0] = FeatureDic.ContainsKey(FeaturePart.Head) ? FeatureDic[FeaturePart.Head].ID : 0;
             FeatureIDsBeforeDeeath[1] = FeatureDic.ContainsKey(FeaturePart.Body) ? FeatureDic[FeaturePart.Body].ID : 0;
             FeatureIDsBeforeDeeath[2] = FeatureDic.ContainsKey(FeaturePart.Back) ? FeatureDic[FeaturePart.Back].ID : 0;
@@ -257,13 +257,14 @@ namespace Starbro.NeonIO
         [PunRPC]
         public virtual void Restart()
         {
+            if (NeonArenaFlow.Active) return;
             if (!HasSimulationAuthority) return;
             BeginNewLife();
             IsRevived = false;
             Exp = 0;
             Star = 0;
             LV = 1;
-            MaxHealth = PhotonLauncher.SelectGameType == GameType.InfinityWar ? GameSettingData.Health : GameSettingData.Health_C;
+            MaxHealth = PhotonLauncher.SelectGameType != GameType.Challenge ? GameSettingData.Health : GameSettingData.Health_C;
             RemoveAllBuffer();
             RemoveSkill();
             RemoveFeature();
@@ -283,6 +284,7 @@ namespace Starbro.NeonIO
         [PunRPC]
         public virtual void Revive()
         {
+            if (NeonArenaFlow.Active) return;
             if (!HasSimulationAuthority) return;
             BeginNewLife();
             IsRevived = true;
@@ -308,7 +310,7 @@ namespace Starbro.NeonIO
             Star = 0;
             if (UseJsonData)
             {
-                if (PhotonLauncher.SelectGameType == GameType.InfinityWar)
+                if (PhotonLauncher.SelectGameType != GameType.Challenge)
                 {
                     MaxHealth = GameSettingData.Health;
                     BaseDamage = GameSettingData.Damage;
@@ -626,7 +628,8 @@ namespace Starbro.NeonIO
 
         protected override int GetDeathLootCount()
         {
-            return PhotonLauncher.SelectGameType == GameType.InfinityWar ? GameSettingData.GetDropExpStarCount(LV) : 0;
+            if (NeonArenaFlow.Active) return NeonArena.DropCount(this);
+            return PhotonLauncher.SelectGameType != GameType.Challenge ? GameSettingData.GetDropExpStarCount(LV) : 0;
         }
         public override RoleNetworkState CaptureNetworkState()
         {
@@ -717,7 +720,7 @@ namespace Starbro.NeonIO
             Exp = Mathf.Max(0, Exp - LVUpExp);
             LV++;
             ExtendMaxHP(GameSettingData.LVUpAddMaxHP);
-            if (PhotonLauncher.SelectGameType == GameType.InfinityWar)
+            if (PhotonLauncher.SelectGameType != GameType.Challenge)
             {
                 List<FeaturePart> lackOfParts = new List<FeaturePart>() { FeaturePart.Head, FeaturePart.Body, FeaturePart.Back };
                 if (SkillDic.ContainsKey(FeaturePart.Head))

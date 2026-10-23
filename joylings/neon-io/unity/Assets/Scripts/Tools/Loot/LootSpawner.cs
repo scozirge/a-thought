@@ -8,6 +8,10 @@ namespace Scoz.Func
     public class LootSpawner : MonoBehaviour
     {
         public const int MaxPooledLoot = 512;
+        public static int ActiveCount
+        {
+            get { int count = 0; if (MySelf) foreach (var loot in MySelf.LootList) if (loot && loot.IsActive) count++; return count; }
+        }
         List<Loot> LootList;
         [SerializeField]
         Loot ExpLootPrefab = null;

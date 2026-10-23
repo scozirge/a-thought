@@ -14,15 +14,16 @@ namespace Neon.Astral
             // The original animated guardian, meteors and entrance burst remain visible.
             var menu=Plate(page,"Menu backing",0,0,560,920);menu.color=new Color(Night.r,Night.g,Night.b,.68f);menu.border=new Color(Gold.r,Gold.g,Gold.b,.24f);
             Pin(menu.transform,new Vector2(0,.5f),new Vector2(32,0));
-            var brand=TitleArt(menu.transform,"Brand",L("星際遊俠","NOVAROVE"),0,328,480,150);
+            var brand=TitleArt(menu.transform,"Brand",L("星際遊俠","NOVAROVE"),0,354,480,110);
             var original=Field<InputField>(lobby,"NameInputField");
-            var nameInput=Input(menu.transform,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,205,480,62,v=>{if(original)original.text=v;},24);
+            var nameInput=Input(menu.transform,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,251,480,54,v=>{if(original)original.text=v;},24);
             nameInput.onEndEdit.AddListener(v=>{if(!string.IsNullOrWhiteSpace(v))MyPlayer.SetName(v.Trim());});
-            ModeCard(menu.transform,"Infinity",L("無際戰場","INFINITY WAR"),L("收集星星，取得技能並生存。","Collect stars. Evolve. Survive."),0,73,()=>lobby.Connect(),AstralGraphic.Shape.Infinity);
-            ModeCard(menu.transform,"Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Duel."),0,-77,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},AstralGraphic.Shape.Duel);
-            var collection=Button(menu.transform,"Collection",L("收藏","COLLECTION"),0,-207,480,66,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
+            ModeCard(menu.transform,"Arena",L("競技模式","ARENA"),L("16 個玩家席位，存活到最後。","16 player seats. Last survivor wins."),0,145,StartArena,AstralGraphic.Shape.Star);
+            ModeCard(menu.transform,"Infinity",L("無際戰場","INFINITY WAR"),L("收集星星，取得技能並生存。","Collect stars. Evolve. Survive."),0,7,()=>lobby.Connect(),AstralGraphic.Shape.Infinity);
+            ModeCard(menu.transform,"Challenge",L("頂尖對決","CHALLENGE"),L("選擇五項技能出戰。","Choose five skills. Duel."),0,-131,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},AstralGraphic.Shape.Duel);
+            var collection=Button(menu.transform,"Collection",L("收藏","COLLECTION"),0,-255,480,54,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,26);
             Graphic(collection.transform,"Collection icon",-194,0,36,36,AstralGraphic.Shape.Collection,Gold);
-            var team=Button(menu.transform,"Team",L("組隊競技 · 尚未開放","TEAM · COMING SOON"),0,-293,480,54,null,false,21);team.interactable=false;
+
             var settings=IconButton(menu.transform,"Settings",AstralGraphic.Shape.Gear,-207,-385,66,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});
             settings.gameObject.AddComponent<AstralHover>().content=()=>L("設定","Settings");
             var tutorial=IconButton(menu.transform,"Tutorial",AstralGraphic.Shape.Book,-123,-385,66,()=>lobby.WatchTutorial());
@@ -35,7 +36,7 @@ namespace Neon.Astral
         {
             var b=Button(parent,name,"",x,y,480,126,action,false);
             var icon=Graphic(b.transform,"Mode icon",-188,0,54,54,symbol,Gold);icon.thickness=2.6f;
-            Text(b.transform,"Title",title,38,21,330,44,31,Pearl);
+            Text(b.transform,"Title",title,38,24,330,56,31,Pearl);
             Text(b.transform,"Description",desc,38,-25,330,40,20,Muted);
         }
         string PartName(int index)=>index==0?L("頭部","HEAD"):index==1?L("身體","BODY"):L("背部","BACK");

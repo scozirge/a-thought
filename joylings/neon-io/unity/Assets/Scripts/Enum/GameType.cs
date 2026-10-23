@@ -4,5 +4,6 @@ namespace Starbro.NeonIO
     {
         InfinityWar,
         Challenge,
+        Arena,
     }
 }

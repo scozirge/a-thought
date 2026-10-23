@@ -125,7 +125,15 @@ namespace Starbro.NeonIO
             while (PhotonNetwork.IsConnected && (!PhotonNetwork.IsReadyForGameplay ||
                 (PhotonNetwork.Runner != null && PhotonNetwork.Runner.SceneManager != null && PhotonNetwork.Runner.SceneManager.IsBusy)))
                 yield return null;
+            if (NeonArenaFlow.Active)
+            {
+                float arenaReadyDeadline = Time.realtimeSinceStartup + 15;
+                while (!NeonArena.Instance && PhotonNetwork.InRoom && Time.realtimeSinceStartup < arenaReadyDeadline) yield return null;
+                if (!NeonArena.Instance || NeonArena.Instance.FindActor(PhotonNetwork.LocalPlayer.ActorNumber) < 0)
+                { MyBattleUI.LeaveRoom(); yield break; }
+            }
             IsWin = false;
+            if (NeonArenaFlow.Active) { BattleFieldRadius = 4000; SpawnRoleRadius = 3000; }
             if (PhotonLauncher.SelectGameType == GameType.Challenge)
             {
                 foreach (Player player in PhotonNetwork.PlayerList)
@@ -148,6 +156,7 @@ namespace Starbro.NeonIO
             MyLeaderBoard.Init();
             IsReadyToSpawn = true;
             StartGame();//開始遊戲
+            if (NeonArenaFlow.Active) yield break;
             if (UseJsonData)
             {
                 GodDebutTime = GameSettingData.GodDebutTime;
@@ -368,6 +377,7 @@ namespace Starbro.NeonIO
         }
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
+            if (NeonArenaFlow.Active) return;
             if (PhotonNetwork.IsMasterClient)
             {
                 if (PhotonLauncher.SelectGameType == GameType.Challenge)
@@ -644,7 +654,7 @@ namespace Starbro.NeonIO
                 }
             }
         }
-        NeutralRole SpawnRandomNeutral()
+        public NeutralRole SpawnRandomNeutral()
         {
             if (NeutralRolePrefabs == null || NeutralRolePrefabs.Count <= 0)
                 return null;
@@ -918,6 +928,7 @@ namespace Starbro.NeonIO
         }
         public void EndGame()//玩家死亡時呼叫此Func並結束遊戲
         {
+            if (NeonArenaFlow.Active) return;
             if (HasEnded || (PhotonLauncher.SelectGameType == GameType.Challenge && !ChallengeResultLocked)) return;
             HasEnded = true;
             EndGameTime = System.DateTime.Now;//設定玩家結束遊戲時間

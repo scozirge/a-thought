@@ -94,7 +94,16 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-joyst
   await gestures.touch(page,'touchStart',[{id:9,x:sr.x+sr.w/2,y:sr.y+sr.h/2}]);await ready(()=>neonState.elements.some(e=>e.name==='Tooltip'));
   await gestures.touch(page,'touchCancel',[]);await ready(()=>!neonState.elements.some(e=>e.name==='Tooltip'));
   report.checks.push('Mobile skill description appears only while pressed and disappears on release or touchcancel');
-  await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+40,y}]);await ready(()=>neonState.stickX>.7);await resize(390,844);await ready(()=>!neonState.stickDragging);await gestures.touch(page,'touchEnd',[]);await resize(844,390);assert.equal((await state()).stickX,0);assert.ok((await state()).connected);
+  // Death during the preceding live skill-hover check must not be mistaken for a stuck joystick.
+  let rotationDrag=false;
+  for(let attempt=0;attempt<3&&!rotationDrag;attempt++){
+   await ensureAlive();await ready(()=>neonState.playerAlive&&!neonState.inputBlocked);
+   await gestures.touch(page,'touchStart',[{id:1,x,y}]);await page.waitForTimeout(100);await gestures.touch(page,'touchMove',[{id:1,x:x+40,y}]);
+   await page.waitForFunction(()=>neonState.stickX>.7||!neonState.playerAlive,null,{timeout:8000});
+   const current=await state();rotationDrag=current.playerAlive&&current.stickX>.7;
+   if(!rotationDrag)await gestures.touch(page,'touchCancel',[]);
+  }
+  assert.ok(rotationDrag,'A living player must capture the joystick before rotation');await resize(390,844);await ready(()=>!neonState.stickDragging);await gestures.touch(page,'touchEnd',[]);await resize(844,390);assert.equal((await state()).stickX,0);assert.ok((await state()).connected);
   // Rotation does not pause the live match; finish any resulting death flow
   // before interacting with the arena controls behind the result overlay.
   await ensureAlive();await ready(()=>neonState.playerAlive&&!neonState.inputBlocked);

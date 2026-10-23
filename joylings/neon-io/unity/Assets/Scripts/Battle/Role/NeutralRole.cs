@@ -100,10 +100,11 @@ namespace Starbro.NeonIO
                 Name = StringData.GetString("Guest");
             gameObject.name = _name;
             NameLabel.text = _name;
+            if (NeonArenaFlow.Active) { Name = _name; NameLabel.gameObject.SetActive(!string.IsNullOrEmpty(_name)); }
             if (!BattleManager.BM.NeutralRoleDic.ContainsKey(ID))
                 BattleManager.BM.NeutralRoleDic.Add(ID, this);
-            BattleManager.BM.MyLeaderBoard.AddPlayer(this);
-            if (PhotonNetwork.IsConnected && photonView.IsMine)//若玩家是房主 且 此AI名不為Guest 且 該玩家名稱的喊話資料尚未取得 則從DB中取得該玩家的喊話
+            if (!NeonArenaFlow.Active || !string.IsNullOrEmpty(_name)) BattleManager.BM.MyLeaderBoard.AddPlayer(this);
+            if (!NeonArenaFlow.Active && PhotonNetwork.IsConnected && photonView.IsMine)//若玩家是房主 且 此AI名不為Guest 且 該玩家名稱的喊話資料尚未取得 則從DB中取得該玩家的喊話
                 if (Name != StringData.GetString("Guest") && Name != "")
                 {
                     if (!BattleManager.AIRoleClamorDic.ContainsKey(Name))
@@ -115,11 +116,12 @@ namespace Starbro.NeonIO
         [PunRPC]
         public virtual void Restart()
         {
+            if (NeonArenaFlow.Active) return;
             if (!HasSimulationAuthority) return;
             BeginNewLife();
             Exp = 0;
             LV = 1;
-            MaxHealth = PhotonLauncher.SelectGameType == GameType.InfinityWar ? GameSettingData.NeutralHealth : GameSettingData.NeutralHealth_C;
+            MaxHealth = PhotonLauncher.SelectGameType != GameType.Challenge ? GameSettingData.NeutralHealth : GameSettingData.NeutralHealth_C;
             RemoveAllBuffer();
             RemoveSkill();
             RemoveFeature();
@@ -140,7 +142,7 @@ namespace Starbro.NeonIO
             BeginNewLife();
             Exp = 0;
             LV = 1;
-            MaxHealth = PhotonLauncher.SelectGameType == GameType.InfinityWar ? GameSettingData.NeutralHealth : GameSettingData.NeutralHealth_C;
+            MaxHealth = PhotonLauncher.SelectGameType != GameType.Challenge ? GameSettingData.NeutralHealth : GameSettingData.NeutralHealth_C;
             RemoveAllBuffer();
             RemoveSkill();
             RemoveFeature();
@@ -202,7 +204,7 @@ namespace Starbro.NeonIO
         }
         public override void Die()//腳色死亡時隱藏
         {
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             base.Die();
             gameObject.tag = "Untagged";//死掉後要把tag設成Untagged才不會被鎖定為攻擊目標
             MyRigi.linearVelocity = Vector3.zero;
@@ -321,7 +323,8 @@ namespace Starbro.NeonIO
 
         protected override int GetDeathLootCount()
         {
-            return PhotonLauncher.SelectGameType == GameType.InfinityWar ? GameSettingData.GetDropExpStarCount(LV) : 0;
+            if (NeonArenaFlow.Active) return NeonArena.DropCount(this);
+            return PhotonLauncher.SelectGameType != GameType.Challenge ? GameSettingData.GetDropExpStarCount(LV) : 0;
         }
         public override RoleNetworkState CaptureNetworkState()
         {
@@ -354,7 +357,7 @@ namespace Starbro.NeonIO
             base.GetProperties();
             if (UseJsonData)
             {
-                if (PhotonLauncher.SelectGameType == GameType.InfinityWar)
+                if (PhotonLauncher.SelectGameType != GameType.Challenge)
                 {
                     MaxHealth = GameSettingData.NeutralHealth;
                     BaseDamage = GameSettingData.NeutralDamage;

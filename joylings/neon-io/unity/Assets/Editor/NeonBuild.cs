@@ -66,6 +66,15 @@ namespace Neon.Editor
             EditorUtility.SetDirty(sessionPrefab);
             AssetDatabase.SetLabels(sessionPrefab, new[] { "FusionPrefab" });
 
+            var arena = new GameObject("NeonArena");
+            arena.AddComponent<NetworkObject>().Flags = NetworkObjectFlags.MasterClientObject;
+            arena.AddComponent(RuntimeType("NeonArena"));
+            var arenaPrefab = PrefabUtility.SaveAsPrefabAsset(arena, "Assets/Resources/Networking/NeonArena.prefab");
+            Object.DestroyImmediate(arena);
+            new NetworkObjectBakerEditTime().Bake(arenaPrefab);
+            EditorUtility.SetDirty(arenaPrefab);
+            AssetDatabase.SetLabels(arenaPrefab, new[] { "FusionPrefab" });
+
             const string catalogPath = "Assets/Resources/Networking/NeonPrefabCatalog.asset";
             var data = AssetDatabase.LoadAssetAtPath<ScriptableObject>(catalogPath);
             if (!data) { data = ScriptableObject.CreateInstance(RuntimeType("NeonPrefabCatalog")); AssetDatabase.CreateAsset(data, catalogPath); }
@@ -75,7 +84,7 @@ namespace Neon.Editor
             EditorBuildSettings.scenes = Scenes.Select(name => new EditorBuildSettingsScene("Assets/Scenes/" + name + ".unity", true)).ToArray();
             PlayerSettings.productName = "Neon Impact";
             PlayerSettings.companyName = "Starbro";
-            PlayerSettings.bundleVersion = "1.1.9-fusion";
+            PlayerSettings.bundleVersion = "1.2.0-fusion";
             PlayerSettings.defaultScreenWidth = 1280;
             PlayerSettings.defaultScreenHeight = 800;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;

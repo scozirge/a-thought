@@ -29,6 +29,8 @@ namespace Neon.Validation
             public NeonCombatCheck.Result combat;
             public NeonLootCheck.Result loot;
             public NeonDeathLootCheck.Result deathLoot;
+            public NeonArenaCheck.Result arena;
+            public NeonArenaMigrationCheck.Result arenaMigration;
             public Neon.Astral.NeonPaletteCheck.Result palette;
             public NeonGameplayAudit.Result gameplayAudit;
         }
@@ -96,6 +98,7 @@ namespace Neon.Validation
                     yield return NeonChallengeCheck.StartFromAstralLobby(value=>started=value);
                     if (!started) { Finish("Astral challenge UI did not start matchmaking."); yield break; }
                 }
+                else if (Has("-neonArena")) NeonArenaFlow.Search();
                 else PhotonLauncher.JoinTheRandomRoom();
             }
             float joinStart = Time.realtimeSinceStartup;
@@ -111,6 +114,19 @@ namespace Neon.Validation
                 yield return null;
             }
             if (!BattleManager.BM || !BattleManager.BM.MyPlayerRole) { Finish("Battle player did not spawn."); yield break; }
+            if (Has("-neonArenaMigration"))
+            {
+                var check = gameObject.AddComponent<NeonArenaMigrationCheck>(); yield return check.Run();
+                report.arenaMigration = check.result; report.connected = PhotonNetwork.InRoom;
+                report.scene = SceneManager.GetActiveScene().name;
+                Finish(report.errors > 0 ? "Runtime errors recorded." : check.result.passed ? null : check.result.failure); yield break;
+            }
+            if (Has("-neonArena"))
+            {
+                var check = gameObject.AddComponent<NeonArenaCheck>();
+                yield return check.Run(); report.arena = check.result;
+                if (!report.arena.passed) { Finish(report.arena.failure); yield break; }
+            }
             if (Has("-neonAudit"))
             {
                 report.gameplayAudit = NeonGameplayAudit.Run();
@@ -161,7 +177,7 @@ namespace Neon.Validation
                 var actors = Object.FindObjectsByType<PlayerRole>(FindObjectsSortMode.None);
                 report.maxActors = Math.Max(report.maxActors, actors.Length);
                 report.maxAi = Math.Max(report.maxAi, Object.FindObjectsByType<NeutralRole>(FindObjectsSortMode.None).Length);
-                if (!Has("-neonCombatCheck") && !Has("-neonDeathLoot") && !Has("-neonChallenge") && BattleManager.BM && BattleManager.BM.MyPlayerRole && !BattleManager.BM.MyPlayerRole.IsAlive) BattleManager.BM.Restart();
+                if (!Has("-neonArena") && !Has("-neonCombatCheck") && !Has("-neonDeathLoot") && !Has("-neonChallenge") && BattleManager.BM && BattleManager.BM.MyPlayerRole && !BattleManager.BM.MyPlayerRole.IsAlive) BattleManager.BM.Restart();
                 yield return null;
             }
             if (Has("-neonReconnect"))

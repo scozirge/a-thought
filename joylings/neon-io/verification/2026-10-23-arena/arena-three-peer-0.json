@@ -1,0 +1,150 @@
+{
+    "passed": true,
+    "connected": true,
+    "contentReady": true,
+    "reconnected": false,
+    "scene": "Battle",
+    "failure": "",
+    "name": "驗證1",
+    "errors": 0,
+    "features": 95,
+    "testedSkills": 0,
+    "maxPeers": 3,
+    "maxActors": 3,
+    "maxAi": 29,
+    "cancelledJoins": 0,
+    "expectedCancellationMessages": 0,
+    "elapsed": 40.283355712890628,
+    "averageFrameMs": 20.456707000732423,
+    "actors": [
+        {
+            "name": "驗證2",
+            "id": 1049601,
+            "health": 0,
+            "level": 1,
+            "skills": 0,
+            "local": false,
+            "alive": false,
+            "position": {
+                "x": -1440.0887451171875,
+                "y": 153.2269744873047,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證3",
+            "id": 525314,
+            "health": 1050,
+            "level": 2,
+            "skills": 0,
+            "local": false,
+            "alive": true,
+            "position": {
+                "x": 2500.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "name": "驗證1",
+            "id": 1573889,
+            "health": 0,
+            "level": 3,
+            "skills": 0,
+            "local": true,
+            "alive": false,
+            "position": {
+                "x": 1027.8436279296875,
+                "y": -2173.440185546875,
+                "z": 0.0
+            }
+        }
+    ],
+    "errorMessages": [],
+    "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+    },
+    "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+    },
+    "deathLoot": {
+        "passed": false,
+        "launched": false,
+        "intercepted": false,
+        "awardedOnce": false,
+        "killerCollected": false,
+        "reused": false,
+        "targetDeathReleased": false,
+        "observedPlayers": 0,
+        "interceptorGain": 0,
+        "killerGain": 0,
+        "failure": ""
+    },
+    "arena": {
+        "passed": true,
+        "closedRoom": true,
+        "roster": true,
+        "npcUnranked": true,
+        "seatRanked": true,
+        "drops": true,
+        "damage": true,
+        "duplicateIgnored": true,
+        "frozenResult": true,
+        "activeGroundCount": true,
+        "result": true,
+        "rewardOnce": true,
+        "humans": 3,
+        "namedAi": 13,
+        "namelessBots": 16,
+        "roles": 32,
+        "localRank": 2,
+        "localReward": 30,
+        "failure": ""
+    },
+    "arenaMigration": {
+        "passed": false,
+        "departingMaster": false,
+        "preservedRoster": false,
+        "deathAfterMigration": false,
+        "starWaves": false,
+        "storm": false,
+        "failure": ""
+    },
+    "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+    },
+    "gameplayAudit": {
+        "passed": false,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 0.0,
+        "registrySearchMilliseconds": 0.0
+    }
+}

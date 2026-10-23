@@ -22,7 +22,9 @@ namespace Neon.Astral
                 case "collection": case "select": BuildTouchCollection(value=="select"); break;
                 case "loadout": case "matching": case "versus": BuildTouchLoadout(); break;
                 case "settings": case "clamor": case "credits": BuildTouchSettings(value); break;
-                case "battle": BuildTouchBattle(); break;
+                case "battle": BuildTouchBattle(); BuildArenaHud(); break;
+                case "arena-waiting": BuildArenaWaiting(); break;
+                case "arena-result": BuildArenaResult(); break;
                 case "result": BuildTouchBattle(); BuildTouchResult(); break;
                 default:
                     if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name!="Init")
@@ -52,23 +54,24 @@ namespace Neon.Astral
         {
             float w=Mathf.Clamp(ViewWidth*.40f,286,380),h=Mathf.Max(180,ViewHeight-24),x=-ViewWidth*.5f+16+w*.5f;
             var backing=Plate(page,"Menu backing",x,0,w,h);backing.color=new Color(Night.r,Night.g,Night.b,.7f);backing.border=new Color(Gold.r,Gold.g,Gold.b,.25f);
-            var scroll=Scroll(backing.transform,"Lobby actions",0,29,w-8,h-66,out var content);content.sizeDelta=new Vector2(0,286);scroll.GetComponent<Image>().color=Color.clear;
+            var scroll=Scroll(backing.transform,"Lobby actions",0,29,w-8,h-66,out var content);content.sizeDelta=new Vector2(0,350);scroll.GetComponent<Image>().color=Color.clear;
             float inner=w-32;
             var brand=TitleArt(content,"Brand",L("星際遊俠","NOVAROVE"),0,0,inner,42);TopContent(brand,-28);
             var original=Field<InputField>(lobby,"NameInputField");
             var input=Input(content,"Player name",original?original.text:MyPlayer.Name,L("輸入玩家名稱","Your name"),0,-79,inner,44,v=>{if(original)original.text=v;},24);TopContent((RectTransform)input.transform,-79);input.textComponent.fontSize=16;((Text)input.placeholder).fontSize=16;
             input.onEndEdit.AddListener(v=>{if(!string.IsNullOrWhiteSpace(v))MyPlayer.SetName(v.Trim());});
-            var infinity=TouchButton(content,"Infinity",L("無際戰場","INFINITY WAR"),0,-139,inner,()=>lobby.Connect(),false,54,18);TopContent((RectTransform)infinity.transform,-139);
-            var duel=TouchButton(content,"Challenge",L("頂尖對決","CHALLENGE"),0,-203,inner,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,54,18);TopContent((RectTransform)duel.transform,-203);
-            foreach(var b in new[]{infinity,duel}){var label=b.GetComponentInChildren<Text>();label.rectTransform.anchoredPosition=new Vector2(23,0);label.rectTransform.sizeDelta=new Vector2(inner-68,46);label.alignment=TextAnchor.MiddleLeft;var icon=Graphic(b.transform,"Mode icon",-inner*.5f+27,0,28,28,b==infinity?AstralGraphic.Shape.Infinity:AstralGraphic.Shape.Duel,Gold);icon.thickness=1.7f;}
-            var collection=TouchButton(content,"Collection",L("收藏","COLLECTION"),0,-261,inner,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,44,16);TopContent((RectTransform)collection.transform,-261);
+            var arena=TouchButton(content,"Arena",L("競技模式","ARENA"),0,-139,inner,StartArena,false,54,18);TopContent((RectTransform)arena.transform,-139);
+            var infinity=TouchButton(content,"Infinity",L("無際戰場","INFINITY WAR"),0,-203,inner,()=>lobby.Connect(),false,54,18);TopContent((RectTransform)infinity.transform,-203);
+            var duel=TouchButton(content,"Challenge",L("頂尖對決","CHALLENGE"),0,-267,inner,()=>{if(original&&!string.IsNullOrWhiteSpace(original.text))MyPlayer.SetName(original.text.Trim());lobby.ActiveControlPanel(false);challenge.SetActive(true);},false,54,18);TopContent((RectTransform)duel.transform,-267);
+            foreach(var b in new[]{arena,infinity,duel}){var label=b.GetComponentInChildren<Text>();label.rectTransform.anchoredPosition=new Vector2(23,0);label.rectTransform.sizeDelta=new Vector2(inner-68,46);label.alignment=TextAnchor.MiddleLeft;var icon=Graphic(b.transform,"Mode icon",-inner*.5f+27,0,28,28,b==arena?AstralGraphic.Shape.Star:b==infinity?AstralGraphic.Shape.Infinity:AstralGraphic.Shape.Duel,Gold);icon.thickness=1.7f;}
+            var collection=TouchButton(content,"Collection",L("收藏","COLLECTION"),0,-325,inner,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,44,16);TopContent((RectTransform)collection.transform,-325);
             Graphic(collection.transform,"Collection icon",-inner*.5f+27,0,23,23,AstralGraphic.Shape.Collection,Gold);
             if(ViewHeight<330)
             {
                 // Prioritize the two playable modes when browser chrome leaves a short viewport.
                 brand.sizeDelta=new Vector2(Mathf.Min(inner,32*brand.rect.width/brand.rect.height),32);TopContent(brand,-18);
-                foreach(var b in new[]{infinity,duel}){var r=(RectTransform)b.transform;r.sizeDelta=new Vector2(inner,44);TopContent(r,b==infinity?-62:-114);}
-                TopContent((RectTransform)input.transform,-170);TopContent((RectTransform)collection.transform,-224);content.sizeDelta=new Vector2(0,252);
+                foreach(var b in new[]{arena,infinity,duel}){var r=(RectTransform)b.transform;r.sizeDelta=new Vector2(inner,44);TopContent(r,b==arena?-62:b==infinity?-114:-166);}
+                TopContent((RectTransform)input.transform,-222);TopContent((RectTransform)collection.transform,-276);content.sizeDelta=new Vector2(0,304);
             }
             float footer=-h*.5f+32,left=-w*.5f+38;
             IconButton(backing.transform,"Settings",AstralGraphic.Shape.Gear,left,footer,44,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});

@@ -96,10 +96,10 @@ namespace Neon.Networking
                 runner.ProvideInput = false;
                 var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
                 var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-                settings.AppVersion = "neon-io/binary-3/" + PhotonNetwork.GameVersion;
+                settings.AppVersion = "neon-io/binary-4/" + PhotonNetwork.GameVersion;
                 settings.FixedRegion = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion.ToLowerInvariant();
                 int mode = (int)PhotonLauncher.SelectGameType;
-                if (maximumPlayers <= 0) maximumPlayers = PhotonLauncher.SelectGameType == GameType.Challenge ? 2 : 10;
+                if (maximumPlayers <= 0) maximumPlayers = PhotonLauncher.SelectGameType == GameType.Challenge ? 2 : PhotonLauncher.SelectGameType == GameType.Arena ? 16 : 10;
                 var result = await runner.StartGame(new StartGameArgs
                 {
                     GameMode = GameMode.Shared,
@@ -112,7 +112,7 @@ namespace Neon.Networking
                     EnableClientSessionCreation = true,
                     StartGameCancellationToken = cancellation.Token,
                     IsOpen = true,
-                    IsVisible = string.IsNullOrEmpty(NeonWebBridge.ValidationRoom)
+                    IsVisible = string.IsNullOrEmpty(NeonWebBridge.ValidationRoom) && !(sessionName?.StartsWith("neon-validation-", StringComparison.Ordinal) ?? false)
                 });
                 if (attempt != generation || !this) { await DisposeRunner(runner); return; }
                 if (!result.Ok) throw new InvalidOperationException("Fusion connection failed: " + result.ShutdownReason);

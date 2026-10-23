@@ -171,7 +171,7 @@ namespace Starbro.NeonIO
         protected bool IsInit = false;
         public bool IsInitialized { get { return IsInit; } }
         protected bool CanInitialize { get { return BattleManager.BM != null && BattleManager.BM.IsReadyToSpawn && (!PhotonNetwork.IsConnected || photonView.IsReady); } }
-        protected bool HasSimulationAuthority { get { return !PhotonNetwork.IsConnected || photonView.IsMine; } }
+        public bool HasSimulationAuthority { get { return !PhotonNetwork.IsConnected || photonView.IsMine; } }
         bool HasAppliedNetworkState;
         bool ApplyingNetworkState;
         protected int NetworkLifeRevision;
@@ -237,7 +237,7 @@ namespace Starbro.NeonIO
 
         protected virtual void Update()
         {
-            if (!IsInit) return;
+            if (!IsInit || NeonArenaFlow.CombatBlocked) return;
             if (!HasSimulationAuthority)
             {
                 // Proxy state comes from snapshots; only presentation timers run here.
@@ -269,7 +269,7 @@ namespace Starbro.NeonIO
         }
         void OutsideBattleAreaGetDebuff()
         {
-            if (BattleManager.BM == null || !HasSimulationAuthority) return;
+            if (NeonArenaFlow.Active || BattleManager.BM == null || !HasSimulationAuthority) return;
             bool inside = Circle.CheckIfPointInsiedTheCircle(BattleManager.BM.BattleFieldRadius, Vector2.zero, transform.position);
             if (!inside)
             {
@@ -392,7 +392,7 @@ namespace Starbro.NeonIO
         [PunRPC]
         public virtual void BeAttack(int _dmg, Vector2 _force)
         {
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             if (BuffersExist(RoleBuffer.Invisible))
                 RemoveBufferByTypes(RoleBuffer.Invisible);
             if (BuffersExist(RoleBuffer.Immortal))
@@ -443,11 +443,20 @@ namespace Starbro.NeonIO
         }
         public virtual void ReceiveDmg(int _dmg)
         {
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             if (BuffersExist(RoleBuffer.Immortal))
                 return;
+            int arenaDamage = Mathf.Clamp(_dmg, 0, Health);
+            NeonArena.Report(this, PhotonNetwork.Time - LastAttackerTime <= 15 ? LastAttackerViewId : 0, arenaDamage, false);
             Health -= _dmg;
             BreakNoDamageTaken();
+        }
+        public void ArenaStormDamage(int damage)
+        {
+            if (!NeonArenaFlow.Active || NeonArenaFlow.CombatBlocked || !HasSimulationAuthority || !IsAlive) return;
+            LastAttackerViewId = 0; LastAttackerTime = 0; lastOfflineAttacker = null;
+            Health -= damage;
+            if (Health <= 0 && IsAlive) Die();
         }
         public virtual void HealHP(int _heal)
         {
@@ -795,9 +804,10 @@ namespace Starbro.NeonIO
         }
         public virtual void Die()
         {
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             Vector2 deathPosition = transform.position;
             int killerViewId = PhotonNetwork.Time - LastAttackerTime <= 15 ? LastAttackerViewId : 0;
+            NeonArena.Report(this, killerViewId, 0, true);
             NetworkLifeRevision++;
             ApplyDeathPresentation();
             if (PhotonNetwork.IsConnected)
@@ -837,7 +847,7 @@ namespace Starbro.NeonIO
         }
         void HandleMatchDeath()
         {
-            if (BattleManager.BM == null) return;
+            if (BattleManager.BM == null || NeonArenaFlow.Active) return;
             if (PhotonLauncher.SelectGameType == GameType.Challenge)
             {
                 BattleManager.BM.ConfirmChallengeDeath(this);
@@ -897,7 +907,7 @@ namespace Starbro.NeonIO
                 var caster=casterView?casterView.GetComponent<Role>():null;
                 CallToEmitParticle(particle, position, caster?caster.MyForce:MyForce);
             }
-            if (!HasSimulationAuthority || !IsAlive) return;
+            if (!HasSimulationAuthority || !IsAlive || NeonArenaFlow.CombatBlocked) return;
             if (types == null || times == null || values == null || values2 == null ||
                 types.Length != times.Length || types.Length != values.Length || types.Length != values2.Length) return;
             bool harmful = damage > 0;
