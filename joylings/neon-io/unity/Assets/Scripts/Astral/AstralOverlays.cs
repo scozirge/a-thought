@@ -66,7 +66,13 @@ namespace Neon.Astral
             if(f!=null)Image(box,"Original guardian",-474,24,245,345,f.IconSprite,Color.white);
             Button(box,"Previous page",L("‹  上一頁","‹  PREVIOUS"),-465,-380,390,70,()=>book.PreviousPage()).interactable=book.LeftArrow&&book.LeftArrow.activeSelf;
             Text(box,"Page",book.PageText?book.PageText.text:"",0,-380,410,60,28,Gold,TextAnchor.MiddleCenter);
-            Button(box,"Next page",L("下一頁  ›","NEXT  ›"),465,-380,390,70,()=>book.NextPage(),true).interactable=book.RightArrow&&book.RightArrow.activeSelf;
+            BookForwardButton(box,book,465,-380,390,70,28);
+        }
+        void BookForwardButton(Transform parent,Book book,float x,float y,float width,float height,int fontSize)
+        {
+            bool hasNext=book.RightArrow&&book.RightArrow.activeSelf;
+            Button(parent,hasNext?"Next page":"Finish tutorial",hasNext?L("下一頁  ›","NEXT  ›"):L("關閉","CLOSE"),x,y,width,height,
+                ()=>{if(hasNext)book.NextPage();else book.OpenBook(false);},true,fontSize);
         }
         string BookText(GameObject bookPage)
         {
@@ -114,7 +120,7 @@ namespace Neon.Astral
             float buttonWidth=Mathf.Min(170,(w-104)*.5f),buttonX=(w-buttonWidth)*.5f-16,buttonY=-h*.5f+38;
             Button(box,"Previous page",L("‹  上一頁","‹  PREVIOUS"),-buttonX,buttonY,buttonWidth,44,()=>book.PreviousPage(),false,16).interactable=book.LeftArrow&&book.LeftArrow.activeSelf;
             Text(box,"Page",book.PageText?book.PageText.text:"",0,buttonY,64,44,16,Gold,TextAnchor.MiddleCenter);
-            Button(box,"Next page",L("下一頁  ›","NEXT  ›"),buttonX,buttonY,buttonWidth,44,()=>book.NextPage(),true,16).interactable=book.RightArrow&&book.RightArrow.activeSelf;
+            BookForwardButton(box,book,buttonX,buttonY,buttonWidth,44,16);
         }
     }
 }

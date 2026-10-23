@@ -1,0 +1,133 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "physicalDevice": false,
+  "checks": [
+    {
+      "label": "desktop-zh",
+      "kind": "general",
+      "page": "10/10",
+      "text": "關閉",
+      "enabled": true,
+      "cssBounds": {
+        "x": 820,
+        "y": 630,
+        "w": 260,
+        "h": 46.666664123535156,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1280,
+        "clipH": 800
+      },
+      "closed": true,
+      "previousRestoresNext": true
+    },
+    {
+      "label": "desktop-zh",
+      "kind": "reopen-and-header-close",
+      "passed": true
+    },
+    {
+      "label": "desktop-zh",
+      "kind": "first-game",
+      "page": "7/7",
+      "text": "關閉",
+      "enabled": true,
+      "cssBounds": {
+        "x": 820,
+        "y": 630,
+        "w": 260,
+        "h": 46.666664123535156,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1280,
+        "clipH": 800
+      },
+      "closed": true,
+      "previousRestoresNext": true
+    },
+    {
+      "label": "desktop-zh",
+      "kind": "single-page",
+      "page": "1/1",
+      "text": "關閉",
+      "enabled": true,
+      "cssBounds": {
+        "x": 820,
+        "y": 630,
+        "w": 260,
+        "h": 46.666664123535156,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 1280,
+        "clipH": 800
+      },
+      "closed": true,
+      "previousRestoresNext": false
+    },
+    {
+      "label": "mobile-en",
+      "kind": "general",
+      "page": "10/10",
+      "text": "CLOSE",
+      "enabled": true,
+      "cssBounds": {
+        "x": 469,
+        "y": 303,
+        "w": 170,
+        "h": 44,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 667,
+        "clipH": 375
+      },
+      "closed": true,
+      "previousRestoresNext": true
+    },
+    {
+      "label": "mobile-en",
+      "kind": "reopen-and-header-close",
+      "passed": true
+    },
+    {
+      "label": "mobile-en",
+      "kind": "first-game",
+      "page": "7/7",
+      "text": "CLOSE",
+      "enabled": true,
+      "cssBounds": {
+        "x": 469,
+        "y": 303,
+        "w": 170,
+        "h": 44,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 667,
+        "clipH": 375
+      },
+      "closed": true,
+      "previousRestoresNext": true
+    },
+    {
+      "label": "mobile-en",
+      "kind": "single-page",
+      "page": "1/1",
+      "text": "CLOSE",
+      "enabled": true,
+      "cssBounds": {
+        "x": 469,
+        "y": 303,
+        "w": 170,
+        "h": 44,
+        "clipX": 0,
+        "clipY": 0,
+        "clipW": 667,
+        "clipH": 375
+      },
+      "closed": true,
+      "previousRestoresNext": false
+    }
+  ],
+  "errors": [],
+  "singlePageTrigger": "Existing QA settlement preview; actual tutorial and pointer/touch events"
+}
