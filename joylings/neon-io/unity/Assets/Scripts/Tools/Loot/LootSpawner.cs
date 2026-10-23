@@ -12,6 +12,15 @@ namespace Scoz.Func
         {
             get { int count = 0; if (MySelf) foreach (var loot in MySelf.LootList) if (loot && loot.IsActive) count++; return count; }
         }
+        public static int ActiveCountWithin(float radius)
+        {
+            if (!MySelf || radius <= 0) return 0;
+            int count = 0;
+            float radiusSquared = radius * radius;
+            foreach (var loot in MySelf.LootList)
+                if (loot && loot.IsActive && ((Vector2)loot.transform.position).sqrMagnitude <= radiusSquared) count++;
+            return count;
+        }
         List<Loot> LootList;
         [SerializeField]
         Loot ExpLootPrefab = null;

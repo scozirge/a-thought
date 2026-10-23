@@ -7,6 +7,20 @@ namespace Neon.Networking
         public const int PlayerSeats = 16, ResourceBots = 16, Total = 32;
         public const float QueueSeconds = 15, StarSeconds = 10, InitialRadius = 4000;
         public const int StarsPerWave = 24, GroundStarLimit = 384;
+        static float AreaRatio(float radius)
+        {
+            float ratio = Mathf.Clamp01(radius / InitialRadius);
+            return ratio * ratio;
+        }
+        public static int AmbientStarsPerWindow(float radius) => Mathf.FloorToInt(StarsPerWave * AreaRatio(radius));
+        public static int AmbientStarLimit(float radius) => Mathf.FloorToInt(GroundStarLimit * AreaRatio(radius));
+        public static float AmbientStarInterval(float radius)
+        {
+            int count = AmbientStarsPerWindow(radius);
+            return count > 0 ? StarSeconds / count : StarSeconds;
+        }
+        public static bool CanSpawnAmbientStar(float radius, int nearby, int total) =>
+            AmbientStarsPerWindow(radius) > 0 && nearby < AmbientStarLimit(radius) && total < GroundStarLimit;
         // Thirty seconds to gather, then a smooth collapse; storm damage escalates every 30 seconds.
         public static float Radius(float elapsed) => InitialRadius * Mathf.Clamp01(1 - Mathf.Max(0, elapsed - 30) / 210);
         public static int StormDamage(float elapsed, int maxHealth) => Mathf.Max(1, Mathf.CeilToInt(maxHealth * (.035f + Mathf.Floor(elapsed / 30) * .015f)));

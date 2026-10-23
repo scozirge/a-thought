@@ -13,6 +13,14 @@ namespace Neon.Networking
         public static void Run()
         {
             var tickRate = Fusion.TickRate.Resolve(Fusion.NetworkProjectConfig.Global.Simulation.TickRateSelection);
+            Require(NeonArenaRules.AmbientStarsPerWindow(4000) == 24 && NeonArenaRules.AmbientStarsPerWindow(2000) == 6
+                && NeonArenaRules.AmbientStarsPerWindow(1000) == 1 && NeonArenaRules.AmbientStarsPerWindow(800) == 0,
+                "Ambient stars must decrease with safe-zone area, stopping in the final circle.");
+            Require(NeonArenaRules.AmbientStarLimit(2000) == 96 && NeonArenaRules.AmbientStarLimit(1000) == 24
+                && !NeonArenaRules.CanSpawnAmbientStar(2000, 96, 96)
+                && !NeonArenaRules.CanSpawnAmbientStar(4000, 0, 384)
+                && !NeonArenaRules.CanSpawnAmbientStar(0, 0, 0)
+                && !NeonArenaRules.CanSpawnAmbientStar(-1, 0, 0), "Ambient density or collapsed-circle limit failed.");
             Require(tickRate.Client == 32 && tickRate.Server == 32 && tickRate.ClientSend == 16 && tickRate.ServerSend == 16,
                 "Fusion Shared tick/send rates must be 32/16 without runtime fallback.");
             var bytes = NeonWireCodec.Pack("BeAttackAndAddBuffer", new object[] { 25, new Vector2(3, -4), new int[] { (int)RoleBuffer.Stun }, new float[] { 2 }, new float[] { 0.5f }, new float[] { 0 } });

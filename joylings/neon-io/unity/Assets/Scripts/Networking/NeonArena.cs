@@ -124,10 +124,12 @@ namespace Neon.Networking
             if (Phase != ArenaPhase.Running) return;
             if (Runner.SimulationTime >= NextStars)
             {
-                NextStars = Runner.SimulationTime + NeonArenaRules.StarSeconds;
-                int budget = Mathf.Min(NeonArenaRules.StarsPerWave, NeonArenaRules.GroundStarLimit - LootSpawner.ActiveCount);
-                for (int i = 0; i < budget; i += 3)
-                    LootSpawner.SpawnExpLoot(Mathf.Min(3, budget - i), UnityEngine.Random.insideUnitCircle * Mathf.Max(0, Radius - 120));
+                float radius = Radius;
+                // Pace individual stars across the interval. A late tick or host handover
+                // must never replay missed waves as a burst at the centre of a small circle.
+                NextStars = Runner.SimulationTime + NeonArenaRules.AmbientStarInterval(radius);
+                if (NeonArenaRules.CanSpawnAmbientStar(radius, LootSpawner.ActiveCountWithin(radius), LootSpawner.ActiveCount))
+                    LootSpawner.SpawnExpLoot(1, UnityEngine.Random.insideUnitCircle * Mathf.Max(0, radius - 120));
             }
         }
         static string RandomName(int slot)

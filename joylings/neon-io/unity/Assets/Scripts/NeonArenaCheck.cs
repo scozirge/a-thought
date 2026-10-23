@@ -14,11 +14,15 @@ namespace Neon.Validation
         [Serializable] public sealed class Result
         {
             public bool passed, closedRoom, roster, npcUnranked, seatRanked, drops, damage, duplicateIgnored, frozenResult, activeGroundCount, result, rewardOnce;
+            public bool ambientPaced, ambientScaled, ambientDensity, ambientStopped;
+            public int fullCircleStars, halfCircleStars, quarterCircleStars, denseCircleStars;
             public int humans, namedAi, namelessBots, roles, localRank, localReward;
             public string failure = "";
         }
         public readonly Result result = new Result();
         bool freeze;
+        bool starTestActive;
+        float starTestElapsed;
         public IEnumerator Run()
         {
             string room = PhotonNetwork.Runner ? PhotonNetwork.Runner.SessionInfo.Name : "";
@@ -61,6 +65,7 @@ namespace Neon.Validation
             result.roster = result.roles == 32 && result.humans + result.namedAi == 16 && result.namelessBots == 16;
             result.closedRoom = !PhotonNetwork.Runner.SessionInfo.IsOpen && PhotonNetwork.Runner.SessionInfo.MaxPlayers == 16;
             if (!result.roster || !result.closedRoom) throw new Exception("Wrong roster or open room: " + JsonUtility.ToJson(result));
+            yield return CheckAmbientStars(match);
             var killer = FindObjectsByType<PlayerRole>(FindObjectsSortMode.None).Single(r => r.photonView.Owner.ActorNumber == PhotonNetwork.MasterClient.ActorNumber);
             int killerSlot = match.FindView(killer.photonView.ViewID);
             int seat = Enumerable.Range(0, 16).First(i => match.Entries[i].Actor == 0);
@@ -96,13 +101,55 @@ namespace Neon.Validation
             match.SaveReward(); int stars = MyPlayer.Star; match.SaveReward();
             result.rewardOnce = stars == MyPlayer.Star;
             var row = match.Entries[match.LocalSlot]; result.localReward = NeonArenaRules.Reward(row.Rank, row.Kills, row.Damage);
-            result.passed = result.roster && result.closedRoom && result.npcUnranked && result.seatRanked && result.drops && result.damage && result.duplicateIgnored && result.result && result.rewardOnce && result.frozenResult && result.activeGroundCount;
+            result.passed = result.roster && result.closedRoom && result.npcUnranked && result.seatRanked && result.drops && result.damage && result.duplicateIgnored && result.result && result.rewardOnce && result.frozenResult && result.activeGroundCount
+                && result.ambientPaced && result.ambientScaled && result.ambientDensity && result.ambientStopped;
             if (!result.passed) throw new Exception(JsonUtility.ToJson(result));
             yield return Barrier(6);
+        }
+        IEnumerator CheckAmbientStars(NeonArena match)
+        {
+            starTestActive = true;
+            yield return SampleAmbient(match, 20, 0);
+            result.fullCircleStars = LootSpawner.ActiveCount;
+            result.ambientPaced = result.fullCircleStars >= 4 && result.fullCircleStars <= 12;
+            yield return SampleAmbient(match, 21, 135);
+            result.halfCircleStars = LootSpawner.ActiveCount;
+            yield return SampleAmbient(match, 22, 187.5f);
+            result.quarterCircleStars = LootSpawner.ActiveCount;
+            result.ambientScaled = result.halfCircleStars >= 1 && result.halfCircleStars <= 4
+                && result.halfCircleStars < result.fullCircleStars && result.quarterCircleStars == 1;
+            yield return SampleAmbient(match, 23, 135, 96);
+            result.denseCircleStars = LootSpawner.ActiveCount;
+            result.ambientDensity = result.denseCircleStars == 96;
+            yield return SampleAmbient(match, 24, 245);
+            result.ambientStopped = LootSpawner.ActiveCount == 0;
+            if (!(result.ambientPaced && result.ambientScaled && result.ambientDensity && result.ambientStopped))
+                throw new Exception("Ambient star rate/density regression: " + JsonUtility.ToJson(result));
+            starTestElapsed = 0;
+            yield return Barrier(25);
+            if (PhotonNetwork.IsMasterClient) { match.Started = PhotonNetwork.Time; match.NextStars = PhotonNetwork.Time + 10; }
+            starTestActive = false;
+            yield return Barrier(26);
+        }
+        IEnumerator SampleAmbient(NeonArena match, int phase, float elapsed, int preload = 0)
+        {
+            starTestElapsed = elapsed;
+            yield return Barrier(phase);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                foreach (var loot in FindObjectsByType<Loot>(FindObjectsSortMode.None)) loot.SetActive(false);
+                match.Started = PhotonNetwork.Time - elapsed;
+                // Simulate a late tick: the game must not replay missed waves all at once.
+                match.NextStars = PhotonNetwork.Time - 60;
+                if (preload > 0) LootSpawner.SpawnExpLoot(preload, Vector3.zero);
+            }
+            yield return new WaitForSecondsRealtime(4);
         }
         void Update()
         {
             if (!freeze || !NeonArena.Instance) return;
+            if (starTestActive && PhotonNetwork.IsMasterClient)
+                NeonArena.Instance.Started = PhotonNetwork.Time - starTestElapsed;
             foreach (var role in FindObjectsByType<Role>(FindObjectsSortMode.None))
             {
                 if (!role.HasSimulationAuthority || !role.IsAlive) continue;
@@ -110,7 +157,9 @@ namespace Neon.Validation
                 int slot = NeonArena.Instance.FindView(role.photonView.ViewID);
                 // Keep fixtures separate, inside the safe zone and away from ambient stars.
                 float angle = slot * Mathf.PI * 2 / 32;
-                role.transform.position = new Vector3(Mathf.Cos(angle) * 2500, Mathf.Sin(angle) * 2500, 0);
+                float distance = starTestActive ? 10000 : 2500;
+                role.transform.position = new Vector3(Mathf.Cos(angle) * distance, Mathf.Sin(angle) * distance, 0);
+                if (starTestActive) role.Health = role.MaxHealth; // Keep fixture actors away from loot without storm deaths.
                 role.MyRigi.linearVelocity = Vector2.zero;
             }
         }

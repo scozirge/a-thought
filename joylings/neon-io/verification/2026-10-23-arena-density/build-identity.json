@@ -1,0 +1,29 @@
+{
+  "version": "1.2.2-web",
+  "previous_initial_bytes": 32960069,
+  "initial_bytes": 32963060,
+  "protected_published_files": 722,
+  "protected_unchanged": true,
+  "files": {
+    "index.html": {
+      "bytes": 8908,
+      "sha256": "03b52d87bd74191c4750ffc699404592938b692f9fc01d5c44006ba2727ebacb"
+    },
+    "Build/0f8f0dbd0080d65626e47a3535fe1806.data.unityweb": {
+      "bytes": 21017115,
+      "sha256": "8f63c638697e70d5e7d847eb9aea71f5e961a9a470572b9bdb43fdb91aef0661"
+    },
+    "Build/4ef510e3efade6eb5c847d74f4a9afcb.framework.js.unityweb": {
+      "bytes": 93180,
+      "sha256": "d0445dc1d2e129ccf5cd1b479c7a4314021b4bb9e28c0e10f5747aa9a60830fd"
+    },
+    "Build/7f252b71f04cb0ee78ba8b2db8c3b48f.wasm.unityweb": {
+      "bytes": 11795991,
+      "sha256": "ad8886a33fa1b2ff36974a124bfd8a1fe196db2056614758075a97f46c2eac58"
+    },
+    "Build/e2a793a1a38d493fc899635b692423f8.loader.js": {
+      "bytes": 47866,
+      "sha256": "65cef429ba439d210efe4c0878b11dab03309bb9ea2e13c3b2d37ab3e3214109"
+    }
+  }
+}

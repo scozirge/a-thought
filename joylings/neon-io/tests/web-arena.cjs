@@ -64,6 +64,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
    }
   }
   report.checks.push('NPC deaths are unranked; player seats rank; damage excludes overkill; repeat deaths ignored; rank 1..16 unique; rewards granted once');
+  report.checks.push('Ambient stars are paced individually, decrease with safe-zone area, pause at the local density limit and stop in a collapsed circle');
   for(const [i,p] of pages.entries())await click(p,'Arena return',i===1);
   await Promise.all(pages.map(p=>p.waitForFunction(()=>neonState.view==='lobby'&&!neonState.connected,null,{timeout:45000})));
   report.checks.push('Desktop and phone results return to lobby without respawning');
