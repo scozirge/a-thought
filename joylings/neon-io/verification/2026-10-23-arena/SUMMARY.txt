@@ -25,6 +25,8 @@
 - WebGL 桌面雙瀏覽器連線及手機 Chromium 觸控；55 個完整版面情境及最新發布檔的 11 個觸控情境。
 - Chromium / WebKit HTML 外框旋轉、fullscreen/orientation API 拒絕與視窗安全區處理。WebKit 此項使用 Unity stub，不代表真實 iPhone WebGL 實測。
 - Windows 壓縮檔 CRC 與 SHA256；原媒體、動畫、Shader、548 個 prefab 與 95 技能內容比對。
+- 公開 GitHub Pages 網址實際雙瀏覽器 Photon 連線通過：桌面與手機模擬各一名真人、14 個補位 AI、16 個無名 bot，同房共 32 個角色。取消配對、淘汰名次、有效傷害、結算防重複、矮螢幕返回大廳均通過，未出現非預期執行錯誤。
+- 公開入口與四個遊戲發布檔案均 HTTP 200，檔案大小及 SHA256 與本機最終版本完全相符。
 
 限制
 - 真人滿 16 席的壓力測試尚未執行；目前實際多人測試為 Windows 3 人及 WebGL 2 人，32 個角色總數已實測。
@@ -32,4 +34,9 @@
 - 獎勵沿用本機存檔，未新增雲端資料庫；連線沿用 Fusion Shared Mode，並非專用伺服器防作弊架構。
 - 斷線視為淘汰，未實作斷線重入。
 
-發布狀態：待 GitHub Pages 部署與公開版核對。
+發布狀態：GitHub Pages 已部署成功，公開版檔案及實際多人連線已核對通過。
+公開網址：https://scozirge.github.io/a-thought/neon-impact/
+版本：1.2.0-web / 1.2.0-fusion
+程式提交：580451e
+網頁發布提交：fb8c692a5f569681bd428fd8b57e86cbe2d8a6a5
+部署紀錄：https://github.com/scozirge/a-thought/actions/runs/39932451723
