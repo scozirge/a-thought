@@ -46,7 +46,7 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
   <button id="landscape" hidden>切換橫向全螢幕</button>
  </section>
 </main>
-<script src="Build/234f4493f549ad70ee5f90de80a37389.loader.js"></script>
+<script src="Build/5894bf71bd0e7bd5728e37425bd585d3.loader.js"></script>
 <script>
 const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
@@ -109,9 +109,9 @@ landscape.onclick=requestLandscape;
 updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
- dataUrl:'Build/2a1a0404a60f5327a103a6280d6c4890.data.unityweb',frameworkUrl:'Build/9e88cfdbc1deade90600425a016781f4.framework.js.unityweb',codeUrl:'Build/fe0236f2bf869dad1dadb59f13cab5bf.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+ dataUrl:'Build/879785a4a14aafae6c99824acb04b7a5.data.unityweb',frameworkUrl:'Build/8c1b99f61f8449575ea068a0186f8a22.framework.js.unityweb',codeUrl:'Build/ea9b0343fdd8617cc28804bb6e8c3655.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
  // Keep the storage identity so existing local profiles and loadouts survive the rename.
- companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.8-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.9-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
  window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
