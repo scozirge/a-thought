@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-visual">
+<meta name="theme-color" content="#10172b">
+<title>星際遊俠 NOVAROVE</title>
+<style>
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:#10172b;color:#eee8d6;font-family:system-ui,sans-serif;overflow:hidden;overscroll-behavior:none}
+#viewport{position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;overflow:hidden}
+#game{position:absolute;top:var(--safe-top);right:var(--safe-right);bottom:var(--safe-bottom);left:var(--safe-left)}
+#unity-canvas{width:100%;height:100%;display:block;outline:none;touch-action:none;-webkit-user-select:none;user-select:none}
+.screen{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:24px;overflow:auto;background:#10172b}
+h1{font-size:clamp(28px,6vw,56px);letter-spacing:.08em;margin:0 0 20px;color:#d8bd72}
+progress{width:min(340px,80vw);height:8px;accent-color:#d8bd72;justify-self:center}
+p{font-size:16px;line-height:1.6;margin:12px 0}
+button{font:inherit;font-size:16px;font-weight:500;min-height:44px;background:#18223a;color:#eee8d6;border:1px solid #bca56d;border-radius:3px;padding:10px 20px;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.45;cursor:wait}
+a{color:#d8bd72;font-size:16px;margin-top:20px}
+#sound{position:absolute;z-index:1;top:max(12px,var(--safe-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:#10172bd9;font-size:13px;padding:8px 14px}
+#sound svg{width:20px;height:20px;fill:none;stroke:#cbb477;stroke-width:1.6}
+#error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}
+#rotate{z-index:2;padding:max(24px,var(--safe-top)) max(24px,var(--safe-right)) max(24px,var(--safe-bottom)) max(24px,var(--safe-left))}
+#rotate h2{font-size:26px;font-weight:600;color:#d8bd72;margin:24px 0 8px}
+#rotate p{max-width:26em;color:#b8c2d5}
+.phone{justify-self:center;width:96px;height:52px;border:2px solid #d8bd72;border-radius:8px;position:relative}
+.phone:after{content:'';position:absolute;right:6px;top:18px;width:3px;height:12px;border-radius:2px;background:#d8bd72}
+[hidden]{display:none!important}
+@media(max-height:420px) and (orientation:landscape){#loading{padding:12px}#loading h1{font-size:28px;margin:0 0 8px}#loading p{margin:8px 0}#loading a{margin-top:12px}}
+</style>
+</head>
+<body>
+<main id="viewport">
+ <div id="game"><canvas id="unity-canvas" tabindex="0" aria-label="星際遊俠 NOVAROVE 遊戲"></canvas></div>
+ <section id="loading" class="screen" aria-label="載入遊戲">
+  <progress id="progress" max="1" value="0" aria-label="載入進度"></progress>
+  <p id="status" role="status">載入中…</p>
+  <p id="error" role="alert" hidden></p>
+ </section>
+ <button id="sound" aria-label="開啟遊戲聲音" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5 5 9H2v6h3l5 4Z M15 9l7 6m0-6-7 6"/></svg><span>點一下開啟聲音</span></button>
+ <section id="rotate" class="screen" role="dialog" aria-modal="true" aria-labelledby="rotate-title" hidden>
+  <div class="phone" aria-hidden="true"></div><h2 id="rotate-title">請將手機橫放</h2>
+  <p>橫向後會自動調整畫面。<br>若畫面沒有旋轉，請關閉手機的直向鎖定。</p>
+  <button id="landscape" hidden>切換橫向全螢幕</button>
+ </section>
+</main>
+<script src="Build/b737434321103fd58be5e456c3cca071.loader.js"></script>
+<script>
+const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
+const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
+// Touchscreen Windows laptops still use the desktop mouse controls. iPadOS can
+// identify itself as a Mac when requesting a desktop website.
+const touchDevice=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let scheduled=false,lastViewport='',portrait=false,started=false;
+function maybeStart(){
+ if(!window.unityInstance||portrait||started)return;
+ started=true;loading.hidden=true;canvas.focus();
+ window.unityInstance.SendMessage('NeonWebBridge','StartGame');
+}
+function audioState(){sound.hidden=!started||portrait||window.neonAudioState==='running';}
+function unlockAudio(){window.unityInstance?.SendMessage('NeonWebBridge','UnlockAudio');}
+window.addEventListener('neon-audio-state',audioState);
+sound.addEventListener('click',()=>{unlockAudio();canvas.focus();});
+canvas.addEventListener('pointerdown',unlockAudio,{passive:true});
+canvas.addEventListener('keydown',unlockAudio);
+function updateViewport(){
+ scheduled=false;
+ const visual=window.visualViewport;
+ const width=Math.max(1,Math.round(visual?visual.width:innerWidth)),height=Math.max(1,Math.round(visual?visual.height:innerHeight));
+ viewport.style.width=width+'px';viewport.style.height=height+'px';
+ viewport.style.left=(visual?visual.offsetLeft:0)+'px';viewport.style.top=(visual?visual.offsetTop:0)+'px';
+ // A keyboard can reduce visualViewport without rotating the phone. Use the
+ // layout viewport for orientation, and keep it stable during text entry.
+ const editing=/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||'');
+ if(!editing)portrait=touchDevice&&innerHeight>innerWidth;
+ rotate.hidden=!portrait;canvas.inert=portrait;loading.inert=portrait;
+ const metrics={width:canvas.clientWidth,height:canvas.clientHeight,touch:touchDevice,blocked:portrait||document.hidden||!document.hasFocus()};
+ window.neonViewport={...metrics,portrait,visibleWidth:width,visibleHeight:height};
+ const json=JSON.stringify(metrics);
+ if(window.unityInstance&&json!==lastViewport){window.unityInstance.SendMessage('NeonWebBridge','SetViewport',json);lastViewport=json;}
+ maybeStart();audioState();
+}
+function scheduleViewport(){if(!scheduled){scheduled=true;requestAnimationFrame(updateViewport);}}
+window.addEventListener('resize',scheduleViewport);
+window.addEventListener('pageshow',scheduleViewport);
+function releaseInput(){window.unityInstance?.SendMessage('NeonWebBridge','ReleaseInput');scheduleViewport();}
+window.addEventListener('blur',releaseInput);
+window.addEventListener('focus',scheduleViewport);
+document.addEventListener('visibilitychange',releaseInput);
+canvas.addEventListener('touchcancel',releaseInput);
+window.addEventListener('orientationchange',()=>{scheduleViewport();setTimeout(scheduleViewport,150);setTimeout(scheduleViewport,400);});
+document.addEventListener('fullscreenchange',scheduleViewport);
+document.addEventListener('focusout',()=>setTimeout(scheduleViewport,100));
+window.visualViewport?.addEventListener('resize',scheduleViewport);
+window.visualViewport?.addEventListener('scroll',scheduleViewport);
+screen.orientation?.addEventListener('change',scheduleViewport);
+async function requestLandscape(){
+ if(!touchDevice)return;
+ // Optional enhancement: normal rotation still works when either API is denied.
+ try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();}catch(_error){}
+ try{if(screen.orientation?.lock)await screen.orientation.lock('landscape');}catch(_error){}
+ scheduleViewport();
+}
+const landscape=document.getElementById('landscape');
+landscape.hidden=!(touchDevice&&document.documentElement.requestFullscreen);
+landscape.onclick=requestLandscape;
+updateViewport();
+window.neonLoadStarted=performance.now();
+createUnityInstance(canvas,{
+ dataUrl:'Build/6595fd9fb877422772d5ff8657f7282d.data.unityweb',frameworkUrl:'Build/3fa6052cee52c9b222bdeff6595b610b.framework.js.unityweb',codeUrl:'Build/75fcd699acf85540c99b34a75093afb7.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+ // Keep the storage identity so existing local profiles and loadouts survive the rename.
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.3.1-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
+ cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
+},p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
+ window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;
+ updateViewport();
+}).catch(error=>{
+ const message=document.getElementById('error');message.hidden=false;
+ message.textContent='載入失敗，請重新整理或使用電腦版 Chrome／Edge。';status.textContent='無法載入';console.error(error);
+});
+</script>
+</body>
+</html>

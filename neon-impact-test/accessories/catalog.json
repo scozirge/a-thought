@@ -1,0 +1,10391 @@
+[
+  {
+    "id": 1,
+    "part": "頭部",
+    "name": "憤怒轟炸",
+    "description": "受到攻擊後凝聚能量產生爆破造成傷害並燃燒周圍敵人，冷卻3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "BeHitExplode",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "2"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BeHitExplode.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-BeHitExplode",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BeHitExplode.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [3, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Bomb-BeHitExplode",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-BeHitExplode.prefab",
+        "details": [
+          "單次接觸傷害係數：1.5 × 技能攻擊力；基準傷害 375／600（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "part": "頭部",
+    "name": "不死之王",
+    "description": "頻死瞬間會恢復10%生命，並轉化為幽靈狀態持續4秒，冷卻12秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "DieGhost",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DieGhost.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-DieGhost",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DieGhost.prefab",
+        "details": [
+          "觸發：死亡；條件參數 [12]",
+          "自身：幽靈，Time=4，數值 0，Value2=0",
+          "自身：立即治療，Time=0，數值 0.1，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "part": "頭部",
+    "name": "瘋狂鋸刀",
+    "description": "向靠近的敵人發射迴旋鋸刀(穿透性子彈)造成傷害並使敵人流血持續5秒，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "BowBlade",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.2"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "300"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BowBlade.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-BowBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BowBlade.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-BowBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-BowBlade.prefab",
+        "details": [
+          "單次接觸傷害係數：0.35 × 技能攻擊力；基準傷害 88／140（一般／對決）",
+          "同目標觸發間隔：0.3",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "part": "頭部",
+    "name": "無畏假面",
+    "description": "生命低於一半時，若受到攻擊無敵2秒並恢復15%生命，冷卻12秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Knight",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "13"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Knight.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Knight",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Knight.prefab",
+        "details": [
+          "觸發：受擊且低血量；條件參數 [12, 0.5]",
+          "自身：無敵，Time=2，數值 0，Value2=0",
+          "自身：立即治療，Time=0，數值 0.15，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "part": "頭部",
+    "name": "酷寒水晶",
+    "description": "向前方發射兩道冰錐，每發基準傷害100，命中緩速60%，施放間隔1秒。",
+    "acquisition": "初始配件",
+    "price": "0",
+    "skill": "Icicle",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-4"
+      ],
+      [
+        "AmmoNum",
+        "2"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "8"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Icicle.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Icicle",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Icicle.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：2"
+        ]
+      },
+      {
+        "prefab": "Ammo-Icicle",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Icicle.prefab",
+        "details": [
+          "固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "part": "頭部",
+    "name": "吸血將軍",
+    "description": "任何攻擊擊中敵人時，恢復5%生命，冷卻0.2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Vampire",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "4"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Vampire.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Vampire",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Vampire.prefab",
+        "details": [
+          "觸發：任何攻擊命中；條件參數 [0.2, 0, 0]",
+          "自身：立即治療，Time=0，數值 0.05，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "part": "頭部",
+    "name": "超方位感應",
+    "description": "顯示所有視野外的敵方方向",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "EnemyDirection",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-EnemyDirection.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-EnemyDirection",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-EnemyDirection.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [3]",
+          "自身：方向提示，Time=4，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "part": "頭部",
+    "name": "無上光環",
+    "description": "光盤環繞自身，可抵擋非穿透子彈，每次接觸基準傷害100。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "CircularBlade",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.3"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "0.9"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-CircularBlade.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-CircularBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-CircularBlade.prefab",
+        "details": [
+          "施放間隔：0.9"
+        ]
+      },
+      {
+        "prefab": "Melee-CircularBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-CircularBlade.prefab",
+        "details": [
+          "固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "part": "頭部",
+    "name": "哪來的鴨蛋",
+    "description": "放置鴨蛋，5秒後爆炸；爆炸半徑與特效放大30%，保留原傷害與燃燒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "DuckEgg",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "2"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "4"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DuckEgg.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-DuckEgg",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DuckEgg.prefab",
+        "details": [
+          "施放間隔：4"
+        ]
+      },
+      {
+        "prefab": "Bomb-DuckEgg",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-DuckEgg.prefab",
+        "details": [
+          "單次接觸傷害係數：2 × 技能攻擊力；基準傷害 500／800（一般／對決）",
+          "作用半徑／視覺縮放：1.3 倍",
+          "延遲爆炸：5 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=2，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "part": "頭部",
+    "name": "隱形邊緣人",
+    "description": "受到攻擊後隱形4秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Invisible",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Invisible.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Invisible",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Invisible.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [1, 1, 1]",
+          "自身：隱形，Time=4，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "part": "頭部",
+    "name": "大明星",
+    "description": "吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留拾星回血與加速。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "AbsorbStar",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "9"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-AbsorbStar.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-AbsorbStar",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-AbsorbStar.prefab",
+        "details": [
+          "觸發：取得經驗；條件參數 [0]",
+          "自身：立即治療，Time=0，數值 0.25，Value2=0",
+          "自身：移速提升，Time=2，數值 0.3，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "part": "頭部",
+    "name": "吹個大泡泡",
+    "description": "產生3發上升泡泡，施放間隔2.5秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "UpAheadBubble",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "2.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "3"
+      ],
+      [
+        "AmmoInterval",
+        "0.6"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-UpAheadBubble.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-UpAheadBubble",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-UpAheadBubble.prefab",
+        "details": [
+          "施放間隔：2.5",
+          "每次生成數：3"
+        ]
+      },
+      {
+        "prefab": "Ammo-UpAheadBubble",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-UpAheadBubble.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：4"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "part": "頭部",
+    "name": "超惡飛針",
+    "description": "向前發射4道飛針，每發基準傷害80，附加流血。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "NailSplash",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.25"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-20"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "10"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-NailSplash.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-NailSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-NailSplash.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-NailSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-NailSplash.prefab",
+        "details": [
+          "固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "part": "頭部",
+    "name": "逃脫大師",
+    "description": "受擊且生命低於50%時傳送至安全區內，恢復30%生命；冷卻10秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Teleport",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "13"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Teleport.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Teleport",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Teleport.prefab",
+        "details": [
+          "觸發：受擊且低血量；條件參數 [10, 0.5]",
+          "自身：傳送，Time=0，數值 0，Value2=0",
+          "自身：立即治療，Time=0，數值 0.3，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "part": "頭部",
+    "name": "彩虹死光",
+    "description": "向前方發射死亡射線(穿透性子彈)造成傷害，冷卻3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Laser",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "2000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Laser.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Laser",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Laser.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-Laser",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Laser.prefab",
+        "details": [
+          "單次接觸傷害係數：1.5 × 技能攻擊力；基準傷害 375／600（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "part": "頭部",
+    "name": "高端格檔",
+    "description": "抵擋一次攻擊，冷卻6秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Constitution",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Constitution.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Constitution",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Constitution.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [6]",
+          "自身：格擋，Time=8，數值 1，Value2=1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "part": "頭部",
+    "name": "醫生喵",
+    "description": "恢復2.5%生命，冷卻1秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Recovery",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Recovery.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Recovery",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Recovery.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [1]",
+          "自身：立即治療，Time=0，數值 0.025，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "part": "頭部",
+    "name": "三叉箭射",
+    "description": "向三個方向發射箭頭造成傷害，冷卻1秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "TripleArrow",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.7"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "90"
+      ],
+      [
+        "AmmoNum",
+        "3"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "120"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TripleArrow.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-TripleArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TripleArrow.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：3"
+        ]
+      },
+      {
+        "prefab": "Ammo-TripleArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-TripleArrow.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "part": "頭部",
+    "name": "一次電一下",
+    "description": "每次肉搏命中發射一道追蹤電流。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "EliteHunt",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "6"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0.5"
+      ],
+      [
+        "StartAngle",
+        "-90"
+      ],
+      [
+        "AngleInterval",
+        "-90"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-EliteHunt.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-EliteHunt",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-EliteHunt.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：肉搏命中；條件參數 [0, 1, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-EliteHunt",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-EliteHunt.prefab",
+        "details": [
+          "單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "part": "頭部",
+    "name": "我要活下去",
+    "description": "生命低於3%時，每秒恢復10%最大生命。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Rest",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "3"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Rest.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Rest",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Rest.prefab",
+        "details": [
+          "觸發：低血量；條件參數 [1, 0.03, 0]",
+          "自身：立即治療，Time=0，數值 0.1，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "part": "頭部",
+    "name": "隱身詭雷",
+    "description": "在原地放置隱形炸彈，敵人靠近或10秒後爆炸對敵人造成傷害並燃燒，冷卻3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "InvisibleBomb",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.5"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-InvisibleBomb.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-InvisibleBomb",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-InvisibleBomb.prefab",
+        "details": [
+          "施放間隔：3"
+        ]
+      },
+      {
+        "prefab": "Bomb-InvisibleBomb",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-InvisibleBomb.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "延遲爆炸：10 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "part": "頭部",
+    "name": "甜蜜報復",
+    "description": "受擊發射追蹤愛心，子彈存在4秒，保留吸血效果。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "WoeShare",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "13"
+      ],
+      [
+        "DamagePercent",
+        "0.5"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WoeShare.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-WoeShare",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WoeShare.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：受擊且低血量；條件參數 [0.2, 1]"
+        ]
+      },
+      {
+        "prefab": "Ammo-WoeShare",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-WoeShare.prefab",
+        "details": [
+          "單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：4"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "part": "頭部",
+    "name": "熱血進擊",
+    "description": "肉搏命中恢復10%最大生命，移速提升30%持續3秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Berserker ",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "6"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Berserker.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Berserker",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Berserker.prefab",
+        "details": [
+          "觸發：肉搏命中；條件參數 [0.3, 1, 0]",
+          "自身：立即治療，Time=0，數值 0.1，Value2=0",
+          "自身：移速提升，Time=3，數值 0.3，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "part": "頭部",
+    "name": "派對氣球",
+    "description": "發射氣球，基準接觸傷害300，3秒後爆炸；施放間隔3秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "TraceBalloon",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "1"
+      ],
+      [
+        "DetecteRadius",
+        "1300"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceBalloon.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-TraceBalloon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceBalloon.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-TraceBalloon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-TraceBalloon.prefab",
+        "details": [
+          "固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-Confetti",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-Confetti.prefab",
+        "details": [
+          "固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例",
+          "延遲爆炸：0 秒",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "part": "頭部",
+    "name": "原力大反射",
+    "description": "反射周圍子彈並暈眩敵人，冷卻6秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "SoundWave",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "2"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "300"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SoundWave.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SoundWave",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SoundWave.prefab",
+        "details": [
+          "施放間隔：6"
+        ]
+      },
+      {
+        "prefab": "Melee-SoundWave",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-SoundWave.prefab",
+        "details": [
+          "單次接觸傷害係數：0 × 技能攻擊力；基準傷害 0／0（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.6",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "part": "頭部",
+    "name": "神奇腦波",
+    "description": "發出奇怪的腦波對靠近的敵人造成持續傷害",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Curse",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.15"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "1"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Curse.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Curse",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Curse.prefab",
+        "details": [
+          "施放間隔：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-Curse",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Curse.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：99999"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "part": "頭部",
+    "name": "胡蘿蔔大進擊",
+    "description": "投擲迴旋胡蘿蔔，每次接觸基準傷害200。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Carrot",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "2"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "70"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0.15"
+      ],
+      [
+        "AngleInterval",
+        "-15"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Carrot.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Carrot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Carrot.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-Carrot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Carrot.prefab",
+        "details": [
+          "固定基準傷害：200／200（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "part": "頭部",
+    "name": "超載",
+    "description": "受擊釋放衝擊波，暈眩2秒，保留6秒冷卻。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "KnockWave",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KnockWave.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-KnockWave",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KnockWave.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [6, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Melee-KnockWave",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-KnockWave.prefab",
+        "details": [
+          "單次接觸傷害係數：0 × 技能攻擊力；基準傷害 0／0（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.6",
+          "命中目標：暈眩，Time=2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "part": "頭部",
+    "name": "為什麼有雞蛋",
+    "description": "原地產生雞蛋，雞蛋4秒後或敵人靠近會爆炸並傷害範圍內敵人並造成燃燒持續5秒，冷卻4秒",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "ChickenEgg",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "1"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "4"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ChickenEgg.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-ChickenEgg",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ChickenEgg.prefab",
+        "details": [
+          "施放間隔：4"
+        ]
+      },
+      {
+        "prefab": "Bomb-ChickenEgg",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-ChickenEgg.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "延遲爆炸：4 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "part": "頭部",
+    "name": "毒痰大噴獸",
+    "description": "向敵人發射毒氣彈造成傷害並留下毒氣持續造成範圍內敵人傷害並虛弱，冷卻3秒（虛弱：攻擊力降低50%。）",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "PoisonedStrike",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.5"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PoisonedStrike.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-PoisonedStrike",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PoisonedStrike.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-PoisonedStrike",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-PoisonedStrike.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.2",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-PoisonedStrike",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-PoisonedStrike.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0.5",
+          "接觸觸發間隔：0",
+          "存在秒數：5",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "part": "頭部",
+    "name": "千金風暴",
+    "description": "向周圍發射金球造成傷害，冷卻7秒",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "CoinBullet",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "12"
+      ],
+      [
+        "AmmoInterval",
+        "0.01"
+      ],
+      [
+        "AngleInterval",
+        "30"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-CoinBullet.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-CoinBullet",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-CoinBullet.prefab",
+        "details": [
+          "施放間隔：6",
+          "每次生成數：12"
+        ]
+      },
+      {
+        "prefab": "Ammo-CoinBullet",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-CoinBullet.prefab",
+        "details": [
+          "單次接觸傷害係數：0.7 × 技能攻擊力；基準傷害 175／280（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "part": "頭部",
+    "name": "蠻牛大爆衝",
+    "description": "肉搏攻擊倍率1.5，保留前方非穿透子彈防護。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "PowerfulStrike",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "1.2"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "1"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PowerfulStrike.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-PowerfulStrike",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PowerfulStrike.prefab",
+        "details": [
+          "施放間隔：6"
+        ]
+      },
+      {
+        "prefab": "Melee-PowerfulStrike",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-PowerfulStrike.prefab",
+        "details": [
+          "單次接觸傷害係數：1.5 × 肉搏攻擊力；基準傷害 375／600（一般／對決）",
+          "同目標觸發間隔：0.3",
+          "接觸觸發間隔：0",
+          "存在秒數：999999",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "part": "頭部",
+    "name": "超速奔騰",
+    "description": "未受傷後移動速度提升40%。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "FocalMove",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "8"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FocalMove.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FocalMove",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FocalMove.prefab",
+        "details": [
+          "觸發：未受傷；條件參數 [2, 2, 1]",
+          "自身：移速提升，Time=99999，數值 0.4，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "part": "身體",
+    "name": "影襲",
+    "description": "進行肉搏攻擊後隱身3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "SneakAttack",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "6"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SneakAttack.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SneakAttack",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SneakAttack.prefab",
+        "details": [
+          "觸發：肉搏命中；條件參數 [0.2, 0, 0]",
+          "自身：隱形，Time=3，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "part": "身體",
+    "name": "超硬派特攻",
+    "description": "減免受到的傷害30%",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Defend",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Defend.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Defend",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Defend.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [2]",
+          "自身：格擋，Time=3，數值 0.3，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "part": "身體",
+    "name": "扭曲基點",
+    "description": "骨盾旋轉速度為原本2倍。",
+    "acquisition": "初始配件",
+    "price": "0",
+    "skill": "BoneShield",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "1"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BoneShield.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-BoneShield",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BoneShield.prefab",
+        "details": [
+          "施放間隔：1"
+        ]
+      },
+      {
+        "prefab": "Melee-BoneShield",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-BoneShield.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：0.7",
+          "接觸觸發間隔：0",
+          "存在秒數：99999",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "part": "身體",
+    "name": "繞跑小丑",
+    "description": "受擊後移動速度提升60%，持續2秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Flee",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Flee.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Flee",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Flee.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [4, 0, 0]",
+          "自身：移速提升，Time=2，數值 0.6，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "part": "身體",
+    "name": "急凍噴霧",
+    "description": "噴霧每次接觸基準傷害20，造成60%緩速。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FrozenSpray",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.15"
+      ],
+      [
+        "DetecteRadius",
+        "400"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "30"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.15"
+      ],
+      [
+        "DetecteRadius",
+        "400"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "180"
+      ],
+      [
+        "AttackRadius",
+        "30"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenSpray.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FrozenSpray",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenSpray.prefab",
+        "details": [
+          "施放間隔：5"
+        ]
+      },
+      {
+        "prefab": "Melee-FrozenSpray",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-FrozenSpray.prefab",
+        "details": [
+          "固定基準傷害：20／20（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0.25",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：緩速60%，Time=1.5，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-FrozenSpray",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenSpray.prefab",
+        "details": [
+          "施放間隔：5"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "part": "身體",
+    "name": "爆破感應",
+    "description": "敵方靠近時2秒後產生爆破，傷害敵人並造成燃燒，冷卻6秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "SelfExplosion",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "300"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "2"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SelfExplosion.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SelfExplosion",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SelfExplosion.prefab",
+        "details": [
+          "施放間隔：6"
+        ]
+      },
+      {
+        "prefab": "Bomb-SelfExplosion",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-SelfExplosion.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "part": "身體",
+    "name": "超威能反射盾",
+    "description": "反射盾半徑與特效放大20%。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "ReflectAmmoShell",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "DamagePercent",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ReflectAmmoShell.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-ReflectAmmoShell",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ReflectAmmoShell.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [4]"
+        ]
+      },
+      {
+        "prefab": "Melee-ReflectAmmoShell",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-ReflectAmmoShell.prefab",
+        "details": [
+          "作用半徑／視覺縮放：1.2 倍",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：4",
+          "存在秒數：999999"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "part": "身體",
+    "name": "極緩磁圈",
+    "description": "產生緩速磁場使靠近的敵人受到傷害，且靠近的子彈會減速50%",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "SlowDown",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "DamagePercent",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SlowDown.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SlowDown",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SlowDown.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [4]"
+        ]
+      },
+      {
+        "prefab": "Melee-SlowDown",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-SlowDown.prefab",
+        "details": [
+          "單次接觸傷害係數：0.05 × 技能攻擊力；基準傷害 12／20（一般／對決）",
+          "同目標觸發間隔：0.5",
+          "接觸觸發間隔：0",
+          "存在秒數：999999",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "part": "身體",
+    "name": "若隱若現",
+    "description": "週期性隱形，每次持續1.5秒，週期間隔2秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "IntermittentInvisible",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-IntermittentInvisible.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-IntermittentInvisible",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-IntermittentInvisible.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [2]",
+          "自身：隱形，Time=1.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "part": "身體",
+    "name": "大顆火球",
+    "description": "火球每次命中基準傷害300，保留燃燒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FireBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "1"
+      ],
+      [
+        "DetecteRadius",
+        "1200"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "1"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FireBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FireBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FireBall.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-FireBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-FireBall.prefab",
+        "details": [
+          "固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2",
+          "命中目標：暈眩，Time=0.3，數值 0，Value2=0",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "part": "身體",
+    "name": "縱火小子",
+    "description": "產生火焰在自己腳對經過的敵人造成傷害並燃燒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FireTrail",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.1"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "0.3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FireTrail.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FireTrail",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FireTrail.prefab",
+        "details": [
+          "施放間隔：0.3"
+        ]
+      },
+      {
+        "prefab": "Bomb-FireTrail",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-FireTrail.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：5",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "part": "身體",
+    "name": "追跡兩小魚",
+    "description": "從背後發射2條會追蹤敵人的小魚，冷卻1秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "TraceFish",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.3"
+      ],
+      [
+        "DetecteRadius",
+        "600"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-225"
+      ],
+      [
+        "AmmoNum",
+        "2"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "90"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceFish.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-TraceFish",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceFish.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：2"
+        ]
+      },
+      {
+        "prefab": "Ammo-TraceFish",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-TraceFish.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：4"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "part": "身體",
+    "name": "軌道光子",
+    "description": "在周圍圍繞4顆光粒子，擊中敵人可造成傷害",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "PhotonShell",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.15"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "1"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PhotonShell.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-PhotonShell",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PhotonShell.prefab",
+        "details": [
+          "施放間隔：1"
+        ]
+      },
+      {
+        "prefab": "Melee-PhotonShell",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-PhotonShell.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0.3",
+          "接觸觸發間隔：0",
+          "存在秒數：99999",
+          "命中目標：暈眩，Time=0.2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 114,
+    "part": "身體",
+    "name": "不再彈疼",
+    "description": "護甲包覆自身，減免非穿透性子彈傷害50%並免除造成的負面效果",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "AmmoArmor",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "DamagePercent",
+        "0"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-AmmoArmor.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-AmmoArmor",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-AmmoArmor.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [0]"
+        ]
+      },
+      {
+        "prefab": "Melee-AmmoArmor",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-AmmoArmor.prefab",
+        "details": [
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：999999"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 115,
+    "part": "身體",
+    "name": "要你命手刀",
+    "description": "敵人靠近時發動高速斬擊來造成傷害，冷卻6秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "KarateChop",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "250"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KarateChop.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-KarateChop",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KarateChop.prefab",
+        "details": [
+          "施放間隔：6"
+        ]
+      },
+      {
+        "prefab": "Melee-KarateChop",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-KarateChop.prefab",
+        "details": [
+          "單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.3",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 116,
+    "part": "身體",
+    "name": "乓!乓!乓!乓!乓!",
+    "description": "對敵人連續射出追蹤光環造成傷害，冷卻6秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "RingShoot",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "6"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "6"
+      ],
+      [
+        "AmmoInterval",
+        "0.4"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-RingShoot.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-RingShoot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-RingShoot.prefab",
+        "details": [
+          "施放間隔：6",
+          "每次生成數：6"
+        ]
+      },
+      {
+        "prefab": "Ammo-RingShoot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-RingShoot.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 117,
+    "part": "身體",
+    "name": "閃電瞬身",
+    "description": "每3秒瞬移至畫面內的安全位置；半透明自身預告落點，黑霧或畫面改變時重新選點。不再因受擊瞬移。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Escape",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Escape.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Escape",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Escape.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [3]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 118,
+    "part": "身體",
+    "name": "絕對無敵法老王",
+    "description": "無敵3秒，週期間隔6秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Immortal",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Immortal.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Immortal",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Immortal.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [6]",
+          "自身：無敵，Time=3，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 119,
+    "part": "身體",
+    "name": "氣功大師",
+    "description": "衝擊波擊退力為原本3倍。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "KnockShock",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "4"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KnockShock.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-KnockShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-KnockShock.prefab",
+        "details": [
+          "施放間隔：4",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-KnockShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-KnockShock.prefab",
+        "details": [
+          "單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）",
+          "同目標觸發間隔：0.2",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：暈眩，Time=1.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 120,
+    "part": "身體",
+    "name": "惹洨光線",
+    "description": "光線每發基準傷害50，施放間隔0.5秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Beam",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "0.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Beam.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Beam",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Beam.prefab",
+        "details": [
+          "施放間隔：0.5",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-Beam",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Beam.prefab",
+        "details": [
+          "固定基準傷害：50／50（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 121,
+    "part": "身體",
+    "name": "痛痛拳",
+    "description": "肉搏傷害提升50%，受到的擊退減半。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "PowerfulMelee",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PowerfulMelee.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-PowerfulMelee",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PowerfulMelee.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [2]",
+          "自身：肉搏傷害提升，Time=3，加成 50%，Value2=0",
+          "自身：擊退減免，Time=3，數值 0.5，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 122,
+    "part": "身體",
+    "name": "魅力四射",
+    "description": "吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留原拾星效果。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "StarSplash",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "9"
+      ],
+      [
+        "DamagePercent",
+        "0.4"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "10"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "36"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-StarSplash.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-StarSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-StarSplash.prefab",
+        "details": [
+          "每次生成數：10",
+          "觸發：取得經驗；條件參數 [0.5]",
+          "自身：立即治療，Time=0，數值 0.1，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Ammo-StarSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-StarSplash.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 123,
+    "part": "身體",
+    "name": "血腥綻放",
+    "description": "飛爪每次命中基準傷害80，附加流血。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Claw",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "DamagePercent",
+        "0.25"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "10"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "36"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "6"
+      ],
+      [
+        "DamagePercent",
+        "0.25"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "10"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "36"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Claw.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Claw",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Claw.prefab",
+        "details": [
+          "每次生成數：10",
+          "觸發：受擊；條件參數 [1, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-Claw",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Claw.prefab",
+        "details": [
+          "固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.6",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-Claw",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Claw.prefab",
+        "details": [
+          "每次生成數：10",
+          "觸發：肉搏命中；條件參數 [0, 0, 0]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 124,
+    "part": "身體",
+    "name": "狂嘯音刀",
+    "description": "技能或肉搏擊中敵人後釋放斬擊波(穿透性子彈)造成傷害，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Slash",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "4"
+      ],
+      [
+        "DamagePercent",
+        "1"
+      ],
+      [
+        "VampireProportion",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Slash.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Slash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Slash.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：任何攻擊命中；條件參數 [2, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-Slash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Slash.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2",
+          "命中目標：暈眩，Time=0.3，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 125,
+    "part": "身體",
+    "name": "鐵意志大拔砲",
+    "description": "砲彈爆炸半徑與特效放大為1.5倍。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Cannon",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Cannon.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Cannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Cannon.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-Cannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Cannon.prefab",
+        "details": [
+          "單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1"
+        ]
+      },
+      {
+        "prefab": "Bomb-Cannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-Cannon.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "作用半徑／視覺縮放：1.5 倍",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 126,
+    "part": "身體",
+    "name": "等一下大爆炸",
+    "description": "在敵人腳下產生爆破造成範圍傷害，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Meteorite",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "700"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "1"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Meteorite.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Meteorite",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Meteorite.prefab",
+        "details": [
+          "施放間隔：2"
+        ]
+      },
+      {
+        "prefab": "Bomb-Meteorite",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-Meteorite.prefab",
+        "details": [
+          "單次接觸傷害係數：1.3 × 技能攻擊力；基準傷害 325／520（一般／對決）",
+          "延遲爆炸：1.1 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 127,
+    "part": "身體",
+    "name": "交叉路箭射",
+    "description": "向四個方向發射出箭頭造成傷害，冷卻1秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "QuadrupleArrow",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "45"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "90"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleArrow.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-QuadrupleArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleArrow.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-QuadrupleArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-QuadrupleArrow.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 128,
+    "part": "身體",
+    "name": "惡臭",
+    "description": "在移動路徑上釋放毒氣，傷害並虛弱在路徑上的敵人（虛弱：攻擊力降低50%。）",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "OdourTrace",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "0.3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-OdourTrace.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-OdourTrace",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-OdourTrace.prefab",
+        "details": [
+          "施放間隔：0.3"
+        ]
+      },
+      {
+        "prefab": "Bomb-OdourTrace",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-OdourTrace.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：5",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 129,
+    "part": "身體",
+    "name": "友情圈圈",
+    "description": "圈圈作用半徑與特效放大為1.5倍。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "ReactionForce",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "1"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ReactionForce.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-ReactionForce",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ReactionForce.prefab",
+        "details": [
+          "施放間隔：2.5"
+        ]
+      },
+      {
+        "prefab": "Bomb-ReactionForce",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-ReactionForce.prefab",
+        "details": [
+          "單次接觸傷害係數：0.7 × 技能攻擊力；基準傷害 175／280（一般／對決）",
+          "作用半徑／視覺縮放：1.5 倍",
+          "延遲爆炸：1.3 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 130,
+    "part": "身體",
+    "name": "插翅高飛",
+    "description": "向敵人連射6發羽毛，每發間隔0.1秒。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "FeatherSplash",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "6"
+      ],
+      [
+        "AmmoInterval",
+        "0.1"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FeatherSplash.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FeatherSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FeatherSplash.prefab",
+        "details": [
+          "每次生成數：6",
+          "觸發：受擊；條件參數 [0.5, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-FeatherSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-FeatherSplash.prefab",
+        "details": [
+          "單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 131,
+    "part": "身體",
+    "name": "索命牽引",
+    "description": "牽引每次接觸基準傷害150。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "DarkExplosion",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DarkExplosion.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-DarkExplosion",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DarkExplosion.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [1]"
+        ]
+      },
+      {
+        "prefab": "Melee-DarkExplosion",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-DarkExplosion.prefab",
+        "details": [
+          "固定基準傷害：150／150（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：3",
+          "存在秒數：999999",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 132,
+    "part": "身體",
+    "name": "冷酷加農",
+    "description": "發射冰冷砲彈(穿透性子彈)，一段時間後爆破造成範圍內敵人受到傷害並60%緩速，冷卻2秒",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "IceCannon",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-IceCannon.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-IceCannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-IceCannon.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-IceCannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-IceCannon.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.7",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0",
+          "命中目標：暈眩，Time=0.3，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-IceCannon",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-IceCannon.prefab",
+        "details": [
+          "單次接觸傷害係數：1.3 × 技能攻擊力；基準傷害 325／520（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 201,
+    "part": "背部",
+    "name": "八方箭射",
+    "description": "對周圍發射箭頭造成傷害，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "SplashArrow",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "50"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "-30"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "130"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "30"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SplashArrow.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SplashArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SplashArrow.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-SplashArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-SplashArrow.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1"
+        ]
+      },
+      {
+        "prefab": "Skill-SplashArrow",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SplashArrow.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：4"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 202,
+    "part": "背部",
+    "name": "引力光環",
+    "description": "向周圍射出會折返的能量光環造成傷害，冷卻7秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "MagicalBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "7"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "10"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "36"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MagicalBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-MagicalBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MagicalBall.prefab",
+        "details": [
+          "施放間隔：7",
+          "每次生成數：10"
+        ]
+      },
+      {
+        "prefab": "Ammo-MagicalBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-MagicalBall.prefab",
+        "details": [
+          "單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）",
+          "同目標觸發間隔：0.5",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 203,
+    "part": "背部",
+    "name": "吸血蝙蝠俠",
+    "description": "向靠近的敵人發射3隻吸血蝙蝠造成傷害並吸取血量，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "TraceBat",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "600"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "160"
+      ],
+      [
+        "AmmoNum",
+        "3"
+      ],
+      [
+        "AmmoInterval",
+        "0.5"
+      ],
+      [
+        "AngleInterval",
+        "20"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceBat.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-TraceBat",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TraceBat.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：3"
+        ]
+      },
+      {
+        "prefab": "Ammo-TraceBat",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-TraceBat.prefab",
+        "details": [
+          "單次接觸傷害係數：0.15 × 技能攻擊力；基準傷害 38／60（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 204,
+    "part": "背部",
+    "name": "秒速暴衝",
+    "description": "觸發後移動速度提升70%。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Rush",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "10"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Rush.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Rush",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Rush.prefab",
+        "details": [
+          "觸發：週期觸發；條件參數 [1.5]",
+          "自身：移速提升，Time=0.5，數值 0.7，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 205,
+    "part": "背部",
+    "name": "血腥剃刀",
+    "description": "剃刀每次命中基準傷害40。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Scratch",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "6"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "2"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Scratch.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Scratch",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Scratch.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：肉搏命中；條件參數 [0.3, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-Scratch",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-Scratch.prefab",
+        "details": [
+          "固定基準傷害：40／40（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0.3",
+          "接觸觸發間隔：0",
+          "存在秒數：0.8",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 206,
+    "part": "背部",
+    "name": "膽小鬼",
+    "description": "幽靈狀態持續2秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Ghost",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Ghost.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Ghost",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Ghost.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [3, 0, 0]",
+          "自身：幽靈，Time=2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 207,
+    "part": "背部",
+    "name": "冷冽冰錐",
+    "description": "冰錐每發基準傷害100，造成60%緩速。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "QuadrupleIcicle",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-45"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "90"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleIcicle.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-QuadrupleIcicle",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleIcicle.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-QuadrupleIcicle",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-QuadrupleIcicle.prefab",
+        "details": [
+          "固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 208,
+    "part": "背部",
+    "name": "敲敲迴旋刀",
+    "description": "迴旋刀每次接觸基準傷害60。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "QuadrupleBlade",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleBlade.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-QuadrupleBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleBlade.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-QuadrupleBlade",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-QuadrupleBlade.prefab",
+        "details": [
+          "固定基準傷害：60／60（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：8",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 209,
+    "part": "背部",
+    "name": "冰與火",
+    "description": "向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒與60%緩速持續5秒，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "DoubleCrutch",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DoubleCrutch.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-DoubleCrutch",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DoubleCrutch.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-DoubleCrutch-Ice",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-DoubleCrutch-Ice.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-DoubleCrutch",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DoubleCrutch.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-DoubleCrutch-Fire",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-DoubleCrutch-Fire.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 210,
+    "part": "背部",
+    "name": "急凍領域",
+    "description": "受到攻擊加速移動30%並在2秒後產生大範圍冰霧造成持續傷害並60%緩速目標，冷卻12秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FrozenWing",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "2"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenWing.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FrozenWing",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenWing.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [12, 0, 0]",
+          "自身：移速提升，Time=2，數值 0.3，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-FrozenWing",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-FrozenWing.prefab",
+        "details": [
+          "單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：5",
+          "命中目標：緩速60%，Time=2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 211,
+    "part": "背部",
+    "name": "溜溜圈",
+    "description": "向上方發射5道會返回自身的光環，冷卻3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "DiskAmmo",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "WaitToSpellTime",
+        "0.1"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "180"
+      ],
+      [
+        "AmmoNum",
+        "5"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "-45"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DiskAmmo.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-DiskAmmo",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-DiskAmmo.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：5"
+        ]
+      },
+      {
+        "prefab": "Ammo-DiskAmmo",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-DiskAmmo.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3.1",
+          "命中目標：暈眩，Time=0.2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 212,
+    "part": "背部",
+    "name": "頑皮小旋風",
+    "description": "向前方發射2道旋風(穿透性子彈)造成敵方傷害，冷卻2秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "WindShock",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "750"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "2"
+      ],
+      [
+        "AmmoInterval",
+        "0.2"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WindShock.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-WindShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WindShock.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：2"
+        ]
+      },
+      {
+        "prefab": "Ammo-WindShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-WindShock.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 213,
+    "part": "背部",
+    "name": "展翅高飛",
+    "description": "4秒內沒受到攻擊後每2秒恢復3%血量，若受到攻擊停止回血並加速移動20%持續2秒",
+    "acquisition": "初始配件",
+    "price": "100",
+    "skill": "Heal",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "8"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "14"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Heal.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Heal",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Heal.prefab",
+        "details": [
+          "觸發：未受傷；條件參數 [2, 2, 0]",
+          "自身：立即治療，Time=0，數值 0.03，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-Heal",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Heal.prefab",
+        "details": [
+          "觸發：結束未受傷；條件參數 [3]",
+          "自身：移速提升，Time=2，數值 0.2，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 214,
+    "part": "背部",
+    "name": "火球不只一顆",
+    "description": "對靠近目標發射2道火球造成敵方傷害並燃燒持續5秒，冷卻1秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "OnFireBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "800"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "2"
+      ],
+      [
+        "AmmoInterval",
+        "0.3"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-OnFireBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-OnFireBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-OnFireBall.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：2"
+        ]
+      },
+      {
+        "prefab": "Ammo-OnFireBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-OnFireBall.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 215,
+    "part": "背部",
+    "name": "閃耀快快拳",
+    "description": "拳頭每發基準傷害100。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "ConsecutiveFist",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "400"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-20"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0.25"
+      ],
+      [
+        "AngleInterval",
+        "10"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ConsecutiveFist.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-ConsecutiveFist",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ConsecutiveFist.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-ConsecutiveFist",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-ConsecutiveFist.prefab",
+        "details": [
+          "固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 216,
+    "part": "背部",
+    "name": "冷空氣",
+    "description": "產生寒冰結界，對靠近的敵人造成傷害並60%緩速",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FrozenZone",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenZone.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FrozenZone",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenZone.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [1]"
+        ]
+      },
+      {
+        "prefab": "Melee-FrozenZone",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-FrozenZone.prefab",
+        "details": [
+          "單次接觸傷害係數：0.15 × 技能攻擊力；基準傷害 38／60（一般／對決）",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：999999",
+          "命中目標：緩速60%，Time=2，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 217,
+    "part": "背部",
+    "name": "心花怒放",
+    "description": "愛心每發基準傷害70。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "HeartAmmo",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "300"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "2"
+      ],
+      [
+        "FirstAttackNoWait",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "8"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "45"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-HeartAmmo.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-HeartAmmo",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-HeartAmmo.prefab",
+        "details": [
+          "施放間隔：2",
+          "每次生成數：8"
+        ]
+      },
+      {
+        "prefab": "Ammo-HeartAmmo",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-HeartAmmo.prefab",
+        "details": [
+          "固定基準傷害：70／70（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 218,
+    "part": "背部",
+    "name": "突波電脈衝",
+    "description": "電脈衝施放間隔1.5秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "ElectricBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "400"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "Interval",
+        "1.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "0"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "45"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "90"
+      ],
+      [
+        "TriggerWall",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ElectricBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-ElectricBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-ElectricBall.prefab",
+        "details": [
+          "施放間隔：1.5",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-ElectricBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-ElectricBall.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：2",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 219,
+    "part": "背部",
+    "name": "自由高歌",
+    "description": "沒受到攻擊時，每秒發射追蹤音符造成敵人傷害",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "MusicNote",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "8"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "2"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "180"
+      ],
+      [
+        "TriggerWall",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MusicNote.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-MusicNote",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MusicNote.prefab",
+        "details": [
+          "每次生成數：2",
+          "觸發：未受傷；條件參數 [1, 1, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-MusicNote",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-MusicNote.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 220,
+    "part": "背部",
+    "name": "鐵削電磁網",
+    "description": "電磁網每次接觸基準傷害120。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "MagneticField",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "6"
+      ],
+      [
+        "SpawnedInSelf",
+        "1"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "11"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "AttackRadius",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MagneticField.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-MagneticField",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-MagneticField.prefab",
+        "details": [
+          "觸發：取得技能時；條件參數 [1]"
+        ]
+      },
+      {
+        "prefab": "Melee-MagneticField",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Melee-MagneticField.prefab",
+        "details": [
+          "固定基準傷害：120／120（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：999999",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 221,
+    "part": "背部",
+    "name": "雙重震盪",
+    "description": "在自身及靠近的目標位置產生產生震盪造成傷害，冷卻2.5秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "Stamp",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "700"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "2.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "700"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "1"
+      ],
+      [
+        "Interval",
+        "2.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Stamp.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-Stamp",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Stamp.prefab",
+        "details": [
+          "施放間隔：2.5"
+        ]
+      },
+      {
+        "prefab": "Bomb-Stamp",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-Stamp.prefab",
+        "details": [
+          "單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）",
+          "延遲爆炸：1 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-Stamp",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-Stamp.prefab",
+        "details": [
+          "施放間隔：2.5"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 222,
+    "part": "背部",
+    "name": "糾纏蜘蛛絲",
+    "description": "蛛網爆炸暈眩5秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "WebShoot",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "7"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WebShoot.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-WebShoot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WebShoot.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：受到肉搏；條件參數 [7, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-WebShoot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-WebShoot.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.2"
+        ]
+      },
+      {
+        "prefab": "Bomb-WebShoot",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-WebShoot.prefab",
+        "details": [
+          "單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.5",
+          "命中目標：暈眩，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 223,
+    "part": "背部",
+    "name": "雪花爆冰",
+    "description": "發射60%緩速霧氣擊中敵方後會爆破造成傷害並60%緩速範圍內敵人，冷卻3秒",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "FrozenShock",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "WaitToSpellTime",
+        "0.1"
+      ],
+      [
+        "DetecteRadius",
+        "700"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "0"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenShock.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-FrozenShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-FrozenShock.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-FrozenShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-FrozenShock.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.5",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-FrozenShock",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-FrozenShock.prefab",
+        "details": [
+          "單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）",
+          "延遲爆炸：1 秒",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：0.2",
+          "命中目標：暈眩，Time=1，數值 0，Value2=0",
+          "命中目標：緩速60%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 224,
+    "part": "背部",
+    "name": "大口毒液砲",
+    "description": "向前方發射毒球造成傷害並虛弱敵人，冷卻1秒（虛弱：攻擊力降低50%。）",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "PoisonedBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "1"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PoisonedBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-PoisonedBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-PoisonedBall.prefab",
+        "details": [
+          "施放間隔：1",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-PoisonedBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-PoisonedBall.prefab",
+        "details": [
+          "單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0",
+          "命中目標：暈眩，Time=0.3，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 225,
+    "part": "背部",
+    "name": "動感陀螺",
+    "description": "陀螺施放間隔2.5秒。",
+    "acquisition": "星幣",
+    "price": "100",
+    "skill": "WhippingTop",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "2.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "1"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WhippingTop.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-WhippingTop",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-WhippingTop.prefab",
+        "details": [
+          "施放間隔：2.5",
+          "每次生成數：1"
+        ]
+      },
+      {
+        "prefab": "Ammo-WhippingTop",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-WhippingTop.prefab",
+        "details": [
+          "單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：6",
+          "命中目標：暈眩，Time=0.5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 226,
+    "part": "背部",
+    "name": "四口毒痰",
+    "description": "向四個方向發射毒液砲造成傷害虛弱敵人，冷卻1.5秒（虛弱：攻擊力降低50%。）",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "QuadruplePoisonedBall",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "1.5"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "45"
+      ],
+      [
+        "AmmoNum",
+        "4"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "90"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadruplePoisonedBall.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-QuadruplePoisonedBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadruplePoisonedBall.prefab",
+        "details": [
+          "施放間隔：1.5",
+          "每次生成數：4"
+        ]
+      },
+      {
+        "prefab": "Ammo-QuadruplePoisonedBall",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-QuadruplePoisonedBall.prefab",
+        "details": [
+          "單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：1.5",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 227,
+    "part": "背部",
+    "name": "跟屁精",
+    "description": "跟屁精每次接觸基準傷害40。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "TrackGenie",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "1"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "1"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TrackGenie.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-TrackGenie",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-TrackGenie.prefab",
+        "details": [
+          "每次生成數：1",
+          "觸發：受擊；條件參數 [10, 0, 0]"
+        ]
+      },
+      {
+        "prefab": "Ammo-TrackGenie",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-TrackGenie.prefab",
+        "details": [
+          "固定基準傷害：40／40（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：10",
+          "命中目標：暈眩，Time=0.3，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 228,
+    "part": "背部",
+    "name": "劍飄飄",
+    "description": "飛劍每次接觸基準傷害80。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "QuadrupleSword",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "4"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "45"
+      ],
+      [
+        "AmmoNum",
+        "3"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "45"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "1000"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "4"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "0"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "-45"
+      ],
+      [
+        "AmmoNum",
+        "3"
+      ],
+      [
+        "AmmoInterval",
+        "0"
+      ],
+      [
+        "AngleInterval",
+        "-45"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleSword.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-QuadrupleSword",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleSword.prefab",
+        "details": [
+          "施放間隔：4",
+          "每次生成數：3"
+        ]
+      },
+      {
+        "prefab": "Ammo-QuadrupleSword",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-QuadrupleSword.prefab",
+        "details": [
+          "固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0"
+        ]
+      },
+      {
+        "prefab": "Skill-QuadrupleSword",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-QuadrupleSword.prefab",
+        "details": [
+          "施放間隔：4",
+          "每次生成數：3"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 229,
+    "part": "背部",
+    "name": "彩虹泡泡王",
+    "description": "泡泡施放間隔3秒。",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "BubbleSplash",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "DetecteRadius",
+        "0"
+      ],
+      [
+        "AttackOnce",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "Interval",
+        "3"
+      ],
+      [
+        "FirstAttackNoWait",
+        "1"
+      ],
+      [
+        "Patetern",
+        "4"
+      ],
+      [
+        "RandomAngle",
+        "0"
+      ],
+      [
+        "StartAngle",
+        "0"
+      ],
+      [
+        "AmmoNum",
+        "6"
+      ],
+      [
+        "AmmoInterval",
+        "0.3"
+      ],
+      [
+        "AngleInterval",
+        "0"
+      ],
+      [
+        "TriggerWall",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BubbleSplash.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-BubbleSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-BubbleSplash.prefab",
+        "details": [
+          "施放間隔：3",
+          "每次生成數：6"
+        ]
+      },
+      {
+        "prefab": "Ammo-BubbleSplash",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Ammo-BubbleSplash.prefab",
+        "details": [
+          "單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）",
+          "同目標觸發間隔：0",
+          "接觸觸發間隔：0",
+          "存在秒數：3",
+          "命中目標：暈眩，Time=0.1，數值 0，Value2=0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 230,
+    "part": "背部",
+    "name": "大吐痰",
+    "description": "受到攻擊後回血10%並產生大範圍毒霧造成持續傷害並虛弱毒霧內的敵人，冷卻12秒（虛弱：攻擊力降低50%。）",
+    "acquisition": "付費（尚未接金流）",
+    "price": "10",
+    "skill": "SpitInk",
+    "parameters": [
+      [
+        "serializedVersion",
+        "6"
+      ],
+      [
+        "BehaviorSkill",
+        "0"
+      ],
+      [
+        "AttackStopMove",
+        "0"
+      ],
+      [
+        "StopMoveTime",
+        "0"
+      ],
+      [
+        "SpawnedInSelf",
+        "0"
+      ],
+      [
+        "ConnectToAmmo",
+        "0"
+      ],
+      [
+        "DetectedTargetType",
+        "0"
+      ],
+      [
+        "MyFeaturePart",
+        "0"
+      ],
+      [
+        "MyFeatureType",
+        "0"
+      ],
+      [
+        "MyFeatureDataID",
+        "0"
+      ],
+      [
+        "FeaturePartSerialNumber",
+        "0"
+      ],
+      [
+        "TriggerType",
+        "0"
+      ],
+      [
+        "SpawnAtTargetPos",
+        "0"
+      ],
+      [
+        "PrepareTime",
+        "0.7"
+      ],
+      [
+        "Suicide",
+        "0"
+      ]
+    ],
+    "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SpitInk.prefab",
+    "combat": [
+      {
+        "prefab": "Skill-SpitInk",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Skill\\Skill-SpitInk.prefab",
+        "details": [
+          "觸發：受擊；條件參數 [12, 0, 0]",
+          "自身：立即治療，Time=0，數值 0.1，Value2=0"
+        ]
+      },
+      {
+        "prefab": "Bomb-SpitInk",
+        "source": "unity\\Assets\\Resources\\Gameobjects\\Battle\\Ammo\\Bomb-SpitInk.prefab",
+        "details": [
+          "單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）",
+          "延遲爆炸：0 秒",
+          "同目標觸發間隔：1",
+          "接觸觸發間隔：0",
+          "存在秒數：7",
+          "命中目標：虛弱50%，Time=5，數值 0，Value2=0"
+        ]
+      }
+    ]
+  }
+]

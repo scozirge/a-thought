@@ -1,0 +1,2566 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>星際遊俠 配件能力清單</title><style>body{font:16px system-ui;background:#10192b;color:#eee;margin:24px}h1{color:#d8bd77}input{padding:12px;width:min(90%,480px)}table{border-collapse:collapse;width:100%;margin-top:20px}th,td{padding:14px;border-bottom:1px solid #586070;text-align:left;vertical-align:top;white-space:pre-line}th{color:#d8bd77}td:nth-child(4){min-width:270px}td:nth-child(5){min-width:380px;color:#ead59f}td:last-child{font:12px monospace;min-width:180px}.wrap{overflow:auto}</style><h1>星際遊俠：95 個配件能力清單</h1><p>已追加技能、子彈與衍生爆炸 prefab 的傷害係數及被動增益。比較基準：一般攻擊力 250、對決攻擊力 400；先不計增傷、虛弱、減傷、持續傷害。數字是單次接觸計算值，並非每次施放總傷害或 DPS；多發不保證全部命中。治療／反射／格擋類元件仍需依其行為解讀，零係數不代表沒有作用。</p><p>來源：有 FixedDamage 時，以固定基準傷害乘上目前攻擊力／基礎攻擊力，保留增傷與虛弱；其餘使用攻擊力 × ValuePercent。替代肉搏的 MeleeAmmo 使用肉搏攻擊力。自身增益另列，未加入基準傷害。Time 與條件參數是原始資料，0 的意義依效果實作而異。仍需實戰驗證。</p><p>付費價格沿用原本 Kreds 資料，並非台幣售價。升級數值尚待設計，未接上商店交易驗證。</p><input id="q" placeholder="搜尋配件、能力或部位"><div class="wrap"><table><thead><tr><th>ID</th><th>部位</th><th>名稱</th><th>能力說明</th><th>傷害數值／觸發與增益</th><th>取得／原價格</th><th>技能識別字</th><th>原始參數</th></tr></thead><tbody><tr><td>1</td><td>頭部</td><td>憤怒轟炸</td><td>受到攻擊後凝聚能量產生爆破造成傷害並燃燒周圍敵人，冷卻3秒</td><td>Skill-BeHitExplode
+觸發：受擊；條件參數 [3, 0, 0]
+
+Bomb-BeHitExplode
+單次接觸傷害係數：1.5 × 技能攻擊力；基準傷害 375／600（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>BeHitExplode</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+SpawnAtTargetPos = 0
+PrepareTime = 2
+Suicide = 0</td></tr><tr><td>2</td><td>頭部</td><td>不死之王</td><td>頻死瞬間會恢復10%生命，並轉化為幽靈狀態持續4秒，冷卻12秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-DieGhost
+觸發：死亡；條件參數 [12]
+自身：幽靈，Time=4，數值 0，Value2=0
+自身：立即治療，Time=0，數值 0.1，Value2=0</td><td>星幣 100</td><td>DieGhost</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 1</td></tr><tr><td>3</td><td>頭部</td><td>瘋狂鋸刀</td><td>向靠近的敵人發射迴旋鋸刀(穿透性子彈)造成傷害並使敵人流血持續5秒，冷卻2秒</td><td>Skill-BowBlade
+施放間隔：2
+每次生成數：1
+
+Ammo-BowBlade
+單次接觸傷害係數：0.35 × 技能攻擊力；基準傷害 88／140（一般／對決）
+同目標觸發間隔：0.3
+接觸觸發間隔：0
+存在秒數：3
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0</td><td>星幣 100</td><td>BowBlade</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+DamagePercent = 0.2
+SpawnedInSelf = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DetecteRadius = 300
+VampireProportion = 0
+AttackOnce = 0
+Interval = 2
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+RandomAngle = 0
+Patetern = 1
+FirstAttackNoWait = 1
+TriggerWall = 0</td></tr><tr><td>4</td><td>頭部</td><td>無畏假面</td><td>生命低於一半時，若受到攻擊無敵2秒並恢復15%生命，冷卻12秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Knight
+觸發：受擊且低血量；條件參數 [12, 0.5]
+自身：無敵，Time=2，數值 0，Value2=0
+自身：立即治療，Time=0，數值 0.15，Value2=0</td><td>星幣 100</td><td>Knight</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 13</td></tr><tr><td>5</td><td>頭部</td><td>酷寒水晶</td><td>向前方發射兩道冰錐，每發基準傷害100，命中緩速60%，施放間隔1秒。</td><td>Skill-Icicle
+施放間隔：1
+每次生成數：2
+
+Ammo-Icicle
+固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>初始配件 0</td><td>Icicle</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = -4
+AmmoNum = 2
+AmmoInterval = 0
+AngleInterval = 8
+TriggerWall = 0</td></tr><tr><td>6</td><td>頭部</td><td>吸血將軍</td><td>任何攻擊擊中敵人時，恢復5%生命，冷卻0.2秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Vampire
+觸發：任何攻擊命中；條件參數 [0.2, 0, 0]
+自身：立即治療，Time=0，數值 0.05，Value2=0</td><td>星幣 100</td><td>Vampire</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 4</td></tr><tr><td>7</td><td>頭部</td><td>超方位感應</td><td>顯示所有視野外的敵方方向</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-EnemyDirection
+觸發：週期觸發；條件參數 [3]
+自身：方向提示，Time=4，數值 0，Value2=0</td><td>星幣 100</td><td>EnemyDirection</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+TriggerType = 10</td></tr><tr><td>8</td><td>頭部</td><td>無上光環</td><td>光盤環繞自身，可抵擋非穿透子彈，每次接觸基準傷害100。</td><td>Skill-CircularBlade
+施放間隔：0.9
+
+Melee-CircularBlade
+固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3</td><td>星幣 100</td><td>CircularBlade</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DamagePercent = 0.3
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 0.9
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>9</td><td>頭部</td><td>哪來的鴨蛋</td><td>放置鴨蛋，5秒後爆炸；爆炸半徑與特效放大30%，保留原傷害與燃燒。</td><td>Skill-DuckEgg
+施放間隔：4
+
+Bomb-DuckEgg
+單次接觸傷害係數：2 × 技能攻擊力；基準傷害 500／800（一般／對決）
+作用半徑／視覺縮放：1.3 倍
+延遲爆炸：5 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=2，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>DuckEgg</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 2
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 4
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>10</td><td>頭部</td><td>隱形邊緣人</td><td>受到攻擊後隱形4秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Invisible
+觸發：受擊；條件參數 [1, 1, 1]
+自身：隱形，Time=4，數值 0，Value2=0</td><td>星幣 100</td><td>Invisible</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0</td></tr><tr><td>11</td><td>頭部</td><td>大明星</td><td>吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留拾星回血與加速。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-AbsorbStar
+觸發：取得經驗；條件參數 [0]
+自身：立即治療，Time=0，數值 0.25，Value2=0
+自身：移速提升，Time=2，數值 0.3，Value2=0</td><td>星幣 100</td><td>AbsorbStar</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 9</td></tr><tr><td>12</td><td>頭部</td><td>吹個大泡泡</td><td>產生3發上升泡泡，施放間隔2.5秒。</td><td>Skill-UpAheadBubble
+施放間隔：2.5
+每次生成數：3
+
+Ammo-UpAheadBubble
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：4</td><td>星幣 100</td><td>UpAheadBubble</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 2.5
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 3
+AmmoInterval = 0.6
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>13</td><td>頭部</td><td>超惡飛針</td><td>向前發射4道飛針，每發基準傷害80，附加流血。</td><td>Skill-NailSplash
+施放間隔：1
+每次生成數：4
+
+Ammo-NailSplash
+固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0</td><td>星幣 100</td><td>NailSplash</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DamagePercent = 0.25
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = -20
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 10
+TriggerWall = 0</td></tr><tr><td>14</td><td>頭部</td><td>逃脫大師</td><td>受擊且生命低於50%時傳送至安全區內，恢復30%生命；冷卻10秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Teleport
+觸發：受擊且低血量；條件參數 [10, 0.5]
+自身：傳送，Time=0，數值 0，Value2=0
+自身：立即治療，Time=0，數值 0.3，Value2=0</td><td>星幣 100</td><td>Teleport</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 13</td></tr><tr><td>15</td><td>頭部</td><td>彩虹死光</td><td>向前方發射死亡射線(穿透性子彈)造成傷害，冷卻3秒</td><td>Skill-Laser
+施放間隔：3
+每次生成數：1
+
+Ammo-Laser
+單次接觸傷害係數：1.5 × 技能攻擊力；基準傷害 375／600（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>Laser</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 2000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>16</td><td>頭部</td><td>高端格檔</td><td>抵擋一次攻擊，冷卻6秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Constitution
+觸發：週期觸發；條件參數 [6]
+自身：格擋，Time=8，數值 1，Value2=1</td><td>星幣 100</td><td>Constitution</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+DamagePercent = 0
+SpawnedInSelf = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 10</td></tr><tr><td>17</td><td>頭部</td><td>醫生喵</td><td>恢復2.5%生命，冷卻1秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Recovery
+觸發：週期觸發；條件參數 [1]
+自身：立即治療，Time=0，數值 0.025，Value2=0</td><td>星幣 100</td><td>Recovery</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+DamagePercent = 0
+SpawnedInSelf = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 10</td></tr><tr><td>18</td><td>頭部</td><td>三叉箭射</td><td>向三個方向發射箭頭造成傷害，冷卻1秒</td><td>Skill-TripleArrow
+施放間隔：1
+每次生成數：3
+
+Ammo-TripleArrow
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.2</td><td>星幣 100</td><td>TripleArrow</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.7
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 90
+AmmoNum = 3
+AmmoInterval = 0
+AngleInterval = 120
+TriggerWall = 0</td></tr><tr><td>19</td><td>頭部</td><td>一次電一下</td><td>每次肉搏命中發射一道追蹤電流。</td><td>Skill-EliteHunt
+每次生成數：1
+觸發：肉搏命中；條件參數 [0, 1, 0]
+
+Ammo-EliteHunt
+單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>EliteHunt</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 6
+SpawnAtTargetPos = 0
+AmmoNum = 1
+AmmoInterval = 0.5
+StartAngle = -90
+AngleInterval = -90
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>20</td><td>頭部</td><td>我要活下去</td><td>生命低於3%時，每秒恢復10%最大生命。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Rest
+觸發：低血量；條件參數 [1, 0.03, 0]
+自身：立即治療，Time=0，數值 0.1，Value2=0</td><td>星幣 100</td><td>Rest</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 3</td></tr><tr><td>21</td><td>頭部</td><td>隱身詭雷</td><td>在原地放置隱形炸彈，敵人靠近或10秒後爆炸對敵人造成傷害並燃燒，冷卻3秒</td><td>Skill-InvisibleBomb
+施放間隔：3
+
+Bomb-InvisibleBomb
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+延遲爆炸：10 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>InvisibleBomb</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.5
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>22</td><td>頭部</td><td>甜蜜報復</td><td>受擊發射追蹤愛心，子彈存在4秒，保留吸血效果。</td><td>Skill-WoeShare
+每次生成數：1
+觸發：受擊且低血量；條件參數 [0.2, 1]
+
+Ammo-WoeShare
+單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：4</td><td>星幣 100</td><td>WoeShare</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 13
+DamagePercent = 0.5
+VampireProportion = 0
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 0
+Patetern = 0</td></tr><tr><td>23</td><td>頭部</td><td>熱血進擊</td><td>肉搏命中恢復10%最大生命，移速提升30%持續3秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Berserker
+觸發：肉搏命中；條件參數 [0.3, 1, 0]
+自身：立即治療，Time=0，數值 0.1，Value2=0
+自身：移速提升，Time=3，數值 0.3，Value2=0</td><td>星幣 100</td><td>Berserker </td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 6</td></tr><tr><td>24</td><td>頭部</td><td>派對氣球</td><td>發射氣球，基準接觸傷害300，3秒後爆炸；施放間隔3秒。</td><td>Skill-TraceBalloon
+施放間隔：3
+每次生成數：1
+
+Ammo-TraceBalloon
+固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3
+命中目標：暈眩，Time=1，數值 0，Value2=0
+
+Bomb-Confetti
+固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例
+延遲爆炸：0 秒
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>TraceBalloon</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 1
+DetecteRadius = 1300
+VampireProportion = 0
+AttackOnce = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>25</td><td>頭部</td><td>原力大反射</td><td>反射周圍子彈並暈眩敵人，冷卻6秒。</td><td>Skill-SoundWave
+施放間隔：6
+
+Melee-SoundWave
+單次接觸傷害係數：0 × 技能攻擊力；基準傷害 0／0（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.6
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>SoundWave</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 0
+DetectedTargetType = 2
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 300
+AttackOnce = 0
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>26</td><td>頭部</td><td>神奇腦波</td><td>發出奇怪的腦波對靠近的敵人造成持續傷害</td><td>Skill-Curse
+施放間隔：1
+
+Ammo-Curse
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：99999</td><td>星幣 100</td><td>Curse</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.15
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 1
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>27</td><td>頭部</td><td>胡蘿蔔大進擊</td><td>投擲迴旋胡蘿蔔，每次接觸基準傷害200。</td><td>Skill-Carrot
+施放間隔：3
+每次生成數：4
+
+Ammo-Carrot
+固定基準傷害：200／200（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>Carrot</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 800
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 2
+RandomAngle = 0
+StartAngle = 70
+AmmoNum = 4
+AmmoInterval = 0.15
+AngleInterval = -15
+TriggerWall = 0</td></tr><tr><td>28</td><td>頭部</td><td>超載</td><td>受擊釋放衝擊波，暈眩2秒，保留6秒冷卻。</td><td>Skill-KnockWave
+觸發：受擊；條件參數 [6, 0, 0]
+
+Melee-KnockWave
+單次接觸傷害係數：0 × 技能攻擊力；基準傷害 0／0（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.6
+命中目標：暈眩，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>KnockWave</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>29</td><td>頭部</td><td>為什麼有雞蛋</td><td>原地產生雞蛋，雞蛋4秒後或敵人靠近會爆炸並傷害範圍內敵人並造成燃燒持續5秒，冷卻4秒</td><td>Skill-ChickenEgg
+施放間隔：4
+
+Bomb-ChickenEgg
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+延遲爆炸：4 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>付費（尚未接金流） 10</td><td>ChickenEgg</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 1
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 4
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>30</td><td>頭部</td><td>毒痰大噴獸</td><td>向敵人發射毒氣彈造成傷害並留下毒氣持續造成範圍內敵人傷害並虛弱，冷卻3秒（虛弱：攻擊力降低50%。）</td><td>Skill-PoisonedStrike
+施放間隔：3
+每次生成數：1
+
+Ammo-PoisonedStrike
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.2
+命中目標：虛弱50%，Time=5，數值 0，Value2=0
+
+Bomb-PoisonedStrike
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：0.5
+接觸觸發間隔：0
+存在秒數：5
+命中目標：虛弱50%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>PoisonedStrike</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.5
+DetecteRadius = 1000
+VampireProportion = 0
+AttackOnce = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>31</td><td>頭部</td><td>千金風暴</td><td>向周圍發射金球造成傷害，冷卻7秒</td><td>Skill-CoinBullet
+施放間隔：6
+每次生成數：12
+
+Ammo-CoinBullet
+單次接觸傷害係數：0.7 × 技能攻擊力；基準傷害 175／280（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>CoinBullet</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 800
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 12
+AmmoInterval = 0.01
+AngleInterval = 30
+TriggerWall = 0</td></tr><tr><td>32</td><td>頭部</td><td>蠻牛大爆衝</td><td>肉搏攻擊倍率1.5，保留前方非穿透子彈防護。</td><td>Skill-PowerfulStrike
+施放間隔：6
+
+Melee-PowerfulStrike
+單次接觸傷害係數：1.5 × 肉搏攻擊力；基準傷害 375／600（一般／對決）
+同目標觸發間隔：0.3
+接觸觸發間隔：0
+存在秒數：999999
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>PowerfulStrike</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DamagePercent = 1.2
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 1
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>33</td><td>頭部</td><td>超速奔騰</td><td>未受傷後移動速度提升40%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-FocalMove
+觸發：未受傷；條件參數 [2, 2, 1]
+自身：移速提升，Time=99999，數值 0.4，Value2=0</td><td>付費（尚未接金流） 10</td><td>FocalMove</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 8</td></tr><tr><td>101</td><td>身體</td><td>影襲</td><td>進行肉搏攻擊後隱身3秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-SneakAttack
+觸發：肉搏命中；條件參數 [0.2, 0, 0]
+自身：隱形，Time=3，數值 0，Value2=0</td><td>星幣 100</td><td>SneakAttack</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 6</td></tr><tr><td>102</td><td>身體</td><td>超硬派特攻</td><td>減免受到的傷害30%</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Defend
+觸發：週期觸發；條件參數 [2]
+自身：格擋，Time=3，數值 0.3，Value2=0</td><td>星幣 100</td><td>Defend</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+TriggerType = 10</td></tr><tr><td>103</td><td>身體</td><td>扭曲基點</td><td>骨盾旋轉速度為原本2倍。</td><td>Skill-BoneShield
+施放間隔：1
+
+Melee-BoneShield
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：0.7
+接觸觸發間隔：0
+存在秒數：99999
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>初始配件 0</td><td>BoneShield</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 1
+SpawnAtTargetPos = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>104</td><td>身體</td><td>繞跑小丑</td><td>受擊後移動速度提升60%，持續2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Flee
+觸發：受擊；條件參數 [4, 0, 0]
+自身：移速提升，Time=2，數值 0.6，Value2=0</td><td>星幣 100</td><td>Flee</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0</td></tr><tr><td>105</td><td>身體</td><td>急凍噴霧</td><td>噴霧每次接觸基準傷害20，造成60%緩速。</td><td>Skill-FrozenSpray
+施放間隔：5
+
+Melee-FrozenSpray
+固定基準傷害：20／20（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0.25
+接觸觸發間隔：0
+存在秒數：3
+命中目標：緩速60%，Time=1.5，數值 0，Value2=0
+
+Skill-FrozenSpray
+施放間隔：5</td><td>星幣 100</td><td>FrozenSpray</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.15
+DetecteRadius = 400
+VampireProportion = 0
+AttackOnce = 0
+Interval = 5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 30
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.15
+DetecteRadius = 400
+VampireProportion = 0
+AttackOnce = 0
+Interval = 5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 180
+AttackRadius = 30</td></tr><tr><td>106</td><td>身體</td><td>爆破感應</td><td>敵方靠近時2秒後產生爆破，傷害敵人並造成燃燒，冷卻6秒</td><td>Skill-SelfExplosion
+施放間隔：6
+
+Bomb-SelfExplosion
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>SelfExplosion</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 300
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 2
+Suicide = 0</td></tr><tr><td>107</td><td>身體</td><td>超威能反射盾</td><td>反射盾半徑與特效放大20%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-ReflectAmmoShell
+觸發：取得技能時；條件參數 [4]
+
+Melee-ReflectAmmoShell
+作用半徑／視覺縮放：1.2 倍
+同目標觸發間隔：0
+接觸觸發間隔：4
+存在秒數：999999</td><td>星幣 100</td><td>ReflectAmmoShell</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 11
+DamagePercent = 0
+VampireProportion = 0
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>108</td><td>身體</td><td>極緩磁圈</td><td>產生緩速磁場使靠近的敵人受到傷害，且靠近的子彈會減速50%</td><td>Skill-SlowDown
+觸發：取得技能時；條件參數 [4]
+
+Melee-SlowDown
+單次接觸傷害係數：0.05 × 技能攻擊力；基準傷害 12／20（一般／對決）
+同目標觸發間隔：0.5
+接觸觸發間隔：0
+存在秒數：999999
+命中目標：暈眩，Time=0.1，數值 0，Value2=0</td><td>星幣 100</td><td>SlowDown</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 11
+DamagePercent = 0
+VampireProportion = 0
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>109</td><td>身體</td><td>若隱若現</td><td>週期性隱形，每次持續1.5秒，週期間隔2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-IntermittentInvisible
+觸發：週期觸發；條件參數 [2]
+自身：隱形，Time=1.5，數值 0，Value2=0</td><td>星幣 100</td><td>IntermittentInvisible</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 10</td></tr><tr><td>110</td><td>身體</td><td>大顆火球</td><td>火球每次命中基準傷害300，保留燃燒。</td><td>Skill-FireBall
+施放間隔：1
+每次生成數：1
+
+Ammo-FireBall
+固定基準傷害：300／300（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2
+命中目標：暈眩，Time=0.3，數值 0，Value2=0
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>FireBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 1
+DetecteRadius = 1200
+VampireProportion = 0
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 1
+TriggerWall = 0</td></tr><tr><td>111</td><td>身體</td><td>縱火小子</td><td>產生火焰在自己腳對經過的敵人造成傷害並燃燒</td><td>Skill-FireTrail
+施放間隔：0.3
+
+Bomb-FireTrail
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：5
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>FireTrail</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.1
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 0
+Interval = 0.3
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>112</td><td>身體</td><td>追跡兩小魚</td><td>從背後發射2條會追蹤敵人的小魚，冷卻1秒</td><td>Skill-TraceFish
+施放間隔：1
+每次生成數：2
+
+Ammo-TraceFish
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：4</td><td>星幣 100</td><td>TraceFish</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.3
+DetecteRadius = 600
+VampireProportion = 0
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = -225
+AmmoNum = 2
+AmmoInterval = 0
+AngleInterval = 90
+TriggerWall = 0</td></tr><tr><td>113</td><td>身體</td><td>軌道光子</td><td>在周圍圍繞4顆光粒子，擊中敵人可造成傷害</td><td>Skill-PhotonShell
+施放間隔：1
+
+Melee-PhotonShell
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0.3
+接觸觸發間隔：0
+存在秒數：99999
+命中目標：暈眩，Time=0.2，數值 0，Value2=0</td><td>星幣 100</td><td>PhotonShell</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+DamagePercent = 0.15
+DetecteRadius = 0
+VampireProportion = 0
+AttackOnce = 1
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>114</td><td>身體</td><td>不再彈疼</td><td>護甲包覆自身，減免非穿透性子彈傷害50%並免除造成的負面效果</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-AmmoArmor
+觸發：取得技能時；條件參數 [0]
+
+Melee-AmmoArmor
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：999999</td><td>星幣 100</td><td>AmmoArmor</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+TriggerType = 11
+DamagePercent = 0
+VampireProportion = 0
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>115</td><td>身體</td><td>要你命手刀</td><td>敵人靠近時發動高速斬擊來造成傷害，冷卻6秒</td><td>Skill-KarateChop
+施放間隔：6
+
+Melee-KarateChop
+單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.3
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>KarateChop</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 1
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 250
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AttackRadius = 0</td></tr><tr><td>116</td><td>身體</td><td>乓!乓!乓!乓!乓!</td><td>對敵人連續射出追蹤光環造成傷害，冷卻6秒</td><td>Skill-RingShoot
+施放間隔：6
+每次生成數：6
+
+Ammo-RingShoot
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2</td><td>星幣 100</td><td>RingShoot</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 6
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 6
+AmmoInterval = 0.4
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>117</td><td>身體</td><td>閃電瞬身</td><td>每3秒瞬移至畫面內的安全位置；半透明自身預告落點，黑霧或畫面改變時重新選點。不再因受擊瞬移。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Escape
+觸發：週期觸發；條件參數 [3]</td><td>星幣 100</td><td>Escape</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 10</td></tr><tr><td>118</td><td>身體</td><td>絕對無敵法老王</td><td>無敵3秒，週期間隔6秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Immortal
+觸發：週期觸發；條件參數 [6]
+自身：無敵，Time=3，數值 0，Value2=0</td><td>星幣 100</td><td>Immortal</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 10</td></tr><tr><td>119</td><td>身體</td><td>氣功大師</td><td>衝擊波擊退力為原本3倍。</td><td>Skill-KnockShock
+施放間隔：4
+每次生成數：1
+
+Ammo-KnockShock
+單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）
+同目標觸發間隔：0.2
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：暈眩，Time=1.5，數值 0，Value2=0</td><td>星幣 100</td><td>KnockShock</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 4
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>120</td><td>身體</td><td>惹洨光線</td><td>光線每發基準傷害50，施放間隔0.5秒。</td><td>Skill-Beam
+施放間隔：0.5
+每次生成數：1
+
+Ammo-Beam
+固定基準傷害：50／50（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2</td><td>星幣 100</td><td>Beam</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1800
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 0.5
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>121</td><td>身體</td><td>痛痛拳</td><td>肉搏傷害提升50%，受到的擊退減半。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-PowerfulMelee
+觸發：週期觸發；條件參數 [2]
+自身：肉搏傷害提升，Time=3，加成 50%，Value2=0
+自身：擊退減免，Time=3，數值 0.5，Value2=0</td><td>星幣 100</td><td>PowerfulMelee</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+TriggerType = 10</td></tr><tr><td>122</td><td>身體</td><td>魅力四射</td><td>吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留原拾星效果。</td><td>Skill-StarSplash
+每次生成數：10
+觸發：取得經驗；條件參數 [0.5]
+自身：立即治療，Time=0，數值 0.1，Value2=0
+
+Ammo-StarSplash
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1</td><td>星幣 100</td><td>StarSplash</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 9
+DamagePercent = 0.4
+VampireProportion = 0
+AmmoNum = 10
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 36
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>123</td><td>身體</td><td>血腥綻放</td><td>飛爪每次命中基準傷害80，附加流血。</td><td>Skill-Claw
+每次生成數：10
+觸發：受擊；條件參數 [1, 0, 0]
+
+Ammo-Claw
+固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.6
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0
+
+Skill-Claw
+每次生成數：10
+觸發：肉搏命中；條件參數 [0, 0, 0]</td><td>星幣 100</td><td>Claw</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+DamagePercent = 0.25
+VampireProportion = 0
+AmmoNum = 10
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 36
+TriggerWall = 0
+Patetern = 1
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 6
+DamagePercent = 0.25
+VampireProportion = 0
+AmmoNum = 10
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 36
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>124</td><td>身體</td><td>狂嘯音刀</td><td>技能或肉搏擊中敵人後釋放斬擊波(穿透性子彈)造成傷害，冷卻2秒</td><td>Skill-Slash
+每次生成數：1
+觸發：任何攻擊命中；條件參數 [2, 0, 0]
+
+Ammo-Slash
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2
+命中目標：暈眩，Time=0.3，數值 0，Value2=0</td><td>星幣 100</td><td>Slash</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 4
+DamagePercent = 1
+VampireProportion = 0
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>125</td><td>身體</td><td>鐵意志大拔砲</td><td>砲彈爆炸半徑與特效放大為1.5倍。</td><td>Skill-Cannon
+施放間隔：3
+每次生成數：1
+
+Ammo-Cannon
+單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+
+Bomb-Cannon
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+作用半徑／視覺縮放：1.5 倍
+延遲爆炸：0 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>Cannon</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>126</td><td>身體</td><td>等一下大爆炸</td><td>在敵人腳下產生爆破造成範圍傷害，冷卻2秒</td><td>Skill-Meteorite
+施放間隔：2
+
+Bomb-Meteorite
+單次接觸傷害係數：1.3 × 技能攻擊力；基準傷害 325／520（一般／對決）
+延遲爆炸：1.1 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>Meteorite</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 700
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+SpawnAtTargetPos = 1
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>127</td><td>身體</td><td>交叉路箭射</td><td>向四個方向發射出箭頭造成傷害，冷卻1秒</td><td>Skill-QuadrupleArrow
+施放間隔：1
+每次生成數：4
+
+Ammo-QuadrupleArrow
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.2</td><td>星幣 100</td><td>QuadrupleArrow</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 45
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 90
+TriggerWall = 0</td></tr><tr><td>128</td><td>身體</td><td>惡臭</td><td>在移動路徑上釋放毒氣，傷害並虛弱在路徑上的敵人（虛弱：攻擊力降低50%。）</td><td>Skill-OdourTrace
+施放間隔：0.3
+
+Bomb-OdourTrace
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：5
+命中目標：虛弱50%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>OdourTrace</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 0.3
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>129</td><td>身體</td><td>友情圈圈</td><td>圈圈作用半徑與特效放大為1.5倍。</td><td>Skill-ReactionForce
+施放間隔：2.5
+
+Bomb-ReactionForce
+單次接觸傷害係數：0.7 × 技能攻擊力；基準傷害 175／280（一般／對決）
+作用半徑／視覺縮放：1.5 倍
+延遲爆炸：1.3 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1.5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>ReactionForce</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 800
+AttackOnce = 0
+Interval = 2.5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+SpawnAtTargetPos = 1
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>130</td><td>身體</td><td>插翅高飛</td><td>向敵人連射6發羽毛，每發間隔0.1秒。</td><td>Skill-FeatherSplash
+每次生成數：6
+觸發：受擊；條件參數 [0.5, 0, 0]
+
+Ammo-FeatherSplash
+單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1</td><td>付費（尚未接金流） 10</td><td>FeatherSplash</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+AmmoNum = 6
+AmmoInterval = 0.1
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>131</td><td>身體</td><td>索命牽引</td><td>牽引每次接觸基準傷害150。</td><td>Skill-DarkExplosion
+觸發：取得技能時；條件參數 [1]
+
+Melee-DarkExplosion
+固定基準傷害：150／150（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：1
+接觸觸發間隔：3
+存在秒數：999999
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>DarkExplosion</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 11
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>132</td><td>身體</td><td>冷酷加農</td><td>發射冰冷砲彈(穿透性子彈)，一段時間後爆破造成範圍內敵人受到傷害並60%緩速，冷卻2秒</td><td>Skill-IceCannon
+施放間隔：3
+每次生成數：1
+
+Ammo-IceCannon
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.7
+命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：暈眩，Time=0.3，數值 0，Value2=0
+
+Bomb-IceCannon
+單次接觸傷害係數：1.3 × 技能攻擊力；基準傷害 325／520（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=0.5，數值 0，Value2=0
+命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>IceCannon</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>201</td><td>背部</td><td>八方箭射</td><td>對周圍發射箭頭造成傷害，冷卻2秒</td><td>Skill-SplashArrow
+施放間隔：2
+每次生成數：4
+
+Ammo-SplashArrow
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+
+Skill-SplashArrow
+施放間隔：2
+每次生成數：4</td><td>星幣 100</td><td>SplashArrow</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 50
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = -30
+TriggerWall = 0
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 130
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 30
+TriggerWall = 0</td></tr><tr><td>202</td><td>背部</td><td>引力光環</td><td>向周圍射出會折返的能量光環造成傷害，冷卻7秒</td><td>Skill-MagicalBall
+施放間隔：7
+每次生成數：10
+
+Ammo-MagicalBall
+單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）
+同目標觸發間隔：0.5
+接觸觸發間隔：0
+存在秒數：3
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>MagicalBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 7
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 10
+AmmoInterval = 0
+AngleInterval = 36
+TriggerWall = 0</td></tr><tr><td>203</td><td>背部</td><td>吸血蝙蝠俠</td><td>向靠近的敵人發射3隻吸血蝙蝠造成傷害並吸取血量，冷卻2秒</td><td>Skill-TraceBat
+施放間隔：2
+每次生成數：3
+
+Ammo-TraceBat
+單次接觸傷害係數：0.15 × 技能攻擊力；基準傷害 38／60（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3</td><td>星幣 100</td><td>TraceBat</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 600
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 160
+AmmoNum = 3
+AmmoInterval = 0.5
+AngleInterval = 20
+TriggerWall = 0</td></tr><tr><td>204</td><td>背部</td><td>秒速暴衝</td><td>觸發後移動速度提升70%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Rush
+觸發：週期觸發；條件參數 [1.5]
+自身：移速提升，Time=0.5，數值 0.7，Value2=0</td><td>星幣 100</td><td>Rush</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 10</td></tr><tr><td>205</td><td>背部</td><td>血腥剃刀</td><td>剃刀每次命中基準傷害40。</td><td>Skill-Scratch
+每次生成數：1
+觸發：肉搏命中；條件參數 [0.3, 0, 0]
+
+Ammo-Scratch
+固定基準傷害：40／40（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0.3
+接觸觸發間隔：0
+存在秒數：0.8
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0
+命中目標：暈眩，Time=0.1，數值 0，Value2=0</td><td>星幣 100</td><td>Scratch</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 6
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 0
+Patetern = 2</td></tr><tr><td>206</td><td>背部</td><td>膽小鬼</td><td>幽靈狀態持續2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Ghost
+觸發：受擊；條件參數 [3, 0, 0]
+自身：幽靈，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>Ghost</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0</td></tr><tr><td>207</td><td>背部</td><td>冷冽冰錐</td><td>冰錐每發基準傷害100，造成60%緩速。</td><td>Skill-QuadrupleIcicle
+施放間隔：1
+每次生成數：4
+
+Ammo-QuadrupleIcicle
+固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2
+命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0</td><td>星幣 100</td><td>QuadrupleIcicle</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = -45
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 90
+TriggerWall = 0</td></tr><tr><td>208</td><td>背部</td><td>敲敲迴旋刀</td><td>迴旋刀每次接觸基準傷害60。</td><td>Skill-QuadrupleBlade
+施放間隔：3
+每次生成數：1
+
+Ammo-QuadrupleBlade
+固定基準傷害：60／60（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：8
+命中目標：暈眩，Time=0.1，數值 0，Value2=0
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0</td><td>星幣 100</td><td>QuadrupleBlade</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 800
+AttackOnce = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>209</td><td>背部</td><td>冰與火</td><td>向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒與60%緩速持續5秒，冷卻2秒</td><td>Skill-DoubleCrutch
+施放間隔：2
+每次生成數：1
+
+Ammo-DoubleCrutch-Ice
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：緩速60%，Time=5，數值 0，Value2=0
+
+Skill-DoubleCrutch
+施放間隔：2
+每次生成數：1
+
+Ammo-DoubleCrutch-Fire
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>DoubleCrutch</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>210</td><td>背部</td><td>急凍領域</td><td>受到攻擊加速移動30%並在2秒後產生大範圍冰霧造成持續傷害並60%緩速目標，冷卻12秒</td><td>Skill-FrozenWing
+觸發：受擊；條件參數 [12, 0, 0]
+自身：移速提升，Time=2，數值 0.3，Value2=0
+
+Bomb-FrozenWing
+單次接觸傷害係數：0.4 × 技能攻擊力；基準傷害 100／160（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：5
+命中目標：緩速60%，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenWing</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+SpawnAtTargetPos = 0
+PrepareTime = 2
+Suicide = 0</td></tr><tr><td>211</td><td>背部</td><td>溜溜圈</td><td>向上方發射5道會返回自身的光環，冷卻3秒</td><td>Skill-DiskAmmo
+施放間隔：3
+每次生成數：5
+
+Ammo-DiskAmmo
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3.1
+命中目標：暈眩，Time=0.2，數值 0，Value2=0</td><td>星幣 100</td><td>DiskAmmo</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+WaitToSpellTime = 0.1
+DetecteRadius = 800
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 180
+AmmoNum = 5
+AmmoInterval = 0
+AngleInterval = -45
+TriggerWall = 0</td></tr><tr><td>212</td><td>背部</td><td>頑皮小旋風</td><td>向前方發射2道旋風(穿透性子彈)造成敵方傷害，冷卻2秒</td><td>Skill-WindShock
+施放間隔：2
+每次生成數：2
+
+Ammo-WindShock
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>WindShock</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 750
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 2
+AmmoInterval = 0.2
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>213</td><td>背部</td><td>展翅高飛</td><td>4秒內沒受到攻擊後每2秒恢復3%血量，若受到攻擊停止回血並加速移動20%持續2秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+
+Skill-Heal
+觸發：未受傷；條件參數 [2, 2, 0]
+自身：立即治療，Time=0，數值 0.03，Value2=0
+
+Skill-Heal
+觸發：結束未受傷；條件參數 [3]
+自身：移速提升，Time=2，數值 0.2，Value2=0</td><td>初始配件 100</td><td>Heal</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 8
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 14</td></tr><tr><td>214</td><td>背部</td><td>火球不只一顆</td><td>對靠近目標發射2道火球造成敵方傷害並燃燒持續5秒，冷卻1秒</td><td>Skill-OnFireBall
+施放間隔：2
+每次生成數：2
+
+Ammo-OnFireBall
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：燃燒，Time=5，每 0.2 秒扣目標最大生命 0.5%（每跳取整數），Value2=0</td><td>星幣 100</td><td>OnFireBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 800
+AttackOnce = 0
+Interval = 2
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 2
+AmmoInterval = 0.3
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>215</td><td>背部</td><td>閃耀快快拳</td><td>拳頭每發基準傷害100。</td><td>Skill-ConsecutiveFist
+施放間隔：3
+每次生成數：4
+
+Ammo-ConsecutiveFist
+固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：暈眩，Time=0.1，數值 0，Value2=0</td><td>星幣 100</td><td>ConsecutiveFist</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 400
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = -20
+AmmoNum = 4
+AmmoInterval = 0.25
+AngleInterval = 10
+TriggerWall = 0</td></tr><tr><td>216</td><td>背部</td><td>冷空氣</td><td>產生寒冰結界，對靠近的敵人造成傷害並60%緩速</td><td>Skill-FrozenZone
+觸發：取得技能時；條件參數 [1]
+
+Melee-FrozenZone
+單次接觸傷害係數：0.15 × 技能攻擊力；基準傷害 38／60（一般／對決）
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：999999
+命中目標：緩速60%，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenZone</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 11
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>217</td><td>背部</td><td>心花怒放</td><td>愛心每發基準傷害70。</td><td>Skill-HeartAmmo
+施放間隔：2
+每次生成數：8
+
+Ammo-HeartAmmo
+固定基準傷害：70／70（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1</td><td>星幣 100</td><td>HeartAmmo</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 300
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 2
+FirstAttackNoWait = 0
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 8
+AmmoInterval = 0
+AngleInterval = 45
+TriggerWall = 0</td></tr><tr><td>218</td><td>背部</td><td>突波電脈衝</td><td>電脈衝施放間隔1.5秒。</td><td>Skill-ElectricBall
+施放間隔：1.5
+每次生成數：4
+
+Ammo-ElectricBall
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：2
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>ElectricBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 400
+AttackOnce = 0
+Interval = 1.5
+FirstAttackNoWait = 0
+Patetern = 0
+RandomAngle = 0
+StartAngle = 45
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 90
+TriggerWall = 1</td></tr><tr><td>219</td><td>背部</td><td>自由高歌</td><td>沒受到攻擊時，每秒發射追蹤音符造成敵人傷害</td><td>Skill-MusicNote
+每次生成數：2
+觸發：未受傷；條件參數 [1, 1, 0]
+
+Ammo-MusicNote
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3</td><td>星幣 100</td><td>MusicNote</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 8
+SpawnAtTargetPos = 0
+AmmoNum = 2
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 180
+TriggerWall = 1
+Patetern = 4</td></tr><tr><td>220</td><td>背部</td><td>鐵削電磁網</td><td>電磁網每次接觸基準傷害120。</td><td>Skill-MagneticField
+觸發：取得技能時；條件參數 [1]
+
+Melee-MagneticField
+固定基準傷害：120／120（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：999999
+命中目標：暈眩，Time=0.1，數值 0，Value2=0</td><td>星幣 100</td><td>MagneticField</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 6
+SpawnedInSelf = 1
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 11
+Patetern = 0
+StartAngle = 0
+RandomAngle = 0
+AttackRadius = 0</td></tr><tr><td>221</td><td>背部</td><td>雙重震盪</td><td>在自身及靠近的目標位置產生產生震盪造成傷害，冷卻2.5秒</td><td>Skill-Stamp
+施放間隔：2.5
+
+Bomb-Stamp
+單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）
+延遲爆炸：1 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+
+Skill-Stamp
+施放間隔：2.5</td><td>星幣 100</td><td>Stamp</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 700
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 2.5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 700
+AttackOnce = 0
+SpawnAtTargetPos = 1
+Interval = 2.5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 0
+PrepareTime = 0
+Suicide = 0</td></tr><tr><td>222</td><td>背部</td><td>糾纏蜘蛛絲</td><td>蛛網爆炸暈眩5秒。</td><td>Skill-WebShoot
+每次生成數：1
+觸發：受到肉搏；條件參數 [7, 0, 0]
+
+Ammo-WebShoot
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.2
+
+Bomb-WebShoot
+單次接觸傷害係數：0.2 × 技能攻擊力；基準傷害 50／80（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.5
+命中目標：暈眩，Time=5，數值 0，Value2=0</td><td>星幣 100</td><td>WebShoot</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 7
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 0
+Patetern = 1</td></tr><tr><td>223</td><td>背部</td><td>雪花爆冰</td><td>發射60%緩速霧氣擊中敵方後會爆破造成傷害並60%緩速範圍內敵人，冷卻3秒</td><td>Skill-FrozenShock
+施放間隔：3
+每次生成數：1
+
+Ammo-FrozenShock
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.5
+命中目標：緩速60%，Time=5，數值 0，Value2=0
+
+Bomb-FrozenShock
+單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）
+延遲爆炸：1 秒
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：0.2
+命中目標：暈眩，Time=1，數值 0，Value2=0
+命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenShock</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+WaitToSpellTime = 0.1
+DetecteRadius = 700
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 0
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>224</td><td>背部</td><td>大口毒液砲</td><td>向前方發射毒球造成傷害並虛弱敵人，冷卻1秒（虛弱：攻擊力降低50%。）</td><td>Skill-PoisonedBall
+施放間隔：1
+每次生成數：1
+
+Ammo-PoisonedBall
+單次接觸傷害係數：1 × 技能攻擊力；基準傷害 250／400（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1
+命中目標：虛弱50%，Time=5，數值 0，Value2=0
+命中目標：暈眩，Time=0.3，數值 0，Value2=0</td><td>星幣 100</td><td>PoisonedBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 1
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>225</td><td>背部</td><td>動感陀螺</td><td>陀螺施放間隔2.5秒。</td><td>Skill-WhippingTop
+施放間隔：2.5
+每次生成數：1
+
+Ammo-WhippingTop
+單次接觸傷害係數：0.5 × 技能攻擊力；基準傷害 125／200（一般／對決）
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：6
+命中目標：暈眩，Time=0.5，數值 0，Value2=0</td><td>星幣 100</td><td>WhippingTop</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 2.5
+FirstAttackNoWait = 1
+Patetern = 1
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 1
+AmmoInterval = 0
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>226</td><td>背部</td><td>四口毒痰</td><td>向四個方向發射毒液砲造成傷害虛弱敵人，冷卻1.5秒（虛弱：攻擊力降低50%。）</td><td>Skill-QuadruplePoisonedBall
+施放間隔：1.5
+每次生成數：4
+
+Ammo-QuadruplePoisonedBall
+單次接觸傷害係數：0.6 × 技能攻擊力；基準傷害 150／240（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：1.5
+命中目標：虛弱50%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>QuadruplePoisonedBall</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 1.5
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 45
+AmmoNum = 4
+AmmoInterval = 0
+AngleInterval = 90
+TriggerWall = 0</td></tr><tr><td>227</td><td>背部</td><td>跟屁精</td><td>跟屁精每次接觸基準傷害40。</td><td>Skill-TrackGenie
+每次生成數：1
+觸發：受擊；條件參數 [10, 0, 0]
+
+Ammo-TrackGenie
+固定基準傷害：40／40（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：10
+命中目標：暈眩，Time=0.3，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>TrackGenie</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 1
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+SpawnAtTargetPos = 0
+AmmoNum = 1
+AmmoInterval = 0
+StartAngle = 0
+AngleInterval = 0
+TriggerWall = 1
+Patetern = 4</td></tr><tr><td>228</td><td>背部</td><td>劍飄飄</td><td>飛劍每次接觸基準傷害80。</td><td>Skill-QuadrupleSword
+施放間隔：4
+每次生成數：3
+
+Ammo-QuadrupleSword
+固定基準傷害：80／80（一般／對決）；仍套用增傷與虛弱比例
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3
+命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0
+
+Skill-QuadrupleSword
+施放間隔：4
+每次生成數：3</td><td>付費（尚未接金流） 10</td><td>QuadrupleSword</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 4
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = 45
+AmmoNum = 3
+AmmoInterval = 0
+AngleInterval = 45
+TriggerWall = 0
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 1000
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 4
+FirstAttackNoWait = 1
+Patetern = 0
+RandomAngle = 0
+StartAngle = -45
+AmmoNum = 3
+AmmoInterval = 0
+AngleInterval = -45
+TriggerWall = 0</td></tr><tr><td>229</td><td>背部</td><td>彩虹泡泡王</td><td>泡泡施放間隔3秒。</td><td>Skill-BubbleSplash
+施放間隔：3
+每次生成數：6
+
+Ammo-BubbleSplash
+單次接觸傷害係數：0.3 × 技能攻擊力；基準傷害 75／120（一般／對決）
+同目標觸發間隔：0
+接觸觸發間隔：0
+存在秒數：3
+命中目標：暈眩，Time=0.1，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>BubbleSplash</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+DetecteRadius = 0
+AttackOnce = 0
+SpawnAtTargetPos = 0
+Interval = 3
+FirstAttackNoWait = 1
+Patetern = 4
+RandomAngle = 0
+StartAngle = 0
+AmmoNum = 6
+AmmoInterval = 0.3
+AngleInterval = 0
+TriggerWall = 0</td></tr><tr><td>230</td><td>背部</td><td>大吐痰</td><td>受到攻擊後回血10%並產生大範圍毒霧造成持續傷害並虛弱毒霧內的敵人，冷卻12秒（虛弱：攻擊力降低50%。）</td><td>Skill-SpitInk
+觸發：受擊；條件參數 [12, 0, 0]
+自身：立即治療，Time=0，數值 0.1，Value2=0
+
+Bomb-SpitInk
+單次接觸傷害係數：0.8 × 技能攻擊力；基準傷害 200／320（一般／對決）
+延遲爆炸：0 秒
+同目標觸發間隔：1
+接觸觸發間隔：0
+存在秒數：7
+命中目標：虛弱50%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>SpitInk</td><td>serializedVersion = 6
+BehaviorSkill = 0
+AttackStopMove = 0
+StopMoveTime = 0
+SpawnedInSelf = 0
+ConnectToAmmo = 0
+DetectedTargetType = 0
+MyFeaturePart = 0
+MyFeatureType = 0
+MyFeatureDataID = 0
+FeaturePartSerialNumber = 0
+TriggerType = 0
+SpawnAtTargetPos = 0
+PrepareTime = 0.7
+Suicide = 0</td></tr></tbody></table></div><script>q.oninput=()=>document.querySelectorAll('tbody tr').forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(q.value.toLowerCase()))</script></html>
