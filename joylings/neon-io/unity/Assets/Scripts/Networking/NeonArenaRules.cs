@@ -6,13 +6,17 @@ namespace Neon.Networking
     {
         public const int PlayerSeats = 16, ResourceBots = 16, Total = 32;
         public const float QueueSeconds = 15, StarSeconds = 10, InitialRadius = 4000;
-        public const int StarsPerWave = 24, GroundStarLimit = 384;
+        public const int GroundStarLimit = 384;
         static float AreaRatio(float radius)
         {
             float ratio = Mathf.Clamp01(radius / InitialRadius);
             return ratio * ratio;
         }
-        public static int AmbientStarsPerWindow(float radius) => Mathf.FloorToInt(StarsPerWave * AreaRatio(radius));
+        public static int AmbientStarsPerWindow(float radius)
+        {
+            float ratio = Mathf.Clamp01(radius / InitialRadius);
+            return ratio > .5f ? 4 : ratio > .25f ? 2 : ratio > .2f ? 1 : 0;
+        }
         public static int AmbientStarLimit(float radius) => Mathf.FloorToInt(GroundStarLimit * AreaRatio(radius));
         public static float AmbientStarInterval(float radius)
         {
@@ -28,6 +32,6 @@ namespace Neon.Networking
         public static int KillReward(int kills) => Mathf.Clamp(kills, 0, Total - 1) * 3;
         public static int DamageReward(int damage) => Mathf.Clamp(damage / 500, 0, 30);
         public static int Reward(int rank, int kills, int damage) => PlacementReward(rank) + KillReward(kills) + DamageReward(damage);
-        public static int DropCount(int slot) => slot >= 0 && slot < Total ? (slot < PlayerSeats ? 3 : 1) : 0;
+        public static int DropCount(int slot) => slot >= 0 && slot < Total ? (slot < PlayerSeats ? 2 : 1) : 0;
     }
 }

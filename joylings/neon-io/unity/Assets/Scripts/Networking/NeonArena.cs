@@ -30,8 +30,7 @@ namespace Neon.Networking
         [Networked, Capacity(32)] public NetworkArray<ArenaEntry> Entries => default;
         readonly Dictionary<int, int> sentSequences = new Dictionary<int, int>();
         float nextMaintenance, nextStorm;
-        LineRenderer ring;
-        Material ringMaterial;
+        NeonArenaFog fog;
         public float Elapsed => Phase >= ArenaPhase.Running ? Mathf.Max(0, (float)(Runner.SimulationTime - Started)) : 0;
         public float Radius => NeonArenaRules.Radius(Elapsed);
         public int Remaining => Enumerable.Range(0, 16).Count(i => !Entries[i].Eliminated);
@@ -54,8 +53,6 @@ namespace Neon.Networking
         void OnDestroy()
         {
             if (instance == this) instance = null;
-            if (ring) Destroy(ring.gameObject);
-            if (ringMaterial) Destroy(ringMaterial);
         }
         public int FindActor(int actor)
         {
@@ -144,7 +141,8 @@ namespace Neon.Networking
             if (Phase >= ArenaPhase.Running && FindActor(PhotonNetwork.LocalPlayer.ActorNumber) < 0)
             { FindFirstObjectByType<BattleUI>()?.LeaveRoom(); return; }
             BattleManager.BM.BattleFieldRadius = Mathf.RoundToInt(Radius);
-            DrawRing();
+            if (!fog) fog = gameObject.AddComponent<NeonArenaFog>();
+            fog.SetRadius(Radius);
             if (HasLocalResult) SaveReward();
             if (Phase != ArenaPhase.Running || Time.unscaledTime < nextStorm) return;
             nextStorm = Time.unscaledTime + 1;
@@ -204,19 +202,6 @@ namespace Neon.Networking
             var row = Entries[LocalSlot];
             MyPlayer.MatchSettlement(NeonArenaRules.Reward(row.Rank, row.Kills, row.Damage), row.Kills);
             PlayerPrefs.SetString("Neon.Arena.LastReward", id); PlayerPrefs.Save();
-        }
-        void DrawRing()
-        {
-            if (!ring)
-            {
-                ring = new GameObject("Arena safe zone").AddComponent<LineRenderer>();
-                ringMaterial = new Material(Shader.Find("Sprites/Default")); ring.sharedMaterial = ringMaterial;
-                ring.loop = true; ring.useWorldSpace = true; ring.positionCount = 128;
-                ring.startWidth = ring.endWidth = 18;
-                ring.startColor = ring.endColor = new Color(.84f, .73f, .43f, .8f); ring.sortingOrder = 20;
-            }
-            for (int i = 0; i < 128; i++)
-            { float angle = i * Mathf.PI * 2 / 128; ring.SetPosition(i, new Vector3(Mathf.Cos(angle) * Radius, Mathf.Sin(angle) * Radius, 0)); }
         }
     }
 }

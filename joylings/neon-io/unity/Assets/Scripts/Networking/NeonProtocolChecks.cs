@@ -13,7 +13,7 @@ namespace Neon.Networking
         public static void Run()
         {
             var tickRate = Fusion.TickRate.Resolve(Fusion.NetworkProjectConfig.Global.Simulation.TickRateSelection);
-            Require(NeonArenaRules.AmbientStarsPerWindow(4000) == 24 && NeonArenaRules.AmbientStarsPerWindow(2000) == 6
+            Require(NeonArenaRules.AmbientStarsPerWindow(4000) == 4 && NeonArenaRules.AmbientStarsPerWindow(2000) == 2
                 && NeonArenaRules.AmbientStarsPerWindow(1000) == 1 && NeonArenaRules.AmbientStarsPerWindow(800) == 0,
                 "Ambient stars must decrease with safe-zone area, stopping in the final circle.");
             Require(NeonArenaRules.AmbientStarLimit(2000) == 96 && NeonArenaRules.AmbientStarLimit(1000) == 24
@@ -21,6 +21,21 @@ namespace Neon.Networking
                 && !NeonArenaRules.CanSpawnAmbientStar(4000, 0, 384)
                 && !NeonArenaRules.CanSpawnAmbientStar(0, 0, 0)
                 && !NeonArenaRules.CanSpawnAmbientStar(-1, 0, 0), "Ambient density or collapsed-circle limit failed.");
+            Require(NeonArenaRules.DropCount(0) == 2 && NeonArenaRules.DropCount(15) == 2 && NeonArenaRules.DropCount(16) == 1
+                && NeonArenaRules.DropCount(31) == 1 && NeonArenaRules.DropCount(-1) == 0, "Arena death drops must be two for seats, one for resource bots.");
+            for (int seed = 0; seed < 20; seed++)
+            {
+                var queue = new NeonQueueProgress("queue-" + seed); var same = new NeonQueueProgress("queue-" + seed);
+                int previous = 0, pauses = 0, clusters = 0;
+                for (int step = 0; step <= 30; step++)
+                {
+                    int count = queue.CountAt(step * .5f);
+                    Require(count >= previous && count <= 16 && count == same.CountAt(step * .5f), "Queue seats must be bounded, monotonic and reproducible.");
+                    if (count == previous) pauses++; if (count - previous > 1) clusters++;
+                    previous = count;
+                }
+                Require(queue.CountAt(0) == 1 && previous == 16 && pauses > 2 && clusters > 0, "Queue must have pauses, clusters and finish before launch.");
+            }
             Require(tickRate.Client == 32 && tickRate.Server == 32 && tickRate.ClientSend == 16 && tickRate.ServerSend == 16,
                 "Fusion Shared tick/send rates must be 32/16 without runtime fallback.");
             var bytes = NeonWireCodec.Pack("BeAttackAndAddBuffer", new object[] { 25, new Vector2(3, -4), new int[] { (int)RoleBuffer.Stun }, new float[] { 2 }, new float[] { 0.5f }, new float[] { 0 } });
