@@ -117,6 +117,7 @@ namespace Starbro.NeonIO
             }
             else
             {
+                _role.RecordOfflineHit(Attacker, damage, Buffers);
                 _role.BeAttack(damage, force);
                 if (_role.IsAlive && ReplaceAttack)
                 {

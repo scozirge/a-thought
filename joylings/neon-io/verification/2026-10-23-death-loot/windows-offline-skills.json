@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "source_run": "logs/neon-validation-2d16dc428cc3",
+  "peers": [
+    {
+      "passed": true,
+      "connected": false,
+      "contentReady": true,
+      "reconnected": false,
+      "scene": "Battle",
+      "failure": "",
+      "name": "驗證1",
+      "errors": 0,
+      "features": 95,
+      "testedSkills": 95,
+      "maxPeers": 0,
+      "maxActors": 1,
+      "maxAi": 0,
+      "cancelledJoins": 0,
+      "expectedCancellationMessages": 0,
+      "elapsed": 29.777982711791992,
+      "averageFrameMs": 20.874059677124023,
+      "actors": [
+        {
+          "name": "GameDeveloper",
+          "id": -15400,
+          "health": 600,
+          "level": 1,
+          "skills": 3,
+          "local": true,
+          "alive": true,
+          "position": {
+            "x": -5478.5517578125,
+            "y": -4199.7001953125,
+            "z": 0.0
+          }
+        }
+      ],
+      "errorMessages": [],
+      "combat": {
+        "passed": false,
+        "damage": false,
+        "lifeSteal": false,
+        "immortal": false,
+        "death": false,
+        "singleKill": false,
+        "challengeResult": false,
+        "lateDeathDidNotFlipResult": false,
+        "damagedHealth": 0,
+        "attackerAfterHealing": 0,
+        "protectedHealth": 0,
+        "finalVictimHealth": 0,
+        "kills": 0,
+        "observedPlayers": 0,
+        "failure": ""
+      },
+      "loot": {
+        "passed": false,
+        "count": 0,
+        "totalValue": 0,
+        "failure": ""
+      },
+      "deathLoot": {
+        "passed": false,
+        "launched": false,
+        "intercepted": false,
+        "awardedOnce": false,
+        "killerCollected": false,
+        "reused": false,
+        "targetDeathReleased": false,
+        "observedPlayers": 0,
+        "interceptorGain": 0,
+        "killerGain": 0,
+        "failure": ""
+      },
+      "palette": {
+        "passed": false,
+        "failure": "",
+        "renderers": 0,
+        "particlePrefabs": 0,
+        "skills": 0,
+        "reflections": 0,
+        "actors": [],
+        "originalShaders": []
+      },
+      "gameplayAudit": {
+        "passed": true,
+        "allocationCounterAvailable": false,
+        "failure": "",
+        "checks": [
+          "Cooldown boundaries and periodic damage under slow/fast frames",
+          "Target indicators at 4:3, 16:10, 16:9 and 21:9",
+          "Per-target cooldown after idle, distinct actors and single-hit/reuse semantics",
+          "Main-thread connection timeout while paused; connected sessions excluded",
+          "Live-target registry, disable/re-enable, homing retarget and 1000-query allocation comparison",
+          "Music pool selection, volume restoration and duplicate loop key"
+        ],
+        "legacySearchBytes": 0,
+        "registrySearchBytes": 0,
+        "legacySearchMilliseconds": 2.5498000000000003,
+        "registrySearchMilliseconds": 0.9646
+      }
+    }
+  ]
+}

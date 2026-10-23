@@ -111,7 +111,7 @@ window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
  dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',
  // Keep the storage identity so existing local profiles and loadouts survive the rename.
- companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.7-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
+ companyName:'Starbro',productName:'Neon Impact',productVersion:'1.1.8-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
 },p=>{document.getElementById('progress').value=p;status.textContent='載入中 '+Math.round(p*100)+'%';}).then(instance=>{
  window.unityInstance=instance;window.neonLoadMilliseconds=performance.now()-window.neonLoadStarted;

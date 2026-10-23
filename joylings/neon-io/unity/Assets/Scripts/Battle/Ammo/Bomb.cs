@@ -68,6 +68,7 @@ namespace Starbro.NeonIO
             }
             else
             {
+                _role.RecordOfflineHit(Attacker, damage, Buffers);
                 _role.BeAttack(damage, force);
             }
             if (Attacker && VampireProportion > 0 && damage > 0 && !PhotonNetwork.IsConnected)

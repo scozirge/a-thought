@@ -15,12 +15,17 @@ namespace Neon.Networking
         [Networked] public float NetworkAngularVelocity { get; set; }
         [Networked] public NetworkBool LootActive { get; set; }
         [Networked] public int LootValue { get; set; }
+        [Networked] public int LootDeathTarget { get; set; }
+        [Networked] public double LootFlightUntil { get; set; }
+        [Networked] public int LootSpawnRevision { get; set; }
+        [Networked] public double LootPickupReadyAt { get; set; }
         [Networked] public NetworkBool StateReady { get; set; }
         PhotonView view;
         Rigidbody2D body;
         RigidbodyType2D originalBodyType;
         Loot loot;
         ExpLoot expLoot;
+        LootMove lootMovement;
         Starbro.NeonIO.Role role;
         bool previousAuthority;
         bool hasRendered;
@@ -39,6 +44,7 @@ namespace Neon.Networking
             if (body) originalBodyType = body.bodyType;
             loot = GetComponent<Loot>();
             expLoot = loot as ExpLoot;
+            lootMovement = loot ? GetComponent<LootMove>() : null;
             role = GetComponent<Starbro.NeonIO.Role>();
             previousAuthority = HasStateAuthority;
             ConfigurePhysics();
@@ -56,13 +62,25 @@ namespace Neon.Networking
             NetworkPosition = transform.position;
             NetworkRotation = transform.eulerAngles.z;
             if (body) { NetworkVelocity = body.linearVelocity; NetworkAngularVelocity = body.angularVelocity; }
-            if (loot) LootActive = loot.IsActive;
-            if (expLoot) LootValue = expLoot.Value;
+            if (loot) { LootActive = loot.IsActive; LootPickupReadyAt = loot.PickupReadyAt; }
+            if (expLoot) { LootValue = expLoot.Value; LootSpawnRevision = expLoot.SpawnRevision; }
+            if (lootMovement) { LootDeathTarget = lootMovement.DeathTargetId; LootFlightUntil = lootMovement.DeathFlightUntil; }
             StateReady = true;
         }
         public override void FixedUpdateNetwork()
         {
-            if (previousAuthority != HasStateAuthority) { previousAuthority = HasStateAuthority; ConfigurePhysics(); PhotonNetwork.Runtime.Register(view); }
+            if (previousAuthority != HasStateAuthority)
+            {
+                previousAuthority = HasStateAuthority;
+                ConfigurePhysics();
+                PhotonNetwork.Runtime.Register(view);
+                if (HasStateAuthority && loot && StateReady)
+                {
+                    transform.position = NetworkPosition;
+                    if (body) { body.position = NetworkPosition; body.linearVelocity = NetworkVelocity; }
+                    RestoreLootState();
+                }
+            }
             if (HasStateAuthority) Capture();
         }
         public override void Render()
@@ -71,11 +89,11 @@ namespace Neon.Networking
             {
                 float blend = 1f - Mathf.Exp(-18f * UnityEngine.Time.unscaledDeltaTime);
                 float distance = (transform.position - NetworkPosition).sqrMagnitude;
-                transform.position = !hasRendered || distance > 1000000f ? NetworkPosition : Vector3.Lerp(transform.position, NetworkPosition, blend);
+                bool newLoot = expLoot && expLoot.SpawnRevision != LootSpawnRevision;
+                transform.position = !hasRendered || newLoot || distance > 1000000f ? NetworkPosition : Vector3.Lerp(transform.position, NetworkPosition, blend);
                 transform.rotation = Quaternion.Euler(0, 0, Mathf.LerpAngle(transform.eulerAngles.z, NetworkRotation, blend));
                 if (body) { body.linearVelocity = NetworkVelocity; body.angularVelocity = NetworkAngularVelocity; }
-                if (loot && loot.IsActive != LootActive) loot.SetActive(LootActive);
-                if (expLoot) expLoot.Value = Mathf.Max(1, LootValue);
+                RestoreLootState();
                 hasRendered = true;
             }
             if (role && !role.IsInitialized) return;
@@ -84,6 +102,18 @@ namespace Neon.Networking
                 var item = pending.Dequeue();
                 view.InvokeLocal(item.method, item.arguments, item.time, item.sender);
             }
+        }
+        void RestoreLootState()
+        {
+            if (expLoot && expLoot.SpawnRevision != LootSpawnRevision)
+            {
+                expLoot.SetLoot(LootActive, NetworkPosition, NetworkVelocity);
+                expLoot.SpawnRevision = LootSpawnRevision;
+            }
+            if (loot && loot.IsActive != LootActive) loot.SetActive(LootActive);
+            if (loot) loot.RestorePickupDeadline(LootPickupReadyAt);
+            if (expLoot) expLoot.Value = Mathf.Max(1, LootValue);
+            if (lootMovement) lootMovement.RestoreDeathFlight(LootDeathTarget, LootFlightUntil);
         }
         public override void Despawned(NetworkRunner runner, bool hasState)
         {

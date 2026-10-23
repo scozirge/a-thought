@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "baseline": "verification/2026-10-23-icons/protected-content.json",
+  "files": {
+    "unity/Assets/Scenes/Init.unity": "6625f4661ec5260158e86927dec26ccd2d1620a4e05a6b415e007ab3967676c2",
+    "unity/Assets/Scripts/Init/Init.cs": "9756e44243d8af14f2ff01c370e050c5574442607d0f5ca98c2f2c0cc5a232da",
+    "unity/Assets/Scripts/Tools/Scene/LoadingCheck.cs": "d168bf1467cd727c3094d97762fd6f907be27935b6d11c49d77344c0568f095b",
+    "unity/Assets/Resources/Animator/Logo.meta": "e3f8884fdd1d9a5fd2868d297edbf35e11b79bbb882ca4b9f7f713a26102c9b4",
+    "unity/Assets/Resources/Animator/Logo/Logo.controller": "55ce7563d57186cd4e171a813fecb4342ac5895023f1063c023ca14e9e066705",
+    "unity/Assets/Resources/Animator/Logo/Logo.controller.meta": "461d17f756cb4c8b1b4a3439a4ac1c0864ae5318f891c8830184bf2737aca3d1",
+    "unity/Assets/Resources/Music/127422_Electronic_Symphony_Remixe.mp3": "176059203e1ce99942b8f5d16d20d51bd9ed4563c15bf21bb3e368897fb576ed",
+    "unity/Assets/Resources/Music/127422_Electronic_Symphony_Remixe.mp3.meta": "b6786da2b54916f47cc536b3211c3bc04f14a34693ab6d33d3dc8a433eca69ee",
+    "unity/Assets/Resources/Music/887659_warped.mp3": "555fb9fddee7263b4c40e26cd280a7f69adfb80e774a1ab3977614030d9ceeba",
+    "unity/Assets/Resources/Music/887659_warped.mp3.meta": "0f683b3f589081f3b52565be6d0024e74569ec6c8cb2cc0cba05094ca38309ec",
+    "unity/Assets/Resources/Music/bgm.mp3": "6b7cf001cce0ce11301e2bd8981bb0fa08c70bf2e7feaa8df1bac49532700587",
+    "unity/Assets/Resources/Music/bgm.mp3.meta": "850b23cadd81580a0a65101818d7d5ace240c69ee984645a7eaadc317ed158d4",
+    "unity/Assets/Resources/Music/Cut-frosted-flakes-of-skin.mp3": "59ec507628ddeac1d0e28b2cc65ce61570a00fd0da3b392c5a5d2566e74067c4",
+    "unity/Assets/Resources/Music/Cut-frosted-flakes-of-skin.mp3.meta": "d90550aecc1164b86602208ef4d1340a043bcce5dd0abff4261c8c60ec3ffb5f",
+    "unity/Assets/Resources/Music/frosted-flakes-of-skin.mp3": "704014433646507640446961cad59fdb9e29cccb8f1d55b559a371731e678d9c",
+    "unity/Assets/Resources/Music/frosted-flakes-of-skin.mp3.meta": "ed7850dd1b54f36e27ba882a9351d80de3d4bb5f80838e3268ebe4613fee25ab",
+    "unity/Assets/Resources/Music/NewAudioMixer.mixer": "4a00b3c4781832c6652f25e6ef0815bf831b07f270a94260957e7326ba24d1ed",
+    "unity/Assets/Resources/Music/NewAudioMixer.mixer.meta": "25cb6a449f5151a55c65ffb6e93b7956abf40ecad23f74956215a853deb63bb0",
+    "unity/Assets/Resources/Json/Feature.json": "1adf94e82150d98a9c7c712a762675415b41a8c3545c0ac0803000e3743e0db1",
+    "unity/Assets/Resources/Json/GameSetting.json": "ef7bbb0c6600d864554a7ffbe8944d2a5f8e483d60ec94a7d2e4630ff1486b05",
+    "unity/Assets/Resources/Json/String_Feature.json": "56aaa59d8247f8c49a1b9a316126becdfca4d58c15f356daced69c370d6737fb"
+  },
+  "changed": []
+}

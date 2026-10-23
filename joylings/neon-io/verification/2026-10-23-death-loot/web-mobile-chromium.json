@@ -1,0 +1,1554 @@
+{
+  "url": "http://127.0.0.1:8200/",
+  "passed": true,
+  "physicalDevice": false,
+  "inputOnly": true,
+  "checks": [
+    "Focused deployed-player input smoke; the full menu matrix is covered separately by the release verification",
+    "Real CDP touch drag moves the actual Photon player right",
+    "Second finger does not steal joystick; release, off-stick taps and touchcancel clear direction",
+    "Mobile skill description appears only while pressed and disappears on release or touchcancel",
+    "Rotation preserves Photon session and clears captured input; confirmation dialog blocks movement",
+    "Lightweight HUD at four sizes: translucent rank and joystick, inset controls, small exit icon with 44-pixel hit area, compact skills and player level beside actual experience progress",
+    "Battle controls retain their inner spacing in addition to simulated notch and bottom gesture safe areas",
+    "Result layout checked with explicitly synthetic zero-reward fixture, then left the room"
+  ],
+  "layouts": [
+    {
+      "label": "lobby-notch",
+      "view": "lobby",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 7,
+      "elements": [
+        {
+          "name": "Menu backing",
+          "x": 16,
+          "y": 12,
+          "w": 302.3999938964844,
+          "h": 345,
+          "opacity": 0.699999988079071,
+          "borderOpacity": 0.25,
+          "fontSize": 0
+        },
+        {
+          "name": "Brand",
+          "x": 93.86666107177734,
+          "y": 16,
+          "w": 146.66665649414062,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Settings icon",
+          "x": 40.79999923706055,
+          "y": 311.79998779296875,
+          "w": 26.39999771118164,
+          "h": 26.400001525878906,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Tutorial",
+          "x": 82,
+          "y": 303,
+          "w": 44,
+          "h": 44,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        },
+        {
+          "name": "Currency",
+          "x": 198.39999389648438,
+          "y": 307,
+          "w": 108,
+          "h": 36,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "leave-confirm",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Dialog",
+          "x": 122,
+          "y": 25,
+          "w": 600,
+          "h": 340,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "hud-844x390",
+      "view": "battle",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-667x375",
+      "view": "battle",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 231,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 265,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 610,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 199,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 204,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 475,
+          "y": 283,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 477,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 537,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 597,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 487,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-844x300",
+      "view": "battle",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 176,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 205,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 144,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 149,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 220,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-844x240",
+      "view": "battle",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 116,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 145,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 84,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 89,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 160,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "hud-notch",
+      "view": "battle",
+      "css": [
+        756,
+        369
+      ],
+      "controls": 1,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 225,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 259,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 699,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 165,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 165,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 193,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 198,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 564,
+          "y": 277,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 566,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 626,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 686,
+          "y": 279,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 576,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x390",
+      "view": "result",
+      "css": [
+        844,
+        390
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 246,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 280,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 186,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 214,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 219,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 652,
+          "y": 298,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 654,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 714,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 300,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 68,
+          "w": 800,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-667x375",
+      "view": "result",
+      "css": [
+        667,
+        375
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 231,
+          "w": 116,
+          "h": 116,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 66,
+          "y": 265,
+          "w": 48,
+          "h": 48,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 610,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 171,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 199,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 204,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 475,
+          "y": 283,
+          "w": 168,
+          "h": 64,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 477,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 537,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 597,
+          "y": 285,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 487,
+          "y": 60,
+          "w": 156,
+          "h": 124,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 84,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 12,
+          "y": 60.5,
+          "w": 643,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x300",
+      "view": "result",
+      "css": [
+        844,
+        300
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 176,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 205,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 116,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 144,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 149,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 220,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 218,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 23,
+          "w": 800,
+          "h": 254,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    },
+    {
+      "label": "result-fixture-844x240",
+      "view": "result",
+      "css": [
+        844,
+        240
+      ],
+      "controls": 3,
+      "elements": [
+        {
+          "name": "Touch joystick",
+          "x": 32,
+          "y": 116,
+          "w": 100,
+          "h": 100,
+          "opacity": 0.14000000059604645,
+          "borderOpacity": 0.3199999928474426,
+          "fontSize": 0
+        },
+        {
+          "name": "Thumb",
+          "x": 61,
+          "y": 145,
+          "w": 42,
+          "h": 42,
+          "opacity": 0.41999998688697815,
+          "borderOpacity": 0.5199999809265137,
+          "fontSize": 0
+        },
+        {
+          "name": "Exit icon",
+          "x": 787,
+          "y": 23,
+          "w": 22,
+          "h": 22,
+          "opacity": 1,
+          "borderOpacity": 0.6499999761581421,
+          "fontSize": 0
+        },
+        {
+          "name": "Vitality",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 48,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Health",
+          "x": 32,
+          "y": 56,
+          "w": 144,
+          "h": 20,
+          "opacity": 0.8799999952316284,
+          "borderOpacity": 0,
+          "fontSize": 13
+        },
+        {
+          "name": "Level",
+          "x": 32,
+          "y": 84,
+          "w": 42,
+          "h": 20,
+          "opacity": 0.8999999761581421,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Experience",
+          "x": 82,
+          "y": 89,
+          "w": 94,
+          "h": 10,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Skill dock",
+          "x": 660,
+          "y": 160,
+          "w": 160,
+          "h": 56,
+          "opacity": 0,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 662,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 718,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Slot",
+          "x": 774,
+          "y": 158,
+          "w": 44,
+          "h": 44,
+          "opacity": 0.10000000149011612,
+          "borderOpacity": 0.20000000298023224,
+          "fontSize": 0
+        },
+        {
+          "name": "Leaderboard",
+          "x": 664,
+          "y": 60,
+          "w": 156,
+          "h": 82,
+          "opacity": 0.2199999988079071,
+          "borderOpacity": 0,
+          "fontSize": 0
+        },
+        {
+          "name": "Combat feed",
+          "x": 12,
+          "y": 12,
+          "w": 208,
+          "h": 42,
+          "opacity": 1,
+          "borderOpacity": 0,
+          "fontSize": 12
+        },
+        {
+          "name": "Result panel",
+          "x": 22,
+          "y": 12,
+          "w": 800,
+          "h": 216,
+          "opacity": 1,
+          "borderOpacity": 0.44999998807907104,
+          "fontSize": 0
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "movement": {
+    "start": {
+      "x": -691.6079711914062,
+      "y": -466.84686279296875
+    },
+    "end": {
+      "x": -683.6084594726562,
+      "y": -466.9357604980469
+    },
+    "velocity": {
+      "x": 399.9754638671875,
+      "y": -4.44417142868042
+    }
+  }
+}

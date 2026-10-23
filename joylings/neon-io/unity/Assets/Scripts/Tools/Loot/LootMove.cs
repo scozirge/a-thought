@@ -50,25 +50,84 @@ namespace Scoz.Func
         MyTimer StopMoveTimer;
 
         protected Transform TargetTrans;
+        public int DeathTargetId { get; private set; }
+        public double DeathFlightUntil { get; private set; }
+        Role deathTarget;
+        bool initialized;
+        public const float DeathLaunchSpeed = 900f;
+        public const float DeathFlightSpeed = 1100f;
+        public const float DeathFlightSeconds = 8f;
 
 
         protected virtual void Start()
         {
-
-            if (MyRigi == null) MyRigi = GetComponent<Rigidbody2D>();
-            OriginalPos = transform.position;
-            TargetPos = OriginalPos;
-            WanderIntervalTimer = 0;
-            WanderIntervalTimer = WanderInterval;
-            StartWander = Wander;
-            CanMove = GetComponent<Loot>() == null || GetComponent<Loot>().IsActive;
-            if (StopMoveTime > 0)
-                StopMoveTimer = new MyTimer(StopMoveTime, StopMove, true, false);
+            // Spawning/reusing can configure a star before its first Start.
+            if (!initialized) ResetForReuse(GetComponent<Loot>() == null || GetComponent<Loot>().IsActive);
         }
         void StopMove()
         {
+            if (MoveToPlayer || DeathFlightUntil > PhotonNetwork.Time) return;
             MyRigi.linearVelocity = Vector2.zero;
             StartWander = false;
+        }
+
+        public static Vector2 DeathLaunchVelocity(Vector2 origin, Vector2 destination)
+        {
+            Vector2 direction = (destination - origin).normalized;
+            if (direction == Vector2.zero) return Vector2.zero;
+            Vector2 sideways = new Vector2(-direction.y, direction.x);
+            return (direction + sideways * Random.Range(-0.12f, 0.12f)).normalized * DeathLaunchSpeed;
+        }
+        public void BeginDeathFlight(Role killer)
+        {
+            if (killer == null || !killer.IsAlive || !killer.IsInitialized) return;
+            deathTarget = killer;
+            MoveToPlayer = false;
+            TargetTrans = null;
+            DeathTargetId = killer.photonView.ViewID;
+            DeathFlightUntil = PhotonNetwork.Time + DeathFlightSeconds;
+            CanMove = true;
+            SetVelocity(DeathLaunchVelocity(transform.position, killer.transform.position));
+        }
+        // Durable state for late join and shared-master handover; never reserves pickup ownership.
+        public void RestoreDeathFlight(int targetId, double until)
+        {
+            if (DeathTargetId != targetId) deathTarget = null;
+            DeathTargetId = targetId;
+            DeathFlightUntil = until;
+            CanMove = GetComponent<Loot>() == null || GetComponent<Loot>().IsActive;
+            initialized = true;
+            if (MyRigi == null) MyRigi = GetComponent<Rigidbody2D>();
+        }
+        void ClearDeathFlight()
+        {
+            DeathTargetId = 0;
+            DeathFlightUntil = 0;
+            deathTarget = null;
+        }
+        bool MoveDeathFlight()
+        {
+            if (DeathTargetId == 0 || PhotonNetwork.Time >= DeathFlightUntil)
+            {
+                ClearDeathFlight();
+                return false;
+            }
+            if (deathTarget == null)
+            {
+                PhotonView targetView = PhotonView.Find(DeathTargetId);
+                if (targetView != null) deathTarget = targetView.GetComponent<Role>();
+            }
+            // A target may arrive after the loot snapshot. Leave the deadline bounded while resolving it.
+            if (deathTarget == null) return false;
+            if (!deathTarget.IsAlive || !deathTarget.IsInitialized)
+            {
+                ClearDeathFlight();
+                return false;
+            }
+            Vector2 delta = deathTarget.transform.position - transform.position;
+            Vector2 desired = delta.normalized * Mathf.Min(DeathFlightSpeed, delta.magnitude * 10f);
+            MyRigi.linearVelocity = Vector2.MoveTowards(MyRigi.linearVelocity, desired, 2400f * Time.fixedDeltaTime);
+            return true;
         }
 
         public void SetVelocity(Vector2 _force)
@@ -115,7 +174,7 @@ namespace Scoz.Func
             {
                 if (!MoveToPlayer)
                 {
-                    WanderMovement();
+                    if (!MoveDeathFlight()) WanderMovement();
                 }
                 else
                 {
@@ -161,6 +220,8 @@ namespace Scoz.Func
         }
         public void ResetForReuse(bool active)
         {
+            initialized = true;
+            ClearDeathFlight();
             CanMove = active;
             MoveToPlayer = false;
             TargetTrans = null;

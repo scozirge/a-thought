@@ -1297,6 +1297,10 @@ MonoBehaviour:
   _LootActive:
     RawValue: 0
   _LootValue: 0
+  _LootDeathTarget: 0
+  _LootFlightUntil: 0
+  _LootSpawnRevision: 0
+  _LootPickupReadyAt: 0
   _StateReady:
     RawValue: 0
 --- !u!114 &8650826316055964267

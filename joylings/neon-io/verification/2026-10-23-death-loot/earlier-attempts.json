@@ -1,0 +1,57 @@
+[
+  {
+    "source": "logs\\neon-validation-8e37f48b460d\\peer-0.json",
+    "failure": "Pooled star did not start a new flight.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-8e37f48b460d\\peer-1.json",
+    "failure": "Pooled star did not start a new flight.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-8e37f48b460d\\peer-2.json",
+    "failure": "Pooled star did not start a new flight.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-a3fcbdd7d7a6\\peer-0.json",
+    "failure": "Unintercepted star did not reach the killer.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-a3fcbdd7d7a6\\peer-1.json",
+    "failure": "Unintercepted star did not reach the killer.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-a3fcbdd7d7a6\\peer-2.json",
+    "failure": "Unintercepted star did not reach the killer.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-98d7e6052620\\peer-0.json",
+    "failure": "Unintercepted star did not reach the killer. 驗證2/1049601 alive=False xp=0 pos=(0.00, 0.00, 0.00) colliders=驗證2:False,Absorber:False;驗證1/525313 alive=False xp=0 pos=(2400.00, 1000.00, 0.00) colliders=驗證1:False,Absorber:False;驗證3/1573889 alive=False xp=1 pos=(1400.00, -2000.00, 0.00) colliders=驗證3:False,Absorber:False STARS 525318 active=True pos=(1808.66, 999.30, 0.00) vel=(0.00, 0.00) target=0 until=-11.75 absorb=False;525321 active=True pos=(1461.93, -1932.53, 0.00) vel=(15.59, 16.98) target=0 until=-11.75 absorb=False;525319 active=True pos=(2487.29, 1092.17, 0.00) vel=(0.00, 0.00) target=0 until=-11.75 absorb=False;525320 active=True pos=(1104.43, -1827.25, 0.00) vel=(-74.40, 43.48) target=0 until=-11.75 absorb=False",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-98d7e6052620\\peer-1.json",
+    "failure": "Unintercepted star did not reach the killer. 驗證1/-16556 alive=False xp=0 pos=(2400.00, 1000.00, 0.00) colliders=驗證1:False,Absorber:False;驗證2/1049601 alive=False xp=0 pos=(0.00, 0.00, 0.00) colliders=驗證2:False,Absorber:False;驗證3/1573889 alive=False xp=1 pos=(1400.00, -2000.00, 0.00) colliders=驗證3:False,Absorber:False STARS 525318 active=True pos=(1808.66, 999.30, 0.00) vel=(0.00, 0.00) target=0 until=-11.84375 absorb=False;525320 active=True pos=(1104.59, -1827.34, 0.00) vel=(-77.40, 45.24) target=0 until=-11.84375 absorb=False;525321 active=True pos=(1461.89, -1932.57, 0.00) vel=(16.22, 17.67) target=0 until=-11.84375 absorb=False;525319 active=True pos=(2487.29, 1092.17, 0.00) vel=(0.00, 0.00) target=0 until=-11.84375 absorb=False",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-98d7e6052620\\peer-2.json",
+    "failure": "Unintercepted star did not reach the killer. 驗證3/1573889 alive=False xp=1 pos=(1400.00, -2000.00, 0.00) colliders=驗證3:False,Absorber:False;驗證2/1049601 alive=False xp=0 pos=(0.00, 0.00, 0.00) colliders=驗證2:False,Absorber:False STARS 525318 active=True pos=(1808.66, 999.30, 0.00) vel=(0.00, 0.00) target=0 until=-11.84375 absorb=False;525320 active=True pos=(1105.80, -1828.05, 0.00) vel=(-77.40, 45.24) target=0 until=-11.84375 absorb=False;525319 active=True pos=(2487.29, 1092.17, 0.00) vel=(0.00, 0.00) target=0 until=-11.84375 absorb=False;525321 active=True pos=(1461.64, -1932.85, 0.00) vel=(16.22, 17.67) target=0 until=-11.84375 absorb=False",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-53046abac239\\peer-0.json",
+    "failure": "The two-player session or master changed during the loot stress test.",
+    "passed": false
+  },
+  {
+    "source": "logs\\neon-validation-53046abac239\\peer-1.json",
+    "failure": "The two-player session or master changed during the loot stress test.",
+    "passed": false
+  }
+]

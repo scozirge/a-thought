@@ -52,7 +52,7 @@ namespace Scoz.Func
             }
             return force;
         }
-        public static void SpawnExpLoot(int _count, Vector3 _pos)
+        public static void SpawnExpLoot(int _count, Vector3 _pos, Role killer = null)
         {
             if (MySelf == null || (PhotonNetwork.IsConnected && !PhotonNetwork.IsMasterClient)) return;
             if (ExpLootPrefab_Static == null)
@@ -64,20 +64,7 @@ namespace Scoz.Func
             for (int i = 0; i < _count; i++)
             {
                 Loot loot = GetAvailableLoot();
-                if (loot != null)
-                {
-
-                    if (PhotonNetwork.IsConnected)
-                    {
-                        if (loot.photonView.IsMine)
-                            loot.photonView.RPC("SetLoot", RpcTarget.All, true, (Vector2)_pos, MySelf.GetRandomForce());
-                    }
-                    else
-                    {
-                        loot.SetLoot(true, _pos, MySelf.GetRandomForce());
-                    }
-                }
-                else
+                if (loot == null)
                 {
                     if (MySelf.LootList.Count >= MaxPooledLoot)
                     {
@@ -88,10 +75,11 @@ namespace Scoz.Func
                             if (nearest == null)
                             {
                                 // During master reassignment scene-object authority can arrive a frame later.
-                                MySelf.StartCoroutine(MySelf.RetrySpawn(remaining, _pos));
+                                MySelf.StartCoroutine(MySelf.RetrySpawn(remaining, _pos, killer));
                                 return;
                             }
                             remaining -= nearest.AddValue(remaining);
+                            nearest.LaunchToward(killer);
                         }
                         return;
                     }
@@ -102,7 +90,6 @@ namespace Scoz.Func
                             GameObject go = PhotonNetwork.InstantiateSceneObject(ExpLootPrefab_Static.name, _pos, Quaternion.identity);
                             Register(go.GetComponent<Loot>());
                             loot = go.GetComponent<ExpLoot>();
-                            loot.photonView.RPC("SetLoot", RpcTarget.All, true, (Vector2)_pos, MySelf.GetRandomForce());
                         }
                     }
                     else
@@ -111,9 +98,13 @@ namespace Scoz.Func
                         loot.transform.SetParent(MySelf.transform);
                         loot.transform.localPosition = _pos;
                         Register(loot);
-                        loot.SetLoot(true, _pos, MySelf.GetRandomForce());
                     }
                 }
+                // Reserve/reset on the authority synchronously. An All RPC can be deferred
+                // until the Fusion tick and would select the same inactive star repeatedly.
+                Vector2 force = MySelf.GetRandomForce();
+                loot.SetLoot(true, _pos, force);
+                if (loot is ExpLoot experience) experience.LaunchToward(killer);
             }
         }
         static ExpLoot FindMergeTarget(Vector3 position)
@@ -132,12 +123,12 @@ namespace Scoz.Func
             }
             return nearest;
         }
-        IEnumerator RetrySpawn(int count, Vector3 position)
+        IEnumerator RetrySpawn(int count, Vector3 position, Role killer)
         {
             while ((!PhotonNetwork.IsConnected || PhotonNetwork.IsMasterClient) &&
                 GetAvailableLoot() == null && FindMergeTarget(position) == null)
                 yield return null;
-            SpawnExpLoot(count, position);
+            SpawnExpLoot(count, position, killer);
         }
         static Loot GetAvailableLoot()
         {

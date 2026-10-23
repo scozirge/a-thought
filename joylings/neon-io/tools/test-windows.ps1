@@ -1,4 +1,4 @@
-﻿param([ValidateSet('Offline','Multiplayer','Combat','Challenge','ChallengeAI','ChallengeCombat','LootStress','Reconnect')][string]$Mode = 'Multiplayer', [int]$Seconds = 35, [switch]$Render, [switch]$Palette, [switch]$Audit, [switch]$CancelCheck, [ValidateRange(2,10)][int]$Clients = 2)
+﻿param([ValidateSet('Offline','Multiplayer','Combat','Challenge','ChallengeAI','ChallengeCombat','LootStress','DeathLoot','Reconnect')][string]$Mode = 'Multiplayer', [int]$Seconds = 35, [switch]$Render, [switch]$Palette, [switch]$Audit, [switch]$CancelCheck, [ValidateRange(2,10)][int]$Clients = 2)
 $ErrorActionPreference = 'Stop'
 $neonRoot = Split-Path -Parent $PSScriptRoot
 $neonExe = Join-Path $neonRoot 'Builds/Windows/NeonImpact.exe'
@@ -9,6 +9,7 @@ New-Item -ItemType Directory -Path $neonRun -Force | Out-Null
 $neonProcesses = @()
 $neonCount = if ($Mode -in @('Offline','ChallengeAI')) { 1 } else { 2 }
 if ($Mode -eq 'Multiplayer') { $neonCount = $Clients }
+if ($Mode -eq 'DeathLoot') { $neonCount = 3 }
 for ($index = 0; $index -lt $neonCount; $index++) {
   $neonName = '驗證' + ($index + 1)
   $neonReport = Join-Path $neonRun ('peer-' + $index + '.json')
@@ -21,6 +22,7 @@ for ($index = 0; $index -lt $neonCount; $index++) {
   if ($Mode -in @('Combat','ChallengeCombat')) { $neonArgs += '-neonCombatCheck' }
   if ($Mode -in @('Challenge','ChallengeAI','ChallengeCombat')) { $neonArgs += '-neonChallenge' }
   if ($Mode -eq 'Reconnect') { $neonArgs += '-neonReconnect' }
+  if ($Mode -eq 'DeathLoot') { $neonArgs += '-neonDeathLoot' }
   if ($Mode -eq 'LootStress') { $neonArgs += '-neonLootStress' }
   if ($Palette) { $neonArgs += '-neonPalette' }
   if ($Audit) { $neonArgs += '-neonAudit' }

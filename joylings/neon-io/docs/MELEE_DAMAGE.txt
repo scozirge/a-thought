@@ -1,0 +1,59 @@
+星際遊俠 / NOVAROVE：肉搏傷害資料核對
+核對日期：2026-10-23；依目前 95 筆技能、Prefab 實值與傷害程式整理。本次未調整技能平衡。
+
+直接提高肉搏傷害
+1. 痛痛拳（身體，ID 121 / PowerfulMelee）：MeleeDamageUp +20%；每 2 秒刷新一次、持續 3 秒，同時減少 50% 擊退。此增益存在時生效。
+2. 蠻牛大爆衝（頭部，ID 32 / PowerfulStrike）：巨角替換原本肉搏攻擊，每次命中 = 當下肉搏攻擊力 × 120%，同一目標傷害間隔 0.3 秒。前方非穿透子彈減傷 20% 與命中暈眩 0.5 秒另計。
+
+無詛咒、無其他攻擊增益／敵方減傷時，每次直接命中比較：
+配置                         無際戰場（基礎 250）    頂尖對決（基礎 400）
+原本肉搏                     250                    400
+只有痛痛拳生效               300                    480
+只有蠻牛大爆衝               300                    480
+痛痛拳生效 + 蠻牛大爆衝      360（1.2 × 1.2）       576（1.2 × 1.2）
+兩者一起為 +44%，不是 +40%。同種類 Buff 在 Role.AddBuffer 中覆寫／刷新，不會把多份 MeleeDamageUp 加總。
+等級目前增加生命與技能成長，不直接增加 BaseDamage。
+
+肉搏命中後追加攻擊（以下是獨立技能命中，並非普攻永久加成）
+兩下電三下（頭部，ID 19 / EliteHunt）：兩次肉搏命中觸發 3 發追蹤電流，每發 40% 技能攻擊力；3 發全中共 120%；冷卻 1 秒，4 秒未連續命中會清除計數，命中暈眩 0.5 秒。
+血腥綻放（身體，ID 123 / Claw）：肉搏命中向周圍放出 10 發能量，每發 25% 技能攻擊力，流血 5 秒。朝不同方向發射，不能當成同一目標保證承受 250%。受擊也有另一個觸發途徑，該途徑冷卻 1 秒。
+狂野斬刀（身體，ID 124 / Slash）：肉搏或技能命中後追加斬波，每次 100% 技能攻擊力，冷卻 2 秒。
+血腥剃刀（背部，ID 205 / Scratch）：肉搏命中追加血刃，每次 10% 技能攻擊力，冷卻 0.3 秒，拉回目標並流血 5 秒。
+上述額外攻擊使用 SkillDamage；痛痛拳只提高 MeleeDamage，不會把這些投射物一起乘 1.2。
+
+容易混淆的近身技能（本身有傷害，並非提高原本肉搏）
+無上光環（頭部，ID 8）：每次技能命中 30% 技能攻擊力。
+神奇腦波（頭部，ID 26）：每次技能命中 30% 技能攻擊力。
+扭曲基點（身體，ID 103）：每次技能命中 50% 技能攻擊力。
+急凍噴霧（身體，ID 105）：每次技能命中 15% 技能攻擊力。
+極緩磁圈（身體，ID 108）：每次技能命中 5% 技能攻擊力。
+軌道光子（身體，ID 113）：每次技能命中 30% 技能攻擊力。
+要你命手刀（身體，ID 115）：每次技能命中 120% 技能攻擊力。
+索命牽引（身體，ID 131）：每次技能命中 50% 技能攻擊力。
+冷空氣（背部，ID 216）：每次技能命中 15% 技能攻擊力。
+鐵削電磁網（背部，ID 220）：每次技能命中 35% 技能攻擊力。
+這些資料以 Ammo.ValuePercent 為準。若舊 Prefab 的 Skill.DamagePercent 欄位與其不同，以實際程式使用的 Ammo.ValuePercent 為準。
+
+肉搏觸發但沒有直接傷害加成
+熱血進擊（頭部，ID 23）：每次符合觸發的肉搏命中恢復最大生命 2.5%，移速 +30% 持續 3 秒；觸發冷卻 0.3 秒。
+影襲（身體，ID 101）：肉搏命中後隱身 3 秒；觸發冷卻 0.2 秒。
+
+實際公式（各步依 Unity Mathf.RoundToInt 取整）
+Damage = round(BaseDamage × (1 + DamageUp - Sick 減傷))
+MeleeDamage = round(Damage × (1 + MeleeDamageUp))
+普通肉搏 = round(MeleeDamage × PlayerAttack.DamagePercent)，玩家 Prefab 為 1。
+替換肉搏 = round(MeleeDamage × Ammo.ValuePercent)，巨角為 1.2。
+一般技能 = round(SkillDamage × Ammo.ValuePercent)。
+Sick 的攻擊力減少目前是 0.5。實際扣血還受無敵、防禦、格擋與命中條件影響。
+
+核對來源（專案內相對路徑）
+unity/Assets/Resources/Json/Feature.json
+unity/Assets/Resources/Json/String_Feature.json
+unity/Assets/Resources/Json/GameSetting.json
+unity/Assets/Resources/Gameobjects/Battle/Skill/Skill-PowerfulMelee.prefab
+unity/Assets/Resources/Gameobjects/Battle/Ammo/Melee-PowerfulStrike.prefab
+unity/Assets/Scripts/Battle/Role/Role.cs
+unity/Assets/Scripts/Battle/Attack/PlayerAttack.cs
+unity/Assets/Scripts/Battle/Attack/PassiveSkill.cs
+unity/Assets/Scripts/Battle/Ammo/Ammo.cs
+unity/Assets/Scripts/Battle/Ammo/MeleeAmmo.cs

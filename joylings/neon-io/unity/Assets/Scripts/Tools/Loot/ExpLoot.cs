@@ -6,6 +6,16 @@ namespace Scoz.Func
     public class ExpLoot : Loot
     {
         public int Value = 1;
+        public int SpawnRevision { get; internal set; }
+
+        public void LaunchToward(Role killer)
+        {
+            if (!IsActive || killer == null || !killer.IsAlive || !killer.IsInitialized) return;
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+            GetComponent<LootMove>()?.BeginDeathFlight(killer);
+            // Death stars can be intercepted from launch, not only after the ordinary 1-second delay.
+            AllowImmediatePickup();
+        }
 
         // Return the accepted amount so the spawner can carry excess to another star.
         public int AddValue(int amount)
@@ -37,10 +47,7 @@ namespace Scoz.Func
             if (!(role is PlayerRole) && !(role is NeutralRole)) return;
             int remaining = Mathf.Max(1, Value);
             SetActive(false); // Reserve synchronously before any RPC can return.
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC("SetLoot", RpcTarget.All, false, Vector2.zero, Vector2.zero);
-            }
+            // Active/value/flight are replicated together in Fusion snapshots; no per-star hide RPC.
             // Keep each grant within the wire validator limit without losing merged value.
             foreach (int amount in SplitGrants(remaining))
             {
@@ -52,7 +59,7 @@ namespace Scoz.Func
         [PunRPC]
         public override void SetLoot(bool active, Vector2 position, Vector2 force)
         {
-            if (active) Value = 1;
+            if (active) { Value = 1; SpawnRevision = SpawnRevision == int.MaxValue ? 1 : SpawnRevision + 1; }
             base.SetLoot(active, position, force);
             LootMove movement = GetComponent<LootMove>();
             if (movement == null) return;

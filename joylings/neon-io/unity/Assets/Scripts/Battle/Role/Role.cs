@@ -177,6 +177,7 @@ namespace Starbro.NeonIO
         protected int NetworkLifeRevision;
         int LastNotifiedDeath = -1;
         int LastAttackerViewId;
+        Role lastOfflineAttacker;
         double LastAttackerTime;
         int HitSequence;
         readonly Dictionary<int, int> LastHealingHit = new Dictionary<int, int>();
@@ -782,6 +783,16 @@ namespace Starbro.NeonIO
             }
         }
 
+        public void RecordOfflineHit(Role attacker, int damage, List<BufferData> buffers)
+        {
+            if (PhotonNetwork.IsConnected || !IsAlive || attacker == null || attacker == this) return;
+            bool harmful = damage > 0;
+            if (buffers != null)
+                foreach (BufferData buffer in buffers) harmful |= buffer.Type == RoleBuffer.Burn || buffer.Type == RoleBuffer.Bleed;
+            if (!harmful) return;
+            lastOfflineAttacker = attacker;
+            LastAttackerTime = PhotonNetwork.Time;
+        }
         public virtual void Die()
         {
             if (!HasSimulationAuthority || !IsAlive) return;
@@ -793,7 +804,8 @@ namespace Starbro.NeonIO
                 photonView.RPC("NotifyDeath", RpcTarget.All, NetworkLifeRevision, killerViewId, GetDeathLootCount(), deathPosition);
             else
             {
-                if (GetDeathLootCount() > 0) LootSpawner.SpawnExpLoot(GetDeathLootCount(), deathPosition);
+                Role killer = PhotonNetwork.Time - LastAttackerTime <= 15 ? lastOfflineAttacker : null;
+                if (GetDeathLootCount() > 0) LootSpawner.SpawnExpLoot(GetDeathLootCount(), deathPosition, killer != this ? killer : null);
                 HandleMatchDeath();
             }
         }
@@ -803,6 +815,7 @@ namespace Starbro.NeonIO
             if (!HasSimulationAuthority) return;
             NetworkLifeRevision++;
             LastAttackerViewId = 0;
+            lastOfflineAttacker = null;
             LastAttackerTime = 0;
             LastHealingHit.Clear();
         }
@@ -845,10 +858,10 @@ namespace Starbro.NeonIO
             }
             // Every client receives the same confirmed death. Only the scene authority
             // creates drops, and only the killer authority changes that player's score.
-            if (PhotonNetwork.IsMasterClient && dropCount > 0)
-                LootSpawner.SpawnExpLoot(dropCount, position);
             PhotonView killerView = killerViewId != 0 ? PhotonView.Find(killerViewId) : null;
             Role killer = killerView != null ? killerView.GetComponent<Role>() : null;
+            if (PhotonNetwork.IsMasterClient && dropCount > 0)
+                LootSpawner.SpawnExpLoot(dropCount, position, killer != this ? killer : null);
             if (killer != null && killer != this && killerView.IsMine)
             {
                 if (killer is PlayerRole)

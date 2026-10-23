@@ -28,6 +28,7 @@ namespace Neon.Validation
             public string[] errorMessages;
             public NeonCombatCheck.Result combat;
             public NeonLootCheck.Result loot;
+            public NeonDeathLootCheck.Result deathLoot;
             public Neon.Astral.NeonPaletteCheck.Result palette;
             public NeonGameplayAudit.Result gameplayAudit;
         }
@@ -124,6 +125,15 @@ namespace Neon.Validation
                 report.maxPeers = Math.Max(report.maxPeers, PhotonNetwork.CurrentRoom.PlayerCount);
                 if (!check.result.passed) { Finish(check.result.failure); yield break; }
             }
+            if (Has("-neonDeathLoot"))
+            {
+                var check = gameObject.AddComponent<NeonDeathLootCheck>();
+                yield return check.Run();
+                report.deathLoot = check.result;
+                report.maxActors = Math.Max(report.maxActors, check.result.observedPlayers);
+                report.maxPeers = Math.Max(report.maxPeers, PhotonNetwork.CurrentRoom.PlayerCount);
+                if (!check.result.passed) { Finish(check.result.failure); yield break; }
+            }
             if (Has("-neonLootStress"))
             {
                 var check = gameObject.AddComponent<NeonLootCheck>();
@@ -151,7 +161,7 @@ namespace Neon.Validation
                 var actors = Object.FindObjectsByType<PlayerRole>(FindObjectsSortMode.None);
                 report.maxActors = Math.Max(report.maxActors, actors.Length);
                 report.maxAi = Math.Max(report.maxAi, Object.FindObjectsByType<NeutralRole>(FindObjectsSortMode.None).Length);
-                if (!Has("-neonCombatCheck") && !Has("-neonChallenge") && BattleManager.BM && BattleManager.BM.MyPlayerRole && !BattleManager.BM.MyPlayerRole.IsAlive) BattleManager.BM.Restart();
+                if (!Has("-neonCombatCheck") && !Has("-neonDeathLoot") && !Has("-neonChallenge") && BattleManager.BM && BattleManager.BM.MyPlayerRole && !BattleManager.BM.MyPlayerRole.IsAlive) BattleManager.BM.Restart();
                 yield return null;
             }
             if (Has("-neonReconnect"))

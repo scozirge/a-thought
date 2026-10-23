@@ -55,6 +55,7 @@ namespace Starbro.NeonIO
             else
             {
                 victim.CallToEmitParticle("MeleeHit", impact, Attacker.MyForce);
+                victim.RecordOfflineHit(Attacker, damage, Buffers);
                 victim.BeAttack(damage, force);
                 if (victim.IsAlive)
                 {
