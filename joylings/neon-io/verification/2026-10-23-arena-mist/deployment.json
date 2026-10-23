@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "version": "1.3.0-web",
+  "source_commit": "ada0fbd21baa55c87af9e321f9ad72dc9e46b389",
+  "pages_commit": "02eb4da0e4de17147c5fd463f28ed7c41032d929",
+  "workflow_url": "https://github.com/scozirge/a-thought/actions/runs/39955159201",
+  "jobs": [
+    {
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "report-build-status",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "deploy",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

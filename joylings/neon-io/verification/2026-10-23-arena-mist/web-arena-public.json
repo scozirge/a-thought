@@ -1,0 +1,481 @@
+{
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "passed": true,
+  "checks": [
+    "Three playable menu modes on desktop and mobile; original intro reaches lobby",
+    "Cancel arena matchmaking returns to lobby",
+    "Queue shows 16 outlined/filled seat icons and breathing status; no numeric human count, timer or rules; short mobile reflow preserves progress",
+    "Two real Photon WebGL peers share a closed 32-actor arena after the 15-second queue",
+    "Actual WebGL procedural black mist renders on both clients with no circle LineRenderer; HUD remains above mist",
+    "NPC deaths are unranked; player seats rank; damage excludes overkill; repeat deaths ignored; rank 1..16 unique; rewards granted once",
+    "Player seats drop 2 and resource bots 1; ambient stars use 4/2/1 tiers, pace individually, pause at density limit and stop in a collapsed circle",
+    "Desktop and phone results return to lobby without respawning"
+  ],
+  "errors": [],
+  "results": [
+    {
+      "passed": true,
+      "closedRoom": true,
+      "roster": true,
+      "npcUnranked": true,
+      "seatRanked": true,
+      "drops": true,
+      "damage": true,
+      "duplicateIgnored": true,
+      "frozenResult": true,
+      "activeGroundCount": true,
+      "result": true,
+      "rewardOnce": true,
+      "ambientPaced": true,
+      "ambientScaled": true,
+      "ambientDensity": true,
+      "ambientStopped": true,
+      "fullCircleStars": 3,
+      "halfCircleStars": 2,
+      "quarterCircleStars": 1,
+      "denseCircleStars": 96,
+      "humans": 2,
+      "namedAi": 14,
+      "namelessBots": 16,
+      "roles": 32,
+      "localRank": 1,
+      "localReward": 52,
+      "failure": "",
+      "stage": "complete"
+    },
+    {
+      "passed": true,
+      "closedRoom": true,
+      "roster": true,
+      "npcUnranked": true,
+      "seatRanked": true,
+      "drops": true,
+      "damage": true,
+      "duplicateIgnored": true,
+      "frozenResult": true,
+      "activeGroundCount": true,
+      "result": true,
+      "rewardOnce": true,
+      "ambientPaced": true,
+      "ambientScaled": true,
+      "ambientDensity": true,
+      "ambientStopped": true,
+      "fullCircleStars": 3,
+      "halfCircleStars": 2,
+      "quarterCircleStars": 1,
+      "denseCircleStars": 96,
+      "humans": 2,
+      "namedAi": 14,
+      "namelessBots": 16,
+      "roles": 32,
+      "localRank": 2,
+      "localReward": 30,
+      "failure": "",
+      "stage": "complete"
+    }
+  ],
+  "expectedCancellationMessages": 1,
+  "queueProgress": [
+    [
+      {
+        "time": 20110.39999999106,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.5836732387542725
+      },
+      {
+        "time": 20620.79999999702,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.9662179946899414
+      },
+      {
+        "time": 21113.69999998808,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.870643675327301
+      },
+      {
+        "time": 21616.89999999106,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.5036154389381409
+      },
+      {
+        "time": 22124.69999998808,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.7544770240783691
+      },
+      {
+        "time": 22618.79999999702,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.9948848485946655
+      },
+      {
+        "time": 23210.89999999106,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.6515771150588989
+      },
+      {
+        "time": 23717.69999998808,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.540746808052063
+      },
+      {
+        "time": 24224.5,
+        "icons": 16,
+        "filled": 4,
+        "alpha": 0.9210237264633179
+      },
+      {
+        "time": 24715,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.8978339433670044
+      },
+      {
+        "time": 25207.79999999702,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.5231943130493164
+      },
+      {
+        "time": 25707.79999999702,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.6849426627159119
+      },
+      {
+        "time": 26207.89999999106,
+        "icons": 16,
+        "filled": 7,
+        "alpha": 0.9985920190811157
+      },
+      {
+        "time": 26707.89999999106,
+        "icons": 16,
+        "filled": 7,
+        "alpha": 0.7372792959213257
+      },
+      {
+        "time": 27208,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.5053873062133789
+      },
+      {
+        "time": 27708,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.8392517566680908
+      },
+      {
+        "time": 28207.29999999702,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.9666884541511536
+      },
+      {
+        "time": 28707.39999999106,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.5929536819458008
+      },
+      {
+        "time": 29224.29999999702,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.5896177291870117
+      },
+      {
+        "time": 29715.19999998808,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.967546284198761
+      },
+      {
+        "time": 30223.69999998808,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.831943690776825
+      },
+      {
+        "time": 30725.5,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.5034570097923279
+      },
+      {
+        "time": 31215,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.7528266906738281
+      },
+      {
+        "time": 31712.19999998808,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.9943336248397827
+      },
+      {
+        "time": 32220,
+        "icons": 16,
+        "filled": 13,
+        "alpha": 0.6530946493148804
+      },
+      {
+        "time": 32815.89999999106,
+        "icons": 16,
+        "filled": 13,
+        "alpha": 0.5441623330116272
+      },
+      {
+        "time": 33311,
+        "icons": 16,
+        "filled": 13,
+        "alpha": 0.9290940165519714
+      },
+      {
+        "time": 33810,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.8834909200668335
+      },
+      {
+        "time": 34310.09999999404,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.5203430652618408
+      },
+      {
+        "time": 34807.69999998808,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.6883609890937805
+      },
+      {
+        "time": 35310.69999998808,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.9989416599273682
+      },
+      {
+        "time": 35810,
+        "icons": 16,
+        "filled": 16,
+        "alpha": 0.7337515354156494
+      },
+      {
+        "time": 36313,
+        "icons": 16,
+        "filled": 16,
+        "alpha": 0.5061421394348145
+      }
+    ],
+    [
+      {
+        "time": 20202.40000000596,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.6167744398117065
+      },
+      {
+        "time": 20702.29999999702,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.9797810316085815
+      },
+      {
+        "time": 21307,
+        "icons": 16,
+        "filled": 0,
+        "alpha": 0.8254586458206177
+      },
+      {
+        "time": 21805.5,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.5094289183616638
+      },
+      {
+        "time": 22305,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.8548074960708618
+      },
+      {
+        "time": 22805.29999999702,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.9577803015708923
+      },
+      {
+        "time": 23305.29999999702,
+        "icons": 16,
+        "filled": 1,
+        "alpha": 0.5801849961280823
+      },
+      {
+        "time": 23805.5,
+        "icons": 16,
+        "filled": 2,
+        "alpha": 0.5953506231307983
+      },
+      {
+        "time": 24402.29999999702,
+        "icons": 16,
+        "filled": 5,
+        "alpha": 0.9682010412216187
+      },
+      {
+        "time": 24902.20000000298,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.8323148488998413
+      },
+      {
+        "time": 25401.79999999702,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.5038176774978638
+      },
+      {
+        "time": 25902.29999999702,
+        "icons": 16,
+        "filled": 6,
+        "alpha": 0.744661808013916
+      },
+      {
+        "time": 26402.20000000298,
+        "icons": 16,
+        "filled": 7,
+        "alpha": 0.9977011680603027
+      },
+      {
+        "time": 26902.29999999702,
+        "icons": 16,
+        "filled": 8,
+        "alpha": 0.6778408885002136
+      },
+      {
+        "time": 27402.29999999702,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.524875283241272
+      },
+      {
+        "time": 27902.40000000596,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.8925946950912476
+      },
+      {
+        "time": 28401.90000000596,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.9305121302604675
+      },
+      {
+        "time": 28911.70000000298,
+        "icons": 16,
+        "filled": 9,
+        "alpha": 0.5509295463562012
+      },
+      {
+        "time": 29320.90000000596,
+        "icons": 16,
+        "filled": 10,
+        "alpha": 0.6394538283348083
+      },
+      {
+        "time": 29902.29999999702,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.9916298389434814
+      },
+      {
+        "time": 30411.40000000596,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.7626367807388306
+      },
+      {
+        "time": 30908.09999999404,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.5026064515113831
+      },
+      {
+        "time": 31404,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.8349047899246216
+      },
+      {
+        "time": 31910.59999999404,
+        "icons": 16,
+        "filled": 12,
+        "alpha": 0.9655430316925049
+      },
+      {
+        "time": 32404.40000000596,
+        "icons": 16,
+        "filled": 13,
+        "alpha": 0.5846119523048401
+      },
+      {
+        "time": 32911.90000000596,
+        "icons": 16,
+        "filled": 13,
+        "alpha": 0.5960915684700012
+      },
+      {
+        "time": 33402.29999999702,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.9694915413856506
+      },
+      {
+        "time": 34002.29999999702,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.819899320602417
+      },
+      {
+        "time": 34502.20000000298,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.5019909143447876
+      },
+      {
+        "time": 35002.29999999702,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.757696270942688
+      },
+      {
+        "time": 35502.40000000596,
+        "icons": 16,
+        "filled": 14,
+        "alpha": 0.9956008195877075
+      },
+      {
+        "time": 36002.40000000596,
+        "icons": 16,
+        "filled": 16,
+        "alpha": 0.6654633283615112
+      },
+      {
+        "time": 36730.40000000596,
+        "icons": 16,
+        "filled": 16,
+        "alpha": 0.530848503112793
+      }
+    ]
+  ],
+  "queueToBattleMs": 19383
+}
