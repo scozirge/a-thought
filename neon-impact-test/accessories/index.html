@@ -80,7 +80,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 13</td></tr><tr><td>5</td><td>頭部</td><td>酷寒水晶</td><td>向前方發射兩道冰錐，每發基準傷害100，命中緩速60%，施放間隔1秒。</td><td>Skill-Icicle
+TriggerType = 13</td></tr><tr><td>5</td><td>頭部</td><td>酷寒水晶</td><td>向前方發射兩道冰錐造成100點傷害並造成緩速60%，冷卻1秒</td><td>Skill-Icicle
 施放間隔：1
 每次生成數：2
 
@@ -137,7 +137,7 @@ ConnectToAmmo = 0
 MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
-TriggerType = 10</td></tr><tr><td>8</td><td>頭部</td><td>無上光環</td><td>光盤環繞自身，可抵擋非穿透子彈，每次接觸基準傷害100。</td><td>Skill-CircularBlade
+TriggerType = 10</td></tr><tr><td>8</td><td>頭部</td><td>無上光環</td><td>產生光盤環繞自身，可抵擋非穿透性子彈也能造成傷害</td><td>Skill-CircularBlade
 施放間隔：0.9
 
 Melee-CircularBlade
@@ -163,7 +163,7 @@ FirstAttackNoWait = 1
 Patetern = 0
 RandomAngle = 0
 StartAngle = 0
-AttackRadius = 0</td></tr><tr><td>9</td><td>頭部</td><td>哪來的鴨蛋</td><td>放置鴨蛋，5秒後爆炸；爆炸半徑與特效放大30%，保留原傷害與燃燒。</td><td>Skill-DuckEgg
+AttackRadius = 0</td></tr><tr><td>9</td><td>頭部</td><td>哪來的鴨蛋</td><td>在原地產生鴨蛋，5秒後會爆炸對大範圍內敵人造成傷害並燃燒持續5秒，冷卻4秒</td><td>Skill-DuckEgg
 施放間隔：4
 
 Bomb-DuckEgg
@@ -192,7 +192,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>10</td><td>頭部</td><td>隱形邊緣人</td><td>受到攻擊後隱形4秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+Suicide = 0</td></tr><tr><td>10</td><td>頭部</td><td>隱形邊緣人</td><td>受到攻擊後隱形</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Invisible
 觸發：受擊；條件參數 [1, 1, 1]
@@ -207,7 +207,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 0</td></tr><tr><td>11</td><td>頭部</td><td>大明星</td><td>吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留拾星回血與加速。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerType = 0</td></tr><tr><td>11</td><td>頭部</td><td>大明星</td><td>吸引畫面內的星星飛向自己，在吸收星之力時額外恢復25%生命且移動速度上升30%持續2秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-AbsorbStar
 觸發：取得經驗；條件參數 [0]
@@ -223,7 +223,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 9</td></tr><tr><td>12</td><td>頭部</td><td>吹個大泡泡</td><td>產生3發上升泡泡，施放間隔2.5秒。</td><td>Skill-UpAheadBubble
+TriggerType = 9</td></tr><tr><td>12</td><td>頭部</td><td>吹個大泡泡</td><td>產生3發向上漂浮的泡泡造成傷害，冷卻2.5秒</td><td>Skill-UpAheadBubble
 施放間隔：2.5
 每次生成數：3
 
@@ -253,7 +253,7 @@ StartAngle = 0
 AmmoNum = 3
 AmmoInterval = 0.6
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>13</td><td>頭部</td><td>超惡飛針</td><td>向前發射4道飛針，每發基準傷害80，附加流血。</td><td>Skill-NailSplash
+TriggerWall = 0</td></tr><tr><td>13</td><td>頭部</td><td>超惡飛針</td><td>向前方發射4道飛針造成敵人傷害並流血持續5秒，冷卻2秒</td><td>Skill-NailSplash
 施放間隔：1
 每次生成數：4
 
@@ -284,7 +284,7 @@ StartAngle = -20
 AmmoNum = 4
 AmmoInterval = 0
 AngleInterval = 10
-TriggerWall = 0</td></tr><tr><td>14</td><td>頭部</td><td>逃脫大師</td><td>受擊且生命低於50%時傳送至安全區內，恢復30%生命；冷卻10秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerWall = 0</td></tr><tr><td>14</td><td>頭部</td><td>逃脫大師</td><td>生命低於50%時，受到攻擊會傳送到安全區內的隨機位置並恢復30%生命，冷卻10秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Teleport
 觸發：受擊且低血量；條件參數 [10, 0.5]
@@ -331,7 +331,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>16</td><td>頭部</td><td>高端格檔</td><td>抵擋一次攻擊，冷卻6秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerWall = 0</td></tr><tr><td>16</td><td>頭部</td><td>高端格檔</td><td>抵擋1次攻擊，冷卻6秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Constitution
 觸發：週期觸發；條件參數 [6]
@@ -383,7 +383,7 @@ StartAngle = 90
 AmmoNum = 3
 AmmoInterval = 0
 AngleInterval = 120
-TriggerWall = 0</td></tr><tr><td>19</td><td>頭部</td><td>一次電一下</td><td>每次肉搏命中發射一道追蹤電流。</td><td>Skill-EliteHunt
+TriggerWall = 0</td></tr><tr><td>19</td><td>頭部</td><td>一次電一下</td><td>每次肉搏攻擊命中時釋放1道追蹤電流造成傷害</td><td>Skill-EliteHunt
 每次生成數：1
 觸發：肉搏命中；條件參數 [0, 1, 0]
 
@@ -410,7 +410,7 @@ AmmoInterval = 0.5
 StartAngle = -90
 AngleInterval = -90
 TriggerWall = 0
-Patetern = 1</td></tr><tr><td>20</td><td>頭部</td><td>我要活下去</td><td>生命低於3%時，每秒恢復10%最大生命。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+Patetern = 1</td></tr><tr><td>20</td><td>頭部</td><td>我要活下去</td><td>生命低於3%時每秒恢復10%生命</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Rest
 觸發：低血量；條件參數 [1, 0.03, 0]
@@ -452,7 +452,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>22</td><td>頭部</td><td>甜蜜報復</td><td>受擊發射追蹤愛心，子彈存在4秒，保留吸血效果。</td><td>Skill-WoeShare
+Suicide = 0</td></tr><tr><td>22</td><td>頭部</td><td>甜蜜報復</td><td>受到攻擊會釋放追蹤愛心造成傷害並恢復自身生命，冷卻0.2秒</td><td>Skill-WoeShare
 每次生成數：1
 觸發：受擊且低血量；條件參數 [0.2, 1]
 
@@ -478,7 +478,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 0
-Patetern = 0</td></tr><tr><td>23</td><td>頭部</td><td>熱血進擊</td><td>肉搏命中恢復10%最大生命，移速提升30%持續3秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+Patetern = 0</td></tr><tr><td>23</td><td>頭部</td><td>熱血進擊</td><td>肉搏攻擊時恢復10%生命，且移動速度提高30%持續3秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Berserker
 觸發：肉搏命中；條件參數 [0.3, 1, 0]
@@ -494,7 +494,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 6</td></tr><tr><td>24</td><td>頭部</td><td>派對氣球</td><td>發射氣球，基準接觸傷害300，3秒後爆炸；施放間隔3秒。</td><td>Skill-TraceBalloon
+TriggerType = 6</td></tr><tr><td>24</td><td>頭部</td><td>派對氣球</td><td>發射上升氣球並3秒後爆炸造成額外傷害，冷卻3秒</td><td>Skill-TraceBalloon
 施放間隔：3
 每次生成數：1
 
@@ -528,7 +528,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>25</td><td>頭部</td><td>原力大反射</td><td>反射周圍子彈並暈眩敵人，冷卻6秒。</td><td>Skill-SoundWave
+TriggerWall = 0</td></tr><tr><td>25</td><td>頭部</td><td>原力大反射</td><td>敵人或子彈靠近時產生反射音波暈眩範圍內敵人並反彈範圍內的子彈，冷卻6秒</td><td>Skill-SoundWave
 施放間隔：6
 
 Melee-SoundWave
@@ -578,7 +578,7 @@ FirstAttackNoWait = 1
 Patetern = 0
 RandomAngle = 0
 StartAngle = 0
-AttackRadius = 0</td></tr><tr><td>27</td><td>頭部</td><td>胡蘿蔔大進擊</td><td>投擲迴旋胡蘿蔔，每次接觸基準傷害200。</td><td>Skill-Carrot
+AttackRadius = 0</td></tr><tr><td>27</td><td>頭部</td><td>胡蘿蔔大進擊</td><td>向左或右邊投擲迴旋胡蘿蔔造成敵人傷害，冷卻3秒</td><td>Skill-Carrot
 施放間隔：3
 每次生成數：4
 
@@ -609,7 +609,7 @@ StartAngle = 70
 AmmoNum = 4
 AmmoInterval = 0.15
 AngleInterval = -15
-TriggerWall = 0</td></tr><tr><td>28</td><td>頭部</td><td>超載</td><td>受擊釋放衝擊波，暈眩2秒，保留6秒冷卻。</td><td>Skill-KnockWave
+TriggerWall = 0</td></tr><tr><td>28</td><td>頭部</td><td>超載</td><td>受到攻擊時產生衝擊波，暈眩周圍目標並摧毀非穿透性的子彈，冷卻6秒</td><td>Skill-KnockWave
 觸發：受擊；條件參數 [6, 0, 0]
 
 Melee-KnockWave
@@ -660,7 +660,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>30</td><td>頭部</td><td>毒痰大噴獸</td><td>向敵人發射毒氣彈造成傷害並留下毒氣持續造成範圍內敵人傷害並虛弱，冷卻3秒（虛弱：攻擊力降低50%。）</td><td>Skill-PoisonedStrike
+Suicide = 0</td></tr><tr><td>30</td><td>頭部</td><td>毒痰大噴獸</td><td>向敵人發射毒氣彈造成傷害並留下毒氣持續造成範圍內敵人傷害並虛弱，冷卻3秒</td><td>Skill-PoisonedStrike
 施放間隔：3
 每次生成數：1
 
@@ -728,7 +728,7 @@ StartAngle = 0
 AmmoNum = 12
 AmmoInterval = 0.01
 AngleInterval = 30
-TriggerWall = 0</td></tr><tr><td>32</td><td>頭部</td><td>蠻牛大爆衝</td><td>肉搏攻擊倍率1.5，保留前方非穿透子彈防護。</td><td>Skill-PowerfulStrike
+TriggerWall = 0</td></tr><tr><td>32</td><td>頭部</td><td>蠻牛大爆衝</td><td>前方產生巨角，減免來自前方的非穿透性子彈傷害20%並免除造成的負面效果，且肉搏攻擊的傷害提升</td><td>Skill-PowerfulStrike
 施放間隔：6
 
 Melee-PowerfulStrike
@@ -755,7 +755,7 @@ FirstAttackNoWait = 1
 Patetern = 4
 RandomAngle = 0
 StartAngle = 0
-AttackRadius = 0</td></tr><tr><td>33</td><td>頭部</td><td>超速奔騰</td><td>未受傷後移動速度提升40%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+AttackRadius = 0</td></tr><tr><td>33</td><td>頭部</td><td>超速奔騰</td><td>沒受到攻擊後4秒，移動速度上升40%</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-FocalMove
 觸發：未受傷；條件參數 [2, 2, 1]
@@ -798,7 +798,7 @@ ConnectToAmmo = 0
 MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
-TriggerType = 10</td></tr><tr><td>103</td><td>身體</td><td>扭曲基點</td><td>骨盾旋轉速度為原本2倍。</td><td>Skill-BoneShield
+TriggerType = 10</td></tr><tr><td>103</td><td>身體</td><td>扭曲基點</td><td>在周圍產生環繞扭曲基點(穿透性子彈)，擊中可擊退並可造成傷害，也可以用來反彈子彈</td><td>Skill-BoneShield
 施放間隔：1
 
 Melee-BoneShield
@@ -825,7 +825,7 @@ FirstAttackNoWait = 1
 Patetern = 0
 RandomAngle = 0
 StartAngle = 0
-AttackRadius = 0</td></tr><tr><td>104</td><td>身體</td><td>繞跑小丑</td><td>受擊後移動速度提升60%，持續2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+AttackRadius = 0</td></tr><tr><td>104</td><td>身體</td><td>繞跑小丑</td><td>受到攻擊後移動速度增加60%持續2秒，冷卻4秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Flee
 觸發：受擊；條件參數 [4, 0, 0]
@@ -839,7 +839,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 0</td></tr><tr><td>105</td><td>身體</td><td>急凍噴霧</td><td>噴霧每次接觸基準傷害20，造成60%緩速。</td><td>Skill-FrozenSpray
+TriggerType = 0</td></tr><tr><td>105</td><td>身體</td><td>急凍噴霧</td><td>目標靠近時，向左右發射冰凍噴霧造成傷害並造成緩速60%持續1.5秒，冷卻5秒</td><td>Skill-FrozenSpray
 施放間隔：5
 
 Melee-FrozenSpray
@@ -914,7 +914,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 2
-Suicide = 0</td></tr><tr><td>107</td><td>身體</td><td>超威能反射盾</td><td>反射盾半徑與特效放大20%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+Suicide = 0</td></tr><tr><td>107</td><td>身體</td><td>超威能反射盾</td><td>產生可將子彈加速反彈回去的反射護盾，冷卻4秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-ReflectAmmoShell
 觸發：取得技能時；條件參數 [4]
@@ -959,7 +959,7 @@ VampireProportion = 0
 Patetern = 0
 StartAngle = 0
 RandomAngle = 0
-AttackRadius = 0</td></tr><tr><td>109</td><td>身體</td><td>若隱若現</td><td>週期性隱形，每次持續1.5秒，週期間隔2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+AttackRadius = 0</td></tr><tr><td>109</td><td>身體</td><td>若隱若現</td><td>間斷的隱形1.5秒，冷卻2秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-IntermittentInvisible
 觸發：週期觸發；條件參數 [2]
@@ -971,7 +971,7 @@ SpawnedInSelf = 0
 ConnectToAmmo = 0
 MyFeaturePart = 0
 MyFeatureType = 0
-TriggerType = 10</td></tr><tr><td>110</td><td>身體</td><td>大顆火球</td><td>火球每次命中基準傷害300，保留燃燒。</td><td>Skill-FireBall
+TriggerType = 10</td></tr><tr><td>110</td><td>身體</td><td>大顆火球</td><td>向前方發射大火球造成敵人傷害並燃燒，冷卻1.5秒</td><td>Skill-FireBall
 施放間隔：1
 每次生成數：1
 
@@ -1160,7 +1160,7 @@ StartAngle = 0
 AmmoNum = 6
 AmmoInterval = 0.4
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>117</td><td>身體</td><td>閃電瞬身</td><td>每3秒瞬移至畫面內的安全位置；半透明自身預告落點，黑霧或畫面改變時重新選點。不再因受擊瞬移。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerWall = 0</td></tr><tr><td>117</td><td>身體</td><td>閃電瞬身</td><td>每3秒瞬移到畫面內、安全區中的隨機位置，以半透明分身預告下一次落點</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Escape
 觸發：週期觸發；條件參數 [3]</td><td>星幣 100</td><td>Escape</td><td>serializedVersion = 6
@@ -1174,7 +1174,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 10</td></tr><tr><td>118</td><td>身體</td><td>絕對無敵法老王</td><td>無敵3秒，週期間隔6秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerType = 10</td></tr><tr><td>118</td><td>身體</td><td>絕對無敵法老王</td><td>無敵3秒，冷卻6秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Immortal
 觸發：週期觸發；條件參數 [6]
@@ -1189,7 +1189,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 10</td></tr><tr><td>119</td><td>身體</td><td>氣功大師</td><td>衝擊波擊退力為原本3倍。</td><td>Skill-KnockShock
+TriggerType = 10</td></tr><tr><td>119</td><td>身體</td><td>氣功大師</td><td>對前方釋放氣功波(穿透性子彈)造成傷害並擊退敵人，冷卻4秒</td><td>Skill-KnockShock
 施放間隔：4
 每次生成數：1
 
@@ -1220,7 +1220,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>120</td><td>身體</td><td>惹洨光線</td><td>光線每發基準傷害50，施放間隔0.5秒。</td><td>Skill-Beam
+TriggerWall = 0</td></tr><tr><td>120</td><td>身體</td><td>惹洨光線</td><td>向敵人發射遠距離光束造成傷害，冷卻0.5秒</td><td>Skill-Beam
 施放間隔：0.5
 每次生成數：1
 
@@ -1250,7 +1250,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>121</td><td>身體</td><td>痛痛拳</td><td>肉搏傷害提升50%，受到的擊退減半。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerWall = 0</td></tr><tr><td>121</td><td>身體</td><td>痛痛拳</td><td>肉搏傷害增加50%且被擊退的距離減半</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-PowerfulMelee
 觸發：週期觸發；條件參數 [2]
@@ -1264,7 +1264,7 @@ ConnectToAmmo = 0
 MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
-TriggerType = 10</td></tr><tr><td>122</td><td>身體</td><td>魅力四射</td><td>吸引畫面內星星，以死亡掉星相同力道漸進飛向自身，可被攔截；保留原拾星效果。</td><td>Skill-StarSplash
+TriggerType = 10</td></tr><tr><td>122</td><td>身體</td><td>魅力四射</td><td>吸引畫面內的星星飛向自己，吸收星之力時額外恢復10%生命並釋放流星群造成敵人傷害，冷卻0.5秒</td><td>Skill-StarSplash
 每次生成數：10
 觸發：取得經驗；條件參數 [0.5]
 自身：立即治療，Time=0，數值 0.1，Value2=0
@@ -1291,7 +1291,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 36
 TriggerWall = 0
-Patetern = 1</td></tr><tr><td>123</td><td>身體</td><td>血腥綻放</td><td>飛爪每次命中基準傷害80，附加流血。</td><td>Skill-Claw
+Patetern = 1</td></tr><tr><td>123</td><td>身體</td><td>血腥綻放</td><td>受到攻擊或是肉搏攻擊目標都會產生濺射能量造成敵人傷害並流血持續5秒</td><td>Skill-Claw
 每次生成數：10
 觸發：受擊；條件參數 [1, 0, 0]
 
@@ -1367,7 +1367,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 0
-Patetern = 1</td></tr><tr><td>125</td><td>身體</td><td>鐵意志大拔砲</td><td>砲彈爆炸半徑與特效放大為1.5倍。</td><td>Skill-Cannon
+Patetern = 1</td></tr><tr><td>125</td><td>身體</td><td>鐵意志大拔砲</td><td>向前方發射大砲擊中敵人後爆炸造成範圍傷害，冷卻2秒</td><td>Skill-Cannon
 施放間隔：3
 每次生成數：1
 
@@ -1462,7 +1462,7 @@ StartAngle = 45
 AmmoNum = 4
 AmmoInterval = 0
 AngleInterval = 90
-TriggerWall = 0</td></tr><tr><td>128</td><td>身體</td><td>惡臭</td><td>在移動路徑上釋放毒氣，傷害並虛弱在路徑上的敵人（虛弱：攻擊力降低50%。）</td><td>Skill-OdourTrace
+TriggerWall = 0</td></tr><tr><td>128</td><td>身體</td><td>惡臭</td><td>在移動路徑上釋放毒氣，傷害並虛弱在路徑上的敵人</td><td>Skill-OdourTrace
 施放間隔：0.3
 
 Bomb-OdourTrace
@@ -1491,7 +1491,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>129</td><td>身體</td><td>友情圈圈</td><td>圈圈作用半徑與特效放大為1.5倍。</td><td>Skill-ReactionForce
+Suicide = 0</td></tr><tr><td>129</td><td>身體</td><td>友情圈圈</td><td>在敵人腳下產生反動力場造成傷害並將敵人拉往力場中心，冷卻2.5秒</td><td>Skill-ReactionForce
 施放間隔：2.5
 
 Bomb-ReactionForce
@@ -1520,7 +1520,7 @@ RandomAngle = 0
 StartAngle = 0
 SpawnAtTargetPos = 1
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>130</td><td>身體</td><td>插翅高飛</td><td>向敵人連射6發羽毛，每發間隔0.1秒。</td><td>Skill-FeatherSplash
+Suicide = 0</td></tr><tr><td>130</td><td>身體</td><td>插翅高飛</td><td>受到攻擊時，向敵人發射6發羽毛造成傷害，冷卻0.5秒</td><td>Skill-FeatherSplash
 每次生成數：6
 觸發：受擊；條件參數 [0.5, 0, 0]
 
@@ -1544,7 +1544,7 @@ AmmoInterval = 0.1
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 0
-Patetern = 1</td></tr><tr><td>131</td><td>身體</td><td>索命牽引</td><td>牽引每次接觸基準傷害150。</td><td>Skill-DarkExplosion
+Patetern = 1</td></tr><tr><td>131</td><td>身體</td><td>索命牽引</td><td>產生靈魂力場，敵人碰觸力場時造成傷害且抽取敵人生命，同時將敵人拉向自己，冷卻3秒</td><td>Skill-DarkExplosion
 觸發：取得技能時；條件參數 [1]
 
 Melee-DarkExplosion
@@ -1566,7 +1566,7 @@ TriggerType = 11
 Patetern = 0
 StartAngle = 0
 RandomAngle = 0
-AttackRadius = 0</td></tr><tr><td>132</td><td>身體</td><td>冷酷加農</td><td>發射冰冷砲彈(穿透性子彈)，一段時間後爆破造成範圍內敵人受到傷害並60%緩速，冷卻2秒</td><td>Skill-IceCannon
+AttackRadius = 0</td></tr><tr><td>132</td><td>身體</td><td>冷酷加農</td><td>發射冰冷砲彈(穿透性子彈)，一段時間後爆破造成範圍內敵人受到傷害並造成緩速60%，冷卻2秒</td><td>Skill-IceCannon
 施放間隔：3
 每次生成數：1
 
@@ -1716,7 +1716,7 @@ StartAngle = 160
 AmmoNum = 3
 AmmoInterval = 0.5
 AngleInterval = 20
-TriggerWall = 0</td></tr><tr><td>204</td><td>背部</td><td>秒速暴衝</td><td>觸發後移動速度提升70%。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+TriggerWall = 0</td></tr><tr><td>204</td><td>背部</td><td>秒速暴衝</td><td>加速移動70%持續0.5秒，冷卻1.5秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Rush
 觸發：週期觸發；條件參數 [1.5]
@@ -1730,7 +1730,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 10</td></tr><tr><td>205</td><td>背部</td><td>血腥剃刀</td><td>剃刀每次命中基準傷害40。</td><td>Skill-Scratch
+TriggerType = 10</td></tr><tr><td>205</td><td>背部</td><td>血腥剃刀</td><td>肉搏攻擊後會釋放血刃將目標拉回造成傷害並使目標流血</td><td>Skill-Scratch
 每次生成數：1
 觸發：肉搏命中；條件參數 [0.3, 0, 0]
 
@@ -1756,7 +1756,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 0
-Patetern = 2</td></tr><tr><td>206</td><td>背部</td><td>膽小鬼</td><td>幽靈狀態持續2秒。</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
+Patetern = 2</td></tr><tr><td>206</td><td>背部</td><td>膽小鬼</td><td>受到攻擊轉化為幽靈狀態持續2秒，冷卻7秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Ghost
 觸發：受擊；條件參數 [3, 0, 0]
@@ -1771,7 +1771,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 0</td></tr><tr><td>207</td><td>背部</td><td>冷冽冰錐</td><td>冰錐每發基準傷害100，造成60%緩速。</td><td>Skill-QuadrupleIcicle
+TriggerType = 0</td></tr><tr><td>207</td><td>背部</td><td>冷冽冰錐</td><td>向四個方向發射冰錐造成敵人緩速60%並流血，冷卻2秒</td><td>Skill-QuadrupleIcicle
 施放間隔：1
 每次生成數：4
 
@@ -1802,7 +1802,7 @@ StartAngle = -45
 AmmoNum = 4
 AmmoInterval = 0
 AngleInterval = 90
-TriggerWall = 0</td></tr><tr><td>208</td><td>背部</td><td>敲敲迴旋刀</td><td>迴旋刀每次接觸基準傷害60。</td><td>Skill-QuadrupleBlade
+TriggerWall = 0</td></tr><tr><td>208</td><td>背部</td><td>敲敲迴旋刀</td><td>發射追蹤迴旋刀(穿透性子彈)造成敵人傷害並流血，冷卻3秒</td><td>Skill-QuadrupleBlade
 施放間隔：3
 每次生成數：1
 
@@ -1833,7 +1833,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>209</td><td>背部</td><td>冰與火</td><td>向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒與60%緩速持續5秒，冷卻2秒</td><td>Skill-DoubleCrutch
+TriggerWall = 0</td></tr><tr><td>209</td><td>背部</td><td>冰與火</td><td>向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒與緩速60%持續5秒，冷卻2秒</td><td>Skill-DoubleCrutch
 施放間隔：2
 每次生成數：1
 
@@ -1895,7 +1895,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>210</td><td>背部</td><td>急凍領域</td><td>受到攻擊加速移動30%並在2秒後產生大範圍冰霧造成持續傷害並60%緩速目標，冷卻12秒</td><td>Skill-FrozenWing
+TriggerWall = 0</td></tr><tr><td>210</td><td>背部</td><td>急凍領域</td><td>受到攻擊加速移動30%並在2秒後產生大範圍冰霧造成持續傷害並使目標緩速60%，冷卻12秒</td><td>Skill-FrozenWing
 觸發：受擊；條件參數 [12, 0, 0]
 自身：移速提升，Time=2，數值 0.3，Value2=0
 
@@ -2041,7 +2041,7 @@ StartAngle = 0
 AmmoNum = 2
 AmmoInterval = 0.3
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>215</td><td>背部</td><td>閃耀快快拳</td><td>拳頭每發基準傷害100。</td><td>Skill-ConsecutiveFist
+TriggerWall = 0</td></tr><tr><td>215</td><td>背部</td><td>閃耀快快拳</td><td>靠近目標時向前方擊出追蹤4連拳造成傷害，冷卻3秒</td><td>Skill-ConsecutiveFist
 施放間隔：3
 每次生成數：4
 
@@ -2072,7 +2072,7 @@ StartAngle = -20
 AmmoNum = 4
 AmmoInterval = 0.25
 AngleInterval = 10
-TriggerWall = 0</td></tr><tr><td>216</td><td>背部</td><td>冷空氣</td><td>產生寒冰結界，對靠近的敵人造成傷害並60%緩速</td><td>Skill-FrozenZone
+TriggerWall = 0</td></tr><tr><td>216</td><td>背部</td><td>冷空氣</td><td>產生寒冰結界，對靠近的敵人造成傷害並造成緩速60%</td><td>Skill-FrozenZone
 觸發：取得技能時；條件參數 [1]
 
 Melee-FrozenZone
@@ -2095,7 +2095,7 @@ TriggerType = 11
 Patetern = 0
 StartAngle = 0
 RandomAngle = 0
-AttackRadius = 0</td></tr><tr><td>217</td><td>背部</td><td>心花怒放</td><td>愛心每發基準傷害70。</td><td>Skill-HeartAmmo
+AttackRadius = 0</td></tr><tr><td>217</td><td>背部</td><td>心花怒放</td><td>向周圍發射愛心造成傷害並任何愛心擊中敵人時會恢復自身生命，冷卻2秒</td><td>Skill-HeartAmmo
 施放間隔：2
 每次生成數：8
 
@@ -2125,7 +2125,7 @@ StartAngle = 0
 AmmoNum = 8
 AmmoInterval = 0
 AngleInterval = 45
-TriggerWall = 0</td></tr><tr><td>218</td><td>背部</td><td>突波電脈衝</td><td>電脈衝施放間隔1.5秒。</td><td>Skill-ElectricBall
+TriggerWall = 0</td></tr><tr><td>218</td><td>背部</td><td>突波電脈衝</td><td>發射追蹤電流造成敵人傷害，冷卻1.5秒</td><td>Skill-ElectricBall
 施放間隔：1.5
 每次生成數：4
 
@@ -2181,7 +2181,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 180
 TriggerWall = 1
-Patetern = 4</td></tr><tr><td>220</td><td>背部</td><td>鐵削電磁網</td><td>電磁網每次接觸基準傷害120。</td><td>Skill-MagneticField
+Patetern = 4</td></tr><tr><td>220</td><td>背部</td><td>鐵削電磁網</td><td>產生電磁護盾傷害觸碰到的敵人</td><td>Skill-MagneticField
 觸發：取得技能時；條件參數 [1]
 
 Melee-MagneticField
@@ -2256,7 +2256,7 @@ Patetern = 0
 RandomAngle = 0
 StartAngle = 0
 PrepareTime = 0
-Suicide = 0</td></tr><tr><td>222</td><td>背部</td><td>糾纏蜘蛛絲</td><td>蛛網爆炸暈眩5秒。</td><td>Skill-WebShoot
+Suicide = 0</td></tr><tr><td>222</td><td>背部</td><td>糾纏蜘蛛絲</td><td>受到肉搏攻擊發射蜘蛛絲並展開蜘蛛網造成敵方傷害與暈眩持續5秒，冷卻7秒</td><td>Skill-WebShoot
 每次生成數：1
 觸發：受到肉搏；條件參數 [7, 0, 0]
 
@@ -2289,7 +2289,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 0
-Patetern = 1</td></tr><tr><td>223</td><td>背部</td><td>雪花爆冰</td><td>發射60%緩速霧氣擊中敵方後會爆破造成傷害並60%緩速範圍內敵人，冷卻3秒</td><td>Skill-FrozenShock
+Patetern = 1</td></tr><tr><td>223</td><td>背部</td><td>雪花爆冰</td><td>發射冰凍霧氣擊中敵方後會爆破造成傷害並使範圍內敵人緩速60%，冷卻3秒</td><td>Skill-FrozenShock
 施放間隔：3
 每次生成數：1
 
@@ -2330,7 +2330,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>224</td><td>背部</td><td>大口毒液砲</td><td>向前方發射毒球造成傷害並虛弱敵人，冷卻1秒（虛弱：攻擊力降低50%。）</td><td>Skill-PoisonedBall
+TriggerWall = 0</td></tr><tr><td>224</td><td>背部</td><td>大口毒液砲</td><td>向前方發射毒球造成傷害並虛弱敵人，冷卻1秒</td><td>Skill-PoisonedBall
 施放間隔：1
 每次生成數：1
 
@@ -2362,7 +2362,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>225</td><td>背部</td><td>動感陀螺</td><td>陀螺施放間隔2.5秒。</td><td>Skill-WhippingTop
+TriggerWall = 0</td></tr><tr><td>225</td><td>背部</td><td>動感陀螺</td><td>對靠近的目標發射迴力陀螺(穿透性子彈)造成傷害，冷卻2.5秒</td><td>Skill-WhippingTop
 施放間隔：2.5
 每次生成數：1
 
@@ -2393,7 +2393,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>226</td><td>背部</td><td>四口毒痰</td><td>向四個方向發射毒液砲造成傷害虛弱敵人，冷卻1.5秒（虛弱：攻擊力降低50%。）</td><td>Skill-QuadruplePoisonedBall
+TriggerWall = 0</td></tr><tr><td>226</td><td>背部</td><td>四口毒痰</td><td>向四個方向發射毒液砲造成傷害虛弱敵人，冷卻1.5秒</td><td>Skill-QuadruplePoisonedBall
 施放間隔：1.5
 每次生成數：4
 
@@ -2424,7 +2424,7 @@ StartAngle = 45
 AmmoNum = 4
 AmmoInterval = 0
 AngleInterval = 90
-TriggerWall = 0</td></tr><tr><td>227</td><td>背部</td><td>跟屁精</td><td>跟屁精每次接觸基準傷害40。</td><td>Skill-TrackGenie
+TriggerWall = 0</td></tr><tr><td>227</td><td>背部</td><td>跟屁精</td><td>受到攻擊會施放追蹤精靈造成傷害，當精靈造成傷害時會恢復自身生命，冷卻10秒</td><td>Skill-TrackGenie
 每次生成數：1
 觸發：受擊；條件參數 [10, 0, 0]
 
@@ -2451,7 +2451,7 @@ AmmoInterval = 0
 StartAngle = 0
 AngleInterval = 0
 TriggerWall = 1
-Patetern = 4</td></tr><tr><td>228</td><td>背部</td><td>劍飄飄</td><td>飛劍每次接觸基準傷害80。</td><td>Skill-QuadrupleSword
+Patetern = 4</td></tr><tr><td>228</td><td>背部</td><td>劍飄飄</td><td>向四周發射追蹤飛劍造成傷害並流血，冷卻6秒</td><td>Skill-QuadrupleSword
 施放間隔：4
 每次生成數：3
 
@@ -2508,7 +2508,7 @@ StartAngle = -45
 AmmoNum = 3
 AmmoInterval = 0
 AngleInterval = -45
-TriggerWall = 0</td></tr><tr><td>229</td><td>背部</td><td>彩虹泡泡王</td><td>泡泡施放間隔3秒。</td><td>Skill-BubbleSplash
+TriggerWall = 0</td></tr><tr><td>229</td><td>背部</td><td>彩虹泡泡王</td><td>對前方連續釋放追蹤泡泡，造成目標傷害，冷卻3秒</td><td>Skill-BubbleSplash
 施放間隔：3
 每次生成數：6
 
@@ -2539,7 +2539,7 @@ StartAngle = 0
 AmmoNum = 6
 AmmoInterval = 0.3
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>230</td><td>背部</td><td>大吐痰</td><td>受到攻擊後回血10%並產生大範圍毒霧造成持續傷害並虛弱毒霧內的敵人，冷卻12秒（虛弱：攻擊力降低50%。）</td><td>Skill-SpitInk
+TriggerWall = 0</td></tr><tr><td>230</td><td>背部</td><td>大吐痰</td><td>受到攻擊後回血10%並產生大範圍毒霧造成持續傷害並虛弱毒霧內的敵人，冷卻12秒</td><td>Skill-SpitInk
 觸發：受擊；條件參數 [12, 0, 0]
 自身：立即治療，Time=0，數值 0.1，Value2=0
 

@@ -1,1 +1,15 @@
-{"build":"2026-10-24-balance-test","protocol":"binary-9","unityBuildPassed":true,"multiplayerPlaytestPassed":false}
+{
+  "build": "2026-10-24-status-stack-test",
+  "protocol": "binary-10",
+  "arenaInitialHealth": 1500,
+  "levelUpHealth": 50,
+  "unityBuildPassed": true,
+  "statusChecksPassed": true,
+  "multiplayerPlaytestPassed": false,
+  "files": {
+    "Build/807691cbfa33e23d77c84a8a45f18711.framework.js.unityweb": "798f98ca398c02acc491ed26892caaf19664c23d82f9a23f7d81f5aa8be4a20a",
+    "Build/94e54f936c4bcf7fb5c1dc8554e68742.loader.js": "68684c7945cc817531bac317d4fc1f9960aec4038d8db391ba24a33caf359fed",
+    "Build/a2e07d73dff92357b0052ae78b7ad9cd.data.unityweb": "abe96817a66338faef1a3c931d73810553ffe50b0a43af40b2095f4e41a3ffd9",
+    "Build/ff6f27fe4427ba2618fd3744dbfa754e.wasm.unityweb": "7b5901441a8505d021fc1ebfdee809f3f54c470e74eb7f9c3d9969fb1eb9ef1c"
+  }
+}
