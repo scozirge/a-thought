@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "version": "1.1.8-web",
+  "url": "https://scozirge.github.io/a-thought/neon-impact/",
+  "source_commit": "010f210d24ff3377483c9e6148c69d0f8dc5eb75",
+  "pages_commit": "dcbee4c48106cefb77d52c10862536e2dc6b37e9",
+  "workflow_run_id": 39914357095,
+  "workflow_url": "https://github.com/scozirge/a-thought/actions/runs/39914357095",
+  "jobs": [
+    {
+      "id": 120284410271,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39914357095,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Upload artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Post Checkout",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        }
+      ]
+    },
+    {
+      "id": 120285111863,
+      "name": "report-build-status",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39914357095,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Report Build Status",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    },
+    {
+      "id": 120285112010,
+      "name": "deploy",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 39914357095,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Deploy to GitHub Pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ]
+}

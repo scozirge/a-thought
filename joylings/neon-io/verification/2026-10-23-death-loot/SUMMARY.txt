@@ -18,3 +18,5 @@
 
 目標與飛行期限會隨 Fusion 快照保留；本次沒有專門強制測試飛行中主機交接。
 公開部署與遠端檔案雜湊、公開手機操作結果另存 deployment.json、public-files.json、web-mobile-public.json。
+
+上線完成：GitHub Pages 工作流程 39914357095 全部成功，公開 1.1.8-web 頁面與四個載入檔案 SHA-256 全部符合本次建置；公開網址手機模擬的 11 組檢查通過，沒有執行錯誤。
