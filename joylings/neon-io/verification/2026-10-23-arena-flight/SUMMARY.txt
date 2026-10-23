@@ -20,6 +20,14 @@
 - 最終 WebGL 手機 11 個操作及版面情境通過：真實觸控拖曳、第二根手指不搶搖桿、旋轉解除輸入、多種橫向尺寸、技能長按及返回大廳。
 - Windows 發布壓縮檔 CRC 與 SHA256 驗證通過。
 
-待完成：公開版部署與核對。
+公開版驗證
+- GitHub Pages 部署成功，入口與四個遊戲檔案 HTTP 200，大小及 SHA256 均與本機最終版本相符。
+- 公開網址的桌面中文／手機英文配對畫面、取消重試、雙人實際 Photon 同房、32 角色、淘汰排名及返回大廳通過；無非預期執行錯誤。
+- 網頁首次載入檔案共 32,960,069 bytes，較 1.2.0 增加 11,391 bytes；其他課程及遊戲的 722 個發布檔案雜湊未變。
+公開網址：https://scozirge.github.io/a-thought/neon-impact/
+版本：1.2.1-web / 1.2.1-fusion
+程式提交：71848bd6c3b5b2783c4fde14d1cddb54dfea15e9
+網頁提交：4a76f247c9fd7cdf073e4d1e937af032bf953f28
+部署紀錄：https://github.com/scozirge/a-thought/actions/runs/39937523528
 
 範圍說明：手機使用瀏覽器裝置模擬，未代表實體 iPhone／Android 實測；仍沿用本機存檔與 Fusion Shared Mode。
