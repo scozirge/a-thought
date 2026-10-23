@@ -13,8 +13,9 @@ namespace Scoz.Func
             if (!IsActive || killer == null || !killer.IsAlive || !killer.IsInitialized) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
             GetComponent<LootMove>()?.BeginDeathFlight(killer);
-            // Death stars can be intercepted from launch, not only after the ordinary 1-second delay.
-            AllowImmediatePickup();
+            // Keep the initial burst visible even when the killer overlaps the victim.
+            // Once armed, any role that physically touches a star can intercept it.
+            DelayPickup(LootMove.DeathPickupDelay);
         }
 
         // Return the accepted amount so the spawner can carry excess to another star.
@@ -42,7 +43,9 @@ namespace Scoz.Func
             if (!IsActive || !ReadyToAcquire) return;
             // One authority awards each star, even with simultaneous contacts.
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-            Role role = collider.GetComponentInParent<Role>();
+            // Absorption/attack sensors are children of a role, not its pickup body.
+            // They may guide ordinary loot but must never grant experience at a distance.
+            Role role = collider.GetComponent<Role>();
             if (role == null || !role.IsInitialized || !role.IsAlive) return;
             if (!(role is PlayerRole) && !(role is NeutralRole)) return;
             int remaining = Mathf.Max(1, Value);

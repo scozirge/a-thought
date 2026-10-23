@@ -32,6 +32,15 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
   report.checks.push('Cancel arena matchmaking returns to lobby');
   const queued=Date.now();
   await Promise.all(pages.map((p,i)=>click(p,'Arena',i===1)));
+  await Promise.all(pages.map(async(p,i)=>{
+   await p.waitForFunction(()=>neonState.arenaPhase==='Waiting'&&neonState.arenaQueueText);
+   const status=await p.evaluate(()=>neonState.arenaQueueText);
+   assert.equal(status,i===0?'配對中…':'MATCHMAKING…');
+   const control=(await p.evaluate(()=>neonState.controls)).find(c=>c.name==='Cancel arena');
+   const bounds=await cssRect(p,control);assert.ok(bounds.h>=43&&bounds.y>=0&&bounds.y+bounds.h<=(i===0?800:390));
+   await p.screenshot({path:path.join(output,'queue-'+i+'.png')});
+  }));
+  report.checks.push('Queue shows only matchmaking status, with no player counts, timer, fill or rules text');
   await Promise.all(pages.map(p=>p.waitForFunction(()=>neonState.arenaPhase==='Running'&&neonState.arenaRoles===32,null,{timeout:90000})));
   const states=await Promise.all(pages.map(p=>p.evaluate(()=>neonState)));
   assert.equal(states[0].touch,false);assert.equal(states[1].touch,true);

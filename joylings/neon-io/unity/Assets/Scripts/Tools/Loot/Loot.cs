@@ -37,10 +37,10 @@ namespace Scoz.Func
             int randY = Random.Range(-RandomPosRadius, RandomPosRadius);
             transform.position += new Vector3(randX, randY);
         }
-        protected void AllowImmediatePickup()
+        protected void DelayPickup(float seconds)
         {
             pickupConfigured = true;
-            PickupReadyAt = PhotonNetwork.Time;
+            PickupReadyAt = PhotonNetwork.Time + Mathf.Max(WaitToBeAcquire, seconds);
         }
         public void RestorePickupDeadline(double deadline)
         {

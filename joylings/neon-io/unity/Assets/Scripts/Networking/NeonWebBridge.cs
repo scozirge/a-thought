@@ -42,6 +42,18 @@ namespace Neon.Networking
         }
         Neon.Validation.NeonGameplayAudit.Result audit;
         Neon.Validation.NeonArenaCheck.Result arenaAudit;
+        Neon.Validation.NeonDeathLootCheck.Result deathLootAudit;
+        public void RunDeathLootAudit()
+        {
+            if (diagnostics && !string.IsNullOrEmpty(ValidationRoom) && started && SceneManager.GetActiveScene().name == "Battle" && !GetComponent<Neon.Validation.NeonDeathLootCheck>())
+                StartCoroutine(DeathLootAudit());
+        }
+        System.Collections.IEnumerator DeathLootAudit()
+        {
+            var check = gameObject.AddComponent<Neon.Validation.NeonDeathLootCheck>();
+            deathLootAudit = check.result;
+            yield return check.Run();
+        }
         public void RunArenaAudit()
         {
             if (diagnostics && !string.IsNullOrEmpty(ValidationRoom) && started && NeonArena.Instance && !GetComponent<Neon.Validation.NeonArenaCheck>()) StartCoroutine(ArenaAudit());
@@ -100,6 +112,8 @@ namespace Neon.Networking
         {
             public string arenaPhase; public int arenaRemaining, arenaRoles, arenaRank; public float arenaRadius;
             public Neon.Validation.NeonArenaCheck.Result arenaAudit;
+            public Neon.Validation.NeonDeathLootCheck.Result deathLootAudit;
+            public string arenaQueueText;
             public string scene, room, region, error; public int features, owned, peers, stars, level, experience, experienceRequired;
             public bool started, connected; public Control[] controls;
             public int[] loadout;
@@ -134,7 +148,8 @@ namespace Neon.Networking
                 playerAlive=player&&player.IsAlive,playerX=player?player.transform.position.x:0,playerY=player?player.transform.position.y:0,velocityX=velocity.x,velocityY=velocity.y,
                 level=player?player.LV:0,experience=player?player.Experience:0,experienceRequired=player?player.ExperienceToNextLevel:0,
                 arenaPhase=NeonArena.Instance?NeonArena.Instance.Phase.ToString():"", arenaRemaining=NeonArena.Instance?NeonArena.Instance.Remaining:0, arenaRoles=NeonArena.Instance?Enumerable.Range(0,32).Count(i=>NeonArena.Instance.Entries[i].View!=0):0,arenaRank=NeonArena.Instance&&NeonArena.Instance.HasLocalResult?NeonArena.Instance.Entries[NeonArena.Instance.LocalSlot].Rank:0,arenaRadius=NeonArena.Instance?NeonArena.Instance.Radius:0,arenaAudit=arenaAudit,
-                connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length, gameplayAudit=audit,
+                connected=PhotonNetwork.InRoom, peers=PhotonNetwork.PlayerList.Length, gameplayAudit=audit,deathLootAudit=deathLootAudit,
+                arenaQueueText=presentation&&presentation.CurrentView=="arena-waiting"?string.Join("\n",presentation.GetComponentsInChildren<Text>().Where(t=>t.name.StartsWith("Arena ",StringComparison.Ordinal)).Select(t=>t.text)):"",
                 room=PhotonNetwork.InRoom ? PhotonNetwork.Runner.SessionInfo.Name : "", error=PhotonNetwork.LastError,
                 region=PhotonNetwork.CloudRegion,
                 features=GameDictionary.FeatureDic?.Count ?? 0,

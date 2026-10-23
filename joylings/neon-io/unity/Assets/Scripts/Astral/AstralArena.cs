@@ -21,24 +21,14 @@ namespace Neon.Astral
             if (touch) TouchHeader(L("競技模式", "ARENA"), NeonArenaFlow.Cancel);
             else Header(L("競技模式", "ARENA"), "", NeonArenaFlow.Cancel);
             float w = touch ? ViewWidth - 48 : 1100;
-            Transform waitingBody = page;
-            if (touch)
-            {
-                float bodyHeight = Mathf.Max(48, ViewHeight - 140);
-                Scroll(page, "Arena queue details", 0, TouchTop - 74 - bodyHeight * .5f, w, bodyHeight, out var content);
-                content.sizeDelta = new Vector2(0, 140);
-                waitingBody = Rect(content, "Queue content", 0, -70, w, 140); TopContent((RectTransform)waitingBody, -70);
-            }
-            Text(waitingBody, "Arena rules", L("16 個玩家席位 · 淘汰制 · 縮小安全區", "16 player seats · Elimination · Shrinking safe zone"), 0, touch ? 30 : 140, w, touch ? 44 : 60, touch ? 18 : 36, Pearl, TextAnchor.MiddleCenter);
-            var status = Text(waitingBody, "Arena queue", "", 0, touch ? -12 : 32, w, touch ? 40 : 70, touch ? 18 : 32, Gold, TextAnchor.MiddleCenter);
-            Text(waitingBody, "Arena fill", L("不足席位以 AI 補齊，另有 16 個無名 bot。", "AI fills empty seats, plus 16 resource bots."), 0, touch ? -50 : -65, w, touch ? 38 : 54, touch ? 14 : 24, Muted, TextAnchor.MiddleCenter);
-            Button(page, "Cancel arena", L("取消配對", "CANCEL SEARCH"), 0, touch ? TouchBottom + 34 : -240, touch ? 240 : 400, touch ? 44 : 68, NeonArenaFlow.Cancel, false, touch ? 16 : 26);
+            var status = Text(page, "Arena queue", "", 0, touch ? 0 : 40, w, touch ? 44 : 70, touch ? 22 : 36, Gold, TextAnchor.MiddleCenter);
+            Button(page, "Cancel arena", L("取消配對", "CANCEL SEARCH"), 0, touch ? TouchBottom + 34 : -110, touch ? 240 : 400, touch ? 44 : 68, NeonArenaFlow.Cancel, false, touch ? 16 : 26);
             live.Add(() =>
             {
                 var match = NeonArena.Instance;
-                if (!match) status.text = L("連線中…", "CONNECTING…");
-                else if (match.Phase != ArenaPhase.Waiting) status.text = L("正在準備戰場…", "PREPARING THE ARENA…");
-                else status.text = PhotonNetwork.CurrentRoom.PlayerCount + " / 16   ·   " + Mathf.CeilToInt(Mathf.Max(0, (float)(match.Deadline - PhotonNetwork.Time))) + L(" 秒後開局", "s to start");
+                status.text = match && match.Phase != ArenaPhase.Waiting
+                    ? L("正在準備戰場…", "PREPARING THE ARENA…")
+                    : L("配對中…", "MATCHMAKING…");
             });
         }
         void BuildArenaHud()

@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "scope": "HTML host only; Unity is stubbed",
+  "checks": [
+    "chromium: denied fullscreen/orientation APIs, repeated rotation, visualViewport-only resize/scroll and single start passed",
+    "chromium: touchscreen Windows browser retains desktop mouse layout, including portrait windows",
+    "webkit: denied fullscreen/orientation APIs, repeated rotation, visualViewport-only resize/scroll and single start passed",
+    "webkit: touchscreen Windows browser retains desktop mouse layout, including portrait windows"
+  ]
+}

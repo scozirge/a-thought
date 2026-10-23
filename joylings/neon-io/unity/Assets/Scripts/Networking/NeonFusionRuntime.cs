@@ -96,7 +96,7 @@ namespace Neon.Networking
                 runner.ProvideInput = false;
                 var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
                 var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-                settings.AppVersion = "neon-io/binary-4/" + PhotonNetwork.GameVersion;
+                settings.AppVersion = "neon-io/binary-5/" + PhotonNetwork.GameVersion;
                 settings.FixedRegion = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion.ToLowerInvariant();
                 int mode = (int)PhotonLauncher.SelectGameType;
                 if (maximumPlayers <= 0) maximumPlayers = PhotonLauncher.SelectGameType == GameType.Challenge ? 2 : PhotonLauncher.SelectGameType == GameType.Arena ? 16 : 10;

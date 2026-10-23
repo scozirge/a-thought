@@ -54,9 +54,11 @@ namespace Scoz.Func
         public double DeathFlightUntil { get; private set; }
         Role deathTarget;
         bool initialized;
-        public const float DeathLaunchSpeed = 900f;
-        public const float DeathFlightSpeed = 1100f;
-        public const float DeathFlightSeconds = 8f;
+        public const float DeathBurstSeconds = .45f;
+        public const float DeathPickupDelay = 1f;
+        public const float DeathFlightSpeed = 650f;
+        public const float DeathFlightSeconds = 12f;
+        public bool IsDeathFlight => DeathTargetId != 0 && PhotonNetwork.Time < DeathFlightUntil;
 
 
         protected virtual void Start()
@@ -71,13 +73,6 @@ namespace Scoz.Func
             StartWander = false;
         }
 
-        public static Vector2 DeathLaunchVelocity(Vector2 origin, Vector2 destination)
-        {
-            Vector2 direction = (destination - origin).normalized;
-            if (direction == Vector2.zero) return Vector2.zero;
-            Vector2 sideways = new Vector2(-direction.y, direction.x);
-            return (direction + sideways * Random.Range(-0.12f, 0.12f)).normalized * DeathLaunchSpeed;
-        }
         public void BeginDeathFlight(Role killer)
         {
             if (killer == null || !killer.IsAlive || !killer.IsInitialized) return;
@@ -87,7 +82,10 @@ namespace Scoz.Func
             DeathTargetId = killer.photonView.ViewID;
             DeathFlightUntil = PhotonNetwork.Time + DeathFlightSeconds;
             CanMove = true;
-            SetVelocity(DeathLaunchVelocity(transform.position, killer.transform.position));
+            // Preserve the spawner's original radial scatter. Do not aim the burst at the killer.
+            if (MyRigi == null) MyRigi = GetComponent<Rigidbody2D>();
+            if (MyRigi != null && MyRigi.linearVelocity.sqrMagnitude < 1f)
+                SetVelocity(Random.insideUnitCircle.normalized * 500f);
         }
         // Durable state for late join and shared-master handover; never reserves pickup ownership.
         public void RestoreDeathFlight(int targetId, double until)
@@ -124,9 +122,12 @@ namespace Scoz.Func
                 ClearDeathFlight();
                 return false;
             }
+            float age = Mathf.Max(0, DeathFlightSeconds - (float)(DeathFlightUntil - PhotonNetwork.Time));
+            if (age < DeathBurstSeconds) return true;
             Vector2 delta = deathTarget.transform.position - transform.position;
-            Vector2 desired = delta.normalized * Mathf.Min(DeathFlightSpeed, delta.magnitude * 10f);
-            MyRigi.linearVelocity = Vector2.MoveTowards(MyRigi.linearVelocity, desired, 2400f * Time.fixedDeltaTime);
+            float speed = Mathf.Lerp(180f, DeathFlightSpeed, Mathf.Clamp01((age - DeathBurstSeconds) / 1.5f));
+            Vector2 desired = delta.normalized * Mathf.Min(speed, delta.magnitude * 4f);
+            MyRigi.linearVelocity = Vector2.MoveTowards(MyRigi.linearVelocity, desired, 900f * Time.fixedDeltaTime);
             return true;
         }
 
@@ -184,6 +185,7 @@ namespace Scoz.Func
         }
         public void SetMoveToTarget(Transform _trans)
         {
+            if (IsDeathFlight) return; // A magnet must not cancel the scatter/slow homing path.
             if (MoveToPlayer)//只會接收一次設定移動目標，第二個玩家想要吸收就沒辦法
                 return;
             TargetTrans = _trans;
@@ -192,6 +194,7 @@ namespace Scoz.Func
         [PunRPC]
         public void SetMoveToTarget_RPC(int _senderView)
         {
+            if (IsDeathFlight) return;
             PhotonView senderView = PhotonView.Find(_senderView);
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
             if (senderView == null)

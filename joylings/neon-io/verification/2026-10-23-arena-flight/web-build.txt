@@ -1,0 +1,5 @@
+NEON_PREPARE_OK prefabs=4
+NEON_GAMEPLAY_CHECKS_OK {"passed":true,"allocationCounterAvailable":false,"failure":"","checks":["Cooldown boundaries and periodic damage under slow/fast frames","Target indicators at 4:3, 16:10, 16:9 and 21:9","Per-target cooldown after idle, distinct actors and single-hit/reuse semantics"],"legacySearchBytes":0,"registrySearchBytes":0,"legacySearchMilliseconds":0.0,"registrySearchMilliseconds":0.0}
+NEON_PROTOCOL_CHECKS_OK typed RPC, max Unicode/all buffs 771 bytes, packed state, GUID, aggregate loot, malformed data, hit validation
+NEON_CONTENT_OK 95 features; all resource prefabs and 4 scenes have scripts.
+NEON_WEB_BUILD_OK textures=327 audio=94 bytes=32960069

@@ -1,0 +1,59 @@
+{
+  "url": "http://127.0.0.1:8201/",
+  "passed": true,
+  "checks": [
+    "Three playable menu modes on desktop and mobile; original intro reaches lobby",
+    "Cancel arena matchmaking returns to lobby",
+    "Queue shows only matchmaking status, with no player counts, timer, fill or rules text",
+    "Two real Photon WebGL peers share a closed 32-actor arena after the 15-second queue",
+    "NPC deaths are unranked; player seats rank; damage excludes overkill; repeat deaths ignored; rank 1..16 unique; rewards granted once",
+    "Desktop and phone results return to lobby without respawning"
+  ],
+  "errors": [],
+  "results": [
+    {
+      "passed": true,
+      "closedRoom": true,
+      "roster": true,
+      "npcUnranked": true,
+      "seatRanked": true,
+      "drops": true,
+      "damage": true,
+      "duplicateIgnored": true,
+      "frozenResult": true,
+      "activeGroundCount": true,
+      "result": true,
+      "rewardOnce": true,
+      "humans": 2,
+      "namedAi": 14,
+      "namelessBots": 16,
+      "roles": 32,
+      "localRank": 1,
+      "localReward": 52,
+      "failure": ""
+    },
+    {
+      "passed": true,
+      "closedRoom": true,
+      "roster": true,
+      "npcUnranked": true,
+      "seatRanked": true,
+      "drops": true,
+      "damage": true,
+      "duplicateIgnored": true,
+      "frozenResult": true,
+      "activeGroundCount": true,
+      "result": true,
+      "rewardOnce": true,
+      "humans": 2,
+      "namedAi": 14,
+      "namelessBots": 16,
+      "roles": 32,
+      "localRank": 15,
+      "localReward": 4,
+      "failure": ""
+    }
+  ],
+  "expectedCancellationMessages": 1,
+  "queueToBattleMs": 19194
+}

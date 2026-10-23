@@ -65,6 +65,7 @@ namespace Scoz.Func
                 return;
             }
 
+            float burstAngle = Random.Range(0, Mathf.PI * 2);
             for (int i = 0; i < _count; i++)
             {
                 Loot loot = GetAvailableLoot();
@@ -107,6 +108,11 @@ namespace Scoz.Func
                 // Reserve/reset on the authority synchronously. An All RPC can be deferred
                 // until the Fusion tick and would select the same inactive star repeatedly.
                 Vector2 force = MySelf.GetRandomForce();
+                if (killer != null && killer.IsAlive && killer.IsInitialized)
+                {
+                    float angle = burstAngle + Mathf.PI * 2 * i / _count + Random.Range(-.15f, .15f);
+                    force = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Random.Range(450f, 600f);
+                }
                 loot.SetLoot(true, _pos, force);
                 if (loot is ExpLoot experience) experience.LaunchToward(killer);
             }

@@ -1,0 +1,61 @@
+{
+  "url": "http://127.0.0.1:8201/",
+  "passed": true,
+  "errors": [],
+  "results": [
+    {
+      "passed": true,
+      "launched": true,
+      "intercepted": true,
+      "awardedOnce": true,
+      "killerCollected": true,
+      "reused": true,
+      "targetDeathReleased": true,
+      "burstVisible": true,
+      "nearbyDelayed": true,
+      "sensorIgnored": true,
+      "scatterDistance": 265.8953552246094,
+      "nearbyCollectionSeconds": 1.75,
+      "observedPlayers": 3,
+      "interceptorGain": 1,
+      "killerGain": 1,
+      "failure": ""
+    },
+    {
+      "passed": true,
+      "launched": true,
+      "intercepted": true,
+      "awardedOnce": true,
+      "killerCollected": true,
+      "reused": true,
+      "targetDeathReleased": true,
+      "burstVisible": true,
+      "nearbyDelayed": true,
+      "sensorIgnored": true,
+      "scatterDistance": 271.9928283691406,
+      "nearbyCollectionSeconds": 1.59375,
+      "observedPlayers": 3,
+      "interceptorGain": 1,
+      "killerGain": 1,
+      "failure": ""
+    },
+    {
+      "passed": true,
+      "launched": true,
+      "intercepted": true,
+      "awardedOnce": true,
+      "killerCollected": true,
+      "reused": true,
+      "targetDeathReleased": true,
+      "burstVisible": true,
+      "nearbyDelayed": true,
+      "sensorIgnored": true,
+      "scatterDistance": 267.1629943847656,
+      "nearbyCollectionSeconds": 1.75,
+      "observedPlayers": 3,
+      "interceptorGain": 1,
+      "killerGain": 1,
+      "failure": ""
+    }
+  ]
+}
