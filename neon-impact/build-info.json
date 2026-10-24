@@ -1,0 +1,45 @@
+{
+  "build": "2026-10-24-battle-official",
+  "protocol": "binary-14",
+  "arenaInitialHealth": 1500,
+  "levelUpHealth": 50,
+  "matchmakingWindowSeconds": 1,
+  "botDifficultyTiers": 3,
+  "accessoriesAnalyzed": 95,
+  "loadoutClassificationsChecked": 31680,
+  "lootCursorEditorChecksPassed": true,
+  "officialRelease": true,
+  "battleBackground": "navy-cosmos-with-distant-planet",
+  "battleMusicTracks": [
+    "Electronic Symphony Remixed",
+    "Warped"
+  ],
+  "battleMusicFollowsSettings": true,
+  "battleMusicModes": [
+    "Arena",
+    "InfinityWar",
+    "Challenge"
+  ],
+  "stormDelaySeconds": 15,
+  "stormDurationSeconds": 75,
+  "cursorStopRadiusAt1080": 25,
+  "cursorFullSpeedRadiusAt1080": 150,
+  "lootInactiveUntilSnapshot": true,
+  "lootParticlePlaybackReset": true,
+  "earlyResultFooterActions": [
+    "watch",
+    "return"
+  ],
+  "unityBuildPassed": true,
+  "botDecisionChecksPassed": true,
+  "multiplayerPlaytestPassed": false,
+  "realDevicePlaytestPassed": false,
+  "initialBytes": 33072667,
+  "files": {
+    "index.html": "243a18b080f1cbc3f0f5ff7e5eb0c9ebc12114011e86669fc9594ac32544110b",
+    "Build/26633915ca52f533455ab633eab51de5.loader.js": "901dff5f26fbace94a1a153da24086b992bc9071d67552861957b96e3e59b83e",
+    "Build/286f22e50e4c242ccef67a06f6ab2366.wasm.unityweb": "9135597b97b0dbcd29ff41e850306ef20752b4a4ba87af78cb0a0d804fbd3456",
+    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "490964365a43715e99fdba511f956ebeced0d7ab73418519dd0e3830edb241da",
+    "Build/9de2851ef743f994bda2a7a10ffd62cf.data.unityweb": "ddaf5b70079baeb3681295479184720effdf96fbf7f5f40544ccd0bf5aee2e7c"
+  }
+}
