@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta name="neon-build" content="2026-10-24-arena-spectator-test">
+<meta name="neon-build" content="2026-10-24-battle-clarity-test">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-visual">
 <meta name="theme-color" content="#10172b">
@@ -47,7 +47,7 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
   <button id="landscape" hidden>切換橫向全螢幕</button>
  </section>
 </main>
-<script src="Build/9ccb62ba567c01024911a8f2bd55070c.loader.js"></script>
+<script src="Build/f10881bdde9eaabd14e40c97b8364076.loader.js"></script>
 <script>
 const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
@@ -110,7 +110,7 @@ landscape.onclick=requestLandscape;
 updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
- dataUrl:'Build/4a598a7dd15e331643a088de6d766e79.data.unityweb',frameworkUrl:'Build/43041f626a8191c758b8c8ecad23d607.framework.js.unityweb',codeUrl:'Build/ecf2229c32608142ba3229be6f7c5f47.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+ dataUrl:'Build/7b3b64e24a7185701307e794de2ffe77.data.unityweb',frameworkUrl:'Build/415ce31c918982388882286f6655c92d.framework.js.unityweb',codeUrl:'Build/5ac50f3ecb7619031fedacf50f342f58.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
  // Keep the storage identity so existing local profiles and loadouts survive the rename.
  companyName:'Starbro',productName:'Neon Impact',productVersion:'1.3.1-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'

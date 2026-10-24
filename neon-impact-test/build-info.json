@@ -1,5 +1,5 @@
 {
-  "build": "2026-10-24-arena-spectator-test",
+  "build": "2026-10-24-battle-clarity-test",
   "protocol": "binary-13",
   "arenaInitialHealth": 1500,
   "levelUpHealth": 50,
@@ -9,16 +9,22 @@
   "loadoutClassificationsChecked": 31680,
   "arenaResultsEditorChecksPassed": true,
   "arenaSpectatorEditorChecksPassed": true,
+  "battlePresentationEditorChecksPassed": true,
+  "movementArrowFollowsVelocity": true,
+  "earlyResultFooterActions": [
+    "watch",
+    "return"
+  ],
   "unityBuildPassed": true,
   "botDecisionChecksPassed": true,
   "multiplayerPlaytestPassed": false,
   "realDevicePlaytestPassed": false,
-  "initialBytes": 33070981,
+  "initialBytes": 33067235,
   "files": {
-    "index.html": "f5b071805b43ee35e70766b23d4d4b9be39c9b691e55fb3f943ba6f5853aab55",
-    "Build/43041f626a8191c758b8c8ecad23d607.framework.js.unityweb": "787f132aae4ea466c0f5e7d1a011e9609ace77b80ec77f4ecb1a9533021c98da",
-    "Build/4a598a7dd15e331643a088de6d766e79.data.unityweb": "a595e47aa1bf100fe635476dcad3d837199c91113f1cf004192c43ed794c1329",
-    "Build/9ccb62ba567c01024911a8f2bd55070c.loader.js": "7fadbe9d2d66e413329bc77be87f373551871c46a74f45994bc1dd3f1e694f14",
-    "Build/ecf2229c32608142ba3229be6f7c5f47.wasm.unityweb": "7f9128fa571b2cacb1d1af6f7504e6ce47e0800c6bbe38c0656cf8c7a3c12d30"
+    "index.html": "09ccc4a056a132d11ea787daed151d94f8578587aa30a1451d62124ced3afe2c",
+    "Build/415ce31c918982388882286f6655c92d.framework.js.unityweb": "d7ffe04db409524ba128a2ff1a4559683e0aa0bd50e0635d0880678dac6f5268",
+    "Build/5ac50f3ecb7619031fedacf50f342f58.wasm.unityweb": "6efbd54944dcea84aa943065f0454123bd0e0c5e6053054cc0f346fb55fe76e7",
+    "Build/7b3b64e24a7185701307e794de2ffe77.data.unityweb": "bde13719443c2252496593c5049904d176e3fcd45fea48bdc565b7b05b88bd4c",
+    "Build/f10881bdde9eaabd14e40c97b8364076.loader.js": "7811e70c30a8300761fdd1adcda5c92f085f1d5f09ddfd7b8b41b3705dc2d536"
   }
 }
