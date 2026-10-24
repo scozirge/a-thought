@@ -1,16 +1,19 @@
 {
-  "build": "2026-10-24-battle-clarity-test",
-  "protocol": "binary-13",
+  "build": "2026-10-24-loot-cursor-test",
+  "protocol": "binary-14",
   "arenaInitialHealth": 1500,
   "levelUpHealth": 50,
   "matchmakingWindowSeconds": 1,
   "botDifficultyTiers": 3,
   "accessoriesAnalyzed": 95,
   "loadoutClassificationsChecked": 31680,
-  "arenaResultsEditorChecksPassed": true,
-  "arenaSpectatorEditorChecksPassed": true,
-  "battlePresentationEditorChecksPassed": true,
-  "movementArrowFollowsVelocity": true,
+  "lootCursorEditorChecksPassed": true,
+  "stormDelaySeconds": 15,
+  "stormDurationSeconds": 75,
+  "cursorStopRadiusAt1080": 25,
+  "cursorFullSpeedRadiusAt1080": 150,
+  "lootInactiveUntilSnapshot": true,
+  "lootParticlePlaybackReset": true,
   "earlyResultFooterActions": [
     "watch",
     "return"
@@ -19,12 +22,12 @@
   "botDecisionChecksPassed": true,
   "multiplayerPlaytestPassed": false,
   "realDevicePlaytestPassed": false,
-  "initialBytes": 33067235,
+  "initialBytes": 33071495,
   "files": {
-    "index.html": "09ccc4a056a132d11ea787daed151d94f8578587aa30a1451d62124ced3afe2c",
-    "Build/415ce31c918982388882286f6655c92d.framework.js.unityweb": "d7ffe04db409524ba128a2ff1a4559683e0aa0bd50e0635d0880678dac6f5268",
-    "Build/5ac50f3ecb7619031fedacf50f342f58.wasm.unityweb": "6efbd54944dcea84aa943065f0454123bd0e0c5e6053054cc0f346fb55fe76e7",
-    "Build/7b3b64e24a7185701307e794de2ffe77.data.unityweb": "bde13719443c2252496593c5049904d176e3fcd45fea48bdc565b7b05b88bd4c",
-    "Build/f10881bdde9eaabd14e40c97b8364076.loader.js": "7811e70c30a8300761fdd1adcda5c92f085f1d5f09ddfd7b8b41b3705dc2d536"
+    "index.html": "b1842f12dd1ac72c5262c21a3ef86bf60c3d2158daf40f856f2de8fe79866558",
+    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "0391b41aa902a91079e4d642d0947044379dde845c4d5fc11998bbd2642558b8",
+    "Build/7c3f78c2107b8df36e720ff670c9102c.wasm.unityweb": "8374fd79ce5ff2d9ee9dbf908a53ddeb7da4c496b77714476f72485ab8495f1a",
+    "Build/c5bab7e3f959761a76bb6a782c424ad3.data.unityweb": "2656032ccd4283071aa8ac6b1a76adb58dff8108040a1037dbc0d884d449cb57",
+    "Build/dd38de3ec5ae1e98dc7aaa9a197fc240.loader.js": "7e5cbaeb864b3a509c4bdf235b577b357ace097d5ecaff1e85ea15eb71d563ca"
   }
 }
