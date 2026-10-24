@@ -1,13 +1,37 @@
 {
-  "build": "2026-10-24-all-parts-test",
-  "protocol": "binary-15/test-all-parts",
+  "build": "2026-10-25-bot-fog-test",
+  "protocol": "binary-16/test-all-parts",
   "arenaInitialHealth": 1500,
   "levelUpHealth": 50,
   "matchmakingWindowSeconds": 1,
   "botDifficultyTiers": 3,
+  "botRetreatHealthThresholds": [
+    0.2,
+    0.25,
+    0.3
+  ],
+  "botRetreatHoldSeconds": [
+    0.6,
+    0.8,
+    1.0
+  ],
+  "botQuietRecoveryHealthThreshold": 0.5,
+  "botMeleeResetSeconds": [
+    0.45,
+    0.65
+  ],
+  "botEndgameAvoidanceBonus": false,
+  "fogBoundaryOpacity": [
+    0.68,
+    0.72
+  ],
+  "fogDeepOpacity": [
+    0.96,
+    0.985
+  ],
+  "fogEditorRenderChecksPassed": true,
   "accessoriesAnalyzed": 95,
   "loadoutClassificationsChecked": 31680,
-  "arenaResourceEditorChecksPassed": true,
   "officialRelease": false,
   "allAccessoriesUnlocked": true,
   "unlockedAccessories": {
@@ -49,21 +73,21 @@
   "botDecisionChecksPassed": true,
   "multiplayerPlaytestPassed": false,
   "realDevicePlaytestPassed": false,
-  "initialBytes": 33070979,
+  "initialBytes": 33073859,
   "files": {
-    "index.html": "eddf5d17c2976c371901df5fde576979a08c265167339abf8351a7d5a9b5cf2d",
-    "Build/26a2984539247846fd6da7452d436b64.data.unityweb": "4093035036dcd156ea800c3a5198f5d08b698c4668d7cc22027fba24cdffbdf5",
-    "Build/27936a6637186a728364a851c1576ab2.loader.js": "6a93125076244fea95e2b5f15f47666821d1e0c60646e079dccf46c0833149f6",
-    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "4a0aa6ad4ffc22050ca0354da4bf017967a9c705682416734e1b6e70c0ec9156",
-    "Build/e4069b30155ccab58873b032a8d8807e.wasm.unityweb": "e263042fdd76b8f44be06a5bfc435350000743824387d6c092e061deb01688b8"
+    "index.html": "0f7e924e6b4c4d4397b1216596f282113b7fed87456687d1e7b3bb08c30ea00d",
+    "Build/2c74457f740935dd05d814f6de75efbf.loader.js": "9dc5c9e7243a06f1d5646ff79f10399272776b07fdea1febee6458de9c3d6389",
+    "Build/535cead7f39141e0976459a4037791e0.framework.js.unityweb": "75ed2401ce17e54decdaed614316f4f160168c7eb3991b1c354b2cdf540f550c",
+    "Build/7619cf4983e714c86d0f57a8c8a91832.data.unityweb": "99f3bee65de94768972c9ed3010f378deda795d75434efac808386f967a7e3e2",
+    "Build/fa93cfd997a8767585027bbc548c58a3.wasm.unityweb": "f00dc21755c2c1f9e3dd5fb05c3e3e1610ccc394ed024ff2b0376ac0ecacc266"
   },
   "documentFiles": {
-    "ARENA_RATING_RULES.txt": "eaf5065f9e675276d40d02aaa59869ed153d660bd45d9c3c076954748d19ac44",
-    "BOT_COMBINATIONS.txt": "bf6b2d7e772a58ccd4be3a5080e0d96c254489475919dbfd696d9fd49392f70b",
-    "bot-strategy/index.html": "f5bc48b19fe5652a6520eb208f42d59473b1fb046d0d679c8ccbf5d3d176e104",
+    "ARENA_RATING_RULES.txt": "1de66f7b928bd4538649bb07fae0f314460d29a217f64d6226dce105f358d47a",
+    "BOT_COMBINATIONS.txt": "fb4ad8602b82e27a045bef5f479fd1da4af3d517901390b6988db1964ed781e4",
+    "bot-strategy/index.html": "9f29a22e5a1b64557593ce9aa65f019d4f41aaa657476f8493e2b897aef92c53",
     "accessories/index.html": "c5c5d39d4f865580fefd4f721f4d37f81926ebb6a5a4cb6ef2fdc4938be79612",
     "accessories/catalog.json": "9941269ca9354725de18449e182a3528c97e95ec458f80018fc0e78100042406",
-    "TEST_BUILD.txt": "9dd82e0c83c08b4c3a139b1b6f9e93126df19a4cc4a2f18116890e21eb58ca50",
+    "TEST_BUILD.txt": "dc202a38631a402eeb24bae6da4f2c3f18b0179a5ccdd83cccdca36945a28c93",
     "build-variant.json": "cea032a42f7d1a46f4c768a0e5f3d7fd9395bdfbab9bcf7f279dfb63976de15c"
   }
 }
