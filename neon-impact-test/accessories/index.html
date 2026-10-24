@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>星際遊俠 配件能力清單</title><style>body{font:16px system-ui;background:#10192b;color:#eee;margin:24px}h1{color:#d8bd77}input{padding:12px;width:min(90%,480px)}table{border-collapse:collapse;width:100%;margin-top:20px}th,td{padding:14px;border-bottom:1px solid #586070;text-align:left;vertical-align:top;white-space:pre-line}th{color:#d8bd77}td:nth-child(4){min-width:270px}td:nth-child(5){min-width:380px;color:#ead59f}td:last-child{font:12px monospace;min-width:180px}.wrap{overflow:auto}</style><h1>星際遊俠：95 個配件能力清單</h1><p>已追加技能、子彈與衍生爆炸 prefab 的傷害係數及被動增益。比較基準：一般攻擊力 250、對決攻擊力 400；先不計增傷、虛弱、減傷、持續傷害。數字是單次接觸計算值，並非每次施放總傷害或 DPS；多發不保證全部命中。治療／反射／格擋類元件仍需依其行為解讀，零係數不代表沒有作用。</p><p>來源：有 FixedDamage 時，以固定基準傷害乘上目前攻擊力／基礎攻擊力，保留增傷與虛弱；其餘使用攻擊力 × ValuePercent。替代肉搏的 MeleeAmmo 使用肉搏攻擊力。自身增益另列，未加入基準傷害。Time 與條件參數是原始資料，0 的意義依效果實作而異。仍需實戰驗證。</p><p>付費價格沿用原本 Kreds 資料，並非台幣售價。升級數值尚待設計，未接上商店交易驗證。</p><input id="q" placeholder="搜尋配件、能力或部位"><div class="wrap"><table><thead><tr><th>ID</th><th>部位</th><th>名稱</th><th>能力說明</th><th>傷害數值／觸發與增益</th><th>取得／原價格</th><th>技能識別字</th><th>原始參數</th></tr></thead><tbody><tr><td>1</td><td>頭部</td><td>憤怒轟炸</td><td>受到攻擊後凝聚能量產生爆破造成傷害並燃燒周圍敵人，冷卻3秒</td><td>Skill-BeHitExplode
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>星際遊俠 配件能力清單</title><style>body{font:16px system-ui;background:#10192b;color:#eee;margin:24px}h1{color:#d8bd77}input{padding:12px;width:min(90%,480px)}table{border-collapse:collapse;width:100%;margin-top:20px}th,td{padding:14px;border-bottom:1px solid #586070;text-align:left;vertical-align:top;white-space:pre-line}th{color:#d8bd77}td:nth-child(4){min-width:270px}td:nth-child(5){min-width:380px;color:#ead59f}td:last-child{font:12px monospace;min-width:180px}.wrap{overflow:auto}</style><h1>星際遊俠：95 個配件能力清單</h1><p>已追加技能、子彈與衍生爆炸 prefab 的傷害係數及被動增益。比較基準：一般攻擊力 250、對決攻擊力 400；先不計增傷、虛弱、減傷、持續傷害。數字是單次接觸計算值，並非每次施放總傷害或 DPS；多發不保證全部命中。治療／反射／格擋類元件仍需依其行為解讀，零係數不代表沒有作用。</p><p>來源：有 FixedDamage 時，以固定基準傷害乘上目前攻擊力／基礎攻擊力，保留增傷與虛弱；其餘使用攻擊力 × ValuePercent。替代肉搏的 MeleeAmmo 使用肉搏攻擊力。自身增益另列，未加入基準傷害。Time 與條件參數是原始資料，0 的意義依效果實作而異。仍需實戰驗證。</p><p>付費價格沿用原本 Kreds 資料，並非台幣售價。升級數值尚待設計，未接上商店交易驗證。</p><p><a style="color:#a8d9df" href="../bot-strategy/index.html">查看三階 Bot 與 95 個配件的戰術分析</a></p><input id="q" placeholder="搜尋配件、能力或部位"><div class="wrap"><table><thead><tr><th>ID</th><th>部位</th><th>名稱</th><th>能力說明</th><th>傷害數值／觸發與增益</th><th>取得／原價格</th><th>技能識別字</th><th>原始參數</th></tr></thead><tbody><tr><td>1</td><td>頭部</td><td>憤怒轟炸</td><td>受到攻擊後凝聚能量產生爆破造成傷害並燃燒周圍敵人，冷卻3秒</td><td>Skill-BeHitExplode
 觸發：受擊；條件參數 [3, 0, 0]
 
 Bomb-BeHitExplode
@@ -88,8 +88,8 @@ Ammo-Icicle
 固定基準傷害：100／100（一般／對決）；仍套用增傷與虛弱比例
 同目標觸發間隔：0
 接觸觸發間隔：0
-存在秒數：1.5
-命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>初始配件 0</td><td>Icicle</td><td>serializedVersion = 6
+存在秒數：3
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0</td><td>初始配件 0</td><td>Icicle</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
 StopMoveTime = 0
@@ -106,10 +106,10 @@ Interval = 1
 FirstAttackNoWait = 1
 Patetern = 4
 RandomAngle = 0
-StartAngle = -4
+StartAngle = -6.5
 AmmoNum = 2
 AmmoInterval = 0
-AngleInterval = 8
+AngleInterval = 13
 TriggerWall = 0</td></tr><tr><td>6</td><td>頭部</td><td>吸血將軍</td><td>任何攻擊擊中敵人時，恢復5%生命，冷卻0.2秒</td><td>未發現直接傷害係數；請看下列被動／增益效果，不等於總傷害為零。
 
 Skill-Vampire
@@ -839,7 +839,7 @@ MyFeaturePart = 0
 MyFeatureType = 0
 MyFeatureDataID = 0
 FeaturePartSerialNumber = 0
-TriggerType = 0</td></tr><tr><td>105</td><td>身體</td><td>急凍噴霧</td><td>目標靠近時，向左右發射冰凍噴霧造成傷害並造成緩速60%持續1.5秒，冷卻5秒</td><td>Skill-FrozenSpray
+TriggerType = 0</td></tr><tr><td>105</td><td>身體</td><td>急凍噴霧</td><td>目標靠近時，向左右發射冰凍噴霧造成傷害並造成緩速60%持續0.75秒，冷卻5秒</td><td>Skill-FrozenSpray
 施放間隔：5
 
 Melee-FrozenSpray
@@ -847,7 +847,7 @@ Melee-FrozenSpray
 同目標觸發間隔：0.25
 接觸觸發間隔：0
 存在秒數：3
-命中目標：緩速60%，Time=1.5，數值 0，Value2=0
+命中目標：緩速60%，Time=0.75，數值 0，Value2=0
 
 Skill-FrozenSpray
 施放間隔：5</td><td>星幣 100</td><td>FrozenSpray</td><td>serializedVersion = 6
@@ -1575,7 +1575,7 @@ Ammo-IceCannon
 同目標觸發間隔：0
 接觸觸發間隔：0
 存在秒數：0.7
-命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0
 命中目標：暈眩，Time=0.3，數值 0，Value2=0
 
 Bomb-IceCannon
@@ -1585,7 +1585,7 @@ Bomb-IceCannon
 接觸觸發間隔：0
 存在秒數：0.2
 命中目標：暈眩，Time=0.5，數值 0，Value2=0
-命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>IceCannon</td><td>serializedVersion = 6
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0</td><td>付費（尚未接金流） 10</td><td>IceCannon</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
 StopMoveTime = 0
@@ -1780,7 +1780,7 @@ Ammo-QuadrupleIcicle
 同目標觸發間隔：0
 接觸觸發間隔：0
 存在秒數：2
-命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0
 命中目標：流血，Time=5，每 1 秒扣目標最大生命 1%（每跳取整數），Value2=0</td><td>星幣 100</td><td>QuadrupleIcicle</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
@@ -1833,7 +1833,7 @@ StartAngle = 0
 AmmoNum = 1
 AmmoInterval = 0
 AngleInterval = 0
-TriggerWall = 0</td></tr><tr><td>209</td><td>背部</td><td>冰與火</td><td>向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒與緩速60%持續5秒，冷卻2秒</td><td>Skill-DoubleCrutch
+TriggerWall = 0</td></tr><tr><td>209</td><td>背部</td><td>冰與火</td><td>向前方發射燃燒火球並向靠近的敵人發射急凍冰球，分別造成燃燒持續5秒與緩速60%持續2.5秒，冷卻2秒</td><td>Skill-DoubleCrutch
 施放間隔：2
 每次生成數：1
 
@@ -1842,7 +1842,7 @@ Ammo-DoubleCrutch-Ice
 同目標觸發間隔：0
 接觸觸發間隔：0
 存在秒數：1.5
-命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0
 
 Skill-DoubleCrutch
 施放間隔：2
@@ -1905,7 +1905,7 @@ Bomb-FrozenWing
 同目標觸發間隔：1
 接觸觸發間隔：0
 存在秒數：5
-命中目標：緩速60%，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenWing</td><td>serializedVersion = 6
+命中目標：緩速60%，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenWing</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
 StopMoveTime = 0
@@ -2080,7 +2080,7 @@ Melee-FrozenZone
 同目標觸發間隔：1
 接觸觸發間隔：0
 存在秒數：999999
-命中目標：緩速60%，Time=2，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenZone</td><td>serializedVersion = 6
+命中目標：緩速60%，Time=1，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenZone</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
 StopMoveTime = 6
@@ -2298,7 +2298,7 @@ Ammo-FrozenShock
 同目標觸發間隔：0
 接觸觸發間隔：0
 存在秒數：0.5
-命中目標：緩速60%，Time=5，數值 0，Value2=0
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0
 
 Bomb-FrozenShock
 單次接觸傷害係數：1.2 × 技能攻擊力；基準傷害 300／480（一般／對決）
@@ -2307,7 +2307,7 @@ Bomb-FrozenShock
 接觸觸發間隔：0
 存在秒數：0.2
 命中目標：暈眩，Time=1，數值 0，Value2=0
-命中目標：緩速60%，Time=5，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenShock</td><td>serializedVersion = 6
+命中目標：緩速60%，Time=2.5，數值 0，Value2=0</td><td>星幣 100</td><td>FrozenShock</td><td>serializedVersion = 6
 BehaviorSkill = 0
 AttackStopMove = 0
 StopMoveTime = 0

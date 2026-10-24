@@ -1,13 +1,40 @@
 {
-  "build": "2026-10-24-loot-cursor-test",
-  "protocol": "binary-14",
+  "build": "2026-10-24-all-parts-test",
+  "protocol": "binary-15/test-all-parts",
   "arenaInitialHealth": 1500,
   "levelUpHealth": 50,
   "matchmakingWindowSeconds": 1,
   "botDifficultyTiers": 3,
   "accessoriesAnalyzed": 95,
   "loadoutClassificationsChecked": 31680,
-  "lootCursorEditorChecksPassed": true,
+  "arenaResourceEditorChecksPassed": true,
+  "officialRelease": false,
+  "allAccessoriesUnlocked": true,
+  "unlockedAccessories": {
+    "head": 33,
+    "body": 32,
+    "back": 30
+  },
+  "battleBackground": "navy-cosmos-with-distant-planet",
+  "battleMusicTracks": [
+    "Electronic Symphony Remixed",
+    "Warped"
+  ],
+  "battleMusicStartsInQueue": true,
+  "initialLocalPlayerBlue": true,
+  "resourceBotHealth": 1000,
+  "resourceBotLevel": 1,
+  "resourceBotCollectsStars": false,
+  "resourceBotTacticalAI": false,
+  "freezeDurationMultiplier": 0.5,
+  "icicleTravelDistance": 1800,
+  "icicleSpreadDegrees": 13,
+  "battleMusicFollowsSettings": true,
+  "battleMusicModes": [
+    "Arena",
+    "InfinityWar",
+    "Challenge"
+  ],
   "stormDelaySeconds": 15,
   "stormDurationSeconds": 75,
   "cursorStopRadiusAt1080": 25,
@@ -22,12 +49,21 @@
   "botDecisionChecksPassed": true,
   "multiplayerPlaytestPassed": false,
   "realDevicePlaytestPassed": false,
-  "initialBytes": 33071495,
+  "initialBytes": 33070979,
   "files": {
-    "index.html": "b1842f12dd1ac72c5262c21a3ef86bf60c3d2158daf40f856f2de8fe79866558",
-    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "0391b41aa902a91079e4d642d0947044379dde845c4d5fc11998bbd2642558b8",
-    "Build/7c3f78c2107b8df36e720ff670c9102c.wasm.unityweb": "8374fd79ce5ff2d9ee9dbf908a53ddeb7da4c496b77714476f72485ab8495f1a",
-    "Build/c5bab7e3f959761a76bb6a782c424ad3.data.unityweb": "2656032ccd4283071aa8ac6b1a76adb58dff8108040a1037dbc0d884d449cb57",
-    "Build/dd38de3ec5ae1e98dc7aaa9a197fc240.loader.js": "7e5cbaeb864b3a509c4bdf235b577b357ace097d5ecaff1e85ea15eb71d563ca"
+    "index.html": "eddf5d17c2976c371901df5fde576979a08c265167339abf8351a7d5a9b5cf2d",
+    "Build/26a2984539247846fd6da7452d436b64.data.unityweb": "4093035036dcd156ea800c3a5198f5d08b698c4668d7cc22027fba24cdffbdf5",
+    "Build/27936a6637186a728364a851c1576ab2.loader.js": "6a93125076244fea95e2b5f15f47666821d1e0c60646e079dccf46c0833149f6",
+    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "4a0aa6ad4ffc22050ca0354da4bf017967a9c705682416734e1b6e70c0ec9156",
+    "Build/e4069b30155ccab58873b032a8d8807e.wasm.unityweb": "e263042fdd76b8f44be06a5bfc435350000743824387d6c092e061deb01688b8"
+  },
+  "documentFiles": {
+    "ARENA_RATING_RULES.txt": "eaf5065f9e675276d40d02aaa59869ed153d660bd45d9c3c076954748d19ac44",
+    "BOT_COMBINATIONS.txt": "bf6b2d7e772a58ccd4be3a5080e0d96c254489475919dbfd696d9fd49392f70b",
+    "bot-strategy/index.html": "f5bc48b19fe5652a6520eb208f42d59473b1fb046d0d679c8ccbf5d3d176e104",
+    "accessories/index.html": "c5c5d39d4f865580fefd4f721f4d37f81926ebb6a5a4cb6ef2fdc4938be79612",
+    "accessories/catalog.json": "9941269ca9354725de18449e182a3528c97e95ec458f80018fc0e78100042406",
+    "TEST_BUILD.txt": "9dd82e0c83c08b4c3a139b1b6f9e93126df19a4cc4a2f18116890e21eb58ca50",
+    "build-variant.json": "cea032a42f7d1a46f4c768a0e5f3d7fd9395bdfbab9bcf7f279dfb63976de15c"
   }
 }

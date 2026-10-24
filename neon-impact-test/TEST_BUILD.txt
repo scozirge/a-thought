@@ -1,0 +1,16 @@
+星際遊俠測試版：全部配件開放
+
+- 收藏內全部 95 個配件可用：頭部 33、身體 32、背部 30。
+- 新存檔與舊存檔皆可直接使用；頂尖對決可自由配裝，戰鬥升級的配件候選也包含全部配件。
+- 這是測試使用權，不扣星幣、不製造購買或付款紀錄；既有星幣與購買資料保留。
+- 喊話解鎖沿用原本設定；本次開放的是角色頭、身、背配件。
+- 測試版使用獨立配對版本 binary-15/test-all-parts，與正式版分開。
+- 包含最新配對音樂、初始藍色角色、無名 bot、冰凍時間與冰錐調整。
+
+建置：tools/build-web.ps1 -Test
+建置入口：Neon.Editor.NeonWebBuild.BuildTest
+編譯旗標：NEON_TEST_ALL_PARTS，只加在這一次 Player 建置，不保存到全域 PlayerSettings。
+輸出：Builds/WebGLTest；發布目錄：neon-impact-test/。
+正式版：tools/build-web.ps1，輸出 Builds/WebGL；保留原始配件解鎖規則。
+
+驗證界線：編譯、資料與建置產物檢查，未進行實機或 Photon 多人對局。
