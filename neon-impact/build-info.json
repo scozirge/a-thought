@@ -1,19 +1,28 @@
 {
-  "build": "2026-10-24-battle-official",
-  "protocol": "binary-14",
+  "build": "2026-10-24-arena-balance-official",
+  "protocol": "binary-15",
   "arenaInitialHealth": 1500,
   "levelUpHealth": 50,
   "matchmakingWindowSeconds": 1,
   "botDifficultyTiers": 3,
   "accessoriesAnalyzed": 95,
   "loadoutClassificationsChecked": 31680,
-  "lootCursorEditorChecksPassed": true,
+  "arenaResourceEditorChecksPassed": true,
   "officialRelease": true,
   "battleBackground": "navy-cosmos-with-distant-planet",
   "battleMusicTracks": [
     "Electronic Symphony Remixed",
     "Warped"
   ],
+  "battleMusicStartsInQueue": true,
+  "initialLocalPlayerBlue": true,
+  "resourceBotHealth": 1000,
+  "resourceBotLevel": 1,
+  "resourceBotCollectsStars": false,
+  "resourceBotTacticalAI": false,
+  "freezeDurationMultiplier": 0.5,
+  "icicleTravelDistance": 1800,
+  "icicleSpreadDegrees": 13,
   "battleMusicFollowsSettings": true,
   "battleMusicModes": [
     "Arena",
@@ -34,12 +43,19 @@
   "botDecisionChecksPassed": true,
   "multiplayerPlaytestPassed": false,
   "realDevicePlaytestPassed": false,
-  "initialBytes": 33072667,
+  "initialBytes": 33071254,
   "files": {
-    "index.html": "243a18b080f1cbc3f0f5ff7e5eb0c9ebc12114011e86669fc9594ac32544110b",
-    "Build/26633915ca52f533455ab633eab51de5.loader.js": "901dff5f26fbace94a1a153da24086b992bc9071d67552861957b96e3e59b83e",
-    "Build/286f22e50e4c242ccef67a06f6ab2366.wasm.unityweb": "9135597b97b0dbcd29ff41e850306ef20752b4a4ba87af78cb0a0d804fbd3456",
-    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "490964365a43715e99fdba511f956ebeced0d7ab73418519dd0e3830edb241da",
-    "Build/9de2851ef743f994bda2a7a10ffd62cf.data.unityweb": "ddaf5b70079baeb3681295479184720effdf96fbf7f5f40544ccd0bf5aee2e7c"
+    "index.html": "9c5cd2868981401b293895f9ea01b6d824717aab0d6aa6b1e26200b3c079dbb6",
+    "Build/155c43272846b77f8bc4e53d992a386e.wasm.unityweb": "6f021ef45d393624efc0ed2986e6ea637acffe866cf125661a1f90cbd7789bb3",
+    "Build/2ad81fa46964d98fda32a1e0cae046c4.framework.js.unityweb": "d253f3190059261835456ed65b2cd29da7544cddae6d443ef494cf945e2283fa",
+    "Build/4874ece1f67f88aa005a797f16ede0b9.data.unityweb": "d46584dc4374e0572896ccff9b53d1bc92a62fbbdc1f2548dda6d187345db4cb",
+    "Build/e5b4ea15038d229c6c97ecb4a0805361.loader.js": "acaad81e751a1f652f9aea2fb7a0256efa14d7ec3b08b4cd17507685efdf06dc"
+  },
+  "documentFiles": {
+    "ARENA_RATING_RULES.txt": "eaf5065f9e675276d40d02aaa59869ed153d660bd45d9c3c076954748d19ac44",
+    "BOT_COMBINATIONS.txt": "bf6b2d7e772a58ccd4be3a5080e0d96c254489475919dbfd696d9fd49392f70b",
+    "bot-strategy/index.html": "f5bc48b19fe5652a6520eb208f42d59473b1fb046d0d679c8ccbf5d3d176e104",
+    "accessories/index.html": "c5c5d39d4f865580fefd4f721f4d37f81926ebb6a5a4cb6ef2fdc4938be79612",
+    "accessories/catalog.json": "9941269ca9354725de18449e182a3528c97e95ec458f80018fc0e78100042406"
   }
 }
