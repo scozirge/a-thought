@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>一起回家｜雙人跳跳</title><link rel="stylesheet" href="styles.css"></head>
-<body><main><header><h1>一起回家</h1><div class="navigation"><select id="levels" aria-label="選擇關卡"></select><button id="restart">重來</button></div></header>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>類pico park合作通關</title><link rel="stylesheet" href="styles.css"></head>
+<body><main><header><h1>類pico park合作通關</h1><div class="navigation"><select id="levels" aria-label="選擇關卡"></select><button id="restart">重來</button></div></header>
 <section class="game"><p id="message" role="status">踩朋友的頭，拿鑰匙！</p><canvas id="game" width="1000" height="340" tabindex="0" aria-label="兩個小動物合作跳躍，拿高處鑰匙，再一起進右邊的門"></canvas><div id="success" hidden><strong id="win-title">一起過關了！</strong><div class="win-buttons"><button id="again">再玩一次</button><button id="next">下一關 →</button></div></div></section>
 <section class="controls" aria-label="雙人操作"><div class="player fox"><h2>🦊 狐狸</h2><div class="pad" data-player="0"><button data-action="left" aria-label="狐狸向左">A ←</button><button data-action="jump" aria-label="狐狸跳躍">W 跳</button><button data-action="right" aria-label="狐狸向右">D →</button></div></div><div class="player rabbit"><h2>🐰 兔子</h2><div class="pad" data-player="1"><button data-action="left" aria-label="兔子向左">←</button><button data-action="jump" aria-label="兔子跳躍">↑ 跳</button><button data-action="right" aria-label="兔子向右">→</button></div></div></section>
-</main><script src="levels.js"></script><script src="physics.js"></script><script src="core.js"></script><script src="app.js"></script></body></html>
+</main><script src="levels.js"></script><script src="collision.js"></script><script src="physics.js"></script><script src="core.js"></script><script src="app.js"></script></body></html>

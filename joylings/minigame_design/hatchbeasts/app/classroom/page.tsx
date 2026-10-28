@@ -18,7 +18,7 @@ export default function ClassroomHome() {
             <div className="catalog-actions">
               <a className="course-button" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
-                玩一起回家
+                玩類pico park合作通關
                 <ArrowUpRight size={18} aria-hidden="true" />
               </a>
               <a className="course-button" href={NEON_IMPACT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
@@ -317,7 +317,7 @@ export default function ClassroomHome() {
             <div className="sixth-game-choices">
               <a className="unit-card card-green" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-green"><Gamepad2 size={28} aria-hidden="true" /></span>
-                <span className="sixth-game-copy"><span className="unit-title">一起回家・雙人跳跳</span><span className="unit-meta">10 關合作挑戰：拿鑰匙，一起進門</span></span>
+                <span className="sixth-game-copy"><span className="unit-title">類pico park合作通關</span><span className="unit-meta">10 關合作挑戰：拿鑰匙，一起進門</span></span>
                 <ArrowUpRight size={22} aria-hidden="true" />
               </a>
               <a className="unit-card card-green" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
@@ -331,15 +331,16 @@ export default function ClassroomHome() {
                 <ArrowUpRight size={22} aria-hidden="true" />
               </a>
             </div>
-          <div className="activity-content">
-            <p className="catalog-question-context">狐狸用 A／D 移動、W 跳；兔子用 ←／→ 移動、↑ 跳。一起拿到鑰匙，再走進門。</p>
-          </div>
-          <details className="featured-unit current-course">
+            <div className="activity-content">
+              <p className="catalog-question-context">兩人一台電腦。狐狸用 A／D 移動、W 跳；兔子用 ←／→ 移動、↑ 跳。拿齊鑰匙，兩人都到出口。</p>
+              <p className="catalog-question-context">第 1 關學操作，第 2 關暖身；第 3～10 關一起想搬箱順序、控制機關、接朋友過關。</p>
+            </div>
+          <details className="featured-unit">
             <summary className="featured-heading">
               <a className="featured-link" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-green"><Gamepad2 size={28} strokeWidth={1.6} aria-hidden="true" /></span>
                 <span className="featured-copy">
-                  <span className="unit-title">木塊出走・關卡與答案</span>
+                  <span className="unit-title">延伸活動：木塊出走</span>
                   <span className="unit-meta">10 關挑戰 · 2 關隱藏關</span>
                   <span className="unit-meta">移開木塊，讓紅色木塊到出口</span>
                 </span>

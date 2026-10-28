@@ -11,7 +11,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   await page.clock.runFor(Math.round(frames*1000/120));
   for(const k of [keys[0].jump,keys[1].jump])if(down.has(k)){await page.keyboard.up(k);down.delete(k);}
  }
+ assert.equal(await page.title(),'類pico park合作通關');
  assert.equal(await page.locator('#levels option').count(),10);
+ // A single rabbit jumps over the untouched crate, walks off the blue pad,
+ // and keeps running/jumping at the wall. No direct state setup is used.
+ await page.selectOption('#levels','9');
+ await tick(10,[{}, {axis:1}]);await tick(120,[{}, {axis:1,jump:true}]);
+ await tick(240,[{}, {axis:1}]);await tick(120,[{}, {axis:1,jump:true}]);
+ let regression=await read();assert.equal(regression.boxes[0].x,200);assert.equal(G.gateOpen(regression,0),false);assert.ok(regression.players[1].x+38<=G.levels[9].gates[0].x);
+ console.log('Level 10 single-player wall exploit blocked via real keyboard.');
  for(const l of G.levels){
   await release();await page.selectOption('#levels',String(l.id));
   if([0,1,2,3,4,5,6,7,8,9].includes(l.id))await page.screenshot({path:path.join(output,`level-${l.id+1}.png`),fullPage:true});

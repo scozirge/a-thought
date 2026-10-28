@@ -57,9 +57,9 @@ async function playAdvanced(d,l){
  if(l.id===4){await liftRelay({rider:1,holder:0,park:630});await lowKey(0,0,248);await lowKey(1,1,248);}
  if(l.id===5){await mode(0,0);await move(1,410);await move(0,400);await stack(0);await mode(1,1);await move(1,740);await move(0,730);await stack(1);}
  if(l.id===6){await push(0,400);await stack(0,358,390);await move(1,660,352);await move(0,660,352);await move(1,770,304);await move(0,770,304);await stack(1,304,770);}
- if(l.id===7){await liftRelay({cargo:0,boxTarget:740,park:790});await lowKey(0,0,280);}
+ if(l.id===7){await liftRelay({cargo:0,boxTarget:740,park:790});await lowKey(0,0,240);}
  if(l.id===8){await push(2,570);await move(1,80);await push(1,440);await push(0,310);await move(1,750);await move(0,730);await stack(0);}
- if(l.id===9){await stack(0);await move(1,50);await push(0,260);await move(1,390);await liftRelay({cargo:1,boxTarget:760,park:710,off:100});await mode(1,0);await lowKey(0,1,280);}
+ if(l.id===9){await stack(0);await move(1,50);await push(0,250);await move(1,390);await liftRelay({cargo:1,boxTarget:760,park:710,off:100});await mode(1,0);await lowKey(0,1,240);}
  await move(0,l.door.x+25,l.door.y+l.door.h);await move(1,l.door.x+25,l.door.y+l.door.h);await wait(5);if((await read()).won)return;
  throw Error(`no win L${l.id+1}: ${JSON.stringify(await read())}`);
 }

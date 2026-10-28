@@ -1,12 +1,13 @@
 (function(root){
 function create(C){
+const constrainGates=typeof module!=='undefined'?require('./collision.js'):root.TogetherCollision;
 const width=o=>o.w??C.w,height=o=>o.h??C.h;
 const hit=(a,b)=>a.x+width(a)>b.x+1&&a.x<b.x+width(b)-1&&a.y+height(a)>b.y+1&&a.y<b.y+height(b)-1;
 function weighted(s,b){return [...s.players.filter(p=>!p.exited),...s.boxes].some(p=>p.grounded&&Math.abs(p.y+height(p)-b.y)<4&&p.x+width(p)>b.x+3&&p.x<b.x+b.w-3);}
 function open(s,l,i){const g=l.gates[i];return (g.mode===undefined||s.mode===g.mode)&&(!g.buttons||g.buttons.every(b=>weighted(s,b)));}
 function fresh(l,level){return {level,players:l.starts.map(x=>({x,y:356,vy:0,grounded:true,support:-1,onBox:-1,exited:false})),boxes:(l.boxes||[]).map(b=>({...b,y:b.y??400-b.h,vy:0,grounded:true})),lifts:(l.lifts||[]).map(f=>f.bottom),switches:(l.switches||[]).map(()=>false),mode:l.mode??0,collected:l.keys.map(()=>false),latched:l.gates.map(()=>false),key:false,won:false};}
 function surfaces(s,l){return [...l.platforms,...(l.lifts||[]).map((f,i)=>({...f,y:s.lifts[i],h:12}))];}
-function block(o,prev,s,l){for(let i=0;i<l.gates.length;i++){const g=l.gates[i];if(open(s,l,i)||o.y+height(o)<=g.y||o.y>=g.y+g.h)continue;if(prev.x+width(o)<=g.x+.2&&o.x+width(o)>g.x)o.x=g.x-width(o);else if(prev.x>=g.x+g.w-.2&&o.x<g.x+g.w)o.x=g.x+g.w;}o.x=Math.max(0,Math.min(C.width-width(o),o.x));}
+function block(o,prev,s,l){constrainGates(o,prev,l.gates,i=>open(s,l,i),C);}
 function vertical(o,prev,s,n,l,dt){
  let carried=false;
  (l.lifts||[]).forEach((f,i)=>{if(Math.abs(prev.y+height(o)-s.lifts[i])<2&&prev.x+width(o)>f.x+2&&prev.x<f.x+f.w-2&&o.vy>=0){o.y+=n.lifts[i]-s.lifts[i];carried=true;}});
@@ -56,6 +57,12 @@ function step(s,input,l,dt){
   for(let i=0;i<2;i++){const p=n.players[i],q=n.players[1-i];if(Math.abs(p.x-q.x)>l.tether&&Math.abs(p.x-q.x)>Math.abs(s.players[i].x-q.x))p.x=s.players[i].x;}
  }
  (l.switches||[]).forEach((b,i)=>{const down=weighted(n,b);if(down&&!s.switches[i])n.mode=1-n.mode;n.switches[i]=down;});
+ // Recheck after switches, ropes, box pushes and pressure changes this tick.
+ // Returning a body can release another pad, so settle the gates together.
+ for(let pass=0;pass<=l.gates.length;pass++){
+  n.boxes.forEach((b,i)=>block(b,s.boxes[i],n,l));
+  n.players.forEach((p,i)=>{if(!p.exited)block(p,s.players[i],n,l);});
+ }
  n.players.forEach((p,actor)=>{if(p.exited)return;l.keys.forEach((k,i)=>{if((k.owner===undefined||k.owner===actor)&&p.x<k.x+k.r&&p.x+C.w>k.x-k.r&&p.y<k.y+k.r&&p.y+C.h>k.y-k.r)n.collected[i]=true;});});
  n.key=n.collected.every(Boolean);
  for(const p of n.players)if(!p.exited&&n.key&&p.x+C.w/2>l.door.x+14&&Math.abs(p.y+C.h-(l.door.y+l.door.h))<4){p.exited=true;p.support=-1;}
