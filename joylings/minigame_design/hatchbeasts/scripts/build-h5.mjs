@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { verifyH5 } from './verify-h5.mjs';
+import { copyTogetherHome } from './copy-together-home.mjs';
 
 // Match the repository and folder used on the gh-pages publishing branch.
 const basePath = (process.env.GITHUB_PAGES_BASE_PATH ?? '/a-thought/hatchbeasts')
@@ -84,6 +85,7 @@ for (const slug of [
   );
 }
 writeFileSync(join(output, '.nojekyll'), '');
+copyTogetherHome(output, basePath);
 verifyH5(output, basePath);
 console.log(
   `Game and classroom H5 exported and verified at dist/h5 for ${basePath || '/'}.`,

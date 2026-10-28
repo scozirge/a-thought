@@ -55,6 +55,7 @@ export function verifyH5(output, basePath) {
     'utf8',
   );
   assert.ok(classroom.includes('遊戲設計'), 'Missing classroom catalog');
+  assert.ok(classroom.includes(`href="${basePath}/together-home/"`) && existsSync(join(root, 'together-home/core.js')), 'Missing bundled cooperative game');
   assert.ok(
     classroom.includes('id="sixth-course"') && classroom.includes('第 6 週課程') &&
       classroom.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&

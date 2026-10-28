@@ -64,6 +64,7 @@ export function verifyClassroom(output) {
     'utf8',
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
+  assert.ok(catalog.includes('href="/together-home/"') && existsSync(join(root, 'together-home/core.js')), 'Missing bundled cooperative game');
   assert.ok(
     catalog.includes('id="sixth-course"') && catalog.includes('第 6 週課程') &&
       catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f5ec">
+  <meta name="description" content="拼好邏輯方塊，讓小幫手做出剛剛好的怪獸點心。">
+  <title>怪獸點心屋 · 邏輯小廚師</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="game.js" defer></script>
+  <script src="art.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="怪獸點心屋首頁"><span class="brand-mark" aria-hidden="true">m<span>✦</span></span><span>怪獸點心屋<span class="brand-sub">MONSTER SNACK HOUSE</span></span></a>
+    <div class="header-right"><span class="lesson-label">第六堂 · 邏輯小廚師</span><button id="levels-button" class="soft-button">▦ 選關卡 <span id="progress">0 / 12</span></button></div>
+  </header>
+  <main>
+    <section class="lesson-heading" aria-labelledby="level-title"><div><span class="eyebrow" id="level-number">第一張訂單</span><h1 id="level-title">第一份點心</h1><p id="goal"></p></div><span id="topic" class="topic"></span></section>
+    <div class="game-layout">
+      <section class="kitchen" aria-label="點心屋">
+        <div class="scene-top"><span class="open-label"><i></i> 今日營業中</span><span id="order-count">客人 1 / 1</span></div>
+        <div class="awning" aria-hidden="true"></div>
+        <div class="shop-scene" id="shop-scene">
+          <div class="window" aria-hidden="true"><span class="sun"></span><span class="hill"></span></div>
+          <div class="shelf" aria-hidden="true"><span>🍯</span><span>🌱</span><span>🥛</span></div>
+          <div class="order-bubble"><span id="guest-name">暖暖龍</span><strong id="guest-wish">我想吃 3 顆！</strong><span id="flavor-wish" hidden></span></div>
+          <div id="monster" class="monster"></div>
+          <div class="counter"><div class="counter-line"></div></div>
+          <div id="helper" class="helper"></div>
+          <div class="plate-wrap"><div id="snacks" class="snacks"></div><div class="plate"></div><span id="flavor-label" class="flavor-label">原味點心</span></div>
+          <div id="reaction" class="reaction" aria-hidden="true"></div>
+        </div>
+        <div class="variables"><div class="variable-x"><span><b>x</b> 盤子裡</span><strong id="x-value">3 <small>顆</small></strong></div><span class="variable-divider">↔</span><div class="variable-y"><span><b>y</b> 客人想吃</span><strong id="y-value">3 <small>顆</small></strong></div></div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"><span class="feedback-icon">✦</span><span id="message">先幫小幫手安排工作吧！</span></div>
+        <div class="queue" id="queue" aria-label="這一關的所有訂單"></div>
+      </section>
+      <section class="workbench" aria-label="編排指令">
+        <div class="bench-heading"><h2>小幫手的工作表</h2><button id="help-button" class="text-button">? 小提示</button></div>
+        <div class="editor-layout">
+          <aside class="toolbox"><h3>方塊盒</h3><div id="palette"></div></aside>
+          <div class="workspace"><div class="workspace-top"><span class="start-chip">⚑ 開始</span><div class="edit-tools"><button id="undo-button" title="復原上一次編輯" aria-label="復原上一次編輯">↶</button><button id="clear-button">清空</button></div></div><div id="program"></div><div class="finish-label">到這裡結束</div></div>
+        </div>
+        <p class="editor-tip" id="editor-tip">點方塊加入，也可以拖到工作表。</p>
+        <div class="controls"><button id="run-button" class="primary-button">▶ 開始</button><button id="step-button" class="soft-button">▷ 一步</button><button id="reset-button" class="soft-button">↺ 重來</button><label class="speed-label">速度 <select id="speed" aria-label="播放速度"><option value="950">慢慢看</option><option value="450">快一點</option></select></label></div>
+      </section>
+    </div>
+    <footer><span>✦ 先想一想，再讓小幫手試試看。</span><span>第 <span id="footer-level">1</span> 關 / 12 <span class="version">v0.1</span></span></footer>
+    <p id="storage-warning" class="storage-warning" hidden>這個瀏覽器無法保存進度，關閉頁面後會重新開始。</p>
+  </main>
+  <dialog id="levels-dialog"><div class="dialog-heading"><div><span class="eyebrow">小廚師的練習簿</span><h2>今天做哪一份？</h2></div><button class="close-button" data-close aria-label="關閉關卡選單">×</button></div><div id="level-grid"></div></dialog>
+  <dialog id="help-dialog"><div class="dialog-heading"><h2>小幫手的提醒</h2><button class="close-button" data-close aria-label="關閉提示">×</button></div><p id="help-text"></p><p class="help-note">一個 if 只判斷一次。送餐後，就換下一位客人。</p></dialog>
+  <dialog id="success-dialog"><div class="success-art" id="success-art"></div><span class="eyebrow">訂單全部完成</span><h2 id="success-title">今天的點心，剛剛好！</h2><p id="success-copy"></p><div class="success-actions"><button id="next-button" class="primary-button">下一關 →</button><button class="soft-button" data-close>再看看</button></div></dialog>
+</body>
+</html>

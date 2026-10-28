@@ -16,6 +16,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
+                <Gamepad2 size={20} aria-hidden="true" />
+                玩一起回家
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={NEON_IMPACT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
                 玩 Neon Impact
@@ -310,6 +315,11 @@ export default function ClassroomHome() {
           <section className="sixth-course" id="sixth-course" aria-labelledby="sixth-course-title">
             <h2 id="sixth-course-title">第 6 週課程</h2>
             <div className="sixth-game-choices">
+              <a className="unit-card card-green" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
+                <span className="unit-icon tint-green"><Gamepad2 size={28} aria-hidden="true" /></span>
+                <span className="sixth-game-copy"><span className="unit-title">一起回家・雙人跳跳</span><span className="unit-meta">10 關合作挑戰：拿鑰匙，一起進門</span></span>
+                <ArrowUpRight size={22} aria-hidden="true" />
+              </a>
               <a className="unit-card card-green" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <span className="unit-icon tint-green"><Gamepad2 size={28} aria-hidden="true" /></span>
                 <span className="sixth-game-copy"><span className="unit-title">木塊出走</span><span className="unit-meta">移開木塊，找到出口</span></span>
@@ -321,6 +331,9 @@ export default function ClassroomHome() {
                 <ArrowUpRight size={22} aria-hidden="true" />
               </a>
             </div>
+          <div className="activity-content">
+            <p className="catalog-question-context">狐狸用 A／D 移動、W 跳；兔子用 ←／→ 移動、↑ 跳。一起拿到鑰匙，再走進門。</p>
+          </div>
           <details className="featured-unit current-course">
             <summary className="featured-heading">
               <a className="featured-link" href={WOOD_EXIT_PUBLIC_URL} target="_blank" rel="noopener noreferrer">

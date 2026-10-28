@@ -1,0 +1,58 @@
+(function(root){
+'use strict';
+const C={width:1000,height:480,floor:400,w:38,h:44,speed:210,gravity:1600,jump:440};
+const levels=typeof module!=='undefined'?require('./levels.js'):root.TogetherLevels;
+const physics=(typeof module!=='undefined'?require('./physics.js'):root.TogetherPhysics)(C);
+function fresh(level=0){const l=levels[level];if(level>=2)return physics.fresh(l,level);return {level,players:l.starts.map(x=>({x,y:356,vy:0,grounded:true,support:-1,exited:false})),collected:l.keys.map(()=>false),latched:l.gates.map(()=>false),key:false,won:false};}
+const overlap=(a,b)=>a.x+C.w>b.x+2&&a.x<b.x+C.w-2;
+function pressed(s,g){return s.players.some(p=>!p.exited&&p.grounded&&Math.abs(p.y+C.h-g.button.y)<3&&p.x+C.w>g.button.x&&p.x<g.button.x+g.button.w);}
+function gateOpen(s,i){if(s.level>=2)return physics.gateOpen(s,levels[s.level],i);return s.latched[i]||pressed(s,levels[s.level].gates[i]);}
+function blockGates(p,old,l,s){
+ for(let i=0;i<l.gates.length;i++){
+  const g=l.gates[i];if(gateOpen(s,i)||p.y+C.h<=g.y||p.y>=g.y+g.h)continue;
+  if(old.x+C.w<=g.x+.1&&p.x+C.w>g.x)p.x=g.x-C.w;
+  else if(old.x>=g.x+g.w-.1&&p.x<g.x+g.w)p.x=g.x+g.w;
+ }
+}
+function step(s,inputs,dt=1/120){
+ if(s.won)return s; if(s.level>=2)return physics.step(s,inputs,levels[s.level],dt);
+ const l=levels[s.level],n={...s,players:s.players.map(p=>({...p})),collected:[...s.collected],latched:[...s.latched]},old=s.players;
+ for(let i=0;i<2;i++){
+  const p=n.players[i],input=inputs[i]||{};if(p.exited)continue;
+  if(input.jump&&p.grounded){p.vy=-C.jump;p.grounded=false;p.support=-1;}
+  p.x+=Math.max(-1,Math.min(1,input.axis||0))*C.speed*dt;
+  if(p.support>=0&&!old[p.support].exited)p.x+=(inputs[p.support]?.axis||0)*C.speed*dt;
+  p.x=Math.max(0,Math.min(C.width-C.w,p.x));
+  p.vy+=C.gravity*dt;p.y+=p.vy*dt;p.grounded=false;p.support=-1;
+  if(p.y+C.h>=C.floor){p.y=C.floor-C.h;p.vy=0;p.grounded=true;}
+  for(const f of l.platforms){
+   if(p.vy>=0&&old[i].y+C.h<=f.y+.1&&p.y+C.h>=f.y&&p.x+C.w>f.x+2&&p.x<f.x+f.w-2){p.y=f.y-C.h;p.vy=0;p.grounded=true;}
+  }
+  blockGates(p,old[i],l,s);
+ }
+ // Heads and wooden ledges are one-way platforms: jump up, land on top.
+ for(let i=0;i<2;i++){
+  const j=1-i,p=n.players[i],q=n.players[j];if(p.exited||q.exited)continue;
+  if(overlap(p,q)&&p.vy>=q.vy&&old[i].y+C.h<=old[j].y+2&&p.y+C.h>=q.y){p.y=q.y-C.h;p.vy=q.vy;p.grounded=q.grounded;p.support=j;}
+ }
+ for(let attempt=0;attempt<2;attempt++){
+  const [a,b]=n.players;
+  if(!a.exited&&!b.exited&&overlap(a,b)&&Math.min(a.y+C.h,b.y+C.h)-Math.max(a.y,b.y)>3){
+   const left=old[0].x<=old[1].x?0:1,right=1-left,gap=n.players[left].x+C.w-n.players[right].x;
+   if(gap>0){n.players[left].x-=gap/2;n.players[right].x+=gap/2;}
+  }
+  n.players.forEach((p,i)=>{blockGates(p,old[i],l,s);p.x=Math.max(0,Math.min(C.width-C.w,p.x));});
+ }
+ l.gates.forEach((g,i)=>{
+  if(gateOpen(s,i)&&n.players.some((p,j)=>!p.exited&&old[j].x<=g.x+g.w+12&&p.x>g.x+g.w+12))n.latched[i]=true;
+ });
+ for(const p of n.players){
+  if(p.exited)continue;
+  l.keys.forEach((k,i)=>{if(!n.collected[i]&&p.x<k.x+k.r&&p.x+C.w>k.x-k.r&&p.y<k.y+k.r&&p.y+C.h>k.y-k.r)n.collected[i]=true;});
+ }
+ n.key=n.collected.every(Boolean);
+ for(const p of n.players)if(!p.exited&&n.key&&p.x+C.w/2>l.door.x+14&&p.y+C.h>=C.floor-3){p.exited=true;p.support=-1;}
+ n.won=n.players.every(p=>p.exited);return n;
+}
+const api={C,levels,fresh,step,pressed,gateOpen,weighted:physics.pressed};if(typeof module!=='undefined')module.exports=api;else root.Together=api;
+})(globalThis);

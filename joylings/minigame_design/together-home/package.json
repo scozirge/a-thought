@@ -1,0 +1,1 @@
+{"name":"together-home","version":"0.4.0","private":true,"scripts":{"start":"node serve.cjs","test":"node --test tests/core.test.cjs","build":"node build.cjs"}}

@@ -1,0 +1,12 @@
+{
+  "name": "monster-snack",
+  "version": "0.1.0",
+  "private": true,
+  "description": "怪獸點心屋：第六堂課邏輯方塊 H5",
+  "scripts": {
+    "start": "node serve.cjs",
+    "test": "node --test tests/game.test.cjs",
+    "build:h5": "node scripts/build-h5.cjs",
+    "test:browser": "node tests/browser.cjs"
+  }
+}

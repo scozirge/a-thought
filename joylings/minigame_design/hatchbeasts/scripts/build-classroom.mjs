@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { cpSync, mkdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { verifyClassroom } from './verify-classroom.mjs';
+import { copyTogetherHome } from './copy-together-home.mjs';
 
 const build = spawnSync(
   process.execPath,
@@ -67,7 +68,8 @@ writeFileSync(
     '第三次課程：http://localhost:4317/classroom/weapon-logic/',
     '第四次課程（Unity）：https://scozirge.github.io/a-thought/puzzle-party/',
     '第五次課程（單機 H5）：https://scozirge.github.io/a-thought/witch-potions/',
-    '第六次課程（單機 H5）：https://scozirge.github.io/a-thought/wood-exit/',
+    '第六次課程（雙人合作・一起回家）：http://localhost:4317/together-home/',
+    '第六次課程（木塊出走）：https://scozirge.github.io/a-thought/wood-exit/',
     '第六次課程（Neon Impact 多人對戰）：https://scozirge.github.io/a-thought/neon-impact/',
     '第六次課程答案：https://scozirge.github.io/a-thought/wood-exit/?tip=true',
     '破殼怪獸：http://localhost:4317/',
@@ -79,5 +81,6 @@ writeFileSync(
   ].join('\n'),
   'utf8',
 );
+copyTogetherHome(output);
 verifyClassroom(output);
 console.log(`Local classroom H5 ready: ${output}`);
