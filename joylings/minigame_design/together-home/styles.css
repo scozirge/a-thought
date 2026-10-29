@@ -13,6 +13,7 @@ button:hover{background:#f1efdf}button:active{transform:translateY(2px)}
 button:focus-visible,select:focus-visible,#game:focus-visible{outline:3px solid #729695;outline-offset:3px}
 select{padding:8px 12px;max-width:100%;cursor:pointer}
 .navigation,.win-buttons{display:flex;align-items:center;gap:10px}
+.solution-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 18px}.solution-controls button{font-size:20px;font-weight:700}.solution-controls #solution-play{color:#fff;background:#54765d;border-color:#54765d}.solution-controls #solution-play:hover{background:#45654d}#solution-status{font-size:18px;color:var(--muted);flex:1 1 240px}.pad button:disabled{cursor:default}
 .restart{display:flex;align-items:center;justify-content:center;gap:7px}.restart .icon{width:22px;height:22px}
 .game{position:relative;overflow:hidden;border:2px solid #d8dfc9;border-radius:24px;background:#f5f7ed;box-shadow:0 5px 0 #e3e5d5}
 .game-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:14px 22px;border-bottom:1px solid #e3e7d7;background:#fffdf4}

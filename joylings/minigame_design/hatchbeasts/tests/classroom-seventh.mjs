@@ -21,7 +21,10 @@ const server=http.createServer((req,res)=>{
  for(const width of [1280,375,320]){await page.setViewportSize({width,height:1000});await seventh.scrollIntoViewIfNeeded();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await seventh.screenshot({path:path.join(out,`catalog-${width}.png`)});}
  for(const [href,tips] of [['/together-home/',false],['/together-home/?tip=true',true]]){
   const popupPromise=page.waitForEvent('popup');await seventh.locator(`a[href="${href}"]`).click();const game=await popupPromise;await game.waitForFunction(()=>typeof readGame==='function');
-  assert.equal(await game.locator('#levels option').count(),20);assert.equal(await game.locator('#answer-panel').isVisible(),tips);assert.equal(await game.locator('#message').isVisible(),tips);await game.close();
+  assert.equal(await game.locator('#levels option').count(),20);assert.equal(await game.locator('#answer-panel').isVisible(),tips);assert.equal(await game.locator('#message').isVisible(),tips);
+  assert.equal(await game.locator('#solution-controls').isVisible(),tips);
+  if(tips){await game.locator('#solution-play').click();await game.waitForFunction(()=>readGame().won);assert.match(await game.locator('#win-title').innerText(),/示範完成/);}
+  await game.close();
  }
  assert.deepEqual(errors,[]);console.log('Built lesson 7 catalog, lesson 6 preservation, desktop/mobile layout and both game links passed.');
 }finally{await browser.close();await new Promise(r=>server.close(r));}})().catch(e=>{console.error(e);server.close();process.exitCode=1;});

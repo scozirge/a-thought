@@ -367,7 +367,7 @@ export default function ClassroomHome() {
               <p className="catalog-question-context">一起過冰橋、搭電梯、往雲端前進。20 關全部完成後，貓狗一起登台慶祝！</p>
               <div className="potion-teacher-links">
                 <strong>老師教學版</strong>
-                <p>網址加 <code>?tip=true</code> 才顯示機關編號、路段提示與每關解答。<a href={assetUrl('/together-home/?tip=true')} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>
+                <p>網址加 <code>?tip=true</code> 可看提示與解答，也能按「播放解題」觀看貓狗合作通關。<a href={assetUrl('/together-home/?tip=true')} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>
                 <p>指定關卡時加 <code>&amp;tip=true</code>，例如 <code>?level=20&amp;tip=true</code>。</p>
               </div>
             </div>
