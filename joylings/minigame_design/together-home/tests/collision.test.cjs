@@ -37,8 +37,9 @@ for (const level of Campaign.levels) {
             let s = G.fresh(level.id);
             if(level.sizeSwap)s.players.forEach(p=>{p.w=38;p.h=44;});
             const x = direction > 0 ? gate.x - G.C.w - 2 : gate.x + gate.w + 2;
-            s.players[0] = { ...s.players[0], x, y: stacked ? 312 : 356, grounded: true, support: stacked ? 1 : -1 };
-            s.players[1] = { ...s.players[1], x, y: 356, grounded: true, exited: !stacked };
+            const floor=Math.min(400,gate.y+gate.h);
+            s.players[0] = { ...s.players[0], x, y: floor-(stacked?88:44), grounded: true, support: stacked ? 1 : -1 };
+            s.players[1] = { ...s.players[1], x, y: floor-44, grounded: true, exited: !stacked };
             if (gate.mode !== undefined) s.mode = 1 - gate.mode;
             // Some receiving pads touch the approach area. If an owner presses
             // one, passage is legitimate; check the collision whenever closed.
@@ -61,7 +62,7 @@ for (const level of Campaign.levels) {
     }
     test(`第${level.id + 1}關門${index + 1}：關門夾到角色或箱子，退回進入的一側`, () => {
       for (const w of [G.C.w, 48, 64]) for (const side of [-1, 1]) {
-        const previous = { x: gate.x + gate.w / 2 - w / 2, y: 320, w, h: 44, gateSides: [] };
+        const previous = { x: gate.x + gate.w / 2 - w / 2, y: Math.min(320,gate.y+gate.h-50), w, h: 44, gateSides: [] };
         previous.gateSides[index] = side;
         const body = { ...previous, x: previous.x - side * 12 };
         constrain(body, previous, level.gates, i => i !== index, {...G.C,width:level.world?.width??G.C.width});

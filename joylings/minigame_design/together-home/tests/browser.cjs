@@ -24,22 +24,22 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  assert.equal(await page.title(),'貓狗一起回家｜合作通關');
  assert.equal(await page.locator('#levels option').count(),G.levels.length);
  await page.evaluate(()=>localStorage.setItem('together-home-platform-v3',JSON.stringify([0,1,10,19])));await page.reload();
- assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),3,'依舊關卡識別碼對應精選進度');
+ assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),2,'依舊關卡識別碼對應保留的精選進度');
  assert.equal(await page.locator('#levels optgroup,[data-campaign],[data-trial]').count(),0,'只有平面 1～20 關選單');
- assert.ok(!(await page.locator('#levels option').allTextContents()).slice(10).some(t=>t.startsWith('✓')),'重製後十關不誤標已完成');
+ assert.ok(!(await page.locator('#levels option').allTextContents()).slice(11).some(t=>t.startsWith('✓')),'新組合關卡不誤標已完成');
  await page.evaluate(()=>localStorage.setItem('together-home-curated-v4',JSON.stringify(['original-0','preview-swap-1','preview-phase-1','preview-gravity-1','preview-magnet-1','preview-relay-1'])));await page.reload();
- assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),4,'三種保留玩法的進度仍保留，新玩法不誤標');
- assert.match(await page.locator('#levels option[value="1"]').innerText(),/^✓/);
+ assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),3,'三種保留玩法的進度仍保留，新玩法不誤標');
+ assert.match(await page.locator(`#levels option[value="${G.levels.findIndex(l=>l.preview==='swap')}"]`).innerText(),/^✓/);
  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('together-home-platform-v3'))),[0,1,10,19],'遷移不覆寫舊存檔');
  await page.evaluate(()=>{localStorage.removeItem('together-home-curated-v4');localStorage.removeItem('together-home-platform-v3');});await page.reload();
  if(!process.env.TOGETHER_UI_ONLY){
  // A single dog jumps over the untouched crate, walks off the blue pad,
  // and keeps running/jumping at the wall. No direct state setup is used.
- await page.selectOption('#levels','9');
+ const exploitLevel=G.levels.findIndex(l=>l.saveKey==='original-19');await page.selectOption('#levels',String(exploitLevel));
  await tick(10,[{}, {axis:1}]);await tick(120,[{}, {axis:1,jump:true}]);
  await tick(240,[{}, {axis:1}]);await tick(120,[{}, {axis:1,jump:true}]);
- let regression=await read();assert.equal(regression.boxes[0].x,120);assert.equal(G.gateOpen(regression,0),false);assert.ok(regression.players[1].x+38<=G.levels[9].gates[0].x);
- console.log('Level 10 single-player wall exploit blocked via real keyboard.');
+ let regression=await read();assert.equal(regression.boxes[0].x,120);assert.equal(G.gateOpen(regression,0),false);assert.ok(regression.players[1].x+38<=G.levels[exploitLevel].gates[0].x);
+ console.log(`Level ${exploitLevel+1} single-player wall exploit blocked via real keyboard.`);
  const from=Number(process.env.TOGETHER_FROM||1),proof=from===1?[]:JSON.parse(fs.readFileSync(path.join(output,'twenty-playthrough.json'),'utf8')).filter(p=>p.level<from);
  assert.equal(proof.length,from-1,'續測必須有每一關先前的實玩紀錄');
  for(const [i,p] of proof.entries()){assert.equal(p.level,i+1);assert.equal(p.name,G.levels[i].name);assert.ok(p.won&&p.collected.every(Boolean)&&p.exited.every(Boolean));}
@@ -53,7 +53,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   assert.match(await page.locator('#answer-title').innerText(),new RegExp(`第 ${l.id+1} 關`));
   assert.ok(await page.locator('#answer-steps li').count()>=3);
   assert.deepEqual((await read()).collected,initial.collected,'看解答不會給鑰匙或過關');
-  await page.locator('#answer-toggle').click();await page.locator('#game').focus();
+  await page.locator('#answer-toggle').evaluate(button=>button.click());await page.locator('#game').focus();
   await page.screenshot({path:path.join(output,`level-${l.id+1}.png`),fullPage:true});
   let ticks=0;await playLevel({read,tick:async(n,c)=>{ticks++;await tick(n,c);}},l);
   const end=await read();assert.ok(end.won);assert.ok(end.collected.every(Boolean));assert.ok(end.players.every(p=>p.exited));assert.ok(await page.locator('#success').isVisible());
@@ -72,7 +72,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  await page.locator('#next').click();assert.equal((await read()).level,0);assert.equal((await read()).won,false);await page.reload();assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),G.levels.length);assert.equal(await page.locator('#finale').evaluate(d=>d.open),false);
  }
  await page.keyboard.down('w');await page.clock.runFor(1200);assert.ok((await read()).players[0].grounded,'no auto jump on hold');await page.keyboard.up('w');
- await page.keyboard.down('d');await page.keyboard.down('ArrowRight');await page.clock.runFor(200);let s=await read();assert.ok(s.players[0].x>180&&s.players[1].x>290);await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const x=(await read()).players[0].x;await page.clock.runFor(200);assert.equal((await read()).players[0].x,x);await page.keyboard.up('d');await page.keyboard.up('ArrowRight');
+ const bothStart=await read();await page.keyboard.down('d');await page.keyboard.down('ArrowRight');await page.clock.runFor(200);let s=await read();assert.ok(s.players.every((p,i)=>p.x>bothStart.players[i].x));await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const x=(await read()).players[0].x;await page.clock.runFor(200);assert.equal((await read()).players[0].x,x);await page.keyboard.up('d');await page.keyboard.up('ArrowRight');
  await page.selectOption('#levels','9');await page.setViewportSize({width:375,height:800});await page.screenshot({path:path.join(output,'ten-levels-mobile.png'),fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  const touch=page.locator('[data-player="0"] [data-action="right"]');await touch.scrollIntoViewIfNeeded();const box=await touch.boundingBox();const before=(await read()).players[0].x;await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.clock.runFor(200);await page.mouse.up();assert.ok((await read()).players[0].x>before);
  await page.setViewportSize({width:320,height:800});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));

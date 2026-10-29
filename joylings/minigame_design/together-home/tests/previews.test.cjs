@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),G=require('../core.js');
+const {test}=require('node:test'),assert=require('node:assert/strict'),G=require('./previous-fixture.cjs');
 function run(s,n,a={},b={}){for(let i=0;i<n;i++)s=G.step(s,[a,b].map(c=>({...c,jump:i===0&&c.jump,special:i===0&&c.special,ability:i===0&&c.ability})));return s;}
 test('已確認玩法保留存檔與地圖，其餘淘汰玩法不回來',()=>{
  assert.equal(G.levels[1].saveKey,'preview-swap-1');assert.equal(G.levels[2].saveKey,'preview-phase-1');assert.equal(G.levels[3].saveKey,'preview-gravity-1');assert.equal(G.levels[3].group,'main');

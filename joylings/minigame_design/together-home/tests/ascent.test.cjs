@@ -3,7 +3,7 @@ const id=G.levels.findIndex(l=>l.preview==='ascent'),l=G.levels[id];
 function run(s,n,a={},b={}){for(let i=0;i<n;i++)s=G.step(s,[a,b].map(c=>({...c,jump:i===0&&c.jump})));return s;}
 function stand(s,i,x,floor){Object.assign(s.players[i],{x,y:floor-44,grounded:true,vy:0,vx:0,support:-1});}
 test('二十關不含球與泡泡，保留認可的雲端路線與存檔',()=>{
- assert.equal(G.levels.length,20);assert.equal(G.levels.filter(l=>l.world).length,10);
+ assert.equal(G.levels.length,20);assert.equal(G.levels.filter(l=>l.world).length,11);
  assert.ok(G.levels.every(l=>!l.ballGoals&&!l.targets&&!l.jumpBubbles));
  assert.equal(G.levels.find(l=>l.preview==='balance').saveKey,'trial-balance-1');
  assert.equal(l.world.width,3300);assert.equal(l.door.y+l.door.h,-600);assert.ok(l.jumpSwap&&l.phaseOnJump&&l.balances.length&&l.lifts.length&&l.movers.length&&l.iceZones.length);

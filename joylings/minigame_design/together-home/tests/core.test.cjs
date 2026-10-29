@@ -8,12 +8,13 @@ for(const l of Campaign.levels)test(`第${l.id+1}關 ${l.name} 可合作通關`,
  }},l);
  assert.ok(s.won);assert.ok(s.collected.every(Boolean));assert.ok(s.collectedBy.every(actor=>actor===0||actor===1));
 });
-test('20 關共用單一選單，後十關延長地圖並使用新的完成紀錄',()=>{
+test('重新排列 20 關：保留 15 關、兩種新玩法與三個組合關，後五關逐步擴大',()=>{
  assert.equal(Campaign.levels.length,20);assert.ok(Campaign.levels.every(l=>l.group==='main'&&!l.chapter));
- assert.deepEqual(Campaign.levels.slice(1,7).map(l=>l.preview),['swap','phase','gravity','bridge','balance','ice']);
- assert.equal(Campaign.levels.filter(l=>l.ice).length,7);assert.equal(Campaign.levels.filter(l=>l.fallY).length,12);
- assert.ok(Campaign.levels.slice(10).every(l=>l.coop&&l.world));
- assert.ok(Campaign.levels.slice(10,18).every(l=>l.saveKey.startsWith('campaign-')));
+ assert.deepEqual(Campaign.levels.slice(0,6).map(l=>l.preview),['swap','bridge','phase','balance','gravity','ice']);
+ assert.equal(Campaign.levels.filter(l=>l.puzzle).length,5);
+ assert.equal(Campaign.levels.filter(l=>Campaign.levels.previous.some(p=>p.saveKey===l.saveKey)).length,15);
+ assert.deepEqual(Campaign.levels.slice(15).map(l=>l.world.width),[2440,3120,3300,4200,4840]);
+ assert.ok(!Campaign.levels.some(l=>l.echoPads));
  assert.ok(Campaign.levels.every(l=>!l.timeFreeze));assert.ok(!('freezer' in Campaign.fresh(4)));
  assert.equal(new Set(Campaign.levels.map(l=>l.saveKey)).size,20);
 });

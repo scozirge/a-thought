@@ -4,7 +4,14 @@
   "private": true,
   "scripts": {
     "start": "node serve.cjs",
-    "test": "node --test tests/core.test.cjs tests/collision.test.cjs tests/previews.test.cjs tests/mixed.test.cjs tests/trials.test.cjs tests/ascent.test.cjs tests/solutions.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/collision.test.cjs tests/previews.test.cjs tests/mixed.test.cjs tests/trials.test.cjs tests/ascent.test.cjs tests/solutions.test.cjs tests/lab.test.cjs tests/campaign.test.cjs tests/visuals.test.cjs",
+    "test:campaign:browser": "node tests/campaign-browser.cjs",
+    "test:visual:browser": "node tests/visual-browser.cjs",
+    "start:lab": "node serve.cjs 18129",
+    "test:lab": "node --test tests/lab.test.cjs",
+    "test:lab:browser": "node tests/lab-browser.cjs",
+    "record:lab": "node scripts/record-lab.cjs",
+    "check:lab": "node scripts/record-lab.cjs --check",
     "record:solutions": "node scripts/record-solutions.cjs",
     "check:solutions": "node scripts/record-solutions.cjs --check",
     "build": "node build.cjs"

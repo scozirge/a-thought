@@ -1,6 +1,7 @@
 'use strict';
 const G = Together, canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
 const select = document.getElementById('levels'), names = ['貓咪', '狗狗'];
+const isLab = !!window.TogetherLab;
 const query = new URLSearchParams(location.search), showTips = query.get('tip') === 'true';
 const ui = Object.fromEntries(['success', 'failure', 'fail-title', 'retry', 'message', 'key-progress', 'key-count', 'key-slots', 'mode-status', 'mechanic-status', 'home-count', 'win-title', 'next', 'answer-toggle', 'answer-panel', 'answer-label', 'answer-title', 'answer-steps', 'announcement'].map(id => [id, document.getElementById(id)]));
 const playerStatuses = names.map((_, i) => document.getElementById(`player-status-${i}`));
@@ -10,13 +11,13 @@ let demonstration = null;
 const demoControls = document.getElementById('solution-controls'), demoPlay = document.getElementById('solution-play'), demoStop = document.getElementById('solution-stop'), demoStatus = document.getElementById('solution-status');
 const finale = document.getElementById('finale'), finaleCanvas = document.getElementById('finale-art');
 const allComplete = () => G.levels.every(l => completed.includes(l.saveKey));
-const progressKey = 'together-home-curated-v4';
+const progressKey = isLab ? 'together-home-local-puzzles-v1' : 'together-home-curated-v4';
 try {
   const saved = localStorage.getItem(progressKey);
   if (saved !== null) {
     const parsed = JSON.parse(saved);
     if (Array.isArray(parsed)) completed = [...new Set(parsed.filter(key => G.levels.some(l => l.saveKey === key)))];
-  } else {
+  } else if (!isLab) {
     const old = JSON.parse(localStorage.getItem('together-home-platform-v3') || '[]');
     if (Array.isArray(old)) completed = G.levels.filter(l => l.legacyId !== undefined && old.includes(l.legacyId)).map(l => l.saveKey);
   }
@@ -39,7 +40,7 @@ function reset(level = state.level) {
   if(finale.open)finale.close();
   state = G.fresh(level); clearInput(); accumulator = 0; last = 0; effects = []; hudSignature = '';
   ui.success.hidden = true; ui.failure.hidden = true; ui.announcement.textContent = ''; options(); toggleAnswer(showTips);
-  document.querySelector('.answer-section').hidden = !showTips; ui.message.hidden = !showTips;
+  document.querySelector('.answer-section').hidden = !showTips; ui.message.hidden = !showTips && !isLab && !G.levels[level].puzzle;
   const l = G.levels[level]; ui['answer-title'].textContent = `${levelLabel(l)} · ${l.name}`;
   ui['answer-steps'].replaceChildren(...(showTips ? l.solution : []).map(step => { const li = document.createElement('li'); li.textContent = step; return li; }));
   ui['key-slots'].innerHTML = l.keys.map((_, i) => `<span class="key-slot" data-key="${i}">${keyIcon}</span>`).join('');
@@ -152,8 +153,8 @@ function updateHud() {
     element.classList.toggle('has-key', n > 0); element.classList.toggle('arrived', arrived);
   });
   const gatesLeft = l.legacy && state.latched.some(v => !v);
-  ui.message.textContent = showTips ? ((l.preview || l.mix) && !state.won ? l.hint : state.key ? (gatesLeft ? '踩住按鈕，讓朋友先過門。' : '鑰匙齊了，一起到小屋！') : l.hint) : '';
-  ui.failure.hidden = !state.failed; ui['fail-title'].textContent = state.failed ? `${names[state.fallen]}掉出去了！` : '';
+  ui.message.textContent = (isLab || l.puzzle) ? l.hint : showTips ? ((l.preview || l.mix) && !state.won ? l.hint : state.key ? (gatesLeft ? '踩住按鈕，讓朋友先過門。' : '鑰匙齊了，一起到小屋！') : l.hint) : '';
+  ui.failure.hidden = !state.failed; ui['fail-title'].textContent = state.failed ? state.lostCargo ? '箱子掉下去了！' : `${names[state.fallen]}掉出去了！` : '';
   ui.success.hidden = !state.won; ui['win-title'].textContent = demonstration && state.won ? `${levelLabel(l)}示範完成！` : completed.length === mainCount ? `${mainCount} 關全部完成！` : `${levelLabel(l)}完成，一起回家了！`;
   ui.next.textContent = state.level === mainCount - 1 ? '回第一關' : '下一關 →';
   canvas.setAttribute('aria-label', `${levelLabel(l)} ${l.name}。已拿 ${count} 把鑰匙，共 ${l.keys.length} 把；${home} 人到家。`);
@@ -161,7 +162,7 @@ function updateHud() {
 function draw(time) {
   TogetherArt.scene(ctx, canvas, state, G, effects, time, showTips); updateHud();
   originalControls.forEach(({ b }) => { const i = +b.closest('[data-player]').dataset.player, code = TogetherInput.codes.find(code => mapping[code][0] === i && mapping[code][1] === b.dataset.action); b.classList.toggle('pressed', keyboard.isDown(code) || touch[i].has(b.dataset.action) || (keyLights.get(code) || 0) > time); });
-  if(finale.open)TogetherArt.finale(finaleCanvas,matchMedia('(prefers-reduced-motion: reduce)').matches?4:(time-finaleStarted)/1000);
+  if(finale.open)TogetherArt.finale(finaleCanvas,matchMedia('(prefers-reduced-motion: reduce)').matches?4:(time-finaleStarted)/1000,mainCount);
 }
 function frame(time) {
   if (!last) last = time; accumulator += Math.min((time - last) / 1000, .05); last = time;
@@ -169,7 +170,7 @@ function frame(time) {
     if (demonstration && (demonstration.status !== 'playing' || !nextDemoInput())) { accumulator = 0; break; }
     for (const code of TogetherInput.codes) if (keyboard.isDown(code)) keyLights.set(code, time + 90);
     const before = state; state = G.step(state, inputs()); keyboard.consume(); accumulator -= 1 / 120;
-    if (!before.failed && state.failed) { clearInput(); if(demonstration){demonstration.status='error';updateDemo('示範中斷，請重新播放。');} ui.announcement.textContent = `${names[state.fallen]}掉出去了，按重試本關再挑戰。`; }
+    if (!before.failed && state.failed) { clearInput(); if(demonstration){demonstration.status='error';updateDemo('示範中斷，請重新播放。');} ui.announcement.textContent = `${state.lostCargo?'箱子':names[state.fallen]}掉下去了，按重試本關再挑戰。`; }
     const pickups = [];
     state.collected.forEach((collected, i) => {
       if (collected && !before.collected[i]) { effects.push({ key: i, time }); pickups.push(`${names[state.collectedBy[i]]}拿到第 ${i + 1} 把鑰匙！`); }
@@ -183,7 +184,7 @@ function frame(time) {
       if (!completed.includes(key)) { completed.push(key); try { localStorage.setItem(progressKey, JSON.stringify(completed)); } catch {} options(); }
       if(!previouslyComplete&&allComplete()){
         finaleStarted=time;clearInput();finale.showModal();document.getElementById('finale-close').focus();
-        ui.announcement.textContent='20 關全部完成！你們是最佳拍檔！';
+        ui.announcement.textContent=`${mainCount} 關全部完成！你們是最佳拍檔！`;
       }
     }
   }

@@ -8,6 +8,10 @@ const G = require('../core.js'), Input = require('../input.js'), solutions = req
     page.on('pageerror', e => errors.push(e.message));
     const base = process.env.TOGETHER_URL || 'http://127.0.0.1:18128/', progressKey = 'together-home-curated-v4';
     const output = path.join(__dirname, '../test-output'); fs.mkdirSync(output, { recursive: true });
+    const progress=path.join(output,'replay-progress.txt');fs.writeFileSync(progress,'');
+    const log=message=>{console.log(message);fs.appendFileSync(progress,message+'\n');};
+    // Avoid waiting on CSS transitions while Playwright's clock is paused.
+    await page.emulateMedia({reducedMotion:'reduce'});
     await page.clock.install({ time: new Date('2026-10-29T00:00:00Z') });
     await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
     // Observe every ordinary physics input; do not replace results or game state.
@@ -19,13 +23,14 @@ const G = require('../core.js'), Input = require('../input.js'), solutions = req
       } });
     });
     const read = () => page.evaluate(() => readGame());
-    await page.goto(base); assert.equal(await page.locator('#solution-controls').isVisible(), false);
+    await page.goto(base); log('已載入一般版');assert.equal(await page.locator('#solution-controls').isVisible(), false);
     await page.evaluate(() => document.getElementById('solution-play').click());
     await page.clock.runFor(200); assert.equal((await read()).players[0].x, G.fresh().players[0].x);
-    const teacher = new URL(base); teacher.searchParams.set('tip', 'true'); await page.goto(teacher.href);
+    const teacher = new URL(base); teacher.searchParams.set('tip', 'true'); await page.goto(teacher.href);log('已載入老師版');
     await page.evaluate(([key, value]) => localStorage.setItem(key, value), [progressKey, JSON.stringify([G.levels[0].saveKey])]);
     const originalSave = await page.evaluate(key => localStorage.getItem(key), progressKey);
     for (const l of G.levels) {
+      log(`驗證第 ${l.id + 1} 關播放：${l.name}`);
       await page.selectOption('#levels', String(l.id));
       await page.locator('#solution-play').click();
       await page.evaluate(() => { window.observedInputs = []; });
@@ -42,7 +47,10 @@ const G = require('../core.js'), Input = require('../input.js'), solutions = req
       if (l.id === 0) {
         await page.clock.runFor(200); assert.ok(await page.locator('.pressed').count() > 0);
         // Folding written tips must not release replay inputs.
-        await page.locator('#answer-toggle').click(); await page.locator('#answer-toggle').click();
+        // Fold the off-screen answer without waiting for a smooth scroll while
+        // the virtual clock is paused. This still invokes the real UI handler.
+        await page.locator('#answer-toggle').evaluate(button => button.click());
+        await page.locator('#answer-toggle').evaluate(button => button.click());
       }
       await page.clock.runFor(Math.ceil(tape.frames * 1000 / 120) + 200);
       const state = await read(), observed = await page.evaluate(() => window.observedInputs);
@@ -61,7 +69,7 @@ const G = require('../core.js'), Input = require('../input.js'), solutions = req
       assert.equal(await page.locator('.pressed').count(), 0);
       proof.push({ level: l.id + 1, frames: observed.length, seconds: tape.frames / 120, won: state.won, collected: state.collected, exited: state.players.map(p => p.exited) });
       await page.screenshot({ path: path.join(output, `solution-win-${l.id + 1}.png`) });
-      console.log(`第 ${l.id + 1} 關：播放按鈕通關，${observed.length} 步全部符合一般按鍵物理結果`);
+      log(`第 ${l.id + 1} 關：播放按鈕通關，${observed.length} 步全部符合一般按鍵物理結果`);
     }
     // Replay from victory; stop/reset/switch never leave stuck inputs or write saves.
     await page.locator('#solution-play').click(); await page.clock.runFor(400);

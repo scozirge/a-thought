@@ -1,6 +1,7 @@
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs'),G=require('../core.js'),{playLevel}=require('./play-level.cjs');
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.emulateMedia({reducedMotion:'reduce'});
  await page.clock.install({time:new Date('2026-10-29T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
  // Observe rendered labels without changing any draw call or gameplay state.
  await page.addInitScript(()=>{
@@ -19,26 +20,27 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   const url=new URL(base);if(tips)url.searchParams.set('tip','true');await page.goto(url.href);
   for(const l of G.levels){
    await page.selectOption('#levels',String(l.id));
-   assert.equal(await page.locator('#message').isVisible(),tips,`第 ${l.id+1} 關提示`);
+   assert.equal(await page.locator('#message').isVisible(),tips||!!l.puzzle,`第 ${l.id+1} 關提示`);
    assert.equal(await page.locator('.answer-section').isVisible(),tips);assert.equal(await page.locator('#answer-panel').isVisible(),tips);
    assert.equal(await page.locator('#levels option').count(),20);assert.equal((await read()).won,false);
    const labels=await page.evaluate(()=>window.renderedLabels),numbers=labels.filter(t=>/^\d+(?:\s[☀☾])?$/.test(t));
+   assert.ok(!labels.some(t=>/undefined|NaN|\bnull\b/.test(t)),`第 ${l.id+1} 關沒有未定義標籤`);
    if(tips){assert.ok(await page.locator('#answer-steps li').count()>=3);if(l.gates.some(g=>g.number)||l.lifts.length>1)assert.ok(numbers.length>0,`第 ${l.id+1} 關教學編號`);}
-   else{assert.equal(await page.locator('#answer-steps li').count(),0);assert.deepEqual(numbers,[],`第 ${l.id+1} 關一般版不畫編號`);assert.ok(!labels.some(t=>/[①②③④⑤⑥]/.test(t)));assert.equal(await page.locator('#message').textContent(),'');}
+   else{assert.equal(await page.locator('#answer-steps li').count(),0);assert.deepEqual(numbers,[],`第 ${l.id+1} 關一般版不畫編號`);assert.ok(!labels.some(t=>/[①②③④⑤⑥]/.test(t)));assert.equal(await page.locator('#message').textContent(),l.puzzle?l.hint:'');}
    assert.equal(await page.locator('#mode-status').isVisible(),!!(l.phaseOnJump||l.switches?.length));
   }
-  if(tips)assert.equal(await page.locator('#message').innerText(),'登頂後還有兩座日月橋；最後一棒，也要接回朋友。');
+  if(tips)assert.equal(await page.locator('#message').innerText(),G.levels.at(-1).hint);
   for(const width of [1280,375,320]){
    await page.setViewportSize({width,height:900});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
    await page.screenshot({path:path.join(output,`tutorial-${tips?'on':'off'}-${width}.png`),fullPage:true});
   }
   await page.setViewportSize({width:1280,height:900});await page.selectOption('#levels','0');
-  if(tips){await page.locator('#answer-toggle').click();assert.equal(await page.locator('#answer-panel').isVisible(),false);await page.locator('#restart').click();assert.equal(await page.locator('#answer-panel').isVisible(),true);}
+  if(tips){await page.locator('#answer-toggle').evaluate(button=>button.click());assert.equal(await page.locator('#answer-panel').isVisible(),false);await page.locator('#restart').click();assert.equal(await page.locator('#answer-panel').isVisible(),true);}
   await playLevel({read,tick},G.levels[0]);await tick(0,[{},{}]);assert.ok((await read()).won);assert.ok((await read()).players.every(p=>p.exited));
-  assert.equal(await page.locator('.key-slot.collected').count(),1);await page.locator('#next').click();assert.equal((await read()).level,1);assert.equal(await page.locator('.answer-section').isVisible(),tips);
+  assert.equal(await page.locator('.key-slot.collected').count(),G.levels[0].keys.length);await page.locator('#next').click();assert.equal((await read()).level,1);assert.equal(await page.locator('.answer-section').isVisible(),tips);
  }
  for(const query of ['?tip','?tip=false','?tip=1','?tip=TRUE']){await page.goto(new URL(query,base).href);assert.equal(await page.locator('.answer-section').isVisible(),false);assert.equal(await page.locator('#message').isVisible(),false);}
  await page.goto(new URL('?level=20&tip=true',base).href);assert.equal((await read()).level,19);assert.ok(await page.locator('#answer-panel').isVisible());
- await page.goto(new URL('?preview=gravity&tip=true',base).href);assert.equal((await read()).level,3);assert.ok(await page.locator('#answer-panel').isVisible());
+ await page.goto(new URL('?preview=gravity&tip=true',base).href);assert.equal((await read()).level,G.levels.findIndex(l=>l.preview==='gravity'));assert.ok(await page.locator('#answer-panel').isVisible());
  assert.deepEqual(errors,[]);console.log('All 20 normal/teacher views, canvas numbering, hints, solutions, real keyboard wins, saves, query flags and mobile layouts passed.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

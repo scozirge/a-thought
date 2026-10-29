@@ -1,9 +1,10 @@
 (function(root){
 'use strict';
+function create(levels, hooks){
+hooks??=(typeof module!=='undefined'?require('./puzzle-rules.js'):root.TogetherPuzzleRules)(levels);
 const C={width:1000,height:480,floor:400,w:38,h:44,speed:210,gravity:1600,jump:440};
-const levels=typeof module!=='undefined'?require('./levels.js'):root.TogetherLevels;
 const constrainGates=typeof module!=='undefined'?require('./collision.js'):root.TogetherCollision;
-const physics=(typeof module!=='undefined'?require('./physics.js'):root.TogetherPhysics)(C);
+const physics=(typeof module!=='undefined'?require('./physics.js'):root.TogetherPhysics)(C,hooks);
 function fresh(level=0){const l=levels[level];if(!l.legacy)return physics.fresh(l,level);return {level,players:l.starts.map(x=>({x,y:356,vy:0,grounded:true,support:-1,exited:false})),collected:l.keys.map(()=>false),collectedBy:l.keys.map(()=>null),latched:l.gates.map(()=>false),key:false,won:false};}
 const overlap=(a,b)=>a.x+C.w>b.x+2&&a.x<b.x+C.w-2;
 function pressed(s,g){return s.players.some(p=>!p.exited&&p.grounded&&Math.abs(p.y+C.h-g.button.y)<3&&p.x+C.w>g.button.x&&p.x<g.button.x+g.button.w);}
@@ -62,9 +63,12 @@ function camera(s){
  const l=levels[s.level];if(!l.world)return {x:0,y:l.cameraTop??140,w:1000,h:480-(l.cameraTop??140),scale:1};
  const actors=s.players.filter(p=>!p.exited),points=actors.length?actors:s.players;
  const left=Math.min(...points.map(p=>p.x)),right=Math.max(...points.map(p=>p.x+(p.w??38))),top=Math.min(...points.map(p=>p.y)),bottom=Math.max(...points.map(p=>p.y+(p.h??44)));
- const scale=Math.max(.65,Math.min(1,1000/(right-left+360),560/(bottom-top+220))),w=1000/scale,h=560/scale;
+ const viewportHeight=l.viewHeight??560,scale=Math.max(.65,Math.min(1,1000/(right-left+360),viewportHeight/(bottom-top+220))),w=1000/scale,h=viewportHeight/scale;
  const clamp=(v,min,max)=>Math.max(min,Math.min(Math.max(min,max),v));
  return {x:clamp((left+right)/2-w/2+90,l.world.left??0,l.world.width-w),y:clamp((top+bottom)/2-h/2-30,l.world.top,l.world.bottom-h),w,h,scale};
 }
-const api={C,levels,fresh,step,camera,pressed,gateOpen,weighted:physics.pressed,platformActive:physics.platformActive,canHelp:physics.canHelp,isIce:physics.isIce};if(typeof module!=='undefined')module.exports=api;else root.Together=api;
+const api={C,levels,fresh,step,camera,pressed,gateOpen,weighted:physics.pressed,platformActive:physics.platformActive,canHelp:physics.canHelp,isIce:physics.isIce};return api;
+}
+const api=create(typeof module!=='undefined'?require('./levels.js'):root.TogetherLevels);api.create=create;
+if(typeof module!=='undefined')module.exports=api;else root.Together=api;
 })(globalThis);

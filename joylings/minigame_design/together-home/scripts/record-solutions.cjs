@@ -26,7 +26,7 @@ async function record() {
     '(function(root){\nconst data=' + JSON.stringify(data, null, 0) + ';\n' +
     "if(typeof module!=='undefined')module.exports=data;else root.TogetherSolutions=data;\n})(globalThis);\n";
   const target = path.join(__dirname, '../solutions.js');
-  if (process.argv.includes('--check')) assert.equal(fs.readFileSync(target, 'utf8'), output, '關卡或解法變更後，請執行 npm run record:solutions');
+  if (process.argv.includes('--check')) assert.equal(fs.readFileSync(target, 'utf8').replace(/\r\n/g, '\n'), output, '關卡或解法變更後，請執行 npm run record:solutions');
   else fs.writeFileSync(target, output);
 }
 record().catch(error => { console.error(error); process.exitCode = 1; });

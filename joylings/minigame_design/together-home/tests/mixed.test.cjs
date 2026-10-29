@@ -1,4 +1,4 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),G=require('../core.js');
+const {test}=require('node:test'),assert=require('node:assert/strict'),G=require('./previous-fixture.cjs');
 const id=name=>G.levels.findIndex(l=>l.mix===name);
 function run(s,n,a={},b={}){for(let i=0;i<n;i++)s=G.step(s,[a,b].map(c=>({...c,jump:i===0&&c.jump,special:i===0&&c.special})));return s;}
 function stand(s,i,x,y=400){Object.assign(s.players[i],{x,y:y-s.players[i].h,vy:0,vx:0,grounded:true,support:-1});}

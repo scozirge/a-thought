@@ -1,23 +1,24 @@
 (function(root){
-function create(C){
+function create(C,hooks={}){
 const constrainGates=typeof module!=='undefined'?require('./collision.js'):root.TogetherCollision;
 const mechanics=(typeof module!=='undefined'?require('./mechanics.js'):root.TogetherMechanics)(C);
 const width=o=>o.w??C.w,height=o=>o.h??C.h;
 const hit=(a,b)=>a.x+width(a)>b.x+1&&a.x<b.x+width(b)-1&&a.y+height(a)>b.y+1&&a.y<b.y+height(b)-1;
 function weighted(s,b){
+ const custom=hooks.weighted?.(s,b);if(custom!==undefined)return custom;
  const bodies=b.owner===undefined?[...s.players.filter(p=>!p.exited),...s.boxes]:s.players.filter((p,i)=>i===b.owner&&!p.exited);
  return bodies.some(p=>p.grounded&&Math.abs((b.ceiling?p.y:p.y+height(p))-b.y)<4&&p.x+width(p)>b.x+3&&p.x<b.x+b.w-3);
 }
 function active(s,f){return (f.mode===undefined||f.mode===s.mode)&&(!f.pads||f.pads.some(b=>weighted(s,b)));}
-function open(s,l,i){const g=l.gates[i];return (!g.keyIndices||g.keyIndices.every(k=>s.collected[k]))&&active(s,g)&&(!g.buttons||g.buttons.every(b=>weighted(s,b)));}
-function fresh(l,level){return {...mechanics.fresh(l),level,players:l.starts.map((x,i)=>({x,y:(l.startFloors?.[i]??400)-C.h,w:C.w,h:C.h,vy:0,grounded:true,support:-1,onBox:-1,exited:false})),boxes:(l.boxes||[]).map(b=>({...b,y:b.y??400-b.h,vy:0,grounded:true})),lifts:(l.lifts||[]).map(f=>f.bottom),switches:(l.switches||[]).map(()=>false),mode:l.mode??0,collected:l.keys.map(()=>false),collectedBy:l.keys.map(()=>null),latched:l.gates.map(()=>false),flash:0,key:false,won:false,failed:false,fallen:null};}
-function surfaces(s,l,actor){return [...l.platforms.filter(p=>active(s,p)&&(p.owner===undefined||p.owner===actor)),...(l.lifts||[]).map((f,i)=>({...f,y:s.lifts[i],h:12})),...mechanics.moving(s,l).filter(p=>active(s,p)),...mechanics.balanced(s,l)];}
+function open(s,l,i){const custom=hooks.openGate?.(s,l,i);if(custom!==undefined)return custom;const g=l.gates[i];return (!g.keyIndices||g.keyIndices.every(k=>s.collected[k]))&&active(s,g)&&(!g.buttons||g.buttons.every(b=>weighted(s,b)));}
+function fresh(l,level){return {...mechanics.fresh(l),...hooks.fresh?.(l),level,players:l.starts.map((x,i)=>({x,y:(l.startFloors?.[i]??400)-C.h,w:C.w,h:C.h,vy:0,grounded:true,support:-1,onBox:-1,exited:false})),boxes:(l.boxes||[]).map(b=>({...b,y:b.y??400-b.h,vy:0,grounded:true})),lifts:(l.lifts||[]).map(f=>f.bottom),switches:(l.switches||[]).map(()=>false),mode:l.mode??0,collected:l.keys.map(()=>false),collectedBy:l.keys.map(()=>null),latched:l.gates.map(()=>false),flash:0,key:false,won:false,failed:false,fallen:null};}
+function surfaces(s,l,actor){return [...l.platforms.filter(p=>active(s,p)&&(p.owner===undefined||p.owner===actor)),...(l.lifts||[]).map((f,i)=>({...f,y:s.lifts[i],h:12})),...mechanics.moving(s,l).filter(p=>active(s,p)),...mechanics.balanced(s,l),...(hooks.platforms?.(s,l)||[])];}
 function block(o,prev,s,l){constrainGates(o,prev,l.gates,i=>open(s,l,i),l.world?{...C,width:l.world.width}:C);}
 function vertical(o,prev,s,n,l,dt,actor){
  if(l.gravityFlip&&n.gravity[actor]===-1){mechanics.inverted(o,prev,n,l,dt,surfaces(n,l,actor));return;}
  let carried=false;
- const oldMovers=mechanics.moving(s,l),newMovers=mechanics.moving(n,l);
- oldMovers.forEach((f,i)=>{if(active(s,f)&&active(n,f)&&Math.abs(prev.y+height(prev)-f.y)<2&&prev.x+width(prev)>f.x+2&&prev.x<f.x+f.w-2&&o.vy>=0){o.y+=newMovers[i].y-f.y;carried=true;}});
+ const oldMovers=[...mechanics.moving(s,l),...(hooks.platforms?.(s,l)||[])],newMovers=[...mechanics.moving(n,l),...(hooks.platforms?.(n,l)||[])];
+ oldMovers.forEach((f,i)=>{if(active(s,f)&&active(n,f)&&Math.abs(prev.y+height(prev)-f.y)<2&&prev.x+width(prev)>f.x+2&&prev.x<f.x+f.w-2&&o.vy>=0){o.y+=newMovers[i].y-f.y;o.x+=newMovers[i].x-f.x;carried=true;}});
  const oldBalances=mechanics.balanced(s,l),newBalances=mechanics.balanced(n,l);
  oldBalances.forEach((f,i)=>{if(Math.abs(prev.y+height(prev)-f.y)<2&&prev.x+width(prev)>f.x+2&&prev.x<f.x+f.w-2&&o.vy>=0){o.y+=newBalances[i].y-f.y;carried=true;}});
  (l.lifts||[]).forEach((f,i)=>{if(Math.abs(prev.y+height(o)-s.lifts[i])<2&&prev.x+width(o)>f.x+2&&prev.x<f.x+f.w-2&&o.vy>=0){o.y+=n.lifts[i]-s.lifts[i];carried=true;}});
@@ -30,6 +31,8 @@ function step(s,input,l,dt){
  const n={...s,players:s.players.map(p=>({...p})),boxes:s.boxes.map(b=>({...b})),lifts:[...s.lifts],switches:[...s.switches],collected:[...s.collected],collectedBy:[...s.collectedBy],latched:[...s.latched],flash:Math.max(0,s.flash-dt)};
  if(l.jumpSwap)input=input.map((a,i)=>({...a,jump:mechanics.canHelp(s,l)&&!!input[1-i]?.jump}));
  input=mechanics.begin(s,n,input,l,dt);
+ hooks.begin?.(s,n,input,l,dt);
+ const linkedDirections=hooks.boxDirections?.(s,input,l,dt,C,{open,hit});
  if(l.phaseOnJump&&input.some((a,i)=>a?.jump&&s.players[i].grounded&&!s.players[i].exited)){n.mode=1-s.mode;n.flash=.3;}
  (l.lifts||[]).forEach((f,i)=>{const target=f.buttons.some(b=>weighted(s,b))?f.top:f.bottom;n.lifts[i]+=Math.sign(target-s.lifts[i])*Math.min(Math.abs(target-s.lifts[i]),(f.speed||90)*dt);});
  n.boxes.forEach((b,i)=>{
@@ -41,6 +44,7 @@ function step(s,input,l,dt){
    const together=!q.exited&&q.grounded&&!input[j]?.jump&&(input[j]?.axis||0)===axis&&Math.abs(q.y+height(q)-(prev.y+prev.h))<4&&gap>=-2&&gap<=3;
    if(!b.heavy||together)dir=axis;
   }
+  dir=linkedDirections?.[i]??dir;
   b.x+=dir*C.speed*dt;
   for(let j=0;j<n.boxes.length;j++)if(j!==i&&hit(b,n.boxes[j]))b.x=prev.x;
   for(const p of s.players)if(!p.exited&&hit(b,p)&&(((dir||b.vx)>0&&p.x>=prev.x+prev.w-2)||((dir||b.vx)<0&&p.x+width(p)<=prev.x+2))){b.x=prev.x;}
@@ -71,10 +75,12 @@ function step(s,input,l,dt){
   for(let i=0;i<2;i++){const p=n.players[i],q=n.players[1-i];if(Math.abs(p.x-q.x)>l.tether&&Math.abs(p.x-q.x)>Math.abs(s.players[i].x-q.x))p.x=s.players[i].x;}
  }
  (l.switches||[]).forEach((b,i)=>{const down=weighted(n,b);if(down&&!s.switches[i])n.mode=1-n.mode;n.switches[i]=down;});
+ hooks.afterMove?.(s,n,l);
  // Recheck after switches, ropes, box pushes and pressure changes this tick.
  // Returning a body can release another pad, so settle the gates together.
  for(let pass=0;pass<=l.gates.length;pass++){
   n.boxes.forEach((b,i)=>block(b,s.boxes[i],n,l));
+  hooks.afterGates?.(s,n,l,linkedDirections,C,dt);
   n.players.forEach((p,i)=>{if(!p.exited)block(p,s.players[i],n,l);});
  }
  if(l.fallY!==undefined){const fallen=n.players.findIndex(p=>!p.exited&&(p.y>l.fallY||l.fallTop!==undefined&&p.y+height(p)<l.fallTop));if(fallen>=0){n.failed=true;n.fallen=fallen;return n;}}
