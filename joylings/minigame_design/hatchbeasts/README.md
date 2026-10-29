@@ -18,7 +18,7 @@
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
-[第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [開始遊戲](https://scozirge.github.io/together-home/)：兩人共用鍵盤操作貓狗，合作拿鑰匙並回家。共 20 關，直接依編號選關；第 11～20 關用現有機制加長路線，包含三段日月冰橋、三層電梯、斷頂重力、重量登塔與雲端最後接力。一般版保留鑰匙持有標示與立即重試；[老師教學版](https://scozirge.github.io/together-home/?tip=true) 才顯示每關解答、機關編號與路段提示；全 20 關完成後，貓狗一起登台，顯示「你們是最佳拍檔！」。滾球、泡泡、煞車、大小交換與停時間皆已移除，保留關卡的存檔不變。
+[第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [開始遊戲](https://scozirge.github.io/together-home/)：兩人共用鍵盤操作貓狗，合作拿鑰匙並回家。共 20 關，直接依編號選關；第 11～20 關用現有機制加長路線，包含三段日月冰橋、三層電梯、斷頂重力、重量登塔與雲端最後接力。一般版保留鑰匙持有標示與立即重試；[老師教學版](https://scozirge.github.io/together-home/?tip=true) 才顯示每關解答、機關編號與路段提示；一般入口先播放相遇小劇場，再進入第 0 關暖身；全 20 關完成後，貓狗一起回家，顯示「團結就是力量！」與「我們在一起的時候是最棒的！」。滾球、泡泡、煞車、大小交換與停時間皆已移除，保留關卡的存檔不變。
 
 [第六週課程：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/) · [老師答案版](https://scozirge.github.io/a-thought/wood-exit/?tip=true)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
 

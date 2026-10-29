@@ -364,7 +364,7 @@ export default function ClassroomHome() {
             </a>
             <div className="activity-content">
               <p className="catalog-question-context">兩人一台電腦。貓咪用 A／D 移動、W 跳；狗狗用 ←／→ 移動、↑ 跳。拿齊鑰匙，兩人都到出口。</p>
-              <p className="catalog-question-context">一起推連動箱子、開渡船、搭電梯。最後 5 關是大型合作挑戰；20 關全破後，貓狗一起登台慶祝！</p>
+              <p className="catalog-question-context">先看貓狗相遇，再從第 0 關暖身。一起推連動箱子、開渡船、搭電梯；最後 5 關是大型挑戰，20 關全破後一起回家！</p>
               <div className="potion-teacher-links">
                 <strong>老師教學版</strong>
                 <p>網址加 <code>?tip=true</code> 可看提示與解答，也能按「播放解題」觀看貓狗合作通關。<a href={assetUrl('/together-home/?tip=true')} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>

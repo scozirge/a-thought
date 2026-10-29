@@ -5,7 +5,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.clock.install({time:new Date('2026-10-29T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
  const url=process.env.TOGETHER_URL||pathToFileURL(path.resolve(__dirname,'../dist/h5/index.html')).href;
- await page.goto(url);const read=()=>page.evaluate(()=>readGame()),held=new Set();
+ const direct=new URL(url);direct.searchParams.set('level','1');await page.goto(direct.href);const read=()=>page.evaluate(()=>readGame()),held=new Set();
  const keys=[['a','d','w','s'],['ArrowLeft','ArrowRight','ArrowUp','ArrowDown']];
  async function release(){for(const k of held)await page.keyboard.up(k);held.clear();}
  async function tick(n,commands){

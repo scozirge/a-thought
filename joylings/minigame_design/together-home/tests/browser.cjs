@@ -3,7 +3,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  // Advance only through tick(): screenshots and assertions must not keep moving players.
  await page.clock.install({time:new Date('2026-10-28T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-28T00:00:01Z'));
- const teacherUrl=new URL(process.env.TOGETHER_URL||'http://127.0.0.1:18128/');teacherUrl.searchParams.set('tip','true');await page.goto(teacherUrl.href);
+ const teacherUrl=new URL(process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1');teacherUrl.searchParams.set('tip','true');await page.goto(teacherUrl.href);
  const read=()=>page.evaluate(()=>readGame()),output=path.join(__dirname,'../test-output'),down=new Set();fs.mkdirSync(output,{recursive:true});
  const keys=[{left:'a',right:'d',jump:'w',special:'s'},{left:'ArrowLeft',right:'ArrowRight',jump:'ArrowUp',special:'ArrowDown'}];
  async function release(){for(const k of down)await page.keyboard.up(k);down.clear();}
@@ -22,11 +22,11 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   }
  }
  assert.equal(await page.title(),'貓狗一起回家｜合作通關');
- assert.equal(await page.locator('#levels option').count(),G.levels.length);
+ assert.equal(await page.locator('#levels option').count(),G.levels.length+1);
  await page.evaluate(()=>localStorage.setItem('together-home-platform-v3',JSON.stringify([0,1,10,19])));await page.reload();
  assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),2,'依舊關卡識別碼對應保留的精選進度');
  assert.equal(await page.locator('#levels optgroup,[data-campaign],[data-trial]').count(),0,'只有平面 1～20 關選單');
- assert.ok(!(await page.locator('#levels option').allTextContents()).slice(11).some(t=>t.startsWith('✓')),'新組合關卡不誤標已完成');
+ assert.ok(!(await page.locator('#levels option').allTextContents()).slice(12).some(t=>t.startsWith('✓')),'新組合關卡不誤標已完成');
  await page.evaluate(()=>localStorage.setItem('together-home-curated-v4',JSON.stringify(['original-0','preview-swap-1','preview-phase-1','preview-gravity-1','preview-magnet-1','preview-relay-1'])));await page.reload();
  assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),3,'三種保留玩法的進度仍保留，新玩法不誤標');
  assert.match(await page.locator(`#levels option[value="${G.levels.findIndex(l=>l.preview==='swap')}"]`).innerText(),/^✓/);
@@ -57,15 +57,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   await page.screenshot({path:path.join(output,`level-${l.id+1}.png`),fullPage:true});
   let ticks=0;await playLevel({read,tick:async(n,c)=>{ticks++;await tick(n,c);}},l);
   const end=await read();assert.ok(end.won);assert.ok(end.collected.every(Boolean));assert.ok(end.players.every(p=>p.exited));assert.ok(await page.locator('#success').isVisible());
-  assert.equal(await page.locator('#finale').evaluate(d=>d.open),l.id===19,'只有全二十關完成才出現舞台');
+  assert.equal(await page.locator('#finale').evaluate(d=>d.open),l.id===19,'只有全二十關完成才出現回家結局');
   proof.push({level:l.id+1,name:l.name,keyboardSteps:ticks,won:end.won,collected:end.collected,exited:end.players.map(p=>p.exited)});
   fs.writeFileSync(path.join(output,'twenty-playthrough.json'),JSON.stringify(proof,null,2));
   await page.screenshot({path:path.join(output,`level-${l.id+1}-won.png`),fullPage:true});console.log(`Browser level ${l.id+1} passed (${ticks} keyboard steps)`);
 
  }
  await release();assert.deepEqual((await page.evaluate(()=>JSON.parse(localStorage.getItem('together-home-curated-v4')))).sort(),G.levels.map(l=>l.saveKey).sort());
- assert.equal(await page.locator('#finale-title').innerText(),'你們是最佳拍檔！');assert.ok(await page.locator('#finale-close').evaluate(b=>b===document.activeElement));
- const opening=await page.locator('#finale-art').evaluate(c=>c.toDataURL());await page.clock.runFor(3200);assert.notEqual(await page.locator('#finale-art').evaluate(c=>c.toDataURL()),opening,'貓狗走上舞台');
+ assert.equal(await page.locator('#finale-title').innerText(),'我們回家了！');assert.ok(await page.locator('#finale-close').evaluate(b=>b===document.activeElement));
+ const opening=await page.locator('#finale-art').evaluate(c=>c.toDataURL());await page.clock.runFor(8000);assert.notEqual(await page.locator('#finale-art').evaluate(c=>c.toDataURL()),opening,'貓狗結伴回家');
  await page.screenshot({path:path.join(output,'twenty-finale-desktop.png'),fullPage:true});
  for(const width of [375,320]){await page.setViewportSize({width,height:800});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.ok(await page.locator('#finale').evaluate(d=>d.scrollWidth<=d.clientWidth));await page.screenshot({path:path.join(output,`twenty-finale-${width}.png`),fullPage:true});}
  await page.locator('#finale-close').click();await page.setViewportSize({width:1280,height:900});
@@ -79,10 +79,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  assert.ok(await page.locator('#answer-steps li').evaluateAll(nodes=>nodes.every(node=>parseFloat(getComputedStyle(node).fontSize)>=18)));
  await page.screenshot({path:path.join(output,'answers-mobile-320.png'),fullPage:true});
  await page.locator('#restart').click();assert.equal((await read()).level,9);assert.ok((await read()).collected.every(v=>!v));assert.ok((await read()).collectedBy.every(v=>v===null));assert.equal(await page.locator('.key-slot.collected').count(),0);assert.equal(await page.locator('#answer-panel').isVisible(),true);assert.ok((await read()).latched.every(v=>!v));assert.deepEqual(errors,[]);
- await page.goto(new URL('?level=11&tip=true',process.env.TOGETHER_URL||'http://127.0.0.1:18128/').href);assert.equal((await read()).level,10);
+ await page.goto(new URL('?level=11&tip=true',process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1').href);assert.equal((await read()).level,10);
  for(const width of [375,320]){await page.setViewportSize({width,height:800});await page.selectOption('#levels','9');assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:path.join(output,`advanced-mobile-${width}.png`),fullPage:true});}
  for(const {preview,id} of G.levels.filter(l=>l.preview)){
-  await page.goto(new URL(`?preview=${preview}&tip=true`,process.env.TOGETHER_URL||'http://127.0.0.1:18128/').href);assert.equal((await read()).level,id);
+  await page.goto(new URL(`?preview=${preview}&tip=true`,process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1').href);assert.equal((await read()).level,id);
   assert.equal(await page.locator('#levels').inputValue(),String(id));
   for(const width of [1280,375,320]){
    await page.setViewportSize({width,height:900});await page.screenshot({path:path.join(output,`preview-${preview}-${width}.png`),fullPage:true});

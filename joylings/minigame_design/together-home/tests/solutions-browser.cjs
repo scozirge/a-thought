@@ -6,7 +6,7 @@ const G = require('../core.js'), Input = require('../input.js'), solutions = req
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } }), errors = [], proof = [];
     page.on('pageerror', e => errors.push(e.message));
-    const base = process.env.TOGETHER_URL || 'http://127.0.0.1:18128/', progressKey = 'together-home-curated-v4';
+    const base = process.env.TOGETHER_URL || 'http://127.0.0.1:18128/?level=1', progressKey = 'together-home-curated-v4';
     const output = path.join(__dirname, '../test-output'); fs.mkdirSync(output, { recursive: true });
     const progress=path.join(output,'replay-progress.txt');fs.writeFileSync(progress,'');
     const log=message=>{console.log(message);fs.appendFileSync(progress,message+'\n');};

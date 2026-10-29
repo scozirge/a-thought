@@ -3,7 +3,7 @@ const G=require('../core.js'),Input=require('../input.js'),tapes=require('../sol
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
   const page=await browser.newPage({viewport:{width:1280,height:1000}}),errors=[],out=path.join(__dirname,'../test-output');fs.mkdirSync(out,{recursive:true});
   page.on('pageerror',e=>errors.push(e.message));await page.clock.install();await page.clock.pauseAt(new Date());
-  await page.goto(process.env.TOGETHER_URL||'http://127.0.0.1:18128/');
+  await page.goto(process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1');
   // Render reachable snapshots on the canvas only, without assigning app state,
   // granting progress, changing the physics or touching a user's browser profile.
   await page.evaluate(()=>{const draw=CanvasRenderingContext2D.prototype.fillText;window.drawnLabels=[];CanvasRenderingContext2D.prototype.fillText=function(value,...args){window.drawnLabels.push(String(value));return draw.call(this,value,...args);};});

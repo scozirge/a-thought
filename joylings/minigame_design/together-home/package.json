@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node serve.cjs",
-    "test": "node --test tests/core.test.cjs tests/collision.test.cjs tests/previews.test.cjs tests/mixed.test.cjs tests/trials.test.cjs tests/ascent.test.cjs tests/solutions.test.cjs tests/lab.test.cjs tests/campaign.test.cjs tests/visuals.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/collision.test.cjs tests/previews.test.cjs tests/mixed.test.cjs tests/trials.test.cjs tests/ascent.test.cjs tests/solutions.test.cjs tests/lab.test.cjs tests/campaign.test.cjs tests/visuals.test.cjs tests/warmup.test.cjs",
+    "test:story:browser": "node tests/story-browser.cjs",
     "test:campaign:browser": "node tests/campaign-browser.cjs",
     "test:visual:browser": "node tests/visual-browser.cjs",
     "start:lab": "node serve.cjs 18129",

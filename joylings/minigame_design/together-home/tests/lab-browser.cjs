@@ -36,7 +36,7 @@ const levels=require('../lab-levels.js'),{playLab}=require('./play-lab.cjs'),tap
     await page.locator('#finale-close').click();await page.reload();assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),3);
     const labSave=await page.evaluate(k=>localStorage.getItem(k),labKey);
     // Same-origin main game remains 20 levels, with its original save intact.
-    await page.goto(new URL('./',base).href);assert.equal(await page.locator('#levels option').count(),20);
+    await page.goto(new URL('./',base).href);assert.equal(await page.locator('#levels option').count(),21);
     assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),1);
     const teacher=new URL(base);teacher.searchParams.set('tip','true');await page.goto(teacher.href);
     for(const l of levels){

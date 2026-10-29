@@ -27,8 +27,11 @@ const levelLabel = l => `第 ${l.id + 1} 關`;
 const originalControls = [...document.querySelectorAll('[data-action]')].map(b => ({ b, html: b.innerHTML, label: b.getAttribute('aria-label') }));
 const keyboard = TogetherInput.create(), touch = [new Set(), new Set()], keyLights = new Map();
 const mapping = TogetherInput.mapping;
+const story = isLab ? null : TogetherStory.create({startWarmup:()=>reset(-1),clear:clearInput,focus:()=>canvas.focus({preventScroll:true})});
 function options() {
-  select.innerHTML = G.levels.map(l => `<option value="${l.id}">${completed.includes(l.saveKey) ? '✓ ' : ''}${levelLabel(l)} · ${l.name}</option>`).join('');select.value = state.level;
+  const menu=G.levels.warmup?[G.levels.warmup,...G.levels]:G.levels;
+  select.innerHTML = menu.map(l => `<option value="${l.id}">${completed.includes(l.saveKey) ? '✓ ' : ''}${levelLabel(l)} · ${l.name}</option>`).join('');select.value = state.level;
+  if(story)document.getElementById('watch-ending').hidden=!allComplete();
 }
 function toggleAnswer(open) {
   open = showTips && open;
@@ -40,7 +43,7 @@ function reset(level = state.level) {
   if(finale.open)finale.close();
   state = G.fresh(level); clearInput(); accumulator = 0; last = 0; effects = []; hudSignature = '';
   ui.success.hidden = true; ui.failure.hidden = true; ui.announcement.textContent = ''; options(); toggleAnswer(showTips);
-  document.querySelector('.answer-section').hidden = !showTips; ui.message.hidden = !showTips && !isLab && !G.levels[level].puzzle;
+  document.querySelector('.answer-section').hidden = !showTips; ui.message.hidden = !showTips && !isLab && !G.levels[level].puzzle && !G.levels[level].tutorial;
   const l = G.levels[level]; ui['answer-title'].textContent = `${levelLabel(l)} · ${l.name}`;
   ui['answer-steps'].replaceChildren(...(showTips ? l.solution : []).map(step => { const li = document.createElement('li'); li.textContent = step; return li; }));
   ui['key-slots'].innerHTML = l.keys.map((_, i) => `<span class="key-slot" data-key="${i}">${keyIcon}</span>`).join('');
@@ -86,20 +89,20 @@ function nextDemoInput() {
   keyboard.setMask(demo.mask); demo.remaining--; return true;
 }
 demoPlay.onclick = () => {
-  if (!showTips) return;
+  if (!showTips || story?.active) return;
   if (demonstration?.status === 'playing') { pauseDemo(); return; }
   if (demonstration?.status === 'paused') {
     // Restore held keys without generating a second jump/flip after a pause.
     keyboard.setMask(demonstration.mask); keyboard.consume();
     demonstration.status = 'playing'; accumulator = 0; last = 0; updateDemo(); return;
   }
-  const tape = TogetherSolutions.levels[G.levels[state.level].saveKey];
+  const tape = G.levels[state.level].tutorial ? TogetherWarmup.tape : TogetherSolutions.levels[G.levels[state.level].saveKey];
   if (!tape) { updateDemo('這一關的示範尚未準備好。'); return; }
   reset(); demonstration = { status: 'playing', tape, index: 0, remaining: 0, mask: 0 }; updateDemo();
 };
 demoStop.onclick = () => { reset(); updateDemo('已停止，回到起點。'); };
 window.addEventListener('keydown', e => {
-  if(finale.open)return;
+  if(finale.open||story?.active)return;
   if (state.failed && !e.repeat && (e.code === 'Enter' || e.code === 'KeyR')) { e.preventDefault(); reset(); return; }
   if (e.target.closest('select,input,textarea')) return;
   const a = mapping[e.code]; if (!a) return; e.preventDefault();
@@ -110,20 +113,23 @@ window.addEventListener('blur', () => { pauseDemo(); clearInput(); });
 document.addEventListener('visibilitychange', () => { if(document.hidden)pauseDemo(); clearInput(); last = 0; accumulator = 0; });
 for (const b of document.querySelectorAll('[data-action]')) {
   const i = +b.closest('[data-player]').dataset.player, action = b.dataset.action;
-  b.addEventListener('pointerdown', e => { if(demonstration)return; e.preventDefault(); b.setPointerCapture(e.pointerId); touch[i].add(action); keyboard.pulse(i, action); b.classList.add('pressed'); });
+  b.addEventListener('pointerdown', e => { if(demonstration||story?.active||finale.open)return; e.preventDefault(); b.setPointerCapture(e.pointerId); touch[i].add(action); keyboard.pulse(i, action); b.classList.add('pressed'); });
   const release = () => { touch[i].delete(action); b.classList.remove('pressed'); };
   b.addEventListener('pointerup', release); b.addEventListener('pointercancel', release); b.addEventListener('lostpointercapture', release);
 }
 select.onchange = () => reset(+select.value);
 document.getElementById('restart').onclick = () => reset(); document.getElementById('again').onclick = () => reset(); ui.retry.onclick = () => reset();
 ui.next.onclick = () => reset((state.level + 1) % G.levels.length);
-document.getElementById('finale-close').onclick=()=>finale.close();
-finale.addEventListener('close',()=>{clearInput();canvas.focus({preventScroll:true});});
+if(story)document.getElementById('watch-ending').onclick=()=>{if(allComplete()){pauseDemo();story.openEnding();}};
+else{
+  document.getElementById('finale-close').onclick=()=>finale.close();
+  finale.addEventListener('close',()=>{clearInput();canvas.focus({preventScroll:true});});
+}
 ui['answer-toggle'].onclick = () => { if(!demonstration)clearInput(); toggleAnswer(ui['answer-panel'].hidden); };
 document.querySelectorAll('[data-avatar]').forEach(c => TogetherArt.avatar(c, +c.dataset.avatar));
 function updateHud() {
   const l = G.levels[state.level], stage=!l.ascent?-1:l.roof&&Math.min(...state.players.map(p=>p.x))>=3020?4:Math.min(...state.players.map(p=>p.x))<1000?0:!state.collected[0]?1:Math.max(...state.players.map(p=>p.y+44))> -300?2:3;
-  const signature = JSON.stringify([state.level,stage,state.mode,state.gravity,state.collected,state.collectedBy,state.players.map(p=>p.exited),state.latched,state.won,state.failed,state.fallen,G.canHelp(state,l)]);
+  const signature = JSON.stringify([state.level,stage,state.mode,state.gravity,state.collected,state.collectedBy,state.players.map(p=>p.exited),state.latched,state.won,state.failed,state.fallen,G.canHelp(state,l),l.tutorial&&G.gateOpen(state,0)]);
   if (signature === hudSignature) return; hudSignature = signature;
   const count = state.collected.filter(Boolean).length, home = state.players.filter(p => p.exited).length;
   ui['key-count'].textContent = state.key ? `鑰匙齊了 ${count} / ${l.keys.length}` : `鑰匙 ${count} / ${l.keys.length}`;
@@ -153,18 +159,20 @@ function updateHud() {
     element.classList.toggle('has-key', n > 0); element.classList.toggle('arrived', arrived);
   });
   const gatesLeft = l.legacy && state.latched.some(v => !v);
-  ui.message.textContent = (isLab || l.puzzle) ? l.hint : showTips ? ((l.preview || l.mix) && !state.won ? l.hint : state.key ? (gatesLeft ? '踩住按鈕，讓朋友先過門。' : '鑰匙齊了，一起到小屋！') : l.hint) : '';
+  ui.message.textContent = l.tutorial ? (state.key?'門開著了！兩人一起走進小屋。':G.gateOpen(state,0)?'貓咪往右走，按 W 跳起拿鑰匙。':l.hint) : (isLab || l.puzzle) ? l.hint : showTips ? ((l.preview || l.mix) && !state.won ? l.hint : state.key ? (gatesLeft ? '踩住按鈕，讓朋友先過門。' : '鑰匙齊了，一起到小屋！') : l.hint) : '';
   ui.failure.hidden = !state.failed; ui['fail-title'].textContent = state.failed ? state.lostCargo ? '箱子掉下去了！' : `${names[state.fallen]}掉出去了！` : '';
-  ui.success.hidden = !state.won; ui['win-title'].textContent = demonstration && state.won ? `${levelLabel(l)}示範完成！` : completed.length === mainCount ? `${mainCount} 關全部完成！` : `${levelLabel(l)}完成，一起回家了！`;
-  ui.next.textContent = state.level === mainCount - 1 ? '回第一關' : '下一關 →';
+  ui.success.hidden = !state.won; ui['win-title'].textContent = demonstration && state.won ? `${levelLabel(l)}示範完成！` : l.tutorial ? '暖身完成，出發囉！' : completed.length === mainCount ? `${mainCount} 關全部完成！` : `${levelLabel(l)}完成，一起回家了！`;
+  ui.next.textContent = l.tutorial ? '開始第 1 關 →' : state.level === mainCount - 1 ? '回第一關' : '下一關 →';
   canvas.setAttribute('aria-label', `${levelLabel(l)} ${l.name}。已拿 ${count} 把鑰匙，共 ${l.keys.length} 把；${home} 人到家。`);
 }
 function draw(time) {
   TogetherArt.scene(ctx, canvas, state, G, effects, time, showTips); updateHud();
   originalControls.forEach(({ b }) => { const i = +b.closest('[data-player]').dataset.player, code = TogetherInput.codes.find(code => mapping[code][0] === i && mapping[code][1] === b.dataset.action); b.classList.toggle('pressed', keyboard.isDown(code) || touch[i].has(b.dataset.action) || (keyLights.get(code) || 0) > time); });
-  if(finale.open)TogetherArt.finale(finaleCanvas,matchMedia('(prefers-reduced-motion: reduce)').matches?4:(time-finaleStarted)/1000,mainCount);
+  if(story)story.frame(time);
+  else if(finale.open)TogetherArt.finale(finaleCanvas,matchMedia('(prefers-reduced-motion: reduce)').matches?4:(time-finaleStarted)/1000,mainCount);
 }
 function frame(time) {
+  if(story?.active||finale.open){last=time;accumulator=0;draw(time);requestAnimationFrame(frame);return;}
   if (!last) last = time; accumulator += Math.min((time - last) / 1000, .05); last = time;
   while (accumulator >= 1 / 120) {
     if (demonstration && (demonstration.status !== 'playing' || !nextDemoInput())) { accumulator = 0; break; }
@@ -178,13 +186,15 @@ function frame(time) {
     if (pickups.length) ui.announcement.textContent = pickups.join('') + (state.key ? '鑰匙齊了，一起到小屋！' : '');
     if (!before.won && state.won) {
       if (demonstration) { demonstration.status = 'done'; clearInput(); updateDemo(); ui.announcement.textContent = `${levelLabel(G.levels[state.level])}示範完成。`; continue; }
+      if(G.levels[state.level].tutorial){clearInput();ui.announcement.textContent='暖身完成，一起挑戰第 1 關！';continue;}
       const previouslyComplete=allComplete();
       clearInput(); ui.announcement.textContent = `${levelLabel(G.levels[state.level])}完成，貓咪和狗狗都到家了！`;
       const key = G.levels[state.level].saveKey;
       if (!completed.includes(key)) { completed.push(key); try { localStorage.setItem(progressKey, JSON.stringify(completed)); } catch {} options(); }
       if(!previouslyComplete&&allComplete()){
-        finaleStarted=time;clearInput();finale.showModal();document.getElementById('finale-close').focus();
-        ui.announcement.textContent=`${mainCount} 關全部完成！你們是最佳拍檔！`;
+        finaleStarted=time;clearInput();
+        if(story)story.openEnding();else{finale.showModal();document.getElementById('finale-close').focus();}
+        ui.announcement.textContent=`${mainCount} 關全部完成！貓咪和狗狗一起回家了！`;
       }
     }
   }
@@ -192,6 +202,9 @@ function frame(time) {
 }
 window.readGame = () => JSON.parse(JSON.stringify(state));
 window.readCamera = () => G.camera(state);
+window.readStory = () => story?.read() || null;
 const preview = G.levels.findIndex(l => l.preview === query.get('preview'));
-const requestedLevel = preview >= 0 ? preview : Number(query.get('level')) - 1;
-reset(Number.isInteger(requestedLevel) && requestedLevel >= 0 && requestedLevel < G.levels.length ? requestedLevel : 0); requestAnimationFrame(frame);
+const requested=Number(query.get('level'))-1;
+const requestedLevel=preview>=0?preview:query.has('level')&&Number.isInteger(requested)&&requested>=(G.levels.warmup?-1:0)&&requested<G.levels.length?requested:null;
+const showIntro=!!story&&!showTips&&requestedLevel===null;
+reset(requestedLevel??(showIntro?-1:0));if(showIntro)story.openIntro();requestAnimationFrame(frame);

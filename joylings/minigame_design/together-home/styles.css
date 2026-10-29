@@ -62,3 +62,19 @@ h2{font-size:22px;line-height:1.5;margin:0}.player-status{margin:1px 0 0;color:#
 #finale::backdrop{background:#162b40b8}#finale-caption{font-size:20px;margin:0 0 6px;color:#947445}#finale-title{font-size:36px;line-height:1.5;margin:0 0 16px}
 #finale-art{display:block;width:100%;height:auto;border-radius:16px;background:#293c52}#finale-close{margin-top:20px;padding:10px 30px;font-weight:700;background:#54765d;color:white;border-color:#54765d}
 @media(max-width:700px){#finale{padding:18px 12px;border-radius:18px}#finale-title{font-size:28px}#finale-caption{font-size:18px}#finale-close{font-size:20px}}
+
+/* Short story scenes share the game's large controls and warm colours. */
+.story-dialog{width:min(900px,calc(100% - 28px));max-height:calc(100dvh - 28px);overflow:auto;border:2px solid #d5c79e;border-radius:24px;padding:24px;text-align:center;background:#fff9e9;color:#635039;box-shadow:0 22px 80px #14253855}
+.story-dialog::backdrop{background:#253e4eaa;backdrop-filter:blur(4px)}
+#intro-title{font-size:36px;margin:0 0 16px}#intro-art{display:block;width:100%;height:auto;border-radius:16px;background:#e8f0de}
+.story-scene{position:relative;overflow:hidden;border-radius:16px;background:#e3f0ec}
+.story-scene :is(#intro-art,#finale-art){border-radius:0;background:transparent}
+.speech-bubble{--bubble-ink:#c58a53;--bubble-fill:#fff8e8;position:absolute;z-index:1;transform:translate(-50%,-100%);width:max-content;max-width:min(360px,calc(100% - 24px));padding:12px 18px;border:2px solid var(--bubble-ink);border-radius:22px;background:var(--bubble-fill);box-shadow:0 4px 12px #63503918;color:#51483e;font-size:24px;font-weight:700;line-height:1.5;text-align:center;text-wrap:balance;pointer-events:none}
+.speech-bubble[data-speaker="狗狗"]{--bubble-ink:#799e8e;--bubble-fill:#f3faf3}
+.speech-bubble:after{content:"";position:absolute;top:calc(100% - 6px);left:var(--tail-x,50%);width:14px;height:14px;transform:translateX(-50%) rotate(45deg);background:var(--bubble-fill);border-right:2px solid var(--bubble-ink);border-bottom:2px solid var(--bubble-ink)}
+.story-actions{display:flex;justify-content:center;gap:12px;margin-top:16px}.story-actions button{min-width:160px;font-size:22px;font-weight:700;background:#54765d;border-color:#54765d;color:white}#intro-skip{background:#fffdf7;border-color:#d5c79e;color:#635039}
+#finale-message{font-size:26px;font-weight:800;line-height:1.6;margin:18px 0 6px;color:#54765d;animation:home-message .55s ease-out}
+#watch-ending{font-size:18px}
+@keyframes home-message{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.story-dialog{padding:18px 12px}#intro-title{font-size:28px}.story-scene{padding-top:36px}.speech-bubble{font-size:18px;padding:10px 12px;border-radius:18px}#finale-message{font-size:22px}.navigation{flex-wrap:wrap}#watch-ending{order:3;flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){#finale-message{animation:none}}

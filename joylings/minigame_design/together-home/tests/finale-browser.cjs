@@ -2,7 +2,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.clock.install({time:new Date('2026-10-29T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
- await page.goto(process.env.TOGETHER_URL||'http://127.0.0.1:18128/');
+ await page.goto(process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1');
  const read=()=>page.evaluate(()=>readGame()),held=new Set(),keys=[['a','d','w'],['ArrowLeft','ArrowRight','ArrowUp']];
  async function tick(n,a){
   const want=new Set();a.forEach((c,i)=>{if(c.axis)want.add(keys[i][c.axis>0?1:0]);if(c.jump)want.add(keys[i][2]);});
@@ -18,10 +18,11 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),19);
   await playLevel({read,tick},G.levels[0]);await tick(0,[{},{}]);
   assert.equal(await page.locator('#finale').evaluate(d=>d.matches(':modal')),true,'最後補第一關也會全破');
-  assert.equal(await page.locator('#finale-title').innerText(),'你們是最佳拍檔！');
+  assert.equal(await page.locator('#finale-title').innerText(),reduced?'團結就是力量！':'我們回家了！');
   const before=await read(),art=await page.locator('#finale-art').evaluate(c=>c.toDataURL());
-  await page.keyboard.press('r');await page.keyboard.press('w');await page.keyboard.press('ArrowUp');await page.clock.runFor(3200);
-  assert.deepEqual(await read(),before,'舞台開啟時遊戲不接收操作');
+  await page.keyboard.press('r');await page.keyboard.press('w');await page.keyboard.press('ArrowUp');await page.clock.runFor(8000);
+  assert.deepEqual(await read(),before,'結尾開啟時遊戲不接收操作');
+  assert.equal(await page.locator('#finale-title').innerText(),'團結就是力量！');assert.equal(await page.locator('#finale-message').innerText(),'我們在一起的時候是最棒的！');
   const after=await page.locator('#finale-art').evaluate(c=>c.toDataURL());
   if(reduced)assert.equal(after,art,'減少動態偏好呈現靜態終幕');else assert.notEqual(after,art,'入場動畫有走動');
   await page.screenshot({path:path.join(__dirname,`../test-output/finale-${reduced?'reduced':'stage'}.png`),fullPage:true});
@@ -29,5 +30,5 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   assert.equal(await page.locator('#finale').evaluate(d=>d.open),false);assert.equal(await page.locator('#game').evaluate(c=>c===document.activeElement),true);
   await page.locator('#next').click();assert.equal((await read()).level,1);assert.equal((await read()).won,false);
  }
- assert.deepEqual(errors,[]);console.log('All-clear order, invalid saves, stage animation, reduced motion, modal keys and focus passed.');
+ assert.deepEqual(errors,[]);console.log('All-clear order, invalid saves, homecoming animation, reduced motion, modal keys and focus passed.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

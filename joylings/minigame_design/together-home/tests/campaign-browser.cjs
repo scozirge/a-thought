@@ -2,10 +2,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
 const G=require('../core.js'),{playLevel}=require('./play-level.cjs');
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
  const page=await browser.newPage({viewport:{width:1280,height:1000}}),errors=[],held=new Set(),keys=[['a','d','w'],['ArrowLeft','ArrowRight','ArrowUp']];
- const base=process.env.TOGETHER_URL||'http://127.0.0.1:18128/',output=path.join(__dirname,'../test-output');fs.mkdirSync(output,{recursive:true});
+ const base=process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1',output=path.join(__dirname,'../test-output');fs.mkdirSync(output,{recursive:true});
  page.on('pageerror',e=>errors.push(e.message));await page.clock.install({time:new Date('2026-10-29T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
  await page.goto(base);await page.evaluate(keys=>localStorage.setItem('together-home-curated-v4',JSON.stringify(keys)),G.levels.previous.map(l=>l.saveKey));await page.reload();
- assert.equal(await page.locator('#levels option').count(),20);assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),15);assert.equal(await page.locator('#finale').isVisible(),false);
+ assert.equal(await page.locator('#levels option').count(),21);assert.equal(await page.locator('#levels option').filter({hasText:'✓'}).count(),15);assert.equal(await page.locator('#finale').isVisible(),false);
  const read=()=>page.evaluate(()=>readGame());
  async function release(){for(const key of held)await page.keyboard.up(key);held.clear();}
  async function tick(n,commands){

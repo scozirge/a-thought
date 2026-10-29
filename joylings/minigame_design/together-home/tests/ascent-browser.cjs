@@ -2,7 +2,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
 (async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});try{
  const page=await browser.newPage({viewport:{width:1280,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.clock.install({time:new Date('2026-10-29T00:00:00Z')});await page.clock.pauseAt(new Date('2026-10-29T00:00:01Z'));
- const url=process.env.TOGETHER_URL||'http://127.0.0.1:18128/';await page.goto(new URL('?preview=ascent&tip=true',url).href);
+ const url=process.env.TOGETHER_URL||'http://127.0.0.1:18128/?level=1';await page.goto(new URL('?preview=ascent&tip=true',url).href);
  const read=()=>page.evaluate(()=>readGame()),held=new Set(),keys=[['a','d','w'],['ArrowLeft','ArrowRight','ArrowUp']];
  async function release(){for(const k of held)await page.keyboard.up(k);held.clear();}
  async function tick(n,a){
@@ -10,7 +10,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
   for(const k of [...held])if(!desired.has(k)){await page.keyboard.up(k);held.delete(k);}for(const k of desired)if(!held.has(k)){await page.keyboard.down(k);held.add(k);}
   await page.clock.runFor(Math.round(n*1000/120));for(const k of [keys[0][2],keys[1][2]])if(held.has(k)){await page.keyboard.up(k);held.delete(k);}
  }
- const l=G.levels.find(l=>l.preview==='ascent');assert.equal((await read()).level,l.id);assert.equal(await page.locator('#levels option').count(),20);
+ const l=G.levels.find(l=>l.preview==='ascent');assert.equal((await read()).level,l.id);assert.equal(await page.locator('#levels option').count(),21);
  assert.equal(await page.locator('.special-action:visible').count(),0);assert.equal(await page.locator('[data-trial=ball],[data-trial=bubbles]').count(),0);
  assert.ok(await page.locator('#answer-panel').isVisible());assert.equal(await page.locator('#answer-steps li').count(),8);await page.locator('#answer-toggle').click();
  const initialView=await page.evaluate(()=>readCamera());await page.screenshot({path:path.join(__dirname,'../test-output/ascent-start.png'),fullPage:true});
@@ -25,6 +25,6 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright'),assert=requi
  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('together-home-curated-v4'))),[l.saveKey]);
  await release();await page.locator('#restart').click();assert.deepEqual(await page.evaluate(()=>readCamera()),initialView);assert.deepEqual((await read()).collected,[false,false]);
  for(const width of [375,320]){await page.setViewportSize({width,height:900});if(!(await page.locator('#answer-panel').isVisible()))await page.locator('#answer-toggle').click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:path.join(__dirname,`../test-output/ascent-mobile-${width}.png`),fullPage:true});await page.locator('#answer-toggle').click();}
- for(const removed of ['ball','bubbles']){await page.goto(new URL(`?preview=${removed}`,url).href);assert.equal((await read()).level,0);}
+ for(const removed of ['ball','bubbles']){await page.goto(new URL(`?preview=${removed}`,url).href);assert.equal((await read()).level,-1);assert.ok(await page.locator('#intro').isVisible());}
  assert.deepEqual(errors,[]);console.log('Large scrolling challenge: full keyboard win, cameras, mandatory cooperation, failure, retry, saves and mobile passed.');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1});
