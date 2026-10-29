@@ -105,7 +105,8 @@ namespace Neon.Astral
             if(Time.unscaledTime>=nextScan){Scan();nextScan=Time.unscaledTime+.5f;}
             if(!GameDictionary.IsInit){SetView("loading");return;}
             string v="loading";
-            if(battle)v=NeonArenaFlow.Active && NeonArena.Instance && NeonArena.Instance.HasLocalResult ? "arena-result" : Is(battle,"SettlementUI")?"result":"battle";
+            if(battle)v=NeonArenaFlow.Active && NeonArena.Instance && NeonArena.Instance.HasLocalResult ?
+                (NeonArenaSpectator.Instance && NeonArenaSpectator.Instance.IsWatching ? "arena-spectate" : "arena-result") : Is(battle,"SettlementUI")?"result":"battle";
             else if(lobby)
             {
                 if(NeonArenaFlow.Searching)v="arena-waiting";
@@ -150,6 +151,7 @@ namespace Neon.Astral
         void SetView(string value)
         {
             string key=value+"/"+MyPlayer.UseLanguage+"/"+part+"/"+TouchUI+"/"+Screen.width+"x"+Screen.height+"/"+Mathf.RoundToInt(ViewWidth)+"x"+Mathf.RoundToInt(ViewHeight);
+            if(value=="arena-result"&&NeonArena.Instance)key+="/"+NeonArena.Instance.Phase;
             var focused=key!=viewKey&&value==CurrentView?page.GetComponentsInChildren<InputField>().FirstOrDefault(f=>f.isFocused):null;
             // Recreating an active mobile InputField closes the browser's native
             // keyboard. Keep it alive while typing; reflow as soon as editing ends.
@@ -161,7 +163,7 @@ namespace Neon.Astral
             var scrollPositions=reflow?page.GetComponentsInChildren<ScrollRect>().ToDictionary(s=>PagePath(s.transform),s=>s.verticalNormalizedPosition):null;
             viewKey=key;CurrentView=value;live.Clear();balance=null;Clear(page);ShowTooltip(null);
             pageFade.alpha=0;
-            backdrop.SetActive(value!="battle"&&value!="result"&&value!="lobby"&&value!="loading");
+            backdrop.SetActive(value!="battle"&&value!="arena-spectate"&&value!="result"&&value!="lobby"&&value!="loading");
             if(TouchUI)BuildTouchView(value);
             else switch(value)
             {
@@ -172,6 +174,7 @@ namespace Neon.Astral
                 case "battle":BuildBattle();BuildArenaHud();break;
                 case "arena-waiting":BuildArenaWaiting();break;
                 case "arena-result":BuildArenaResult();break;
+                case "arena-spectate":BuildArenaSpectator();break;
                 case "result":BuildBattle();BuildResult();break;
                 default:BuildLoading();break;
             }
@@ -199,6 +202,7 @@ namespace Neon.Astral
             }
             if(CurrentView=="select")challenge.ActiveSelectUI(false);
             else if(CurrentView=="arena-waiting")NeonArenaFlow.Cancel();
+            else if(CurrentView=="arena-spectate")NeonArenaSpectator.Instance?.ShowResult();
             else if(CurrentView=="matching")challenge.CancelChallenge();
             else if(CurrentView=="settings"||CurrentView=="clamor"||CurrentView=="credits"||CurrentView=="collection"||CurrentView=="loadout")Home();
             else if(CurrentView=="battle")PopupUI.ShowConfirmCancel(L("確定離開目前的戰場？","Leave the current arena?"),()=>battle.LeaveRoom(),null);

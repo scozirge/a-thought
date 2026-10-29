@@ -94,7 +94,7 @@ MonoBehaviour:
   WaitToBeAcquire: 1
   RandomPosRadius: 0
   Appearance: {fileID: 4295087337248251754}
-  IsActive: 1
+  IsActive: 0
   Value: 1
 --- !u!114 &6601469728054186071
 MonoBehaviour:
@@ -213,6 +213,8 @@ MonoBehaviour:
   _LootPickupReadyAt: 0
   _StateReady:
     RawValue: 0
+  _ViewCenter: {x: 0, y: 0}
+  _ViewHalfSize: {x: 0, y: 0}
 --- !u!1 &6877690372530643401
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +231,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4295087337248251754
 RectTransform:
   m_ObjectHideFlags: 0

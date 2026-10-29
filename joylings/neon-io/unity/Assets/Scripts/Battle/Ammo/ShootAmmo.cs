@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class ShootAmmo : Ammo
+    public partial class ShootAmmo : Ammo
     {
         [LabelOverride("旋轉子彈朝向目標")]
         [SerializeField]

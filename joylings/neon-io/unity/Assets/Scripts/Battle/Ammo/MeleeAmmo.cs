@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class MeleeAmmo : Ammo
+    public partial class MeleeAmmo : Ammo
     {
         [LabelOverride("肉搏類型")]
         [Tooltip("Damage是一般肉搏,Block是擋ShootAmmo子彈,BlockDamage是檔ShootAmmo子彈也可以攻擊人\n\n" +
@@ -94,11 +94,11 @@ namespace Starbro.NeonIO
             if (Attacker != null)
                 if (!ReplaceAttack)
                 {
-                    damage = Mathf.RoundToInt((Attacker.SkillDamage * ValuePercent));//使用攻擊者當下的攻擊力(不然雙刀怪這種技能不會受到詛咒而導致攻擊下降)
+                    damage = CalculateDamage(false);
                 }
                 else
                 {
-                    damage = Mathf.RoundToInt((Attacker.MeleeDamage * ValuePercent));//使用攻擊者當下的攻擊力(不然雙刀怪這種技能不會受到詛咒而導致攻擊下降)
+                    damage = CalculateDamage(true);
                 }
 
             if (PhotonNetwork.IsConnected)//如果有連線且是玩家自己就跑同步Func

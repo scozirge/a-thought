@@ -4,7 +4,7 @@ using UnityEngine;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class Melee : Attack
+    public partial class Melee : Attack
     {
         [Tooltip("肉搏子彈物件")]
         [SerializeField]
@@ -24,7 +24,7 @@ namespace Starbro.NeonIO
             ammo.transform.SetParent(AmmoParent);
             ammo.transform.position = transform.position + AttackRadius * AttackDir;
             if (SpawnAtTargetPos)
-                ammo.transform.position = GetTargetPos() + AttackRadius * AttackDir;
+                ammo.transform.position = BotAttackPosition + AttackRadius * AttackDir;
 
             ammo.Init(AmmoData);
             if (ConnectToAmmo)

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scoz.Func;
@@ -60,8 +60,11 @@ namespace Starbro.NeonIO
         {
             if (NRole == null || !NRole.IsInitialized || !NRole.IsAlive) return;
             if (PhotonNetwork.IsConnected && !NRole.photonView.IsMine) return;
-            if (RoamTimer != null)
-                RoamTimer.RunTimer();
+            if (NRole.IsArenaPlayerSeat)
+            {
+                CurrentToward = NRole.ArenaBrain.Movement;
+            }
+            else if (RoamTimer != null) RoamTimer.RunTimer();
             if (PhotonNetwork.IsConnected)
             {
                 if (NRole.photonView.IsMine)
@@ -76,7 +79,7 @@ namespace Starbro.NeonIO
         void Move()
         {
             if (NeonArenaFlow.CombatBlocked) { MyRigid.linearVelocity = Vector2.zero; return; }
-            if (NeonArenaFlow.Active && NeonArena.Instance && transform.position.sqrMagnitude > Mathf.Pow(Mathf.Max(0, NeonArena.Instance.Radius - 200), 2))
+            if (NeonArenaFlow.Active && NeonArena.Instance && transform.position.sqrMagnitude > Mathf.Pow(Mathf.Max(0, NeonArena.Instance.Radius - (NRole.IsArenaPlayerSeat ? Mathf.Min(NRole.ArenaDifficulty.Margin, NeonArena.Instance.Radius * .15f) : 200)), 2))
                 AwayFromBorderTowardCenter();
             if (!NRole.BuffersExist(RoleBuffer.Stun))
                 MyRigid.linearVelocity = CurrentToward * NRole.MoveSpeed;
@@ -108,6 +111,13 @@ namespace Starbro.NeonIO
         void Roam()
         {
             float faceAngle = Random.Range(0, 360);
+            if (NRole.IsArenaResourceBot)
+            {
+                // Resource monsters wander and use their normal attacks; no loot seeking or loadout tactics.
+                CurrentToward = MyMath.GetEulerFromAngle(faceAngle);
+                RoamTimer.ResetCircleTime(Random.Range(RoamChangeDirCircle.x, RoamChangeDirCircle.y));
+                return;
+            }
             GameObject lootGo = GameobjectFinder.FindInRangeClosestGameobjectWithTag(NRole.gameObject, DetectStarRadius, "Loot");
             if (lootGo != null && ProbabilityGetter.GetResult(FaceClosestStarProbability))
             {

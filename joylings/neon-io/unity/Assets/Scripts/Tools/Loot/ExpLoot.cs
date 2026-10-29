@@ -10,7 +10,7 @@ namespace Scoz.Func
 
         public void LaunchToward(Role killer)
         {
-            if (!IsActive || killer == null || !killer.IsAlive || !killer.IsInitialized) return;
+            if (!IsActive || killer == null || !killer.IsAlive || !killer.IsInitialized || !killer.CanCollectStars) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
             GetComponent<LootMove>()?.BeginDeathFlight(killer);
             // Keep the initial burst visible even when the killer overlaps the victim.
@@ -46,10 +46,11 @@ namespace Scoz.Func
             // Absorption/attack sensors are children of a role, not its pickup body.
             // They may guide ordinary loot but must never grant experience at a distance.
             Role role = collider.GetComponent<Role>();
-            if (role == null || !role.IsInitialized || !role.IsAlive) return;
+            if (role == null || !role.IsInitialized || !role.IsAlive || !role.CanCollectStars) return;
             if (!(role is PlayerRole) && !(role is NeutralRole)) return;
             int remaining = Mathf.Max(1, Value);
             SetActive(false); // Reserve synchronously before any RPC can return.
+            NeonArena.RecordStarPickup(role, remaining);
             // Active/value/flight are replicated together in Fusion snapshots; no per-star hide RPC.
             // Keep each grant within the wire validator limit without losing merged value.
             foreach (int amount in SplitGrants(remaining))

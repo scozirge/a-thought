@@ -18,9 +18,9 @@
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
-[第六週課程：類pico park合作通關](https://scozirge.github.io/classroom/#sixth-course) · [開始遊戲](https://scozirge.github.io/together-home/)：兩人共用鍵盤，合作拿鑰匙並到出口。10 關涵蓋疊人、搬箱、重箱、電梯接應、切換門及繩索；第 1 關學操作，第 2 關暖身，後段著重搬運順序與分工。
+[第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [開始遊戲](https://scozirge.github.io/together-home/)：兩人共用鍵盤操作貓狗，合作拿鑰匙並回家。共 20 關，直接依編號選關；第 11～20 關用現有機制加長路線，包含三段日月冰橋、三層電梯、斷頂重力、重量登塔與雲端最後接力。一般版保留鑰匙持有標示與立即重試；[老師教學版](https://scozirge.github.io/together-home/?tip=true) 才顯示每關解答、機關編號與路段提示；全 20 關完成後，貓狗一起登台，顯示「你們是最佳拍檔！」。滾球、泡泡、煞車、大小交換與停時間皆已移除，保留關卡的存檔不變。
 
-[第六週延伸活動：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/) · [老師答案版](https://scozirge.github.io/a-thought/wood-exit/?tip=true)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
+[第六週課程：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/) · [老師答案版](https://scozirge.github.io/a-thought/wood-exit/?tip=true)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
 
 [2026-09-24 紅藍槍戰課堂復盤](docs/課堂復盤/2026-09-24-紅藍槍戰.md)：保留授課者原話，記錄連線互動、提問狀況，以及每個人都完成的新武器紙上設計與強弱思考。[線上復盤](https://scozirge.github.io/classroom/red-blue-battle/#retrospective) 也記下次將新武器想法與題目加入遊戲的安排。
 
@@ -50,7 +50,7 @@ npm test
 
 ## 課堂短網址發布
 
-正式課堂目錄：https://scozirge.github.io/classroom/ 。課程依第一至第六堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
+正式課堂目錄：https://scozirge.github.io/classroom/ 。課程依第一至第七堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
 
 執行 `npm run build:classroom-site`，輸出 `dist/classroom-site/`；將內容發布到 `scozirge/scozirge.github.io` 的 `main` 分支根目錄，Pages 來源為 `main` 的 `/`。此輸出使用根路徑，教材內返回目錄及各課連結維持 `/classroom/`；遊戲入口繼續指向既有的公開遊戲。`npm run build:h5` 仍建置原本 `/a-thought/hatchbeasts` 前綴版本。
 

@@ -23,6 +23,11 @@ namespace Neon.Networking
                 if (values.Length < 1 || !(values[0] is int damage) || damage < 0 || damage > 1000000) return false;
             if (method == "GainExp")
                 return values.Length == 1 && values[0] is int experience && experience > 0 && experience <= 10000;
+            if (method == "CastBotSkill")
+                return values.Length == 6 && IsEnum<FeaturePart>(values[0]) && values[1] is int slot && slot >= 0 && slot < 64
+                    && values[2] is int feature && feature >= 0 && feature < 100000 && values[3] is int
+                    && values[4] is Vector3 point && point.sqrMagnitude <= 100000000
+                    && values[5] is Vector3 facing && facing.sqrMagnitude <= 1.01f;
             if (method == "CastSkill" || method == "CastPrepareSkill" || method == "SkillSpawnAttackPrefab")
                 return values.Length == 2 && IsEnum<FeaturePart>(values[0]) && values[1] is int index && index >= 0 && index < 64;
             if (method == "GetFeature")

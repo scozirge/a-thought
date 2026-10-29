@@ -219,8 +219,7 @@ namespace Starbro.NeonIO
             P2Features = null;
             WaitToStartBattle = null;
             IsFindingOpponent = true;
-            AudioPlayer.StopAllMusic();
-            AudioPlayer.PlayLoopMusicAtSecond_Static(GameDictionary.GetMusic("Battle0"), "Challenge", 0);
+            AudioPlayer.PlayBattleMusic(MyPlayer.ChooseBattleSong);
             PhotonLauncher.JoinTheRandomRoom();
             LookingForOpponentObj.SetActive(true);
             MatchBtn.gameObject.SetActive(false);

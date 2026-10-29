@@ -39,7 +39,7 @@ namespace Scoz.Func
             if (!MyRigid)
                 AddRigid();
             MyCircleCol.radius = _range;
-            MyCircleCol.enabled = true;
+            MyCircleCol.enabled = MySelf && MySelf.CanCollectStars;
         }
         public void SetDontAbsorb()
         {
@@ -52,7 +52,7 @@ namespace Scoz.Func
 
         void OnTriggerStay2D(Collider2D collider)
         {
-            if (MySelf == null || !MySelf.IsAlive || !collider.CompareTag("Loot")) return;
+            if (MySelf == null || !MySelf.IsAlive || !MySelf.CanCollectStars || !collider.CompareTag("Loot")) return;
             LootMove movement = collider.GetComponent<LootMove>();
             Loot loot = collider.GetComponent<Loot>();
             if (movement == null || loot == null || !loot.IsActive) return;

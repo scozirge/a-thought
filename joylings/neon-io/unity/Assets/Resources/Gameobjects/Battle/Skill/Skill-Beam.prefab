@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &2400132773501615094
 GameObject:
@@ -59,7 +59,7 @@ MonoBehaviour:
   DetecteRadius: 1800
   AttackOnce: 0
   SpawnAtTargetPos: 0
-  Interval: 0.7
+  Interval: 0.5
   FirstAttackNoWait: 1
   Patetern: 1
   RandomAngle: 0

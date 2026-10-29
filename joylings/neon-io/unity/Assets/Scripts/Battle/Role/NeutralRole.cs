@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Scoz.Func;
@@ -6,7 +6,7 @@ using Neon.Networking;
 
 namespace Starbro.NeonIO
 {
-    public class NeutralRole : Role
+    public partial class NeutralRole : Role
     {
         #region Public Field
         [HideInInspector]
@@ -21,6 +21,13 @@ namespace Starbro.NeonIO
         [SerializeField]
         float DetectTargetInterval = 0.5f;
         MyTimer DetectTargetTimer;
+        float nextSeatTargetScan;
+        // Only ranked seats use loadout tactics; resource bots use basic wandering/attacks.
+        public bool IsArenaPlayerSeat => NeonArenaFlow.Active && ID >= 10000 && ID < 10000 + NeonArenaRules.PlayerSeats;
+        public bool IsArenaResourceBot => NeonArenaFlow.Active && ID >= 10000 + NeonArenaRules.PlayerSeats && ID < 10000 + NeonArenaRules.Total;
+        public override bool CanCollectStars => !IsArenaResourceBot;
+        public NeonBotDifficulty ArenaDifficulty => NeonBotDifficulty.For(NeonArena.Instance ? NeonArena.Instance.BotRating : NeonArenaRating.Initial);
+        public int SeatTargetScans { get; private set; }
         [LabelOverride("獲得經驗特效")]
         [SerializeField]
         ParticleSystem GainExpEffect = null;
@@ -74,8 +81,18 @@ namespace Starbro.NeonIO
         {
             base.Update();
             if (!IsInit) return;
-            if (HasSimulationAuthority && IsAlive && DetectTargetTimer != null)
-                DetectTargetTimer.RunTimer();
+            if (HasSimulationAuthority && IsAlive && !NeonArenaFlow.CombatBlocked)
+            {
+                if (IsArenaPlayerSeat)
+                {
+                    if (Time.time >= nextSeatTargetScan)
+                    {
+                        nextSeatTargetScan = Time.time + ArenaDifficulty.Scan;
+                        ExecuteDetectTarget(); SeatTargetScans++;
+                    }
+                }
+                else if (DetectTargetTimer != null) DetectTargetTimer.RunTimer();
+            }
             ArrowRotate();
             if (HasSimulationAuthority && IsAlive && ChangeFeatureTimer != null)
                 ChangeFeatureTimer.RunTimer();
@@ -86,11 +103,13 @@ namespace Starbro.NeonIO
         [PunRPC]
         public void SetPlayerData(string _name, int _id)
         {
+            bool identityChanged = ID != _id;
             if (_name != "")
                 NameLabel.gameObject.SetActive(true);
             if (ID != _id && BattleManager.BM.NeutralRoleDic.TryGetValue(ID, out NeutralRole previous) && previous == this)
                 BattleManager.BM.NeutralRoleDic.Remove(ID);
             ID = _id;
+            if (identityChanged && IsArenaResourceBot && HasSimulationAuthority) ResetResourceStats();
 
             if (TowardDirTrans != null)
                 TowardDirTrans.gameObject.SetActive(true);
@@ -234,11 +253,10 @@ namespace Starbro.NeonIO
         [PunRPC]
         public void GainExp(int _addEXP)
         {
-            if (_addEXP <= 0 || !IsAlive)
+            if (_addEXP <= 0 || !IsAlive || !CanCollectStars)
                 return;
             // A merged star keeps the rewards of each original pickup, with one sound/effect.
-            if (GainExpEffect) EffectEmitter.EmitParticle(GainExpEffect, Vector3.zero, Vector3.zero, transform, MyForce);
-            if (GainExpSound) AudioPlayer.PlaySound(GainExpSound);
+            PickupFeedback.Play(this, GainExpEffect, GainExpSound);
             HealProportionOfHP(0);
             if (!HasSimulationAuthority) return;
             for (int i = 0; i < _addEXP; i++)
@@ -251,6 +269,7 @@ namespace Starbro.NeonIO
         }
         public void LevelUp()
         {
+            if (IsArenaResourceBot) return;
             Exp = Mathf.Max(0, Exp - LVUpExp);
             LV++;
             ExtendMaxHP(GameSettingData.LVUpAddMaxHP);
@@ -352,6 +371,13 @@ namespace Starbro.NeonIO
         }
 
         #region Private Func
+        void ResetResourceStats()
+        {
+            Exp = 0;
+            LV = 1;
+            MaxHealth = NeonArenaRules.ResourceBotHealth;
+            Health = MaxHealth;
+        }
         protected override void GetProperties()
         {
             base.GetProperties();
@@ -370,10 +396,12 @@ namespace Starbro.NeonIO
                 }
                 NeedExpList = GameSettingData.NeedExps;
             }
-            Health = MaxHealth;
+            if (IsArenaResourceBot) ResetResourceStats();
+            else Health = MaxHealth;
         }
         protected override Role FindClosestOpponent()
         {
+            if (IsArenaPlayerSeat) return ArenaBrain.Target;
             base.FindClosestOpponent();
             GameObject go = GameobjectFinder.FindClosestGameobjectWithTags(gameObject, Force.Neutral.ToString(), Force.Opponent.ToString(), Force.Player.ToString());
             if (go)
@@ -385,6 +413,7 @@ namespace Starbro.NeonIO
         }
         void ExecuteDetectTarget()
         {
+            if (IsArenaPlayerSeat) { ArenaBrain.Sense(Time.time); return; }
             FindClosestOpponent();
             if (ClosestOpponent == null)
                 return;
@@ -402,8 +431,13 @@ namespace Starbro.NeonIO
                 return;
             if (!HasSimulationAuthority) return;
             ArrowTargetAngle = MyMath.GetAngleFromVelocity(MyRigi.linearVelocity) - 90;
-
-            ArrowAngle = Mathf.Lerp(ArrowAngle, ArrowTargetAngle, 0.1f);
+            if (IsArenaPlayerSeat)
+            {
+                // Aim independently of movement: a nearby flank must not wait for a roam change.
+                if (ArenaBrain.HasAim) ArrowTargetAngle = ArenaBrain.FacingAngle;
+                ArrowAngle = Mathf.MoveTowardsAngle(ArrowAngle, ArrowTargetAngle, ArenaDifficulty.Turn * Time.deltaTime);
+            }
+            else ArrowAngle = Mathf.Lerp(ArrowAngle, ArrowTargetAngle, 0.1f);
             //ArrowAngle = ArrowTargetAngle - 90;
             TowardDirTrans.rotation = Quaternion.Euler(new Vector3(0, 0, ArrowAngle));
             Movetorward = MyMath.GetEulerFromAngle(ArrowAngle + 90);

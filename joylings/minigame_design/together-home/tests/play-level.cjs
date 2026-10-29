@@ -1,5 +1,5 @@
 const G=require('../core.js');
-async function playLevel(driver,l){ if(l.id>=2)return require("./play-advanced.cjs").playAdvanced(driver,l);
+async function playLevel(driver,l){ if(l.ascent)return require('./play-ascent.cjs').playAscent(driver,l); if(l.trial)return require('./play-trials.cjs').playTrials(driver,l); if(l.coop)return require('./play-cooperation.cjs').playCooperation(driver,l); if(l.preview)return require('./play-previews.cjs').playPreviews(driver,l); if(!l.legacy)return require("./play-advanced.cjs").playAdvanced(driver,l);
  const read=driver.read,tick=driver.tick;
  async function move(i,target,surface=400){
   for(let attempt=0;attempt<600;attempt++){

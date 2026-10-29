@@ -65,7 +65,7 @@ MonoBehaviour:
   DamageInterval: 0.3
   Buffers:
   - Type: 2
-    Time: 3
+    Time: 1.5
     Value: 0.5
   TriggerOnRushRole: 0
   Value: 0

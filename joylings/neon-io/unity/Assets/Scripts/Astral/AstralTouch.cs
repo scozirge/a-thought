@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +25,7 @@ namespace Neon.Astral
                 case "battle": BuildTouchBattle(); BuildArenaHud(); break;
                 case "arena-waiting": BuildArenaWaiting(); break;
                 case "arena-result": BuildArenaResult(); break;
+                case "arena-spectate": BuildArenaSpectator(); break;
                 case "result": BuildTouchBattle(); BuildTouchResult(); break;
                 default:
                     if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name!="Init")
@@ -52,9 +53,10 @@ namespace Neon.Astral
         }
         void BuildTouchLobby()
         {
+            RecoverArenaRating();
             float w=Mathf.Clamp(ViewWidth*.40f,286,380),h=Mathf.Max(180,ViewHeight-24),x=-ViewWidth*.5f+16+w*.5f;
             var backing=Plate(page,"Menu backing",x,0,w,h);backing.color=new Color(Night.r,Night.g,Night.b,.7f);backing.border=new Color(Gold.r,Gold.g,Gold.b,.25f);
-            var scroll=Scroll(backing.transform,"Lobby actions",0,29,w-8,h-66,out var content);content.sizeDelta=new Vector2(0,350);scroll.GetComponent<Image>().color=Color.clear;
+            var scroll=Scroll(backing.transform,"Lobby actions",0,29,w-8,h-66,out var content);content.sizeDelta=new Vector2(0,390);scroll.GetComponent<Image>().color=Color.clear;
             float inner=w-32;
             var brand=TitleArt(content,"Brand",L("星際遊俠","NOVAROVE"),0,0,inner,42);TopContent(brand,-28);
             var original=Field<InputField>(lobby,"NameInputField");
@@ -66,12 +68,14 @@ namespace Neon.Astral
             foreach(var b in new[]{arena,infinity,duel}){var label=b.GetComponentInChildren<Text>();label.rectTransform.anchoredPosition=new Vector2(23,0);label.rectTransform.sizeDelta=new Vector2(inner-68,46);label.alignment=TextAnchor.MiddleLeft;var icon=Graphic(b.transform,"Mode icon",-inner*.5f+27,0,28,28,b==arena?AstralGraphic.Shape.Star:b==infinity?AstralGraphic.Shape.Infinity:AstralGraphic.Shape.Duel,Gold);icon.thickness=1.7f;}
             var collection=TouchButton(content,"Collection",L("收藏","COLLECTION"),0,-325,inner,()=>{part=0;selected=null;lobby.ActiveControlPanel(false);lobby.ActiveShopUI(true);},false,44,16);TopContent((RectTransform)collection.transform,-325);
             Graphic(collection.transform,"Collection icon",-inner*.5f+27,0,23,23,AstralGraphic.Shape.Collection,Gold);
+            var rating=Text(content,"Arena rating",ArenaRatingLabel(),0,-367,inner,28,16,Gold,TextAnchor.MiddleLeft);TopContent(rating.rectTransform,-367);
+            live.Add(()=>{if(rating)rating.text=ArenaRatingLabel();});
             if(ViewHeight<330)
             {
                 // Prioritize the two playable modes when browser chrome leaves a short viewport.
                 brand.sizeDelta=new Vector2(Mathf.Min(inner,32*brand.rect.width/brand.rect.height),32);TopContent(brand,-18);
                 foreach(var b in new[]{arena,infinity,duel}){var r=(RectTransform)b.transform;r.sizeDelta=new Vector2(inner,44);TopContent(r,b==arena?-62:b==infinity?-114:-166);}
-                TopContent((RectTransform)input.transform,-222);TopContent((RectTransform)collection.transform,-276);content.sizeDelta=new Vector2(0,304);
+                TopContent((RectTransform)input.transform,-222);TopContent((RectTransform)collection.transform,-276);content.sizeDelta=new Vector2(0,342);TopContent(rating.rectTransform,-316);
             }
             float footer=-h*.5f+32,left=-w*.5f+38;
             IconButton(backing.transform,"Settings",AstralGraphic.Shape.Gear,left,footer,44,()=>{lobby.ActiveControlPanel(false);lobby.ActiveSettingUI(true);});
@@ -113,8 +117,10 @@ namespace Neon.Astral
             Scroll(box,"Description",0,h*.5f-heading-bodyHeight*.5f,w-24,bodyHeight,out var c);
             var text=TouchParagraph(c,"Text",f.Description,w-56,16);c.sizeDelta=new Vector2(0,Mathf.Max(bodyHeight,text.rectTransform.rect.height));
             var action=TouchButton(box,"Use skill",choosing?L("裝備此技能","EQUIP SKILL"):L("已擁有","OWNED"),0,-h*.5f+34,w-24,()=>
-            {if(choosing&&f.Owned){challenge.SetFeature(f);challenge.ActiveSelectUI(false);selected=null;}},choosing);
-            action.interactable=choosing&&f.Owned;
+            {if(choosing&&f.Owned){challenge.SetFeature(f);challenge.ActiveSelectUI(false);selected=null;}
+             else if(!choosing&&!f.Owned){var item=lobby.GetComponentsInChildren<PurchaseItem>(true).FirstOrDefault(x=>x.MyFeatureData==f);if(item)item.Purchase();}},choosing);
+            var label=action.GetComponentInChildren<Text>();
+            live.Add(()=>{if(!action)return;action.interactable=choosing?f.Owned:!f.Owned;label.text=choosing?(f.Owned?L("裝備","EQUIP"):L("尚未擁有","LOCKED")):f.Owned?L("已擁有","OWNED"):L("解鎖 ","UNLOCK ")+(f.SoldType==Currency.Star?"✦ "+f.Fee:f.Fee+" Kreds");});
         }
         void BuildTouchLoadout()
         {

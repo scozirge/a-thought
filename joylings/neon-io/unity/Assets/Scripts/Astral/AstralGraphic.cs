@@ -4,6 +4,7 @@ using UnityEngine.UI;
 namespace Neon.Astral
 {
     // Resolution-independent ornaments: a few UI triangles, no rasterised mockup panels.
+    [RequireComponent(typeof(CanvasRenderer))]
     public sealed class AstralGraphic : MaskableGraphic
     {
         public enum Shape { Plate, Frame, Orbit, Star, Starfield, Rule, Glow, Disc, Exit, Back, Gear, Infinity, Duel, Collection, Book, Currency }

@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &4189972174564851421
 GameObject:
@@ -56,13 +56,7 @@ MonoBehaviour:
   MyFeatureType: 0
   MyFeatureDataID: 0
   FeaturePartSerialNumber: 0
-  TriggerType: 7
+  TriggerType: 10
   ValueList:
   - 3
-  - 0
-  - 0
-  SelfBuffers:
-  - Type: 14
-    Time: 0
-    Value: 0
-    Value2: 1000
+  SelfBuffers: []

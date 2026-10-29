@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class Attack : Skill
+    public partial class Attack : Skill
     {
         [LabelOverride("偵測距離)")]
         [Tooltip("偵測有目標在半徑範圍內才會攻擊，若填0代不偵測CD到自動施放)")]
@@ -87,7 +87,7 @@ namespace Starbro.NeonIO
             }
 
             AmmoData.Add("Direction", AttackDir);
-            AmmoData.Add("Target", TargetRole);
+            AmmoData.Add("Target", BotAttackTarget);
         }
 
         protected override void TimerFunc()
@@ -99,7 +99,11 @@ namespace Starbro.NeonIO
             if (Myself.BuffersExist(RoleBuffer.Stun))
                 return;
             if (!CheckIfHasTarget())
+            {
+                // Leaving detection range must not freeze a ranged bot's cooldown while it disengages.
+                if (Timer > 0 && OnCD) Timer -= Time.deltaTime;
                 return;
+            }
             if (AttackOnce && SpellTimes > 0)
                 return;
             //目標是否在距離內判斷
@@ -128,15 +132,15 @@ namespace Starbro.NeonIO
             {
                 OnCD = false;
                 Timer = CurInterval;
-                if (InRange)
+                if (InRange && (!(Myself is NeutralRole seat) || !seat.IsArenaPlayerSeat || seat.ArenaBrain.CanFire(this)))
                 {
                     if (!PhotonNetwork.IsConnected)//只有在網路有連線時才使用RPC
                     {
-                        Spell(new PhotonMessageInfo());
+                        RequestSpell();
                     }
                     else if (Myself.photonView.IsMine)
                     {
-                        Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                        RequestSpell();
                     }
 
                 }
@@ -185,7 +189,7 @@ namespace Starbro.NeonIO
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval)* Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.LeftRight:
-                    if (Myself.Movetorward.x >= 0)
+                    if (BotFacing.x >= 0)
                     {
                         reverse = 1;
                         AttackDir = Vector2.right;
@@ -200,7 +204,7 @@ namespace Starbro.NeonIO
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval * reverse) * Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.TopDown:
-                    if (Myself.Movetorward.y >= 0)
+                    if (BotFacing.y >= 0)
                     {
                         reverse = 1;
                         AttackDir = Vector2.up;
@@ -216,13 +220,13 @@ namespace Starbro.NeonIO
                     break;
                 case DirectionPatetern.TowardTarget:
 
-                    AttackDir = (GetTargetPos() - Myself.transform.position);
+                    AttackDir = (BotAttackPosition - Myself.transform.position);
                     origAngle = ((Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + StartAngle) * Mathf.Deg2Rad;
                     AttackDir = new Vector3(Mathf.Cos(origAngle), Mathf.Sin(origAngle), 0).normalized;
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval) * Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.FaceDirection:
-                    AttackDir = Myself.Movetorward;
+                    AttackDir = BotFacing;
                     origAngle = ((Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + StartAngle) * Mathf.Deg2Rad;
                     AttackDir = new Vector3(Mathf.Cos(origAngle), Mathf.Sin(origAngle), 0).normalized;
 

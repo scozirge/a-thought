@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &1355510181367407396
 GameObject:
@@ -131,7 +131,7 @@ MonoBehaviour:
   TriggerCD: 0
   Buffers:
   - Type: 0
-    Time: 3
+    Time: 5
     Value: 0
     Value2: 0
   Value: 0

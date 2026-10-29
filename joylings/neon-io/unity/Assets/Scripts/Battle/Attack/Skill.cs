@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class Skill : MonoBehaviourPunCallbacks
+    public partial class Skill : MonoBehaviourPunCallbacks
     {
         [LabelOverride("註解")]
         [TextArea]

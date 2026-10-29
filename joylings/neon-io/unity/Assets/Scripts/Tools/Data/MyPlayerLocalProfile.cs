@@ -83,7 +83,7 @@ namespace Scoz.Func
         // Used by startup and migration checks: corrupt/truncated saves never leave null skill slots.
         public static FeatureData[] ParseChallengeLoadout(string saved)
         {
-            int[] defaults = { 5, 103, 213, 102, 17 };
+            int[] defaults = { 5, 103, 213, 103, 5 };
             FeatureData[] result = new FeatureData[defaults.Length];
             string[] entries = (saved ?? "").Split(',');
             for (int i = 0; i < result.Length; i++)

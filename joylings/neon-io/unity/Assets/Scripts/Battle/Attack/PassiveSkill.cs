@@ -6,7 +6,7 @@ using Neon.Networking;
 
 namespace Starbro.NeonIO
 {
-    public class PassiveSkill : Skill
+    public partial class PassiveSkill : Skill
     {
         #region Public Field
         [LabelOverride("觸發類型")]
@@ -128,12 +128,12 @@ namespace Starbro.NeonIO
             if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
             {
                 if (Myself.photonView.IsMine)
-                    Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                    RequestSpell();
                 else if (TriggerType == PSkillTriggerCondition.Die)//如果是死亡觸發即使不是自己也要直接觸發，不然死掉後才接收到來自server的觸發資訊已經來不及了
                     Spell(new PhotonMessageInfo());
             }
             else
-                Spell(new PhotonMessageInfo());
+                RequestSpell();
 
             if (CDTimer != null)
             {
@@ -151,10 +151,10 @@ namespace Starbro.NeonIO
                 if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
                 {
                     if (Myself.photonView.IsMine)
-                        Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                        RequestSpell();
                 }
                 else
-                    Spell(new PhotonMessageInfo());
+                    RequestSpell();
                 if (CDTimer != null)
                 {
                     CDTimer.StartRunTimer = true;
@@ -183,10 +183,10 @@ namespace Starbro.NeonIO
             if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
             {
                 if (Myself.photonView.IsMine)
-                    Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                    RequestSpell();
             }
             else
-                Spell(new PhotonMessageInfo());
+                RequestSpell();
             if (CDTimer != null)
             {
                 CDTimer.StartRunTimer = true;
@@ -202,10 +202,10 @@ namespace Starbro.NeonIO
                 if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
                 {
                     if (Myself.photonView.IsMine)
-                        Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                        RequestSpell();
                 }
                 else
-                    Spell(new PhotonMessageInfo());
+                    RequestSpell();
                 if (CDTimer != null)
                 {
                     CDTimer.StartRunTimer = true;
@@ -225,11 +225,11 @@ namespace Starbro.NeonIO
             {
                 if (Myself.photonView.IsMine)
                 {
-                    Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                    RequestSpell();
                 }
             }
             else
-                Spell(new PhotonMessageInfo());
+                RequestSpell();
         }
         protected virtual void HPBelowTrigger()
         {
@@ -240,10 +240,10 @@ namespace Starbro.NeonIO
             if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
             {
                 if (Myself.photonView.IsMine)
-                    Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                    RequestSpell();
             }
             else
-                Spell(new PhotonMessageInfo());
+                RequestSpell();
             if (CDTimer != null)
             {
                 CDTimer.StartRunTimer = true;
@@ -259,10 +259,10 @@ namespace Starbro.NeonIO
             if (PhotonNetwork.IsConnected)//只有在網路有連線且是自己時才使用RPC
             {
                 if (Myself.photonView.IsMine)
-                    Myself.photonView.RPC("CastSkill", RpcTarget.All, MyFeaturePart, FeaturePartSerialNumber);
+                    RequestSpell();
             }
             else
-                Spell(new PhotonMessageInfo());
+                RequestSpell();
             if (CDTimer != null)
             {
                 CDTimer.StartRunTimer = true;
@@ -410,11 +410,14 @@ namespace Starbro.NeonIO
                     break;
             }
         }
+        int SpeedSource => 1 + (int)MyFeaturePart * 256 + FeaturePartSerialNumber;
         protected void AddBufferToMySelf()
         {
             for (int i = 0; i < SelfBuffers.Count; i++)
             {
-                Myself.AddBuffer(SelfBuffers[i]);
+                var buff = SelfBuffers[i];
+                if (buff.Type == RoleBuffer.SpeedUp) buff.Value2 = SpeedSource;
+                Myself.AddBuffer(buff);
             }
         }
         protected void OnBreakStateRemoveOffered()
@@ -424,11 +427,13 @@ namespace Starbro.NeonIO
                 if (PhotonNetwork.IsConnected && Myself.photonView.IsMine)//只有在網路有連線且是自己時才使用RPC
                     for (int i = 0; i < SelfBuffers.Count; i++)
                     {
-                        Myself.photonView.RPC("RemoveBufferByTypes_RPC", RpcTarget.All, SelfBuffers[i].Type);
+                        if (SelfBuffers[i].Type == RoleBuffer.SpeedUp) Myself.RemoveSpeedSource(SpeedSource);
+                        else Myself.photonView.RPC("RemoveBufferByTypes_RPC", RpcTarget.All, SelfBuffers[i].Type);
                     }
                 else
                     for (int i = 0; i < SelfBuffers.Count; i++)
-                        Myself.RemoveBufferByTypes(SelfBuffers[i].Type);
+                        if (SelfBuffers[i].Type == RoleBuffer.SpeedUp) Myself.RemoveSpeedSource(SpeedSource);
+                        else Myself.RemoveBufferByTypes(SelfBuffers[i].Type);
             }
         }
         //結束CD時執行，若CD為0時代表沒CD，所以不會執行此程式

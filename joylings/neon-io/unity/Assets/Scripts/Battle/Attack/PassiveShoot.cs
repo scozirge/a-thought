@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class PassiveShoot : PassiveSkill
+    public partial class PassiveShoot : PassiveSkill
     {
         [LabelOverride("產生在目標位置")]
         [SerializeField]
@@ -97,7 +97,7 @@ namespace Starbro.NeonIO
             ammo.transform.SetParent(AmmoParent);
             ammo.transform.position = transform.position;
             if (SpawnAtTargetPos)
-                ammo.transform.position = GetTargetPos();
+                ammo.transform.position = BotAttackPosition;
             if (Myself.MyForce == Force.Player)
                 AmmoData.Add("TargetRoleTag", string.Format("{0},{1}", Force.Opponent, Force.Neutral));
             else
@@ -105,7 +105,7 @@ namespace Starbro.NeonIO
                 AmmoData.Add("TargetRoleTag", string.Format("{0},{1},{2}", Force.Player, Force.Opponent, Force.Neutral));
             }
             AmmoData.Add("Direction", AttackDir);
-            AmmoData.Add("Target", TargetRole);
+            AmmoData.Add("Target", BotAttackTarget);
             AmmoData.Add("TriggerWall", TriggerWall);
             ammo.Init(AmmoData);
             if (ConnectToAmmo)
@@ -139,7 +139,7 @@ namespace Starbro.NeonIO
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval)* Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.LeftRight:
-                    if (Myself.Movetorward.x >= 0)
+                    if (BotFacing.x >= 0)
                     {
                         reverse = 1;
                         AttackDir = Vector2.right;
@@ -154,7 +154,7 @@ namespace Starbro.NeonIO
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval * reverse) * Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.TopDown:
-                    if (Myself.Movetorward.y >= 0)
+                    if (BotFacing.y >= 0)
                     {
                         reverse = 1;
                         AttackDir = Vector2.up;
@@ -169,13 +169,13 @@ namespace Starbro.NeonIO
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval * reverse) * Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.TowardTarget:
-                    AttackDir = (GetTargetPos() - Myself.transform.position);
+                    AttackDir = (BotAttackPosition - Myself.transform.position);
                     origAngle = ((Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + StartAngle) * Mathf.Deg2Rad;
                     AttackDir = new Vector3(Mathf.Cos(origAngle), Mathf.Sin(origAngle), 0).normalized;
                     //AmmoRotation = (Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + (StartAngle + CurSpawnAmmoNum * AngleInterval) * Mathf.Deg2Rad;
                     break;
                 case DirectionPatetern.FaceDirection:
-                    AttackDir = Myself.Movetorward;
+                    AttackDir = BotFacing;
                     origAngle = ((Mathf.Atan2(AttackDir.y, AttackDir.x) * Mathf.Rad2Deg) + StartAngle) * Mathf.Deg2Rad;
                     AttackDir = new Vector3(Mathf.Cos(origAngle), Mathf.Sin(origAngle), 0).normalized;
 

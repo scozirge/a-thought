@@ -1,4 +1,4 @@
-using Fusion;
+﻿using Fusion;
 using Scoz.Func;
 using Starbro.NeonIO;
 using UnityEngine;
@@ -32,18 +32,31 @@ namespace Neon.Networking
         {
             if (Searching || PhotonNetwork.IsDisconnecting || PhotonNetwork.InRoom) return;
             if (!instance) { instance = new GameObject("Arena flow").AddComponent<NeonArenaFlow>(); DontDestroyOnLoad(instance); }
+            NeonArenaRating.RecoverAbandoned();
             PhotonLauncher.SelectGameType = GameType.Arena;
             PhotonNetwork.NickName = MyPlayer.Name;
             Searching = true; instance.started = Time.unscaledTime; visualMatch = null; queueProgress = null;
+            AudioPlayer.PlayBattleMusic(MyPlayer.ChooseBattleSong);
             PhotonLauncher.JoinTheRandomRoom();
         }
         public static void Cancel()
         {
             Searching = false;
+            RestoreLobbyMusic();
             PhotonLauncher.CancelJoin();
             PhotonNetwork.Disconnect();
         }
-        public static void Disconnected() { Searching = false; }
+        public static void Disconnected()
+        {
+            if (Searching) RestoreLobbyMusic();
+            Searching = false;
+        }
+        static void RestoreLobbyMusic()
+        {
+            if (SceneManager.GetActiveScene().name != "Lobby" || !AudioPlayer.IsInit || AudioPlayer.CheckMusicKeyIfExit("Lobby")) return;
+            AudioPlayer.StopAllMusic();
+            AudioPlayer.PlayLoopMusicAtSecond_Static(GameDictionary.GetMusic("Lobby"), "Lobby", 8);
+        }
         void Update()
         {
             if (!Searching) return;

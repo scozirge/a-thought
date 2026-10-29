@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &2552244362101821593
 GameObject:
@@ -111,6 +111,7 @@ MonoBehaviour:
   HildinOpponentView: 0
   SpawnSound: {fileID: 0}
   HitTargetSound: {fileID: 8300000, guid: 8d3ccb6bf6d60604d8a6273a93d216eb, type: 3}
+  FixedDamage: 100
   ValuePercent: 0.3
   VampireProportion: 0
   LifeTime: 3

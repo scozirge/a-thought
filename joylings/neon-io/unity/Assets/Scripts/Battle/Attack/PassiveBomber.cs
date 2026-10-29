@@ -5,7 +5,7 @@ using Scoz.Func;
 using Neon.Networking;
 namespace Starbro.NeonIO
 {
-    public class PassiveBomber : PassiveSkill, IPrepareSkill
+    public partial class PassiveBomber : PassiveSkill, IPrepareSkill
     {
         [LabelOverride("產生在目標位置")]
         [SerializeField]
@@ -90,7 +90,7 @@ namespace Starbro.NeonIO
             {
                 AmmoData.Add("TargetRoleTag", string.Format("{0},{1},{2}", Force.Player, Force.Opponent, Force.Neutral));
             }
-            AmmoData.Add("Target", TargetRole);
+            AmmoData.Add("Target", BotAttackTarget);
             //自身子彈
             if (AttackPrefab)
             {
@@ -100,7 +100,7 @@ namespace Starbro.NeonIO
                 go.transform.SetParent(AmmoParent);
                 go.transform.position = transform.position;
                 if (SpawnAtTargetPos)
-                    go.transform.position = GetTargetPos();
+                    go.transform.position = BotAttackPosition;
                 ammo.Init(AmmoData);
                 if (ConnectToAmmo)
                 {

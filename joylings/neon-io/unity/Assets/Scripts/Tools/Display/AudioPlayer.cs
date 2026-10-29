@@ -402,6 +402,18 @@ namespace Scoz.Func
             if (myAS) myAS.time = Mathf.Clamp(_second, 0, Mathf.Max(0, _ac.length - .001f));
             return myAS;
         }
+        public static AudioSource PlayBattleMusic(int selectedSong)
+        {
+            // Use the same two existing tracks for every entry path, including Arena.
+            var clip = GameDictionary.GetMusic(selectedSong == 0 ? "Battle0" : "Battle1");
+            if (!clip) return null;
+            if (!IsInit) InstantiateAudioManager();
+            // Loading the battlefield must not restart music already playing in matchmaking.
+            if (LoopMusicDic.TryGetValue("Battle", out var current) && current && current.clip == clip)
+                return current;
+            StopAllMusic();
+            return PlayLoopMusicAtSecond_Static(clip, "Battle", 0);
+        }
         public static AudioSource PlayLoopMusic_Static(AudioClip _ac, string _key)
         {
             if (_ac == null)

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Starbro.NeonIO;
@@ -9,8 +9,16 @@ namespace Neon.Astral
 {
     public sealed partial class AstralPresentation
     {
+        void RecoverArenaRating()
+        {
+            var match = Neon.Networking.NeonArena.Instance;
+            if (match && match.HasLocalResult) match.SaveReward();
+            if (!match || match.Phase < Neon.Networking.ArenaPhase.Running) Neon.Networking.NeonArenaRating.RecoverAbandoned();
+        }
+        string ArenaRatingLabel() => L("競技積分 ", "RATING ") + Neon.Networking.NeonArenaRating.Current.ToString("N0");
         void BuildLobby()
         {
+            RecoverArenaRating();
             // The original animated guardian, meteors and entrance burst remain visible.
             var menu=Plate(page,"Menu backing",0,0,560,920);menu.color=new Color(Night.r,Night.g,Night.b,.68f);menu.border=new Color(Gold.r,Gold.g,Gold.b,.24f);
             Pin(menu.transform,new Vector2(0,.5f),new Vector2(32,0));
@@ -30,6 +38,8 @@ namespace Neon.Astral
             tutorial.gameObject.AddComponent<AstralHover>().content=()=>L("遊玩教學","How to play");
             var quit=IconButton(menu.transform,"Quit",AstralGraphic.Shape.Exit,-39,-385,66,()=>lobby.ExitGame());
             quit.gameObject.AddComponent<AstralHover>().content=()=>L("離開遊戲","Quit game");
+            var rating = Text(menu.transform,"Arena rating",ArenaRatingLabel(),0,-318,480,34,23,Gold,TextAnchor.MiddleLeft);
+            live.Add(()=>{if(rating)rating.text=ArenaRatingLabel();});
             CurrencyRow(menu.transform,150,-385,false);
         }
         void ModeCard(Transform parent,string name,string title,string desc,float x,float y,UnityEngine.Events.UnityAction action,AstralGraphic.Shape symbol)

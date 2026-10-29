@@ -5,7 +5,7 @@ using Neon.Networking;
 using Scoz.Func;
 namespace Starbro.NeonIO
 {
-    public class Shoot : Attack
+    public partial class Shoot : Attack
     {
         [Tooltip("飛射子彈物件")]
         [SerializeField]
@@ -47,7 +47,7 @@ namespace Starbro.NeonIO
             ammo.transform.SetParent(AmmoParent);
             ammo.transform.position = transform.position;
             if (SpawnAtTargetPos)
-                ammo.transform.position = GetTargetPos();
+                ammo.transform.position = BotAttackPosition;
             AmmoData.Add("TriggerWall", TriggerWall);
             ammo.Init(AmmoData);
             CurSpawnAmmoNum++;

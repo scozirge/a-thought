@@ -66,19 +66,35 @@ namespace Scoz.Func
             {
                 PickupReadyAt = 0;
                 if (MyAutoMove != null) MyAutoMove.ResetForReuse(false);
+                ResetParticles(false);
             }
+        }
+        void ResetParticles(bool play)
+        {
+            if (Appearance == null) return;
+            // Clear world-space particles and the manager's saved playback time.
+            // Re-enabling a pooled star must never replay its previous lifetime.
+            foreach (var manager in Appearance.GetComponentsInChildren<ParticleManager>(true))
+                manager.ResetPlayback(play);
         }
         [PunRPC]
         public virtual void SetLoot(bool _active, Vector2 _pos,Vector2 _force)
         {
             pickupConfigured = true;
-            SetActive(_active);
             if (_active)
             {
                 transform.position = _pos;
-                PickupReadyAt = PhotonNetwork.Time + WaitToBeAcquire;
+                var body = GetComponent<Rigidbody2D>();
+                if (body) body.position = _pos;
+                ResetParticles(false);
             }
-
+            // The new position and clean playback must be ready before OnEnable runs.
+            SetActive(_active);
+            if (_active)
+            {
+                PickupReadyAt = PhotonNetwork.Time + WaitToBeAcquire;
+                ResetParticles(true);
+            }
         }
     }
 }

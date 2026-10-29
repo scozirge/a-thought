@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Fusion;
 using UnityEngine;
 
@@ -6,6 +6,7 @@ namespace Neon.Networking
 {
     public sealed class NeonPlayerSession : NetworkBehaviour
     {
+        [Networked] public int ArenaRating { get; set; }
         [Networked] public NetworkString<_64> PlayerName { get; set; }
         [Networked, Capacity(256)] public NetworkArray<int> PropertyWords => default;
         [Networked] public int PropertyLength { get; set; }
@@ -32,6 +33,7 @@ namespace Neon.Networking
         {
             if (!Object || !Object.IsValid || !HasStateAuthority) return;
             PlayerName = PhotonNetwork.LocalPlayer.NickName;
+            ArenaRating = NeonArenaRating.Current;
             byte[] bytes = NeonWireCodec.PackProperties(PhotonNetwork.LocalPlayer.CustomProperties);
             if (bytes.Length > PropertyWords.Length * 4) { Debug.LogError("Player properties exceed Fusion capacity."); return; }
             NeonPackedState.Write(PropertyWords, bytes);

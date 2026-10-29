@@ -5,7 +5,7 @@ using Neon.Networking;
 using Scoz.Func;
 namespace Starbro.NeonIO
 {
-    public class Bomber : Attack, IPrepareSkill
+    public partial class Bomber : Attack, IPrepareSkill
     {
         [Tooltip("爆炸前的特效物件")]
         [SerializeField]
@@ -101,7 +101,7 @@ namespace Starbro.NeonIO
                 go.transform.SetParent(AmmoParent);
                 go.transform.position = transform.position;
                 if (SpawnAtTargetPos)
-                    go.transform.position = GetTargetPos();
+                    go.transform.position = BotAttackPosition;
                 ammo.Init(AmmoData);
                 if (ConnectToAmmo)
                 {

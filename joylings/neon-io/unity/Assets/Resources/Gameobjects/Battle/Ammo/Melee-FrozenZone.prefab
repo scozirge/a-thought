@@ -68,7 +68,7 @@ MonoBehaviour:
   TriggerCD: 0
   Buffers:
   - Type: 2
-    Time: 2
+    Time: 1
     Value: 0
     Value2: 0
   Value: 0

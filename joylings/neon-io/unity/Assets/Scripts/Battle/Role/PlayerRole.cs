@@ -15,8 +15,10 @@ namespace Starbro.NeonIO
         [LabelOverride("需要按住滑鼠左鍵")]
         public bool MouseDownMove = false;
         [LabelOverride("指標最小限制距離")]
-        [Tooltip("指標在距離腳色多少距離內不移動")]
-        public float CursorLimitDist = 200;
+        [Tooltip("1080 高度下，以角色實際畫面位置為中心的停止半徑")]
+        public float CursorLimitDist = 25;
+        [Tooltip("1080 高度下，超過此距離恢復全速；停止半徑與此距離之間逐漸減速")]
+        public float CursorFullSpeedDist = 150;
         public bool IsRevived;//是否已經付費重生過，付費重生過沒辦法再次使用付費重生
         public int Star = 0;//星幣
         #endregion
@@ -29,6 +31,7 @@ namespace Starbro.NeonIO
         public FollowPlayerRole MyFollowCamera = null;
         public Canvas BattleObjsUICanvas = null;
         AnimationPlayer CameraPlayer = null;
+        Camera movementCamera;
         int Exp = 0;
         public int Experience => Exp;
         public int ExperienceToNextLevel => NeedExpList != null && NeedExpList.Length >= 4 && LV > 0 ? LVUpExp : 1;
@@ -75,12 +78,30 @@ namespace Starbro.NeonIO
 
 
 
+        protected override void Awake()
+        {
+            base.Awake();
+            // The legacy prefab can be rendered before Init while Fusion assigns ownership.
+            // Hide that unclassified appearance; apply the viewer palette in Spawned first.
+            if (PhotonNetwork.IsConnected)
+            {
+                if (AppearanceObj) AppearanceObj.SetActive(false);
+            }
+            else ApplyViewerFaction(true);
+        }
+        public void ApplyViewerFaction(bool localPlayer)
+        {
+            MyForce = localPlayer ? Force.Player : Force.Opponent;
+            tag = MyForce.ToString();
+            Neon.Astral.FactionVisuals.Apply(transform, MyForce);
+            if (!IsInit && AppearanceObj) AppearanceObj.SetActive(true);
+        }
         // Start is called before the first frame update
         public override void Init()
         {
             if (IsInit || !CanInitialize)
                 return;
-            MyForce = !PhotonNetwork.IsConnected || photonView.IsMine ? Force.Player : Force.Opponent;
+            ApplyViewerFaction(!PhotonNetwork.IsConnected || photonView.IsMine);
             if (PhotonNetwork.IsConnected)
             {
                 if (photonView.IsMine)
@@ -312,7 +333,7 @@ namespace Starbro.NeonIO
             {
                 if (PhotonLauncher.SelectGameType != GameType.Challenge)
                 {
-                    MaxHealth = GameSettingData.Health;
+                    MaxHealth = NeonArenaFlow.Active ? NeonArenaRules.InitialPlayerHealth : GameSettingData.Health;
                     BaseDamage = GameSettingData.Damage;
                 }
                 else
@@ -367,6 +388,8 @@ namespace Starbro.NeonIO
             MyFollowCamera.transform.position = cameraPosition;
             MyFollowCamera.SetFollowObj(this);
             MyFollowCamera.enabled = true;
+            movementCamera = MyFollowCamera.GetComponentInChildren<Camera>();
+            BattleCosmos.Ensure(movementCamera);
             CameraPlayer = MyFollowCamera.GetComponent<AnimationPlayer>();
             GameObject canvasObject = GameObject.FindGameObjectWithTag("BattleObjsUICanvas");
             BattleObjsUICanvas = canvasObject != null ? canvasObject.GetComponent<Canvas>() : null;
@@ -409,6 +432,10 @@ namespace Starbro.NeonIO
         }
         public void Move(Vector3 _movetorward)
         {
+            Move(_movetorward, 1);
+        }
+        void Move(Vector3 _movetorward, float speedScale)
+        {
             if (!HasSimulationAuthority || !IsInit) return;
             if (_movetorward == Vector3.zero)
                 return;
@@ -429,7 +456,7 @@ namespace Starbro.NeonIO
 
 
             Movetorward = _movetorward.normalized;
-            Vector2 force = Movetorward * MoveSpeed;
+            Vector2 force = Movetorward * MoveSpeed * Mathf.Clamp01(speedScale);
             MyRigi.linearVelocity = force;
         }
         void NotMobileControl()
@@ -437,32 +464,25 @@ namespace Starbro.NeonIO
             //滑鼠或鍵盤控制
             if (Control == ControlWay.Cursor)//滑鼠移動
             {
-                if (MouseDownMove && !Input.GetMouseButton(0))
-                    return;
-                Vector3 cursorPos = Input.mousePosition;
-                cursorPos.z = 0;
-                //cursorPos = MyCamera.ScreenToWorldPoint(new Vector3(cursorPos.x, cursorPos.y, 0));
-                //float distance = Vector3.Distance(cursorPos, transform.position);
-                Vector3 center = new Vector2(Screen.width / 2, Screen.height / 2);
-                float distance = Vector3.Distance(cursorPos, center);
-                if (distance > CursorLimitDist)
+                if (MouseDownMove && !Input.GetMouseButton(0)) { StopControlledMovement(); return; }
+                if (DragTimer.StartRunTimer) return; // Preserve knockback.
+                if (!movementCamera && MyFollowCamera) movementCamera = MyFollowCamera.GetComponentInChildren<Camera>();
+                Vector2 origin = CursorMovement.ScreenOrigin(movementCamera, transform.position);
+                Vector2 delta = (Vector2)Input.mousePosition - origin;
+                float scale = CursorMovement.SpeedScale(delta.magnitude, movementCamera ? movementCamera.pixelHeight : Screen.height,
+                    CursorLimitDist, CursorFullSpeedDist);
+                if (scale <= 0) { StopControlledMovement(); return; }
+                Vector3 direction = delta;
+                if (movementCamera)
                 {
-                    if (!DragTimer.StartRunTimer)
-                    {
-                        DragRecovery();
-                        //更新腳色面向
-                        UpdateDirection_CursorControl();
-                        //移動
-                        Move(Movetorward);
-
-                        //箭頭朝向面向方向
-                        float angle = -MyMath.GetAngerFormTowPoint2D(cursorPos, center);
-                        ArrowAngle = angle;
-
-                        //腳色朝向面向方向
-                        FaceMoveDirection();
-                    }
+                    float depth = movementCamera.WorldToScreenPoint(transform.position).z;
+                    direction = movementCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, depth)) - transform.position;
+                    direction.z = 0;
                 }
+                DragRecovery();
+                Move(direction, scale);
+                ArrowAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;
+                FaceMoveDirection();
             }
             else if (Control == ControlWay.Keyboard)//鍵盤移動
             {
@@ -509,14 +529,6 @@ namespace Starbro.NeonIO
                     }
                 }
             }
-        }
-        void UpdateDirection_CursorControl()
-        {
-            Vector3 cursorPos = Input.mousePosition;
-            Vector3 center = new Vector2(Screen.width / 2, Screen.height / 2);
-            Vector3 dir = (cursorPos - center);
-            float origAngle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg) * Mathf.Deg2Rad;
-            Movetorward = new Vector3(Mathf.Cos(origAngle), Mathf.Sin(origAngle), 0).normalized;
         }
         void UpdateDirection_KeyboardControl()
         {
@@ -702,8 +714,7 @@ namespace Starbro.NeonIO
                 PhotonTools.AddIntProp(PhotonNetwork.LocalPlayer, PunCustomProp.GainExp, _addEXP);
             }
             // A merged star keeps the rewards of each original pickup, with one sound/effect.
-            if (GainExpEffect) EffectEmitter.EmitParticle(GainExpEffect, Vector3.zero, Vector3.zero, transform, MyForce);
-            if (GainExpSound) AudioPlayer.PlaySound(GainExpSound);
+            PickupFeedback.Play(this, GainExpEffect, GainExpSound);
             HealProportionOfHP(0);
             if (!HasSimulationAuthority) return;
             for (int i = 0; i < _addEXP; i++)

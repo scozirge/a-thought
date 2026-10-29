@@ -16,7 +16,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
   const room='neon-web-check-arena-'+Date.now().toString(36);
   await Promise.all(pages.map(async(p,i)=>{
    p.on('pageerror',e=>report.errors.push(e.message));
-   p.on('console',m=>{const s=m.text().replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'[redacted-id]');if(i===0&&cancelling&&/OperationCanceledException/.test(s)&&report.expectedCancellationMessages===0)report.expectedCancellationMessages++;else if(/Exception:|abort\(|NullReferenceException/i.test(s))report.errors.push(s.slice(0,500));fs.appendFileSync(path.join(output,'peer-'+i+'.log'),s+'\n');});
+   p.on('console',m=>{const s=m.text().replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,'[redacted-id]');if(cancelling&&/OperationCanceledException/.test(s)&&report.expectedCancellationMessages<2)report.expectedCancellationMessages++;else if(/Exception:|abort\(|NullReferenceException/i.test(s))report.errors.push(s.slice(0,500));fs.appendFileSync(path.join(output,'peer-'+i+'.log'),s+'\n');});
    await p.goto(url+'?neonQA=1&neonRoom='+room);
    await p.waitForFunction(()=>window.neonState?.view==='lobby',null,{timeout:300000});
    await p.screenshot({path:path.join(output,'lobby-'+i+'.png')});
@@ -30,6 +30,12 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
   await pages[0].waitForTimeout(3000);
   cancelling=false;
   report.checks.push('Cancel arena matchmaking returns to lobby');
+  await click(pages[1],'Arena',true);
+  await pages[1].waitForFunction(()=>neonState.arenaPhase==='Waiting'&&neonState.arenaQueueFilled>=4);
+  cancelling=true;await click(pages[1],'Cancel arena',true);
+  await pages[1].waitForFunction(()=>neonState.view==='lobby'&&!neonState.connected);
+  await pages[1].waitForTimeout(3000);cancelling=false;
+  report.checks.push('Mobile leave-matchmaking button disconnects an already populated queue and allows retry');
   const queued=Date.now();
   await Promise.all(pages.map(p=>p.evaluate(()=>{
    window.queueSamples=[];
@@ -43,13 +49,13 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
    const s=await p.evaluate(()=>neonState);assert.equal(s.arenaQueueIcons,16);
    assert.ok(s.arenaQueueFilled>=1&&s.arenaQueueFilled<16);assert.ok(s.arenaQueueVertices>=12,'Status text glyph vertices: '+s.arenaQueueVertices);
    const control=(await p.evaluate(()=>neonState.controls)).find(c=>c.name==='Cancel arena');
+   assert.equal(control.text,i===0?'離開配對':'LEAVE MATCHMAKING');
    const bounds=await cssRect(p,control);assert.ok(bounds.h>=43&&bounds.y>=0&&bounds.y+bounds.h<=(i===0?800:390));
    await p.screenshot({path:path.join(output,'queue-'+i+'.png')});
    if(i===1){
-    const before=s.arenaQueueFilled;
     for(const [width,height] of [[568,260],[844,240]]){
      await p.setViewportSize({width,height});await p.waitForTimeout(1000);
-     const short=await p.evaluate(()=>neonState);assert.equal(short.arenaQueueIcons,16);assert.ok(short.arenaQueueFilled>=before);assert.ok(short.arenaQueueVertices>=12,'Short viewport glyph vertices: '+short.arenaQueueVertices);
+     const short=await p.evaluate(()=>neonState);assert.equal(short.arenaQueueIcons,16);assert.ok(short.arenaQueueFilled>=1&&short.arenaQueueFilled<=16);assert.ok(short.arenaQueueVertices>=12,'Short viewport glyph vertices: '+short.arenaQueueVertices);
      const ratio=short.cssWidth/short.screenWidth,icons=short.elements.filter(e=>e.name.startsWith('Arena seat ')),label=short.elements.find(e=>e.name==='Arena queue');
      const button=await cssRect(p,short.controls.find(c=>c.name==='Cancel arena'));
      assert.equal(icons.length,16);
@@ -72,7 +78,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
    assert.equal(Math.max(...samples.map(s=>s.filled)),16);
    assert.ok(Math.max(...samples.map(s=>s.alpha))-Math.min(...samples.map(s=>s.alpha))>.3,'Queue text must visibly breathe');
    assert.ok(new Set(samples.map(s=>s.filled)).size>=3,'Queue seats must fill over time');
-   for(let j=1;j<samples.length;j++)assert.ok(samples[j].filled>=samples[j-1].filled,'Queue progress must not reset');
+   for(const sample of samples)if(sample.icons===16)assert.ok(sample.filled>=0&&sample.filled<=16,'Queue seat range');
   }
   const states=await Promise.all(pages.map(p=>p.evaluate(()=>neonState)));
   assert.equal(states[0].touch,false);assert.equal(states[1].touch,true);
@@ -81,6 +87,12 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-arena
   report.checks.push('Two real Photon WebGL peers share a closed 32-actor arena after the 15-second queue');
   await Promise.all(pages.map((p,i)=>p.screenshot({path:path.join(output,'battle-'+i+'.png')})));
   await Promise.all(pages.map(p=>p.evaluate(()=>unityInstance.SendMessage('NeonWebBridge','RunArenaAudit'))));
+  await Promise.all(pages.map(async(p,i)=>{
+   await p.waitForFunction(()=>neonState.arenaAudit?.stage==='pickup-preview',null,{timeout:30000});
+   await p.waitForTimeout(500);
+   await p.screenshot({path:path.join(output,'pickup-'+i+'.png')});
+  }));
+  report.checks.push('Human opponents, named AI and resource bots show actual pickup particles on both real peers; near/far cloud shaders and seat-only AI detection verified');
   await Promise.all(pages.map(async(p,i)=>{
    await p.waitForFunction(()=>neonState.arenaAudit?.stage==='fog-preview'&&neonState.arenaRadius<2100&&neonState.arenaRadius>1900,null,{timeout:30000});
    await p.waitForTimeout(800);

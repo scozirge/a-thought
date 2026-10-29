@@ -176,7 +176,10 @@ namespace Starbro.NeonIO
 
             Attacker = (Role)(_dic["Attacker"]);
             Neon.Astral.FactionVisuals.Apply(transform, AttackerRoleTag);
-            Value = Mathf.RoundToInt(Attacker.SkillDamage * ValuePercent);
+            Value = CalculateDamage(false);
+            transform.localScale *= RangeScale;
+            if (name.StartsWith("Melee-BoneShield"))
+                foreach (var animator in GetComponentsInChildren<Animator>()) animator.speed *= 2f;
             SpawnParticles();
 
             if (PhotonNetwork.IsConnected)
@@ -192,6 +195,20 @@ namespace Starbro.NeonIO
             else
                 AttackerPhotonViewIsMine = false;
         }
+        public float FixedDamage = -1;
+        public float RangeScale = 1;
+        protected int CalculateDamage(bool melee)
+        {
+            float attack = melee ? Attacker.MeleeDamage : Attacker.SkillDamage;
+            return Mathf.RoundToInt(FixedDamage >= 0 ? FixedDamage * attack / Mathf.Max(1, Attacker.BaseDamage) : attack * ValuePercent);
+        }
+        protected void ScaleEffect(ParticleSystem particle)
+        {
+            if (particle == null || Mathf.Approximately(RangeScale, 1)) return;
+            particle.transform.localScale *= RangeScale;
+            foreach (var child in particle.GetComponentsInChildren<ParticleSystem>())
+            { var main = child.main; main.scalingMode = ParticleSystemScalingMode.Hierarchy; }
+        }
         protected virtual void SpawnParticles()
         {
             //產生特效
@@ -200,6 +217,9 @@ namespace Starbro.NeonIO
                 if (LocalParticles[i] == null)
                     continue;
                 GameObject go = EffectEmitter.EmitParticle(LocalParticles[i], Vector3.zero, Vector3.zero, AppearanceObjs.transform, AttackerRoleTag).gameObject;
+                if (!Mathf.Approximately(RangeScale, 1))
+                    foreach (var particle in go.GetComponentsInChildren<ParticleSystem>())
+                    { var main = particle.main; main.scalingMode = ParticleSystemScalingMode.Hierarchy; }
                 if (LocalParticleObjs != null)
                     LocalParticleObjs.Add(go);
             }
@@ -207,7 +227,7 @@ namespace Starbro.NeonIO
             {
                 if (GlobalParticle[i] == null)
                     continue;
-                EffectEmitter.EmitParticle(GlobalParticle[i], transform.position, Vector3.zero, ParticleParent, AttackerRoleTag);
+                ScaleEffect(EffectEmitter.EmitParticle(GlobalParticle[i], transform.position, Vector3.zero, ParticleParent, AttackerRoleTag).MyParticle);
             }
             if (Attacker)
             {

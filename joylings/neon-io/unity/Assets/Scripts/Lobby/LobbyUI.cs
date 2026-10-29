@@ -110,8 +110,7 @@ namespace Starbro.NeonIO
             ActiveControlPanel(false);
             PhotonLauncher.SelectGameType = GameType.InfinityWar;
             PhotonLauncher.JoinTheRandomRoom();
-            AudioPlayer.StopAllMusic();
-            AudioPlayer.PlayLoopMusicAtSecond_Static(GameDictionary.GetMusic(string.Format("Battle{0}", ChooseBattleSong)), "Battle", 0);
+            AudioPlayer.PlayBattleMusic(ChooseBattleSong);
             for (int i = 0; i < ConnectShowObjs.Length; i++)
             {
                 ConnectShowObjs[i].SetActive(true);

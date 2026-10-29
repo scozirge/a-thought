@@ -16,7 +16,8 @@ for ($index = 0; $index -lt $neonCount; $index++) {
   $neonLog = Join-Path $neonRun ('peer-' + $index + '.log')
   $neonArgs = @('-batchmode','-screen-width','1280','-screen-height','800','-neonSmoke','-neonName',$neonName,'-neonSeconds',$Seconds,'-neonReport',('"' + $neonReport + '"'),'-logFile',('"' + $neonLog + '"'))
   if ($Render) { $neonArgs = @($neonArgs | Where-Object { $_ -ne '-batchmode' }) }
-  elseif ($neonCount -gt 2) { $neonArgs += '-nographics' }
+  # Arena checks exercise real cloud shaders and pickup particles, so keep a graphics device.
+  elseif ($neonCount -gt 2 -and $Mode -ne 'Arena') { $neonArgs += '-nographics' }
   if ($Mode -eq 'Offline') { $neonArgs += @('-neonOffline','-neonSkills') }
   else { $neonArgs += @('-neonRoom',$neonRoom,'-neonMinPeers',$neonCount) }
   if ($Mode -in @('Combat','ChallengeCombat')) { $neonArgs += '-neonCombatCheck' }

@@ -132,6 +132,7 @@ namespace Starbro.NeonIO
                 if (!NeonArena.Instance || NeonArena.Instance.FindActor(PhotonNetwork.LocalPlayer.ActorNumber) < 0)
                 { MyBattleUI.LeaveRoom(); yield break; }
             }
+            AudioPlayer.PlayBattleMusic(MyPlayer.ChooseBattleSong);
             IsWin = false;
             if (NeonArenaFlow.Active) { BattleFieldRadius = 4000; SpawnRoleRadius = 3000; }
             if (PhotonLauncher.SelectGameType == GameType.Challenge)

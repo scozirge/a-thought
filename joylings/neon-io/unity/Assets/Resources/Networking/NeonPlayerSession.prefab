@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af6143bde1f498458b47a9ce0a6809d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Neon.Networking.NeonPlayerSession
+  _ArenaRating: 0
   _PlayerName:
     _length: 0
     _data:

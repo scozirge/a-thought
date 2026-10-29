@@ -20,6 +20,8 @@ namespace Neon.Networking
         [Networked] public int LootSpawnRevision { get; set; }
         [Networked] public double LootPickupReadyAt { get; set; }
         [Networked] public NetworkBool StateReady { get; set; }
+        [Networked] public Vector2 ViewCenter { get; set; }
+        [Networked] public Vector2 ViewHalfSize { get; set; }
         PhotonView view;
         Rigidbody2D body;
         RigidbodyType2D originalBodyType;
@@ -46,10 +48,23 @@ namespace Neon.Networking
             expLoot = loot as ExpLoot;
             lootMovement = loot ? GetComponent<LootMove>() : null;
             role = GetComponent<Starbro.NeonIO.Role>();
+            if (role is Starbro.NeonIO.PlayerRole player) player.ApplyViewerFaction(HasStateAuthority);
             previousAuthority = HasStateAuthority;
             ConfigurePhysics();
             PhotonNetwork.Runtime.Register(view);
             if (HasStateAuthority) Capture();
+            else if (loot)
+            {
+                // A late join can instantiate pooled, inactive stars. Keep the prefab
+                // hidden until one complete snapshot supplies position and visibility.
+                loot.SetActive(false);
+                if (StateReady)
+                {
+                    transform.position = NetworkPosition;
+                    if (body) { body.position = NetworkPosition; body.linearVelocity = LootActive ? NetworkVelocity : Vector2.zero; }
+                    RestoreLootState(); hasRendered = true;
+                }
+            }
         }
         void ConfigurePhysics()
         {
@@ -60,6 +75,15 @@ namespace Neon.Networking
         void Capture()
         {
             NetworkPosition = transform.position;
+            if (role)
+            {
+                var camera = Camera.main;
+                if (camera && camera.orthographic)
+                {
+                    ViewCenter = role is Starbro.NeonIO.PlayerRole ? (Vector2)camera.transform.position : (Vector2)role.transform.position;
+                    ViewHalfSize = new Vector2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
+                }
+            }
             NetworkRotation = transform.eulerAngles.z;
             if (body) { NetworkVelocity = body.linearVelocity; NetworkAngularVelocity = body.angularVelocity; }
             if (loot) { LootActive = loot.IsActive; LootPickupReadyAt = loot.PickupReadyAt; }

@@ -63,8 +63,20 @@ namespace Scoz.Func
                 return fee;
             }
         }
-        // Classroom edition: every head/body/back skill is available without a purchase.
-        public bool Owned = true;
+        // Test access is temporary and never added to the saved purchase list.
+        bool owned;
+        public bool Owned
+        {
+            get
+            {
+#if NEON_TEST_ALL_PARTS
+                return true;
+#else
+                return owned;
+#endif
+            }
+            set { owned = value; }
+        }
         public bool ClamorOwned = false;
         public string Content = "";//³Û¸Ü¤º®e
         public Sprite IconSprite;

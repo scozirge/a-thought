@@ -1,6 +1,65 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>類pico park合作通關</title><link rel="stylesheet" href="styles.css"></head>
-<body><main><header><h1>類pico park合作通關</h1><div class="navigation"><select id="levels" aria-label="選擇關卡"></select><button id="restart">重來</button></div></header>
-<section class="game"><p id="message" role="status">踩朋友的頭，拿鑰匙！</p><canvas id="game" width="1000" height="340" tabindex="0" aria-label="兩個小動物合作跳躍，拿高處鑰匙，再一起進右邊的門"></canvas><div id="success" hidden><strong id="win-title">一起過關了！</strong><div class="win-buttons"><button id="again">再玩一次</button><button id="next">下一關 →</button></div></div></section>
-<section class="controls" aria-label="雙人操作"><div class="player fox"><h2>🦊 狐狸</h2><div class="pad" data-player="0"><button data-action="left" aria-label="狐狸向左">A ←</button><button data-action="jump" aria-label="狐狸跳躍">W 跳</button><button data-action="right" aria-label="狐狸向右">D →</button></div></div><div class="player rabbit"><h2>🐰 兔子</h2><div class="pad" data-player="1"><button data-action="left" aria-label="兔子向左">←</button><button data-action="jump" aria-label="兔子跳躍">↑ 跳</button><button data-action="right" aria-label="兔子向右">→</button></div></div></section>
-</main><script src="levels.js"></script><script src="collision.js"></script><script src="physics.js"></script><script src="core.js"></script><script src="app.js"></script></body></html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f5eb">
+  <title>貓狗一起回家｜合作通關</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="key-icon" viewBox="0 0 32 32"><circle cx="10" cy="12" r="6"/><path d="m14 16 11 11m-5-5 4-4m-1 7 4-4"/></symbol>
+    <symbol id="home-icon" viewBox="0 0 32 32"><path d="m4 14 12-10 12 10M7 12v16h18V12M13 28V18h6v10"/></symbol>
+    <symbol id="book-icon" viewBox="0 0 32 32"><path d="M16 8C12 4 5 5 3 6v21c4-2 9-2 13 1 4-3 9-3 13-1V6c-2-1-9-2-13 2Zm0 0v20M7 11l5 1m-5 5 5 1m8-6 5-1m-5 7 5-1"/></symbol>
+    <symbol id="reset-icon" viewBox="0 0 32 32"><path d="M7 12a10 10 0 1 1 0 9M7 5v8h8"/></symbol>
+  </svg>
+  <main>
+    <header>
+      <h1><svg class="icon title-icon" aria-hidden="true"><use href="#home-icon"/></svg>貓狗一起回家</h1>
+      <div class="navigation">
+        <select id="levels" aria-label="選擇關卡"></select>
+        <button id="restart" class="restart"><svg class="icon" aria-hidden="true"><use href="#reset-icon"/></svg>重來</button>
+      </div>
+    </header>
+    <section class="game" aria-label="合作遊戲">
+      <div class="game-top">
+        <div class="key-progress" id="key-progress"><svg class="icon" aria-hidden="true"><use href="#key-icon"/></svg><strong id="key-count">鑰匙 0 / 1</strong><span id="key-slots" class="key-slots"></span></div>
+        <span id="mode-status" class="mode-status" hidden></span>
+        <span id="mechanic-status" class="mode-status" hidden></span>
+        <span class="home-progress"><svg class="icon" aria-hidden="true"><use href="#home-icon"/></svg><strong id="home-count">到家 0 / 2</strong></span>
+      </div>
+      <p id="message" hidden></p>
+      <canvas id="game" width="1000" height="340" tabindex="0" aria-label="貓咪和狗狗合作拿鑰匙，一起回家"></canvas>
+      <div id="failure" role="alert" hidden><strong id="fail-title"></strong><p>一起重試這一關！</p><button id="retry">重試本關</button></div>
+      <div id="success" hidden>
+        <div class="success-art" aria-hidden="true"><canvas class="avatar" data-avatar="0" width="144" height="144"></canvas><svg class="icon"><use href="#home-icon"/></svg><canvas class="avatar" data-avatar="1" width="144" height="144"></canvas></div>
+        <strong id="win-title">一起回家了！</strong>
+        <div class="win-buttons"><button id="again">再玩一次</button><button id="next">下一關 →</button></div>
+      </div>
+    </section>
+    <section class="controls" aria-label="雙人操作">
+      <div class="player cat" data-player="0">
+        <div class="player-heading"><canvas class="avatar" data-avatar="0" width="144" height="144" aria-hidden="true"></canvas><div><h2>貓咪</h2><p class="player-status" id="player-status-0">還沒拿到鑰匙</p></div></div>
+        <div class="pad"><button data-action="left" aria-label="貓咪向左"><span>A</span><span aria-hidden="true">←</span></button><button data-action="jump" aria-label="貓咪跳躍"><span>W</span><span>跳</span></button><button data-action="right" aria-label="貓咪向右"><span>D</span><span aria-hidden="true">→</span></button><button data-action="special" class="special-action" hidden aria-label="貓咪特殊動作"><span>S</span><span>動作</span></button></div>
+      </div>
+      <div class="player dog" data-player="1">
+        <div class="player-heading"><canvas class="avatar" data-avatar="1" width="144" height="144" aria-hidden="true"></canvas><div><h2>狗狗</h2><p class="player-status" id="player-status-1">還沒拿到鑰匙</p></div></div>
+        <div class="pad"><button data-action="left" aria-label="狗狗向左"><span>←</span></button><button data-action="jump" aria-label="狗狗跳躍"><span>↑</span><span>跳</span></button><button data-action="right" aria-label="狗狗向右"><span>→</span></button><button data-action="special" class="special-action" hidden aria-label="狗狗特殊動作"><span>↓</span><span>動作</span></button></div>
+      </div>
+    </section>
+    <section class="answer-section" aria-label="本關解答" hidden>
+      <button id="answer-toggle" aria-expanded="false" aria-controls="answer-panel"><svg class="icon" aria-hidden="true"><use href="#book-icon"/></svg><span id="answer-label">看解答</span><span class="answer-chevron" aria-hidden="true">⌄</span></button>
+      <div id="answer-panel" hidden><h2 id="answer-title"></h2><p class="answer-note">從起點開始的走法；位置不同時，可以按「重來」。</p><ol id="answer-steps"></ol></div>
+    </section>
+    <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+  <dialog id="finale" aria-labelledby="finale-title" aria-describedby="finale-caption">
+    <p id="finale-caption">20 關全部完成</p>
+    <h2 id="finale-title">你們是最佳拍檔！</h2>
+    <canvas id="finale-art" width="900" height="460" role="img" aria-label="貓咪和狗狗一起走上舞台，在聚光燈和彩紙下接受祝賀"></canvas>
+    <button id="finale-close">繼續選關</button>
+  </dialog>
+  <script src="levels.js"></script><script src="collision.js"></script><script src="mechanics.js"></script><script src="physics.js"></script><script src="core.js"></script><script src="art.js"></script><script src="app.js"></script>
+</body>
+</html>

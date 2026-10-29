@@ -56,6 +56,9 @@ export function verifyH5(output, basePath) {
   );
   assert.ok(classroom.includes('遊戲設計'), 'Missing classroom catalog');
   assert.ok(classroom.includes(`href="${basePath}/together-home/"`) && existsSync(join(root, 'together-home/core.js')), 'Missing bundled cooperative game');
+  const seventh = classroom.match(/<section[^>]+id="seventh-course"[\s\S]*?<\/section>/)?.[0] || '';
+  assert.ok(seventh.includes('第 7 週課程') && seventh.includes(`href="${basePath}/together-home/"`) && seventh.includes(`href="${basePath}/together-home/?tip=true"`), 'Missing seventh lesson or teacher link');
+  assert.ok(classroom.indexOf('id="sixth-course"') < classroom.indexOf('id="seventh-course"'), 'Lesson seven must follow lesson six');
   assert.ok(
     classroom.includes('id="sixth-course"') && classroom.includes('第 6 週課程') &&
       classroom.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&

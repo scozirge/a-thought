@@ -12,7 +12,11 @@ namespace Neon.Editor
 {
     public static class NeonWebBuild
     {
-        public static void Build()
+        const string TestAllPartsDefine = "NEON_TEST_ALL_PARTS";
+        public static void Build() => BuildVariant(false);
+        public static void BuildTest() => BuildVariant(true);
+
+        static void BuildVariant(bool unlockAllParts)
         {
             NeonBuild.Prepare();
             NeonBuild.Validate();
@@ -45,11 +49,19 @@ namespace Neon.Editor
                 importer.SetPlatformTextureSettings(web);
                 importer.SaveAndReimport();
             }
-            foreach (string guid in AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/Resources" }))
+            // A cancelled import can leave a failed artifact that disappears from t:AudioClip
+            // searches. Enumerate the source files so a nominally successful build cannot
+            // silently omit sound effects after an interrupted editor session.
+            var audioPaths = Directory.GetFiles("Assets/Resources", "*", SearchOption.AllDirectories)
+                .Where(p => new[] { ".wav", ".mp3", ".ogg", ".aif", ".aiff" }.Contains(Path.GetExtension(p).ToLowerInvariant()))
+                .Select(p => p.Replace('\\', '/')).ToArray();
+            foreach (string path in audioPaths)
             {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!AssetDatabase.LoadAssetAtPath<AudioClip>(path))
+                    AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+                if (!AssetDatabase.LoadAssetAtPath<AudioClip>(path)) throw new Exception("Audio import failed: " + path);
                 var importer = AssetImporter.GetAtPath(path) as AudioImporter;
-                if (importer == null) continue;
+                if (importer == null) throw new Exception("Missing audio importer: " + path);
                 bool music = path.Contains("/Music/");
                 var web = importer.GetOverrideSampleSettings("WebGL");
                 audio++;
@@ -64,11 +76,12 @@ namespace Neon.Editor
                 web.loadType = AudioClipLoadType.DecompressOnLoad;
                 importer.SetOverrideSampleSettings("WebGL", web);
                 importer.SaveAndReimport();
+                if (!AssetDatabase.LoadAssetAtPath<AudioClip>(path)) throw new Exception("Web audio import failed: " + path);
             }
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.WebGL, ScriptingImplementation.IL2CPP);
             PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.WebGL, ManagedStrippingLevel.Minimal);
             var defines = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.WebGL).Split(';')
-                .Where(s => !s.StartsWith("PUN_") && s != "PHOTON_UNITY_NETWORKING").Concat(new[] { "FUSION_WEAVER" });
+                .Where(s => !s.StartsWith("PUN_") && s != "PHOTON_UNITY_NETWORKING" && s != TestAllPartsDefine).Concat(new[] { "FUSION_WEAVER" });
             PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.WebGL, string.Join(";", defines.Distinct()));
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
             PlayerSettings.WebGL.decompressionFallback = true; // GitHub Pages has no custom Content-Encoding headers.
@@ -78,10 +91,10 @@ namespace Neon.Editor
             PlayerSettings.WebGL.initialMemorySize = 256;
             PlayerSettings.WebGL.maximumMemorySize = 1024;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-            PlayerSettings.bundleVersion = "1.3.0-web";
+            PlayerSettings.bundleVersion = "1.3.1-web";
             // Preserve the original indices for Windows/Web Fusion interoperability.
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
-            string output = Path.GetFullPath("../Builds/WebGL");
+            string output = Path.GetFullPath(unlockAllParts ? "../Builds/WebGLTest" : "../Builds/WebGL");
             Directory.CreateDirectory(output);
             const string oldFontPath = "Assets/Resources/Font/NotoSansCJKtc-Black.ttf";
             byte[] originalFontSettings = File.ReadAllBytes(oldFontPath + ".meta");
@@ -112,7 +125,8 @@ namespace Neon.Editor
                 AssetDatabase.Refresh();
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = scenes, locationPathName = output, target = BuildTarget.WebGL,
-                    subtarget = (int)WebGLTextureSubtarget.DXT, options = BuildOptions.None
+                    subtarget = (int)WebGLTextureSubtarget.DXT, options = BuildOptions.None,
+                    extraScriptingDefines = unlockAllParts ? new[] { TestAllPartsDefine } : Array.Empty<string>()
                 });
             }
             finally
@@ -141,7 +155,18 @@ namespace Neon.Editor
                 Directory.CreateDirectory(Path.GetDirectoryName(target)); File.Copy(path,target,true);
             }
             File.WriteAllText(Path.Combine(output, ".nojekyll"), "");
+            File.WriteAllText(Path.Combine(output, "build-variant.json"), JsonUtility.ToJson(new BuildVariantInfo {
+                variant = unlockAllParts ? "test-all-parts" : "official",
+                allAccessoriesUnlocked = unlockAllParts
+            }, true));
+            Debug.Log($"NEON_WEB_VARIANT_OK variant={(unlockAllParts ? "test-all-parts" : "official")} allAccessoriesUnlocked={unlockAllParts}");
             Debug.Log($"NEON_WEB_BUILD_OK textures={textures} audio={audio} bytes={report.summary.totalSize}");
+        }
+        [Serializable]
+        sealed class BuildVariantInfo
+        {
+            public string variant;
+            public bool allAccessoriesUnlocked;
         }
         static void RestoreSourceBytes(string path, byte[] bytes)
         {

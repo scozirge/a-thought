@@ -1,10 +1,10 @@
 {
   "name": "together-home",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node serve.cjs",
-    "test": "node --test tests/core.test.cjs tests/collision.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/collision.test.cjs tests/previews.test.cjs tests/mixed.test.cjs tests/trials.test.cjs tests/ascent.test.cjs",
     "build": "node build.cjs"
   }
 }

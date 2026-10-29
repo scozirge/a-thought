@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &153007368775093489
 GameObject:
@@ -63,9 +63,9 @@ MonoBehaviour:
   SelfBuffers: []
   AttackPrefab: {fileID: 3577141534146844484, guid: f83dfa306bf8f1e48a6911dddd73822d,
     type: 3}
-  AmmoNum: 3
-  AmmoInterval: 0.02
-  StartAngle: -10
-  AngleInterval: 10
+  AmmoNum: 6
+  AmmoInterval: 0.1
+  StartAngle: 0
+  AngleInterval: 0
   TriggerWall: 0
   Patetern: 1

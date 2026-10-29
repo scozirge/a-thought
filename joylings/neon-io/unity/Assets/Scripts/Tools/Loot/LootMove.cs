@@ -75,7 +75,7 @@ namespace Scoz.Func
 
         public void BeginDeathFlight(Role killer)
         {
-            if (killer == null || !killer.IsAlive || !killer.IsInitialized) return;
+            if (killer == null || !killer.IsAlive || !killer.IsInitialized || !killer.CanCollectStars) return;
             deathTarget = killer;
             MoveToPlayer = false;
             TargetTrans = null;
@@ -117,7 +117,7 @@ namespace Scoz.Func
             }
             // A target may arrive after the loot snapshot. Leave the deadline bounded while resolving it.
             if (deathTarget == null) return false;
-            if (!deathTarget.IsAlive || !deathTarget.IsInitialized)
+            if (!deathTarget.IsAlive || !deathTarget.IsInitialized || !deathTarget.CanCollectStars)
             {
                 ClearDeathFlight();
                 return false;
@@ -171,6 +171,26 @@ namespace Scoz.Func
         void FixedUpdate()
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+            if (CanMove && !IsDeathFlight && !MoveToPlayer && Time.time >= nextMagnetScan)
+            {
+                nextMagnetScan = Time.time + .2f;
+                Role nearest = null; float distance = float.PositiveInfinity;
+                foreach (var sensor in AccessoryMotion.Active)
+                {
+                    var candidate = sensor ? sensor.MagnetRole : null;
+                    if (!candidate || !AccessoryMotion.InView(candidate, transform.position)) continue;
+                    float sqr = ((Vector2)(candidate.transform.position-transform.position)).sqrMagnitude;
+                    if (sqr < distance) { distance=sqr; nearest=candidate; }
+                }
+                if (nearest)
+                {
+                    Vector2 velocity = MyRigi ? MyRigi.linearVelocity : Vector2.zero;
+                    BeginDeathFlight(nearest);
+                    // Existing ground stars start homing without a new death-scatter burst.
+                    DeathFlightUntil -= DeathBurstSeconds;
+                    SetVelocity(velocity);
+                }
+            }
             if (CanMove)
             {
                 if (!MoveToPlayer)
@@ -183,8 +203,11 @@ namespace Scoz.Func
                 }
             }
         }
+        float nextMagnetScan;
         public void SetMoveToTarget(Transform _trans)
         {
+            var role = _trans ? _trans.GetComponent<Role>() : null;
+            if (!role || !role.CanCollectStars) return;
             if (IsDeathFlight) return; // A magnet must not cancel the scatter/slow homing path.
             if (MoveToPlayer)//只會接收一次設定移動目標，第二個玩家想要吸收就沒辦法
                 return;
@@ -199,17 +222,14 @@ namespace Scoz.Func
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
             if (senderView == null)
                 return;
-            if (MoveToPlayer)//只會接收一次設定移動目標，第二個玩家想要吸收就沒辦法
-                return;
-            TargetTrans = senderView.transform;
-            MoveToPlayer = true;
+            SetMoveToTarget(senderView.transform);
         }
         void MoveToTargetFunc()
         {
             if (TargetTrans != null)
             {
                 Role role = TargetTrans.GetComponent<Role>();
-                if (role != null && !role.IsAlive) TargetTrans = null;
+                if (role != null && (!role.IsAlive || !role.CanCollectStars)) TargetTrans = null;
             }
             if (MoveToPlayer && TargetTrans != null)
             {

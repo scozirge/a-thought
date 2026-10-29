@@ -1186,6 +1186,8 @@ MonoBehaviour:
   _LootPickupReadyAt: 0
   _StateReady:
     RawValue: 0
+  _ViewCenter: {x: 0, y: 0}
+  _ViewHalfSize: {x: 0, y: 0}
 --- !u!114 &4085656567334213747
 MonoBehaviour:
   m_ObjectHideFlags: 0

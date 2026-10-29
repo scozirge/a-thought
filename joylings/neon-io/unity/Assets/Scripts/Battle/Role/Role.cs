@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -170,6 +170,7 @@ namespace Starbro.NeonIO
         bool CanClamor = true;
         protected bool IsInit = false;
         public bool IsInitialized { get { return IsInit; } }
+        public virtual bool CanCollectStars => true;
         protected bool CanInitialize { get { return BattleManager.BM != null && BattleManager.BM.IsReadyToSpawn && (!PhotonNetwork.IsConnected || photonView.IsReady); } }
         public bool HasSimulationAuthority { get { return !PhotonNetwork.IsConnected || photonView.IsMine; } }
         bool HasAppliedNetworkState;
@@ -187,6 +188,7 @@ namespace Starbro.NeonIO
         bool PassiveSkillsDirty = true;
         protected Dictionary<RoleBuffer, ParticleSystem> BufferParticles = new Dictionary<RoleBuffer, ParticleSystem>();
         protected Dictionary<RoleBuffer, BufferData> Buffers = new Dictionary<RoleBuffer, BufferData>();
+        readonly SpeedBuffStack speedBuffs = new SpeedBuffStack();
         protected Dictionary<RoleBuffer, float> BufferTimers = new Dictionary<RoleBuffer, float>();
         protected Dictionary<RoleBuffer, PreciseTimer> PreciseBufferTimers = new Dictionary<RoleBuffer, PreciseTimer>();
         public Dictionary<FeaturePart, Skill> SkillDic = new Dictionary<FeaturePart, Skill>();//技能清單
@@ -205,6 +207,7 @@ namespace Starbro.NeonIO
         {
             // Fusion assigns authority in Spawned, after Unity Awake.
             MyRigi = GetComponent<Rigidbody2D>();
+            RoleMovementArrow.Attach(this, TowardDirTrans);
         }
         protected virtual IEnumerator Start()
         {
@@ -560,6 +563,7 @@ namespace Starbro.NeonIO
                     targetPos = Circle.GetRandomPosInCircle(Vector2.zero, _radius);
                     break;
             }
+            targetPos = AccessoryMotion.SafePoint(targetPos);
             if (PhotonNetwork.IsConnected)
                 photonView.RPC("ApplyTeleport", RpcTarget.All, targetPos);
             else
@@ -606,6 +610,13 @@ namespace Starbro.NeonIO
                 PhotonTools.AddStringToUniqueStringProp(PhotonNetwork.LocalPlayer, PunCustomProp.Buffers, ((int)_buffer.Type).ToString());
             }
             */
+            if (_buffer.Type == RoleBuffer.Stun && BufferTimers.TryGetValue(RoleBuffer.Stun, out float stunRemaining))
+                _buffer.Time = SpeedBuffStack.StunDuration(stunRemaining, _buffer.Time);
+            if (_buffer.Type == RoleBuffer.SpeedUp)
+            {
+                speedBuffs.Set((int)_buffer.Value2, _buffer.Time, _buffer.Value);
+                _buffer = new BufferData(RoleBuffer.SpeedUp, speedBuffs.Remaining, speedBuffs.Total, 0);
+            }
             if (Buffers.ContainsKey(_buffer.Type))
             {
                 Buffers[_buffer.Type] = _buffer;
@@ -732,17 +743,30 @@ namespace Starbro.NeonIO
             }
             RemoveBufferByTypes(removeTypes.ToArray());
         }
+        public void RemoveSpeedSource(int source)
+        {
+            speedBuffs.Remove(source);
+            UpdateSpeedAggregate();
+        }
+        void UpdateSpeedAggregate()
+        {
+            if (speedBuffs.Count == 0) { RemoveBufferByTypes_RPC(RoleBuffer.SpeedUp); return; }
+            Buffers[RoleBuffer.SpeedUp] = new BufferData(RoleBuffer.SpeedUp, speedBuffs.Remaining, speedBuffs.Total, 0);
+            BufferTimers[RoleBuffer.SpeedUp] = speedBuffs.Remaining;
+        }
         public void RemoveAllBuffer()
         {
             RoleBuffer[] types = Buffers.Keys.ToArray();
             RemoveBufferByTypes(types);
             Buffers.Clear();
+            speedBuffs.Clear();
             BufferTimers.Clear();
             PreciseBufferTimers.Clear();
         }
         [PunRPC]
         public void RemoveBufferByTypes_RPC(RoleBuffer _buffers)
         {
+            if (_buffers == RoleBuffer.SpeedUp) speedBuffs.Clear();
             if (Buffers.ContainsKey(_buffers))
                 Buffers.Remove(_buffers);
             BufferTimers.Remove(_buffers);
@@ -768,6 +792,7 @@ namespace Starbro.NeonIO
         {
             for (int i = 0; i < _buffers.Length; i++)
             {
+                if (_buffers[i] == RoleBuffer.SpeedUp) speedBuffs.Clear();
                 if (Buffers.ContainsKey(_buffers[i]))
                     Buffers.Remove(_buffers[i]);
                 BufferTimers.Remove(_buffers[i]);
@@ -1001,6 +1026,13 @@ namespace Starbro.NeonIO
                 Debug.LogWarning("沒有此部位技能:" + _part);
         }
 
+        public int EquippedFeatureId(FeaturePart part) => FeatureDic.TryGetValue(part, out var feature) ? feature.ID : 0;
+
+        public bool HasAccessory(int id)
+        {
+            foreach (var feature in FeatureDic.Values) if (feature.ID == id) return true;
+            return false;
+        }
         [PunRPC]
         public virtual void GetFeature(FeaturePart _part, int _featureDataID)
         {
@@ -1039,6 +1071,8 @@ namespace Starbro.NeonIO
                 RemoveFeature(_part);
             }
             FeatureDic.Add(_part, data);
+            if ((_featureDataID == 11 || _featureDataID == 122 || _featureDataID == 117) && !GetComponent<AccessoryMotion>())
+                gameObject.AddComponent<AccessoryMotion>();
             FeatureSpriteRenderer[(int)_part].sprite = data.IconSprite;
             Neon.Astral.FactionVisuals.Apply(transform, MyForce);
             if (GainFeatureSound) AudioPlayer.PlaySound(GainFeatureSound);
@@ -1066,6 +1100,8 @@ namespace Starbro.NeonIO
                         }
                 }
                  */
+                foreach (var skill in SkillDic[_part].GetComponentsInChildren<PassiveSkill>())
+                    RemoveSpeedSource(1 + (int)skill.MyFeaturePart * 256 + skill.FeaturePartSerialNumber);
                 SkillDic[_part].SelfDestroy();
                 SkillDic.Remove(_part);
                 PassiveSkillsDirty = true;
@@ -1157,12 +1193,14 @@ namespace Starbro.NeonIO
         }
         protected virtual void BufferTimerFunc()
         {
+            if (speedBuffs.Count > 0) { speedBuffs.Tick(Time.deltaTime); UpdateSpeedAggregate(); }
             BufferKeysScratch.Clear();
             BufferKeysScratch.AddRange(Buffers.Keys);
             ExpiredBuffersScratch.Clear();
             for (int i = 0; i < BufferKeysScratch.Count; i++)
             {
                 RoleBuffer type = BufferKeysScratch[i];
+                if (type == RoleBuffer.SpeedUp) continue;
                 if (!Buffers.ContainsKey(type) || !BufferTimers.TryGetValue(type, out float remain)) continue;
                 if (PreciseBufferTimers.TryGetValue(type, out PreciseTimer timer) && timer != null)
                     timer.RunTimer(ref remain);
@@ -1225,10 +1263,7 @@ namespace Starbro.NeonIO
                     }
                     break;
                 case RoleBuffer.Freeze:
-                    foreach (var data in SkillDic)
-                    {
-                        data.Value.Freeze(_add);
-                    }
+                    // Cold now slows movement only; attacks continue at their normal rate.
                     break;
                 case RoleBuffer.Ghost:
                     if (RoleAniPlayer != null)
@@ -1414,13 +1449,19 @@ namespace Starbro.NeonIO
                 head = FeatureDic.ContainsKey(FeaturePart.Head) ? FeatureDic[FeaturePart.Head].ID : 0,
                 body = FeatureDic.ContainsKey(FeaturePart.Body) ? FeatureDic[FeaturePart.Body].ID : 0,
                 back = FeatureDic.ContainsKey(FeaturePart.Back) ? FeatureDic[FeaturePart.Back].ID : 0,
-                buffs = new RoleBufferState[Buffers.Count]
+                buffs = new RoleBufferState[Buffers.Count - (Buffers.ContainsKey(RoleBuffer.SpeedUp) ? 1 : 0) + speedBuffs.Count]
             };
             int index = 0;
             foreach (var pair in Buffers)
+            {
+                if (pair.Key == RoleBuffer.SpeedUp) continue;
                 state.buffs[index++] = new RoleBufferState { type = (int)pair.Key,
                     time = BufferTimers.ContainsKey(pair.Key) ? BufferTimers[pair.Key] : pair.Value.Time,
                     value = pair.Value.Value, value2 = pair.Value.Value2 };
+            }
+            foreach (var entry in speedBuffs.Entries)
+                state.buffs[index++] = new RoleBufferState { type = (int)RoleBuffer.SpeedUp,
+                    time = entry.Remaining, value = entry.Value, value2 = entry.Source };
             return state;
         }
 
@@ -1465,12 +1506,18 @@ namespace Starbro.NeonIO
                 ApplyNetworkFeature(FeaturePart.Body, state.body);
                 ApplyNetworkFeature(FeaturePart.Back, state.back);
                 var active = new HashSet<RoleBuffer>();
+                speedBuffs.Clear();
                 if (state.buffs != null)
                     foreach (var item in state.buffs)
                     {
                         var type = (RoleBuffer)item.type;
                         if (item.time <= 0 || !System.Enum.IsDefined(typeof(RoleBuffer), type)) continue;
                         active.Add(type);
+                        if (type == RoleBuffer.SpeedUp)
+                        {
+                            speedBuffs.Set((int)item.value2, item.time, item.value);
+                            continue;
+                        }
                         if (!Buffers.ContainsKey(type))
                             AddBuffer(new BufferData(type, item.time, item.value, item.value2));
                         else
@@ -1479,6 +1526,7 @@ namespace Starbro.NeonIO
                             BufferTimers[type] = item.time;
                         }
                     }
+                if (speedBuffs.Count > 0) UpdateSpeedAggregate();
                 var removed = new List<RoleBuffer>();
                 foreach (var type in Buffers.Keys) if (!active.Contains(type)) removed.Add(type);
                 RemoveBufferByTypes(removed.ToArray());

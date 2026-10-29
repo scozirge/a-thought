@@ -62,10 +62,10 @@ MonoBehaviour:
   FirstAttackNoWait: 1
   Patetern: 4
   RandomAngle: 0
-  StartAngle: -4
+  StartAngle: -6.5
   AttackPrefab: {fileID: 4258820407099068905, guid: 28fe9ce8430e0dc4bad46e0b6e9ea900,
     type: 3}
   AmmoNum: 2
   AmmoInterval: 0
-  AngleInterval: 8
+  AngleInterval: 13
   TriggerWall: 0

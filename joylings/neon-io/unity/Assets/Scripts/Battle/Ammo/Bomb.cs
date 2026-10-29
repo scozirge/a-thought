@@ -82,7 +82,7 @@ namespace Starbro.NeonIO
             {
                 if (LaunchGlobalParticle[i] == null)
                     continue;
-                EffectEmitter.EmitParticle(LaunchGlobalParticle[i], transform.position, Vector3.zero, ParticleParent, AttackerRoleTag);
+                ScaleEffect(EffectEmitter.EmitParticle(LaunchGlobalParticle[i], transform.position, Vector3.zero, ParticleParent, AttackerRoleTag).MyParticle);
             }
         }
         protected override void OnTriggerEnter2D(Collider2D _col)

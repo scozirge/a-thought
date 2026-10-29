@@ -73,7 +73,8 @@ namespace Starbro.NeonIO
             UpdateFeatureIcon(FeaturePart.Back, null, null);
         }
         public void LeaveRoom()
-        {
+        {
+            Neon.Networking.NeonArena.Instance?.LeaveRatedMatch();
             if (PhotonNetwork.IsConnected)
             {
                 //PhotonNetwork.LeaveRoom();

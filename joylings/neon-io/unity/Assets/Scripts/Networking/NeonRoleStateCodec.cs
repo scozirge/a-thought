@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.IO;
 using Starbro.NeonIO;
 using UnityEngine;
 
 namespace Neon.Networking
 {
-    // 20 status slots, two names of at most 64 UTF-16 code units, and fixed scalar fields fit below 900 bytes.
+    // 32 status slots, two names of at most 64 UTF-16 code units, and fixed scalar fields fit below 1024 bytes.
     // A binary snapshot avoids reserving 4096 bytes per role in every Fusion history entry.
     internal static class NeonRoleStateCodec
     {
         public const int Capacity = 1024;
-        const byte Version = 1;
-        const int MaximumBuffs = 20;
+        const byte Version = 2;
+        const int MaximumBuffs = 32;
         public static byte[] Encode(RoleNetworkState state)
         {
             using (var stream = new MemoryStream(Capacity))
@@ -29,7 +29,10 @@ namespace Neon.Networking
                 writer.Write((byte)count);
                 if (count > 0)
                 {
-                    Array.Sort(state.buffs, (first, second) => first.type.CompareTo(second.type));
+                    Array.Sort(state.buffs, (first, second) => {
+                        int type = first.type.CompareTo(second.type);
+                        return type != 0 ? type : first.value2.CompareTo(second.value2);
+                    });
                     foreach (var buff in state.buffs)
                     {
                         writer.Write(buff.type); writer.Write(buff.time); writer.Write(buff.value); writer.Write(buff.value2);

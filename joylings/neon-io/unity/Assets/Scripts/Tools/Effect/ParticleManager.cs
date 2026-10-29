@@ -92,6 +92,15 @@ namespace Scoz.Func
                 }
             }
         }
+        // Explicitly used by recycled loot only. Normal effects keep their resume behaviour.
+        public void ResetPlayback(bool play)
+        {
+            CurParticleTime = 0;
+            if (!MyParticle) MyParticle = GetComponent<ParticleSystem>();
+            if (!MyParticle) return;
+            MyParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            if (play && gameObject.activeInHierarchy) MyParticle.Play(true);
+        }
         void OnEnable()
         {
             if (MyParticle == null)

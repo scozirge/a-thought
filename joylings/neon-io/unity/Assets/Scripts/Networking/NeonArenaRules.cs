@@ -1,11 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Neon.Networking
 {
     public static class NeonArenaRules
     {
         public const int PlayerSeats = 16, ResourceBots = 16, Total = 32;
-        public const float QueueSeconds = 15, StarSeconds = 10, InitialRadius = 4000;
+        public const int InitialPlayerHealth = 1500;
+        public const int ResourceBotHealth = 1000;
+        public const float QueueSeconds = 1, StarSeconds = 10, InitialRadius = 4000;
+        public const float StormDelay = 15, StormDuration = 75;
         public const int GroundStarLimit = 384;
         static float AreaRatio(float radius)
         {
@@ -25,8 +28,8 @@ namespace Neon.Networking
         }
         public static bool CanSpawnAmbientStar(float radius, int nearby, int total) =>
             AmbientStarsPerWindow(radius) > 0 && nearby < AmbientStarLimit(radius) && total < GroundStarLimit;
-        // Thirty seconds to gather, then a smooth collapse; storm damage escalates every 30 seconds.
-        public static float Radius(float elapsed) => InitialRadius * Mathf.Clamp01(1 - Mathf.Max(0, elapsed - 30) / 210);
+        // A short opening, then visible continuous pressure without changing the star density rules.
+        public static float Radius(float elapsed) => InitialRadius * Mathf.Clamp01(1 - Mathf.Max(0, elapsed - StormDelay) / StormDuration);
         public static int StormDamage(float elapsed, int maxHealth) => Mathf.Max(1, Mathf.CeilToInt(maxHealth * (.035f + Mathf.Floor(elapsed / 30) * .015f)));
         public static int PlacementReward(int rank) => rank >= 1 && rank <= PlayerSeats ? (PlayerSeats + 1 - rank) * 2 + (rank == 1 ? 10 : 0) : 0;
         public static int KillReward(int kills) => Mathf.Clamp(kills, 0, Total - 1) * 3;

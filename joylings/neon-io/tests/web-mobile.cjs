@@ -32,7 +32,7 @@ const output=path.resolve(__dirname,'../logs/'+(process.env.NEON_RUN||'web-mobil
    });
    info.label=label;
    assert.equal(info.legacyPopupVisible,false,'Original popup canvas must stay hidden');assert.equal(info.controls.length,3);
-   for(const b of info.controls){assert.ok(b.h>=43.5,`${label}: ${b.name} touch height ${b.h}`);assert.ok(b.w>=100);assert.ok(b.x>=-1&&b.y>=-1&&b.x+b.w<=info.css[0]+1&&b.y+b.h<=info.css[1]+1,`${label}: control clipped`);}
+   for(const b of info.controls){assert.ok(b.h>=43.5,`${label}: ${b.name} touch height ${b.h}`);assert.ok(b.w>=(b.name==='Close tutorial'?43.5:100),`${label}: ${b.name} touch width ${b.w}`);assert.ok(b.x>=-1&&b.y>=-1&&b.x+b.w<=info.css[0]+1&&b.y+b.h<=info.css[1]+1,`${label}: control clipped`);}
    assert.ok(info.canvas.x>=0&&info.canvas.y>=0&&info.canvas.right<=info.viewport[0]+1&&info.canvas.bottom<=info.viewport[1]+1);
    report.sizes.push(info);await page.screenshot({path:path.join(output,label+'.png'),scale:'css'});
   }

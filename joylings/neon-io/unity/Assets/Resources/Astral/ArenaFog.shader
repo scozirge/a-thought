@@ -27,15 +27,19 @@ Shader "Neon/Arena Black Mist"
             {
                 float distance=length(i.world)-_Radius;
                 // Leave the safe interior completely clear; evaluate noise only near/in the fog.
-                if(distance < -170 && _Radius > 0) return fixed4(0,0,0,0);
+                if(distance < -45 && _Radius > 0) return fixed4(0,0,0,0);
                 float2 drift=float2(_Time.y*.035,-_Time.y*.026);
                 float clouds=noise(i.world*.0027+drift);
                 float detail=noise(i.world*.007-drift*1.6);
-                float edge=distance+(clouds-.5)*110+(detail-.5)*35;
-                float opacity=smoothstep(-120,240,edge)*(.84+.12*clouds);
+                // Keep the damage boundary consistently dark. Noise varies the soft inner
+                // fringe, never opens transparent gaps on the unsafe side of the boundary.
+                float fringe=lerp(18,42,clouds*.7+detail*.3);
+                float edge=smoothstep(-fringe,0,distance);
+                float depth=smoothstep(0,110,distance);
+                float opacity=edge*lerp(.68+.04*detail,.96+.025*clouds,depth);
                 // Once the safe area vanishes there is no transparent pinhole at the origin.
-                opacity=lerp(.90,opacity,saturate(_Radius/100));
-                float3 tint=lerp(float3(.009,.012,.021),float3(.036,.043,.063),clouds*.6+detail*.4);
+                opacity=lerp(.97,opacity,saturate(_Radius/60));
+                float3 tint=lerp(float3(.003,.005,.011),float3(.013,.018,.030),clouds*.6+detail*.4);
                 return fixed4(tint,opacity);
             }
             ENDCG

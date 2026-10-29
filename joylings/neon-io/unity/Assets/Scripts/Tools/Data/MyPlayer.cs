@@ -85,6 +85,15 @@ namespace Scoz.Func
                 }
             }
             if (KongregateAPIBehaviour.UsesLocalProfile) LoadLocalProgress();
+            for (int slot = 0; slot < ChallengeSelectFeatures.Length; slot++)
+            {
+                var selected = ChallengeSelectFeatures[slot];
+                if (selected == null || !selected.Owned)
+                {
+                    int fallback = selected == null ? 5 : selected.MyFeaturePart == FeaturePart.Body ? 103 : selected.MyFeaturePart == FeaturePart.Back ? 213 : 5;
+                    ChallengeSelectFeatures[slot] = FeatureData.GetFeatureData(fallback);
+                }
+            }
             PhotonNetwork.NickName = Name;
             Debug.Log("Loading LocoData done");
         }
