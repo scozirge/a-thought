@@ -1,5 +1,23 @@
 # 貓狗一起回家｜20 關合作冒險
 
+## Unity 雙人連線與手機版
+
+[雙人連線版](https://scozirge.github.io/together-online/) · [Unity 老師教學版](https://scozirge.github.io/together-online/?tip=true) · [第 7 週課程](https://scozirge.github.io/classroom/#seventh-course) · [本機 Unity](http://127.0.0.1:18130/)
+
+沿用先前合作挑戰與 RIVALS 的 **Unity 6000.3.11f1＋Photon Fusion 2** 做法。開房者控制貓咪、加入者控制狗狗，六位房號、邀請連結或房間清單均可加入，最多兩人；各自可用電腦或手機。手機的「蘑菇頭」是虛擬搖桿，角色仍是原本的貓狗。搖桿只控制左右，另一指可同時按跳躍；重力關才顯示「翻朋友」。連線時兩位都能用 A／D／W／S 或方向鍵控制自己的角色。同機模式維持原本兩套鍵盤，手機可點角色按鈕切換操控對象。
+
+房主統一以原本每秒 120 步規則計算移動、機關、貨物、鑰匙與勝敗，加入者只送自己的輸入。跳躍與翻重力使用遞增編號保留短按事件，重來／切關更新回合編號，舊輸入不能污染新關。房主選關、重來、控制教學示範；加入者不能透過訊息橋繞過權限。朋友離開暫停等待，新朋友加入時重開本關；房主離開即關房。離開遊戲畫面會清除輸入並暫停，回前景可繼續；連線本身是否中斷由 Photon 判斷。採獨立 `AppVersion=catdog-online-v1`、`asia`，不會混入其他遊戲房間。
+
+Unity C# 原生執行完整 20 關與第 0 關，並使用 Unity 畫布繪製場景、原版貓狗素材和鏡頭。HTML 只負責房間表單、按鍵／多點觸控與輔助介面，沒有嵌入原本 JS 遊戲引擎。Unity 教學示範仍走同一套正常按鍵與物理規則；保留開場、暖身、鑰匙持有標示、全部解答與全破回家結局。示範不計入通關，存檔沿用目前關卡的 saveKey。
+
+建置：先 `npm run setup:unity` 從儲存庫既有 `puzzle-party/unity-game` 複用 Photon SDK、Unity 設定與有授權的繁中字型，再 `npm run build:unity`。SDK 複本、字型二進位及 Unity 快取不重複納入 Git。`scripts/export-unity.cjs` 匯出關卡、原始按鍵解答與逐段比對資料；每次 Unity 建置都先執行 C#／JS 物理比對。原版插圖已匯出成 PNG；需更新時，設定 `PLAYWRIGHT_PATH` 後執行 `node scripts/export-unity-art.cjs`。
+
+`npm run start:unity` 以 HTTP 開啟 `Builds/UnityWeb`；輸出含原生 WebAssembly、內容雜湊檔名、本地啟動器與第三方授權。請透過 HTTP／HTTPS 開啟，不能直接雙擊 WebGL 的 HTML。單機可用本地 HTTP；跨裝置開房與加入需要連上 Photon。遊戲期間保持頁面在前景。
+
+設定 `PLAYWRIGHT_PATH` 後，`npm run test:unity` 逐關驗證原生 WebGL 解題、暫停／停止及手機多點觸控；`npm run test:online` 用隔離瀏覽器與真正 Photon WSS 驗證雙向開房、角色權限、鍵盤加手機合作通關、教學示範與離房；`npm run test:online:lifecycle` 驗證既有存檔、第三位玩家被拒、連線取消及重新加入。`npm run verify:unity` 檢查原生 WebAssembly、資源雜湊與授權文件。這些是瀏覽器／觸控模擬測試，不能等同實體手機、不同 ISP 或長時間弱網實測。
+
+原版 H5 與其測試工具保留在本目錄，以下記錄目前共用的關卡與故事。
+
 整合原本 20 關與兩個已確認的新玩法，汰換最簡單或重複的關卡，再重排成 **20 關**。第 7 關加入「連動箱子」，第 9 關加入「渡船接力」；第 16～20 關是大型組合挑戰。正式選單不加入未選用的「影子接班」。
 
 [開始遊戲](http://127.0.0.1:18128/) · [老師教學版／自動解題](http://127.0.0.1:18128/?tip=true) · [最後五關](http://127.0.0.1:18128/?level=16)
@@ -75,11 +93,11 @@ solutions.js 記錄每秒 120 個正常按鍵狀態，經 input.js 的按下／�
 - npm run record:solutions：從正常按鍵解法重新產生示範；npm run check:solutions 驗證一致。
 - 設定 PLAYWRIGHT_PATH 後，node tests/solutions-browser.cjs 會驗證 20 關播放與逐步輸入；npm run test:campaign:browser 會用真實鍵盤操作新增五關，並檢查舊進度對應、全破與手機排版。
 - 設定 PLAYWRIGHT_PATH 後，node tests/browser.cjs 會透過瀏覽器鍵盤輸入逐關通過正式 20 關，檢查鑰匙、兩人到家、存檔、全破結局與手機操作。
-- 課程端先 npm run build:classroom，再設定 CLASSROOM_ROOT=dist/classroom-h5 執行 node tests/classroom-seventh.mjs，驗證目錄連結、開場泡泡、暖身鍵盤通關、進入第 1 關及老師版示範。
+- 課程端先 npm run build:classroom-site，並開啟本機 Unity 18130 伺服器，再設定 CLASSROOM_ROOT=dist/classroom-site 執行 node tests/classroom-seventh.mjs，驗證第七週 Unity 連結、手機版目錄、開場／暖身與老師版示範。
 - npm run test:story:browser：驗證開場對話、暫停／略過、暖身鍵盤通關、存檔隔離、結局重播及手機排版。
 - npm run test:visual:browser：從正常按鍵產生 20 關各 4 個快照，檢查一般／老師版機關畫面與標籤，不修改遊戲進度。
 
-第七週課程沿用既有遊戲與老師版入口。課程複製腳本與獨立建置均包含 warmup.js、story.js、campaign.js、puzzle-levels.js、puzzle-rules.js，讓離線版本也保有完整故事與機關。
+第七週正式課程的遊戲與老師版入口已改為 Unity 連線版。課程仍保留原 H5 離線副本；複製腳本與獨立建置均包含 warmup.js、story.js、campaign.js、puzzle-levels.js、puzzle-rules.js，讓舊連結與離線版本也保有完整故事與機關。
 
 ## 本地原型保留
 

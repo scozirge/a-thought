@@ -1,2 +1,13 @@
 dist/
 test-output/
+Builds/
+artifacts/
+unity-game/Library/
+unity-game/Temp/
+unity-game/Logs/
+unity-game/obj/
+unity-game/UserSettings/
+unity-game/Assets/Photon/
+unity-game/Assets/Photon.meta
+unity-game/Assets/Resources/NotoSansTC-Regular.otf
+unity-game/Assets/Resources/NotoSansTC-Regular.otf.meta

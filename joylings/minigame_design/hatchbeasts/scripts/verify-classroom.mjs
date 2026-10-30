@@ -64,9 +64,9 @@ export function verifyClassroom(output) {
     'utf8',
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
-  assert.ok(catalog.includes('href="/together-home/"') && existsSync(join(root, 'together-home/core.js')), 'Missing bundled cooperative game');
+  assert.ok(catalog.includes('href="https://scozirge.github.io/together-online/"') && existsSync(join(root, 'together-home/core.js')), 'Missing Unity cooperative link or retained offline game');
   const seventh = catalog.match(/<section[^>]+id="seventh-course"[\s\S]*?<\/section>/)?.[0] || '';
-  assert.ok(seventh.includes('第 7 週課程') && seventh.includes('href="/together-home/"') && seventh.includes('href="/together-home/?tip=true"'), 'Missing seventh lesson or teacher link');
+  assert.ok(seventh.includes('第 7 週課程') && seventh.includes('href="https://scozirge.github.io/together-online/"') && seventh.includes('href="https://scozirge.github.io/together-online/?tip=true"'), 'Missing seventh lesson or Unity teacher link');
   assert.ok(catalog.indexOf('id="sixth-course"') < catalog.indexOf('id="seventh-course"'), 'Lesson seven must follow lesson six');
   assert.ok(
     catalog.includes('id="sixth-course"') && catalog.includes('第 6 週課程') &&

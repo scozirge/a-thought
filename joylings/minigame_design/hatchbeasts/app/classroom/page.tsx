@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2 } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL, TOGETHER_ONLINE_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -16,7 +16,7 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
-              <a className="course-button" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
+              <a className="course-button" href={TOGETHER_ONLINE_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
                 玩貓狗一起回家
                 <ArrowUpRight size={18} aria-hidden="true" />
@@ -357,17 +357,17 @@ export default function ClassroomHome() {
 
           <section className="seventh-course" id="seventh-course" aria-labelledby="seventh-course-title">
             <h2 id="seventh-course-title">第 7 週課程</h2>
-            <a className="unit-card card-green" href={assetUrl('/together-home/')} target="_blank" rel="noopener noreferrer">
+            <a className="unit-card card-green" href={TOGETHER_ONLINE_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
               <span className="unit-icon tint-green"><Gamepad2 size={28} aria-hidden="true" /></span>
-              <span className="sixth-game-copy"><span className="unit-title">貓狗一起回家</span><span className="unit-meta">20 關合作冒險</span></span>
+              <span className="sixth-game-copy"><span className="unit-title">貓狗一起回家</span><span className="unit-meta">20 關雙人連線 · 手機搖桿</span></span>
               <ArrowUpRight size={22} aria-hidden="true" />
             </a>
             <div className="activity-content">
-              <p className="catalog-question-context">兩人一台電腦。貓咪用 A／D 移動、W 跳；狗狗用 ←／→ 移動、↑ 跳。拿齊鑰匙，兩人都到出口。</p>
+              <p className="catalog-question-context">一人開房當貓咪，朋友用六位房號加入當狗狗。兩台電腦或手機都能玩；手機拖動搖桿移動、按跳躍，一起拿齊鑰匙回家。</p>
               <p className="catalog-question-context">先看貓狗相遇，再從第 0 關暖身。一起推連動箱子、開渡船、搭電梯；最後 5 關是大型挑戰，20 關全破後一起回家！</p>
               <div className="potion-teacher-links">
                 <strong>老師教學版</strong>
-                <p>網址加 <code>?tip=true</code> 可看提示與解答，也能按「播放解題」觀看貓狗合作通關。<a href={assetUrl('/together-home/?tip=true')} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>
+                <p>網址加 <code>?tip=true</code> 可看解答與播放示範；連線時由房主選關、重來及播放解題。<a href={`${TOGETHER_ONLINE_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>
                 <p>指定關卡時加 <code>&amp;tip=true</code>，例如 <code>?level=20&amp;tip=true</code>。</p>
               </div>
             </div>
