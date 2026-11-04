@@ -7,12 +7,13 @@
 <div class="entry-body"><h1>小工程師</h1><p class="lead">一個人描述，大家一起畫。</p>
 <button id="identity" class="identity" aria-label="更換隨機名字與頭像"><span id="avatar"></span><b id="name"></b><span class="reroll" aria-hidden="true">⟳</span></button>
 <div class="actions"><button id="join" class="primary">加入</button><button id="host">開房</button></div><p id="status" role="status"></p></div></section>
-<section id="waiting" hidden><div class="sheet-card"><div class="large-icon">✎</div><h2 id="wait-title"></h2><p id="wait-count"></p><button id="start" class="primary">開始出題</button></div></section>
-<section id="drawing" hidden><div class="desk-head"><div><span class="kicker" id="role"></span><h2 id="draw-title"></h2></div><strong id="clock" aria-label="剩餘時間"></strong></div></section>
+<section id="waiting" hidden><div class="sheet-card"><div class="large-icon">✎</div><h2 id="wait-title"></h2><button id="start" class="primary">開始出題</button></div></section>
+<section id="drawing" hidden><div class="desk-head"><div><span class="kicker" id="role"></span><h2 id="draw-title">我的畫紙</h2></div><div class="round-actions"><strong id="clock" aria-label="剩餘時間"></strong><button id="end" hidden>結束</button></div></div></section>
 <div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas></div>
-<div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="oval" aria-label="圓形">○</button><button data-tool="box" aria-label="方形">□</button><button data-tool="tri" aria-label="三角形">△</button><button id="undo" aria-label="上一步">↶</button></div>
+<div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="oval" aria-label="圓形">○</button><button data-tool="box" aria-label="方形">□</button><button data-tool="tri" aria-label="三角形">△</button><button id="undo" aria-label="上一步">↶</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
 <section id="result" hidden><div class="desk-head"><div><span class="kicker">一起翻牌</span><h2 id="result-title">作品牆</h2></div><button id="next" class="primary" hidden>下一輪</button></div><div id="gallery"></div><p id="result-note"></p></section>
 <footer hidden id="foot"><span id="who"></span><button id="leave">離房</button></footer>
+<ul id="roster" hidden aria-label="師傅名單"></ul>
 </main><div id="toast" hidden role="status"></div>
 <script src="app.js"></script><script src="Build/{{{ LOADER_FILENAME }}}"></script>
 <script>
