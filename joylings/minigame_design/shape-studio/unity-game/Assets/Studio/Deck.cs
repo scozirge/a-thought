@@ -3,42 +3,91 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShapeStudio {
-    public static class Deck {
-        // Bounds are in paper coordinates, measured from its top left. Each card has
-        // one silhouette and two or three count, placement or orientation cues.
-        static readonly string[] Cards = {
-            "oval 55 70 199 200;box 57 43 91 77;tri 153 38 200 77;oval 91 116 103 128;oval 152 116 164 128;tri 117 141 137 156",
-            "box 58 119 196 211;tri 41 49 211 119;box 162 47 181 79;oval 109 139 137 167",
-            "tri 91 39 177 138;line 134 138 134 154;line 41 154 213 154;line 213 154 182 193;line 182 193 77 193;line 77 193 41 154;oval 95 166 105 176;oval 122 166 132 176;oval 149 166 159 176",
-            "box 52 84 202 188;line 127 84 127 52;oval 115 28 139 52;box 74 114 94 134;oval 149 111 175 137;box 202 122 220 149",
-            "box 62 77 194 169;line 128 77 128 169;tri 87 40 129 77;tri 129 40 166 77;oval 73 169 109 205;oval 146 169 182 205",
-            "tri 89 21 167 80;box 89 80 167 177;box 112 98 143 129;tri 90 178 113 216;tri 143 178 166 216",
-            "oval 59 77 176 170;line 176 122 215 89;line 215 89 215 156;line 215 156 176 122;oval 79 104 98 123;oval 43 61 57 75;oval 25 38 34 47",
-            "oval 77 124 177 218;oval 87 60 166 128;line 73 73 177 47;tri 91 25 153 62;box 118 153 136 171",
-            "line 127 28 183 95;line 183 95 127 152;line 127 152 73 95;line 73 95 127 28;line 73 95 183 95;line 127 152 99 205;line 127 152 153 195;oval 88 202 104 218;box 150 194 165 209",
-            "box 55 87 166 176;oval 166 105 204 151;oval 76 120 92 136;oval 122 120 138 136;line 43 189 190 189",
-            "box 49 69 206 156;line 49 69 127 120;line 206 69 127 120;line 93 156 93 197;line 158 156 158 197;box 65 191 94 206",
-            "tri 38 86 139 189;tri 112 58 212 189;line 162 58 162 26;line 162 26 190 37;line 190 37 162 46;oval 50 43 76 69",
-            "box 39 64 217 190;line 128 64 128 190;oval 60 94 105 139;tri 150 92 198 145",
-            "tri 40 49 211 133;line 126 133 126 198;line 126 198 150 198;box 84 96 104 116",
-            "oval 65 66 190 192;tri 55 38 100 81;line 127 129 127 88;line 127 129 157 144;line 96 184 80 210;line 159 185 171 206",
-            "box 38 94 214 164;box 53 107 83 133;box 107 107 137 133;oval 164 106 193 135;oval 63 164 99 200;oval 154 164 190 200"
-        };
-        static readonly Queue<int> bag = new Queue<int>();
-        static int previous=-1;
-        public static int Next() {
-            if(bag.Count==0){
-                var cycle=new List<int>();for(int i=0;i<Cards.Length;i++)cycle.Add(i);
-                for(int i=cycle.Count-1;i>0;i--){int j=UnityEngine.Random.Range(0,i+1);int t=cycle[i];cycle[i]=cycle[j];cycle[j]=t;}
-                if(cycle[0]==previous) {int t=cycle[0];cycle[0]=cycle[1];cycle[1]=t;}
-                foreach(int n in cycle)bag.Enqueue(n);
-            }
-            return previous=bag.Dequeue();
+    public sealed class Deck {
+        public const int Levels=5, PerLevel=20;
+        const int Full=(1<<PerLevel)-1;
+        // Five used-card masks followed by each bag's last card (one-based).
+        public readonly int[] History=new int[Levels*2];
+        static string[] cards;
+        public void Restore(int[] history){
+            Array.Clear(History,0,History.Length);
+            if(history!=null && history.Length==History.Length)Array.Copy(history,History,History.Length);
         }
-        public static void Draw(int id,Sheet sheet) {
-            sheet.Reset();
-            foreach(string item in Cards[id].Split(';')){
-                var p=item.Split(' ');sheet.Shape(p[0],int.Parse(p[1]),int.Parse(p[2]),int.Parse(p[3]),int.Parse(p[4]));
+        public int Next(int level){
+            int used=History[level];bool newBag=used==Full;
+            if(newBag)used=0;
+            var choices=new List<int>(PerLevel);
+            for(int i=0;i<PerLevel;i++)
+                if((used&(1<<i))==0 && !(newBag&&History[Levels+level]==i+1))choices.Add(i);
+            int pick=choices[UnityEngine.Random.Range(0,choices.Count)];
+            History[level]=used|(1<<pick);History[Levels+level]=pick+1;
+            return level*PerLevel+pick;
+        }
+        static string[] Load(){
+            var asset=Resources.Load<TextAsset>("chalk-cards");
+            var list=new List<string>();int tier=-1;
+            foreach(string raw in asset.text.Split('\n')){
+                string line=raw.Trim();
+                if(line==""||line.StartsWith("#"))continue;
+                if(line.StartsWith("[")){
+                    tier++;
+                    if(line!="["+tier+"]" || list.Count!=tier*PerLevel)throw new FormatException("題庫分組錯誤："+line);
+                }else list.Add(line);
+            }
+            if(tier!=Levels-1 || list.Count!=Levels*PerLevel)throw new FormatException("每個難度必須有 20 張圖。");
+            return list.ToArray();
+        }
+        public static void Draw(int id,Sheet sheet){
+            cards??=Load();sheet.Reset();
+            foreach(string command in cards[id].Split(';')){
+                string[] fields=command.Trim().Split(new[]{' '},StringSplitOptions.RemoveEmptyEntries);
+                string op=fields[0];
+                sheet.ColorIndex=op.Length==1?(byte)7:byte.Parse(op.Substring(1));
+                if(id/PerLevel==0?sheet.ColorIndex!=7:sheet.ColorIndex<1||sheet.ColorIndex>6)
+                    throw new FormatException("原圖顏色不符難度："+id);
+                int[] n=new int[fields.Length-1];
+                for(int i=0;i<n.Length;i++)n[i]=int.Parse(fields[i+1]);
+                if(op[0]=='p'){
+                    if(n.Length<4||n.Length%2!=0)throw new FormatException(command);
+                    for(int i=2;i<n.Length;i+=2)sheet.Line(n[i-2],n[i-1],n[i],n[i+1]);
+                }else if(op[0]=='c'){
+                    if(n.Length!=8)throw new FormatException(command);
+                    Curve(sheet,n);
+                }else{
+                    if(n.Length!=3&&n.Length!=4)throw new FormatException(command);
+                    int w=n[2],h=n.Length==4?n[3]:w;
+                    int x=n[0]-w/2,y=n[1]-h/2,u=x+w,v=y+h;
+                    switch(op[0]){
+                        case 'o':sheet.Shape("oval",x,y,u,v);break;
+                        case 'r':sheet.Shape("box",x,y,u,v);break;
+                        case 't':sheet.Shape("tri",x,y,u,v);break;
+                        case 'v':sheet.Line(x,y,u,y);sheet.Line(u,y,n[0],v);sheet.Line(n[0],v,x,y);break;
+                        case 'd':sheet.Line(n[0],y,u,n[1]);sheet.Line(u,n[1],n[0],v);sheet.Line(n[0],v,x,n[1]);sheet.Line(x,n[1],n[0],y);break;
+                        case 's':
+                            int px=n[0],py=y;
+                            for(int k=1;k<=10;k++){
+                                float angle=k*Mathf.PI/5-Mathf.PI/2,scale=k%2==0?.5f:.22f;
+                                int nx=n[0]+Mathf.RoundToInt(w*scale*Mathf.Cos(angle));
+                                int ny=n[1]+Mathf.RoundToInt(h*scale*Mathf.Sin(angle));
+                                sheet.Line(px,py,nx,ny);px=nx;py=ny;
+                            }
+                            break;
+                        case 'w':
+                            Curve(sheet,new[]{x,n[1],x+w/6,y-h/6,n[0]-w/6,y-h/6,n[0],n[1]});
+                            Curve(sheet,new[]{n[0],n[1],n[0]+w/6,v+h/6,u-w/6,v+h/6,u,n[1]});
+                            break;
+                        default:throw new FormatException(command);
+                    }
+                }
+            }
+        }
+        static void Curve(Sheet sheet,int[] n){
+            var a=new Vector2(n[0],n[1]);var b=new Vector2(n[2],n[3]);
+            var c=new Vector2(n[4],n[5]);var d=new Vector2(n[6],n[7]);var prev=a;
+            for(int i=1;i<=48;i++){
+                float t=i/48f,s=1-t;
+                var p=s*s*s*a+3*s*s*t*b+3*s*t*t*c+t*t*t*d;
+                sheet.Line(Mathf.RoundToInt(prev.x),Mathf.RoundToInt(prev.y),Mathf.RoundToInt(p.x),Mathf.RoundToInt(p.y));prev=p;
             }
         }
     }

@@ -15,7 +15,9 @@ namespace ShapeStudio {
     [Serializable] public class Wire {
         public string type, phase, token, ink;
         public int round, seq, member, avatar, deadline, winner, card=-1, stamp;
-        public bool final, done;
+        public int promptVersion;public int[] deckHistory;
+        public int showAt;public int[] showOrder;public bool wallOpen;
+        public bool final, done, rename;
         public Portrait[] people;
         public SeatCopy[] seats;
     }
@@ -106,7 +108,7 @@ namespace ShapeStudio {
             var timer=new CancellationTokenSource(TimeSpan.FromSeconds(35));
             try {
                 var app=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-                app.FixedRegion="asia";app.AppVersion="shape-studio-v2";
+                app.FixedRegion="asia";app.AppVersion="shape-studio-v5";
                 peer=new RealtimeClient().SetupForFusion(app);
                 NetworkRunner.CloudConnectionLostCurrentMode=NetworkRunner.CloudConnectionLostMode.Disabled;
                 var config=NetworkProjectConfig.Global; config.AllowClientServerModesInWebGL=true;
@@ -144,7 +146,7 @@ namespace ShapeStudio {
             if(active){active.RemoveCallbacks(this);try{await active.Shutdown();}catch(Exception){}if(active)Destroy(active.gameObject);}
             Host=WantsHost=false;Busy=false;closing=false;peer=null;Closed?.Invoke(notice);Changed?.Invoke();
         }
-        const int MaxTransfer=1024*1024;
+        const int MaxTransfer=4*1024*1024;
         PlayerRef PeerOf(Player actor) => actor!=null && actor.CustomProperties.ContainsKey(PeerKey) &&
             actor.CustomProperties[PeerKey] is int id ? PlayerRef.FromEncoded(id) : PlayerRef.None;
         public void Send(int to,Wire message) {
@@ -169,7 +171,7 @@ namespace ShapeStudio {
                 if(!Host && WantsHost && sender==lead && Latest(CandidateKey)?.ActorNumber==peer.LocalPlayer.ActorNumber)Promote(msg);
                 return;
             }
-            if(bytes.Length>18000 || (!Host && (WantsHost || sender!=lead)))return;
+            if(bytes.Length>65536 || (!Host && (WantsHost || sender!=lead)))return;
             if(!Host && teacher!=lead){teacher=lead;TeacherChanged?.Invoke();}
             Received?.Invoke(sender,msg);
         }

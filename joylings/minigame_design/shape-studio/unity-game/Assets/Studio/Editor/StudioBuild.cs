@@ -9,6 +9,7 @@ using ShapeStudio;
 
 public static class StudioBuild {
     public static void Build(){
+        StudioChecks.Run();
         var scene=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
         var camera=new GameObject("Camera").AddComponent<Camera>();
         camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(1f,.996f,.977f);

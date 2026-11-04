@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShapeStudio {
-    // One ink bit per pixel. Even a full sheet fits in a single bounded reliable message.
+    // Two palette indices per byte. Zero is paper, 1–6 are chalk, 7 is prompt-only black.
     public sealed class Sheet {
-        public const int Size = 256, Bytes = Size * Size / 8;
+        public const int Size = 256, Bytes = Size * Size / 2, MaxPackedChars = ((Bytes+3)/3)*4;
+        public static readonly string[] Palette={"#FFFEF9","#DD8592","#EAA171","#DBBA56","#81B995","#81AED8","#B298CB","#292929"};
+        static readonly Color32[] PaintColors=Array.ConvertAll(Palette, hex=>{
+            ColorUtility.TryParseHtmlString(hex,out Color c);return (Color32)c;
+        });
+        public byte ColorIndex {get;set;}=7;
         public byte[] Bits { get; private set; } = new byte[Bytes];
         readonly List<byte[]> undo = new List<byte[]>();
         byte[] before; int sx, sy, lastX, lastY;
@@ -17,12 +22,14 @@ namespace ShapeStudio {
             Bits = bits != null ? (byte[])bits.Clone() : new byte[Bytes];
             undo.Clear(); before = null; Dirty = true;
         }
-        void Dot(int x, int y, int radius = 1) {
+        void Dot(int x, int y) {
+            int radius=ColorIndex==0?8:1;
             for (int dy = -radius; dy <= radius; dy++)
                 for (int dx = -radius; dx <= radius; dx++) {
                     int px = x+dx, py = y+dy;
                     if (px < 0 || py < 0 || px >= Size || py >= Size || dx*dx+dy*dy > radius*radius+1) continue;
-                    int i = py*Size+px; Bits[i>>3] |= (byte)(1 << (i & 7));
+                    int i=py*Size+px,shift=(i&1)*4;
+                    Bits[i>>1]=(byte)((Bits[i>>1]&~(15<<shift)) | (ColorIndex<<shift));
                 }
             Dirty = true;
         }
@@ -47,13 +54,14 @@ namespace ShapeStudio {
                 Line(oldX,oldY,nx,ny); oldX=nx; oldY=ny;
             }
         }
-        public void Begin(string selected, int x, int y) {
+        public void Begin(string selected, int x, int y, int chalk) {
             End(); before=(byte[])Bits.Clone(); sx=lastX=x; sy=lastY=y; tool=selected;
-            if (tool=="pen") Dot(x,y);
+            ColorIndex=(byte)(tool=="eraser"?0:Mathf.Clamp(chalk,1,6));
+            if (tool=="pen" || tool=="eraser") Dot(x,y);
         }
         public void Move(int x, int y) {
             if (!Down) return;
-            if (tool=="pen") Line(lastX,lastY,x,y);
+            if (tool=="pen" || tool=="eraser") Line(lastX,lastY,x,y);
             else { Array.Copy(before,Bits,Bytes); Shape(tool,sx,sy,x,y); }
             lastX=x; lastY=y;
         }
@@ -66,9 +74,14 @@ namespace ShapeStudio {
             End(); if (undo.Count==0) return false;
             Bits=undo[undo.Count-1]; undo.RemoveAt(undo.Count-1); Dirty=true; return true;
         }
+        public bool Clear() {
+            End();if(!HasInk)return false;
+            if(undo.Count>=32)undo.RemoveAt(0);
+            undo.Add(Bits);Bits=new byte[Bytes];Dirty=true;return true;
+        }
         // Zero runs dominate children's line drawings. Use raw bits if a packed sheet would grow.
         public string Pack() {
-            var packed=new List<byte>{1};
+            var packed=new List<byte>{3};
             for (int i=0; i<Bytes;) {
                 while (i<Bytes && Bits[i]==0) i++;
                 if (i==Bytes) break;
@@ -77,28 +90,30 @@ namespace ShapeStudio {
                 for (int j=start;j<i;j++) packed.Add(Bits[j]);
             }
             if (packed.Count<=Bytes) return Convert.ToBase64String(packed.ToArray());
-            var raw=new byte[Bytes+1]; Array.Copy(Bits,0,raw,1,Bytes); return Convert.ToBase64String(raw);
+            var raw=new byte[Bytes+1];raw[0]=2;Array.Copy(Bits,0,raw,1,Bytes);return Convert.ToBase64String(raw);
         }
         public static byte[] Unpack(string value) {
-            if (string.IsNullOrEmpty(value) || value.Length>11000) return null;
+            if (string.IsNullOrEmpty(value) || value.Length>MaxPackedChars) return null;
             byte[] data; try {data=Convert.FromBase64String(value);} catch(FormatException){return null;}
             if(data.Length<1) return null;
             var bits=new byte[Bytes];
-            if (data[0]==0 && data.Length==Bytes+1) {Array.Copy(data,1,bits,0,Bytes);return bits;}
-            if (data[0]!=1) return null;
-            int previous=0;
-            for(int i=1;i<data.Length;) {
-                if(i+3>data.Length) return null;
-                int start=(data[i]<<8)|data[i+1], length=data[i+2]; i+=3;
-                if(length==0 || start<previous || start+length>Bytes || i+length>data.Length)return null;
-                Array.Copy(data,i,bits,start,length);i+=length;previous=start+length;
-            }
+            if (data[0]==2 && data.Length==Bytes+1) {Array.Copy(data,1,bits,0,Bytes);}
+            else if(data[0]==3){
+                int previous=0;
+                for(int i=1;i<data.Length;) {
+                    if(i+3>data.Length) return null;
+                    int start=(data[i]<<8)|data[i+1], length=data[i+2]; i+=3;
+                    if(length==0 || start<previous || start+length>Bytes || i+length>data.Length)return null;
+                    Array.Copy(data,i,bits,start,length);i+=length;previous=start+length;
+                }
+            }else return null;
+            // Only student sheets are received over the wire.
+            if(Array.Exists(bits,b=>(b&15)>6 || (b>>4)>6))return null;
             return bits;
         }
         public void Paint(Texture2D texture, Color32[] pixels) {
-            var ink=new Color32(37,52,77,255); var paper=new Color32(255,254,249,255);
             for(int y=0;y<Size;y++) for(int x=0;x<Size;x++){
-                int i=y*Size+x; pixels[(Size-1-y)*Size+x]=(Bits[i>>3]&(1<<(i&7)))!=0?ink:paper;
+                int i=y*Size+x;pixels[(Size-1-y)*Size+x]=PaintColors[(Bits[i>>1]>>((i&1)*4))&15];
             }
             texture.SetPixels32(pixels);texture.Apply(false,false);Dirty=false;
         }
