@@ -23,5 +23,5 @@ const realtime=fs.readFileSync(path.join(sdk,'PhotonRealtime/Code/RealtimeClient
 fs.writeFileSync(path.join(licenses,'Photon-Realtime-COPYRIGHT.txt'),realtime.slice(0,realtime.indexOf('#if')).trim()+'\n');
 fs.copyFileSync(path.join(__dirname,'serve.cjs'),path.join(out,'serve.cjs'));
 fs.copyFileSync(path.join(root,'START.cmd'),path.join(out,'START.cmd'));
-fs.writeFileSync(path.join(out,'使用說明.txt'),'\uFEFF小工程師｜Unity 連線版\r\n\r\n電腦安裝 Node.js 後，雙擊 START.cmd。保持視窗開著，同一網路的手機或電腦開啟視窗裡的區網網址。連線需要網際網路。\r\n一人按「開房」，其他人按「加入」。點名字或頭像可以換一組身分。\r\n房主看無題名的原圖並描述。師傅可隨時加入，按「畫好了」鎖筆，取消勾選即可繼續畫。\r\n房主按「結束」或三分鐘到就揭曉。房主點選最相近的作品，再按「下一輪」。另一人按「開房」會接手，原出題者退出。房主按「離房」會關閉教室。\r\n');
+fs.writeFileSync(path.join(out,'使用說明.txt'),'\uFEFF小工程師｜Unity 連線版\r\n\r\n電腦安裝 Node.js 後，雙擊 START.cmd。保持視窗開著，同一網路的手機或電腦開啟視窗裡的區網網址。連線需要網際網路。\r\n一人按「開房」，其他人按「加入」。點名字或頭像可以換一組身分。\r\n房主可選難度、換一題，看無題名原圖並描述。師傅可用六色粉筆、橡皮擦、清空與上一步，按「畫好了」鎖筆，取消勾選即可繼續畫。\r\n房主按「結束」或三分鐘到就揭曉。先單獨展示原圖 3 秒，再輪流展示每位師傅的作品與原圖各 3 秒，最後停在全部作品牆。只有小工程師按「下一題」，全班才會重新作畫。另一人按「開房」會接手，原出題者退出。房主按「離房」會關閉教室。\r\n');
 console.log('已打包 Unity WebGL：'+out);
