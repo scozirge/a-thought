@@ -355,6 +355,20 @@ export default function ClassroomHome() {
           </details>
           </section>
 
+          <details className="lesson-review-action" id="sixth-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第六堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">木塊出走的難度較高，每個人的上手程度差異很大。</p>
+              <p className="catalog-question-context">兩人一組時，有些小朋友沒辦法好好合作。有人只想自己解題，不太願意讓夥伴嘗試，這是這次最大的問題。</p>
+              <p className="catalog-question-context">有人已經解完全部關卡時，其他進度也很快、但年紀較小的小朋友，仍會因為不甘心而生自己的氣。孩子之間有年齡差異，年紀小的其實也已經解得很快。</p>
+              <p className="catalog-question-context">後續希望陪孩子培養抗壓力，減少與別人比較的心態，也練習有始有終地完成挑戰。</p>
+            </div>
+          </details>
+
           <section className="seventh-course" id="seventh-course" aria-labelledby="seventh-course-title">
             <h2 id="seventh-course-title">第 7 週課程</h2>
             <a className="unit-card card-green" href={TOGETHER_ONLINE_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
@@ -367,6 +381,20 @@ export default function ClassroomHome() {
               <p className="catalog-question-context">先看貓狗相遇，再從第 0 關暖身。一起推連動箱子、開渡船、搭電梯；最後 5 關是大型挑戰，20 關全破後一起回家！</p>
             </div>
           </section>
+
+          <details className="lesson-review-action" id="seventh-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第七堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">這次的主題是合作，遊戲機制要求兩個人一起協力。</p>
+              <p className="catalog-question-context">對有些組別來說很成功，雙人合作的要求讓兩人都必須參與，也減少只有想掌控的人一直操作的情況。</p>
+              <p className="catalog-question-context">有些能力不錯、但合作精神較不足的小朋友，仍會想嘗試一人完成，或一直指揮夥伴，沒有充分讓對方一起嘗試，有點可惜。</p>
+              <p className="catalog-question-context">嘗試指導後，這些合作情況有改善。</p>
+            </div>
+          </details>
 
           <section className="eighth-course" id="eighth-course" aria-labelledby="eighth-course-title">
             <h2 id="eighth-course-title">第 8 週課程</h2>
