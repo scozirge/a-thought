@@ -52,7 +52,8 @@ footer{max-width:680px;margin:20px auto 0;border-top:1px solid #b3b4ab;padding-t
 #unity-canvas.erasing{cursor:none}
 
 /* Keep the presenter's reference visible while the class draws. */
-.presenting #unity-canvas{touch-action:auto;cursor:default}
+#presenter-original{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none}
+.presenting #unity-canvas{position:absolute;inset:0;touch-action:auto;cursor:default}
 @media (max-width:650px), (orientation:landscape) and (max-height:500px){
   #shell.presenting{
     display:grid;

@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+const {chromium,webkit}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const url=process.env.STUDIO_URL||'http://127.0.0.1:18136/';
 const output=path.resolve(__dirname,'../artifacts/online');
 fs.mkdirSync(output,{recursive:true});
@@ -13,8 +13,8 @@ async function open(browser,name,mobile=false) {
   page.on('console',m=>{if(/Exception|error|failed|shutdown|disconnect|joined room/i.test(m.text()))record(name+' console',{text:m.text().slice(0,320)});});
   page.on('pageerror',e=>record('pageerror',{player:name,error:e.message}));
   page.on('websocket',socket=>record(name+' socket',{address:new URL(socket.url()).host}));
-  const cdp=await context.newCDPSession(page);
-  await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
+  const cdp=browser.browserType()===chromium?await context.newCDPSession(page):null;
+  if(cdp)await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
   // Observe only the WebGL view events already sent to the player's browser.
   await page.addInitScript(()=>{
     let ui;Object.defineProperty(window,'paperStudio',{get:()=>ui,set(value){
@@ -57,9 +57,10 @@ async function checkPresenterLayout(host,action){
   try{
     for(const [width,height] of [[320,480],[360,640],[390,844],[430,932],[568,320],[667,375],[844,390]]){
       await page.setViewportSize({width,height});
+      await wait(host,()=>{const im=document.querySelector('#presenter-original');return !im.hidden&&im.complete&&im.naturalWidth===256;});
       const boxes=await page.evaluate(id=>{
         const rect=selector=>document.querySelector(selector).getBoundingClientRect().toJSON();
-        return {paper:rect('#unity-canvas'),controls:['#self-id','#role','#difficulty','#reroll','#'+id].map(rect),
+        return {paper:rect('#presenter-original'),controls:['#self-id','#role','#difficulty','#reroll','#'+id].map(rect),
           pageWidth:document.documentElement.scrollWidth,scrollY:window.scrollY};
       },action);
       assert.equal(boxes.pageWidth,width);assert.equal(boxes.scrollY,0);
@@ -76,8 +77,8 @@ async function checkPresenterLayout(host,action){
     }
   }finally{await page.setViewportSize(originalSize);}
 }
-async function inkPixels(p){
-  const png=await p.page.locator('#unity-canvas').screenshot();
+async function inkPixels(p,selector='#unity-canvas'){
+  const png=await p.page.locator(selector).screenshot();
   return p.page.evaluate(async data=>{
     const img=new Image();img.src='data:image/png;base64,'+data;await img.decode();
     const canvas=document.createElement('canvas');canvas.width=img.width;canvas.height=img.height;
@@ -103,8 +104,10 @@ async function stroke(p,mobile=false,offset=0) {
 async function run(){
   const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-backgrounding-occluded-windows','--disable-renderer-backgrounding']});
   const players=[];
+  let presenterBrowser=browser;
   try{
-    const host=await open(browser,'host',true),a=await open(browser,'first'),b=await open(browser,'late',true);
+    if(process.env.STUDIO_HOST_BROWSER==='webkit')presenterBrowser=await webkit.launch();
+    const host=await open(presenterBrowser,'host',true),a=await open(browser,'first'),b=await open(browser,'late',true);
     players.push(host,a,b);
     await snapshot(host,'01-home');const prev=(await view(a)).identity;
     await a.page.click('#identity');await wait(a,n=>roomView.identity!==n,prev);
@@ -120,18 +123,20 @@ async function run(){
     assert.equal(await a.page.locator('#prompt-tools').isVisible(),false);
     await host.page.selectOption('#difficulty','1');await wait(host,()=>roomView.level===1);
     await host.page.waitForTimeout(250);
-    const preview=await host.page.locator('#unity-canvas').screenshot();
+    const preview=await host.page.locator('#presenter-original').getAttribute('src');
     await host.page.click('#reroll');await host.page.waitForTimeout(250);
-    assert.ok(!preview.equals(await host.page.locator('#unity-canvas').screenshot()));
+    assert.notEqual(await host.page.locator('#presenter-original').getAttribute('src'),preview);
     await host.page.click('#start');await wait(a,()=>roomView.phase==='draw');
     const first=await view(a);
-    assert.equal(first.original,'');assert.ok(!('seconds' in first));assert.equal(await a.page.locator('#clock').count(),0);
+    assert.equal(first.original,'');assert.ok(await a.page.locator('#presenter-original').isHidden());
+    assert.equal(await a.page.locator('#presenter-original').getAttribute('src'),null);
+    assert.ok(!('seconds' in first));assert.equal(await a.page.locator('#clock').count(),0);
     assert.deepEqual(await a.page.locator('[data-tool]').evaluateAll(items=>items.map(el=>el.dataset.tool)),['pen','eraser']);
     assert.equal(await host.page.locator('#draw-title').isVisible(),false);assert.ok(!('title' in await view(host)));
     assert.equal(await host.page.locator('#role').innerText(),'大聲說出你的作品 讓師傅們幫你完工!');
     await checkPresenterLayout(host,'end');
     record('手機出題者在七種直橫式尺寸均可同屏看圖、換題與開始或結束');
-    assert.equal(await a.page.locator('[data-chalk]').count(),7);assert.ok(await inkPixels(host)>40);
+    assert.equal(await a.page.locator('[data-chalk]').count(),7);assert.ok(await inkPixels(host,'#presenter-original')>40);
     assert.equal(await a.page.getByRole('button',{name:'黑色粉筆'}).getAttribute('aria-pressed'),'true');
     await snapshot(host,'02-host-prompt');
     assert.equal(await inkPixels(a),0);
@@ -156,7 +161,7 @@ async function run(){
     await wait(a,()=>document.querySelector('#toast').textContent==='出題者換題了');
     assert.equal((await view(a)).done,true);assert.equal((await view(a)).round,first.round);
     assert.equal(await inkPixels(a),lockedInk);
-    const originalInk=await inkPixels(host);
+    const originalInk=(await view(host)).original;assert.ok(originalInk);
     await a.page.mouse.click((await a.page.locator('#unity-canvas').boundingBox()).x+180,360);
     assert.equal(await inkPixels(a),lockedInk);
     if([0,7].includes((await view(b)).identity))await pickAlias(b,1);
@@ -204,10 +209,8 @@ async function run(){
     await checkSelf(replacement,'小小工程師');await pickAlias(host,7); // Taken by the existing artist.
     assert.equal((await view(replacement)).round,first.round);assert.equal((await view(replacement)).level,4);
     await wait(replacement,()=>roomView.people.filter(p=>p.online).length===2 && roomView.people.some(p=>p.done));
-    const desktopSize=replacement.page.viewportSize();
-    await replacement.page.setViewportSize(host.page.viewportSize());
-    assert.equal(await inkPixels(replacement),originalInk);
-    await replacement.page.setViewportSize(desktopSize);
+    assert.equal((await view(replacement)).original,originalInk);
+    assert.ok(await inkPixels(replacement,'#presenter-original')>40);
     await wait(b,()=>roomView.people.some(p=>p.done));
     record('新開房者接手同一題、名單與勾選；原出題者退場');
     assert.ok(await b.page.locator('#end').isHidden());
@@ -358,7 +361,9 @@ async function run(){
     for(const p of players){try{await snapshot(p,'failure-'+p.name);record('failure-view',{player:p.name,view:await view(p)});}catch{}}
     throw e;
   } finally{
-    fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(logs,null,2));await browser.close();
+    fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(logs,null,2));
+    if(presenterBrowser!==browser)await presenterBrowser.close();
+    await browser.close();
   }
 }
 run().catch(e=>{console.error(e);process.exitCode=1;});

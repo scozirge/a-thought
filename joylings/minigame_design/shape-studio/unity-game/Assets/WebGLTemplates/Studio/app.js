@@ -77,7 +77,7 @@
       else{const blank=document.createElement('div');blank.className='blank';blank.textContent=id && v.people.find(p=>p.id===id)?.drawn?'作品載入中':'白紙';card.append(blank);}
       const caption=document.createElement('strong');caption.textContent=text;card.append(caption);wall.append(card);
     }
-    if(v.original){originalURL||=pictureURL(v.original);tile('原圖',originalURL,'original',0);}
+    if(v.original)tile('原圖',originalURL,'original',0);
     if(answerOnly)return;
     const ids=all?v.showOrder:[v.showOrder[v.slide]];
     const roster=new Map(v.people.map(p=>[p.id,p]));
@@ -110,7 +110,16 @@
     const old=current;current=v;
     const inRoom=v.connected && v.phase!=='home', drawing=inRoom && v.phase==='draw';
     const preview=inRoom && v.host && v.phase==='wait';
-    $('shell').classList.toggle('presenting',v.host&&(preview||drawing));
+    const presenting=v.host&&(preview||drawing);
+    $('shell').classList.toggle('presenting',presenting);
+    if(v.original&&(old?.original!==v.original||!originalURL))originalURL=pictureURL(v.original);
+    const prompt=$('presenter-original');
+    if(presenting&&v.original){
+      if(prompt.hidden||old?.original!==v.original)prompt.src=originalURL;
+      prompt.hidden=false;
+    }else if(!prompt.hidden){
+      prompt.hidden=true;prompt.removeAttribute('src');
+    }
     show('entry',!inRoom);show('waiting',inRoom && !preview && ['wait','joining','handoff'].includes(v.phase));
     show('drawing',drawing||preview);show('tools',drawing&&!v.host);show('palette',drawing&&!v.host);show('result',v.phase==='reveal');
     show('prompt-tools',v.host&&(preview||drawing));show('start',preview);
