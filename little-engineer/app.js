@@ -7,7 +7,7 @@
     ['🦁','獅子王'],['🐳','小鯨魚'],['🐦','啾啾鳥'],['🐨','考拉寶'],['🐯','虎斑班']
   ];
   const $ = id => document.getElementById(id);
-  let unity, current, selected='pen', chalk=1, pointer=null, toastTimer, galleryKey='', rosterKey='', lastRound=-1, lastWinner=-1, originalURL='', art=new Map();
+  let unity, current, selected='pen', chalk=7, pointer=null, toastTimer, galleryKey='', rosterKey='', lastRound=-1, candidate=0, originalURL='', art=new Map();
   const send = (method,arg) => { if(unity) arg===undefined ? unity.SendMessage('Studio',method) : unity.SendMessage('Studio',method,String(arg)); };
   const show = (id,visible) => { $(id).hidden=!visible; };
   const label = i => aliases[i].join(' ');
@@ -38,21 +38,41 @@
     art.set(id,{revision,url:pictureURL(ink)});galleryKey='';renderGallery(current);
   }
   function renderGallery(v) {
-    const key=JSON.stringify([v.round,v.slide,v.host,v.winner,v.canPick,v.people,v.showOrder,art.size]);
+    const key=JSON.stringify([v.round,v.slide,v.host,v.winner,v.canPick,candidate,v.people,v.showOrder,art.size]);
     if(galleryKey===key)return;
     galleryKey=key;
     const wall=$('gallery');wall.replaceChildren();
     const all=v.slide===-1,answerOnly=v.slide===-2;
+    const chosen=v.people.find(p=>p.id===v.winner);
+    const openingAward=chosen&&$('award').hidden;
+    show('exhibit',!chosen);show('award',Boolean(chosen));
+    if(chosen){
+      const [avatar,name]=aliases[chosen.avatar];
+      $('award-avatar').textContent=avatar;
+      $('award-title').textContent=name+'的作品最棒!';
+      const url=art.get(chosen.id)?.url;
+      if(url)$('award-art').src=url;
+      show('award-art',Boolean(url));
+      if(openingAward)$('award').scrollIntoView({block:'center'});
+      return;
+    }
+    const hasWorks=v.people.some(p=>p.drawn);
+    const picking=all&&v.host&&v.canPick&&hasWorks;
     wall.classList.toggle('spotlight',!all&&!answerOnly);
     wall.classList.toggle('answer-only',answerOnly);
     $('show-status').textContent=all?'一起看作品':answerOnly?'公布答案':`作品 ${v.slide+1} / ${v.showOrder.length}`;
     $('result-title').textContent=all?'作品牆':answerOnly?'先看原圖':'作品分享';
-    show('next',all&&v.host&&v.canPick);
+    show('confirm-pick',picking);
+    $('confirm-pick').disabled=!picking||!art.has(candidate);
+    show('next',all&&v.host&&v.canPick&&!hasWorks);
     show('result-note',all);
     function tile(text,url,style,id){
       const selectable=all && v.host && v.canPick && id>0 && Boolean(url);
       const card=document.createElement(selectable?'button':'article');card.className='tile '+style;
-      if(selectable){card.setAttribute('aria-label','選 '+text+' 為最相近');card.onclick=()=>send('Choose',id);}
+      if(selectable){
+        card.setAttribute('aria-label','選 '+text+' 的作品');card.setAttribute('aria-pressed',String(candidate===id));
+        card.onclick=()=>{candidate=id;renderGallery(current);$('confirm-pick').focus({preventScroll:true});};
+      }
       if(url){const img=new Image();img.src=url;img.alt=text;card.append(img);}
       else{const blank=document.createElement('div');blank.className='blank';blank.textContent=id && v.people.find(p=>p.id===id)?.drawn?'作品載入中':'白紙';card.append(blank);}
       const caption=document.createElement('strong');caption.textContent=text;card.append(caption);wall.append(card);
@@ -63,13 +83,10 @@
     const roster=new Map(v.people.map(p=>[p.id,p]));
     for(const id of ids){
       const p=roster.get(id);if(!p)continue;
-      const winner=v.winner===p.id;
-      tile((winner?'★ ':'')+label(p.avatar)+(winner?' · 最相近':''),p.drawn?art.get(p.id)?.url:null,winner?'winner':'',p.id);
+      tile((picking&&candidate===p.id?'✓ ':'')+label(p.avatar),p.drawn?art.get(p.id)?.url:null,'',p.id);
     }
     if(!all)return;
-    const valid=v.people.some(p=>p.drawn), chosen=v.people.find(p=>p.id===v.winner);
-    $('result-note').textContent=chosen?label(chosen.avatar)+' 的作品最相近': !valid?'這一輪還沒有作品。':v.host?'可以選出最相近的作品。':'等小工程師出下一題。';
-    if(chosen && lastWinner!==v.winner){lastWinner=v.winner;toast(label(chosen.avatar)+' 最相近！');}
+    $('result-note').textContent=!hasWorks?'這一輪還沒有作品。':v.host?'點選和原圖最像的作品。':'等小工程師選作品。';
   }
   function renderRoster(people,me) {
     const key=JSON.stringify([me,people.map(p=>[p.id,p.avatar,p.online,p.done])]);
@@ -88,7 +105,7 @@
   }
   function view(v) {
     if(v.round!==lastRound || v.phase==='home') {
-      lastRound=v.round;lastWinner=-1;art=new Map();galleryKey='';originalURL='';pointer=null;
+      lastRound=v.round;candidate=0;art=new Map();galleryKey='';originalURL='';pointer=null;
     }
     const old=current;current=v;
     const inRoom=v.connected && v.phase!=='home', drawing=inRoom && v.phase==='draw';
@@ -124,6 +141,7 @@
       for(const b of document.querySelectorAll('[data-chalk]'))b.style.backgroundColor=v.palette[Number(b.dataset.chalk)];
     } else pointer=null;
     if(v.phase==='reveal')renderGallery(v);
+    if(drawing&&old?.phase==='reveal')window.scrollTo(0,0);
   }
   function updateTools(){
     for(const b of document.querySelectorAll('[data-tool]'))b.setAttribute('aria-pressed',String(b.dataset.tool===selected));
@@ -163,16 +181,18 @@
     if(paper.hasPointerCapture(e.pointerId))paper.releasePointerCapture(e.pointerId);
   });
   $('identity').onclick=()=>send('Reroll');$('host').onclick=()=>send('HostRoom');$('join').onclick=()=>send('JoinRoom');
-  $('start').onclick=$('next').onclick=()=>send('NextRound');$('undo').onclick=()=>send('Undo');
+  $('start').onclick=$('next').onclick=()=>send('NextRound');
+  $('confirm-pick').onclick=()=>{if(current?.host&&current.canPick&&candidate)send('Choose',candidate);};
+  $('undo').onclick=()=>send('Undo');
   $('clear').onclick=()=>send('ClearPaper');
   $('difficulty').onchange=e=>send('SetDifficulty',e.target.value);$('reroll').onclick=()=>send('RerollPrompt');
   $('end').onclick=()=>send('EndRound');$('mark').onclick=()=>send('ToggleDone');
   $('leave').onclick=()=>{if(!current?.host || confirm('關閉教室？'))send('Leave');};
   for(const b of document.querySelectorAll('[data-tool]'))b.onclick=()=>{selected=b.dataset.tool;updateTools();};
-  ['紅','橙','黃','綠','藍','紫'].forEach((name,i)=>{
-    const b=document.createElement('button');b.dataset.chalk=i+1;b.textContent=name;b.setAttribute('aria-label',name+'色粉筆');
-    b.onclick=()=>{chalk=i+1;if(selected==='eraser')selected='pen';updateTools();};$('palette').append(b);
-  });
+  for(const [name,index] of [['黑',7],['紅',1],['橙',2],['黃',3],['綠',4],['藍',5],['紫',6]]){
+    const b=document.createElement('button');b.dataset.chalk=index;b.textContent=name;b.setAttribute('aria-label',name+'色粉筆');
+    b.onclick=()=>{chalk=index;if(selected==='eraser')selected='pen';updateTools();};$('palette').append(b);
+  }
   updateTools();
   for(const id of ['join','host','identity'])$(id).disabled=true;
   window.paperStudio={view,toast,picture,ready,

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css?v=1595e1c5f4ae"></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css?v=37dc33bcad98"></head>
 <body><main id="shell">
 <header><span class="brand"><i aria-hidden="true">✎</i> 小工程師</span><div class="header-info"><strong id="self-id" hidden></strong><span id="round-tag"></span></div></header>
 <section id="entry">
@@ -13,11 +13,12 @@
 <div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas></div>
 <div id="palette" hidden role="group" aria-label="粉筆顏色"></div>
 <div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="oval" aria-label="圓形">○</button><button data-tool="box" aria-label="方形">□</button><button data-tool="tri" aria-label="三角形">△</button><button data-tool="eraser">橡皮擦</button><button id="undo" title="上一步" aria-label="上一步">↶</button><button id="clear">清空</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
-<section id="result" hidden><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></section>
+<section id="result" hidden><div id="exhibit"><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="confirm-pick" class="primary" hidden disabled>選這張!</button><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></div>
+<section id="award" hidden aria-labelledby="award-title"><span id="award-avatar" aria-hidden="true"></span><h2 id="award-title" role="status"></h2><img id="award-art" alt="得獎作品" hidden></section></section>
 <footer hidden id="foot"><span id="who"></span><button id="leave">離房</button></footer>
 <ul id="roster" hidden aria-label="師傅名單"></ul>
 </main><div id="toast" hidden role="status"></div>
-<script src="app.js?v=99121f8349e8"></script><script src="Build/41add050990924b9499991c6633dae73.loader.js?v=e46a01a211f1"></script>
+<script src="app.js?v=cbc92aa05a7a"></script><script src="Build/b859e30c883f7ba8e72d687cd22fa303.loader.js?v=92e3c08fb0a2"></script>
 <script>
-createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/63c76edea0a489e78eb294a7e6f3aaef.data.unityweb?v=3ea314073b55',frameworkUrl:'Build/fed8526c399cc8841f55544f4260248d.framework.js.unityweb?v=068833daae5c',codeUrl:'Build/0de040a6d13f488cc15e4c4a56758c04.wasm.unityweb?v=c959d60a526d',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
+createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/7cc93a517e1ac2ccc87d90066fcf7c44.data.unityweb?v=02372573312e',frameworkUrl:'Build/fed8526c399cc8841f55544f4260248d.framework.js.unityweb?v=f2328f4eb6f8',codeUrl:'Build/811633687a5d1f10798101faf386192b.wasm.unityweb?v=fe8b00f9bcba',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
 </script></body></html>
