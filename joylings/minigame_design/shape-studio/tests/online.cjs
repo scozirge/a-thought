@@ -11,7 +11,7 @@ async function open(browser,name,mobile=false) {
   const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1080,height:830},isMobile:mobile,hasTouch:mobile});
   const page=await context.newPage();
   page.on('console',m=>{if(/Exception|error|failed|shutdown|disconnect|joined room/i.test(m.text()))record(name+' console',{text:m.text().slice(0,320)});});
-  page.on('pageerror',e=>record('pageerror',{name,error:e.message}));
+  page.on('pageerror',e=>record('pageerror',{player:name,error:e.message}));
   page.on('websocket',socket=>record(name+' socket',{address:new URL(socket.url()).host}));
   const cdp=await context.newCDPSession(page);
   await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:true});
@@ -64,9 +64,9 @@ async function inkPixels(p){
     return n;
   },png.toString('base64'));
 }
-async function stroke(p,mobile=false) {
+async function stroke(p,mobile=false,offset=0) {
   const box=await p.page.locator('#unity-canvas').boundingBox();
-  const pts=[[.2,.3],[.4,.25],[.5,.64],[.7,.65]].map(([x,y])=>({x:box.x+x*box.width,y:box.y+y*box.height}));
+  const pts=[[.2,.3],[.4,.25],[.5,.64],[.7,.65]].map(([x,y])=>({x:box.x+x*box.width,y:box.y+(y+offset)*box.height}));
   if(mobile){
     const touch=(type,points)=>p.cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points});
     await touch('touchStart',[pts[0]]);for(const pt of pts.slice(1))await touch('touchMove',[pt]);await touch('touchEnd',[]);
@@ -89,7 +89,7 @@ async function run(){
     await pickAlias(a,0); // 貓貓怪
     await host.page.click('#host');await wait(host,()=>roomView.host && roomView.phase==='wait');
     await a.page.click('#join');await wait(a,()=>roomView.phase==='wait');await wait(host,()=>roomView.people.length===1);
-    await checkSelf(host,'小工程師');await checkSelf(a,'師傅');
+    await checkSelf(host,'小小工程師');await checkSelf(a,'師傅');
     assert.equal(await a.page.locator('#roster .self-tag').count(),1);
     assert.equal(await host.page.locator('#difficulty option').count(),5);
     assert.equal(await a.page.locator('#prompt-tools').isVisible(),false);
@@ -100,7 +100,8 @@ async function run(){
     assert.ok(!preview.equals(await host.page.locator('#unity-canvas').screenshot()));
     await host.page.click('#start');await wait(a,()=>roomView.phase==='draw');
     const first=await view(a);
-    assert.equal(first.original,'');assert.ok(first.seconds>=177 && first.seconds<=180);
+    assert.equal(first.original,'');assert.ok(!('seconds' in first));assert.equal(await a.page.locator('#clock').count(),0);
+    assert.deepEqual(await a.page.locator('[data-tool]').evaluateAll(items=>items.map(el=>el.dataset.tool)),['pen','eraser']);
     assert.equal(await host.page.locator('#draw-title').isVisible(),false);assert.ok(!('title' in await view(host)));
     assert.equal(await host.page.locator('#role').innerText(),'大聲說出你的作品 讓師傅們幫你完工!');
     assert.equal(await a.page.locator('[data-chalk]').count(),7);assert.ok(await inkPixels(host)>40);
@@ -110,7 +111,13 @@ async function run(){
     await stroke(a);await a.page.waitForTimeout(400);assert.ok(await inkPixels(a)>40);
     await a.page.click('#undo');await a.page.waitForTimeout(400);assert.equal(await inkPixels(a),0);
     await a.page.getByRole('button',{name:'黑色粉筆'}).click();await stroke(a);
-    const colored=await inkPixels(a);await a.page.click('[data-tool=eraser]');await stroke(a);assert.equal(await inkPixels(a),0);
+    const colored=await inkPixels(a);await a.page.click('[data-tool=eraser]');
+    const paper=await a.page.locator('#unity-canvas').boundingBox();
+    await a.page.mouse.move(paper.x+paper.width/2,paper.y+paper.height/2);
+    const ring=await a.page.locator('#eraser-area').boundingBox();
+    assert.ok(ring && Math.abs(ring.width-paper.width*17/256)<1);
+    assert.ok(Math.abs(ring.x+ring.width/2-(paper.x+paper.width/2))<2);
+    await stroke(a);await a.page.mouse.move(0,0);assert.equal(await inkPixels(a),0);
     await a.page.click('#undo');assert.equal(await inkPixels(a),colored);
     await a.page.click('#clear');assert.equal(await inkPixels(a),0);
     await a.page.click('#undo');assert.equal(await inkPixels(a),colored);
@@ -118,18 +125,17 @@ async function run(){
     await wait(a,()=>roomView.done&&!roomView.markPending);
     assert.ok(await a.page.locator('#undo').isDisabled());const lockedInk=await inkPixels(a);
     assert.ok(await a.page.locator('#clear').isDisabled());assert.ok(await a.page.locator('[data-tool=eraser]').isDisabled());
-    const seconds=(await view(a)).seconds;
     await host.page.selectOption('#difficulty','4');await wait(host,()=>roomView.level===4);
     await wait(a,()=>document.querySelector('#toast').textContent==='出題者換題了');
     assert.equal((await view(a)).done,true);assert.equal((await view(a)).round,first.round);
-    assert.ok((await view(a)).seconds<=seconds);assert.equal(await inkPixels(a),lockedInk);
+    assert.equal(await inkPixels(a),lockedInk);
     const originalInk=await inkPixels(host);
     await a.page.mouse.click((await a.page.locator('#unity-canvas').boundingBox()).x+180,360);
     assert.equal(await inkPixels(a),lockedInk);
     if([0,7].includes((await view(b)).identity))await pickAlias(b,1);
     await b.page.click('#join');await wait(b,()=>roomView.phase==='draw');
-    const late=await view(b),now=await view(host);assert.ok(!('title' in late));assert.ok(late.seconds<180);
-    assert.ok(Math.abs(now.seconds-late.seconds)<=2);await checkSelf(b,'師傅');
+    const late=await view(b),now=await view(host);assert.ok(!('title' in late));
+    assert.equal(now.round,late.round);await checkSelf(b,'師傅');
     await wait(b,()=>roomView.people.some(p=>p.avatar===0&&p.online&&p.done));
     const beforeLeave=(await view(a)).me;await a.page.click('#leave');await wait(a,()=>roomView.phase==='home');
     await wait(host,()=>!roomView.people[0]?.online && document.querySelector('#roster').innerText.includes('已離開'));
@@ -147,25 +153,36 @@ async function run(){
     record('貓貓怪離房換兔耳朵，同座位與作品保留，三端皆顯示新名字和頭像');
     assert.equal(await inkPixels(a),lockedInk);assert.ok((await view(a)).done);
     await a.page.click('#mark');await wait(a,()=>!roomView.done&&!roomView.markPending);
-    await a.page.locator('[data-chalk="2"]').click();await a.page.locator('[data-tool=box]').click();await stroke(a);assert.ok(await inkPixels(a)>lockedInk);
+    await a.page.locator('[data-chalk="2"]').click();await a.page.locator('[data-tool=pen]').click();await stroke(a,false,.1);assert.ok(await inkPixels(a)>lockedInk);
     await a.page.click('#mark');await wait(host,()=>roomView.people[0].done);
     record('勾選鎖筆、名單離席、重連還原完成狀態、取消後可再畫');
     assert.notEqual(late.identity,(await view(a)).identity);
     assert.equal(await b.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-    await b.page.locator('[data-chalk="5"]').click();await b.page.locator('[data-tool=tri]').click();await stroke(b,true);await snapshot(b,'03-late-phone');
-    record('手機中途加入並以觸控繪圖',{seconds:late.seconds});
+    await b.page.locator('[data-chalk="5"]').click();await stroke(b,true);await snapshot(b,'03-late-phone');
+    const mobileInk=await inkPixels(b);
+    await b.page.locator('[data-tool=eraser]').click();
+    const canvas=await b.page.locator('#unity-canvas').boundingBox();
+    const touch={x:canvas.x+.4*canvas.width,y:canvas.y+.25*canvas.height};
+    await b.cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch]});
+    assert.ok(await b.page.locator('#eraser-area').isVisible());
+    await b.cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    assert.ok(await b.page.locator('#eraser-area').isHidden());
+    assert.ok(await inkPixels(b)<mobileInk);
+    await b.page.click('#undo');assert.equal(await inkPixels(b),mobileInk);
+    record('手機中途加入並以觸控繪圖');
     const replacement=await open(browser,'new-host');players.push(replacement);
-    const until=(await view(host)).seconds;await replacement.page.click('#host');
+    await replacement.page.click('#host');
     await wait(replacement,()=>roomView.host && roomView.phase==='draw');
     await wait(host,()=>roomView.phase==='home');
-    await checkSelf(replacement,'小工程師');await pickAlias(host,7); // Taken by the existing artist.
+    await checkSelf(replacement,'小小工程師');await pickAlias(host,7); // Taken by the existing artist.
     assert.equal((await view(replacement)).round,first.round);assert.equal((await view(replacement)).level,4);
-    assert.ok(Math.abs(until-(await view(replacement)).seconds)<15);
     await wait(replacement,()=>roomView.people.filter(p=>p.online).length===2 && roomView.people.some(p=>p.done));
     assert.equal(await inkPixels(replacement),originalInk);
     await wait(b,()=>roomView.people.some(p=>p.done));
-    record('新開房者接手同一題、倒數、名單與勾選；原出題者退場');
+    record('新開房者接手同一題、名單與勾選；原出題者退場');
     assert.ok(await b.page.locator('#end').isHidden());
+    await b.page.locator('#end').evaluate(el=>el.click());
+    assert.equal((await view(replacement)).phase,'draw');
     await replacement.page.click('#end');
     const audience=[replacement,a,b];
     await Promise.all(audience.map(async p=>{
@@ -173,7 +190,7 @@ async function run(){
       assert.equal(await p.page.locator('#gallery .tile').count(),1);
       assert.equal(await p.page.locator('#gallery .original strong').innerText(),'原圖');
       assert.ok(await p.page.locator('#next').isHidden());
-      await checkSelf(p,p===replacement?'小工程師':'師傅');
+      await checkSelf(p,p===replacement?'小小工程師':'師傅');
     }));
     await snapshot(replacement,'04-answer-only');
     for(const i of [0,1]){
@@ -272,13 +289,16 @@ async function run(){
       assert.ok(Math.abs(award.next-award.shown-3000)<900,'公布三秒後才進下一題');
     }
     record('可以改選，確認後全班看到得獎作品，三秒後自動開下一題',{awards});
-    const began=awards[0].next;assert.ok((await view(host)).host);assert.equal((await view(b)).host,false);
+    assert.ok((await view(host)).host);assert.equal((await view(b)).host,false);
     assert.equal((await view(a)).done,false);
     assert.equal((await view(a)).original,'');assert.equal((await view(a)).winner,-1);
     assert.equal(await inkPixels(a),0);
-    await wait(host,()=>roomView.phase==='reveal',null,195000);
-    const elapsed=(Date.now()-began)/1000;assert.ok(elapsed>175 && elapsed<188,'180 秒實時計時：'+elapsed);
-    record('下一輪清空完成狀態，正常倒數仍在三分鐘結束',{elapsed});
+    await host.page.waitForTimeout(181000);
+    for(const p of [a,b,host])assert.equal((await view(p)).phase,'draw');
+    await stroke(b,true);assert.ok(await inkPixels(b)>40);
+    await b.page.click('#clear');assert.equal(await inkPixels(b),0);
+    await host.page.click('#end');
+    record('超過三分鐘仍可作畫，出題者手動結束');
     // The participating blank sheets each get their own turn; switching teachers mid-show
     // must carry the existing shared schedule forward.
     await wait(a,()=>roomView.slide===0&&document.querySelector('#gallery .blank')?.textContent==='白紙');

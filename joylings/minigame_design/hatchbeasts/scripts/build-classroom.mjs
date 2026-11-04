@@ -71,7 +71,7 @@ writeFileSync(
     '第六次課程（木塊出走）：https://scozirge.github.io/a-thought/wood-exit/',
     '第六次課程（Neon Impact 多人對戰）：https://scozirge.github.io/a-thought/neon-impact/',
     '第七次課程（貓狗一起回家）：http://localhost:4317/together-home/',
-    '第八次課程（小工程師）：https://scozirge.github.io/a-thought/little-engineer/',
+    '第八次課程（小小工程師）：https://scozirge.github.io/a-thought/little-engineer/',
     '破殼怪獸：http://localhost:4317/',
     '瀑布精靈音遊 Demo：http://localhost:4317/rhythm/',
     '瀑布精靈製譜器：http://localhost:4317/rhythm/editor/',

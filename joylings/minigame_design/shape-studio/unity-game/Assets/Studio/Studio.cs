@@ -6,12 +6,11 @@ using UnityEngine;
 
 namespace ShapeStudio {
     public sealed class Studio : MonoBehaviour {
-        public const int RoundMs=180000;
         const int SlideMs=3000, AwardMs=3000, AnswerOnly=-2, AllWorks=-1;
         [Serializable] class InputPoint {public int x,y,chalk;public string op,tool;}
         [Serializable] class View {
             public string phase,original; public bool connected,busy,host,canPick,done,markPending;
-            public int round,seconds,me,identity,winner,level,slide; public Portrait[] people;public string[] palette;public int[] showOrder;
+            public int round,me,identity,winner,level,slide; public Portrait[] people;public string[] palette;public int[] showOrder;
         }
         class Seat {
             public int peer; public string token,ink; public int id,avatar,revision,playedRound;
@@ -28,7 +27,7 @@ namespace ShapeStudio {
         Texture2D texture; Color32[] pixels;
         string phase="home",token,original="";
         int round,deadline,card=-1,winner=-1,me,identity,nextId,stamp,lastState,localVersion;
-        int lastSecond=-1;float nextSend,nextRequest,nextHello;bool dirty,finalSent;
+        float nextSend,nextRequest,nextHello;bool dirty,finalSent;
         int showAt,lastSlide;bool wallOpen;int[] showOrder=Array.Empty<int>();
         int pendingMark,promptVersion,resumeSeat;bool done,resync,requestedAlias;
         Portrait[] people=Array.Empty<Portrait>();
@@ -98,9 +97,9 @@ namespace ShapeStudio {
             if(phase=="reveal" || card<0)card=deck.Next(card>=0?card/Deck.PerLevel:0);
             seats.RemoveAll(s=>!s.online);round++;phase="draw";winner=-1;original="";
             foreach(var s in seats){s.drawn=s.done=false;s.ink=null;s.revision=0;s.playedRound=round;}
-            ResetShow();ResetPaper();Deck.Draw(card,model);deadline=unchecked(link.Now+RoundMs);Sync();
+            ResetShow();ResetPaper();Deck.Draw(card,model);deadline=0;Sync();
         }
-        bool CanPickPrompt()=>link.Connected&&link.Host&&(phase=="wait" || (phase=="draw"&&TimeLeft()>0));
+        bool CanPickPrompt()=>link.Connected&&link.Host&&(phase=="wait" || phase=="draw");
         void DrawNewCard(int level){card=deck.Next(level);promptVersion++;Deck.Draw(card,model);Sync();}
         public void RerollPrompt(){if(CanPickPrompt())DrawNewCard(card/Deck.PerLevel);}
         public void SetDifficulty(string value){
@@ -121,7 +120,7 @@ namespace ShapeStudio {
             int index=elapsed/SlideMs-1;
             return index<showOrder.Length?index:AllWorks;
         }
-        bool InDrawingRound() => link.Connected && !link.Host && phase=="draw" && me>0 && TimeLeft()>0;
+        bool InDrawingRound() => link.Connected && !link.Host && phase=="draw" && me>0;
         bool CanDraw() => InDrawingRound() && !done && pendingMark==0;
         public void ToggleDone(){
             if(!InDrawingRound() || pendingMark!=0)return;
@@ -134,14 +133,14 @@ namespace ShapeStudio {
         }
         public void EndRound(){
             if(!link.Connected || !link.Host || phase!="draw")return;
-            deadline=link.Now;Reveal();
+            Reveal();
         }
         public void Pointer(string json) {
             if(!CanDraw())return;
             var p=JsonUtility.FromJson<InputPoint>(json);if(p==null)return;
             int x=Mathf.Clamp(p.x,0,255),y=Mathf.Clamp(p.y,0,255);
             switch(p.op){
-                case "down":board.Begin(p.tool=="oval"||p.tool=="box"||p.tool=="tri"||p.tool=="eraser"?p.tool:"pen",x,y,p.chalk);break;
+                case "down":board.Begin(p.tool=="eraser"?"eraser":"pen",x,y,p.chalk);break;
                 case "move":if(!board.Down)return;board.Move(x,y);break;
                 case "up":if(!board.Down)return;board.Move(x,y);board.End();break;
                 default:return;
@@ -154,11 +153,7 @@ namespace ShapeStudio {
         void Update(){
             if(!link.Connected)return;
             if(!link.Host && phase=="joining" && Time.unscaledTime>=nextHello)Hello();
-            if(phase=="draw"){
-                if(TimeLeft()<=0){
-                    if(link.Host)Reveal();else FinishInk();
-                } else if(!link.Host && dirty && Time.unscaledTime>=nextSend)SendInk(false);
-            }
+            if(phase=="draw" && !link.Host && dirty && Time.unscaledTime>=nextSend)SendInk(false);
             if(phase=="reveal"){
                 if(link.Host && winner>0 && TimeLeft()<=0){BeginRound();return;}
                 int slide=Slide();
@@ -170,9 +165,7 @@ namespace ShapeStudio {
                     nextRequest=Time.unscaledTime+2;
                 }
             }
-            int seconds=Seconds();if(seconds!=lastSecond){lastSecond=seconds;Publish();}
         }
-        int Seconds()=>phase=="draw"?Math.Min(180,(int)Math.Ceiling(Math.Max(0,TimeLeft())/1000.0)):0;
         void ResetPaper(){board.Reset();receivedArt.Clear();localVersion=pendingMark=0;done=dirty=finalSent=false;nextRequest=nextSend=0;}
         void FinishInk(){if(finalSent || me==0)return;board.End();if(!done && pendingMark==0 && (dirty||localVersion>0))SendInk(true);finalSent=true;Publish();}
         void SendInk(bool final){
@@ -207,7 +200,7 @@ namespace ShapeStudio {
                 if(art!=null)link.Send(sender,new Wire{type="art",round=round,member=art.id,seq=art.revision,ink=art.ink});
             }
             bool mark=m.type=="mark";
-            bool acceptingInk=phase=="draw"?TimeLeft()>=-SlideMs:
+            bool acceptingInk=phase=="draw" ||
                 phase=="reveal" && !wallOpen && unchecked(link.Now-showAt)<SlideMs;
             if((!mark && m.type!="ink") || !acceptingInk
                 || seat.playedRound!=round || m.seq<=seat.revision)return;
@@ -298,7 +291,7 @@ namespace ShapeStudio {
             lastSlide=Slide();
             var v=new View{phase=phase,connected=link.Connected,busy=link.Busy,host=link.Host,round=round,
                 slide=lastSlide,showOrder=showOrder,
-                seconds=Seconds(),identity=identity,me=me,winner=winner,people=people,canPick=CanPick(),
+                identity=identity,me=me,winner=winner,people=people,canPick=CanPick(),
                 done=done,markPending=pendingMark!=0,level=link.Host&&card>=0?card/Deck.PerLevel:0,palette=Sheet.Palette,
                 original=phase=="reveal"?original:""};
             #if UNITY_WEBGL && !UNITY_EDITOR

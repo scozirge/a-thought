@@ -13,8 +13,7 @@ namespace ShapeStudio {
         public byte ColorIndex {get;set;}=7;
         public byte[] Bits { get; private set; } = new byte[Bytes];
         readonly List<byte[]> undo = new List<byte[]>();
-        byte[] before; int sx, sy, lastX, lastY;
-        string tool = "pen";
+        byte[] before; int lastX, lastY;
         public bool Down => before != null;
         public bool Dirty { get; set; } = true;
         public bool HasInk => Array.Exists(Bits, b => b != 0);
@@ -55,14 +54,13 @@ namespace ShapeStudio {
             }
         }
         public void Begin(string selected, int x, int y, int chalk) {
-            End(); before=(byte[])Bits.Clone(); sx=lastX=x; sy=lastY=y; tool=selected;
-            ColorIndex=(byte)(tool=="eraser"?0:Mathf.Clamp(chalk,1,Palette.Length-1));
-            if (tool=="pen" || tool=="eraser") Dot(x,y);
+            End(); before=(byte[])Bits.Clone(); lastX=x; lastY=y;
+            ColorIndex=(byte)(selected=="eraser"?0:Mathf.Clamp(chalk,1,Palette.Length-1));
+            Dot(x,y);
         }
         public void Move(int x, int y) {
             if (!Down) return;
-            if (tool=="pen" || tool=="eraser") Line(lastX,lastY,x,y);
-            else { Array.Copy(before,Bits,Bytes); Shape(tool,sx,sy,x,y); }
+            Line(lastX,lastY,x,y);
             lastX=x; lastY=y;
         }
         public void End() {

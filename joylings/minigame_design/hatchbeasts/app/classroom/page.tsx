@@ -20,7 +20,7 @@ export default function ClassroomHome() {
             <div className="catalog-actions">
               <a className="course-button" href={LITTLE_ENGINEER_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <PencilRuler size={20} aria-hidden="true" />
-                玩小工程師
+                玩小小工程師
                 <ArrowUpRight size={18} aria-hidden="true" />
               </a>
               <a className="course-button" href={TOGETHER_ONLINE_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
@@ -400,12 +400,12 @@ export default function ClassroomHome() {
             <h2 id="eighth-course-title">第 8 週課程</h2>
             <a className="unit-card card-blue" href={LITTLE_ENGINEER_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
               <span className="unit-icon tint-blue"><PencilRuler size={28} aria-hidden="true" /></span>
-              <span className="sixth-game-copy"><span className="unit-title">小工程師</span><span className="unit-meta">上台說形狀，大家一起畫</span></span>
+              <span className="sixth-game-copy"><span className="unit-title">小小工程師</span><span className="unit-meta">上台說形狀，大家一起畫</span></span>
               <ArrowUpRight size={22} aria-hidden="true" />
             </a>
             <div className="activity-content">
               <p className="catalog-question-context">上台的同學按「開房」，看著自己的題目，用一句話說出第一個形狀。其他人按「加入」，照著聽到的描述畫；晚一點進來也能一起畫。</p>
-              <p className="catalog-question-context">3 分鐘後一起看原圖和作品。出題者選出最相近的一張，大家說說哪一句描述讓你知道該畫在哪裡。</p>
+              <p className="catalog-question-context">出題者按「結束」後，全班一起看原圖和作品。出題者選出最相近的一張，大家說說哪一句描述讓你知道該畫在哪裡。</p>
             </div>
           </section>
 

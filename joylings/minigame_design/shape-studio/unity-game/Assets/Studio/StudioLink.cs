@@ -108,7 +108,7 @@ namespace ShapeStudio {
             var timer=new CancellationTokenSource(TimeSpan.FromSeconds(35));
             try {
                 var app=Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-                app.FixedRegion="asia";app.AppVersion="shape-studio-v7";
+                app.FixedRegion="asia";app.AppVersion="shape-studio-v8";
                 peer=new RealtimeClient().SetupForFusion(app);
                 NetworkRunner.CloudConnectionLostCurrentMode=NetworkRunner.CloudConnectionLostMode.Disabled;
                 var config=NetworkProjectConfig.Global; config.AllowClientServerModesInWebGL=true;
