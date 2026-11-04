@@ -7,7 +7,7 @@
     ['🦁','獅子王'],['🐳','小鯨魚'],['🐦','啾啾鳥'],['🐨','考拉寶'],['🐯','虎斑班']
   ];
   const $ = id => document.getElementById(id);
-  let unity, current, selected='pen', pointer=null, toastTimer, galleryKey='', lastRound=-1, lastWinner=-1, art=new Map();
+  let unity, current, selected='pen', pointer=null, toastTimer, galleryKey='', rosterKey='', lastRound=-1, lastWinner=-1, art=new Map();
   const send = (method,arg) => { if(unity) arg===undefined ? unity.SendMessage('Studio',method) : unity.SendMessage('Studio',method,String(arg)); };
   const show = (id,visible) => { $(id).hidden=!visible; };
   const label = i => aliases[i].join(' ');
@@ -49,8 +49,8 @@
       else{const blank=document.createElement('div');blank.className='blank';blank.textContent=id && v.people.find(p=>p.id===id)?.drawn?'作品載入中':'白紙';card.append(blank);}
       const caption=document.createElement('strong');caption.textContent=text;card.append(caption);wall.append(card);
     }
-    if(v.original)tile('原圖 · '+v.title,pictureURL(v.original),'original',0);
-    v.people.forEach(p=>{
+    if(v.original)tile('原圖',pictureURL(v.original),'original',0);
+    v.people.filter(p=>p.participating).forEach(p=>{
       const winner=v.winner===p.id;
       tile((winner?'★ ':'')+label(p.avatar)+(winner?' · 最相近':''),p.drawn?art.get(p.id)?.url:null,winner?'winner':'',p.id);
     });
@@ -59,27 +59,47 @@
     show('next',v.host);$('next').disabled=!v.canPick || (valid && !chosen);
     if(chosen && lastWinner!==v.winner){lastWinner=v.winner;toast(label(chosen.avatar)+' 最相近！');}
   }
+  function renderRoster(people) {
+    const key=JSON.stringify(people.map(p=>[p.id,p.avatar,p.online,p.done]));
+    if(key===rosterKey)return;
+    rosterKey=key;
+    $('roster').replaceChildren(...people.map(p=>{
+      const item=document.createElement('li');item.dataset.id=p.id;
+      item.classList.toggle('away',!p.online);
+      const icon=document.createElement('span');icon.setAttribute('aria-hidden','true');icon.textContent=aliases[p.avatar][0];
+      item.append(icon,document.createTextNode(aliases[p.avatar][1]));
+      if(p.done){const tick=document.createElement('b');tick.textContent='✓';tick.setAttribute('aria-label','已完成');item.append(tick);}
+      if(!p.online)item.append(document.createTextNode('已離開'));
+      return item;
+    }));
+  }
   function view(v) {
     if(v.round!==lastRound || v.phase==='home') {
       lastRound=v.round;lastWinner=-1;art=new Map();galleryKey='';pointer=null;
     }
     const old=current;current=v;
     const inRoom=v.connected && v.phase!=='home', drawing=inRoom && v.phase==='draw';
-    show('entry',!inRoom);show('waiting',inRoom && (v.phase==='wait'||v.phase==='joining'));
+    show('entry',!inRoom);show('waiting',inRoom && ['wait','joining','handoff'].includes(v.phase));
     show('drawing',drawing);show('tools',drawing&&!v.host);show('result',v.phase==='reveal');
-    show('foot',inRoom);
+    show('foot',inRoom);show('roster',inRoom && v.people.length>0);renderRoster(v.people);
+    show('end',drawing&&v.host);show('draw-title',drawing&&!v.host);
     $('board-slot').className=drawing?'paper':'park';
     $('round-tag').textContent=inRoom && v.round?'第 '+v.round+' 輪':'';
     $('name').textContent=aliases[v.identity][1];$('avatar').textContent=aliases[v.identity][0];
     for(const id of ['join','host','identity'])$(id).disabled=!unity || v.busy;
     $('status').textContent=v.busy?'連線中…':!unity?'畫室準備中…':'';
     const online=v.people.filter(p=>p.online).length;
-    $('who').textContent=drawing?online+' 位畫家':v.host?'✎ 出題者':label(v.identity);
-    $('wait-title').textContent=v.host?'畫室開門了':v.phase==='joining'?'正在進教室…':'等出題者開始';
-    $('wait-count').textContent=online+' 位畫家';show('start',v.host);
+    $('who').textContent=online+' 位師傅';
+    $('wait-title').textContent=v.host?'畫室開門了':v.phase==='handoff'?'正在接手教室…':v.phase==='joining'?'正在進教室…':'等出題者開始';
+    show('start',v.host);
     if(drawing){
-      $('role').textContent=v.host?'出題者 · 只有你看得到':'畫家 · '+label(v.identity);
-      $('draw-title').textContent=v.host?v.title:'我的畫紙';
+      $('role').textContent=v.host?'出題者 · 只有你看得到':'師傅 · '+label(v.identity);
+      const locked=v.done||v.markPending||v.seconds<=0;
+      if(locked)pointer=null;
+      for(const b of document.querySelectorAll('[data-tool],#undo'))b.disabled=locked;
+      $('mark').disabled=v.markPending||v.seconds<=0;
+      $('mark').textContent=v.done?'☑ 取消勾選':'□ 畫好了';
+      $('mark').setAttribute('aria-pressed',String(v.done));
       $('clock').textContent=Math.floor(v.seconds/60)+':'+String(v.seconds%60).padStart(2,'0');
       $('clock').classList.toggle('soon',v.seconds<=20);
       if(old?.round!==v.round||old?.phase!=='draw'){selected='pen';updateTools();}
@@ -107,7 +127,7 @@
     send('Pointer',JSON.stringify({op,tool:selected,x:norm(e.clientX-r.left,r.width),y:norm(e.clientY-r.top,r.height)}));
   }
   paper.addEventListener('pointerdown',e=>{
-    if(!current || current.host || current.phase!=='draw'||current.seconds<=0||pointer!==null||e.button!==0)return;
+    if(!current || current.host || current.phase!=='draw'||current.done||current.markPending||current.seconds<=0||pointer!==null||e.button!==0)return;
     e.preventDefault();pointer=e.pointerId;paper.setPointerCapture(pointer);point(e,'down');
   });
   paper.addEventListener('pointermove',e=>{
@@ -122,6 +142,7 @@
   });
   $('identity').onclick=()=>send('Reroll');$('host').onclick=()=>send('HostRoom');$('join').onclick=()=>send('JoinRoom');
   $('start').onclick=$('next').onclick=()=>send('NextRound');$('undo').onclick=()=>send('Undo');
+  $('end').onclick=()=>send('EndRound');$('mark').onclick=()=>send('ToggleDone');
   $('leave').onclick=()=>{if(!current?.host || confirm('關閉教室？'))send('Leave');};
   for(const b of document.querySelectorAll('[data-tool]'))b.onclick=()=>{selected=b.dataset.tool;updateTools();};
   updateTools();
