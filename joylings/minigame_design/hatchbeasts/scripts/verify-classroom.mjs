@@ -1,3 +1,4 @@
+import { verifyLessonLinks } from './verify-lesson-links.mjs';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
@@ -65,15 +66,7 @@ export function verifyClassroom(output) {
   );
   const catalog = readFileSync(join(root, 'classroom/index.html'), 'utf8');
   assert.ok(catalog.includes('href="https://scozirge.github.io/together-online/"') && existsSync(join(root, 'together-home/core.js')), 'Missing Unity cooperative link or retained offline game');
-  const seventh = catalog.match(/<section[^>]+id="seventh-course"[\s\S]*?<\/section>/)?.[0] || '';
-  assert.ok(seventh.includes('第 7 週課程') && seventh.includes('href="https://scozirge.github.io/together-online/"') && seventh.includes('href="https://scozirge.github.io/together-online/?tip=true"'), 'Missing seventh lesson or Unity teacher link');
-  assert.ok(catalog.indexOf('id="sixth-course"') < catalog.indexOf('id="seventh-course"'), 'Lesson seven must follow lesson six');
-  assert.ok(
-    catalog.includes('id="sixth-course"') && catalog.includes('第 6 週課程') &&
-      catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/"') &&
-      catalog.includes('href="https://scozirge.github.io/a-thought/wood-exit/?tip=true"'),
-    'Missing sixth lesson or teacher answer link',
-  );
+  verifyLessonLinks(catalog);
   assert.ok(catalog.includes('href="https://scozirge.github.io/a-thought/neon-impact/"'), 'Missing Neon Impact choice in lesson six');
   assert.ok(
     catalog.includes('id="fifth-course"') &&

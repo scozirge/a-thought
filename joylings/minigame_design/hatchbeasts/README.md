@@ -18,9 +18,11 @@
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
-[第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [Unity 雙人連線版](https://scozirge.github.io/together-online/) · [老師教學版](https://scozirge.github.io/together-online/?tip=true)：開房當貓咪，朋友以六位房號加入當狗狗。支援電腦鍵盤與手機虛擬搖桿，多點觸控可邊走邊跳；保留第 0 關暖身、正式 20 關、正常按鍵解題示範與全破回家結局。連線時由房主選關、重來及播放示範。
+[第八週課程：小工程師](https://scozirge.github.io/classroom/#eighth-course) · [開始遊戲](https://scozirge.github.io/a-thought/little-engineer/)：出題者上台描述造型，其他人連線畫圖，三分鐘後一起看作品。
 
-[第六週課程：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/) · [老師答案版](https://scozirge.github.io/a-thought/wood-exit/?tip=true)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
+[第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [Unity 雙人連線版](https://scozirge.github.io/together-online/)：開房當貓咪，朋友以六位房號加入當狗狗。支援電腦鍵盤與手機虛擬搖桿，多點觸控可邊走邊跳；保留第 0 關暖身、正式 20 關、正常按鍵解題示範與全破回家結局。連線時由房主選關、重來及播放示範。
+
+[第六週課程：木塊出走](https://scozirge.github.io/classroom/#sixth-course) · [遊戲](https://scozirge.github.io/a-thought/wood-exit/)：10 個一般關卡與 2 個隱藏關卡，完成前 10 關解鎖；老師版全開並提供目前盤面的解法。
 
 [2026-09-24 紅藍槍戰課堂復盤](docs/課堂復盤/2026-09-24-紅藍槍戰.md)：保留授課者原話，記錄連線互動、提問狀況，以及每個人都完成的新武器紙上設計與強弱思考。[線上復盤](https://scozirge.github.io/classroom/red-blue-battle/#retrospective) 也記下次將新武器想法與題目加入遊戲的安排。
 
@@ -50,7 +52,7 @@ npm test
 
 ## 課堂短網址發布
 
-正式課堂目錄：https://scozirge.github.io/classroom/ 。課程依第一至第七堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
+[網站首頁](https://scozirge.github.io/) 會直接進入[課堂目錄](https://scozirge.github.io/classroom/)。課程依第一至第八堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
 
 執行 `npm run build:classroom-site`，輸出 `dist/classroom-site/`；將內容發布到 `scozirge/scozirge.github.io` 的 `main` 分支根目錄，Pages 來源為 `main` 的 `/`。此輸出使用根路徑，教材內返回目錄及各課連結維持 `/classroom/`；遊戲入口繼續指向既有的公開遊戲。`npm run build:h5` 仍建置原本 `/a-thought/hatchbeasts` 前綴版本。
 

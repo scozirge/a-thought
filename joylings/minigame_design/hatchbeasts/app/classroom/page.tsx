@@ -1,9 +1,11 @@
-import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2 } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2, PencilRuler } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL, TOGETHER_ONLINE_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL, TOGETHER_ONLINE_PUBLIC_URL, LITTLE_ENGINEER_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
+
+export const metadata = { title: '遊戲設計課｜課程目錄' };
 
 export default function ClassroomHome() {
   return (
@@ -16,6 +18,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={LITTLE_ENGINEER_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <PencilRuler size={20} aria-hidden="true" />
+                玩小工程師
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={TOGETHER_ONLINE_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <Gamepad2 size={20} aria-hidden="true" />
                 玩貓狗一起回家
@@ -274,9 +281,7 @@ export default function ClassroomHome() {
               <p className="catalog-question-context">第一關先試玩，第 5 關起進階，最後三關挑戰。</p>
               <div className="potion-teacher-links">
                 <strong>老師試玩</strong>
-                <p>女巫小提示：網址最後加 <code>?tip=true</code>，顯示提示與解法。<a href={`${WITCH_POTIONS_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟女巫提示 ↗</a></p>
                 <p>成為管理員：網址最後加 <code>?gm=true</code>，直接進入 10 題。<a href={`${WITCH_POTIONS_PUBLIC_URL}?gm=true`} target="_blank" rel="noopener noreferrer">直接試玩管理員 ↗</a></p>
-                <p>已有「?」時改用「&amp;」，例如 <code>?tip=true&amp;gm=true</code>。</p>
               </div>
               <ol className="activity-list weapon-catalog-list">
                 {potionChallenges.map((challenge, index) => (
@@ -346,11 +351,6 @@ export default function ClassroomHome() {
             <div className="activity-content">
               <p className="catalog-question-context">第 1～3 關先試玩，第 4～7 關想想順序，第 8～10 關進階挑戰。完成前 10 關，解鎖第 11、12 關。</p>
               <p className="catalog-question-context">兩人一組：一人想順序，一人移木塊；過一關交換。</p>
-              <div className="potion-teacher-links">
-                <strong>老師答案版</strong>
-                <p>網址最後加 <code>?tip=true</code>，開啟全部 12 關、木塊編號和目前盤面的解法。<a href={`${WOOD_EXIT_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟答案版 ↗</a></p>
-                <p>已有「?」時改加 <code>&amp;tip=true</code>。移動或退一步後，答案會更新。</p>
-              </div>
             </div>
           </details>
           </section>
@@ -365,11 +365,19 @@ export default function ClassroomHome() {
             <div className="activity-content">
               <p className="catalog-question-context">一人開房當貓咪，朋友用六位房號加入當狗狗。兩台電腦或手機都能玩；手機拖動搖桿移動、按跳躍，一起拿齊鑰匙回家。</p>
               <p className="catalog-question-context">先看貓狗相遇，再從第 0 關暖身。一起推連動箱子、開渡船、搭電梯；最後 5 關是大型挑戰，20 關全破後一起回家！</p>
-              <div className="potion-teacher-links">
-                <strong>老師教學版</strong>
-                <p>網址加 <code>?tip=true</code> 可看解答與播放示範；連線時由房主選關、重來及播放解題。<a href={`${TOGETHER_ONLINE_PUBLIC_URL}?tip=true`} target="_blank" rel="noopener noreferrer">開啟教學版 ↗</a></p>
-                <p>指定關卡時加 <code>&amp;tip=true</code>，例如 <code>?level=20&amp;tip=true</code>。</p>
-              </div>
+            </div>
+          </section>
+
+          <section className="eighth-course" id="eighth-course" aria-labelledby="eighth-course-title">
+            <h2 id="eighth-course-title">第 8 週課程</h2>
+            <a className="unit-card card-blue" href={LITTLE_ENGINEER_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+              <span className="unit-icon tint-blue"><PencilRuler size={28} aria-hidden="true" /></span>
+              <span className="sixth-game-copy"><span className="unit-title">小工程師</span><span className="unit-meta">上台說形狀，大家一起畫</span></span>
+              <ArrowUpRight size={22} aria-hidden="true" />
+            </a>
+            <div className="activity-content">
+              <p className="catalog-question-context">上台的同學按「開房」，看著自己的題目，用一句話說出第一個形狀。其他人按「加入」，照著聽到的描述畫；晚一點進來也能一起畫。</p>
+              <p className="catalog-question-context">3 分鐘後一起看原圖和作品。出題者選出最相近的一張，大家說說哪一句描述讓你知道該畫在哪裡。</p>
             </div>
           </section>
 

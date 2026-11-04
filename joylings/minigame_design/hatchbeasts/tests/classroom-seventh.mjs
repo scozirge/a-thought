@@ -20,11 +20,13 @@ const server=http.createServer((req,res)=>{
  await page.goto(base+'/classroom/#seventh-course');await page.evaluate(()=>document.fonts.ready);
  const seventh=page.locator('#seventh-course'),sixth=page.locator('#sixth-course');
  assert.match(await seventh.innerText(),/第 7 週課程/);assert.equal(await sixth.locator('a[href*="together-home"]').count(),0);
- assert.equal(await seventh.locator('a[href="'+online+'"]').count(),1);assert.equal(await seventh.locator('a[href="'+online+'?tip=true"]').count(),1);assert.match(await seventh.innerText(),/手機.*搖桿/);
+ assert.equal(await seventh.locator('a[href="'+online+'"]').count(),1);assert.equal(await page.locator('a[href*="tip=true"]').count(),0);assert.match(await seventh.innerText(),/手機.*搖桿/);
  assert.ok(await seventh.evaluate(s=>!!(document.querySelector('#sixth-course').compareDocumentPosition(s)&Node.DOCUMENT_POSITION_FOLLOWING)));
  for(const width of [1280,375,320]){await page.setViewportSize({width,height:1000});await seventh.scrollIntoViewIfNeeded();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await seventh.screenshot({path:path.join(out,`catalog-${width}.png`)});}
  for(const [href,tips] of [[online,false],[online+'?tip=true',true]]){
-  const popupPromise=page.waitForEvent('popup');await seventh.locator(`a[href="${href}"]`).click();const game=await popupPromise;
+  let game;
+  if(tips){game=await page.context().newPage();watch(game);await game.goto(href);}
+  else{const popupPromise=page.waitForEvent('popup');await seventh.locator(`a[href="${href}"]`).click();game=await popupPromise;}
   await game.waitForFunction(()=>window.togetherUnityState?.initialized&&window.unityInstance,null,{timeout:180000});
   assert.equal(await game.locator('#levels option').count(),21);assert.equal(await game.locator('#teacher').isVisible(),tips);
   if(tips){await game.locator('#demo').click();await game.waitForFunction(()=>window.togetherUnityState.state.won,null,{timeout:35000});assert.match(await game.locator('#result-title').innerText(),/示範完成/);}

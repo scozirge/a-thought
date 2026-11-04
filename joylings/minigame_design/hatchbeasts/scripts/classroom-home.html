@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>遊戲設計課｜課程目錄</title>
+  <link rel="canonical" href="https://scozirge.github.io/classroom/">
+  <script>
+    const destination = new URL(location.href);
+    // 舊的音遊連結會帶著怪獸編號返回孵蛋結果。
+    destination.pathname = destination.searchParams.has('result') ? '/a-thought/hatchbeasts/' : '/classroom/';
+    location.replace(destination.href);
+  </script>
+  <noscript><meta http-equiv="refresh" content="0; url=/classroom/"></noscript>
+</head>
+<body><a href="/classroom/">進入課程目錄</a></body>
+</html>

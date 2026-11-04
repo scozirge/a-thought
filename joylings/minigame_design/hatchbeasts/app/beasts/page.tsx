@@ -1,5 +1,6 @@
 import { BEASTS } from '@/lib/game';
 import { assetUrl } from '@/lib/assets';
+import { GAME_PUBLIC_URL } from '@/lib/release';
 
 export default function BeastGallery() {
   return (
@@ -22,7 +23,7 @@ export default function BeastGallery() {
         ))}
       </section>
       <p>
-        <a href={assetUrl('/')}>回到孵蛋遊戲</a>
+        <a href={process.env.NEXT_PUBLIC_CLASSROOM_SITE === 'true' ? GAME_PUBLIC_URL : assetUrl('/')}>回到孵蛋遊戲</a>
       </p>
     </main>
   );
