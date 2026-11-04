@@ -12,7 +12,7 @@ const server=http.createServer((req,res)=>{
  fs.readFile(file,(err,data)=>{if(err){res.writeHead(404).end();return;}res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.woff2':'font/woff2'})[path.extname(file)]||'application/octet-stream'}).end(data);});
 });
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-unsafe-swiftshader']});try{
- const base=`http://127.0.0.1:${server.address().port}`,page=await browser.newPage({viewport:{width:1280,height:1000}}),errors=[];
+ const base=`http://127.0.0.1:${server.address().port}`,context=await browser.newContext({viewport:{width:1280,height:1000}}),page=await context.newPage(),errors=[];
  const online='https://scozirge.github.io/together-online/',unity=process.env.TOGETHER_UNITY_URL||'http://127.0.0.1:18130/';
  await page.context().route(online+'**',async route=>{const response=await route.fetch({url:unity+route.request().url().slice(online.length)});await route.fulfill({response});});
  const watch=tab=>{tab.on('pageerror',e=>errors.push(e.message));tab.on('response',r=>{if(r.status()>=400&&r.url().startsWith(base)&&!r.url().endsWith('/favicon.ico'))errors.push(`${r.status()} ${r.url()}`);});};watch(page);
@@ -25,7 +25,7 @@ const server=http.createServer((req,res)=>{
  for(const width of [1280,375,320]){await page.setViewportSize({width,height:1000});await seventh.scrollIntoViewIfNeeded();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await seventh.screenshot({path:path.join(out,`catalog-${width}.png`)});}
  for(const [href,tips] of [[online,false],[online+'?tip=true',true]]){
   let game;
-  if(tips){game=await page.context().newPage();watch(game);await game.goto(href);}
+  if(tips){game=await context.newPage();watch(game);await game.goto(href);}
   else{const popupPromise=page.waitForEvent('popup');await seventh.locator(`a[href="${href}"]`).click();game=await popupPromise;}
   await game.waitForFunction(()=>window.togetherUnityState?.initialized&&window.unityInstance,null,{timeout:180000});
   assert.equal(await game.locator('#levels option').count(),21);assert.equal(await game.locator('#teacher').isVisible(),tips);
