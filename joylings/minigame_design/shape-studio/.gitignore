@@ -1,0 +1,12 @@
+Builds/
+artifacts/
+node_modules/
+unity-game/Library/
+unity-game/Temp/
+unity-game/Logs/
+unity-game/UserSettings/
+unity-game/obj/
+unity-game/Assets/Photon/
+unity-game/Assets/Photon.meta
+unity-game/ProjectSettings/
+unity-game/Packages/

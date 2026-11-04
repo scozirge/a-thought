@@ -1,0 +1,10 @@
+{
+  "name": "shape-studio",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1",
+    "test:online": "node tests/online.cjs"
+  }
+}
