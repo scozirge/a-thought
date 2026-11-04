@@ -52,6 +52,30 @@ async function checkSelf(p,role){
   assert.ok(await p.page.locator('#self-id').isVisible());
 }
 async function snapshot(p,file){await p.page.screenshot({path:path.join(output,file+'.png')});}
+async function checkPresenterLayout(host,action){
+  const page=host.page,originalSize=page.viewportSize();
+  try{
+    for(const [width,height] of [[320,480],[360,640],[390,844],[430,932],[568,320],[667,375],[844,390]]){
+      await page.setViewportSize({width,height});
+      const boxes=await page.evaluate(id=>{
+        const rect=selector=>document.querySelector(selector).getBoundingClientRect().toJSON();
+        return {paper:rect('#unity-canvas'),controls:['#self-id','#role','#difficulty','#reroll','#'+id].map(rect),
+          pageWidth:document.documentElement.scrollWidth,scrollY:window.scrollY};
+      },action);
+      assert.equal(boxes.pageWidth,width);assert.equal(boxes.scrollY,0);
+      for(const r of [boxes.paper,...boxes.controls]){
+        assert.ok(r.width>0&&r.height>0&&r.left>=0&&r.top>=0&&r.right<=width+1&&r.bottom<=height+1,
+          width+'×'+height+' 出題原圖與主要操作應完整出現在首屏');
+      }
+      const {paper,controls}=boxes;
+      assert.ok(Math.abs(paper.width-paper.height)<1&&paper.width>=Math.min(width-32,height-32)*.78);
+      for(const r of controls.slice(2))assert.ok(r.height>=48);
+      if(width>height)assert.ok(paper.right<=controls[2].left);
+      else assert.ok(paper.bottom<=controls[2].top);
+      if(action==='end'&&(width===390||width===844))await snapshot(host,'02-host-phone-'+(width===390?'portrait':'landscape'));
+    }
+  }finally{await page.setViewportSize(originalSize);}
+}
 async function inkPixels(p){
   const png=await p.page.locator('#unity-canvas').screenshot();
   return p.page.evaluate(async data=>{
@@ -80,7 +104,7 @@ async function run(){
   const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-unsafe-swiftshader','--disable-background-timer-throttling','--disable-backgrounding-occluded-windows','--disable-renderer-backgrounding']});
   const players=[];
   try{
-    const host=await open(browser,'host'),a=await open(browser,'first'),b=await open(browser,'late',true);
+    const host=await open(browser,'host',true),a=await open(browser,'first'),b=await open(browser,'late',true);
     players.push(host,a,b);
     await snapshot(host,'01-home');const prev=(await view(a)).identity;
     await a.page.click('#identity');await wait(a,n=>roomView.identity!==n,prev);
@@ -90,6 +114,7 @@ async function run(){
     await host.page.click('#host');await wait(host,()=>roomView.host && roomView.phase==='wait');
     await a.page.click('#join');await wait(a,()=>roomView.phase==='wait');await wait(host,()=>roomView.people.length===1);
     await checkSelf(host,'小小工程師');await checkSelf(a,'師傅');
+    await checkPresenterLayout(host,'start');
     assert.equal(await a.page.locator('#roster .self-tag').count(),1);
     assert.equal(await host.page.locator('#difficulty option').count(),5);
     assert.equal(await a.page.locator('#prompt-tools').isVisible(),false);
@@ -104,6 +129,8 @@ async function run(){
     assert.deepEqual(await a.page.locator('[data-tool]').evaluateAll(items=>items.map(el=>el.dataset.tool)),['pen','eraser']);
     assert.equal(await host.page.locator('#draw-title').isVisible(),false);assert.ok(!('title' in await view(host)));
     assert.equal(await host.page.locator('#role').innerText(),'大聲說出你的作品 讓師傅們幫你完工!');
+    await checkPresenterLayout(host,'end');
+    record('手機出題者在七種直橫式尺寸均可同屏看圖、換題與開始或結束');
     assert.equal(await a.page.locator('[data-chalk]').count(),7);assert.ok(await inkPixels(host)>40);
     assert.equal(await a.page.getByRole('button',{name:'黑色粉筆'}).getAttribute('aria-pressed'),'true');
     await snapshot(host,'02-host-prompt');
@@ -177,7 +204,10 @@ async function run(){
     await checkSelf(replacement,'小小工程師');await pickAlias(host,7); // Taken by the existing artist.
     assert.equal((await view(replacement)).round,first.round);assert.equal((await view(replacement)).level,4);
     await wait(replacement,()=>roomView.people.filter(p=>p.online).length===2 && roomView.people.some(p=>p.done));
+    const desktopSize=replacement.page.viewportSize();
+    await replacement.page.setViewportSize(host.page.viewportSize());
     assert.equal(await inkPixels(replacement),originalInk);
+    await replacement.page.setViewportSize(desktopSize);
     await wait(b,()=>roomView.people.some(p=>p.done));
     record('新開房者接手同一題、名單與勾選；原出題者退場');
     assert.ok(await b.page.locator('#end').isHidden());
@@ -239,7 +269,10 @@ async function run(){
     const transitions=await Promise.all(audience.map(p=>p.page.evaluate(()=>window.exhibitTimes.filter(x=>x.round===1))));
     for(const events of transitions){
       assert.deepEqual(events.map(x=>x.slide),[-2,0,1,-1]);
-      for(let i=1;i<=3;i++)assert.ok(Math.abs(events[i].time-events[i-1].time-3000)<850,'答案及每人作品各展示三秒');
+      for(let i=1;i<=3;i++){
+        const elapsed=events[i].time-events[i-1].time;
+        assert.ok(Math.abs(elapsed-3000)<850,`展示頁 ${events[i-1].slide} 實測 ${elapsed} ms，預期約三秒`);
+      }
     }
     for(const i of [1,2,3]){
       const times=transitions.map(log=>log[i].time);

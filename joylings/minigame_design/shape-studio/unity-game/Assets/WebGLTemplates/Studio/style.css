@@ -50,3 +50,53 @@ footer{max-width:680px;margin:20px auto 0;border-top:1px solid #b3b4ab;padding-t
 #eraser-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 #eraser-area{position:absolute;border:1px solid #243345;box-shadow:inset 0 0 0 1px white;border-radius:50%;width:calc(100% * 17 / 256);aspect-ratio:1;box-sizing:border-box;transform:translate(-50%,-50%)}
 #unity-canvas.erasing{cursor:none}
+
+/* Keep the presenter's reference visible while the class draws. */
+.presenting #unity-canvas{touch-action:auto;cursor:default}
+@media (max-width:650px), (orientation:landscape) and (max-height:500px){
+  #shell.presenting{
+    display:grid;
+    grid-template-areas:"head" "paper" "brief" "choices" "foot" "roster";
+    grid-template-columns:minmax(0,1fr);
+    align-items:start;
+    gap:10px;
+    padding-top:max(8px,env(safe-area-inset-top));
+    padding-right:max(14px,env(safe-area-inset-right));
+    padding-bottom:max(14px,env(safe-area-inset-bottom));
+    padding-left:max(14px,env(safe-area-inset-left));
+  }
+  .presenting header{grid-area:head;margin:0;padding:0 0 5px}
+  .presenting .brand{display:none}
+  .presenting .header-info{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px}
+  .presenting #self-id{justify-self:start;padding:3px 5px}
+  .presenting #round-tag{white-space:nowrap;letter-spacing:normal}
+  .presenting #drawing{grid-area:brief}
+  .presenting .desk-head{margin:0;gap:8px}
+  .presenting .round-actions{flex:none}
+  .presenting .round-actions:has(#end[hidden]){display:none}
+  .presenting #end{white-space:nowrap}
+  .presenting #prompt-tools{grid-area:choices;margin:0;justify-content:start}
+  .presenting #prompt-tools button{padding-inline:12px}
+  .presenting #board-slot{
+    grid-area:paper;
+    width:min(100%,calc(100svh - 210px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+    margin-inline:auto;
+  }
+  .presenting footer{grid-area:foot;width:100%;margin:0}
+  .presenting #roster{grid-area:roster;width:100%}
+}
+@media (max-width:350px){
+  .presenting #prompt-tools label{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+  .presenting #prompt-tools{gap:5px}
+  .presenting #prompt-tools button,.presenting #difficulty{padding-inline:6px}
+}
+@media (orientation:landscape) and (max-height:500px){
+  #shell.presenting{
+    grid-template-areas:"paper head" "paper brief" "paper choices" "paper ." "foot foot" "roster roster";
+    grid-template-columns:min(52%,calc(100svh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))) minmax(0,1fr);
+    grid-template-rows:auto auto auto 1fr auto auto;
+    column-gap:16px;
+  }
+  .presenting #board-slot{width:100%}
+  #shell.presenting + #toast{left:auto;right:max(14px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));transform:none;max-width:calc(44vw - env(safe-area-inset-right));padding:8px 12px}
+}

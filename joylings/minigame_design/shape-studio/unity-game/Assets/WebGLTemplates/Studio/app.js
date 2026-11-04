@@ -110,6 +110,7 @@
     const old=current;current=v;
     const inRoom=v.connected && v.phase!=='home', drawing=inRoom && v.phase==='draw';
     const preview=inRoom && v.host && v.phase==='wait';
+    $('shell').classList.toggle('presenting',v.host&&(preview||drawing));
     show('entry',!inRoom);show('waiting',inRoom && !preview && ['wait','joining','handoff'].includes(v.phase));
     show('drawing',drawing||preview);show('tools',drawing&&!v.host);show('palette',drawing&&!v.host);show('result',v.phase==='reveal');
     show('prompt-tools',v.host&&(preview||drawing));show('start',preview);
