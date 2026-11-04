@@ -86,7 +86,7 @@
       tile((picking&&candidate===p.id?'✓ ':'')+label(p.avatar),p.drawn?art.get(p.id)?.url:null,'',p.id);
     }
     if(!all)return;
-    $('result-note').textContent=!hasWorks?'這一輪還沒有作品。':v.host?'點選和原圖最像的作品。':'等小小工程師選作品。';
+    $('result-note').textContent=!hasWorks?'這一輪還沒有作品。':v.host?'點選和原圖最像的作品。':'等小工程師選作品。';
   }
   function renderRoster(people,me) {
     const key=JSON.stringify([me,people.map(p=>[p.id,p.avatar,p.online,p.done])]);
@@ -112,12 +112,12 @@
     const preview=inRoom && v.host && v.phase==='wait';
     show('entry',!inRoom);show('waiting',inRoom && !preview && ['wait','joining','handoff'].includes(v.phase));
     show('drawing',drawing||preview);show('tools',drawing&&!v.host);show('palette',drawing&&!v.host);show('result',v.phase==='reveal');
-    show('prompt-tools',v.host&&(preview||drawing));show('start',preview);
+    show('prompt-tools',v.host&&(preview||drawing));show('start',preview);show('clock',drawing);
     if(v.host)$('difficulty').value=String(v.level);
     show('foot',inRoom);show('roster',inRoom && v.people.length>0);renderRoster(v.people,v.host?0:v.me);
     const selfKnown=inRoom&&(v.host||v.me>0);
     show('self-id',selfKnown);
-    if(selfKnown)$('self-id').textContent='你是'+(v.host?'小小工程師':'師傅')+' · '+label(v.identity);
+    if(selfKnown)$('self-id').textContent='你是'+(v.host?'小工程師':'師傅')+' · '+label(v.identity);
     show('end',drawing&&v.host);show('draw-title',drawing&&!v.host);
     $('board-slot').className=drawing||preview?'paper':'park';
     $('round-tag').textContent=inRoom && v.round?'第 '+v.round+' 輪':'';
@@ -129,25 +129,21 @@
     $('wait-title').textContent=v.host?'畫室開門了':v.phase==='handoff'?'正在接手教室…':v.phase==='joining'?'正在進教室…':'等出題者開始';
     if(drawing||preview){
       show('role',v.host);if(v.host)$('role').textContent='大聲說出你的作品 讓師傅們幫你完工!';
-      const locked=v.done||v.markPending;
+      const locked=v.done||v.markPending||v.seconds<=0;
       if(locked)pointer=null;
       for(const b of document.querySelectorAll('[data-tool],[data-chalk],#undo,#clear'))b.disabled=locked;
-      $('mark').disabled=v.markPending;
+      $('mark').disabled=v.markPending||v.seconds<=0;
       $('mark').textContent=v.done?'☑ 取消勾選':'□ 畫好了';
       $('mark').setAttribute('aria-pressed',String(v.done));
+      $('clock').textContent=Math.floor(v.seconds/60)+':'+String(v.seconds%60).padStart(2,'0');
+      $('clock').classList.toggle('soon',v.seconds<=20);
       if(old?.round!==v.round||old?.phase!=='draw'){selected='pen';updateTools();}
       for(const b of document.querySelectorAll('[data-chalk]'))b.style.backgroundColor=v.palette[Number(b.dataset.chalk)];
     } else pointer=null;
-    if(!drawing || v.done || v.markPending || v.host)hideEraser();
     if(v.phase==='reveal')renderGallery(v);
     if(drawing&&old?.phase==='reveal')window.scrollTo(0,0);
   }
-  function hideEraser(){
-    show('eraser-area',false);
-    $('unity-canvas').classList.remove('erasing');
-  }
   function updateTools(){
-    hideEraser();
     for(const b of document.querySelectorAll('[data-tool]'))b.setAttribute('aria-pressed',String(b.dataset.tool===selected));
     for(const b of document.querySelectorAll('[data-chalk]'))b.setAttribute('aria-pressed',String(selected!=='eraser' && Number(b.dataset.chalk)===chalk));
   }
@@ -165,34 +161,21 @@
     if(current)view(current);
   }
   const paper=$('unity-canvas');
-  function previewEraser(e){
-    const r=paper.getBoundingClientRect();
-    if(selected!=='eraser'||current?.phase!=='draw'||current.host||current.done||current.markPending ||
-       (pointer===null && (e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))){hideEraser();return;}
-    const area=$('eraser-area');
-    area.style.left=Math.max(0,Math.min(r.width,e.clientX-r.left))+'px';
-    area.style.top=Math.max(0,Math.min(r.height,e.clientY-r.top))+'px';
-    show('eraser-area',true);paper.classList.add('erasing');
-  }
-  paper.addEventListener('pointerleave',hideEraser);
   function point(e,op) {
     const r=paper.getBoundingClientRect();
     const norm=(n,size)=>Math.max(0,Math.min(255,Math.round(n/size*255)));
     send('Pointer',JSON.stringify({op,tool:selected,chalk,x:norm(e.clientX-r.left,r.width),y:norm(e.clientY-r.top,r.height)}));
   }
   paper.addEventListener('pointerdown',e=>{
-    if(!current || current.host || current.phase!=='draw'||current.done||current.markPending||pointer!==null||e.button!==0)return;
-    e.preventDefault();pointer=e.pointerId;previewEraser(e);paper.setPointerCapture(pointer);point(e,'down');
+    if(!current || current.host || current.phase!=='draw'||current.done||current.markPending||current.seconds<=0||pointer!==null||e.button!==0)return;
+    e.preventDefault();pointer=e.pointerId;paper.setPointerCapture(pointer);point(e,'down');
   });
   paper.addEventListener('pointermove',e=>{
-    if(pointer!==null && e.pointerId!==pointer)return;
-    previewEraser(e);
     if(e.pointerId!==pointer)return;e.preventDefault();
     const samples=e.getCoalescedEvents?.();for(const p of samples?.length?samples:[e])point(p,'move');
   });
   for(const type of ['pointerup','pointercancel','lostpointercapture'])paper.addEventListener(type,e=>{
     if(e.pointerId!==pointer)return;pointer=null;
-    if(type==='pointerup' && e.pointerType==='mouse')previewEraser(e);else hideEraser();
     if(type==='pointerup')point(e,'up');
     else send('EndStroke');
     if(paper.hasPointerCapture(e.pointerId))paper.releasePointerCapture(e.pointerId);

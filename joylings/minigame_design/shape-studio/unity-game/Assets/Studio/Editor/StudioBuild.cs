@@ -18,7 +18,7 @@ public static class StudioBuild {
         const string path="Assets/Studio/Scenes/Classroom.unity";
         EditorSceneManager.SaveScene(scene,path);
         EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(path,true)};
-        PlayerSettings.companyName="AThought";PlayerSettings.productName="小小工程師";PlayerSettings.bundleVersion="1.0.0";
+        PlayerSettings.companyName="AThought";PlayerSettings.productName="小工程師";PlayerSettings.bundleVersion="1.0.0";
         PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Gzip;PlayerSettings.WebGL.decompressionFallback=true;
         PlayerSettings.WebGL.dataCaching=true;PlayerSettings.WebGL.nameFilesAsHashes=true;
         PlayerSettings.WebGL.initialMemorySize=64;PlayerSettings.WebGL.maximumMemorySize=256;
