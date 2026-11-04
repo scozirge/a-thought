@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShapeStudio {
-    // Two palette indices per byte. Zero is paper, 1–6 are chalk, 7 is prompt-only black.
+    // Two palette indices per byte. Zero is paper, 1–6 are pastels, 7 is black.
     public sealed class Sheet {
         public const int Size = 256, Bytes = Size * Size / 2, MaxPackedChars = ((Bytes+3)/3)*4;
         public static readonly string[] Palette={"#FFFEF9","#DD8592","#EAA171","#DBBA56","#81B995","#81AED8","#B298CB","#292929"};
@@ -56,7 +56,7 @@ namespace ShapeStudio {
         }
         public void Begin(string selected, int x, int y, int chalk) {
             End(); before=(byte[])Bits.Clone(); sx=lastX=x; sy=lastY=y; tool=selected;
-            ColorIndex=(byte)(tool=="eraser"?0:Mathf.Clamp(chalk,1,6));
+            ColorIndex=(byte)(tool=="eraser"?0:Mathf.Clamp(chalk,1,Palette.Length-1));
             if (tool=="pen" || tool=="eraser") Dot(x,y);
         }
         public void Move(int x, int y) {
@@ -108,7 +108,7 @@ namespace ShapeStudio {
                 }
             }else return null;
             // Only student sheets are received over the wire.
-            if(Array.Exists(bits,b=>(b&15)>6 || (b>>4)>6))return null;
+            if(Array.Exists(bits,b=>(b&15)>=Palette.Length || (b>>4)>=Palette.Length))return null;
             return bits;
         }
         public void Paint(Texture2D texture, Color32[] pixels) {

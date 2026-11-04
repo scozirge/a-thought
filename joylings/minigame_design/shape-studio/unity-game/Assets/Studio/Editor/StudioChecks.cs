@@ -24,7 +24,7 @@ public static class StudioChecks {
                 Deck.Draw(level*Deck.PerLevel+i,sheet);Check(sheet.HasInk&&unique.Add(sheet.Pack()),"空白或重複原圖");
                 var colors=new HashSet<int>();
                 foreach(byte b in sheet.Bits){colors.Add(b&15);colors.Add(b>>4);}colors.Remove(0);
-                Check(level==0?colors.SetEquals(new[]{7}):colors.Count>=2&&colors.All(c=>c>=1&&c<=6),"原圖色彩不符："+i);
+                Check(level==0?colors.SetEquals(new[]{7}):colors.Count==2&&colors.All(c=>c>=1&&c<=6),"原圖色彩不符："+i);
                 sheet.Paint(tile,pixels);
                 var reduced=new Color32[thumb*thumb];
                 for(int y=0;y<thumb;y++)for(int x=0;x<thumb;x++)reduced[y*thumb+x]=pixels[y*2*Sheet.Size+x*2];
@@ -34,10 +34,11 @@ public static class StudioChecks {
             UnityEngine.Object.DestroyImmediate(preview);
         }
         UnityEngine.Object.DestroyImmediate(tile);
-        sheet.Reset();sheet.Begin("pen",10,20,6);sheet.Move(90,20);sheet.End();string ink=sheet.Pack();
+        sheet.Reset();sheet.Begin("pen",10,20,7);sheet.Move(90,20);sheet.End();string ink=sheet.Pack();
+        Check(sheet.ColorIndex==7 && sheet.Bits.SequenceEqual(Sheet.Unpack(ink)),"黑色粉筆傳輸錯誤");
         sheet.Begin("eraser",40,20,1);sheet.End();Check(ink!=sheet.Pack()&&sheet.Undo()&&sheet.Pack()==ink,"橡皮擦復原錯誤");
         Check(sheet.Clear()&&!sheet.HasInk&&sheet.Undo()&&sheet.Pack()==ink,"清空復原錯誤");
-        for(int i=0;i<Sheet.Bytes;i++)sheet.Bits[i]=(byte)(0x10*(1+i%6)+(1+i/7%6));
+        for(int i=0;i<Sheet.Bytes;i++)sheet.Bits[i]=(byte)(0x10*(1+i%7)+(1+i/7%7));
         Check(sheet.Bits.SequenceEqual(Sheet.Unpack(sheet.Pack())),"密集彩色畫紙傳輸錯誤");
         Debug.Log("Verified 100 unique prompts, shuffle bags, chalk, eraser, undo, clear and dense sheet encoding.");
     }

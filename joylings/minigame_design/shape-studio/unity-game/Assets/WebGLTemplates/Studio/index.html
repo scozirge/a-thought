@@ -13,7 +13,8 @@
 <div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas></div>
 <div id="palette" hidden role="group" aria-label="粉筆顏色"></div>
 <div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="oval" aria-label="圓形">○</button><button data-tool="box" aria-label="方形">□</button><button data-tool="tri" aria-label="三角形">△</button><button data-tool="eraser">橡皮擦</button><button id="undo" title="上一步" aria-label="上一步">↶</button><button id="clear">清空</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
-<section id="result" hidden><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></section>
+<section id="result" hidden><div id="exhibit"><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="confirm-pick" class="primary" hidden disabled>選這張!</button><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></div>
+<section id="award" hidden aria-labelledby="award-title"><span id="award-avatar" aria-hidden="true"></span><h2 id="award-title" role="status"></h2><img id="award-art" alt="得獎作品" hidden></section></section>
 <footer hidden id="foot"><span id="who"></span><button id="leave">離房</button></footer>
 <ul id="roster" hidden aria-label="師傅名單"></ul>
 </main><div id="toast" hidden role="status"></div>

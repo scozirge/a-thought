@@ -19,9 +19,14 @@ async function open(browser,name,mobile=false) {
   await page.addInitScript(()=>{
     let ui;Object.defineProperty(window,'paperStudio',{get:()=>ui,set(value){
       ui=value;const render=ui.view;
-      window.exhibitTimes=[];
+      window.exhibitTimes=[];window.awardTimes={};
       ui.view=v=>{
         window.roomView=v;render(v);
+        if(v.phase==='reveal' && v.winner>0 && !window.awardTimes[v.round]){
+          window.awardTimes[v.round]={shown:Date.now(),text:document.querySelector('#award-title').textContent};
+        }
+        const award=window.awardTimes[v.round-1];
+        if(v.phase==='draw' && award && !award.next)award.next=Date.now();
         const previous=window.exhibitTimes.at(-1);
         if(v.phase==='reveal' && (previous?.round!==v.round||previous.slide!==v.slide))
           window.exhibitTimes.push({round:v.round,slide:v.slide,time:Date.now()});
@@ -98,12 +103,13 @@ async function run(){
     assert.equal(first.original,'');assert.ok(first.seconds>=177 && first.seconds<=180);
     assert.equal(await host.page.locator('#draw-title').isVisible(),false);assert.ok(!('title' in await view(host)));
     assert.equal(await host.page.locator('#role').innerText(),'大聲說出你的作品 讓師傅們幫你完工!');
-    assert.equal(await a.page.locator('[data-chalk]').count(),6);assert.ok(await inkPixels(host)>40);
+    assert.equal(await a.page.locator('[data-chalk]').count(),7);assert.ok(await inkPixels(host)>40);
+    assert.equal(await a.page.getByRole('button',{name:'黑色粉筆'}).getAttribute('aria-pressed'),'true');
     await snapshot(host,'02-host-prompt');
     assert.equal(await inkPixels(a),0);
     await stroke(a);await a.page.waitForTimeout(400);assert.ok(await inkPixels(a)>40);
     await a.page.click('#undo');await a.page.waitForTimeout(400);assert.equal(await inkPixels(a),0);
-    await a.page.locator('[data-chalk="6"]').click();await stroke(a);
+    await a.page.getByRole('button',{name:'黑色粉筆'}).click();await stroke(a);
     const colored=await inkPixels(a);await a.page.click('[data-tool=eraser]');await stroke(a);assert.equal(await inkPixels(a),0);
     await a.page.click('#undo');assert.equal(await inkPixels(a),colored);
     await a.page.click('#clear');assert.equal(await inkPixels(a),0);
@@ -210,7 +216,7 @@ async function run(){
       });
       const palette=(await view(p)).palette;
       assert.ok(colors[0].length>=3&&!colors[0].includes(palette[7]));
-      assert.ok(colors[1].includes(palette[6])&&colors[1].includes(palette[2]));
+      assert.ok(colors[1].includes(palette[7])&&colors[1].includes(palette[2]));
       assert.ok(colors[2].includes(palette[5]));
     }
     const transitions=await Promise.all(audience.map(p=>p.page.evaluate(()=>window.exhibitTimes.filter(x=>x.round===1))));
@@ -226,18 +232,47 @@ async function run(){
     record('提前結束立即揭曉，保留已勾選及未勾選的作品');
     const pick='button.tile:not(.original)';
     await replacement.page.locator(pick).first().waitFor({state:'visible'});
-    assert.equal(await a.page.locator(pick).count(),0);assert.ok(await replacement.page.locator('#next').isEnabled());
+    assert.equal(await a.page.locator(pick).count(),0);
+    assert.ok(await replacement.page.locator('#next').isHidden());
+    assert.equal(await replacement.page.locator('#confirm-pick').innerText(),'選這張!');
+    assert.ok(await replacement.page.locator('#confirm-pick').isDisabled());
+    assert.ok(await a.page.locator('#confirm-pick').isHidden());
     assert.ok(await a.page.locator('#next').isHidden());await a.page.locator('#next').evaluate(el=>el.click());
-    await replacement.page.locator(pick).first().click();await wait(b,()=>roomView.winner>0);
+    await replacement.page.locator(pick).last().click();
+    await replacement.page.locator(pick).first().click();
+    assert.equal(await replacement.page.locator(pick).first().getAttribute('aria-pressed'),'true');
+    assert.equal(await replacement.page.locator(pick).last().getAttribute('aria-pressed'),'false');
+    await replacement.page.locator('#next').evaluate(el=>el.click());
     await snapshot(replacement,'04-gallery');await snapshot(b,'05-phone-gallery');
     await a.page.waitForTimeout(5500);
-    assert.equal((await view(a)).round,1);assert.equal((await view(a)).slide,-1);
+    for(const p of audience){
+      assert.equal((await view(p)).winner,-1);assert.equal((await view(p)).round,1);
+      assert.ok(await p.page.locator('#award').isHidden());
+    }
     await host.page.click('#leave');await wait(host,()=>roomView.phase==='home');
-    // Transfer again during the result phase. The new presenter can see each sheet and the winner.
-    await host.page.click('#host');await wait(host,()=>roomView.host && roomView.phase==='reveal'&&roomView.winner>0&&document.querySelectorAll('#gallery img').length===3);
+    const awardText=(await a.page.locator('#name').textContent())+'的作品最棒!';
+    await replacement.page.click('#confirm-pick');
+    await Promise.all(audience.map(async p=>{
+      await wait(p,id=>roomView.phase==='reveal' && roomView.winner===id,first.me);
+      assert.equal(await p.page.locator('#award-title').innerText(),awardText);
+      assert.ok(await p.page.locator('#award-art').isVisible());
+      assert.ok(await p.page.locator('#next').isHidden());
+    }));
+    await replacement.page.locator('#next').evaluate(el=>el.click());
+    await Promise.all([snapshot(replacement,'06-award'),snapshot(b,'06-phone-award')]);
+    // Request another teacher while the award clock is running.
+    await host.page.click('#host');
+    await wait(a,()=>roomView.phase==='draw'&&roomView.round===2);
+    await wait(b,()=>roomView.phase==='draw'&&roomView.round===2);
+    await wait(host,()=>roomView.host && roomView.phase==='draw'&&roomView.round===2);
     await wait(replacement,()=>roomView.phase==='home');
-    await host.page.click('#next');await wait(a,()=>roomView.phase==='draw'&&roomView.round===2);
-    const began=Date.now();assert.ok((await view(host)).host);assert.equal((await view(b)).host,false);
+    const awards=await Promise.all([a,b].map(p=>p.page.evaluate(()=>window.awardTimes[1])));
+    for(const award of awards){
+      assert.equal(award.text,awardText);
+      assert.ok(Math.abs(award.next-award.shown-3000)<900,'公布三秒後才進下一題');
+    }
+    record('可以改選，確認後全班看到得獎作品，三秒後自動開下一題',{awards});
+    const began=awards[0].next;assert.ok((await view(host)).host);assert.equal((await view(b)).host,false);
     assert.equal((await view(a)).done,false);
     assert.equal((await view(a)).original,'');assert.equal((await view(a)).winner,-1);
     assert.equal(await inkPixels(a),0);

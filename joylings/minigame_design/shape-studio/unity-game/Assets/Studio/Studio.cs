@@ -7,7 +7,7 @@ using UnityEngine;
 namespace ShapeStudio {
     public sealed class Studio : MonoBehaviour {
         public const int RoundMs=180000;
-        const int SlideMs=3000, AnswerOnly=-2, AllWorks=-1;
+        const int SlideMs=3000, AwardMs=3000, AnswerOnly=-2, AllWorks=-1;
         [Serializable] class InputPoint {public int x,y,chalk;public string op,tool;}
         [Serializable] class View {
             public string phase,original; public bool connected,busy,host,canPick,done,markPending;
@@ -90,7 +90,11 @@ namespace ShapeStudio {
         }
         void Hello(){link.Send(default,new Wire{type="hello",token=token,avatar=identity,rename=requestedAlias,member=resumeSeat});nextHello=Time.unscaledTime+2;}
         public void NextRound() {
-            if(!link.Connected||!link.Host || !(phase=="wait" || CanPick()))return;
+            if(!link.Connected||!link.Host)return;
+            if(phase!="wait" && (!CanPick() || winner>0 || seats.Any(s=>s.drawn)))return;
+            BeginRound();
+        }
+        void BeginRound(){
             if(phase=="reveal" || card<0)card=deck.Next(card>=0?card/Deck.PerLevel:0);
             seats.RemoveAll(s=>!s.online);round++;phase="draw";winner=-1;original="";
             foreach(var s in seats){s.drawn=s.done=false;s.ink=null;s.revision=0;s.playedRound=round;}
@@ -103,8 +107,8 @@ namespace ShapeStudio {
             if(CanPickPrompt()&&int.TryParse(value,out int level)&&level>=0&&level<Deck.Levels&&level!=card/Deck.PerLevel)DrawNewCard(level);
         }
         public void Choose(string idText){
-            if(!link.Host || !CanPick() || !int.TryParse(idText,out int id) || !seats.Any(s=>s.id==id&&s.drawn))return;
-            winner=id;Sync();
+            if(!link.Host || !CanPick() || winner>0 || !int.TryParse(idText,out int id) || !seats.Any(s=>s.id==id&&s.drawn))return;
+            winner=id;deadline=unchecked(link.Now+AwardMs);Sync();
         }
         int TimeLeft() => unchecked(deadline-link.Now);
         bool CanPick() => phase=="reveal" && wallOpen;
@@ -156,6 +160,7 @@ namespace ShapeStudio {
                 } else if(!link.Host && dirty && Time.unscaledTime>=nextSend)SendInk(false);
             }
             if(phase=="reveal"){
+                if(link.Host && winner>0 && TimeLeft()<=0){BeginRound();return;}
                 int slide=Slide();
                 if(link.Host && !wallOpen && slide==AllWorks){wallOpen=true;Sync();}
                 else if(slide!=lastSlide)Publish();
