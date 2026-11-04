@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css?v=28de77613034"></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css?v=c8044cba2eef"></head>
 <body><main id="shell">
 <header><span class="brand"><i aria-hidden="true">✎</i> 小小工程師</span><div class="header-info"><strong id="self-id" hidden></strong><span id="round-tag"></span></div></header>
 <section id="entry">
@@ -10,7 +10,7 @@
 <section id="waiting" hidden><div class="sheet-card"><div class="large-icon">✎</div><h2 id="wait-title"></h2></div></section>
 <section id="drawing" hidden><div class="desk-head"><div><span class="kicker" id="role"></span><h2 id="draw-title">我的畫紙</h2></div><div class="round-actions"><button id="end" hidden>結束</button></div></div></section>
 <div id="prompt-tools" hidden><label for="difficulty">難度</label><select id="difficulty"><option value="0">簡單</option><option value="1">中等</option><option value="2">困難</option><option value="3">超級難</option><option value="4">恐怖難</option></select><button id="reroll">換一題</button><button id="start" class="primary">開始出題</button></div>
-<div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas><div id="eraser-layer" aria-hidden="true"><span id="eraser-area" hidden></span></div></div>
+<div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas><img id="presenter-original" alt="出題原圖" draggable="false" hidden><div id="eraser-layer" aria-hidden="true"><span id="eraser-area" hidden></span></div></div>
 <div id="palette" hidden role="group" aria-label="粉筆顏色"></div>
 <div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="eraser">橡皮擦</button><button id="undo" title="上一步" aria-label="上一步">↶</button><button id="clear">清空</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
 <section id="result" hidden><div id="exhibit"><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="confirm-pick" class="primary" hidden disabled>選這張!</button><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></div>
@@ -18,7 +18,7 @@
 <footer hidden id="foot"><span id="who"></span><button id="leave">離房</button></footer>
 <ul id="roster" hidden aria-label="師傅名單"></ul>
 </main><div id="toast" hidden role="status"></div>
-<script src="app.js?v=193500356783"></script><script src="Build/18c33248066fd6493da15a9cd1d7f165.loader.js?v=9ddbbfa1b14c"></script>
+<script src="app.js?v=65bbbbbc6ad3"></script><script src="Build/025e8a830a254448ee42295621fc24a6.loader.js?v=a4a17edbfe3a"></script>
 <script>
-createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/383444cc131066a560e44460c4222ca6.data.unityweb?v=165287c2edb1',frameworkUrl:'Build/fed8526c399cc8841f55544f4260248d.framework.js.unityweb?v=9754429fce8d',codeUrl:'Build/7b4efdea06816e121534e324156a7621.wasm.unityweb?v=c68743c0b3c4',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
+createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/9d7f0c47204a757afb93ff371b1e3c64.data.unityweb?v=7ee24759d15e',frameworkUrl:'Build/fed8526c399cc8841f55544f4260248d.framework.js.unityweb?v=59baeaeb3077',codeUrl:'Build/35ddcd6428b20387030ea3199a914f42.wasm.unityweb?v=50f0aaa38a10',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
 </script></body></html>
