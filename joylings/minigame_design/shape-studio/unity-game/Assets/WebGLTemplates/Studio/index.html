@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css"></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f6f3e8"><title>小小工程師</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css"></head>
 <body><main id="shell">
-<header><span class="brand"><i aria-hidden="true">✎</i> 小工程師</span><div class="header-info"><strong id="self-id" hidden></strong><span id="round-tag"></span></div></header>
+<header><span class="brand"><i aria-hidden="true">✎</i> 小小工程師</span><div class="header-info"><strong id="self-id" hidden></strong><span id="round-tag"></span></div></header>
 <section id="entry">
 <div class="poster"><div class="paper-shadow"><svg viewBox="0 0 400 290" aria-hidden="true"><g stroke="#27364b" stroke-width="5" stroke-linejoin="round"><path fill="#ffd86b" d="M48 166L107 79l70 88z"/><rect x="60" y="165" width="103" height="76" rx="5" fill="#ff967c"/><circle cx="111" cy="199" r="15" fill="#fffdf6"/><circle cx="233" cy="117" r="37" fill="#b5d7fd"/><path d="M215 125q16 15 31-3" fill="none"/><path fill="#f5bc45" d="m305 171 8 16 18 3-13 13 3 18-16-9-16 9 3-18-13-13 18-3z"/><path d="m267 58 11-21m6 31 22-9" fill="none"/></g><path d="M188 218q15-24 35-3t35-3" fill="none" stroke="#4b70a0" stroke-width="4" stroke-dasharray="7 6"/></svg></div></div>
-<div class="entry-body"><h1>小工程師</h1><p class="lead">一個人描述，大家一起畫。</p>
+<div class="entry-body"><h1>小小工程師</h1><p class="lead">一個人描述，大家一起畫。</p>
 <button id="identity" class="identity" aria-label="更換隨機名字與頭像"><span id="avatar"></span><b id="name"></b><span class="reroll" aria-hidden="true">⟳</span></button>
 <div class="actions"><button id="join" class="primary">加入</button><button id="host">開房</button></div><p id="status" role="status"></p></div></section>
 <section id="waiting" hidden><div class="sheet-card"><div class="large-icon">✎</div><h2 id="wait-title"></h2></div></section>
-<section id="drawing" hidden><div class="desk-head"><div><span class="kicker" id="role"></span><h2 id="draw-title">我的畫紙</h2></div><div class="round-actions"><strong id="clock" aria-label="剩餘時間"></strong><button id="end" hidden>結束</button></div></div></section>
+<section id="drawing" hidden><div class="desk-head"><div><span class="kicker" id="role"></span><h2 id="draw-title">我的畫紙</h2></div><div class="round-actions"><button id="end" hidden>結束</button></div></div></section>
 <div id="prompt-tools" hidden><label for="difficulty">難度</label><select id="difficulty"><option value="0">簡單</option><option value="1">中等</option><option value="2">困難</option><option value="3">超級難</option><option value="4">恐怖難</option></select><button id="reroll">換一題</button><button id="start" class="primary">開始出題</button></div>
-<div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas></div>
+<div id="board-slot" class="park"><canvas id="unity-canvas" aria-label="畫布"></canvas><span id="eraser-area" aria-hidden="true" hidden></span></div>
 <div id="palette" hidden role="group" aria-label="粉筆顏色"></div>
-<div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="oval" aria-label="圓形">○</button><button data-tool="box" aria-label="方形">□</button><button data-tool="tri" aria-label="三角形">△</button><button data-tool="eraser">橡皮擦</button><button id="undo" title="上一步" aria-label="上一步">↶</button><button id="clear">清空</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
+<div id="tools" hidden aria-label="畫圖工具"><button data-tool="pen" aria-label="畫筆">✎</button><button data-tool="eraser">橡皮擦</button><button id="undo" title="上一步" aria-label="上一步">↶</button><button id="clear">清空</button><button id="mark" aria-pressed="false">□ 畫好了</button></div>
 <section id="result" hidden><div id="exhibit"><div class="desk-head"><div><span class="kicker" id="show-status" aria-live="polite"></span><h2 id="result-title">作品牆</h2></div><button id="confirm-pick" class="primary" hidden disabled>選這張!</button><button id="next" class="primary" hidden>下一題</button></div><div id="gallery"></div><p id="result-note"></p></div>
 <section id="award" hidden aria-labelledby="award-title"><span id="award-avatar" aria-hidden="true"></span><h2 id="award-title" role="status"></h2><img id="award-art" alt="得獎作品" hidden></section></section>
 <footer hidden id="foot"><span id="who"></span><button id="leave">離房</button></footer>
@@ -20,5 +20,5 @@
 </main><div id="toast" hidden role="status"></div>
 <script src="app.js"></script><script src="Build/{{{ LOADER_FILENAME }}}"></script>
 <script>
-createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
+createUnityInstance(document.getElementById('unity-canvas'),{dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'AThought',productName:'小小工程師',productVersion:'1.0.0',devicePixelRatio:1},p=>paperStudio.loading(p)).then(paperStudio.ready).catch(e=>{paperStudio.fail();console.error(e)});
 </script></body></html>
