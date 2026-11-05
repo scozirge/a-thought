@@ -7,7 +7,7 @@ const url=process.env.STUDIO_URL||'https://scozirge.github.io/little-engineer/';
 const duration=Number(process.env.STUDIO_SOAK_SECONDS||600)*1000;
 const output=path.resolve(__dirname,'../artifacts/connection');
 fs.mkdirSync(output,{recursive:true});
-const events=[],clients=[],errors=[];
+const events=[],clients=[],errors=[],syncTimes=[];
 const record=(name,data={})=>{const row={time:new Date().toISOString(),name,...data};events.push(row);console.log(JSON.stringify(row));};
 const wait=(p,fn,arg,timeout=45000)=>p.page.waitForFunction(fn,arg,{timeout});
 const view=p=>p.page.evaluate(()=>roomView);
@@ -19,7 +19,7 @@ async function open(browser,name,mobile=false){
   const page=await context.newPage();
   const p={context,page,name,mobile,expectedOffline:false};clients.push(p);
   await page.exposeFunction('connectionEvent',e=>{
-    events.push({time:new Date().toISOString(),player:name,...e});
+    events.push({time:new Date().toISOString(),player:name,expected:p.expectedOffline,...e});
     if(ownRoom&&!p.expectedOffline&&e.kind==='disconnect')unexpected.push(name);
   });
   await page.addInitScript(()=>{
@@ -50,8 +50,13 @@ async function roster(players,count,phase='draw'){
     if(!v.host){assert.ok(online.some(x=>x.id===v.me));assert.equal(v.original,phase==='reveal'?v.original:'');}
     return online;
   }));
-  const snapshots=await Promise.all(players.map(async p=>(await view(p)).people.map(x=>[x.id,x.avatar,x.online,x.done])));
-  for(const s of snapshots.slice(1))assert.deepEqual(s,snapshots[0]);
+  // Each artist's own mark acknowledgement can precede the next artist's update.
+  // Wait for the actual host roster to arrive, with a bounded network latency.
+  const expected=JSON.stringify((await view(players[0])).people.map(x=>[x.id,x.avatar,x.online,x.done]));
+  const started=Date.now();
+  await Promise.all(players.slice(1).map(p=>wait(p,expected=>
+    JSON.stringify(roomView.people.map(x=>[x.id,x.avatar,x.online,x.done]))===expected,expected,3000)));
+  syncTimes.push(Date.now()-started);
 }
 async function stroke(p,seed=0){
   await p.page.locator('#unity-canvas').scrollIntoViewIfNeeded();
@@ -188,7 +193,7 @@ async function run(){
     for(const p of artists)assert.equal((await ink(p)).count,0);
     record('關房後重新開房，六人再次入房及開始新回合通過');
     assert.deepEqual(unexpected,[]);assert.deepEqual(errors,[]);
-    record('PASS',{durationSeconds:Math.round((Date.now()-roomSince)/1000),simultaneousPlayers:6,rejoins:20,unexpectedDisconnects:0});
+    record('PASS',{durationSeconds:Math.round((Date.now()-roomSince)/1000),simultaneousPlayers:6,rejoins:20,unexpectedDisconnects:0,maxRosterSyncMs:Math.max(...syncTimes)});
   }catch(e){
     record('FAIL',{message:e.message,stack:e.stack});
     for(const p of clients){try{const v=await view(p);record('failure-view',{player:p.name,view:{...v,original:v.original?'[原圖 '+v.original.length+' 字元]':''}});await p.page.screenshot({path:path.join(output,'failure-'+p.name+'.png')});}catch{}}
