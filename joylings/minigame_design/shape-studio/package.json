@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node scripts/serve.cjs",
     "build": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1",
-    "test:online": "node tests/online.cjs"
+    "test:online": "node tests/online.cjs",
+    "test:connection": "node tests/connection.cjs"
   }
 }

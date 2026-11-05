@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ShapeStudio {
@@ -27,7 +28,7 @@ namespace ShapeStudio {
         Texture2D texture; Color32[] pixels;
         string phase="home",token,original="";
         int round,deadline,card=-1,winner=-1,me,identity,nextId,stamp,lastState,localVersion;
-        float nextSend,nextRequest,nextHello;bool dirty,finalSent;
+        float nextSend,nextRequest,nextHello;bool dirty,finalSent,leaving;
         int showAt,lastSlide;bool wallOpen;int[] showOrder=Array.Empty<int>();
         int pendingMark,promptVersion,resumeSeat;bool done,resync,requestedAlias;
         Portrait[] people=Array.Empty<Portrait>();
@@ -57,9 +58,25 @@ namespace ShapeStudio {
         public void HostRoom(){link.Connect(true);}
         public void JoinRoom(){link.Connect(false);}
         public async void Leave(){
-            if(!link.Connected)return;
-            if(link.Host)link.Broadcast(new Wire{type="closed"});
-            await link.Close("");
+            if(!link.Connected || leaving)return;
+            leaving=true;
+            try{
+                // Ink is sent in batches. Before closing the transport, use the
+                // existing acknowledged mark message to save the final pixels
+                // without changing the artist's checked/unchecked state.
+                if(InDrawingRound() && (dirty || localVersion>0)){
+                    board.End();SendMark();Publish();
+                    float until=Time.realtimeSinceStartup+8;
+                    while(link.Connected && pendingMark!=0 && Time.realtimeSinceStartup<until)
+                        await Task.Yield();
+                    if(link.Connected && pendingMark!=0){
+                        Notice("作品還沒傳好，請再按離房。");return;
+                    }
+                }
+                if(!link.Connected)return;
+                if(link.Host)link.Broadcast(new Wire{type="closed"});
+                await link.Close("");
+            }finally{leaving=false;Publish();}
         }
         void Offline(string notice){
             seats.Clear();people=Array.Empty<Portrait>();phase="home";round=0;card=-1;winner=-1;me=0;
@@ -122,9 +139,9 @@ namespace ShapeStudio {
             return index<showOrder.Length?index:AllWorks;
         }
         bool InDrawingRound() => link.Connected && !link.Host && phase=="draw" && me>0;
-        bool CanDraw() => InDrawingRound() && !done && pendingMark==0;
+        bool CanDraw() => InDrawingRound() && !leaving && !done && pendingMark==0;
         public void ToggleDone(){
-            if(!InDrawingRound() || pendingMark!=0)return;
+            if(!InDrawingRound() || leaving || pendingMark!=0)return;
             board.End();done=!done;SendMark();Publish();
         }
         void SendMark(){
@@ -290,7 +307,7 @@ namespace ShapeStudio {
         void Publish(){
             if(link==null)return;
             lastSlide=Slide();
-            var v=new View{phase=phase,connected=link.Connected,busy=link.Busy,host=link.Host,round=round,
+            var v=new View{phase=phase,connected=link.Connected,busy=link.Busy||leaving,host=link.Host,round=round,
                 slide=lastSlide,showOrder=showOrder,
                 identity=identity,me=me,winner=winner,people=people,canPick=CanPick(),
                 done=done,markPending=pendingMark!=0,level=link.Host&&card>=0?card/Deck.PerLevel:0,palette=Sheet.Palette,

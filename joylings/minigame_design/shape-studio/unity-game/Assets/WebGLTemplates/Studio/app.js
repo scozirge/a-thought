@@ -133,6 +133,7 @@
     $('round-tag').textContent=inRoom && v.round?'第 '+v.round+' 輪':'';
     $('name').textContent=aliases[v.identity][1];$('avatar').textContent=aliases[v.identity][0];
     for(const id of ['join','host','identity'])$(id).disabled=!unity || v.busy;
+    $('leave').disabled=v.busy;
     $('status').textContent=v.busy?'連線中…':!unity?'畫室準備中…':'';
     const online=v.people.filter(p=>p.online).length;
     $('who').textContent=online+' 位師傅';
