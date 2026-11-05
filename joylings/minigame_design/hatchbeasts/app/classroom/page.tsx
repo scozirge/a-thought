@@ -409,6 +409,21 @@ export default function ClassroomHome() {
             </div>
           </section>
 
+          <details className="lesson-review-action" id="eighth-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第八堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">這次希望透過《小小工程師》，讓每個小朋友都有上台表達的機會，練習鼓起勇氣，把自己看到的造型說清楚。</p>
+              <p className="catalog-question-context">有些小朋友一開始明顯抗拒上台，但經過鼓勵與溝通，最後都願意自己上台嘗試。有過第一次上台經驗的孩子，也比較敢再挑戰第二次。</p>
+              <p className="catalog-question-context">有些孩子開始意識到，溝通時能不能正確、清楚地表達很重要，台下的提問也能幫助自己發現哪些資訊還沒說明白。描述與發問相互配合，才更容易讓大家理解同一個造型。</p>
+              <p className="catalog-question-context">有些孩子會主動補充或修正描述中的細節；另一些孩子若沒有提醒，仍會反覆說出原本不完整的資訊，需要引導他們想想「還少說了什麼」，練習把訊息補完整。</p>
+              <p className="catalog-question-context">整體效果不錯，是值得繼續延伸的活動設計。不過，維持課堂秩序也變得更困難。後續若延伸活動，需要一併思考如何安排發言與提問，讓上台的孩子能安心說明，台下也能專心聆聽。</p>
+            </div>
+          </details>
+
           <div className="unit-grid">
             {units.slice(1).map((unit) => (
               <a

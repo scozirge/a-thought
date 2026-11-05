@@ -304,6 +304,8 @@ details.lesson-review-action > summary {
 .sixth-game-choices .unit-meta { font-size: 18px; line-height: 1.6; }
 .sixth-game-copy { display: grid; gap: 6px; min-width: 0; }
 .sixth-course .catalog-question-context, .seventh-course .catalog-question-context, .eighth-course .catalog-question-context { font-size: 18px; line-height: 1.7; }
+#eighth-course-retrospective .catalog-question-context { font-size: 18px; line-height: 1.8; }
+#eighth-course-retrospective > summary { font-size: 18px; }
 @media (max-width: 640px) { .sixth-game-choices { grid-template-columns: 1fr; } }
 .unit-grid {
   display: grid;
