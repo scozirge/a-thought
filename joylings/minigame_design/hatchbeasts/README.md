@@ -18,7 +18,7 @@
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
-[第八週課程：小小工程師](https://scozirge.github.io/classroom/#eighth-course) · [開始遊戲](https://scozirge.github.io/a-thought/little-engineer/)：出題者上台描述造型，其他人連線畫圖，由出題者結束後一起看作品。
+[第八週課程：小小工程師](https://scozirge.github.io/classroom/#eighth-course) · [開始遊戲](https://scozirge.github.io/little-engineer/)：出題者上台描述造型，其他人連線畫圖，由出題者結束後一起看作品。
 
 [第七週課程：貓狗一起回家](https://scozirge.github.io/classroom/#seventh-course) · [Unity 雙人連線版](https://scozirge.github.io/together-online/)：開房當貓咪，朋友以六位房號加入當狗狗。支援電腦鍵盤與手機虛擬搖桿，多點觸控可邊走邊跳；保留第 0 關暖身、正式 20 關、正常按鍵解題示範與全破回家結局。連線時由房主選關、重來及播放示範。
 
@@ -55,6 +55,8 @@ npm test
 [網站首頁](https://scozirge.github.io/) 會直接進入[課堂目錄](https://scozirge.github.io/classroom/)。課程依第一至第八堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
 
 執行 `npm run build:classroom-site`，輸出 `dist/classroom-site/`；將內容發布到 `scozirge/scozirge.github.io` 的 `main` 分支根目錄，Pages 來源為 `main` 的 `/`。此輸出使用根路徑，教材內返回目錄及各課連結維持 `/classroom/`；遊戲入口繼續指向既有的公開遊戲。`npm run build:h5` 仍建置原本 `/a-thought/hatchbeasts` 前綴版本。
+
+第八週《小小工程師》改由同一站台的 `/little-engineer/` 發布。更新課程目錄時，須保留站台既有的 `little-engineer/` 遊戲檔案；其建置與發布方式見 `../shape-studio/README.md`。
 
 ## H5 發布（GitHub Pages）
 

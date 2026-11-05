@@ -4,7 +4,7 @@ Unity WebGL 課堂連線遊戲。出題者只看到一張沒有名稱的原圖�
 
 ## 開始玩
 
-1. 每台裝置都開啟[《小小工程師》公開遊戲](https://scozirge.github.io/a-thought/little-engineer/)。一位玩家按「開房」，其餘師傅按「加入」。每位師傅得到一組名字與頭像，進房前點身分卡即可更換。設計容量為 1 位出題者及 20 位師傅，另留一個接手席位；實際人數受 Photon 帳號容量影響。
+1. 每台裝置都開啟[《小小工程師》公開遊戲](https://scozirge.github.io/little-engineer/)。一位玩家按「開房」，其餘師傅按「加入」。每位師傅得到一組名字與頭像，進房前點身分卡即可更換。設計容量為 1 位出題者及 20 位師傅，另留一個接手席位；實際人數受 Photon 帳號容量影響。
 2. 房主先在私人螢幕選難度、預覽原圖，也可以按「換一題」。按「開始出題」開始作畫。出題中也能換題，師傅會收到通知，畫紙與完成狀態都保留。
 3. 按「畫好了」會勾選並鎖住畫紙與復原，按「取消勾選」可繼續畫。作畫不限時，由出題者按「結束」。先單獨展示答案原圖 3 秒，再依加入順序，將每位師傅的作品與原圖並排展示 3 秒。當輪已離房、未勾選或交白紙的師傅也有展示時間。
 4. 在作品牆可以不限時討論。小小工程師先點選和原圖最像的作品，再按「選這張!」確認。全班會看到「○○○的作品最棒!」及該作品，3 秒後自動開始下一題。若整輪都是白紙，小小工程師可直接按「下一題」。
@@ -32,6 +32,12 @@ Unity WebGL 課堂連線遊戲。出題者只看到一張沒有名稱的原圖�
 `node scripts/setup.cjs` 從同一儲存庫的 puzzle-party 複用 Photon Fusion、Unity 套件與專案設定。`npm run build` 使用 Unity 6000.3.11f1 產生原生 WebAssembly，編輯器位置可透過 `scripts/build.ps1 -Unity <路徑>` 指定。輸出在 `Builds/UnityWeb/`，整個資料夾可複製給其他電腦或放到靜態 HTTP(S) 站台。直接開啟 index.html 無法執行 WebGL。
 
 Unity C# 負責房間、抽題、筆跡與完成狀態。題圖定義在 `unity-game/Assets/Resources/chalk-cards.txt`，依序收錄五組；建置會繪出全部 100 張，檢查唯一性、配色、抽題與彩色筆跡編碼。Photon Fusion Shared 模式讓師傅在換出題者時維持連線；揭曉後師傅才取得其他人的作品。每張紙以四位元色碼儲存每個像素，共 32 KiB，傳送時壓縮空白區域。單獨展示原圖時同步收齊最後筆跡；所有裝置依 Photon 的共用時間輪播。展示順序與開始時間也會隨出題者交接，作品牆會停留到小小工程師確認得獎作品。公布使用房間時間，出題者交接也會保留剩餘公布時間。
+
+## 公開發布
+
+遊戲原始碼仍保存在 `scozirge/a-thought` 的 `master`。公開版本使用 `scozirge/scozirge.github.io` 的 `main` 分支，Pages 來源為根目錄；將已驗證的 `Builds/UnityWeb/` 中 `index.html`、`app.js`、`style.css`、`Build/` 及 `ThirdPartyLicenses/` 複製到發布 checkout 的 `little-engineer/` 後提交及推送。保留其他遊戲與舊版雜湊資源，並維持建置檔案的原始位元組，避免換行轉換造成版本雜湊不一致。
+
+課堂入口為 `https://scozirge.github.io/classroom/#eighth-course`，遊戲為 `https://scozirge.github.io/little-engineer/`。原 `/a-thought/little-engineer/` 的發布包曾出現超過 1 GB 的警告，並連續部署逾時；本次改用帳號站台發布，避免清除其他遊戲的歷史建置。發布後需確認公開 HTML、腳本、樣式與 Unity 資源符合本機建置，並從第八週入口測試手機出題及師傅加入。
 
 ## 連線驗證
 

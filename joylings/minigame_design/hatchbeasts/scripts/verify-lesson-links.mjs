@@ -4,7 +4,7 @@ export function verifyLessonLinks(html) {
   const weeks = [
     ['sixth-course', '第 6 週課程', 'https://scozirge.github.io/a-thought/wood-exit/'],
     ['seventh-course', '第 7 週課程', 'https://scozirge.github.io/together-online/'],
-    ['eighth-course', '第 8 週課程', 'https://scozirge.github.io/a-thought/little-engineer/'],
+    ['eighth-course', '第 8 週課程', 'https://scozirge.github.io/little-engineer/'],
   ];
   let previous = -1;
   for (const [id, heading, url] of weeks) {

@@ -6,4 +6,4 @@ export const WITCH_POTIONS_PUBLIC_URL = 'https://scozirge.github.io/a-thought/wi
 export const WOOD_EXIT_PUBLIC_URL = 'https://scozirge.github.io/a-thought/wood-exit/';
 export const NEON_IMPACT_PUBLIC_URL = 'https://scozirge.github.io/a-thought/neon-impact/';
 export const TOGETHER_ONLINE_PUBLIC_URL = 'https://scozirge.github.io/together-online/';
-export const LITTLE_ENGINEER_PUBLIC_URL = 'https://scozirge.github.io/a-thought/little-engineer/';
+export const LITTLE_ENGINEER_PUBLIC_URL = 'https://scozirge.github.io/little-engineer/';
