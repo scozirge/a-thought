@@ -22,6 +22,7 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
 #sound{position:absolute;z-index:1;top:max(12px,var(--safe-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:#10172bd9;font-size:13px;padding:8px 14px}
 #sound svg{width:20px;height:20px;fill:none;stroke:#cbb477;stroke-width:1.6}
 #error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}
+#connection-report{position:absolute;z-index:30;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:44px;padding:8px 14px;background:#10192bed;border:1px solid #b49e66;border-radius:5px;color:#eee;font:14px system-ui;cursor:pointer}
 #rotate{z-index:2;padding:max(24px,var(--safe-top)) max(24px,var(--safe-right)) max(24px,var(--safe-bottom)) max(24px,var(--safe-left))}
 #rotate h2{font-size:26px;font-weight:600;color:#d8bd72;margin:24px 0 8px}
 #rotate p{max-width:26em;color:#b8c2d5}
@@ -45,11 +46,24 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
   <p>橫向後會自動調整畫面。<br>若畫面沒有旋轉，請關閉手機的直向鎖定。</p>
   <button id="landscape" hidden>切換橫向全螢幕</button>
  </section>
+ <button id="connection-report" hidden>下載連線紀錄</button>
 </main>
 <script src="Build/{{{ LOADER_FILENAME }}}"></script>
 <script>
 const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
+const reportButton=document.getElementById('connection-report');
+try{window.neonLastConnectionReport=JSON.parse(localStorage.getItem('neon.lastConnectionReport')||'null');}catch(_){}
+window.addEventListener('neon-connection-report',()=>{reportButton.hidden=false;});
+window.neonDownloadConnectionReport=function(){
+ const report=window.neonLastConnectionReport;if(!report)return;
+ const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
+ const link=document.createElement('a');link.href=url;link.download='novarove-connection-'+(report.id||'last')+'.json';
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+ reportButton.hidden=true;
+};
+reportButton.addEventListener('click',window.neonDownloadConnectionReport);
+if(new URLSearchParams(location.search).get('neonDiagnostics')==='1'&&window.neonLastConnectionReport)reportButton.hidden=false;
 // Touchscreen Windows laptops still use the desktop mouse controls. iPadOS can
 // identify itself as a Mac when requesting a desktop website.
 const touchDevice=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);

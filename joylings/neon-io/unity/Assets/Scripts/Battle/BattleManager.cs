@@ -122,15 +122,40 @@ namespace Starbro.NeonIO
         }
         System.Collections.IEnumerator Start()
         {
-            while (PhotonNetwork.IsConnected && (!PhotonNetwork.IsReadyForGameplay ||
+            float startupDeadline = Time.realtimeSinceStartup + NeonConnectionPolicy.BattleSeconds;
+            while ((PhotonNetwork.IsConnected || PhotonNetwork.IsConnecting) && (!PhotonNetwork.IsReadyForGameplay ||
                 (PhotonNetwork.Runner != null && PhotonNetwork.Runner.SceneManager != null && PhotonNetwork.Runner.SceneManager.IsBusy)))
+            {
+                if (NeonArenaFlow.Active && Time.realtimeSinceStartup >= startupDeadline)
+                {
+                    NeonArenaFlow.FailStartup("ARENA_LOCAL_READY_TIMEOUT", "戰場載入逾時，請重新配對。連線紀錄已保留。");
+                    yield break;
+                }
                 yield return null;
+            }
             if (NeonArenaFlow.Active)
             {
                 float arenaReadyDeadline = Time.realtimeSinceStartup + 15;
-                while (!NeonArena.Instance && PhotonNetwork.InRoom && Time.realtimeSinceStartup < arenaReadyDeadline) yield return null;
-                if (!NeonArena.Instance || NeonArena.Instance.FindActor(PhotonNetwork.LocalPlayer.ActorNumber) < 0)
-                { MyBattleUI.LeaveRoom(); yield break; }
+                while (PhotonNetwork.InRoom)
+                {
+                    var match = NeonArena.Instance;
+                    var phase = match ? match.Phase : ArenaPhase.Waiting;
+                    bool hasSeat = match && match.FindActor(PhotonNetwork.LocalPlayer.ActorNumber) >= 0;
+                    if (NeonConnectionPolicy.RosterReady(match, phase, hasSeat)) break;
+                    if (NeonConnectionPolicy.RosterRejected(match, phase, hasSeat))
+                    {
+                        NeonArenaFlow.FailStartup("ARENA_ROSTER_CLOSED", "這場對戰已開始，請重新配對。此次未加入對戰，不扣積分。");
+                        yield break;
+                    }
+                    if (Time.realtimeSinceStartup >= arenaReadyDeadline)
+                    {
+                        NeonArenaFlow.FailStartup("ARENA_ROSTER_TIMEOUT", "戰場名單同步逾時，請重新配對。連線紀錄已保留。");
+                        yield break;
+                    }
+                    yield return null;
+                }
+                if (!PhotonNetwork.IsReadyForGameplay) yield break;
+                NeonConnectionDiagnostics.Step("roster-ready");
             }
             AudioPlayer.PlayBattleMusic(MyPlayer.ChooseBattleSong);
             IsWin = false;
@@ -157,6 +182,7 @@ namespace Starbro.NeonIO
             MyLeaderBoard.Init();
             IsReadyToSpawn = true;
             StartGame();//開始遊戲
+            if (NeonArenaFlow.Active) NeonConnectionDiagnostics.Step("local-player-spawned");
             if (NeonArenaFlow.Active) yield break;
             if (UseJsonData)
             {

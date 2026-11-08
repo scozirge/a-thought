@@ -89,8 +89,7 @@ namespace Starbro.NeonIO
             {
                 MyLobbyUI.ActiveProgressLab(false);
                 MyLobbyUI.ActiveControlPanel(true);
-                if (!string.IsNullOrEmpty(PhotonNetwork.LastError))
-                    PopupUI.ShowClickCancel(PhotonNetwork.LastError, null);
+                NeonConnectionDiagnostics.ShowPendingFailure();
             }
             //Connect(LobbyUI.ChooseedRegion);
             
@@ -113,7 +112,8 @@ namespace Starbro.NeonIO
         {
             if (SelectGameType == GameType.Arena)
             {
-                if (!NeonArenaFlow.Searching) PhotonNetwork.Disconnect();
+                // A scene transition may complete before this late join callback.
+                if (!NeonArenaFlow.Starting && UnitySceneManager.GetActiveScene().name != "Battle") PhotonNetwork.Disconnect();
                 return;
             }
             if (SelectGameType == GameType.Challenge && !ChallengeUI.IsFindingOpponent)

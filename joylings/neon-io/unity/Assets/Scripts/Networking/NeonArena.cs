@@ -106,6 +106,7 @@ namespace Neon.Networking
                 }
                 BotRating = humans.Length > 0 ? Mathf.RoundToInt((float)Enumerable.Range(0, humans.Length).Average(i => Entries[i].Rating)) : NeonArenaRating.Initial;
                 Phase = ArenaPhase.Loading; Deadline = Runner.SimulationTime + 60;
+                NeonConnectionDiagnostics.Step("roster-locked");
                 PhotonNetwork.LoadLevel("Battle");
                 return;
             }
@@ -153,6 +154,7 @@ namespace Neon.Networking
                     var ratings = Enumerable.Range(0, 16).Where(i => Entries[i].HumanAtStart).Select(i => Entries[i].Rating).ToArray();
                     BotRating = ratings.Length > 0 ? Mathf.RoundToInt((float)ratings.Average()) : NeonArenaRating.Initial;
                     Phase = ArenaPhase.Running; Started = Runner.SimulationTime; NextStars = Started;
+                    NeonConnectionDiagnostics.Step("match-running");
                 }
                 return;
             }
@@ -180,7 +182,10 @@ namespace Neon.Networking
             if (!Object || !Object.IsValid || PhotonNetwork.IsDisconnecting) return;
             if (!BattleManager.BM || SceneManager.GetActiveScene().name != "Battle") return;
             if (Phase >= ArenaPhase.Running && FindActor(PhotonNetwork.LocalPlayer.ActorNumber) < 0)
-            { FindFirstObjectByType<BattleUI>()?.LeaveRoom(); return; }
+            {
+                NeonArenaFlow.FailStartup("ARENA_ROSTER_CLOSED", "這場對戰已開始，請重新配對。此次未加入對戰，不扣積分。");
+                return;
+            }
             BattleManager.BM.BattleFieldRadius = Mathf.RoundToInt(Radius);
             if (!fog) fog = gameObject.AddComponent<NeonArenaFog>();
             fog.SetRadius(Radius);

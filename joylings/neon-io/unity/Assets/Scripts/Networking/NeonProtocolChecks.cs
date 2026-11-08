@@ -12,6 +12,7 @@ namespace Neon.Networking
         [MenuItem("Neon IO/Check network protocol")]
         public static void Run()
         {
+            NeonConnectionChecks.Run();
             var tickRate = Fusion.TickRate.Resolve(Fusion.NetworkProjectConfig.Global.Simulation.TickRateSelection);
             Require(NeonArenaRules.AmbientStarsPerWindow(4000) == 4 && NeonArenaRules.AmbientStarsPerWindow(2000) == 2
                 && NeonArenaRules.AmbientStarsPerWindow(1000) == 1 && NeonArenaRules.AmbientStarsPerWindow(800) == 0,

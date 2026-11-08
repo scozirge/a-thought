@@ -11,7 +11,10 @@ namespace Neon.Networking
     {
         public static bool Searching { get; private set; }
         static NeonArenaFlow instance;
-        float started;
+        float stageStarted;
+        string stage;
+        bool monitoring, returnToLobby;
+        public static bool Starting => instance && instance.monitoring;
         static NeonArena visualMatch;
         static NeonQueueProgress queueProgress;
         public static int QueueFilled
@@ -35,13 +38,15 @@ namespace Neon.Networking
             NeonArenaRating.RecoverAbandoned();
             PhotonLauncher.SelectGameType = GameType.Arena;
             PhotonNetwork.NickName = MyPlayer.Name;
-            Searching = true; instance.started = Time.unscaledTime; visualMatch = null; queueProgress = null;
+            Searching = true; instance.monitoring = true; instance.returnToLobby = false;
+            instance.stage = null; instance.SetStage("connecting"); visualMatch = null; queueProgress = null;
             AudioPlayer.PlayBattleMusic(MyPlayer.ChooseBattleSong);
             PhotonLauncher.JoinTheRandomRoom();
         }
         public static void Cancel()
         {
             Searching = false;
+            if (instance) instance.monitoring = false;
             RestoreLobbyMusic();
             PhotonLauncher.CancelJoin();
             PhotonNetwork.Disconnect();
@@ -50,6 +55,7 @@ namespace Neon.Networking
         {
             if (Searching) RestoreLobbyMusic();
             Searching = false;
+            if (instance) instance.monitoring = false;
         }
         static void RestoreLobbyMusic()
         {
@@ -59,18 +65,54 @@ namespace Neon.Networking
         }
         void Update()
         {
-            if (!Searching) return;
-            if (SceneManager.GetActiveScene().name == "Battle") { Searching = false; return; }
-            if (!PhotonNetwork.InRoom)
+            if (returnToLobby && !PhotonNetwork.IsDisconnecting && !PhotonNetwork.InRoom)
             {
-                if (Time.unscaledTime - started > 45) { Cancel(); PopupUI.ShowClickCancel("配對連線逾時，請重試。 / Connection timed out. Please retry.", null); }
+                returnToLobby = false;
+                if (SceneManager.GetActiveScene().name != "Lobby" && !BattleManager.BM)
+                    ScenePlayer.GoToScene_Static(MyScene.Lobby);
+            }
+            if (!monitoring) return;
+            if (!Active) { monitoring = false; Searching = false; return; }
+            if (SceneManager.GetActiveScene().name == "Battle") Searching = false;
+            var match = NeonArena.Instance;
+            string nextStage = !PhotonNetwork.IsReadyForGameplay ? "connecting" : !match ? "waiting-match" :
+                match.Phase == ArenaPhase.Waiting ? "queue" : match.Phase == ArenaPhase.Loading ? "loading-battle" : "running";
+            SetStage(nextStage);
+            if (stage == "running") { monitoring = false; Searching = false; return; }
+            if (Time.unscaledTime - stageStarted > NeonConnectionPolicy.StageTimeout(stage))
+            {
+                FailStartup("ARENA_" + stage.Replace('-', '_').ToUpperInvariant() + "_TIMEOUT", "戰場準備逾時，請重新配對。連線紀錄已保留。");
                 return;
             }
+            if (!PhotonNetwork.InRoom) return;
             if (PhotonNetwork.IsReadyForGameplay && PhotonNetwork.IsMasterClient && !NeonArena.Instance)
             {
+                // The synchronous provider cannot spawn while a scene is being loaded.
+                if (PhotonNetwork.Runner.SceneManager.IsBusy) return;
                 var prefab = Resources.Load<GameObject>("Networking/NeonArena");
-                if (prefab) PhotonNetwork.Runner.Spawn(prefab, flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient | NetworkSpawnFlags.DontDestroyOnLoad);
+                if (!prefab) { FailStartup("ARENA_PREFAB_MISSING", "戰場資料未完成載入，請重新整理遊戲。"); return; }
+                try { PhotonNetwork.Runner.Spawn(prefab, flags: NetworkSpawnFlags.SharedModeStateAuthMasterClient | NetworkSpawnFlags.DontDestroyOnLoad); }
+                catch (System.Exception error)
+                {
+                    NeonConnectionDiagnostics.Step("match-spawn-exception", error.GetType().Name);
+                    FailStartup("ARENA_SPAWN_FAILED", "戰場建立失敗，請重新配對。連線紀錄已保留。");
+                }
             }
+        }
+        void SetStage(string next)
+        {
+            if (stage == next) return;
+            stage = next; stageStarted = Time.unscaledTime;
+            NeonConnectionDiagnostics.Step(next);
+        }
+        public static void FailStartup(string code, string message)
+        {
+            PhotonNetwork.LastError = NeonConnectionDiagnostics.Fail(code, message);
+            if (instance) { instance.monitoring = false; instance.returnToLobby = true; }
+            Searching = false;
+            RestoreLobbyMusic();
+            PhotonLauncher.CancelJoin();
+            PhotonNetwork.Disconnect();
         }
     }
 }

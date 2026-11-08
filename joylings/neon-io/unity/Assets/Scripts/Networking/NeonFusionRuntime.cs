@@ -14,6 +14,7 @@ namespace Neon.Networking
 {
     public sealed class NeonFusionRuntime : MonoBehaviour, INetworkRunnerCallbacks
     {
+        public const string NetworkVersion = "binary-17";
         public NetworkRunner Runner { get; private set; }
         public NeonPlayerSession LocalSession { get; internal set; }
         public bool IsConnecting { get; private set; }
@@ -75,6 +76,7 @@ namespace Neon.Networking
             IsConnecting = true; joined = false; intentionalDisconnect = false; leavingRoom = false;
             connectNotificationPending = false;
             PhotonNetwork.LastError = "";
+            NeonConnectionDiagnostics.Begin();
             int attempt = ++generation;
             joinStartedAt = UnityEngine.Time.realtimeSinceStartup;
             // Web has no managed Timer callbacks. Update drives this deadline on
@@ -82,44 +84,67 @@ namespace Neon.Networking
             var cancellation = new CancellationTokenSource();
             connectionCancellation = cancellation;
             NetworkRunner runner = null;
+            string failureCode = "CONNECT_EXCEPTION";
             try
             {
                 await shutdownTask;
                 if (attempt != generation || !this) return;
                 cancellation.Token.ThrowIfCancellationRequested();
                 IsDisconnecting = false;
-                var runnerObject = new GameObject("Neon Fusion Runner");
-                DontDestroyOnLoad(runnerObject);
-                runner = runnerObject.AddComponent<NetworkRunner>();
-                Runner = runner;
-                runner.AddCallbacks(this);
-                runner.ProvideInput = false;
-                var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
-                var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
-#if NEON_TEST_ALL_PARTS
-                settings.AppVersion = "neon-io/binary-16/test-all-parts/" + PhotonNetwork.GameVersion;
-#else
-                settings.AppVersion = "neon-io/binary-16/" + PhotonNetwork.GameVersion;
-#endif
-                settings.FixedRegion = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion.ToLowerInvariant();
-                int mode = (int)PhotonLauncher.SelectGameType;
-                if (maximumPlayers <= 0) maximumPlayers = PhotonLauncher.SelectGameType == GameType.Challenge ? 2 : PhotonLauncher.SelectGameType == GameType.Arena ? 16 : 10;
-                var result = await runner.StartGame(new StartGameArgs
+                for (int retries = 0; ; retries++)
                 {
-                    GameMode = GameMode.Shared,
-                    SessionName = sessionName,
-                    PlayerCount = maximumPlayers,
-                    CustomPhotonAppSettings = settings,
-                    CustomLobbyName = "neon-io-fusion",
-                    SessionProperties = new Dictionary<string, SessionProperty> { { "mode", mode }, { "schema", 2 } },
-                    SceneManager = sceneManager,
-                    EnableClientSessionCreation = true,
-                    StartGameCancellationToken = cancellation.Token,
-                    IsOpen = true,
-                    IsVisible = string.IsNullOrEmpty(NeonWebBridge.ValidationRoom) && !(sessionName?.StartsWith("neon-validation-", StringComparison.Ordinal) ?? false)
-                });
-                if (attempt != generation || !this) { await DisposeRunner(runner); return; }
-                if (!result.Ok) throw new InvalidOperationException("Fusion connection failed: " + result.ShutdownReason);
+                    cancellation.Token.ThrowIfCancellationRequested();
+                    var runnerObject = new GameObject("Neon Fusion Runner");
+                    DontDestroyOnLoad(runnerObject);
+                    runner = runnerObject.AddComponent<NetworkRunner>();
+                    Runner = runner;
+                    runner.AddCallbacks(this);
+                    runner.ProvideInput = false;
+                    var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
+                    var settings = Fusion.Photon.Realtime.PhotonAppSettings.Global.AppSettings.GetCopy();
+#if NEON_TEST_ALL_PARTS
+                    settings.AppVersion = "neon-io/" + NetworkVersion + "/test-all-parts/" + PhotonNetwork.GameVersion;
+#else
+                    settings.AppVersion = "neon-io/" + NetworkVersion + "/" + PhotonNetwork.GameVersion;
+#endif
+                    settings.FixedRegion = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion.ToLowerInvariant();
+                    int mode = (int)PhotonLauncher.SelectGameType;
+                    if (maximumPlayers <= 0) maximumPlayers = PhotonLauncher.SelectGameType == GameType.Challenge ? 2 : PhotonLauncher.SelectGameType == GameType.Arena ? 16 : 10;
+                    var result = await runner.StartGame(new StartGameArgs
+                    {
+                        GameMode = GameMode.Shared,
+                        SessionName = sessionName,
+                        PlayerCount = maximumPlayers,
+                        CustomPhotonAppSettings = settings,
+                        CustomLobbyName = "neon-io-fusion",
+                        SessionProperties = new Dictionary<string, SessionProperty> { { "mode", mode }, { "schema", 2 } },
+                        SceneManager = sceneManager,
+                        EnableClientSessionCreation = true,
+                        StartGameCancellationToken = cancellation.Token,
+                        IsOpen = true,
+                        IsVisible = string.IsNullOrEmpty(NeonWebBridge.ValidationRoom) && !(sessionName?.StartsWith("neon-validation-", StringComparison.Ordinal) ?? false)
+                    });
+                    if (attempt != generation || !this) { await DisposeRunner(runner); return; }
+                    if (NeonConnectionPolicy.RetryArenaRoom(result.ShutdownReason,
+                        PhotonLauncher.SelectGameType == GameType.Arena && string.IsNullOrEmpty(sessionName), retries, cancellation.IsCancellationRequested))
+                    {
+                        NeonConnectionDiagnostics.Step("retry-room", result.ShutdownReason.ToString());
+                        shutdownTask = DisposeRunner(runner);
+                        await shutdownTask;
+                        if (attempt != generation || !this) return;
+                        Runner = null; LocalSession = null;
+                        views.Clear(); viewOwners.Clear(); retiredViews.Clear(); notifiedPlayers.Clear();
+                        PhotonNetwork.ResetRoom();
+                        continue;
+                    }
+                    if (!result.Ok)
+                    {
+                        failureCode = result.ShutdownReason.ToString();
+                        throw new InvalidOperationException("Fusion connection failed: " + result.ShutdownReason);
+                    }
+                    break;
+                }
+                NeonConnectionDiagnostics.Step("room-joined");
                 // A late join can already be loading the room's Battle scene when StartGame completes.
                 // The default Fusion provider intentionally refuses synchronous spawns during this interval.
                 while (runner.SceneManager.IsBusy)
@@ -134,6 +159,7 @@ namespace Neon.Networking
                 var sessionObject = runner.Spawn(sessionPrefab, flags: NetworkSpawnFlags.DontDestroyOnLoad | NetworkSpawnFlags.SharedModeStateAuthLocalPlayer);
                 LocalSession = sessionObject.GetComponent<NeonPlayerSession>();
                 LocalSession.Publish();
+                NeonConnectionDiagnostics.Step("session-ready");
                 // Fusion retains this token for startup/shutdown. Its deadline belongs
                 // only to connection establishment, never to an already playable session.
                 cancellation.Token.ThrowIfCancellationRequested();
@@ -148,9 +174,13 @@ namespace Neon.Networking
             catch (Exception error)
             {
                 if (attempt != generation) return;
-                PhotonNetwork.LastError = error is OperationCanceledException ? "連線逾時，請重試。" : error.Message;
+                if (error is OperationCanceledException) failureCode = "CONNECT_TIMEOUT";
+                NeonConnectionDiagnostics.Step("connect-exception", error.GetType().Name);
+                PhotonNetwork.LastError = NeonConnectionDiagnostics.Fail(failureCode,
+                    error is OperationCanceledException ? "連線逾時，請重試。" : "無法加入戰場，請重試。連線紀錄已保留。");
                 Debug.LogWarning("NEON_FUSION_CONNECT_FAILED " + PhotonNetwork.LastError);
                 intentionalDisconnect = true;
+                NeonArenaFlow.Disconnected();
                 IsDisconnecting = true;
                 shutdownTask = DisposeRunner(runner);
                 await shutdownTask;
@@ -179,6 +209,7 @@ namespace Neon.Networking
         {
             if (intentionalDisconnect && !Runner) return;
             intentionalDisconnect = true; leavingRoom = leaveRoom; joined = false;
+            NeonArenaFlow.Disconnected();
             IsDisconnecting = true;
             int disconnectGeneration = ++generation;
             connectNotificationPending = false;
@@ -196,6 +227,7 @@ namespace Neon.Networking
         void Update()
         {
             CheckConnectionDeadline(UnityEngine.Time.realtimeSinceStartup);
+            NeonConnectionDiagnostics.ShowPendingFailure();
             if (!Runner || !Runner.IsRunning || !joined) return;
             int master = Runner.GetMasterClient().RawEncoded;
             if (master != previousMaster)
@@ -274,6 +306,7 @@ namespace Neon.Networking
         }
         public async void OnShutdown(NetworkRunner runner, ShutdownReason reason)
         {
+            if (Runner == runner) NeonConnectionDiagnostics.Step("shutdown", reason.ToString());
             Debug.Log("NEON_FUSION_SHUTDOWN reason=" + reason + " current=" + (Runner == runner) +
                 " intentional=" + intentionalDisconnect + " joining=" + IsConnecting +
                 " startupCancelled=" + (connectionCancellation != null && connectionCancellation.IsCancellationRequested) +
@@ -281,11 +314,12 @@ namespace Neon.Networking
                 " entities=" + views.Count);
             // StartGame owns its failure path. Reporting here as well would dispatch disconnect twice.
             if (Runner != runner || intentionalDisconnect || IsConnecting) return;
+            PhotonNetwork.LastError = NeonConnectionDiagnostics.Fail(reason.ToString(), "連線已中斷，請重新配對。連線紀錄已保留。");
+            NeonArenaFlow.Disconnected();
             int shutdownGeneration = ++generation;
             IsDisconnecting = true;
             Runner = null; LocalSession = null; joined = false; IsConnecting = false;
             views.Clear(); viewOwners.Clear(); retiredViews.Clear(); notifiedPlayers.Clear(); PhotonNetwork.ResetRoom();
-            PhotonNetwork.LastError = "連線已中斷：" + reason;
             shutdownTask = CleanupStoppedRunner(runner);
             await shutdownTask;
             if (!this || generation != shutdownGeneration) return;
@@ -298,9 +332,16 @@ namespace Neon.Networking
             await Task.Yield();
             if (runner) Destroy(runner.gameObject);
         }
-        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { Debug.LogWarning("NEON_FUSION_DISCONNECTED " + reason); }
+        public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+        {
+            if (Runner == runner) NeonConnectionDiagnostics.Step("server-disconnected", reason.ToString());
+            Debug.LogWarning("NEON_FUSION_DISCONNECTED " + reason);
+        }
         public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { request.Accept(); }
-        public void OnConnectFailed(NetworkRunner runner, NetAddress address, NetConnectFailedReason reason) { }
+        public void OnConnectFailed(NetworkRunner runner, NetAddress address, NetConnectFailedReason reason)
+        {
+            if (Runner == runner) NeonConnectionDiagnostics.Step("connect-failed", reason.ToString());
+        }
         public void OnConnectedToServer(NetworkRunner runner) { }
         public void OnInput(NetworkRunner runner, NetworkInput input) { }
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
@@ -311,7 +352,14 @@ namespace Neon.Networking
         public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
         public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
         public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
-        public void OnSceneLoadStart(NetworkRunner runner) { }
-        public void OnSceneLoadDone(NetworkRunner runner) { Debug.Log("NEON_FUSION_SCENE_READY " + SceneManager.GetActiveScene().name); }
+        public void OnSceneLoadStart(NetworkRunner runner)
+        {
+            if (Runner == runner) NeonConnectionDiagnostics.Step("scene-load-start");
+        }
+        public void OnSceneLoadDone(NetworkRunner runner)
+        {
+            if (Runner == runner) NeonConnectionDiagnostics.Step("scene-load-done");
+            Debug.Log("NEON_FUSION_SCENE_READY " + SceneManager.GetActiveScene().name);
+        }
     }
 }
