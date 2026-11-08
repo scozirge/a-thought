@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta name="neon-build" content="2026-10-25-bot-fog-test">
+<meta name="neon-build" content="2026-11-08-connection-startup-test">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-visual">
 <meta name="theme-color" content="#10172b">
@@ -23,6 +23,7 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
 #sound{position:absolute;z-index:1;top:max(12px,var(--safe-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:#10172bd9;font-size:13px;padding:8px 14px}
 #sound svg{width:20px;height:20px;fill:none;stroke:#cbb477;stroke-width:1.6}
 #error{max-width:36em;color:#ffd0c8;white-space:pre-wrap}
+#connection-report{position:absolute;z-index:30;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:44px;padding:8px 14px;background:#10192bed;border:1px solid #b49e66;border-radius:5px;color:#eee;font:14px system-ui;cursor:pointer}
 #rotate{z-index:2;padding:max(24px,var(--safe-top)) max(24px,var(--safe-right)) max(24px,var(--safe-bottom)) max(24px,var(--safe-left))}
 #rotate h2{font-size:26px;font-weight:600;color:#d8bd72;margin:24px 0 8px}
 #rotate p{max-width:26em;color:#b8c2d5}
@@ -46,11 +47,24 @@ a{color:#d8bd72;font-size:16px;margin-top:20px}
   <p>橫向後會自動調整畫面。<br>若畫面沒有旋轉，請關閉手機的直向鎖定。</p>
   <button id="landscape" hidden>切換橫向全螢幕</button>
  </section>
+ <button id="connection-report" hidden>下載連線紀錄</button>
 </main>
-<script src="Build/2c74457f740935dd05d814f6de75efbf.loader.js"></script>
+<script src="Build/0efbc235abef4eb8fc670d4098958186.loader.js"></script>
 <script>
 const canvas=document.getElementById('unity-canvas'),sound=document.getElementById('sound'),status=document.getElementById('status');
 const viewport=document.getElementById('viewport'),rotate=document.getElementById('rotate'),loading=document.getElementById('loading');
+const reportButton=document.getElementById('connection-report');
+try{window.neonLastConnectionReport=JSON.parse(localStorage.getItem('neon.lastConnectionReport')||'null');}catch(_){}
+window.addEventListener('neon-connection-report',()=>{reportButton.hidden=false;});
+window.neonDownloadConnectionReport=function(){
+ const report=window.neonLastConnectionReport;if(!report)return;
+ const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
+ const link=document.createElement('a');link.href=url;link.download='novarove-connection-'+(report.id||'last')+'.json';
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+ reportButton.hidden=true;
+};
+reportButton.addEventListener('click',window.neonDownloadConnectionReport);
+if(new URLSearchParams(location.search).get('neonDiagnostics')==='1'&&window.neonLastConnectionReport)reportButton.hidden=false;
 // Touchscreen Windows laptops still use the desktop mouse controls. iPadOS can
 // identify itself as a Mac when requesting a desktop website.
 const touchDevice=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
@@ -110,7 +124,7 @@ landscape.onclick=requestLandscape;
 updateViewport();
 window.neonLoadStarted=performance.now();
 createUnityInstance(canvas,{
- dataUrl:'Build/7619cf4983e714c86d0f57a8c8a91832.data.unityweb',frameworkUrl:'Build/535cead7f39141e0976459a4037791e0.framework.js.unityweb',codeUrl:'Build/fa93cfd997a8767585027bbc548c58a3.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
+ dataUrl:'Build/6513e0cc0760c8cec76555e24ed6bf3d.data.unityweb',frameworkUrl:'Build/cc4f68e2f10e65eb6e8e132bbc915709.framework.js.unityweb',codeUrl:'Build/3b4a6484cf971981d82ed1c4d6059a6b.wasm.unityweb',streamingAssetsUrl:'StreamingAssets',
  // Keep the storage identity so existing local profiles and loadouts survive the rename.
  companyName:'Starbro',productName:'Neon Impact',productVersion:'1.3.1-web',devicePixelRatio:Math.min(window.devicePixelRatio||1,2,Math.sqrt(5000000/Math.max(1,canvas.clientWidth*canvas.clientHeight))),
  cacheControl:url=>/\/Build\/[a-f0-9]{32}\./.test(url)?'immutable':'must-revalidate'
