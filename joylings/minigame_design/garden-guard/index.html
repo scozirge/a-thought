@@ -27,7 +27,7 @@
           <defs>
             <pattern id="grass" width="29" height="29" patternUnits="userSpaceOnUse"><path d="m7 18 2-4 2 4m13-9 1-3" stroke="#597853" stroke-opacity=".07" stroke-width="1.2" fill="none"/></pattern>
           </defs>
-          <g id="ground-layer"></g><g id="range-layer" pointer-events="none"></g>
+          <g id="ground-layer"></g><g id="fire-layer" pointer-events="none"></g><g id="range-layer" pointer-events="none"></g>
           <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
           <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
@@ -46,6 +46,7 @@
     </div>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
   </main>
+  <div id="tower-info" class="tower-info" role="tooltip" hidden></div>
 
   <dialog id="result" aria-labelledby="result-title">
     <div class="result-illustration" id="result-art"></div>

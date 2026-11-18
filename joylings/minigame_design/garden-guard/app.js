@@ -4,13 +4,45 @@
   const $ = id => document.getElementById(id);
   const S = 64, OX = 76, OY = 40, X = c => OX + (c + 0.5) * S, Y = r => OY + (r + 0.5) * S;
   const STORAGE = 'garden-guard-v1';
-  const BATTLE_SPEED = 1.5;
-  const descriptions = { pea: '射程遠 · 每次 −1', rapid: '射程短 · 發射快', frost: '命中 −1 · 小蟲變慢', wall: '' };
+  const BATTLE_SPEED = G.BATTLE_SPEED;
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
+  let infoAnchor = null, infoTimer = 0;
   try { const saved = G.restore(JSON.parse(localStorage.getItem(STORAGE))); if (saved) state = saved; } catch {}
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
-  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 顆種子。${descriptions[kind]}">${A.tool(kind)}<span class="tool-cost">${A.icon('seed')}${tool.cost}</span></button>`).join('');
+  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 顆種子">${A.tool(kind)}<span class="tool-cost">${A.icon('seed')}${tool.cost}</span></button>`).join('');
+
+  function hideInfo() {
+    clearTimeout(infoTimer); $('tower-info').hidden = true;
+    infoAnchor?.removeAttribute('aria-describedby'); infoAnchor = null;
+  }
+  function deferHideInfo() { clearTimeout(infoTimer); infoTimer = setTimeout(hideInfo, 140); }
+  function showInfo(kind, anchor) {
+    const tool = G.TOOLS[kind];
+    if (!tool?.rate) { hideInfo(); return; }
+    hideInfo(); infoAnchor = anchor;
+    const info = $('tower-info');
+    info.dataset.kind = kind;
+    info.innerHTML = `<strong>${tool.name}</strong><p>傷害 ${tool.damage}${tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : ''}</p><p>攻擊 ${tool.rate.toFixed(1)}次/s</p><p class="info-effect">${tool.effect}</p>`;
+    info.hidden = false; anchor.setAttribute('aria-describedby', 'tower-info');
+    const zoom = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+    const rect = anchor.getBoundingClientRect(), box = info.getBoundingClientRect();
+    const w = box.width / zoom, h = box.height / zoom, vw = innerWidth / zoom, vh = innerHeight / zoom;
+    const left = Math.max(8, Math.min(vw - w - 8, (rect.left + rect.width / 2) / zoom - w / 2));
+    let top = rect.top / zoom - h - 10;
+    if (top < 8) top = rect.bottom / zoom + 10;
+    info.style.left = `${left}px`; info.style.top = `${Math.max(8, Math.min(vh - h - 8, top))}px`;
+  }
+  function showCellInfo(cell) {
+    const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
+    if (b) showInfo(b.kind, cell); else hideInfo();
+  }
+  function repositionInfo() {
+    if (!infoAnchor) return;
+    const anchor = infoAnchor, rect = anchor.getBoundingClientRect();
+    if (rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || (!anchor.matches(':hover') && document.activeElement !== anchor)) { hideInfo(); return; }
+    if (anchor.dataset.tool) showInfo(anchor.dataset.tool, anchor); else showCellInfo(anchor);
+  }
 
   function save() {
     if (state.phase !== 'planning') return;
@@ -54,10 +86,14 @@
     if (kind && G.TOOLS[kind]?.range) $('range-layer').innerHTML = `<circle cx="${x}" cy="${y}" r="${G.TOOLS[kind].range * S}" fill="${G.TOOLS[kind].color}" fill-opacity=".065" stroke="${G.TOOLS[kind].color}" stroke-width="2" stroke-opacity=".42" stroke-dasharray="5 6"/>`;
     if (state.phase !== 'planning') return;
     const valid = selected === 'remove' ? !!existing : selected && !G.canBuild(state, selected, hover.c, hover.r);
-    const color = selected === 'remove' ? '#bb8967' : valid ? '#7c9b6b' : '#c38c75';
+    const color = selected === 'remove' ? '#bb8967' : existing || valid ? '#7c9b6b' : '#c38c75';
     $('hover-layer').innerHTML = `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="8" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="2.5"/>${valid && selected !== 'remove' && !existing ? `<g transform="translate(${x} ${y})" opacity=".5">${A.tower(selected)}</g>` : ''}`;
   }
   function renderWorld() {
+    $('fire-layer').innerHTML = state.fires.map(f => {
+      const pulse = 0.85 + Math.sin(state.time * 10 + f.id) * 0.15;
+      return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)})" opacity="${Math.min(1, f.life / 0.5)}"><rect x="-30" y="-30" width="60" height="60" rx="12" fill="#ec9a4b" opacity=".38"/><ellipse rx="29" ry="24" fill="#df6b38" opacity=".3"/>${[-17, 0, 17].map((x, i) => `<g transform="translate(${x} ${i % 2 ? -9 : 10}) scale(${pulse})"><path d="M0-19C7-9 13-5 10 3 6 14-9 10-10 2-12-6-4-8 0-19Z" fill="#e77535"/><path d="M0-8C6 0 5 7 0 8-6 7-5 0 0-8Z" fill="#ffe094"/></g>`).join('')}</g>`;
+    }).join('');
     $('building-layer').innerHTML = state.buildings.map(b => {
       const hp = G.TOOLS[b.kind].hp;
       const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
@@ -65,14 +101,20 @@
     }).join('');
     $('bug-layer').innerHTML = state.enemies.map(e => `<g data-enemy="${e.id}" data-hp="${e.hp}" transform="translate(${X(e.x)} ${Y(e.y)})">${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0)}</g>`).join('');
     $('shot-layer').innerHTML = state.shots.map(s => {
+      if (s.kind === 'pierce') return `<g class="piercing-shot"><path d="M${X(s.x - s.ux * 0.34)} ${Y(s.y - s.uy * 0.34)}L${X(s.x)} ${Y(s.y)}" stroke="#4a8f88" stroke-width="7" stroke-linecap="round"/><circle cx="${X(s.x)}" cy="${Y(s.y)}" r="4" fill="#edffdf"/></g>`;
       const target = state.enemies.find(e => e.id === s.target);
       if (!target) return '';
       const point = G.impactPoint(target, s);
       const t = Math.min(1, s.age / s.duration), x = X(s.c + (point.x - s.c) * t), y = Y(s.r + (point.y - s.r) * t);
-      return `<circle cx="${x}" cy="${y}" r="${s.kind === 'frost' ? 6 : 4.5}" fill="${G.TOOLS[s.kind].color}" stroke="#fffde9" stroke-width="1.5"/>`;
+      const radius = { cannon: 8, frost: 6, flame: 7, molecular: 9, push: 7 }[s.kind] || 4.5;
+      return `<g class="shot-${s.kind}"><circle cx="${x}" cy="${y}" r="${radius}" fill="${G.TOOLS[s.kind].color}" stroke="#fffde9" stroke-width="1.5"/>${s.kind === 'molecular' ? `<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#c4a0cd" stroke-width="2"/>` : ''}${s.kind === 'push' ? `<circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#b7bedb" stroke-width="2"/>` : ''}</g>`;
     }).join('');
     $('effects-layer').innerHTML = state.effects.map(e => {
       const t = 1 - e.life / e.duration, x = X(e.x), y = Y(e.y);
+      if (e.kind === 'blast') return `<g class="blast-effect" opacity="${1 - t}"><circle cx="${x}" cy="${y}" r="${(0.25 + t * 0.75) * e.radius * S}" fill="#eec970" fill-opacity=".25" stroke="#c49946" stroke-width="4"/><circle cx="${x}" cy="${y}" r="${10 + t * 25}" fill="#ffedb0"/></g>`;
+      if (e.kind === 'molecular') return `<g class="molecular-effect" transform="translate(${x} ${y})" opacity="${1 - t}"><circle r="${10 + t * 32}" fill="#dfc2ed" fill-opacity=".35" stroke="#a16cab" stroke-width="3"/><path d="M-22 0h44M0-22v44m-16-16 32 32m-32 0 32-32" stroke="#f8e5ff" stroke-width="3"/></g>`;
+      if (e.kind === 'push') return `<g class="push-effect" transform="translate(${x + e.ux * t * 80} ${y + e.uy * t * 80}) rotate(${Math.atan2(e.uy, e.ux) * 180 / Math.PI})" opacity="${1 - t}" fill="none" stroke="#8491bf" stroke-width="4"><path d="m-15-15 13 15-13 15m14-30 13 15-13 15"/></g>`;
+      if (e.kind === 'burn') return `<circle class="burn-effect" cx="${x}" cy="${y}" r="${14 + t * 14}" fill="none" stroke="#ef9c49" stroke-width="3" opacity="${1 - t}"/>`;
       if (e.kind === 'block') {
         const bx = e.vx * t * 60, by = e.vy * t * 60;
         const color = G.TOOLS[e.shotKind]?.color || '#6a8d58';
@@ -100,7 +142,7 @@
     document.querySelectorAll('[data-tool]').forEach(b => {
       b.classList.toggle('selected', b.dataset.tool === selected); b.setAttribute('aria-pressed', String(b.dataset.tool === selected));
       // Keep low-budget tools selectable to inspect their range.
-      b.disabled = state.phase !== 'planning';
+      b.setAttribute('aria-disabled', String(state.phase !== 'planning'));
     });
     $('remove').disabled = state.phase !== 'planning'; $('remove').classList.toggle('active', selected === 'remove'); $('remove').setAttribute('aria-pressed', String(selected === 'remove'));
     $('undo').disabled = state.phase !== 'planning' || state.undo.length === 0;
@@ -110,6 +152,7 @@
     $('action').classList.toggle('pause-state', state.phase === 'running');
   }
   function outcome() {
+    hideInfo();
     const won = state.phase === 'won';
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
     $('result-title').textContent = won ? '守住了！' : '再試一次';
@@ -125,6 +168,7 @@
         const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
         cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.TOOLS[b.kind].name : G.terrain(state.level).has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
       }
+      if (infoAnchor?.classList.contains('cell-hit')) showCellInfo(infoAnchor);
     }
     if (lastPhase !== state.phase) {
       lastPhase = state.phase;
@@ -134,6 +178,7 @@
     updateUI(force); renderWorld();
   }
   function loadLevel(level, replacement = null) {
+    hideInfo();
     if ($('result').open) $('result').close();
     state = replacement || G.createState(level); selected = 'pea'; hover = null; $('status').textContent = ''; accumulator = 0;
     lastPhase = ''; lastRevision = -1; uiSignature = ''; ground(); save(); sync(true);
@@ -147,13 +192,27 @@
   }
   $('tools').addEventListener('click', event => {
     const tool = event.target.closest('[data-tool]'); if (!tool) return;
+    showInfo(tool.dataset.tool, tool);
+    if (state.phase !== 'planning') return;
     selected = tool.dataset.tool; hover = null; selection(); updateUI(true);
   });
+  for (const button of $('tools').querySelectorAll('[data-tool]')) {
+    button.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') showInfo(button.dataset.tool, button); });
+    button.addEventListener('pointerleave', deferHideInfo);
+    button.addEventListener('focus', () => showInfo(button.dataset.tool, button));
+    button.addEventListener('blur', deferHideInfo);
+  }
+  $('tower-info').addEventListener('pointerenter', () => clearTimeout(infoTimer));
+  $('tower-info').addEventListener('pointerleave', deferHideInfo);
+  document.addEventListener('pointerdown', event => { if (!event.target.closest('#tower-info, [data-tool]')) hideInfo(); });
+  window.addEventListener('resize', repositionInfo);
+  document.addEventListener('scroll', repositionInfo, true);
   $('remove').addEventListener('click', () => { selected = selected === 'remove' ? null : 'remove'; selection(); updateUI(true); });
   $('undo').addEventListener('click', () => { if (G.undo(state)) { save(); sync(true); } });
   $('reset').addEventListener('click', () => loadLevel(state.level));
   document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => loadLevel(+b.dataset.level)));
   $('action').addEventListener('click', () => {
+    hideInfo();
     hover = null; $('status').textContent = ''; selection();
     if (state.phase === 'planning') { save(); G.startWave(state); }
     else if (state.phase === 'running' || state.phase === 'paused') G.togglePause(state);
@@ -162,6 +221,7 @@
   });
   $('hit-layer').addEventListener('click', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
+    if (event.pointerType === 'touch' && selected !== 'remove' && G.at(state, +cell.dataset.c, +cell.dataset.r)) { showCellInfo(cell); return; }
     interact(+cell.dataset.c, +cell.dataset.r);
   });
   $('hit-layer').addEventListener('pointermove', event => {
@@ -169,12 +229,15 @@
     const cell = event.target.closest('[data-c]'); if (!cell) return;
     if (hover?.c === +cell.dataset.c && hover?.r === +cell.dataset.r) return;
     hover = { c: +cell.dataset.c, r: +cell.dataset.r }; selection();
+    showCellInfo(cell);
   });
-  $('board').addEventListener('pointerleave', () => { hover = null; selection(); });
+  $('board').addEventListener('pointerleave', () => { hover = null; selection(); deferHideInfo(); });
   $('hit-layer').addEventListener('focusin', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
     focusCell = hover = { c: +cell.dataset.c, r: +cell.dataset.r }; selection();
+    showCellInfo(cell);
   });
+  $('hit-layer').addEventListener('focusout', deferHideInfo);
   $('hit-layer').addEventListener('keydown', event => {
     const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
     if (moves[event.key]) {
@@ -185,7 +248,7 @@
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(focusCell.c, focusCell.r); }
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !$('result').open) { selected = null; hover = null; selection(); updateUI(true); }
+    if (event.key === 'Escape' && !$('result').open) { hideInfo(); selected = null; hover = null; selection(); updateUI(true); }
   });
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));

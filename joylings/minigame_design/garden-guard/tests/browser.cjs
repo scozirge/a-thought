@@ -32,8 +32,24 @@ function lastWaveSnapshot() {
   p.on('pageerror', e => errors.push(e.message));
   try {
     const response = await p.goto(base); assert.equal(response.status(), 200);
+    assert.equal(await p.locator('[data-tool]').count(), 8);
+    assert.equal(await p.locator('#tower-info').isVisible(), false);
+    for (const [kind, tool] of Object.entries(G.TOOLS).filter(([, t]) => t.rate)) {
+      await p.locator(`[data-tool="${kind}"]`).hover();
+      assert.equal(await p.locator('#tower-info strong').textContent(), tool.name);
+      assert.ok((await p.locator('#tower-info').innerText()).includes(`傷害 ${tool.damage}`));
+      assert.ok((await p.locator('#tower-info').innerText()).includes(`攻擊 ${tool.rate.toFixed(1)}次/s`));
+      assert.equal(await p.locator('#tower-info .info-effect').textContent(), tool.effect);
+    }
+    await p.locator('[data-tool="cannon"]').focus();
+    assert.equal(await p.locator('#tower-info strong').textContent(), '大砲範圍塔');
+    await p.keyboard.press('Escape'); assert.equal(await p.locator('#tower-info').isVisible(), false);
+    await p.mouse.move(20, 20);
     await p.screenshot({ path: path.join(out, 'initial-desktop.png'), fullPage: true });
     await place(p, 'pea', 8, 5); assert.equal((await read(p)).money, 16);
+    await p.mouse.move(20, 20); await cell(p, 8, 5).hover();
+    assert.equal(await p.locator('#tower-info strong').textContent(), '一般砲塔');
+    await p.screenshot({ path: path.join(out, 'placed-tower-info.png'), fullPage: true });
     await p.locator('#undo').click(); assert.equal((await read(p)).money, 22);
     await place(p, 'pea', 8, 5);
     await p.locator('#remove').click(); await cell(p, 8, 5).click(); assert.equal((await read(p)).money, 22);
@@ -91,6 +107,19 @@ function lastWaveSnapshot() {
     await p.screenshot({ path: path.join(out, 'shield-direction.png'), fullPage: true });
     await p.reload(); assert.equal((await read(p)).phase, 'planning'); assert.equal((await read(p)).wave, 1);
 
+    for (const [kind, selector] of [['cannon', '.blast-effect'], ['flame', '.ground-fire'], ['pierce', '.piercing-shot'], ['push', '.push-effect'], ['molecular', '.molecular-effect']]) {
+      const demo = G.createState(); demo.wave = 1;
+      G.build(demo, kind, 8, 5); await prepare(p, G.snapshot(demo));
+      await p.locator('#action').click();
+      await p.waitForFunction(selector => !!document.querySelector(selector), selector, { timeout: 15000 });
+      await p.evaluate(() => document.querySelector('#action').click());
+      assert.ok(await p.locator(selector).count() > 0, kind);
+      await p.screenshot({ path: path.join(out, `tower-${kind}.png`), fullPage: true });
+      await p.locator(`[data-tool="${kind}"]`).hover();
+      assert.equal(await p.locator('#tower-info strong').textContent(), G.TOOLS[kind].name, '戰鬥中也能查看資訊');
+    }
+    console.log('已驗證：七種砲塔資訊、已建造塔的資訊、範圍爆炸、地板火焰、穿透彈、擊退與分子砲。');
+
     await prepare(p, lastWaveSnapshot());
     await p.locator('#action').click();
     await p.waitForFunction(() => gardenDebug.getState().phase === 'won', null, { timeout: 45000 });
@@ -120,12 +149,22 @@ function lastWaveSnapshot() {
     await p.setViewportSize({ width: 1440, height: 1080 });
     await p.evaluate(() => { document.documentElement.style.zoom = '2'; });
     assert.equal(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '200% 縮放溢出');
+    await p.locator('[data-tool="flame"]').hover(); await p.waitForTimeout(200);
+    const zoomInfo = await p.locator('#tower-info').boundingBox();
+    assert.ok(zoomInfo && zoomInfo.x >= 0 && zoomInfo.y >= 0 && zoomInfo.x + zoomInfo.width <= 1440 && zoomInfo.y + zoomInfo.height <= 1080, '放大、自動捲動後資訊仍可見');
+    await p.screenshot({ path: path.join(out, 'tower-info-zoom.png'), fullPage: true });
     await p.evaluate(() => { document.documentElement.style.zoom = ''; localStorage.setItem('garden-guard-v1', '{broken'); });
     await p.reload(); assert.equal((await read(p)).money, 22);
     const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const phone = await touch.newPage(); await phone.goto(base);
+    await phone.locator('[data-tool="flame"]').tap();
+    assert.equal(await phone.locator('#tower-info strong').textContent(), '火焰塔');
+    assert.ok((await phone.locator('#tower-info').innerText()).includes('燃燒 1/s'));
+    const infoBox = await phone.locator('#tower-info').boundingBox();
+    assert.ok(infoBox.x >= 0 && infoBox.x + infoBox.width <= 390);
     await phone.locator('[data-tool="pea"]').tap();
     await cell(phone, 3, 5).tap(); assert.equal((await read(phone)).buildings.length, 1);
+    await cell(phone, 3, 5).tap(); assert.equal(await phone.locator('#tower-info strong').textContent(), '一般砲塔');
     await phone.locator('#action').tap(); assert.equal((await read(phone)).phase, 'running');
     await phone.locator('#action').tap(); assert.equal((await read(phone)).phase, 'paused');
     await touch.close();

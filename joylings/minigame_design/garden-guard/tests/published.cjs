@@ -26,6 +26,14 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       checkedFiles.push(file);
     }
     assert.equal(await p.locator('#route-toggle, #route-layer, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
+    assert.equal(await p.locator('[data-tool]').count(), 8);
+    for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
+      await p.locator(`[data-tool="${kind}"]`).hover();
+      assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
+      assert.match(await p.locator('#tower-info').innerText(), /攻擊 \d+\.\d次\/s/);
+    }
+    await p.keyboard.press('Escape');
+    await p.locator('[data-tool="pea"]').click();
     const fresh = await p.evaluate(() => gardenDebug.getState());
     assert.equal(fresh.level, 0); assert.equal(fresh.wave, 0); assert.equal(fresh.phase, 'planning');
     await p.locator('.cell-hit[data-c="8"][data-r="1"]').click();
@@ -49,7 +57,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     assert.equal(below.stats.blocked, 0);
     assert.ok(below.enemies.some(e => e.kind === 'shield' && e.hp < 3));
     assert.deepEqual(errors, []);
-    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, browserErrors: errors };
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, browserErrors: errors };
     fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally { await browser.close(); }

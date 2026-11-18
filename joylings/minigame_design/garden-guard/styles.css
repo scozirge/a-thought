@@ -26,11 +26,17 @@ svg { display: block; }
 .cell-hit:focus-visible { fill: #ffffff30; stroke: #4f7c59; stroke-width: 3px; }
 .cell-hit.reserved { cursor: default; }
 .cell-hit.invalid { fill: #c8785822; stroke: #b66b51; stroke-width: 3px; }
-.control-panel { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 18px; }
-.tools { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.control-panel { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 18px; }
+.tools { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
 .tool-card { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; min-height: 92px; padding: 3px 8px 7px; border-radius: 16px; border: 1.5px solid #e0e3d7; background: #fbfaf4; position: relative; }
 .tool-card.selected { border-color: #72936b; background: #edf2e4; box-shadow: 0 0 0 2px #71906918; }
 .tool-card.selected::after { content: ''; position: absolute; right: 7px; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: #6d8e63; }
+.tool-card[aria-disabled="true"] { opacity: .55; }
+.tower-info { position: fixed; z-index: 10; width: max-content; max-width: min(280px, calc(100vw - 16px)); padding: 14px 18px; border: 1px solid #d6dece; border-radius: 16px; background: #fffef9; box-shadow: 0 6px 24px #344b4020; font-size: 18px; line-height: 1.6; }
+.tower-info[hidden] { display: none; }
+.tower-info strong { display: block; font-size: 20px; margin-bottom: 4px; }
+.tower-info p { margin: 0; }
+.tower-info .info-effect { color: #718164; }
 .tool-art { width: 56px; height: 58px; overflow: visible; }
 .tool-cost { display: flex; align-items: center; justify-content: center; gap: 3px; color: #788359; font-size: 18px; line-height: 1.4; }
 .tool-cost .icon { width: 15px; height: 18px; }
@@ -50,8 +56,13 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
 .result-hearts { display: flex; justify-content: center; gap: 8px; color: #bc836d; margin-bottom: 24px; }
 .result-hearts .empty { color: #e4dfd2; }
 .secondary-button { background: transparent; border: none; min-height: 48px; padding: 8px 20px; margin-top: 14px; color: #7d8972; font-size: 18px; }
+@media (min-width: 701px) and (max-width: 1050px) {
+  .control-panel { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+  .tools { grid-column: 1 / -1; }
+  .tool-card { width: 100%; }
+}
 @media (max-width: 700px) {
-  .app { padding: 12px 12px 214px; }
+  .app { padding: 12px 12px 306px; }
   .field-panel { border-radius: 18px; }
   .hud { padding: 10px 10px 0; gap: 8px; }
   .levels { gap: 0; }
@@ -60,7 +71,7 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
   .resources .icon { width: 20px; height: 22px; }
   .resources strong { font-size: 22px; }
   .control-panel { position: fixed; z-index: 5; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; margin: 0; padding: 10px; border: 1px solid #dce2d3; border-radius: 20px; background: #fffef9f5; box-shadow: 0 6px 28px #344b4010; }
-  .tools { grid-column: 1 / -1; gap: 6px; }
+  .tools { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
   .tool-card { width: 100%; min-width: 0; min-height: 86px; padding: 2px 3px 5px; }
   .tool-art { width: 52px; height: 54px; }
   .edit-controls { gap: 2px; }
