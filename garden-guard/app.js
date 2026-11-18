@@ -5,40 +5,20 @@
   const S = 64, OX = 76, OY = 40, X = c => OX + (c + 0.5) * S, Y = r => OY + (r + 0.5) * S;
   const STORAGE = 'garden-guard-v1';
   const descriptions = { pea: '射程遠 · 每次 −1', rapid: '射程短 · 發射快', frost: '命中 −1 · 小蟲變慢', wall: '' };
-  let state = G.createState(), selected = 'pea', hover = null, speed = 1, showRoute = true, focusCell = { c: 6, r: 5 };
-  let lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, transient = '', transientUntil = 0;
+  let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
+  let lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
   try { const saved = G.restore(JSON.parse(localStorage.getItem(STORAGE))); if (saved) state = saved; } catch {}
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
-  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 顆種子。${descriptions[kind]}">${A.tool(kind)}${kind === 'wall' ? '' : `<span class="tool-name">${tool.name}</span>`}<span class="tool-cost">${A.icon('seed')}${tool.cost}</span></button>`).join('');
+  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 顆種子。${descriptions[kind]}">${A.tool(kind)}<span class="tool-cost">${A.icon('seed')}${tool.cost}</span></button>`).join('');
 
   function save() {
     if (state.phase !== 'planning') return;
     try { localStorage.setItem(STORAGE, JSON.stringify(G.snapshot(state))); } catch {}
   }
-  function message(text) { transient = text; transientUntil = performance.now() + 2400; updateHint(); }
-  function setHint(text, warning = false) {
-    if ($('hint').textContent !== text) $('hint').textContent = text;
-    $('hint').classList.toggle('warning', warning);
-  }
-  function updateHint() {
-    if (transient && performance.now() < transientUntil) { setHint(transient, true); return; }
-    transient = '';
-    if (state.phase === 'paused') { setHint('停下來，看看小蟲走哪裡'); return; }
-    if (state.phase === 'running') { setHint(state.enemies.some(e => e.attackId) ? '路堵住了，小蟲正在拆牆' : '', state.enemies.some(e => e.attackId)); return; }
-    if (state.phase !== 'planning') { setHint(''); return; }
-    const hypothetical = prospective();
-    if (G.previews(state, hypothetical).some(p => p.breaking)) { setHint('沒有路了，小蟲會拆牆', true); return; }
-    if (selected === 'remove') { setHint('移走物品，退回種子'); return; }
-    if (hover && G.at(state, hover.c, hover.r) && selected !== 'remove') {
-      const b = G.at(state, hover.c, hover.r); setHint(b.kind === 'wall' ? '' : `${G.TOOLS[b.kind].name} · ${descriptions[b.kind]}`); return;
-    }
-    setHint(selected ? descriptions[selected] : '點選工具，再點草地');
-  }
-  function prospective() {
-    if (state.phase !== 'planning' || !hover || !selected) return state.buildings;
-    if (selected === 'remove') return state.buildings.filter(b => b.c !== hover.c || b.r !== hover.r);
-    if (!G.canBuild(state, selected, hover.c, hover.r)) return [...state.buildings, { ...hover, kind: selected }];
-    return state.buildings;
+  function feedback(text, c, r) {
+    $('status').textContent = text;
+    const cell = $('hit-layer').querySelector(`[data-c="${c}"][data-r="${r}"]`);
+    if (cell) { cell.classList.add('invalid'); setTimeout(() => cell.classList.remove('invalid'), 700); }
   }
   function ground() {
     let s = '<rect x="69" y="33" width="782" height="526" rx="24" fill="#d2ddbc"/><rect x="72" y="36" width="776" height="520" rx="22" fill="#e4ebd5"/>';
@@ -60,25 +40,10 @@
       }
       hits += '</g>';
     }
-    s += `<g transform="translate(35 ${Y(G.GOAL.r)}) scale(.85)">${A.house()}</g><text x="35" y="${Y(G.GOAL.r) + 65}" text-anchor="middle" fill="#879477" font-size="20" font-weight="600">家</text>`;
+    s += `<g transform="translate(35 ${Y(G.GOAL.r)}) scale(.85)">${A.house()}</g>`;
     for (const r of G.LEVELS[state.level].entries) s += `<g transform="translate(883 ${Y(r)})"><circle r="22" fill="#efecd9"/><path d="M10 0h-20m7-7-7 7 7 7" stroke="#aa9c78" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>`;
     for (const [x, y, a] of [[93, 20, -20], [825, 572, 30], [41, 489, 10], [876, 82, -15]]) s += `<g transform="translate(${x} ${y}) rotate(${a})" opacity=".55"><path d="M0 9q-12-5-11-13Q1-3 0 9m1 0q12-5 11-13Q0-3 1 9" fill="#a6b98a"/><circle cx="16" cy="10" r="3" fill="#dbc78c"/></g>`;
     $('ground-layer').innerHTML = s; $('hit-layer').innerHTML = hits;
-  }
-  function routes() {
-    if (!showRoute) { $('route-layer').innerHTML = ''; return; }
-    const plans = G.previews(state, prospective());
-    $('route-layer').innerHTML = plans.map(plan => {
-      if (!plan.path.length) return '';
-      const points = plan.path.map(p => `${X(p.c)},${Y(p.r)}`).join(' ');
-      const color = plan.breaking ? '#b78053' : '#a0a67c';
-      const arrows = plan.path.slice(0, -1).filter((p, i) => i % 2 === 0).map(p => {
-        const i = plan.path.indexOf(p), next = plan.path[i + 1];
-        const angle = Math.atan2(next.r - p.r, next.c - p.c) * 180 / Math.PI;
-        return `<path d="m-3-4 4 4-4 4" transform="translate(${(X(p.c) + X(next.c)) / 2} ${(Y(p.r) + Y(next.r)) / 2}) rotate(${angle})" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-      }).join('');
-      return `<polyline points="${points}" fill="none" stroke="${plan.breaking ? '#ead2ae' : '#efebd0'}" stroke-width="24" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="2 10" stroke-linejoin="round" stroke-linecap="round" opacity=".6"/>${arrows}`;
-    }).join('');
   }
   function selection() {
     $('hover-layer').innerHTML = ''; $('range-layer').innerHTML = '';
@@ -123,44 +88,38 @@
     }).join('');
   }
   function updateUI(force = false) {
-    const signature = [state.level, state.wave, state.phase, state.money, state.hearts, state.undo.length, selected, speed, showRoute].join(':');
+    const signature = [state.level, state.wave, state.phase, state.money, state.hearts, state.undo.length, selected].join(':');
     if (!force && signature === uiSignature) return;
     uiSignature = signature;
-    $('chapter').textContent = String(state.level + 1).padStart(2, '0'); $('garden-name').textContent = G.LEVELS[state.level].name;
     $('money').textContent = state.money;
-    $('hearts').innerHTML = Array.from({ length: 5 }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
+    $('seeds').setAttribute('aria-label', `可用種子 ${state.money}`);
+    $('health').textContent = state.hearts;
     $('hearts').setAttribute('aria-label', `小屋生命 ${state.hearts}`);
     document.querySelectorAll('[data-level]').forEach(b => { const active = Number(b.dataset.level) === state.level; b.classList.toggle('active', active); b.setAttribute('aria-current', active ? 'step' : 'false'); });
-    $('wave-title').textContent = `第 ${state.wave + 1} 波`;
-    $('wave-dots').innerHTML = G.LEVELS[state.level].waves.map((_, i) => `<span class="wave-dot ${i < state.wave ? 'done' : i === state.wave ? 'current' : ''}"></span>`).join('');
-    $('wave-preview').innerHTML = G.LEVELS[state.level].waves[state.wave].map(g => `<div class="wave-group" aria-label="${G.ENEMIES[g.kind].name}，每隻 ${g.hp} 下，共 ${g.count} 隻">${A.badge(g.kind, g.hp)}<span>×${g.count}</span></div>`).join('');
     document.querySelectorAll('[data-tool]').forEach(b => {
       b.classList.toggle('selected', b.dataset.tool === selected); b.setAttribute('aria-pressed', String(b.dataset.tool === selected));
-      // Keep low-budget tools selectable so their purpose and cost stay readable.
+      // Keep low-budget tools selectable to inspect their range.
       b.disabled = state.phase !== 'planning';
     });
     $('remove').disabled = state.phase !== 'planning'; $('remove').classList.toggle('active', selected === 'remove'); $('remove').setAttribute('aria-pressed', String(selected === 'remove'));
     $('undo').disabled = state.phase !== 'planning' || state.undo.length === 0;
-    $('route-toggle').classList.toggle('active', showRoute); $('route-toggle').setAttribute('aria-pressed', String(showRoute));
-    $('speed').textContent = `${speed}×`; $('speed').setAttribute('aria-label', `速度${speed === 1 ? '一' : '兩'}倍`);
     const label = state.phase === 'running' ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : '放小蟲';
-    $('action').innerHTML = A.icon(state.phase === 'running' ? 'pause' : 'play') + `<span id="action-label">${label}</span>`;
+    $('action').innerHTML = A.icon(state.phase === 'running' ? 'pause' : 'play');
+    $('action').setAttribute('aria-label', label);
     $('action').classList.toggle('pause-state', state.phase === 'running');
-    updateHint();
   }
   function outcome() {
     const won = state.phase === 'won';
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
-    $('result-title').textContent = won ? '守住了！' : '換個位置試試';
+    $('result-title').textContent = won ? '守住了！' : '再試一次';
     $('result-hearts').innerHTML = Array.from({ length: 5 }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
-    $('result-note').textContent = won ? '4 波完成' : '';
     $('result-primary').textContent = won ? state.level < G.LEVELS.length - 1 ? '下一園' : '再玩一次' : '重試這波';
     $('result-secondary').textContent = won ? '看看花園' : '重新開始';
     if (!$('result').open) $('result').showModal();
   }
   function sync(force = false) {
     if (force || lastRevision !== state.revision) {
-      routes(); selection(); lastRevision = state.revision;
+      selection(); lastRevision = state.revision;
       for (const cell of $('hit-layer').querySelectorAll('[data-c]')) {
         const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
         cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.TOOLS[b.kind].name : G.terrain(state.level).has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
@@ -175,32 +134,30 @@
   }
   function loadLevel(level, replacement = null) {
     if ($('result').open) $('result').close();
-    state = replacement || G.createState(level); selected = 'pea'; hover = null; transient = ''; accumulator = 0;
+    state = replacement || G.createState(level); selected = 'pea'; hover = null; $('status').textContent = ''; accumulator = 0;
     lastPhase = ''; lastRevision = -1; uiSignature = ''; ground(); save(); sync(true);
   }
   function interact(c, r) {
     if (!selected) { selected = G.at(state, c, r)?.kind || 'pea'; updateUI(true); return; }
     const result = selected === 'remove' ? G.remove(state, c, r) : G.build(state, selected, c, r);
-    if (!result.ok) message(result.error);
-    else { transient = ''; save(); }
+    if (!result.ok) feedback(result.error, c, r);
+    else { $('status').textContent = ''; save(); }
     sync(true);
   }
   $('tools').addEventListener('click', event => {
     const tool = event.target.closest('[data-tool]'); if (!tool) return;
-    selected = tool.dataset.tool; transient = ''; hover = null; routes(); selection(); updateUI(true);
+    selected = tool.dataset.tool; hover = null; selection(); updateUI(true);
   });
-  $('remove').addEventListener('click', () => { selected = selected === 'remove' ? null : 'remove'; transient = ''; routes(); selection(); updateUI(true); });
-  $('undo').addEventListener('click', () => { if (G.undo(state)) { transient = ''; save(); sync(true); } });
+  $('remove').addEventListener('click', () => { selected = selected === 'remove' ? null : 'remove'; selection(); updateUI(true); });
+  $('undo').addEventListener('click', () => { if (G.undo(state)) { save(); sync(true); } });
   $('reset').addEventListener('click', () => loadLevel(state.level));
   document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => loadLevel(+b.dataset.level)));
-  $('route-toggle').addEventListener('click', () => { showRoute = !showRoute; routes(); updateUI(true); });
-  $('speed').addEventListener('click', () => { speed = speed === 1 ? 2 : 1; updateUI(true); });
   $('action').addEventListener('click', () => {
-    hover = null; transient = ''; selection();
+    hover = null; $('status').textContent = ''; selection();
     if (state.phase === 'planning') { save(); G.startWave(state); }
     else if (state.phase === 'running' || state.phase === 'paused') G.togglePause(state);
     else outcome();
-    routes(); sync(true);
+    sync(true);
   });
   $('hit-layer').addEventListener('click', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
@@ -210,12 +167,12 @@
     if (event.pointerType === 'touch') return;
     const cell = event.target.closest('[data-c]'); if (!cell) return;
     if (hover?.c === +cell.dataset.c && hover?.r === +cell.dataset.r) return;
-    hover = { c: +cell.dataset.c, r: +cell.dataset.r }; routes(); selection(); updateHint();
+    hover = { c: +cell.dataset.c, r: +cell.dataset.r }; selection();
   });
-  $('board').addEventListener('pointerleave', () => { hover = null; routes(); selection(); updateHint(); });
+  $('board').addEventListener('pointerleave', () => { hover = null; selection(); });
   $('hit-layer').addEventListener('focusin', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
-    focusCell = hover = { c: +cell.dataset.c, r: +cell.dataset.r }; routes(); selection();
+    focusCell = hover = { c: +cell.dataset.c, r: +cell.dataset.r }; selection();
   });
   $('hit-layer').addEventListener('keydown', event => {
     const moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
@@ -227,7 +184,7 @@
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(focusCell.c, focusCell.r); }
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !$('result').open) { selected = null; hover = null; routes(); selection(); updateUI(true); }
+    if (event.key === 'Escape' && !$('result').open) { selected = null; hover = null; selection(); updateUI(true); }
   });
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
@@ -243,10 +200,10 @@
   function frame(now) {
     const elapsed = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0; lastFrame = now;
     if (state.phase === 'running') {
-      accumulator += elapsed * speed;
+      accumulator += elapsed;
       while (accumulator >= 1 / 60) { G.step(state, 1 / 60); accumulator -= 1 / 60; }
     } else accumulator = 0;
-    sync(); updateHint(); requestAnimationFrame(frame);
+    sync(); requestAnimationFrame(frame);
   }
   // Read-only diagnostics for verification. No test controls ship in normal play.
   window.gardenDebug = { getState: () => JSON.parse(JSON.stringify(state)), getRoutes: () => G.previews(state) };

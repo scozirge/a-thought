@@ -6,76 +6,54 @@
   <meta name="theme-color" content="#f6f5ed">
   <meta name="description" content="安排小塔、改變路線，和小蟲一起學方向、數量與策略。">
   <title>小小守園隊</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=cc8514c1bf8b">
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div class="brand"><span class="brand-mark" data-icon="leaf"></span><h1>小小守園隊</h1></div>
-      <nav class="levels" aria-label="選擇花園">
-        <button data-level="0" title="青草地" aria-label="花園一：青草地">1</button>
-        <button data-level="1" title="小池塘" aria-label="花園二：小池塘">2</button>
-        <button data-level="2" title="兩條路" aria-label="花園三：兩條路">3</button>
-      </nav>
-      <button id="reset" class="icon-button" aria-label="重新開始這個花園" title="重來" data-icon="reset"></button>
-    </header>
+  <main class="app" aria-label="小小守園隊">
+    <section class="field-panel" aria-label="花園戰場">
+      <header class="hud">
+        <nav class="levels" aria-label="選擇花園">
+          <button data-level="0" aria-label="花園一：青草地">1</button>
+          <button data-level="1" aria-label="花園二：小池塘">2</button>
+          <button data-level="2" aria-label="花園三：兩條路">3</button>
+        </nav>
+        <div class="resources">
+          <div class="heart-count" id="hearts" aria-label="小屋生命 5"><span data-icon="heart"></span><strong id="health">5</strong></div>
+          <div class="seed-count" id="seeds" aria-label="可用種子 22"><span data-icon="seed"></span><strong id="money">22</strong></div>
+        </div>
+      </header>
+      <div class="board-scroll" id="board-scroll">
+        <svg id="board" viewBox="0 0 920 592" role="group" aria-label="戰場。選好工具後點草地放置，或用方向鍵移動、Enter 放置。">
+          <defs>
+            <pattern id="grass" width="29" height="29" patternUnits="userSpaceOnUse"><path d="m7 18 2-4 2 4m13-9 1-3" stroke="#597853" stroke-opacity=".07" stroke-width="1.2" fill="none"/></pattern>
+          </defs>
+          <g id="ground-layer"></g><g id="range-layer" pointer-events="none"></g>
+          <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
+          <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g>
+          <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
+        </svg>
+      </div>
+    </section>
 
-    <div class="game-layout">
-      <section class="field-panel" aria-label="花園戰場">
-        <div class="field-header">
-          <div class="field-title"><span class="chapter" id="chapter">01</span><h2 id="garden-name">青草地</h2></div>
-          <div class="resources">
-            <div class="heart-group" id="hearts" aria-label="小屋生命 5"></div>
-            <span class="resource-divider"></span>
-            <div class="seed-count" title="可用種子"><span data-icon="seed"></span><strong id="money">22</strong></div>
-          </div>
-        </div>
-        <div class="board-scroll" id="board-scroll">
-          <svg id="board" viewBox="0 0 920 592" role="group" aria-label="戰場。選好工具後點草地放置，或用方向鍵移動、Enter 放置。">
-            <defs>
-              <pattern id="grass" width="29" height="29" patternUnits="userSpaceOnUse"><path d="m7 18 2-4 2 4m13-9 1-3" stroke="#597853" stroke-opacity=".07" stroke-width="1.2" fill="none"/></pattern>
-              <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#31462c" flood-opacity=".09"/></filter>
-            </defs>
-            <g id="ground-layer"></g><g id="route-layer" pointer-events="none"></g>
-            <g id="range-layer" pointer-events="none"></g><g id="building-layer" pointer-events="none"></g>
-            <g id="bug-layer" pointer-events="none"></g><g id="shot-layer" pointer-events="none"></g>
-            <g id="effects-layer" pointer-events="none"></g><g id="hover-layer" pointer-events="none"></g>
-            <g id="hit-layer" role="grid" aria-label="建造格子"></g>
-          </svg>
-        </div>
-        <div class="field-footer">
-          <p id="hint" role="status" aria-live="polite">點選工具，再點草地</p>
-          <div class="view-controls">
-            <button id="route-toggle" class="icon-button active" aria-label="顯示路線" aria-pressed="true" title="顯示路線" data-icon="path"></button>
-            <button id="speed" class="speed-button" aria-label="速度一倍">1×</button>
-          </div>
-        </div>
-      </section>
-
-      <aside class="control-panel" aria-label="防守工具">
-        <section class="wave-card">
-          <div class="section-heading"><h2 id="wave-title">第 1 波</h2><div id="wave-dots" class="wave-dots" aria-hidden="true"></div></div>
-          <div id="wave-preview" class="wave-preview"></div>
-        </section>
-        <section class="tool-section">
-          <div class="section-heading"><h2>種下防守</h2><button id="undo" class="icon-button" aria-label="退一步" title="退一步" data-icon="undo" disabled></button></div>
-          <div id="tools" class="tools"></div>
-          <button id="remove" class="remove-button"><span data-icon="erase"></span><span>移走</span><span class="refund-note">退種子</span></button>
-        </section>
-        <button id="action" class="action-button"><span data-icon="play"></span><span id="action-label">放小蟲</span></button>
-      </aside>
+    <div class="control-panel" aria-label="防守工具">
+      <div id="tools" class="tools"></div>
+      <div class="edit-controls">
+        <button id="undo" class="icon-button" aria-label="退一步" data-icon="undo" disabled></button>
+        <button id="remove" class="icon-button" aria-label="移走物品，退回種子" aria-pressed="false" data-icon="erase"></button>
+        <button id="reset" class="icon-button" aria-label="重新開始這個花園" data-icon="reset"></button>
+      </div>
+      <button id="action" class="action-button" aria-label="放小蟲" data-icon="play"></button>
     </div>
-    <footer class="page-footer"><span class="version">初版 01</span></footer>
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
   </main>
 
   <dialog id="result" aria-labelledby="result-title">
     <div class="result-illustration" id="result-art"></div>
     <h2 id="result-title">守住了！</h2>
     <div id="result-hearts" class="result-hearts"></div>
-    <p id="result-note"></p>
     <button id="result-primary" class="action-button">下一園</button>
     <button id="result-secondary" class="secondary-button">再玩一次</button>
   </dialog>
-  <script src="core.js"></script><script src="art.js"></script><script src="app.js"></script>
+  <script src="core.js?v=cc8514c1bf8b"></script><script src="art.js?v=cc8514c1bf8b"></script><script src="app.js?v=cc8514c1bf8b"></script>
 </body>
 </html>
