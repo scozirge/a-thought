@@ -90,6 +90,7 @@
     $('hover-layer').innerHTML = `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="8" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="2.5"/>${valid && selected !== 'remove' && !existing ? `<g transform="translate(${x} ${y})" opacity=".5">${A.tower(selected)}</g>` : ''}`;
   }
   function renderWorld() {
+    const lift = e => e.leap ? Math.sin(Math.PI * Math.min(1, e.leap.age / e.leap.duration)) * 50 : e.kind === 'flyer' ? 12 + Math.sin(state.time * 8 + e.id) * 2 : 0;
     $('fire-layer').innerHTML = state.fires.map(f => {
       const pulse = 0.85 + Math.sin(state.time * 10 + f.id) * 0.15;
       return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)})" opacity="${Math.min(1, f.life / 0.5)}"><rect x="-30" y="-30" width="60" height="60" rx="12" fill="#ec9a4b" opacity=".38"/><ellipse rx="29" ry="24" fill="#df6b38" opacity=".3"/>${[-17, 0, 17].map((x, i) => `<g transform="translate(${x} ${i % 2 ? -9 : 10}) scale(${pulse})"><path d="M0-19C7-9 13-5 10 3 6 14-9 10-10 2-12-6-4-8 0-19Z" fill="#e77535"/><path d="M0-8C6 0 5 7 0 8-6 7-5 0 0-8Z" fill="#ffe094"/></g>`).join('')}</g>`;
@@ -99,18 +100,22 @@
       const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
       return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, b.angle, b.flash)}${damage}</g>`;
     }).join('');
-    $('bug-layer').innerHTML = state.enemies.map(e => `<g data-enemy="${e.id}" data-hp="${e.hp}" transform="translate(${X(e.x)} ${Y(e.y)})">${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0)}</g>`).join('');
+    $('bug-layer').innerHTML = state.enemies.slice().sort((a, b) => Number(!!a.leap || a.kind === 'flyer') - Number(!!b.leap || b.kind === 'flyer')).map(e => `<g data-enemy="${e.id}" data-kind="${e.kind}" data-hp="${e.hp}" data-jumping="${!!e.leap}" transform="translate(${X(e.x)} ${Y(e.y) - lift(e)})">${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0)}</g>`).join('');
     $('shot-layer').innerHTML = state.shots.map(s => {
       if (s.kind === 'pierce') return `<g class="piercing-shot"><path d="M${X(s.x - s.ux * 0.34)} ${Y(s.y - s.uy * 0.34)}L${X(s.x)} ${Y(s.y)}" stroke="#4a8f88" stroke-width="7" stroke-linecap="round"/><circle cx="${X(s.x)}" cy="${Y(s.y)}" r="4" fill="#edffdf"/></g>`;
       const target = state.enemies.find(e => e.id === s.target);
       if (!target) return '';
       const point = G.impactPoint(target, s);
-      const t = Math.min(1, s.age / s.duration), x = X(s.c + (point.x - s.c) * t), y = Y(s.r + (point.y - s.r) * t);
+      const t = Math.min(1, s.age / s.duration), x = X(s.c + (point.x - s.c) * t), y = Y(s.r + (point.y - s.r) * t) - lift(target) * t;
       const radius = { cannon: 8, frost: 6, flame: 7, molecular: 9, push: 7 }[s.kind] || 4.5;
       return `<g class="shot-${s.kind}"><circle cx="${x}" cy="${y}" r="${radius}" fill="${G.TOOLS[s.kind].color}" stroke="#fffde9" stroke-width="1.5"/>${s.kind === 'molecular' ? `<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#c4a0cd" stroke-width="2"/>` : ''}${s.kind === 'push' ? `<circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#b7bedb" stroke-width="2"/>` : ''}</g>`;
     }).join('');
     $('effects-layer').innerHTML = state.effects.map(e => {
       const t = 1 - e.life / e.duration, x = X(e.x), y = Y(e.y);
+      if (e.kind === 'hatch') return `<g class="hatch-effect" transform="translate(${x} ${y})" opacity="${1 - t}"><ellipse rx="${8 + t * 20}" ry="${12 + t * 13}" fill="none" stroke="#efe7b6" stroke-width="3"/><path d="m-11-8 7-5 3 7 7-5 6 7" fill="none" stroke="#fffde6" stroke-width="3"/></g>`;
+      if (e.kind === 'split') return `<g class="split-effect" opacity="${1 - t}">${[0, 1, 2].map(i => { const a = i * Math.PI * 2 / 3; return `<circle cx="${x + Math.cos(a) * t * 42}" cy="${y + Math.sin(a) * t * 42}" r="${12 * (1 - t) + 4}" fill="#c5dfa1" stroke="#79a06b" stroke-width="2"/>`; }).join('')}</g>`;
+      if (e.kind === 'detonate') return `<g class="detonate-effect" opacity="${1 - t}"><rect x="${x - 96}" y="${y - 96}" width="192" height="192" rx="16" fill="#d9814522" stroke="#da8551" stroke-width="3"/><circle cx="${x}" cy="${y}" r="${15 + t * 77}" fill="#f5c66b" fill-opacity=".25" stroke="#d57549" stroke-width="5"/>${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4; return `<path d="M${x + Math.cos(a) * t * 65} ${y + Math.sin(a) * t * 65}l${Math.cos(a) * 14} ${Math.sin(a) * 14}" stroke="#e6a54c" stroke-width="4" stroke-linecap="round"/>`; }).join('')}</g>`;
+      if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#a5b881" stroke-width="3" stroke-dasharray="3 8" opacity="${(1 - t) * 0.65}"/>`;
       if (e.kind === 'blast') return `<g class="blast-effect" opacity="${1 - t}"><circle cx="${x}" cy="${y}" r="${(0.25 + t * 0.75) * e.radius * S}" fill="#eec970" fill-opacity=".25" stroke="#c49946" stroke-width="4"/><circle cx="${x}" cy="${y}" r="${10 + t * 25}" fill="#ffedb0"/></g>`;
       if (e.kind === 'molecular') return `<g class="molecular-effect" transform="translate(${x} ${y})" opacity="${1 - t}"><circle r="${10 + t * 32}" fill="#dfc2ed" fill-opacity=".35" stroke="#a16cab" stroke-width="3"/><path d="M-22 0h44M0-22v44m-16-16 32 32m-32 0 32-32" stroke="#f8e5ff" stroke-width="3"/></g>`;
       if (e.kind === 'push') return `<g class="push-effect" transform="translate(${x + e.ux * t * 80} ${y + e.uy * t * 80}) rotate(${Math.atan2(e.uy, e.ux) * 180 / Math.PI})" opacity="${1 - t}" fill="none" stroke="#8491bf" stroke-width="4"><path d="m-15-15 13 15-13 15m14-30 13 15-13 15"/></g>`;
@@ -121,7 +126,7 @@
         return `<g class="block-effect" data-blocked-enemy="${e.enemyId}" opacity="${1 - t}" transform="translate(${x} ${y})">
           <circle r="${5 + t * 21}" fill="none" stroke="#f6d77c" stroke-width="${3 * (1 - t)}"/>
           <path d="m0-11 3 7 8-3-5 7 5 4-8-1-3 8-3-8-8 1 5-4-5-7 8 3Z" fill="#fff4bc" stroke="#d5a34c" stroke-width="1.3" transform="scale(${1 + t * 0.7})"/>
-          ${[-150, -115, -75, -35].map(a => { const r = a * Math.PI / 180, d = 11 + t * 26; return `<path d="M${Math.cos(r) * d} ${Math.sin(r) * d}l${Math.cos(r) * 7} ${Math.sin(r) * 7}" stroke="#dbaa52" stroke-width="2.5" stroke-linecap="round"/>`; }).join('')}
+          ${[-150, -115, -75, -35].map(a => { const r = a * Math.PI / 180 * (e.vy > 0 ? -1 : 1), d = 11 + t * 26; return `<path d="M${Math.cos(r) * d} ${Math.sin(r) * d}l${Math.cos(r) * 7} ${Math.sin(r) * 7}" stroke="#dbaa52" stroke-width="2.5" stroke-linecap="round"/>`; }).join('')}
           <path d="M${bx - e.vx * 12} ${by - e.vy * 12}L${bx} ${by}" stroke="${color}" stroke-width="3" stroke-linecap="round" opacity=".55"/>
           <circle class="ricochet" cx="${bx}" cy="${by}" r="${e.shotKind === 'frost' ? 5 : 4}" fill="${color}" stroke="#fff8db" stroke-width="1.5"/>
         </g>`;
