@@ -34,11 +34,15 @@
     return `<ellipse cy="22" rx="24" ry="7" fill="#354a3418"/><path d="M-17 7h34l-4 19h-26Z" fill="#d9c6a2"/><path d="M-18 6h36v7h-36Z" fill="#e9d9b9"/><path d="M0 7V-6" stroke="${dark}" stroke-width="6" stroke-linecap="round"/><path d="M-2 6q-19 3-17-12Q-4-8-2 6M2 10Q20 9 18-4 5-4 2 10" fill="#759765"/><g transform="translate(0 -8) rotate(${angle}) scale(${flash > 0 ? 1.06 : 1})">${head}</g>`;
   }
   function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false) {
-    const color = kind === 'shield' ? '#d3a15d' : kind === 'swift' ? '#cfad62' : '#c48769';
-    const dark = kind === 'shield' ? '#85633c' : kind === 'swift' ? '#97773c' : '#8c5843';
+    const color = window.Garden?.ENEMIES[kind]?.color || '#c48769';
+    const dark = { shield: '#85633c', shield_down: '#426f62', hopper: '#546d36', mother: '#865b77', flyer: '#447387', splitter: '#4e7953', giant: '#625240', bomber: '#883f33', swift: '#97773c' }[kind] || '#8c5843';
+    const [rx, ry] = { bug: [18, 14], mother: [32, 24], giant: [35, 27], swift: [19, 14], flyer: [20, 15], hopper: [24, 17] }[kind] || [25, 19];
+    const head = -rx + 2;
     const wiggle = Math.sin(time * 14) * 3;
-    const legs = [-13, 0, 13].map((x, i) => `<path d="m${x}-10 ${i % 2 ? -5 : 5}-${12 + wiggle}m${x} ${22 + wiggle} ${i % 2 ? 5 : -5} ${12 - wiggle}" fill="none" stroke="${dark}" stroke-width="3" stroke-linecap="round"/>`).join('');
-    const shield = kind === 'shield' ? `<g class="hard-shell">
+    const legLength = kind === 'swift' ? 26 : kind === 'giant' ? 22 : 12;
+    const legs = [-13, 0, 13].map((x, i) => `<path d="M${x}-8l${i % 2 ? -8 : 8}-${legLength + wiggle}m${i % 2 ? 8 : -8} ${legLength + wiggle + 16}l${i % 2 ? 8 : -8} ${legLength - wiggle}" fill="none" stroke="${dark}" stroke-width="${kind === 'giant' ? 4.5 : 3}" stroke-linecap="round"/>`).join('');
+    const wings = kind === 'flyer' ? `<g class="bug-wings" fill="#edf9f5" fill-opacity=".85" stroke="#88bdc9" stroke-width="1.5"><ellipse cx="3" cy="-19" rx="26" ry="10" transform="rotate(${-24 + Math.sin(time * 30) * 14})"/><ellipse cx="3" cy="19" rx="26" ry="10" transform="rotate(${24 - Math.sin(time * 30) * 14})"/></g>` : '';
+    const shield = ['shield', 'shield_down'].includes(kind) ? `<g class="hard-shell ${kind === 'shield_down' ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${kind === 'shield_down' ? -1 : 1})">
       <path d="m-30-8 6-15 15-9H9l16 10 6 15-6 8h-49Z" fill="#293846" stroke="#253240" stroke-width="2.5" stroke-linejoin="round"/>
       <path d="m-29-10 6-13 14-9H9l15 10 6 12-9 6h-42Z" fill="${shieldFlash > 0 ? '#c7e2ef' : '#536c7c'}"/>
       <path d="m-23-23 14-9-4 23-16-1Z" fill="#7792a0"/><path d="m9-32 15 10 6 12-16 1Z" fill="#3c5263"/>
@@ -48,7 +52,15 @@
       <g fill="#d8e1df" stroke="#344957" stroke-width="1"><circle cx="-21" cy="-12" r="2.4"/><circle cx="0" cy="-11" r="2.4"/><circle cx="21" cy="-12" r="2.4"/></g>
       ${shieldFlash > 0 ? '<path d="m-33-8 7-18 17-10H10l18 12 7 16" fill="none" stroke="#fff0a9" stroke-width="3" stroke-linejoin="round"/>' : ''}
     </g>` : '';
-    return `<ellipse cy="19" rx="27" ry="7" fill="#354a3419"/>${legs}<ellipse rx="25" ry="19" fill="${flash > 0 ? '#fff6da' : color}" stroke="${dark}" stroke-width="1.5"/><path d="M7-15v30" stroke="${dark}" stroke-width="1.5" opacity=".35"/><path d="m-23-10-7-8m7 27-7 8" stroke="${dark}" stroke-width="2" stroke-linecap="round"/><circle cx="-23" cy="-7" r="5" fill="#fffaf1"/><circle cx="-23" cy="7" r="5" fill="#fffaf1"/><circle cx="-25" cy="-7" r="2.2" fill="#283d37"/><circle cx="-25" cy="7" r="2.2" fill="#283d37"/>${shield}${slow ? '<circle r="31" fill="none" stroke="#8ccde0" stroke-width="2" stroke-dasharray="3 5"/>' : ''}${hp !== null ? `<text x="3" y="9" text-anchor="middle" font-size="28" font-weight="800" fill="${flash > 0 ? dark : '#fffdf4'}" stroke="${dark}" stroke-width=".7" paint-order="stroke">${hp}</text>` : ''}`;
+    const details = {
+      hopper: `<g class="spring-legs" fill="none" stroke="#587536" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="m10-9 21-13-9 21M10 9l21 13-9-21"/><path d="m24-22 9-5m-9 49 9 5"/></g>`,
+      mother: '<g class="brood-eggs" fill="#f9e7ef" stroke="#9f6d8c" stroke-width="1.5"><ellipse cx="-12" cy="17" rx="7" ry="9"/><ellipse cx="3" cy="21" rx="7" ry="9"/><ellipse cx="18" cy="17" rx="7" ry="9"/></g><path d="M-10-15q12-10 26 1" fill="none" stroke="#eac2d4" stroke-width="4" stroke-linecap="round"/>',
+      splitter: '<g class="split-lobes" fill="#b3d6a4" stroke="#5d8a5b" stroke-width="1.5"><circle cx="-11" cy="-2" r="10"/><circle cx="11" cy="-2" r="10"/><circle cx="0" cy="12" r="10"/></g>',
+      giant: '<path d="M-13-22q5 22 0 44M4-24q6 24 0 48m17-43q4 20 0 39" fill="none" stroke="#6f5d47" stroke-width="3"/><path d="m-30-15-10-8 4 14m6 24-10 8 4-14" fill="#d5c29c" stroke="#7f6c50" stroke-width="2"/>',
+      bomber: `<g class="bomb-fuse"><path d="M9-15q13-6 14-17" fill="none" stroke="#6e4b38" stroke-width="3"/><circle cx="23" cy="-31" r="${3 + Math.sin(time * 18)}" fill="#ffe09a" stroke="#dc8a39" stroke-width="2"/></g><path d="m-12-14-5 8m30-9 5 8m-31 19 5 7m20-7-5 7" stroke="#f0c770" stroke-width="5"/>`,
+      swift: '<path d="m2-9 13 9L2 9" fill="none" stroke="#f1dba0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
+    }[kind] || '';
+    return `<ellipse cy="${kind === 'flyer' ? 32 : ry}" rx="${rx + 2}" ry="7" fill="#354a3419"/>${wings}${legs}<ellipse rx="${rx}" ry="${ry}" fill="${flash > 0 ? '#fff6da' : color}" stroke="${dark}" stroke-width="1.5"/><path d="M7-${ry - 4}v${(ry - 4) * 2}" stroke="${dark}" stroke-width="1.5" opacity=".35"/>${details}<path d="m${head}-10-7-8m7 27-7 8" stroke="${dark}" stroke-width="2" stroke-linecap="round"/><circle cx="${head}" cy="-7" r="5" fill="#fffaf1"/><circle cx="${head}" cy="7" r="5" fill="#fffaf1"/><circle cx="${head - 2}" cy="-7" r="2.2" fill="#283d37"/><circle cx="${head - 2}" cy="7" r="2.2" fill="#283d37"/>${shield}${slow ? `<ellipse rx="${rx + 6}" ry="${ry + 7}" fill="none" stroke="#8ccde0" stroke-width="2" stroke-dasharray="3 5"/>` : ''}${hp !== null ? `<text x="3" y="9" text-anchor="middle" font-size="28" font-weight="800" fill="${flash > 0 ? dark : '#fffdf4'}" stroke="${dark}" stroke-width="1.2" paint-order="stroke">${hp}</text>` : ''}`;
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-36 -36 72 72" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-36 -40 72 76" aria-hidden="true">${tower(kind)}</svg>`; }

@@ -27,6 +27,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     }
     assert.equal(await p.locator('#route-toggle, #route-layer, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
     assert.equal(await p.locator('[data-tool]').count(), 8);
+    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 10);
     for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
       await p.locator(`[data-tool="${kind}"]`).hover();
       assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
@@ -56,8 +57,21 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     const below = await p.evaluate(() => gardenDebug.getState());
     assert.equal(below.stats.blocked, 0);
     assert.ok(below.enemies.some(e => e.kind === 'shield' && e.hp < 3));
+    await p.evaluate(() => {
+      const s = Garden.createState(); s.wave = 2; Garden.build(s, 'pea', 8, 5);
+      localStorage.setItem('garden-guard-v1', JSON.stringify(Garden.snapshot(s)));
+    });
+    await p.reload(); await p.locator('#action').click();
+    await p.waitForFunction(() => {
+      if (gardenDebug.getState().stats.blocked > 0 && document.querySelector('.lower-shell')) { document.querySelector('#action').click(); return true; }
+      return false;
+    }, null, { timeout: 15000 });
+    const lowerShield = await p.evaluate(() => gardenDebug.getState());
+    assert.equal(lowerShield.stats.hits, 0);
+    assert.ok(lowerShield.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === 3));
+    await p.screenshot({ path: path.join(dist, 'browser-check/published-lower-shield.png'), fullPage: true });
     assert.deepEqual(errors, []);
-    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, browserErrors: errors };
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: 10, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
     fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally { await browser.close(); }
