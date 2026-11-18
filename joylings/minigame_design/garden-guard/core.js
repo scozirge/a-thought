@@ -20,7 +20,7 @@
   const group = (kind, hp, count) => ({ kind, hp, count });
   const LEVELS = [
     { name: '青草地', money: 22, entries: [3], rocks: [], water: [], waves: [
-      [group('bug', 3, 5)],
+      [group('shield', 3, 5)],
       [group('shield', 4, 5)],
       [group('bug', 5, 3), group('swift', 4, 4)],
       [group('shield', 7, 5), group('bug', 6, 3)]

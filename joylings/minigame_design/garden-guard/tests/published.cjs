@@ -1,0 +1,56 @@
+const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const base = process.env.GARDEN_URL || 'https://scozirge.github.io/a-thought/garden-guard/';
+const dist = path.join(__dirname, '../dist');
+const expectedHtml = fs.readFileSync(path.join(dist, 'h5/index.html'), 'utf8');
+const version = expectedHtml.match(/styles\.css\?v=([a-f0-9]+)/)[1];
+const normalize = text => text.replace(/\r\n/g, '\n');
+
+(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' });
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } }), errors = [];
+  p.on('pageerror', e => errors.push(e.message));
+  try {
+    const response = await p.goto(`${base}?v=${version}`, { waitUntil: 'networkidle', timeout: 45000 });
+    assert.equal(response.status(), 200);
+    assert.equal(normalize(await response.text()), normalize(expectedHtml));
+    const checkedFiles = ['index.html'];
+    for (const file of ['styles.css', 'core.js', 'art.js', 'app.js']) {
+      const selector = file.endsWith('.css') ? `link[href="${file}?v=${version}"]` : `script[src="${file}?v=${version}"]`;
+      assert.equal(await p.locator(selector).count(), 1, `${file} 有版本號`);
+      const asset = await p.request.get(`${base}${file}?v=${version}`);
+      assert.equal(asset.status(), 200, file);
+      assert.equal(normalize(await asset.text()), normalize(fs.readFileSync(path.join(dist, 'h5', file), 'utf8')), file);
+      checkedFiles.push(file);
+    }
+    assert.equal(await p.locator('#route-toggle, #route-layer, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
+    const fresh = await p.evaluate(() => gardenDebug.getState());
+    assert.equal(fresh.level, 0); assert.equal(fresh.wave, 0); assert.equal(fresh.phase, 'planning');
+    await p.locator('.cell-hit[data-c="8"][data-r="1"]').click();
+    await p.locator('#action').click();
+    await p.waitForFunction(() => gardenDebug.getState().stats.blocked >= 3 && document.querySelector('.ricochet'), null, { timeout: 20000 });
+    await p.evaluate(() => document.querySelector('#action').click());
+    const above = await p.evaluate(() => gardenDebug.getState());
+    assert.equal(above.stats.hits, 0);
+    assert.ok(above.enemies.length > 0 && above.enemies.every(e => e.kind === 'shield' && e.hp === 3));
+    assert.equal(await p.locator('#bug-layer .hard-shell').count(), above.enemies.length);
+    for (const e of above.enemies) assert.equal(await p.locator(`[data-enemy="${e.id}"] text`).textContent(), '3');
+    fs.mkdirSync(path.join(dist, 'browser-check'), { recursive: true });
+    await p.mouse.move(20, 20);
+    await p.screenshot({ path: path.join(dist, 'browser-check/published-shield.png'), fullPage: true });
+    await p.locator('#reset').click();
+    await p.locator('.cell-hit[data-c="8"][data-r="5"]').click();
+    await p.locator('#action').click();
+    await p.waitForFunction(() => gardenDebug.getState().stats.hits >= 1, null, { timeout: 15000 });
+    await p.evaluate(() => document.querySelector('#action').click());
+    const below = await p.evaluate(() => gardenDebug.getState());
+    assert.equal(below.stats.blocked, 0);
+    assert.ok(below.enemies.some(e => e.kind === 'shield' && e.hp < 3));
+    assert.deepEqual(errors, []);
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, browserErrors: errors };
+    fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
+    console.log(JSON.stringify(report));
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });

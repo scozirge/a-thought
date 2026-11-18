@@ -7,6 +7,7 @@
     "start": "node serve.cjs",
     "test": "node --test tests/core.test.cjs",
     "test:browser": "node tests/browser.cjs",
+    "test:published": "node tests/published.cjs",
     "build": "node build.cjs"
   }
 }

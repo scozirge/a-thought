@@ -43,6 +43,28 @@ test('池塘與固定石頭永遠不能穿過，兩個入口都有路', () => {
     }
   }
 });
+test('全新開局第一波就是盾蟲；三種上方塔都不扣血，下方塔會扣血', () => {
+  for (const kind of ['pea', 'rapid', 'frost']) {
+    for (const r of [1, 5]) {
+      // Restoring a previous first-wave save must also use the updated wave.
+      const s = G.restore(G.snapshot(G.createState()));
+      assert.equal(G.build(s, kind, 8, r).ok, true);
+      G.startWave(s);
+      assert.ok(s.queue.every(e => e.kind === 'shield' && e.hp === 3));
+      simulate(s, 8);
+      if (r === 1) {
+        assert.ok(s.stats.blocked > 0, kind);
+        assert.equal(s.stats.hits, 0);
+        assert.ok(s.enemies.length > 0);
+        assert.ok(s.enemies.every(e => e.kind === 'shield' && e.hp === 3 && e.slow === 0));
+      } else {
+        assert.ok(s.stats.hits > 0, kind);
+        assert.equal(s.stats.blocked, 0);
+      }
+    }
+  }
+});
+
 test('盾蟲抵擋上方：不扣數字、不減速；下方每次只減 1', () => {
   const s = G.createState(), e = G.spawn(s, 'shield', 4);
   e.y = 3;
