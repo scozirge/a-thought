@@ -4,6 +4,7 @@
   const $ = id => document.getElementById(id);
   const S = 64, OX = 76, OY = 40, X = c => OX + (c + 0.5) * S, Y = r => OY + (r + 0.5) * S;
   const STORAGE = 'garden-guard-v1';
+  const BATTLE_SPEED = 1.5;
   const descriptions = { pea: '射程遠 · 每次 −1', rapid: '射程短 · 發射快', frost: '命中 −1 · 小蟲變慢', wall: '' };
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
@@ -200,7 +201,7 @@
   function frame(now) {
     const elapsed = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0; lastFrame = now;
     if (state.phase === 'running') {
-      accumulator += elapsed;
+      accumulator += elapsed * BATTLE_SPEED;
       while (accumulator >= 1 / 60) { G.step(state, 1 / 60); accumulator -= 1 / 60; }
     } else accumulator = 0;
     sync(); requestAnimationFrame(frame);
