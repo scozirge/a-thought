@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f5ed">
   <meta name="description" content="安排小塔、改變路線，和小蟲一起學方向、數量與策略。">
   <title>小小守園隊</title>
-  <link rel="stylesheet" href="styles.css?v=77ae34d7734c">
+  <link rel="stylesheet" href="styles.css?v=2b481c1e2f48">
 </head>
 <body>
   <main class="app" aria-label="小小守園隊">
@@ -27,7 +27,7 @@
           <defs>
             <pattern id="grass" width="29" height="29" patternUnits="userSpaceOnUse"><path d="m7 18 2-4 2 4m13-9 1-3" stroke="#597853" stroke-opacity=".07" stroke-width="1.2" fill="none"/></pattern>
           </defs>
-          <g id="ground-layer"></g><g id="range-layer" pointer-events="none"></g>
+          <g id="ground-layer"></g><g id="fire-layer" pointer-events="none"></g><g id="range-layer" pointer-events="none"></g>
           <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
           <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
@@ -46,6 +46,7 @@
     </div>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
   </main>
+  <div id="tower-info" class="tower-info" role="tooltip" hidden></div>
 
   <dialog id="result" aria-labelledby="result-title">
     <div class="result-illustration" id="result-art"></div>
@@ -54,6 +55,6 @@
     <button id="result-primary" class="action-button">下一園</button>
     <button id="result-secondary" class="secondary-button">再玩一次</button>
   </dialog>
-  <script src="core.js?v=77ae34d7734c"></script><script src="art.js?v=77ae34d7734c"></script><script src="app.js?v=77ae34d7734c"></script>
+  <script src="core.js?v=2b481c1e2f48"></script><script src="art.js?v=2b481c1e2f48"></script><script src="app.js?v=2b481c1e2f48"></script>
 </body>
 </html>

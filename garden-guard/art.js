@@ -20,13 +20,17 @@
   function icon(name, cls = '') { return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`; }
   function tower(kind, angle = -90, flash = 0) {
     if (kind === 'wall') return '<ellipse cy="19" rx="24" ry="8" fill="#354a3418"/><path d="m-24-9 10-11h29l11 11v29h-50Z" fill="#c8b799"/><path d="m-24-9 10-11h29l11 11Z" fill="#e3d8bf"/><path d="M-24 3H26M-6-9V3M9 3v17" stroke="#9e8d75" stroke-width="2.2"/><path d="m-22 20 2-7 5 3 5-3 3 7" fill="#7c9566"/><path d="M11-15h8" stroke="#f4ecd9" stroke-width="3" stroke-linecap="round"/>';
-    const color = kind === 'pea' ? '#578961' : kind === 'rapid' ? '#d4a448' : '#78a9b7';
-    const dark = kind === 'pea' ? '#346247' : kind === 'rapid' ? '#987139' : '#527f94';
-    const head = kind === 'rapid'
-      ? '<path d="M0-21 6-15l9-3 1 9 8 4-6 7 2 9-10 1-5 8-7-6-9 2-2-9-8-5 6-7-1-8 10-1Z" fill="#e6c46d"/><circle r="13" fill="#a87c38"/><circle cx="15" cy="-6" r="7" fill="#e7b64e"/><circle cx="15" cy="7" r="7" fill="#e7b64e"/><ellipse cx="18" cy="-6" rx="3" ry="4" fill="#765326"/><ellipse cx="18" cy="7" rx="3" ry="4" fill="#765326"/>'
-      : kind === 'frost'
-        ? '<path d="m0-24 8 10 12-1-4 12 6 10-12 3-6 11-8-10-12 1 4-12-6-10 12-3Z" fill="#b1d6dd" stroke="#77a8b4" stroke-width="1.5"/><circle r="11" fill="#719fac"/><path d="M0-7v14m-6-10 12 6m-12 0 12-6" stroke="#ecfcff" stroke-width="2.5" stroke-linecap="round"/>'
-        : `<path d="M-12 12C-28 8-24-10-16-17c9-8 24-4 29 6l7 1v18l-10 1C4 17-4 18-12 12" fill="${color}"/><ellipse cx="19" cy="-1" rx="6" ry="10" fill="${dark}"/><ellipse cx="19" cy="-2" rx="3" ry="5" fill="#233f31"/><path d="M-15-11q7-7 15-3" fill="none" stroke="#9fbf82" stroke-width="4" stroke-linecap="round"/>`;
+    const dark = { pea: '#346247', cannon: '#6d604d', frost: '#527f94', flame: '#9c5235', pierce: '#346e68', push: '#555e88', molecular: '#744c83' }[kind];
+    const heads = {
+      pea: '<path d="M-12 12C-28 8-24-10-16-17c9-8 24-4 29 6l7 1v18l-10 1C4 17-4 18-12 12" fill="#578961"/><ellipse cx="19" cy="-1" rx="6" ry="10" fill="#346247"/><ellipse cx="19" cy="-2" rx="3" ry="5" fill="#233f31"/><path d="M-15-11q7-7 15-3" fill="none" stroke="#9fbf82" stroke-width="4" stroke-linecap="round"/>',
+      cannon: '<circle cx="-8" r="18" fill="#b8a27d" stroke="#786b57" stroke-width="2"/><path d="m-6-12 30-4v32l-30-4Z" fill="#777b72" stroke="#4e584e" stroke-width="2"/><path d="M-2-9 24-12v6L-2-3Z" fill="#b6beb0"/><ellipse cx="24" rx="5" ry="16" fill="#444f46"/><ellipse cx="25" rx="2.5" ry="10" fill="#26392f"/><circle cx="-10" cy="12" r="8" fill="#b68a43" stroke="#f0d390" stroke-width="2"/>',
+      frost: '<path d="m0-24 8 10 12-1-4 12 6 10-12 3-6 11-8-10-12 1 4-12-6-10 12-3Z" fill="#b1d6dd" stroke="#77a8b4" stroke-width="1.5"/><circle r="11" fill="#719fac"/><path d="M0-7v14m-6-10 12 6m-12 0 12-6" stroke="#ecfcff" stroke-width="2.5" stroke-linecap="round"/>',
+      flame: '<rect x="-22" y="-16" width="24" height="32" rx="8" fill="#ca7444" stroke="#925533" stroke-width="2"/><path d="M-18-8h16m-16 16h16" stroke="#f1ba75" stroke-width="4"/><path d="M-2-8h18l7 8-7 8H-2Z" fill="#8e7460"/><path d="M16 0c9-13 7-10 14-14-2 9 7 12 1 21-6 6-12 0-15-7Z" fill="#eea449"/><path d="m21 0 8-6c-3 5 2 7-2 10Z" fill="#fff1b0"/>',
+      pierce: '<path d="M-9-24Q15-19 20 0 15 19-9 24l6-10 11-14-11-14Z" fill="#59978b" stroke="#376e64" stroke-width="2"/><path d="M-7-22 9 0-7 22" fill="none" stroke="#dfdfb4" stroke-width="2"/><path d="M-23-4H18v8h-41Z" fill="#81b8aa"/><path d="m15-8 17 8-17 8 3-8Z" fill="#e1eee5" stroke="#4f8278" stroke-width="1.5"/>',
+      push: '<path d="m-18-12 21-3 20-11v52L3 15l-21-3Z" fill="#8994bc" stroke="#5c688e" stroke-width="2"/><ellipse cx="23" rx="6" ry="26" fill="#bbc7df"/><ellipse cx="24" rx="3" ry="18" fill="#63759b"/><path d="M-14-6H3m-17 12H3" stroke="#dce7f4" stroke-width="3"/><path d="M31-12q5 12 0 24" fill="none" stroke="#7d9cba" stroke-width="2"/>',
+      molecular: '<circle r="18" fill="#8c679b" stroke="#6c4d7b" stroke-width="2"/><ellipse rx="24" ry="9" fill="none" stroke="#d5b2dc" stroke-width="2" transform="rotate(55)"/><ellipse rx="24" ry="9" fill="none" stroke="#d5b2dc" stroke-width="2" transform="rotate(-55)"/><path d="M5-7h18l8 7-8 7H5Z" fill="#af86bd"/><circle cx="1" r="8" fill="#efd6f8"/><circle cx="1" r="4" fill="#fff9ff"/><circle cx="-17" cy="-15" r="3" fill="#fff0ff"/>'
+    };
+    const head = heads[kind] || heads.pea;
     return `<ellipse cy="22" rx="24" ry="7" fill="#354a3418"/><path d="M-17 7h34l-4 19h-26Z" fill="#d9c6a2"/><path d="M-18 6h36v7h-36Z" fill="#e9d9b9"/><path d="M0 7V-6" stroke="${dark}" stroke-width="6" stroke-linecap="round"/><path d="M-2 6q-19 3-17-12Q-4-8-2 6M2 10Q20 9 18-4 5-4 2 10" fill="#759765"/><g transform="translate(0 -8) rotate(${angle}) scale(${flash > 0 ? 1.06 : 1})">${head}</g>`;
   }
   function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false) {
