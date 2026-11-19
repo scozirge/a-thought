@@ -51,10 +51,12 @@ test('下盾蟲擋住七種塔的下方攻擊，從上方及同高側面攻擊�
     const s = G.createState(), e = at(s, 'shield_down', 6, 3, 60);
     assert.equal(G.hit(s, e, { kind, c: 8, r: 5 }), false);
     assert.equal(e.hp, 60); assert.equal(e.slow, 0); assert.equal(e.push, null);
-    const block = s.effects.at(-1); assert.ok(block.y > e.y && block.vy > 0);
+    const block = s.effects.at(-1);
+    if (kind === 'frost') { assert.equal(block, undefined); assert.equal(e.shieldFlash, 0); }
+    else assert.ok(block.y > e.y && block.vy > 0);
     assert.equal(G.hit(s, e, { kind, c: 8, r: 1 }), true); assert.equal(e.hp, 60 - tool.damage);
     const point = G.impactPoint(e, { c: 8, r: 5 });
-    assert.deepEqual(point, { x: block.x, y: block.y });
+    if (block) assert.deepEqual(point, { x: block.x, y: block.y });
     assert.equal(G.shieldBlocks(e, { c: 4, r: 3 }), false);
   }
 });

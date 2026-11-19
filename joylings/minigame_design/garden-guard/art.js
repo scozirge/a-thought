@@ -17,6 +17,7 @@
     erase: '<path d="m3 13 9-10a2 2 0 0 1 3 0l6 5a2 2 0 0 1 0 3l-9 10H9l-6-5q-1.5-1.5 0-3Z" fill="#f5a491" stroke="#754d44" stroke-width="1.7"/><path d="m7 9 8 7 6-6-8-7Z" fill="#ffe0ad" stroke="#754d44" stroke-width="1.5"/><path d="M12 21h10" class="icon-line"/>',
     trophy: '<path d="M6.5 3h11v7.3a5.5 5.5 0 0 1-11 0Z" fill="#ffcf4e" stroke="#98601e" stroke-width="1.6"/><path d="M6 5H2.5v3q0 4.2 5.1 4.2M18 5h3.5v3q0 4.2-5.1 4.2M12 16v4m-4.5 1h9" fill="none" stroke="#98601e" stroke-width="2" stroke-linecap="round"/><path d="m12 5 .9 2 2.1.2-1.5 1.5.4 2.1-1.9-1-1.9 1 .4-2.1L9 7.2l2.1-.2Z" fill="#fff6ba"/>'
   };
+  const laserLensX = 27, headY = -3;
   const heads = {
     pea: `<g stroke="#294f43">
       <path d="M-17-13H-2l7 7V7l-7 7h-15l-6-6V-6Z" fill="#52896d"/>
@@ -54,7 +55,7 @@
       <path d="M-3-8h20l6 3H-4Z" fill="#a9cbc5" stroke="none"/>
       <path d="M-6-12h6v24h-6Zm10 1h5v22H4Z" fill="#7ba7a5"/>
       <path d="m16-10 8 1 6 5v8l-6 5-8 1Z" fill="#efbf80"/>
-      <ellipse cx="26" rx="5" ry="8" fill="#633747"/><ellipse cx="27" rx="2.9" ry="5.4" fill="#ff6581" stroke="none"/>
+      <ellipse cx="26" rx="5" ry="8" fill="#633747"/><ellipse cx="${laserLensX}" rx="2.9" ry="5.4" fill="#ff6581" stroke="none"/>
       <path d="m-18-5 6-3 6 4-1 8-6 3-6-5Z" fill="#ea6986" stroke="#703949"/><path d="m-16-4 5-1 3 2" fill="none" stroke="#ffe8cf"/></g>`,
     push: `<g stroke="#344d58">
       <path d="m-25-8 5-5h8v25h-8l-5-5Z" fill="#528ba0"/>
@@ -236,13 +237,15 @@
     const flare = pulse > 0 ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
     return shot(kind, x, y, Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI, t) + flare;
   }
-  function laser(angle, length, t, hitDistances = []) {
-    const start = Math.min(28, length * .7), path = `M${start} 0H${length}`;
+  function laser(angle, length, t, hitDistances, flash) {
+    const recoil = recoilOffset('pierce', flash);
+    const start = laserLensX - recoil;
+    const path = `M${start} 0H${Math.max(start, length)}`;
     const intensity = (1 - t) ** 2;
-    return `<g transform="rotate(${angle})" fill="none" stroke-linecap="round">
+    return `<g transform="translate(0 ${headY}) rotate(${angle})" fill="none" stroke-linecap="round">
       <path d="${path}" stroke="#fc597f" stroke-opacity=".3" stroke-width="${4 + 7 * intensity}"/>
       <path d="${path}" stroke="#d64262" stroke-width="${2 + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
-      <circle cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
+      <circle class="laser-origin" cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
       <g class="fx-accent" stroke="#ffe9b5" stroke-width="1.8">${hitDistances.map(d => `<g transform="translate(${d} 0)"><path d="M-2 ${-3 - 9 * t}l-2-3m4 ${17 + 18 * t} 2 3"/></g>`).join('')}</g></g>`;
   }
   function aura(radius, t) {
@@ -254,6 +257,12 @@
       <g class="fx-accent" fill="none" stroke="#b5f7ff" stroke-width="1.8">
         <circle r="${Math.max(1, front - 15 * spread)}" stroke-dasharray="${front * .46} ${front * .32}" transform="rotate(${t * 16})"/>
         ${[18,78,138,198,258,318].map(angle => ref('snowflake', `color="#ebffff" transform="rotate(${angle}) translate(${front - 4} 0) rotate(${-angle + 38 * t}) scale(${.4 + .4 * Math.sin(Math.PI * t)})"`)).join('')}</g>`;
+  }
+  function brokenHeart(t) {
+    const split = Math.min(1, t / .58), gap = 1 + 5 * split;
+    return `<g class="broken-heart" transform="translate(0 ${-8 * t})" opacity="${Math.min(1, (1 - t) * 3)}" stroke="#912b40" stroke-width="1.6" stroke-linejoin="round">
+      <g transform="translate(${-gap} 0) rotate(${-11 * split})"><path d="M0-7C-7-18-19-11-16-2c2 6 8 12 16 18l-1-8 4-5-6-4Z" fill="#f45160"/><path d="M-12-7q2-4 5-3" fill="none" stroke="#ffd8c9" stroke-width="2.2" stroke-linecap="round"/></g>
+      <g transform="translate(${gap} ${2 * split}) rotate(${11 * split})"><path d="M0-7C8-18 19-10 16-2c-2 6-8 12-16 18l-1-8 4-5-6-4Z" fill="#e93d52"/></g></g>`;
   }
   function chargeGlobe(progress) {
     const radius = 2 + 8 * progress, orbit = radius + 5;
@@ -278,29 +287,37 @@
     for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
     const whiteShield = '<filter id="art-white-shield" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>';
-    const energy = `<radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
+    const coldShell = '<filter id="art-cold-shell" color-interpolation-filters="sRGB"><feColorMatrix values=".065 .16 .025 0 .025  .15 .48 .07 0 .125  .18 .59 .08 0 .27  0 0 0 1 0"/></filter>';
+    const energy = `<radialGradient id="art-warm-soil"><stop stop-color="#fd7449" stop-opacity=".84"/><stop offset=".53" stop-color="#e64936" stop-opacity=".79"/><stop offset=".83" stop-color="#cb3f33" stop-opacity=".43"/><stop offset="1" stop-color="#bc443c" stop-opacity="0"/></radialGradient>
+      <radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
       <radialGradient id="art-fireball-core"><stop offset="0" stop-color="#ffffc3"/><stop offset=".55" stop-color="#ffda58"/><stop offset="1" stop-color="#f86f21"/></radialGradient>`;
-    return energy + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
+    return energy + coldShell + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
   }
   function icon(name, cls = '') {
     return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`;
   }
+  function recoilKick(flash) {
+    return Math.sin(Math.min(1, (1 - flash) / .24) * Math.PI / 2) * flash * flash;
+  }
+  function recoilRebound(flash) {
+    return Math.sin((1 - flash) * Math.PI * 2) * flash;
+  }
+  function recoilOffset(kind, flash) {
+    return (recoilKick(flash) + recoilRebound(flash) * .23) * recoilDistance[kind];
+  }
   function tower(kind, angle = -25, flash = 0, charge = 0) {
     if (kind === 'wall') return ref('wall');
-    // Snap into the stroke, then ease past rest as the mechanism settles.
-    const t = 1 - flash;
-    const kick = Math.sin(Math.min(1, t / .24) * Math.PI / 2) * flash * flash;
-    const rebound = Math.sin(t * Math.PI * 2) * flash;
+    const kick = recoilKick(flash);
     if (kind === 'frost') {
       return ref('plinth') + ref('tower-frost', `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
         (flash > 0 ? `<g class="fx-accent" transform="translate(0 -5)" opacity="${flash}">${ref('snowflake', 'color="#f3ffff" transform="scale(.8)"')}</g>` : '');
     }
     let style = '';
-    if (kind === 'push') style = `style="--punch-travel:${kick * 13 + rebound * 2}px;--spring-stretch:${1 + kick * .7 + rebound * .12}"`;
+    if (kind === 'push') style = `style="--punch-travel:${kick * 13 + recoilRebound(flash) * 2}px;--spring-stretch:${1 + kick * .7 + recoilRebound(flash) * .12}"`;
     if (kind === 'molecular') style = `style="--core-light:${Math.max(charge, kick)}"`;
-    const recoil = (kick + rebound * .23) * recoilDistance[kind];
+    const recoil = recoilOffset(kind, flash);
     return ref(mounts[kind] ? 'mount-' + kind : 'plinth') +
-      ref('tower-' + kind, `transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
+      ref('tower-' + kind, `transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
   }
   function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false, labelId = '', maxHp) {
     const { head, shadow } = enemyShapes[kind];
@@ -312,21 +329,22 @@
     const label = hp === null ? '' : `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
     const health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
     const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
+    const cold = slow ? 'filter="url(#art-cold-shell)"' : '';
     const shieldLayer = armored ? `<g class="hard-shell ${down ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${down ? -1 : 1})">
-      ${ref('shieldPlate')}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
+      ${ref('shieldPlate', cold)}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
     return `<g class="bug-art" transform="scale(${size})"><ellipse cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>
-      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}">
+      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g ${slow ? 'class="chilled-shell"' : ''} ${cold}>
       ${kind === 'flyer' ? `<g class="bug-wings" transform="scale(1 ${beat})">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
       <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="skewX(${stride * 5})">
         ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
       ${kind === 'giant' ? ref('horns') : ''}
       ${body}${ref('face', `transform="translate(${head} 0)"`)}
-      ${shieldLayer}</g>
+      </g>${shieldLayer}</g>
       ${flash > 0 ? `<path d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
-      ${slow ? `<ellipse rx="${shadow + 4}" ry="21" fill="#b0f3ff" fill-opacity=".12" stroke="#338fb2" stroke-width="2.2" stroke-dasharray="5 4"/>` : ''}
+      ${slow ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}
       </g>${health}`;
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
-  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, laser, aura, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
+  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
 })();

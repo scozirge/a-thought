@@ -138,14 +138,15 @@ test('分子砲讀檔與重試不保留戰鬥瞄準進度，無目標不空射',
   assert.equal(s.buildings[0].aim,null); assert.equal(s.shots.length,0);
 });
 
-test('火焰與大砲不對飛蟲開火，其餘五種塔可選中並傷害飛蟲', () => {
+test('火焰與大砲不對飛蟲開火，其餘五種塔可對飛蟲生效', () => {
   for (const kind of Object.keys(G.TOOLS).filter(k => k !== 'wall')) {
     const s = G.createState(); G.build(s, kind, 6, 4); s.phase = 'running';
     const flying = enemy(s, 'flyer', 100, 7, 3), groundOnly = ['cannon', 'flame'].includes(kind);
     assert.equal(G.canTarget(kind, flying), !groundOnly);
     advance(s, kind === 'molecular' ? 2.5 * G.BATTLE_SPEED + 0.25 : 0.5);
     assert.equal(flying.hp, groundOnly ? 100 : 100 - G.TOOLS[kind].damage);
-    assert.equal(s.stats.hits, groundOnly ? 0 : 1);
+    assert.equal(s.stats.hits, groundOnly || kind === 'frost' ? 0 : 1);
+    if (kind === 'frost') assert.ok(flying.slow > 0);
     if (groundOnly) { assert.equal(s.shots.length, 0); assert.equal(s.fires.length, 0); assert.equal(s.buildings[0].cooldown, 0); }
   }
 });
@@ -198,13 +199,13 @@ test('盾蟲從上方擋住大砲與火球，不爆炸、不點火', () => {
   }
 });
 
-test('冰凍靈氣從塔中心緩速射程內地空目標，只有主目標扣血', () => {
+test('冰凍靈氣從塔中心緩速射程內地空目標，全體維持原血量', () => {
   const s = G.createState(), center = enemy(s, 'bug', 10, 6, 3);
   const edge = enemy(s, 'bug', 10, 6, 5 - G.TOOLS.frost.range), diagonal = enemy(s, 'bug', 10, 6.6, 3.6);
   const flying = enemy(s, 'flyer', 10, 6, 2.5), hopper = enemy(s, 'hopper', 10, 5.5, 3);
   const outside = enemy(s, 'bug', 10, 6, 5 - G.TOOLS.frost.range - .01);
   G.resolveShot(s, {kind:'frost',target:center.id,c:6,r:5});
-  assert.equal(center.hp, 9); assert.equal(s.stats.hits, 1);
+  assert.equal(center.hp, 10); assert.equal(s.stats.hits, 0);
   for (const e of [center,edge,diagonal,flying,hopper]) assert.equal(e.slow, G.TOOLS.frost.slowDuration);
   for (const e of [edge,diagonal,flying,hopper,outside]) assert.equal(e.hp, 10);
   assert.equal(outside.slow, 0); assert.equal(hopper.jumped, false);
@@ -213,14 +214,13 @@ test('冰凍靈氣從塔中心緩速射程內地空目標，只有主目標扣�
   for (const e of [center,edge,diagonal,flying,hopper]) assert.equal(e.slow, 0);
 });
 
-test('冰凍範圍各自檢查盾甲方向，中心致命傷仍緩速周圍，剛分裂的小蟲不追溯受影響', () => {
+test('冰凍範圍各自檢查盾甲方向，一血分裂蟲只緩速，不會分裂或觸發命中特效', () => {
   const s = G.createState(), center = enemy(s,'splitter',1,6,3);
   const up = enemy(s,'shield',10,6.2,3), down = enemy(s,'shield_down',10,5.8,3);
   G.resolveShot(s,{kind:'frost',target:center.id,c:6,r:5});
-  assert.equal(center.dead,true); assert.equal(up.slow,G.TOOLS.frost.slowDuration); assert.equal(down.slow,0);
+  assert.equal(center.dead,false); assert.equal(center.hp,1); assert.equal(center.flash,0); assert.equal(up.slow,G.TOOLS.frost.slowDuration); assert.equal(down.slow,0);
   assert.deepEqual([up.hp,down.hp],[10,10]); assert.equal(s.stats.blocked,1);
-  const babies=s.enemies.filter(e=>e.kind==='bug'); assert.equal(babies.length,3);
-  assert.ok(babies.every(e=>e.hp===2 && e.slow===0));
+  assert.equal(s.stats.split,0); assert.deepEqual(s.effects.map(e=>e.kind),['frost']);
 });
 
 test('火焰命中後在地板燃燒三秒，每實際一秒扣一次血，火區重疊不疊傷', () => {
@@ -295,7 +295,7 @@ test('擊退只影響命中格內地空目標，相鄰格不受影響', () => {
   G.resolveShot(s,{kind:'push',target:targets[0].id,c:5,r:5});
   for (const e of targets) {assert.equal(e.hp,9);assert.ok(e.push.x>e.x);assert.ok(e.push.length<=3+1e-9);assert.ok(e.push.points.length>=2);}
   assert.equal(outside.hp,10); assert.equal(outside.push,null); assert.equal(s.stats.hits,targets.length);
-  assert.deepEqual(s.effects.filter(e=>e.kind==='push-cell').map(e=>[e.x,e.y]),[[7,3]]);
+  assert.deepEqual(s.effects, []);
 });
 
 test('擊退塔每次冷卻只攻擊一格，射程四格並優先最近目標', () => {
@@ -306,7 +306,7 @@ test('擊退塔每次冷卻只攻擊一格，射程四格並優先最近目標',
   advance(s,0.25); assert.deepEqual([a.hp,b.hp],[9,9]); assert.ok(a.push && b.push);
   assert.deepEqual([homeward.hp,farther.hp],[10,10]);
   assert.equal(s.stats.hits,2); assert.ok(s.buildings[0].cooldown>2.7);
-  assert.equal(s.effects.filter(e=>e.kind==='push-cell').length,1);
+  assert.deepEqual(s.effects, []);
   const ranged=G.createState(); G.build(ranged,'push',2,3); ranged.phase='running';
   const distant=enemy(ranged,'giant',10,5.8,3); enemy(ranged,'giant',10,6.2,3);
   G.step(ranged,1/60); assert.equal(ranged.shots[0].target,distant.id);

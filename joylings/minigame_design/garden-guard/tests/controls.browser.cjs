@@ -30,7 +30,10 @@ const out = path.join(__dirname, '../dist/browser-check');
       if(frost.effects.some(e=>e.kind==='frost') && frost.enemies.filter(e=>e.slow>0).length>=2)break;
     }
     assert.ok(frost.enemies.filter(e=>e.slow>0).length>=2);
-    assert.ok(frost.enemies.some(e=>e.slow>0 && e.hp===e.maxHp),'周圍目標只緩速');
+    assert.ok(frost.enemies.every(e=>e.hp===e.maxHp && e.flash===0),'包含主要目標在內都只緩速');
+    assert.equal(frost.stats.hits,0);
+    assert.equal(await p.locator('.chilled-shell').count(),frost.enemies.filter(e=>e.slow>0).length);
+    assert.ok(frost.effects.every(e=>e.kind==='frost'));
     assert.ok(frost.enemies.some(e=>e.slow===0),'範圍外不緩速');
     await press('#action'); assert.ok(await p.locator('.frost-area-effect').count()>0);
     assert.equal(frost.shots.length, 0);
@@ -43,17 +46,17 @@ const out = path.join(__dirname, '../dist/browser-check');
     await prepare('push'); let pushed;
     for(let i=0;i<100;i++) {
       await p.clock.runFor(100); pushed=await read();
-      if(pushed.effects.some(e=>e.kind==='push-cell') && pushed.enemies.filter(e=>e.push).length>=2)break;
+      if(pushed.enemies.filter(e=>e.push).length>=2)break;
     }
     const affected=pushed.enemies.filter(e=>e.push); assert.ok(affected.length>=2);
-    const cell=pushed.effects.find(e=>e.kind==='push-cell'); assert.ok(cell);
+    const cell={x:Math.round(affected[0].push.fromX), y:Math.round(affected[0].push.fromY)};
     for(const e of affected) {
       assert.ok(e.push.length>0 && e.push.length<=3+1e-9); assert.ok(e.push.points.length>=2);
       assert.ok(e.push.x<=11); assert.ok(Math.hypot(e.push.fromX-9,e.push.fromY-6)<=G.TOOLS.push.range);
       assert.equal(Math.round(e.push.fromX),cell.x); assert.equal(Math.round(e.push.fromY),cell.y);
     }
-    assert.ok(pushed.effects.filter(e=>e.kind==='push').every(e=>Math.abs(Math.hypot(e.ux,e.uy)-1)<1e-9));
-    await press('#action'); assert.ok(await p.locator('.push-cell-effect').count()>0); assert.ok(await p.locator('.push-effect').count()>=2);
+    await press('#action');
+    assert.equal(await p.locator('.push-cell-effect,.push-effect').count(),0);
     await p.locator('[data-tool="push"]').focus();
     assert.equal(await p.locator('#tower-info .info-effect').textContent(),'同格沿路退 3 格・最近優先');
     assert.ok((await p.locator('#tower-info').innerText()).includes('攻擊 0.35次/s'));
@@ -98,11 +101,35 @@ const out = path.join(__dirname, '../dist/browser-check');
     await press('#action');
     assert.ok(await p.locator('.laser-beam path').count() >= 3);
     assert.equal((await read()).shots.length, 0);
+    const muzzleError = () => p.evaluate(() => {
+      const head = document.querySelector('[data-building="pierce"] use[href="#art-tower-pierce"]');
+      const lens = document.querySelector('#art-tower-pierce ellipse:last-of-type');
+      const origin = document.querySelector('.laser-origin');
+      const screen = (node, x, y) => new DOMPoint(x, y).matrixTransform(node.getScreenCTM());
+      const a = screen(head, lens.cx.baseVal.value, lens.cy.baseVal.value);
+      const b = screen(origin, origin.cx.baseVal.value, origin.cy.baseVal.value);
+      return Math.hypot(a.x-b.x, a.y-b.y);
+    });
+    assert.ok(await muzzleError()<.01);
+    await press('#action'); await p.clock.runFor(64); await press('#action');
+    assert.ok(await muzzleError()<.01,'後座期間砲口與雷射仍然重合');
     const beam = await p.locator('.laser-beam').first().innerHTML();
     await p.clock.runFor(500);
     assert.equal(await p.locator('.laser-beam').first().innerHTML(), beam);
     await p.screenshot({path:path.join(out,'laser-beam.png')});
+    await p.locator('#level-select').selectOption('1');
+    await p.locator('#level-select').selectOption('0');
+    await press('#action');
+    for (let i=0; i<170 && !await p.locator('.broken-heart').count(); i++) await p.clock.runFor(100);
+    await press('#action');
+    const heart = await p.locator('.broken-heart').first().boundingBox();
+    const house = await p.locator('#ground-layer use[href="#art-cabin"]').boundingBox();
+    assert.ok(heart && house && (await read()).hearts < 5);
+    assert.ok(Math.abs(heart.x + heart.width/2 - house.x - house.width/2) < house.width/8);
+    assert.ok(heart.y + heart.height/2 < house.y,'碎心出現在屋頂上方');
+    assert.equal(await p.locator('.broken-heart').first().locator(':scope > g').count(),2);
+    await p.screenshot({path:path.join(out,'house-broken-heart.png')});
     assert.deepEqual(errors,[]);
-    console.log(JSON.stringify({passed:true,frostArea:true,secondarySlowOnly:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2.5,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
+    console.log(JSON.stringify({passed:true,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2.5,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

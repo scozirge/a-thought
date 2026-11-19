@@ -45,7 +45,7 @@ test('十關共用固定地形，所有右側入口都有路；尋路不穿越�
     }
   }
 });
-test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方塔會扣血', () => {
+test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方依塔種扣血或緩速', () => {
   for (const kind of Object.keys(G.TOOLS).filter(kind => kind !== 'wall')) {
     for (const r of [0, 7]) {
       // Restoring a previous first-wave save must also use the updated wave.
@@ -60,26 +60,29 @@ test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方�
         assert.ok(s.enemies.length > 0);
         assert.ok(s.enemies.every(e => e.kind === 'shield' && e.hp === e.maxHp && e.slow === 0));
       } else {
-        assert.ok(s.stats.hits > 0, kind);
+        if (kind === 'frost') {
+          assert.equal(s.stats.hits, 0); assert.ok(s.enemies.some(e => e.slow > 0));
+          assert.ok(s.enemies.every(e => e.hp === e.maxHp));
+        } else assert.ok(s.stats.hits > 0, kind);
         assert.equal(s.stats.blocked, 0);
       }
     }
   }
 });
 
-test('盾蟲抵擋上方：不扣數字、不減速；下方每次只減 1', () => {
+test('盾蟲抵擋上方：不扣數字、不減速；下方冰凍緩速、一般彈減 1', () => {
   const s = G.createState(), e = G.spawn(s, 'shield', 4);
   e.y = 3;
   assert.equal(G.hit(s, e, { c: 8, r: 1, kind: 'frost' }), false);
   assert.equal(e.hp, 4); assert.equal(e.slow, 0); assert.equal(s.stats.blocked, 1);
   assert.equal(G.hit(s, e, { c: 8, r: 5, kind: 'frost' }), true);
-  assert.equal(e.hp, 3); assert.ok(e.slow > 0);
-  assert.equal(G.hit(s, e, { c: 8, r: 5, kind: 'pea' }), true); assert.equal(e.hp, 2);
+  assert.equal(e.hp, 4); assert.ok(e.slow > 0); assert.equal(e.flash, 0);
+  assert.equal(G.hit(s, e, { c: 8, r: 5, kind: 'pea' }), true); assert.equal(e.hp, 3);
 });
 test('上方子彈停在硬甲外緣並往上彈開，連續格擋不減數字', () => {
   const s = G.createState(), e = G.spawn(s, 'shield', 7);
   for (const c of [e.x - 2, e.x, e.x + 2]) {
-    for (const kind of ['pea', 'cannon', 'frost']) {
+    for (const kind of ['pea', 'cannon', 'flame']) {
       const source = { c, r: 1, kind }, point = G.impactPoint(e, source);
       assert.ok(point.y < e.y); assert.ok(Math.abs(point.x - e.x) <= 0.44 + 1e-9);
       G.hit(s, e, source);
@@ -99,7 +102,7 @@ test('盾固定朝畫面上方，轉彎不旋轉；同高度為側面有效攻�
   assert.equal(G.shieldBlocks(e, { c: 2, r: 4 }), false);
 });
 test('傷害 1 的砲塔逐次扣除生命，擊殺不額外產錢', () => {
-  for (const kind of ['pea', 'frost']) {
+  for (const kind of ['pea', 'pierce']) {
     const s = G.createState(), e = G.spawn(s, 'bug', 3), before = s.money;
     for (let i = 0; i < 3; i++) { G.hit(s, e, { c: 5, r: 5, kind }); assert.equal(e.hp, 2 - i); }
     assert.equal(e.dead, true); assert.equal(s.money, before);

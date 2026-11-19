@@ -26,7 +26,13 @@ const out = path.join(__dirname, '../dist/browser-check');
   try {
     await p.clock.install({time:new Date('2026-01-01T00:00:00Z')}); await p.goto(base); await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
     await p.clock.runFor(10000); assert.equal((await read()).phase,'planning'); assert.equal((await read()).money,G.LEVELS[0].money);
-    await deploy([['pea',8,0]]); await press('#action'); await p.clock.runFor(2000); await press('#action');
+    await deploy([['pea',8,0]]); await press('#action');
+    for (let i=0; i<50; i++) {
+      await p.clock.runFor(100);
+      const first=await read();
+      if (first.stats.blocked>0 && new Set(first.enemies.map(e=>e.r)).size===3) break;
+    }
+    await press('#action');
     const shield=await read(); assert.ok(shield.stats.blocked>0); assert.equal(shield.stats.hits,0); assert.ok(shield.enemies.every(e=>e.hp===e.maxHp));
     assert.equal(new Set(shield.enemies.map(e=>e.r)).size,3); assert.equal(await p.locator('#bug-layer .hard-shell').count(),shield.enemies.length);
     await prepare(G.snapshot(G.createState())); await deploy(layouts[0]); const initial=await read(); await press('#action');
@@ -85,7 +91,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.reload(); assert.equal((await read()).buildings[0].paidCost,32);
     await press('#remove'); await press(cell(3,4)); assert.equal((await read()).money,104,'新塔讀檔後仍全額退款');
     await prepare(G.snapshot(G.createState()));
-    await press('#action'); await finish(); assert.equal((await read()).phase,'lost'); await press('#result-primary'); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
+    await press('#action'); await finish(); assert.equal((await read()).phase,'lost'); await p.clock.runFor(800); assert.equal(await p.locator('#result').evaluate(el=>el.open),true); await press('#result-primary'); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({passed:true,stages:10,retainedBuildings:true,refund:true,manualNext:true,rewardOnce:true,testSelection:true,completionSaved:true,retry:true,budgetMigration:true,longerRanges:true,browserErrors:errors}));
   } finally {await browser.close();}

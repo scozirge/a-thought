@@ -438,7 +438,8 @@ export default function ClassroomHome() {
             </a>
             <div className="activity-content">
               <p className="catalog-question-context">兩人一組，一人猜蟲會走哪條路，另一人選一座塔、點草地蓋好，再按「開始」。看見整片盾牌閃白時，留意子彈從哪一邊飛來。</p>
-              <p className="catalog-question-context">下一次把塔換到路的另一側，看看蟲身上的數字有沒有變小。過關後交換工作，討論金幣要拿來蓋新塔，還是用石牆讓蟲多繞一段路。</p>
+              <p className="catalog-question-context">下一次只換一座塔。試試冰凍塔，看看變藍的蟲走多快，身上的數字有沒有變。過關後交換工作，找找雷射從哪裡射出、蟲進屋時哪裡會出現碎愛心。</p>
+              <p className="catalog-question-context"><a href={`${GARDEN_GUARD_PUBLIC_URL}field-guide.mp4`} target="_blank" rel="noopener noreferrer">看實戰影片：7 座塔和 9 種蟲（1 分 29 秒）</a></p>
             </div>
           </section>
 

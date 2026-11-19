@@ -25,6 +25,10 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       assert.equal(normalize(await asset.text()), normalize(fs.readFileSync(path.join(dist, 'h5', file), 'utf8')), file);
       checkedFiles.push(file);
     }
+    const film = await p.request.get(`${base}field-guide.mp4?v=${version}`);
+    assert.equal(film.status(), 200);
+    assert.ok((await film.body()).equals(fs.readFileSync(path.join(dist, 'h5/field-guide.mp4'))), '公開課堂影片與本次錄影相符');
+    checkedFiles.push('field-guide.mp4');
     assert.equal(await p.locator('#route-toggle, #route-layer, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
     assert.equal(await p.locator('[data-tool]').count(), 8);
     assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 9);

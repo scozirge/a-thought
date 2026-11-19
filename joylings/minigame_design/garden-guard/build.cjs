@@ -15,6 +15,7 @@ for (const file of assets) {
   if (file === 'styles.css') fs.writeFileSync(path.join(out, file), css);
   else fs.copyFileSync(path.join(__dirname, file), path.join(out, file));
 }
+fs.copyFileSync(path.join(__dirname, 'field-guide.mp4'), path.join(out, 'field-guide.mp4'));
 let standalone = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 // A new release must not mix current HTML with cached scripts or styles.
 let html = standalone;
