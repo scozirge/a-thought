@@ -336,8 +336,11 @@
     const stride = Math.sin(time * (kind === 'swift' ? 19 : 12));
     const beat = 0.79 + Math.sin(time * 28) * 0.2;
     const leg = 'feet-' + (down ? 'shield' : kind);
-    const label = hp === null ? '' : `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
-    const health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
+    let health = '';
+    if (hp !== null) {
+      const label = `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
+      health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
+    }
     const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
     let faceLayer;
     if (kind === 'giant') {

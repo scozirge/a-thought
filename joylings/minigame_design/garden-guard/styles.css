@@ -36,12 +36,17 @@ svg { display: block; }
 #reward { position: absolute; right: 0; top: 100%; z-index: 2; padding: 0 8px; border: 1px solid #cf9e46; border-radius: 8px; background: #ffe6a4; color: #6e4c1c; white-space: nowrap; font-size: 18px; font-weight: 750; }
 .board-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #88986a #e4e7c7; }
 #board { width: 100%; min-width: 736px; aspect-ratio: 920 / 592; user-select: none; -webkit-user-select: none; background: #a6c37b url("garden.webp") center / 100% 100% no-repeat; }
-.bug-hp { font-family: "Segoe UI", sans-serif; font-size: 28px; font-weight: 800; text-anchor: middle; stroke: #39463b; stroke-width: 3.4px; stroke-linejoin: round; paint-order: stroke; }
+.bug-hp { font-family: "Segoe UI", sans-serif; font-size: 23px; font-weight: 800; text-anchor: middle; stroke: #39463b; stroke-width: 2.7px; stroke-linejoin: round; paint-order: stroke; }
 .cell-hit { fill: transparent; cursor: crosshair; outline: none; }
 .cell-hit:focus-visible { fill: #ffffff30; stroke: #386d53; stroke-width: 3px; }
 .cell-hit.reserved { cursor: default; }
 .cell-hit.invalid { fill: #ed735b33; stroke: #ba523d; stroke-width: 3px; }
 .control-panel { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px; padding: 10px; border: 1px solid #c6bd9e; border-radius: 16px; background: var(--paper); box-shadow: 0 3px 0 #c9bea0, 0 5px 14px #4e50321a; }
+.display-settings { width: fit-content; max-width: 100%; margin: 6px 0 0 auto; color: #52674f; }
+.display-settings summary { width: fit-content; margin-left: auto; padding: 10px 8px; min-height: 48px; cursor: pointer; }
+.display-settings label { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 14px; border: 1px solid #c6bd9e; border-radius: 10px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.display-settings input { width: 20px; height: 20px; margin: 0; accent-color: #416e50; }
+.display-settings :focus-visible { outline: 3px solid #a96a20; outline-offset: 2px; }
 .tools { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; min-width: 0; flex: 1; }
 .tool-card { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; min-height: 88px; padding: 2px 1px 5px; border: 1.5px solid #cec5a8; border-radius: 11px; background: linear-gradient(#fffdf4,#f1ecd7); box-shadow: 0 2px 0 #d5c9a6; position: relative; }
 .tool-card:not([aria-disabled="true"]):hover { border-color: #8a9b68; background: #f4f4da; }
@@ -83,6 +88,7 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
   .app { max-width: clamp(900px, 122vh, 1060px); padding-top: 10px; }
 }
 @media (max-width: 700px) {
+  html { scroll-padding-bottom: calc(240px + env(safe-area-inset-bottom)); }
   .app { padding: 8px 8px 278px; }
   .field-panel { border-radius: 13px; }
   .hud { flex-wrap: wrap; padding: 7px 10px; gap: 5px 9px; }

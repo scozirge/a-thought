@@ -98,6 +98,18 @@ const out = path.join(__dirname, '../dist/browser-check');
     await phone.locator('[data-tool="pea"]').tap(); await phone.locator(cell(3,5)).tap(); await phone.locator(cell(3,5)).tap();
     assert.equal(await phone.locator('#tower-info strong').textContent(), '一般砲塔');
     await phone.locator('#action').tap(); await phone.locator('#action').tap(); assert.equal((await phone.evaluate(() => gardenDebug.getState())).phase, 'paused');
+    for (const [width, height] of [[390,844], [320,568]]) {
+      await phone.setViewportSize({width,height});
+      await phone.locator('.display-settings summary').tap();
+      const hpSetting = phone.getByLabel('顯示本關怪物血量');
+      const label = await phone.locator('.display-settings label').boundingBox();
+      const controls = await phone.locator('.control-panel').boundingBox();
+      assert.ok(label.y >= 0 && label.y + label.height <= controls.y, '展開後的設定應位於固定工具列上方');
+      const checked = await hpSetting.isChecked();
+      await hpSetting.tap();
+      assert.equal(await hpSetting.isChecked(), !checked);
+      await phone.locator('.display-settings summary').tap();
+    }
     await touch.close(); assert.deepEqual(errors, []);
     console.log(JSON.stringify({passed:true,tooltips:7,testSelector:10,refund:true,keyboard:true,touch:true,widths:[1440,900,390,320],zoom:'200%',browserErrors:errors}));
   } finally {await browser.close();}

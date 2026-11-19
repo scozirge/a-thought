@@ -34,6 +34,8 @@ const out = path.join(__dirname, '../dist/browser-check');
     }
     await press('#action');
     const shield=await read(); assert.ok(shield.stats.blocked>0,JSON.stringify({errors, phase:shield.phase,time:shield.time,towers:shield.buildings.map(b=>b.kind),stats:shield.stats,enemies:shield.enemies.length})); assert.equal(shield.stats.hits,0); assert.ok(shield.enemies.every(e=>e.hp===e.maxHp));
+    assert.equal(await p.locator('#health-layer use').count(), shield.enemies.length);
+    assert.equal(await p.locator('.bug-hp').first().evaluate(n => getComputedStyle(n).fontSize), '23px');
     assert.ok(shield.enemies.every(e => G.LEVELS[0].entries.includes(e.r))); assert.equal(await p.locator('#bug-layer .hard-shell').count(),shield.enemies.length);
     await prepare(G.snapshot(G.createState())); await deploy(layouts[0]); const initial=await read(); await press('#action');
     await p.clock.runFor(2500); assert.equal((await read()).phase,'running');
@@ -55,7 +57,15 @@ const out = path.join(__dirname, '../dist/browser-check');
     // Reorganise with full refunds; the first wave's buildings survive until explicitly removed.
     await press('#reset'); assert.equal((await read()).money,G.LEVELS[1].money); await deploy(layouts[1]);
     await press('#action'); await p.clock.runFor(500); assert.equal((await read()).level,1); assert.ok((await read()).enemies.length>0);
-    await finish(); assert.equal((await read()).level,2); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
+    const hpSetting = p.getByLabel('顯示本關怪物血量');
+    assert.equal(await hpSetting.isChecked(), false);
+    assert.equal(await p.locator('#health-layer use').count(), 0);
+    await p.locator('.display-settings summary').click();
+    await hpSetting.check();
+    assert.ok(await p.locator('#health-layer use').count() > 0);
+    await finish();
+    assert.equal(await hpSetting.isChecked(), false, '自然過關會回到下一關的預設');
+    assert.equal((await read()).level,2); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
     console.log('已驗證：前兩關連打、固定獎金、保留建築、部署等待、拆塔退款與重新整理。');
 
     // Ground-only towers see flying enemies in range and hold their fire.
@@ -67,9 +77,18 @@ const out = path.join(__dirname, '../dist/browser-check');
     await press('#action'); await p.clock.runFor(500);
     await p.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
     assert.equal((await read()).phase,'paused'); await p.evaluate(()=>{delete document.hidden;});
+    assert.equal(await hpSetting.isChecked(), false);
+    await p.locator('.display-settings summary').click();
+    await hpSetting.check();
+    assert.ok(await p.locator('#health-layer use').count() > 0);
     await press('#reset'); assert.equal((await read()).level,7); assert.equal((await read()).phase,'planning'); assert.equal((await read()).money,G.LEVELS[7].money);
 
-    await p.locator('#level-select').selectOption('9'); await deploy(layouts[9]); await press('#action');
+    assert.equal(await hpSetting.isChecked(), true, '重試保留本關設定');
+    await p.reload();
+    assert.equal(await hpSetting.isChecked(), true, '重新整理保留本關設定');
+    await p.locator('#level-select').selectOption('9');
+    assert.equal(await hpSetting.isChecked(), false, '直接選到終關採用關卡預設');
+    await deploy(layouts[9]); await press('#action');
     await p.clock.runFor(7000); await p.screenshot({path:path.join(out,'campaign-final-battle.png')}); await finish();
     assert.equal((await read()).phase,'won'); assert.ok((await read()).hearts>0); assert.equal((await read()).completed,true);
     assert.equal(await p.locator('#result-title').textContent(),'十關完成！');

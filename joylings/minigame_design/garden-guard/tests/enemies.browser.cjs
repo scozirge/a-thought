@@ -49,6 +49,10 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok(wounded);
     assert.equal(wounded.maxHp, 8);
     const sprite = p.locator(`[data-enemy="${wounded.id}"]`);
+    assert.equal(await p.locator('#health-layer use').count(), 0);
+    await p.getByText('顯示設定', { exact: true }).click();
+    await p.getByLabel('顯示本關怪物血量').check();
+    assert.equal(await p.locator('#health-layer use').count(), above.enemies.length);
     assert.equal(await sprite.locator('.bug-hp').textContent(), String(wounded.hp));
     const scale = await sprite.locator('.bug-art').evaluate(g => g.transform.baseVal.getItem(0).matrix.a);
     assert.ok(Math.abs(scale - G.enemyArtScale(wounded.kind, wounded.maxHp)) < 1e-6);
@@ -111,7 +115,7 @@ const out = path.join(__dirname, '../dist/browser-check');
       }).join('')).join('');
       async function paint(style, content = sprites) {
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-          <defs>${GardenArt.definitions()}</defs><style>.bug-hp{font:bold 28px sans-serif;text-anchor:middle}${style}</style>${content}</svg>`;
+          <defs>${GardenArt.definitions()}</defs><style>.bug-hp{font:bold 23px sans-serif;text-anchor:middle}${style}</style>${content}</svg>`;
         const image = new Image();
         image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
         await image.decode();
