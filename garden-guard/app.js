@@ -5,12 +5,13 @@
   const S = 64, OX = 76, OY = 40, X = c => OX + (c + 0.5) * S, Y = r => OY + (r + 0.5) * S;
   const houseX = 38, houseY = Y(G.GOAL.r);
   const STORAGE = 'garden-guard-v1';
+  const UNLOCK = 'garden-guard-bonus-unlocked';
   const BATTLE_SPEED = G.BATTLE_SPEED;
   const enemyHealth = $('enemy-health');
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
   let finishAge = null, resultAfterHeart = false, frameId = null;
-  let infoAnchor = null, infoTimer = 0;
+  let infoAnchor = null, infoTimer = 0, unlockSaved = false;
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE));
     const saved = G.restore(data);
@@ -18,9 +19,11 @@
       state = saved;
       enemyHealth.checked = typeof data.showEnemyHealth === 'boolean' ? data.showEnemyHealth : state.level === 0;
     }
+    unlockSaved = localStorage.getItem(UNLOCK) === '1';
+    if (unlockSaved) state.bonusUnlocked = true;
   } catch {}
   let lastLevel = state.level;
-  $('level-select').innerHTML = G.LEVELS.map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
+  $('level-select').innerHTML = G.LEVELS.slice(0, G.BONUS_LEVEL).map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
   $('garden-art').innerHTML = A.definitions() + `<clipPath id="field-bounds"><rect x="${OX}" y="${OY}" width="${G.COLS * S}" height="${G.ROWS * S}" rx="6"/></clipPath>`;
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
   $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 枚金幣">${A.tool(kind)}<span class="tool-cost">${A.icon('coin')}${tool.cost}</span></button>`).join('');
@@ -60,7 +63,13 @@
   function save() {
     const data = state.phase === 'planning' || state.phase === 'won' ? G.snapshot(state) : state.checkpoint;
     if (!data) return;
-    try { localStorage.setItem(STORAGE, JSON.stringify({ ...data, showEnemyHealth: enemyHealth.checked })); } catch {}
+    try {
+      if (state.bonusUnlocked && !unlockSaved) {
+        localStorage.setItem(UNLOCK, '1');
+        unlockSaved = true;
+      }
+      localStorage.setItem(STORAGE, JSON.stringify({ ...data, showEnemyHealth: enemyHealth.checked }));
+    } catch {}
   }
   function feedback(text, c, r) {
     $('status').textContent = text;
@@ -147,6 +156,10 @@
       if (view.jaws) for (const jaw of view.jaws) jaw.setAttribute('transform', pose.jaw);
       if (view.hit) view.hit.setAttribute('opacity', Math.min(1, enemy.flash * 8));
       if (view.block) view.block.setAttribute('opacity', Math.min(1, enemy.shieldFlash / .12));
+    }
+    if (view.facing !== enemy.facing) {
+      view.node.style.setProperty('--bug-facing', enemy.facing + 'deg');
+      view.facing = enemy.facing;
     }
     if (view.hp !== enemy.hp) {
       view.node.dataset.hp = enemy.hp;
@@ -289,10 +302,11 @@
         <path transform="translate(${t * 9} ${t * 6}) rotate(${t * 20})" d="m-10 3 6-3 4 4 4-6 6 3C9 17-8 17-10 3Z"/></g>`;
       if (e.kind === 'split') {
         const start = G.enemyArtScale('splitter', e.maxHp);
+        const angle = e.facing * Math.PI / 180, offset = 2 * start * (1 - t);
         const plates = e.offspring.map((child, i) => {
-          const dx = (child.x - e.x) * S * t + 2 * start * (1 - t);
-          const dy = (child.y - e.y) * S * t;
-          return A.splitPlateAt(i, dx, dy, start * (1 - t));
+          const dx = (child.x - e.x) * S * t + offset * Math.cos(angle);
+          const dy = (child.y - e.y) * S * t + offset * Math.sin(angle);
+          return A.splitPlateAt(i, dx, dy, start * (1 - t), e.facing);
         });
         return `<g class="split-effect" ${at}>${plates.join('')}</g>`;
       }
@@ -335,7 +349,13 @@
     $('coins').setAttribute('aria-label', `可用金幣 ${state.money}`);
     $('health').textContent = state.hearts;
     $('hearts').setAttribute('aria-label', `小屋生命 ${state.hearts}`);
-    $('level-select').value = String(state.level);
+    const selector = $('level-select');
+    if (state.bonusUnlocked && selector.options.length === G.BONUS_LEVEL) {
+      const option = new Option('第 11 關', G.BONUS_LEVEL);
+      option.title = G.LEVELS[G.BONUS_LEVEL].name;
+      selector.add(option);
+    }
+    selector.value = String(state.level);
     document.querySelectorAll('[data-tool]').forEach(b => {
       b.classList.toggle('selected', b.dataset.tool === selected); b.setAttribute('aria-pressed', String(b.dataset.tool === selected));
       // Keep low-budget tools selectable to inspect their range.
@@ -344,7 +364,7 @@
     $('remove').disabled = state.phase !== 'planning'; $('remove').classList.toggle('active', selected === 'remove'); $('remove').setAttribute('aria-pressed', String(selected === 'remove'));
     $('undo').disabled = state.phase !== 'planning' || state.undo.length === 0;
     $('reset').setAttribute('aria-label', state.phase === 'planning' ? '清空部署，全額退款' : state.phase === 'won' ? '回到第一關' : '重試這關');
-    const label = advancing ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : state.level > 0 ? '下一關' : '開始';
+    const label = advancing ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : state.level > 0 && state.level < G.BONUS_LEVEL ? '下一關' : '開始';
     $('action').innerHTML = state.phase === 'planning' ? label : A.icon(advancing ? 'pause' : 'play');
     $('action').setAttribute('aria-label', label);
     $('action').classList.toggle('pause-state', advancing);
@@ -352,11 +372,14 @@
   function outcome() {
     resultAfterHeart = false;
     hideInfo();
-    const won = state.phase === 'won';
+    const won = state.phase === 'won', bonus = state.level === G.BONUS_LEVEL;
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
-    $('result-title').textContent = won ? '十關完成！' : '再試一次';
-    $('result-hearts').innerHTML = Array.from({ length: 5 }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
-    $('result-primary').textContent = won ? '再玩一次' : '重試這關';
+    $('result-title').textContent = won ? (bonus ? '一心守園成功！' : '十關完成！') : '再試一次';
+    const invite = $('bonus-invite');
+    invite.hidden = !(won && !bonus);
+    invite.textContent = invite.hidden ? '' : '隱藏關「一心守園」已開啟，小屋只有一顆心。';
+    $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
+    $('result-primary').textContent = won ? (bonus ? '再玩一次' : '挑戰第 11 關') : '重試這關';
     $('result-secondary').textContent = won ? '看看花園' : '回到第一關';
     if (!$('result').open) $('result').showModal();
   }
@@ -381,7 +404,7 @@
       finishAge = finished || resultAfterHeart ? 0 : null;
       lastPhase = state.phase;
       if (state.phase === 'planning' || state.phase === 'running' || state.phase === 'won') save();
-      if (finished) {
+      if (finished && state.lastReward > 0) {
         $('status').textContent = `過關，獲得 ${state.lastReward} 枚金幣${state.phase === 'planning' ? '，可以部署下一關' : ''}`;
         $('reward').textContent = `+${state.lastReward}`; $('reward').hidden = false;
         clearTimeout(rewardTimer); rewardTimer = setTimeout(() => { $('reward').hidden = true; }, 3000);
@@ -394,9 +417,13 @@
     scheduleFrame();
   }
   function loadLevel(level, replacement = null) {
+    if (level === G.BONUS_LEVEL && !state.bonusUnlocked) return;
     hideInfo();
     if ($('result').open) $('result').close();
-    state = replacement || G.createState(level); selected = 'pea'; hover = null; $('status').textContent = ''; accumulator = 0;
+    const next = replacement || G.createState(level);
+    next.bonusUnlocked ||= state.bonusUnlocked;
+    state = next; selected = 'pea'; hover = null; accumulator = 0;
+    $('status').textContent = level === G.BONUS_LEVEL ? '守住最後一顆心，別讓蟲進屋！' : '';
     clearTimeout(rewardTimer); $('reward').hidden = true;
     lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
   }
@@ -495,7 +522,7 @@
   });
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
-    else loadLevel(0);
+    else loadLevel(state.level === G.BONUS_LEVEL - 1 ? G.BONUS_LEVEL : 0);
   });
   $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else $('result').close(); });
   document.addEventListener('visibilitychange', () => {

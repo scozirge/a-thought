@@ -24,7 +24,9 @@
     // 第 9 關　把雷射架在下方缺口，貫穿折返的蟲群
     [["pea",2,1],["pea",2,2],["wall",6,2],["wall",2,4],["pea",2,6],["pea",2,7],["flame",4,0],["frost",4,1],["wall",4,2],["cannon",4,3],["pea",4,4],["pea",4,5],["pierce",4,7],["frost",7,2],["push",7,3],["push",7,4],["pea",7,5],["cannon",7,6],["pea",7,7],["pea",10,0],["wall",10,1],["push",10,2],["cannon",10,4],["wall",8,6],["pea",9,1],["pea",6,4],["wall",8,5],["flame",1,6],["flame",2,5],["cannon",6,6],["pea",3,1]],
     // 第 10 關　雷射守下方折返處，分子砲從另一側鎖定巨蟲
-    [["pea",5,4],["flame",2,3],["frost",6,2],["cannon",8,2],["frost",7,3],["wall",6,3],["pea",7,4],["pea",7,5],["pea",8,3],["pea",5,2],["pea",2,2],["molecular",7,2],["push",5,1],["wall",9,2],["wall",3,2],["wall",10,3],["wall",3,3],["cannon",5,3],["pierce",4,7],["wall",4,6],["wall",5,5],["cannon",3,1],["wall",2,1],["wall",5,6],["push",2,0],["pea",3,6],["pea",9,4],["cannon",7,0],["frost",10,0],["wall",8,0],["frost",10,7],["wall",1,3],["pea",7,6],["push",6,5],["pea",1,0],["pea",6,4],["pea",3,4],["frost",3,0]]
+    [["pea",5,4],["flame",2,3],["frost",6,2],["cannon",8,2],["frost",7,3],["wall",6,3],["pea",7,4],["pea",7,5],["pea",8,3],["pea",5,2],["pea",2,2],["molecular",7,2],["push",5,1],["wall",9,2],["wall",3,2],["wall",10,3],["wall",3,3],["cannon",5,3],["pierce",4,7],["wall",4,6],["wall",5,5],["cannon",3,1],["wall",2,1],["wall",5,6],["push",2,0],["pea",3,6],["pea",9,4],["cannon",7,0],["frost",10,0],["wall",8,0],["frost",10,7],["wall",1,3],["pea",7,6],["push",6,5],["pea",1,0],["pea",6,4],["pea",3,4],["frost",3,0]],
+    // 隱藏第 11 關　錯開牆口，讓雷射接住蟲群、擊退守住空路
+    [["pea",5,3],["push",2,4],["wall",6,5],["cannon",8,5],["frost",7,4],["wall",6,4],["pea",7,3],["pea",7,2],["cannon",9,5],["pea",2,5],["push",5,6],["frost",3,5],["frost",10,4],["frost",5,4],["pierce",4,0],["flame",5,2],["cannon",3,6],["wall",2,6],["push",4,1],["pea",2,7],["pea",3,1],["pea",9,3],["cannon",7,7],["wall",1,4],["pea",7,1],["push",6,2],["pea",1,7],["pea",6,3],["pea",3,3],["frost",3,7],["flame",10,6],["pierce",8,3],["cannon",10,5],["pea",1,6],["push",1,2],["pea",10,1],["wall",9,2],["wall",10,2]]
   ];
   function create(level) {
     if (!Number.isInteger(level) || !layouts[level]) throw new RangeError('無效關卡');

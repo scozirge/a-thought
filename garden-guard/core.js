@@ -35,9 +35,10 @@
   const health = (kind, hp) => Math.max(1, hp * ENEMY_HEALTH_MULTIPLIER - (kind === 'flyer' ? 1 : 0));
   for (const [kind, enemy] of Object.entries(ENEMIES)) enemy.hp = health(kind, enemy.hp);
   const group = (kind, hp, count) => ({ kind, hp: health(kind, hp), count });
-  // One battlefield, ten manually started waves. Test selection uses the same
+  const BONUS_LEVEL = 10;
+  // Ten campaign stages and an optional challenge. Test selection uses the same
   // total budget that a lossless campaign has earned by the start of that wave.
-  const stage = (name, entries, reward, groups) => ({ name, entries, reward, rocks: [], water: [], waves: [groups] });
+  const stage = (name, entries, reward, ...waves) => ({ name, entries, reward, rocks: [], water: [], waves });
   const LEVELS = [
     stage('攻擊方向', [3, 1, 6], 12, [group('shield', 3, 8), group('bug', 3, 16)]),
     stage('上下夾擊', [1, 3, 5], 14, [group('shield', 4, 10), group('shield_down', 4, 10), group('bug', 3, 12)]),
@@ -48,18 +49,26 @@
     stage('源源不絕', [0, 1, 3, 4, 6, 7], 24, [group('mother', 14, 3), group('splitter', 9, 9), group('flyer', 5, 12), group('hopper', 9, 10), group('shield', 8, 9), group('shield_down', 8, 9), group('swift', 7, 11), group('bug', 3, 9)]),
     stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 38, 8), group('mother', 21, 4), group('splitter', 10, 11), group('flyer', 7, 16), group('hopper', 13, 11), group('shield', 11, 8), group('shield_down', 11, 8), group('swift', 10, 12), group('bug', 4, 10)]),
     stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 36, [group('giant', 53, 11), group('mother', 27, 5), group('splitter', 12, 13), group('flyer', 9, 17), group('hopper', 16, 13), group('shield', 13, 9), group('shield_down', 13, 9), group('swift', 13, 14), group('bug', 5, 11)]),
-    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 109, 16), group('mother', 45, 7), group('splitter', 24, 15), group('flyer', 13, 20), group('hopper', 26, 14), group('shield', 22, 11), group('shield_down', 22, 11), group('swift', 22, 18), group('bug', 6, 16)])
+    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 109, 16), group('mother', 45, 7), group('splitter', 24, 15), group('flyer', 13, 20), group('hopper', 26, 14), group('shield', 22, 11), group('shield_down', 22, 11), group('swift', 22, 18), group('bug', 6, 16)]),
+    stage('一心守園', [3, 1, 6, 0, 7, 2, 5, 4], 0,
+      [group('swift', 17, 12), group('mother', 43, 5), group('flyer', 13, 12), group('shield_down', 22, 12)],
+      [group('giant', 109, 12), group('flyer', 13, 12), group('splitter', 24, 14), group('hopper', 25, 12)],
+      [group('shield', 22, 12), group('giant', 109, 6), group('swift', 22, 12), group('mother', 40, 4), group('bug', 7, 18)])
   ];
   const largestSpawnHp = Math.max(...LEVELS.flatMap(level => level.waves.flat().map(g => g.hp)));
   const PREVIOUS_BUDGETS = [42, 52, 64, 76, 90, 104, 120, 136, 154, 182];
   const GENEROUS_BUDGETS = [60, 75, 93, 111, 132, 153, 177, 201, 228, 270];
-  const SPAWN_GAPS = [.50, .39, .36, .34, .32, .31, .30, .28, .25, .22];
+  const SPAWN_GAPS = [.50, .39, .36, .34, .32, .31, .30, .28, .25, .22, .20];
   let budget = 48;
   for (const [i, level] of LEVELS.entries()) {
+    level.hearts = i === BONUS_LEVEL ? 1 : 5;
     level.money = budget; budget += level.reward;
     level.spawnInterval = BATTLE_SPEED * SPAWN_GAPS[i];
     level.edgeEntries = i < 7 ? [] : i === 7 ? [{ c: 8, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
       : i === 8 ? [{ c: 7, r: 0, side: 'top' }, { c: 8, r: 7, side: 'bottom' }]
+      : i === BONUS_LEVEL ? [{ c: 5, r: 0, side: 'top' }, { c: 6, r: 7, side: 'bottom' },
+          { c: 7, r: 0, side: 'top' }, { c: 8, r: 7, side: 'bottom' },
+          { c: 9, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
       : [5, 9].flatMap(c => [{ c, r: 0, side: 'top' }, { c, r: 7, side: 'bottom' }]);
   }
   const key = (c, r) => `${c},${r}`;
@@ -127,7 +136,7 @@
   function createState(level = 0) {
     level = Number.isInteger(level) && LEVELS[level] ? level : 0;
     return {
-      level, wave: 0, phase: 'planning', money: LEVELS[level].money, hearts: 5, completed: false, lastReward: 0,
+      level, wave: 0, phase: 'planning', money: LEVELS[level].money, hearts: LEVELS[level].hearts, bonusUnlocked: level === BONUS_LEVEL, completed: false, lastReward: 0,
       buildings: [], enemies: [], shots: [], effects: [], fires: [], queue: [], spawnClock: 0,
       time: 0, revision: 0, nextId: 1, rngState: stageSeed(level), undo: [], checkpoint: null,
       stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0 }
@@ -171,15 +180,16 @@
     return true;
   }
   function snapshot(state) {
-    return { version: 10, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
+    return { version: 11, bonusUnlocked: state.bonusUnlocked, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
       buildings: clone(state.buildings), stats: clone(state.stats) };
   }
   function restore(data) {
-    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (data.level === BONUS_LEVEL && (data.version < 11 || data.bonusUnlocked !== true)) return null;
     if (data.version < 6 && data.level > 2) return null;
     if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= (data.version < 6 ? 4 : 1)) return null;
-    if (data.version >= 6 && (typeof data.completed !== 'boolean' || (data.completed && data.level !== LEVELS.length - 1))) return null;
-    if (!Number.isInteger(data.money) || data.money < 0 || data.money > 1000 || !Number.isInteger(data.hearts) || data.hearts < 1 || data.hearts > 5) return null;
+    if (data.version >= 6 && (typeof data.completed !== 'boolean' || (data.completed && data.level < BONUS_LEVEL - 1))) return null;
+    if (!Number.isInteger(data.money) || data.money < 0 || data.money > 1000 || !Number.isInteger(data.hearts) || data.hearts < 1 || data.hearts > LEVELS[data.level].hearts) return null;
     if (!Array.isArray(data.buildings) || data.buildings.length > COLS * ROWS) return null;
     const state = createState(data.level), used = new Set(), solid = terrain(data.level);
     for (const saved of data.buildings) {
@@ -196,7 +206,8 @@
     }
     // A loaded deployment starts with a full home, including older saves.
     // Completed campaigns keep their final health for the result screen.
-    state.money = data.money; state.hearts = data.version >= 6 && data.completed ? data.hearts : 5;
+    state.money = data.money; state.hearts = data.version >= 6 && data.completed ? data.hearts : LEVELS[data.level].hearts;
+    state.bonusUnlocked = (data.version >= 11 && data.bonusUnlocked === true) || (data.version >= 6 && data.completed === true);
     // Preserve old boards and funds; old sub-batches now restart as one stage.
     if (data.version < 5) state.money = Math.min(1000, state.money + [60, 80, 100][state.level] - [22, 25, 28][state.level]);
     // Normalize earlier economies, then apply the lower budget exactly once.
@@ -222,7 +233,7 @@
       const groups = LEVELS[state.level].waves[wave];
       // Late waves send small mixed squads through the same rotating entrances.
       const largestGroup = Math.max(...groups.map(g => g.count));
-      const packSize = state.level === 9 ? 3 : state.level === 8 ? 6 : largestGroup;
+      const packSize = state.level === BONUS_LEVEL ? 2 : state.level === 9 ? 3 : state.level === 8 ? 6 : largestGroup;
       for (let offset = 0; offset < largestGroup; offset += packSize) {
         for (const g of groups) {
           const end = Math.min(g.count, offset + packSize);
@@ -245,7 +256,7 @@
   }
   function spawn(state, kind, hp = ENEMIES[kind].hp, row = 3, position = null) {
     const x = position?.x ?? COLS - 1, y = position?.y ?? row, c = Math.round(x), r = Math.round(y);
-    const enemy = { id: state.nextId++, kind, hp, maxHp: hp, x, y,
+    const enemy = { id: state.nextId++, kind, hp, maxHp: hp, x, y, facing: 0,
       c, r, next: Math.hypot(x - c, y - r) > 1e-9 ? { c, r } : null, slow: 0, flash: 0, shieldFlash: 0, burnCooldown: 0,
       push: null, leap: null, jumped: false, broodClock: BATTLE_SPEED * 3, bornAt: state.time, attackClock: 0.65, attackId: null, dead: false };
     state.enemies.push(enemy);
@@ -345,7 +356,7 @@
     enemy.dead = true; state.stats.defeated++;
     if (enemy.kind === 'splitter') {
       state.stats.split++;
-      effect(state, 'split', enemy.x, enemy.y, { maxHp: enemy.maxHp, offspring: hatch(state, enemy, 3) });
+      effect(state, 'split', enemy.x, enemy.y, { maxHp: enemy.maxHp, facing: enemy.facing, offspring: hatch(state, enemy, 3) });
     } else effect(state, 'pop', enemy.x, enemy.y);
   }
   function jumpLanding(state, enemy) {
@@ -517,9 +528,17 @@
     if (enemy.leap) return Math.sin(Math.PI * Math.min(1, enemy.leap.age / enemy.leap.duration)) * 50;
     return enemy.kind === 'flyer' ? 12 + Math.sin(time * 8 + enemy.id) * 2 : 0;
   }
+  function faceTravel(enemy, dx, dy) {
+    // The unrotated artwork faces left. Keep the last angle while stationary.
+    if (dy === 0) {
+      if (dx !== 0) enemy.facing = dx < 0 ? 0 : 180;
+    } else if (dx === 0) enemy.facing = dy < 0 ? 90 : -90;
+    else enemy.facing = Math.round(Math.atan2(-dy, -dx) * 180 / Math.PI);
+  }
   function moveEnemy(state, enemy, dt) {
     if (enemy.leap) {
       const p = enemy.leap; p.age += dt; const t = Math.min(1, p.age / p.duration);
+      faceTravel(enemy, p.x - p.fromX, p.y - p.fromY);
       enemy.x = p.fromX + (p.x - p.fromX) * t; enemy.y = p.fromY + (p.y - p.fromY) * t;
       if (t >= 1) { enemy.x = enemy.c = p.x; enemy.y = enemy.r = p.y; enemy.next = null; enemy.leap = null; }
       return;
@@ -532,7 +551,10 @@
         const a = p.points[i - 1], b = p.points[i], length = Math.hypot(b.x - a.x, b.y - a.y);
         const progress = Math.min(1, remaining / length);
         enemy.x = a.x + (b.x - a.x) * progress; enemy.y = a.y + (b.y - a.y) * progress;
-        if (remaining <= length) break;
+        if (remaining <= length || i === p.points.length - 1) {
+          faceTravel(enemy, b.x - a.x, b.y - a.y);
+          break;
+        }
         remaining -= length;
       }
       if (t >= 1) {
@@ -543,6 +565,7 @@
     }
     if (enemy.kind === 'flyer') {
       const dx = GOAL.c - enemy.x, dy = GOAL.r - enemy.y, distance = Math.hypot(dx, dy);
+      faceTravel(enemy, dx, dy);
       const travel = ENEMIES.flyer.speed * (enemy.slow > 0 ? 0.48 : 1) * dt;
       if (distance <= travel) {
         enemy.x = GOAL.c; enemy.y = GOAL.r; enemy.dead = true; state.hearts = Math.max(0, state.hearts - 1); effect(state, 'home', enemy.x, enemy.y);
@@ -558,6 +581,7 @@
       if (plan.path.length < 2) return;
       const next = plan.path[1], obstacle = at(state, next.c, next.r);
       if (obstacle) {
+        faceTravel(enemy, next.c - enemy.x, next.r - enemy.y);
         if (enemy.attackId !== obstacle.id) { enemy.attackId = obstacle.id; enemy.attackClock = 0.65; }
         enemy.attackClock -= dt;
         if (enemy.attackClock <= 0) {
@@ -574,6 +598,7 @@
     }
     const speed = ENEMIES[enemy.kind].speed * (enemy.slow > 0 ? 0.48 : 1);
     const dx = enemy.next.c - enemy.x, dy = enemy.next.r - enemy.y, dist = Math.hypot(dx, dy);
+    faceTravel(enemy, dx, dy);
     const step = speed * dt;
     if (dist <= step) {
       enemy.x = enemy.c = enemy.next.c; enemy.y = enemy.r = enemy.next.r; enemy.next = null;
@@ -583,10 +608,9 @@
     const tool = TOOLS[tower.kind], rangeSquared = tool.range * tool.range;
     let best = null, bestPriority = Infinity, bestHome = Infinity;
     for (const enemy of state.enemies) {
-      if (!canTarget(tower.kind, enemy)) continue;
       const dx = enemy.x - tower.c, dy = enemy.y - tower.r;
       const distanceSquared = dx * dx + dy * dy;
-      if (distanceSquared > rangeSquared) continue;
+      if (distanceSquared > rangeSquared || !canTarget(tower.kind, enemy)) continue;
       if (enemy.id === tower.aim?.target) return enemy;
       const priority = tool.priority === 'highestHp' ? -enemy.hp
         : tool.priority === 'nearest' ? distanceSquared : 0;
@@ -609,7 +633,9 @@
       spawn(state, item.kind, item.hp, item.row, item.position);
       state.spawnClock += LEVELS[state.level].spawnInterval;
     }
-    for (const enemy of [...state.enemies]) {
+    // New hatchlings begin moving next tick. Capture the count without copying the swarm.
+    for (let i = 0, count = state.enemies.length; i < count; i++) {
+      const enemy = state.enemies[i];
       if (enemy.dead) continue;
       enemy.slow = Math.max(0, enemy.slow - dt); enemy.flash = Math.max(0, enemy.flash - dt); enemy.shieldFlash = Math.max(0, enemy.shieldFlash - dt);
       moveEnemy(state, enemy, dt);
@@ -659,7 +685,7 @@
     }
     state.shots = state.shots.filter(s => s.age < s.duration);
     updateFires(state, dt);
-    state.enemies = state.enemies.filter(e => !e.dead);
+    if (state.enemies.some(e => e.dead)) state.enemies = state.enemies.filter(e => !e.dead);
     for (const e of state.effects) e.life -= dt;
     state.effects = state.effects.filter(e => e.life > 0);
     if (!state.queue.length && !state.enemies.length && !state.shots.length) {
@@ -667,13 +693,13 @@
       state.money += state.lastReward;
       state.undo = []; state.checkpoint = null; state.revision++;
       for (const b of state.buildings) b.aim = null;
-      if (state.level === LEVELS.length - 1) { state.completed = true; state.phase = 'won'; }
+      if (state.level >= BONUS_LEVEL - 1) { state.bonusUnlocked = true; state.completed = true; state.phase = 'won'; }
       else { state.level++; state.wave = 0; state.hearts = 5; state.rngState = stageSeed(state.level); state.phase = 'planning'; clearEntrances(state); }
       // Surviving buildings and funds carry over; each new stage heals the home.
       // The last fire
       // remains visible during deployment, then clears when the player starts.
     }
   }
-  return { COLS, ROWS, BATTLE_SPEED, RECOIL_SECONDS, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
+  return { COLS, ROWS, BONUS_LEVEL, BATTLE_SPEED, RECOIL_SECONDS, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
     createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, enemyLift, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
 });

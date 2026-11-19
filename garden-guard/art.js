@@ -119,8 +119,8 @@
     <path d="M5 0q8-11 15-9" stroke="#ffdb91" stroke-width="2.6" fill="none"/>
     <path d="M8 5q11 6 16-4" stroke="#bd6050" stroke-width="1.8" fill="none"/>
     <ellipse cx="17" cy="-2" rx="3.5" ry="2.8" fill="#63414a" stroke="none" transform="rotate(-22 17 -2)"/>`;
-  function splitPlateAt(index, x = 0, y = 0, scale = 1) {
-    return `<use href="#art-splitPlate" transform="translate(${x} ${y}) rotate(${index * 120}) scale(${scale})"/>`;
+  function splitPlateAt(index, x = 0, y = 0, scale = 1, facing = 0) {
+    return `<use href="#art-splitPlate" transform="translate(${x} ${y}) rotate(${facing + index * 120}) scale(${scale})"/>`;
   }
   // One forewing and one jaw are mirrored around the beetle's midline.
   const stagElytron = `<path d="M-1-1Q-3-8 0-15C9-20 28-16 35-8Q39-4 38-1Z" fill="#985231" stroke="#382c28"/>
@@ -359,12 +359,12 @@
     const shieldLayer = armored ? `<g class="hard-shell ${down ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${down ? -1 : 1})">
       ${ref('shieldPlate', cold)}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
     return `<g class="bug-art" transform="scale(${size})"><ellipse cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>
-      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g ${slow ? 'class="chilled-shell"' : ''} ${cold}>
+      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g class="bug-facing${slow ? ' chilled-shell' : ''}" ${cold}>
       ${kind === 'flyer' ? `<g class="bug-wings" transform="${pose.wings}">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
       <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="${pose.legs}">
         ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
-      ${body}${faceLayer}
-      </g>${shieldLayer}</g>
+      ${body}${armored ? '' : faceLayer}
+      </g>${shieldLayer}${armored ? `<g class="bug-facing" ${cold}>${faceLayer}</g>` : ''}</g>
       ${flash > 0 ? `<path class="hit-flash" d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
       ${slow ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}
       </g>${health}`;
