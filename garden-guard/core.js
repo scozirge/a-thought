@@ -582,6 +582,25 @@
       enemy.x = enemy.c = enemy.next.c; enemy.y = enemy.r = enemy.next.r; enemy.next = null;
     } else { enemy.x += dx / dist * step; enemy.y += dy / dist * step; }
   }
+  function chooseTarget(state, tower) {
+    const tool = TOOLS[tower.kind], rangeSquared = tool.range * tool.range;
+    let best = null, bestPriority = Infinity, bestHome = Infinity;
+    for (const enemy of state.enemies) {
+      if (!canTarget(tower.kind, enemy)) continue;
+      const dx = enemy.x - tower.c, dy = enemy.y - tower.r;
+      const distanceSquared = dx * dx + dy * dy;
+      if (distanceSquared > rangeSquared) continue;
+      if (enemy.id === tower.aim?.target) return enemy;
+      const priority = tool.priority === 'highestHp' ? -enemy.hp
+        : tool.priority === 'nearest' ? distanceSquared : 0;
+      const home = enemy.x + Math.abs(enemy.y - GOAL.r);
+      if (priority < bestPriority || (priority === bestPriority &&
+          (home < bestHome || (home === bestHome && enemy.id < best.id)))) {
+        best = enemy; bestPriority = priority; bestHome = home;
+      }
+    }
+    return best;
+  }
   function step(state, dt) {
     if (!isAdvancing(state) || !Number.isFinite(dt) || dt <= 0) return;
     dt = Math.min(dt, 0.05);
@@ -603,7 +622,10 @@
       }
       if (state.hearts === 0) { state.phase = 'lost'; break; }
     }
-    if (state.phase === 'lost') return;
+    if (state.phase === 'lost') {
+      state.enemies = state.enemies.filter(e => !e.dead);
+      return;
+    }
     for (const b of state.buildings) {
       b.flash = Math.max(0, b.flash - dt / RECOIL_SECONDS);
       if (b.kind === 'wall') continue;
@@ -611,17 +633,13 @@
       // Acquire the next target only after this tower's previous projectile has
       // resolved, so the priority sees the HP remaining after its own damage.
       if (tool.aimSeconds && state.shots.some(s => s.tower === b.id)) continue;
-      const inRange = state.enemies.filter(e => canTarget(b.kind, e) && Math.hypot(e.x - b.c, e.y - b.r) <= tool.range);
-      inRange.sort((a, z) => (tool.priority === 'highestHp' ? z.hp - a.hp : tool.priority === 'nearest' ? Math.hypot(a.x - b.c, a.y - b.r) - Math.hypot(z.x - b.c, z.y - b.r) : 0) ||
-        (a.x + Math.abs(a.y - GOAL.r)) - (z.x + Math.abs(z.y - GOAL.r)) || a.id - z.id);
-      let target = inRange[0];
+      const target = chooseTarget(state, b);
       if (tool.aimSeconds) {
-        // Keep tracking the same enemy. Losing it restarts the full aim time;
-        // a newly arrived high-HP enemy cannot steal an existing lock.
-        const locked = inRange.find(e => e.id === b.aim?.target);
-        if (locked) target = locked;
-        else b.aim = target ? { target: target.id, age: 0 } : null;
-        if (b.aim) b.aim.age += dt;
+        if (!target) b.aim = null;
+        else {
+          if (b.aim?.target !== target.id) b.aim = { target: target.id, age: 0 };
+          b.aim.age += dt;
+        }
       }
       if (!target) { b.cooldown = Math.max(0, b.cooldown); continue; }
       b.angle = Math.atan2(target.y - b.r, target.x - b.c) * 180 / Math.PI;
