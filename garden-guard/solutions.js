@@ -5,26 +5,26 @@
   'use strict';
   // The UI and campaign tests share these verified, normally priced layouts.
   const layouts = [
-    // 第 1 關　路旁兩座一般砲塔
-    [["pea",5,4],["pea",8,4]],
-    // 第 2 關　沿用教學塔，再從上下兩側補大砲
-    [["pea",5,4],["pea",8,4],["cannon",1,1],["cannon",3,5]],
-    // 第 3 關　留出牆縫，讓地面蟲走進砲區
-    [["wall",7,0],["wall",7,1],["wall",7,2],["wall",7,3],["wall",7,6],["cannon",6,5],["cannon",4,3]],
-    // 第 4 關　擊退與火焰守住牆後的第二線
-    [["wall",7,0],["wall",7,1],["wall",7,2],["wall",7,3],["wall",7,5],["wall",7,6],["push",5,3],["cannon",6,5],["cannon",4,3],["pea",3,4],["flame",5,5]],
-    // 第 5 關　用雷射顧空中、群攻守地面
-    [["wall",8,0],["wall",8,1],["wall",8,2],["wall",8,3],["cannon",7,5],["frost",3,5],["pea",5,6],["pierce",2,3],["frost",5,3],["pierce",4,0],["pierce",5,2]],
-    // 第 6 關　在分裂點附近留緩速和後備火力
-    [["wall",8,0],["wall",8,1],["wall",8,6],["wall",8,7],["pierce",7,2],["pea",5,5],["flame",6,5],["pea",6,3],["cannon",7,5],["pierce",2,3],["pierce",4,1],["push",2,5],["frost",7,3]],
-    // 第 7 關　從不同角度清理母蟲與幼蟲
-    [["wall",8,0],["wall",8,2],["wall",8,3],["wall",8,6],["wall",8,7],["cannon",7,5],["pierce",3,5],["pierce",4,1],["pierce",5,3],["pierce",7,1],["flame",5,2],["pea",3,4],["pierce",1,3],["frost",5,4]],
-    // 第 8 關　前後分區，控場和輸出交錯
-    [["cannon",4,5],["pea",4,3],["push",9,4],["cannon",5,1],["flame",2,2],["pea",8,6],["push",1,2],["push",5,3],["pea",2,3],["flame",8,2],["frost",3,6],["flame",1,3],["pea",10,4],["frost",3,1],["frost",3,2],["flame",6,5],["push",9,2],["pea",3,3],["push",2,0],["cannon",7,6],["push",1,0],["pea",8,7]],
-    // 第 9 關　兼顧上下入口，在中線保留穿透火力
-    [["wall",8,0],["wall",8,1],["wall",7,3],["wall",8,4],["cannon",7,5],["pierce",3,5],["pierce",3,0],["pierce",4,0],["pierce",5,4],["pierce",1,3],["pierce",2,1],["pierce",1,2],["pea",3,2],["flame",4,2],["frost",1,5],["frost",5,3],["cannon",4,6],["push",6,2],["pea",5,7],["cannon",10,2],["pea",6,5]],
-    // 第 10 關　分子砲分區鎖定，拳套與燃燒守入口
-    [["wall",8,0],["wall",8,1],["wall",8,2],["wall",8,3],["wall",7,5],["wall",8,7],["pea",1,3],["push",4,2],["frost",1,5],["frost",4,7],["pea",6,3],["cannon",7,6],["pea",4,0],["pea",5,1],["pea",5,4],["flame",2,6],["molecular",1,1],["push",2,0],["frost",3,3],["flame",3,2],["molecular",4,4],["cannon",1,0],["push",4,5],["push",6,1],["cannon",10,4],["cannon",10,5],["pea",1,6],["cannon",3,4],["pea",10,7],["frost",9,2],["flame",3,1]]
+    // 第 1 關　三路交會處設大砲，前後兩排塔接力
+    [["pea",7,4],["pea",5,2],["pea",5,5],["pea",3,4],["cannon",2,2],["pea",6,6]],
+    // 第 2 關　從不同方向壓制上下盾
+    [["cannon",7,1],["frost",7,2],["cannon",6,5],["frost",6,4],["pea",7,6],["flame",10,7],["pea",10,1],["pea",2,7]],
+    // 第 3 關　牆縫集中快蟲，在轉角接應
+    [["pea",6,0],["wall",6,2],["wall",6,3],["wall",6,4],["pea",6,5],["push",6,6],["wall",6,7],["flame",9,3],["cannon",4,2],["frost",4,1],["pea",1,6],["pea",2,1],["frost",10,7],["flame",5,0]],
+    // 第 4 關　用兩排缺口牆防跳蟲穿過第一線
+    [["push",3,0],["wall",3,1],["wall",3,2],["wall",3,3],["wall",3,4],["wall",3,5],["wall",3,6],["frost",6,1],["pea",6,2],["frost",6,3],["wall",6,4],["wall",6,5],["wall",6,6],["cannon",6,7],["cannon",2,5],["cannon",4,4],["pea",7,2],["cannon",8,2]],
+    // 第 5 關　引導地面蟲折返，另留對空火力
+    [["wall",3,0],["flame",3,1],["wall",3,2],["pea",3,3],["pea",3,4],["pea",3,5],["cannon",3,6],["pea",7,1],["cannon",7,2],["pea",7,3],["pierce",7,4],["cannon",7,5],["pea",7,6],["wall",7,7],["frost",5,0],["push",1,0]],
+    // 第 6 關　在折返處減速，讓大砲清理分裂後的幼蟲
+    [["wall",2,0],["wall",2,1],["wall",2,2],["wall",2,3],["wall",2,4],["pea",2,5],["frost",1,1],["pea",6,1],["wall",6,2],["cannon",6,3],["wall",6,4],["wall",6,5],["frost",6,6],["wall",6,7],["wall",8,0],["push",8,1],["push",8,2],["wall",8,3],["wall",8,4],["molecular",8,5],["wall",8,7],["pea",10,6],["cannon",10,4],["pea",5,4],["pea",5,1],["pea",9,5]],
+    // 第 7 關　前後交錯的牆把產卵區留在射程內
+    [["cannon",3,0],["pea",3,1],["wall",3,3],["pea",3,4],["wall",3,5],["molecular",3,7],["pea",5,1],["wall",5,2],["cannon",5,3],["pea",5,4],["wall",5,5],["pea",5,6],["wall",5,7],["pea",8,0],["flame",8,1],["wall",8,2],["push",8,3],["wall",8,4],["frost",8,5],["wall",8,7],["molecular",6,5],["wall",6,2],["push",4,7],["pea",2,2]],
+    // 第 8 關　用深淺不同的缺口接住側面來的巨蟲
+    [["wall",3,0],["frost",3,2],["pierce",3,3],["pea",3,4],["pea",3,5],["wall",3,6],["cannon",3,7],["pierce",6,0],["pea",6,1],["wall",6,2],["pea",6,3],["frost",6,4],["push",6,5],["pea",6,6],["wall",9,1],["pea",9,2],["wall",9,3],["pea",9,4],["cannon",9,5],["push",9,6],["wall",9,7],["wall",7,5],["flame",5,2],["wall",1,6],["molecular",1,2],["push",2,2]],
+    // 第 9 關　上下入口換邊後，把折返路線接回同一區
+    [["pea",2,1],["pea",2,2],["wall",6,2],["wall",2,4],["pea",2,6],["pea",2,7],["flame",4,0],["frost",4,1],["wall",4,2],["cannon",4,3],["pea",4,4],["pea",4,5],["cannon",4,7],["frost",7,2],["push",7,3],["push",7,4],["pea",7,5],["cannon",7,6],["pea",7,7],["pea",10,0],["wall",10,1],["push",10,2],["cannon",10,4],["wall",8,6],["pea",9,1],["pea",6,4],["frost",8,5],["flame",1,6],["flame",2,5],["cannon",6,6],["pea",3,1]],
+    // 第 10 關　轉折處交叉射擊，再用小屋前的火力收尾
+    [["pea",5,4],["flame",2,3],["frost",6,2],["cannon",8,2],["frost",7,3],["flame",6,3],["pea",7,4],["pea",7,5],["pea",8,3],["pea",5,2],["pea",2,2],["flame",7,2],["push",5,1],["pea",9,2],["wall",3,2],["pea",10,3],["wall",3,3],["cannon",5,3],["pea",4,7],["pea",4,6],["wall",5,5],["cannon",3,1],["wall",2,1],["wall",5,6],["push",2,0],["pea",3,6],["pea",9,4],["cannon",7,0],["frost",10,0],["wall",8,0],["frost",10,7],["cannon",1,3],["pea",7,6],["push",6,5],["pea",1,0],["pea",6,4],["pea",3,4],["frost",3,0]]
   ];
   function create(level) {
     if (!Number.isInteger(level) || !layouts[level]) throw new RangeError('無效關卡');

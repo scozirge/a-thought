@@ -39,20 +39,21 @@
   // total budget that a lossless campaign has earned by the start of that wave.
   const stage = (name, entries, reward, groups) => ({ name, entries, reward, rocks: [], water: [], waves: [groups] });
   const LEVELS = [
-    stage('攻擊方向', [3], 12, [group('shield', 3, 3), group('bug', 1, 8)]),
-    stage('上下夾擊', [1, 3, 5], 14, [group('shield', 3, 8), group('shield_down', 3, 8), group('bug', 1, 9)]),
-    stage('快速包圍', [1, 2, 3, 5, 6], 14, [group('shield', 3, 8), group('shield_down', 3, 8), group('swift', 2, 8), group('bug', 1, 8)]),
-    stage('越過防線', [1, 2, 3, 5, 6], 16, [group('hopper', 4, 9), group('shield', 4, 7), group('shield_down', 3, 7), group('swift', 3, 8), group('bug', 1, 7)]),
-    stage('空中來襲', [1, 2, 3, 5, 6], 18, [group('flyer', 4, 9), group('hopper', 4, 8), group('shield', 4, 6), group('shield_down', 4, 6), group('swift', 3, 8), group('bug', 1, 7)]),
-    stage('分裂蟲群', [0, 1, 3, 4, 6, 7], 20, [group('splitter', 5, 7), group('flyer', 5, 9), group('hopper', 4, 8), group('shield', 4, 7), group('shield_down', 4, 6), group('swift', 3, 7), group('bug', 1, 8)]),
-    stage('源源不絕', [0, 1, 3, 4, 6, 7], 24, [group('mother', 10, 2), group('splitter', 5, 7), group('flyer', 5, 10), group('hopper', 4, 8), group('shield', 5, 8), group('shield_down', 5, 7), group('swift', 4, 8), group('bug', 1, 10)]),
-    stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 28, 6), group('mother', 16, 4), group('splitter', 7, 10), group('flyer', 7, 16), group('hopper', 7, 10), group('shield', 7, 6), group('shield_down', 7, 6), group('swift', 5, 10), group('bug', 1, 8)]),
-    stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 36, [group('giant', 32, 9), group('mother', 18, 4), group('splitter', 8, 12), group('flyer', 9, 16), group('hopper', 8, 12), group('shield', 8, 8), group('shield_down', 8, 6), group('swift', 6, 10), group('bug', 1, 9)]),
-    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 49, 12), group('mother', 24, 4), group('splitter', 12, 12), group('flyer', 13, 18), group('hopper', 11, 12), group('shield', 10, 10), group('shield_down', 10, 10), group('swift', 7, 12), group('bug', 1, 10)])
+    stage('攻擊方向', [3, 1, 6], 12, [group('shield', 3, 8), group('bug', 3, 16)]),
+    stage('上下夾擊', [1, 3, 5], 14, [group('shield', 4, 10), group('shield_down', 4, 10), group('bug', 3, 12)]),
+    stage('快速包圍', [1, 2, 3, 5, 6], 14, [group('shield', 4, 9), group('shield_down', 4, 9), group('swift', 4, 11), group('bug', 3, 11)]),
+    stage('越過防線', [1, 2, 3, 5, 6], 16, [group('hopper', 6, 12), group('shield', 6, 8), group('shield_down', 5, 8), group('swift', 5, 10), group('bug', 3, 9)]),
+    stage('空中來襲', [1, 2, 3, 5, 6], 18, [group('flyer', 4, 10), group('hopper', 7, 10), group('shield', 6, 8), group('shield_down', 6, 8), group('swift', 5, 10), group('bug', 3, 9)]),
+    stage('分裂蟲群', [0, 1, 3, 4, 6, 7], 20, [group('splitter', 8, 10), group('flyer', 5, 10), group('hopper', 8, 10), group('shield', 7, 8), group('shield_down', 7, 7), group('swift', 6, 9), group('bug', 3, 9)]),
+    stage('源源不絕', [0, 1, 3, 4, 6, 7], 24, [group('mother', 14, 3), group('splitter', 9, 9), group('flyer', 5, 12), group('hopper', 9, 10), group('shield', 8, 9), group('shield_down', 8, 9), group('swift', 7, 11), group('bug', 3, 9)]),
+    stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 38, 8), group('mother', 21, 4), group('splitter', 10, 11), group('flyer', 7, 16), group('hopper', 13, 11), group('shield', 11, 8), group('shield_down', 11, 8), group('swift', 10, 12), group('bug', 4, 10)]),
+    stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 36, [group('giant', 53, 11), group('mother', 27, 5), group('splitter', 12, 13), group('flyer', 9, 17), group('hopper', 16, 13), group('shield', 13, 9), group('shield_down', 13, 9), group('swift', 13, 14), group('bug', 5, 11)]),
+    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 109, 16), group('mother', 45, 7), group('splitter', 24, 15), group('flyer', 13, 20), group('hopper', 26, 14), group('shield', 22, 11), group('shield_down', 22, 11), group('swift', 22, 18), group('bug', 6, 16)])
   ];
+  const largestSpawnHp = Math.max(...LEVELS.flatMap(level => level.waves.flat().map(g => g.hp)));
   const PREVIOUS_BUDGETS = [42, 52, 64, 76, 90, 104, 120, 136, 154, 182];
   const GENEROUS_BUDGETS = [60, 75, 93, 111, 132, 153, 177, 201, 228, 270];
-  const SPAWN_GAPS = [.70, .40, .37, .36, .34, .33, .38, .30, .28, .25];
+  const SPAWN_GAPS = [.50, .39, .36, .34, .32, .31, .30, .28, .25, .22];
   let budget = 48;
   for (const [i, level] of LEVELS.entries()) {
     level.money = budget; budget += level.reward;
@@ -258,8 +259,8 @@
   // Normalize each drawing's natural span, including legs and armor, to a
   // 48–63 unit silhouette on a 64-unit tile. Collision rules use board units.
   function enemyArtScale(kind, maxHp = ENEMIES[kind].hp) {
-    const fraction = Math.max(0, Math.min(1, (maxHp - 1) / 75));
-    return (48 + 15 * Math.sqrt(fraction)) / ENEMIES[kind].artSpan;
+    const hp = Math.max(1, Math.min(maxHp, largestSpawnHp));
+    return (48 + 15 * Math.log(hp) / Math.log(largestSpawnHp)) / ENEMIES[kind].artSpan;
   }
   function impactPoint(enemy, source) {
     if (!shieldBlocks(enemy, source)) return { x: enemy.x, y: enemy.y };
