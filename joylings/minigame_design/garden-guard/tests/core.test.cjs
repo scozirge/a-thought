@@ -53,7 +53,7 @@ test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方�
       assert.equal(G.build(s, kind, 9, r).ok, true);
       G.startWave(s);
       assert.ok(s.queue.slice(0, 3).every(e => e.kind === 'shield' && e.hp === 6));
-      s.queue = s.queue.filter(e => e.kind === 'shield');
+      s.queue = s.queue.filter(e => e.kind === 'shield' && e.row === 3);
       simulate(s, kind === 'molecular' ? 5 : 3.5);
       if (r === 2) {
         assert.ok(s.stats.blocked > 0, kind);

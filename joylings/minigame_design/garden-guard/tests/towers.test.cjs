@@ -28,13 +28,14 @@ test('所有直接與燃燒傷害都是整數，穿透塔以慢攻速維持每�
   advance(s,0.7); assert.equal(target.hp,98); assert.equal(s.stats.hits,2);
 });
 
-test('分子砲兩發擊殺第八關的五十六血巨蟲', () => {
+test('分子砲對第八關巨蟲每發扣二十八血，第三發才擊殺', () => {
   const hp=G.LEVELS[7].waves.flat().find(g=>g.kind==='giant').hp;
   const s=G.createState(7), target=enemy(s,'giant',hp,6,3);
-  assert.equal(hp,56);
+  assert.equal(hp,76);
   const shot={kind:'molecular',target:target.id,c:6,r:5};
-  G.resolveShot(s,shot); assert.equal(target.hp,28); assert.equal(target.dead,false);
-  G.resolveShot(s,shot); assert.equal(target.hp,0); assert.equal(target.dead,true); assert.equal(s.stats.hits,2);
+  G.resolveShot(s,shot); assert.equal(target.hp,48); assert.equal(target.dead,false);
+  G.resolveShot(s,shot); assert.equal(target.hp,20); assert.equal(target.dead,false);
+  G.resolveShot(s,shot); assert.equal(target.hp,0); assert.equal(target.dead,true); assert.equal(s.stats.hits,3);
 });
 
 test('雷射在開火當下貫穿同線目標，光束最長六點二格', () => {

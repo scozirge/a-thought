@@ -73,7 +73,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       return false;
     }, null, { timeout: 15000 });
     const lowerShield = await p.evaluate(() => gardenDebug.getState());
-    assert.ok(lowerShield.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === 6));
+    assert.ok(lowerShield.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === e.maxHp && e.maxHp === 8));
     await p.screenshot({ path: path.join(dist, 'browser-check/published-lower-shield.png'), fullPage: true });
     assert.deepEqual(errors, []);
     const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: 9, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };

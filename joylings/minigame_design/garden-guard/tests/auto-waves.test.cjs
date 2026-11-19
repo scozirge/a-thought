@@ -124,10 +124,14 @@ test('失敗重試回到當關部署，保留前關成果；不重領獎金也�
   assert.deepEqual(G.snapshot(retry), prepared); assert.equal(retry.hearts, 5);
 });
 
-test('教學關用路旁兩座一般砲塔就能守住，空白盤面會失敗', () => {
-  const s=G.createState(); deploy(s,[['pea',5,4],['pea',8,4]]);
-  G.startWave(s); finish(s); assert.equal(s.level,1);
-  const empty=G.createState(); G.startWave(empty); finish(empty); assert.equal(empty.phase,'lost');
+test('普通雙塔和窮舉找到的舊版冰砲組合都守不住三路開局', () => {
+  const cannon = ['cannon',1,5], frost = ['frost',1,3];
+  for (const layout of [[], [['pea',5,4],['pea',8,4]], [cannon,frost], [frost,cannon]]) {
+    const state = G.createState();
+    deploy(state,layout);
+    G.startWave(state); finish(state);
+    assert.equal(state.phase,'lost');
+  }
 });
 
 test('預算內解答能完成混合防線，少建火力會降低通關數', () => {
@@ -144,7 +148,56 @@ test('預算內解答能完成混合防線，少建火力會降低通關數', ()
   assert.ok(wins[1] > wins[0], `舊預算通關 ${wins[0]}，新預算通關 ${wins[1]}`);
 });
 
-test('最後一關也能用砲塔引導路線，全程不蓋小石牆', () => {
+test('第五至十關的解答要靠牆延長路線，把相同數量的牆移到路外會失守', () => {
+  for (let level = 4; level < G.LEVELS.length; level++) {
+    const full = G.createState(level), misplaced = G.createState(level);
+    const layout = layouts[level];
+    for (const p of layout) {
+      assert.ok(G.build(full, ...p).ok);
+      if (p[0] !== 'wall') assert.ok(G.build(misplaced, ...p).ok);
+    }
+    const short = G.previews(misplaced);
+    const long = G.previews(full);
+    assert.ok(long.every(route => !route.breaking));
+    const gain = long.reduce((total, route, i) => total + route.path.length - short[i].path.length, 0);
+    assert.ok(gain / long.length >= 4, `第 ${level+1} 關的石牆要延長地面路線`);
+    const occupiedRoutes = new Set(short.flatMap(route => route.path.map(p => G.key(p.c, p.r))));
+    let remaining = layout.filter(([kind]) => kind === 'wall').length;
+    for (let r = 0; r < G.ROWS && remaining; r++) {
+      for (let c = 1; c < G.COLS - 1 && remaining; c++) {
+        if (!occupiedRoutes.has(G.key(c,r)) && G.build(misplaced,'wall',c,r).ok) remaining--;
+      }
+    }
+    assert.equal(remaining, 0);
+    assert.equal(misplaced.money, full.money);
+    assert.deepEqual(G.previews(misplaced), short);
+    G.startWave(misplaced); finish(misplaced);
+    assert.equal(misplaced.phase, 'lost', `第 ${level+1} 關亂擺牆不應過關`);
+  }
+});
+
+test('終關打開兩格捷徑就會失守，把一座大砲換牆並補雷射能用同樣金幣過關', () => {
+  const open = G.createState(9);
+  deploy(open, layouts[9]);
+  assert.ok(G.remove(open,5,5).ok);
+  assert.ok(G.remove(open,5,6).ok);
+  G.startWave(open); finish(open);
+  assert.equal(open.phase,'lost');
+
+  const laser = G.createState(9);
+  deploy(laser, layouts[9]);
+  const remaining = laser.money;
+  assert.ok(G.remove(laser,1,3).ok);
+  assert.ok(G.build(laser,'wall',1,3).ok);
+  assert.ok(G.remove(laser,4,7).ok);
+  assert.ok(G.build(laser,'pierce',4,7).ok);
+  assert.equal(laser.money,remaining);
+  G.startWave(laser); finish(laser);
+  assert.equal(laser.phase,'won');
+  assert.equal(laser.hearts,2);
+});
+
+test('上版花完預算的無牆通關陣形守不住新版終關', () => {
   const towers = [
     ['pea',5,4], ['flame',2,3], ['molecular',9,5], ['frost',6,2], ['cannon',8,2],
     ['flame',7,3], ['flame',6,3], ['pea',7,4], ['flame',7,5], ['pea',8,3],
@@ -159,8 +212,8 @@ test('最後一關也能用砲塔引導路線，全程不蓋小石牆', () => {
   assert.equal(state.money, 0);
   G.startWave(state);
   for (let tick = 0; state.phase === 'running' && tick < 14400; tick++) G.step(state, 1 / 60);
-  assert.equal(state.phase, 'won');
-  assert.equal(state.hearts, 4);
+  assert.equal(state.phase, 'lost');
+  assert.equal(state.hearts, 0);
 });
 
 test('第九版七種砲塔及石牆照實付價格退款，新造的塔使用新版售價', () => {

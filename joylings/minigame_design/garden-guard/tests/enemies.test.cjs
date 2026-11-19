@@ -7,11 +7,11 @@ function advance(s, seconds) { for (let i = 0; i < Math.round(seconds * 60); i++
 test('九種蟲的初始生命越高體型越大，最大接近一格', () => {
   for (const [kind, spec] of Object.entries(G.ENEMIES)) {
     const span = hp => G.enemyArtScale(kind, hp) * spec.artSpan;
-    const sizes = [1, 6, 18, 40, 76].map(span);
+    const sizes = [1, 6, 18, 40, 76, 106, 218].map(span);
     assert.ok(sizes.every((size, i) => !i || size > sizes[i - 1]));
     assert.ok(Math.abs(sizes[0] - 48) < 1e-8);
-    assert.ok(Math.abs(sizes[4] - 63) < 1e-8);
-    assert.equal(span(1000), sizes[4]);
+    assert.ok(Math.abs(sizes.at(-1) - 63) < 1e-8);
+    assert.equal(span(1000), sizes.at(-1));
   }
 });
 
@@ -29,16 +29,16 @@ test('九種蟲維持整數生命，飛蟲在加倍後減一，重新讀檔不�
   assert.equal(s.enemies[0].hp, 6); assert.equal(s.enemies[0].maxHp, 6);
 });
 
-test('九種蟲分十關逐步增加，小蟲維持兩血，最後兩關以巨蟲取代爆炸蟲', () => {
+test('九種蟲分十關逐步增加，新生小蟲維持兩血，最後兩關以巨蟲取代爆炸蟲', () => {
   assert.equal(Object.keys(G.ENEMIES).length, 9); assert.equal(G.ENEMIES.bomber,undefined);
   let previous = new Set();
   G.LEVELS.forEach((level, i) => {
     const kinds = new Set(level.waves.flat().map(g => g.kind));
     assert.equal(kinds.size, [2, 3, 4, 5, 6, 7, 8, 9, 9, 9][i]);
     assert.equal(kinds.has('bomber'),false);
-    if(i>=8)assert.equal(level.waves.flat().find(g=>g.kind==='giant').count,i===8?9:12);
+    if(i>=8)assert.equal(level.waves.flat().find(g=>g.kind==='giant').count,i===8?11:16);
     for (const kind of previous) assert.ok(kinds.has(kind));
-    for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.equal(g.hp, 2); }
+    for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.ok(g.hp >= G.ENEMIES.bug.hp); }
     previous = kinds;
   });
   assert.equal(G.spawn(G.createState(), 'bug').hp, 2);
