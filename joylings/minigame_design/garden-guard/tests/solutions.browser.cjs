@@ -20,7 +20,16 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
     }
     url.searchParams.set('tip','true');
     await p.goto(url.href);await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
-    for(let level=0;level<10;level++) {
+    assert.equal(await p.locator('#level-select option').count(), 10, '教師頁也不提前公布隱藏關');
+    for(let level=0;level<G.LEVELS.length;level++) {
+      if (level === G.BONUS_LEVEL) {
+        const cleared = S.create(9);
+        G.startWave(cleared);
+        while (cleared.phase === 'running') G.step(cleared, 1 / 60);
+        assert.equal(cleared.phase, 'won');
+        await p.evaluate(data => localStorage.setItem('garden-guard-v1', JSON.stringify(data)), G.snapshot(cleared));
+        await p.reload(); await p.locator('#result-primary').click();
+      }
       await p.locator('#level-select').selectOption(String(level));
       await p.locator('[data-tool="pea"]').click();
       await p.locator('.cell-hit[data-c="2"][data-r="7"]').click();
@@ -28,7 +37,7 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
       const state=await read(),expected=S.create(level);
       assert.deepEqual(placements(state),S.layouts[level]);
       assert.equal(state.money,expected.money);assert.ok(state.money>=0);
-      assert.equal(state.phase,'planning');assert.equal(state.hearts,5);assert.equal(state.time,0);
+      assert.equal(state.phase,'planning');assert.equal(state.hearts,G.LEVELS[level].hearts);assert.equal(state.time,0);
       for(const key of ['enemies','shots','effects','fires','queue','undo'])assert.equal(state[key].length,0,key);
       assert.equal(await p.locator('#undo').isDisabled(),true);
       const entries=await p.locator('.entrance').evaluateAll(nodes=>nodes.map(n=>({c:+n.dataset.c,r:+n.dataset.r,side:n.dataset.side})));
@@ -36,7 +45,7 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
       for(const e of entries.filter(e=>e.side!=='right'))assert.ok(await p.locator(`.cell-hit[data-c="${e.c}"][data-r="${e.r}"]`).evaluate(n=>n.classList.contains('reserved')));
       // Each shipped answer is played through with the same engine and budget.
       G.startWave(expected);for(let i=0;i<12000 && expected.phase==='running';i++)G.step(expected,1/60);
-      assert.equal(expected.phase,level===9?'won':'planning',`第 ${level+1} 關解答`);
+      assert.equal(expected.phase,level>=9?'won':'planning',`第 ${level+1} 關解答`);
       report.push({level:level+1,cost:G.LEVELS[level].money-state.money,budget:G.LEVELS[level].money,passed:true});
     }
     const saved=await read();await p.reload();assert.deepEqual(placements(await read()),placements(saved));assert.equal((await read()).money,saved.money);
@@ -55,6 +64,18 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
       await p.locator('#solution').click();assert.equal((await read()).money,saved.money);
       await p.screenshot({path:path.join(__dirname,`../dist/browser-check/solution-${width}.png`),fullPage:true});
     }
+    await p.locator('#action').click();
+    for (let seconds = 0; seconds < 180 && (await read()).phase === 'running'; seconds += 5) {
+      await p.clock.runFor(5000);
+    }
+    const clearedBonus = await read();
+    assert.equal(clearedBonus.phase, 'won'); assert.equal(clearedBonus.hearts, 1);
+    assert.equal(await p.locator('#result-title').textContent(), '一心守園成功！');
+    assert.equal(await p.locator('#bonus-invite').isVisible(), false);
+    await p.reload(); assert.equal((await read()).phase, 'won');
+    await p.locator('#result-primary').click();
+    assert.equal((await read()).level, 0);
+    assert.equal(await p.locator('#level-select option').count(), 11);
     assert.deepEqual(errors,[]);console.log(JSON.stringify({passed:true,solutions:report,resetDuringBattle:true,resetDuringPause:true,manualStart:true,persisted:true,browserErrors:errors}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

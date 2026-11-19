@@ -15,6 +15,21 @@ test('九種蟲的初始生命越高體型越大，最大接近一格', () => {
   }
 });
 
+test('飛蟲與跨過石牆的跳蟲都沿實際飛行方向轉頭', () => {
+  for (const kind of ['flyer', 'hopper']) {
+    const s = G.createState(), e = at(s, kind, 7, 1);
+    s.phase = 'running';
+    if (kind === 'hopper') assert.ok(G.startLeap(s, e));
+    const x = e.x, y = e.y;
+    G.step(s, 1 / 60);
+    const dx = e.x - x, dy = e.y - y;
+    assert.ok(dx < 0 && dy > 0, '這一步沿斜線靠近小屋');
+    const angle = e.facing * Math.PI / 180;
+    const alignment = -(dx * Math.cos(angle) + dy * Math.sin(angle)) / Math.hypot(dx, dy);
+    assert.ok(alignment > .9999, kind);
+  }
+});
+
 test('九種蟲維持整數生命，飛蟲在加倍後減一，重新讀檔不會重複調整', () => {
   assert.deepEqual(Object.values(G.ENEMIES).map(e => e.hp), [2, 6, 6, 6, 20, 3, 8, 40, 4]);
   assert.ok(G.LEVELS.every(l => l.waves.flat().every(g => g.hp > 0 && g.hp % 2 === (g.kind === 'flyer' ? 1 : 0))));
@@ -34,9 +49,9 @@ test('九種蟲分十關逐步增加，新生小蟲維持兩血，最後兩關�
   let previous = new Set();
   G.LEVELS.forEach((level, i) => {
     const kinds = new Set(level.waves.flat().map(g => g.kind));
-    assert.equal(kinds.size, [2, 3, 4, 5, 6, 7, 8, 9, 9, 9][i]);
+    assert.equal(kinds.size, [2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9][i]);
     assert.equal(kinds.has('bomber'),false);
-    if(i>=8)assert.equal(level.waves.flat().find(g=>g.kind==='giant').count,i===8?11:16);
+    if (i >= 8) assert.equal(level.waves.flat().filter(g => g.kind === 'giant').reduce((n, g) => n + g.count, 0), [11, 16, 18][i - 8]);
     for (const kind of previous) assert.ok(kinds.has(kind));
     for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.ok(g.hp >= G.ENEMIES.bug.hp); }
     previous = kinds;

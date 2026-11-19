@@ -181,8 +181,11 @@ async function main() {
     firstSeed < 1
   )
     throw Error("Invalid sample range");
-  const result = [],
-    levels = G.LEVELS.map((_, i) => i);
+  const stage = process.argv[6] === undefined ? null : Number(process.argv[6]);
+  if (stage !== null && (!Number.isInteger(stage) || stage < 1 || stage > G.LEVELS.length))
+    throw Error("Invalid stage");
+  const result = [];
+  const levels = stage === null ? Array.from({ length: G.BONUS_LEVEL }, (_, i) => i) : [stage - 1];
   async function next() {
     while (levels.length) {
       const level = levels.shift();
@@ -194,7 +197,7 @@ async function main() {
           if (code) reject(Error("worker " + code));
         });
       });
-      result[level] = r;
+      result.push(r);
       const wins = Object.values(r.rows).reduce((total, row) => total + row.wins, 0);
       console.log(
         "Level",
@@ -214,7 +217,7 @@ async function main() {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(
     path.join(dir, filename),
-    JSON.stringify({ seeds, firstSeed, suite, result }, null, 2),
+    JSON.stringify({ seeds, firstSeed, suite, result: result.sort((a, b) => a.level - b.level) }, null, 2),
   );
 }
 if (require.main === module) {

@@ -6,6 +6,7 @@
   "scripts": {
     "balance": "node balance.cjs",
     "balance:campaign": "node campaign-balance.cjs 32 73001 campaign-balance.json strategies && node campaign-balance.cjs 12 81001 campaign-pairs.json pairs && node campaign-balance.cjs 32 92001 campaign-moves.json moves",
+    "balance:bonus": "node campaign-balance.cjs 16 116001 bonus-strategies.json strategies 11 && node campaign-balance.cjs 12 117001 bonus-pairs.json pairs 11 && node campaign-balance.cjs 32 118001 bonus-moves.json moves 11",
     "balance:routes": "node route-balance.cjs",
     "balance:opening": "node route-balance.cjs --all-opening",
     "start": "node serve.cjs",

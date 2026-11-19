@@ -36,6 +36,8 @@ svg { display: block; }
 #reward { position: absolute; right: 0; top: 100%; z-index: 2; padding: 0 8px; border: 1px solid #cf9e46; border-radius: 8px; background: #ffe6a4; color: #6e4c1c; white-space: nowrap; font-size: 18px; font-weight: 750; }
 .board-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #88986a #e4e7c7; }
 #board { width: 100%; min-width: 736px; aspect-ratio: 920 / 592; user-select: none; -webkit-user-select: none; background: #a6c37b url("garden.webp") center / 100% 100% no-repeat; }
+#bonus-invite { font-size: 18px; line-height: 1.5; margin: .25em 0; }
+.bug-facing { transform: rotate(var(--bug-facing, 0deg)); }
 .bug-hp { font-family: "Segoe UI", sans-serif; font-size: 23px; font-weight: 800; text-anchor: middle; stroke: #39463b; stroke-width: 2.7px; stroke-linejoin: round; paint-order: stroke; }
 .cell-hit { fill: transparent; cursor: crosshair; outline: none; }
 .cell-hit:focus-visible { fill: #ffffff30; stroke: #386d53; stroke-width: 3px; }

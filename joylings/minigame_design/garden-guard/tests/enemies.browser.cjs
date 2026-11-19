@@ -34,6 +34,30 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.goto(base);
     assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 9);
     assert.equal(await p.evaluate(() => Garden.LEVELS.every(l=>l.waves.flat().every(g=>g.kind!=='bomber'))),true);
+    for (const dy of [-1, 1]) {
+      const walls = [['wall', 9, 3]];
+      if (dy > 0) walls.push(['wall', 10, 2]);
+      await prepare(0, walls);
+      // Follow the first shield bug as it leaves the middle lane to bypass the wall.
+      await p.waitForFunction(dy => {
+        const e = gardenDebug.getState().enemies[0];
+        if (!e || e.x !== 10 || (e.y - 3) * dy < .1) return false;
+        document.querySelector('#action').click();
+        return true;
+      }, dy);
+      const sprite = p.locator('#bug-layer [data-enemy]').first();
+      const axes = await sprite.evaluate(node => {
+        const forwardY = selector => {
+          const m = node.querySelector(selector).getScreenCTM();
+          return -m.b / Math.hypot(m.a, m.b); // Forward in the artwork is local -X.
+        };
+        return [forwardY('use[href="#art-face"]'), forwardY('.bug-legs'), forwardY('.hard-shell')];
+      });
+      assert.ok(axes[0] * dy > .99 && axes[1] * dy > .99, '蟲頭與腳跟著路線轉彎');
+      assert.equal(Math.abs(axes[2]), 0, '盾牌仍指向畫面上方');
+      const label = p.locator('#health-layer use').first();
+      assert.equal(await label.evaluate(n => n.getScreenCTM().b), 0, '血量保持正立');
+    }
     await prepare(1, [['pea', 8, 7]]);
     const lower = await pauseWhen('blocked', '.lower-shell .shield-flash');
     assert.ok(lower.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === e.maxHp && e.maxHp === 8));
