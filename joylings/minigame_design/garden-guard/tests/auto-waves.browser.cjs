@@ -42,6 +42,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await p.locator('#remove').isDisabled(),false);
     await p.screenshot({path:path.join(out,'campaign-next-deployment.png')});
     await p.clock.runFor(15000); assert.deepEqual(await read(),cleared);
+    assert.equal(await p.locator('#effects-layer > *, .frost-area-effect').count(), 0, '收尾特效播完，部署仍然停在原地');
     const tower=cleared.buildings.find(b=>b.kind!=='wall'); await press('#remove'); await press(cell(tower.c,tower.r));
     assert.equal((await read()).money,cleared.money+G.TOOLS[tower.kind].cost); await press('#undo'); assert.equal((await read()).money,cleared.money);
     await p.reload(); assert.equal((await read()).level,1); assert.equal((await read()).phase,'planning'); assert.equal((await read()).money,cleared.money);

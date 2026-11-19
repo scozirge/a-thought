@@ -33,8 +33,10 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok(frost.enemies.some(e=>e.slow>0 && e.hp===e.maxHp),'周圍目標只緩速');
     assert.ok(frost.enemies.some(e=>e.slow===0),'範圍外不緩速');
     await press('#action'); assert.ok(await p.locator('.frost-area-effect').count()>0);
+    assert.equal(frost.shots.length, 0);
+    assert.ok(frost.effects.some(e => e.kind === 'frost' && e.x === 9 && e.y === 6 && e.radius === G.TOOLS.frost.range));
     await p.locator('[data-tool="frost"]').focus();
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'1 格範圍緩速');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'塔周圍 2.65 格緩速');
     await p.screenshot({path:path.join(out,'frost-area-slow.png')});
     const frozen=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),frozen);
 
@@ -91,6 +93,15 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await p.locator('#tower-info .info-target').textContent(),'目標 地');
     await p.locator('[data-tool="pierce"]').focus(); assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 1'));
     assert.ok((await p.locator('#tower-info').innerText()).includes('攻擊 0.8次/s'));
+    await prepare('pierce');
+    for (let i = 0; i < 40 && !await p.locator('.laser-beam').count(); i++) await p.clock.runFor(50);
+    await press('#action');
+    assert.ok(await p.locator('.laser-beam path').count() >= 3);
+    assert.equal((await read()).shots.length, 0);
+    const beam = await p.locator('.laser-beam').first().innerHTML();
+    await p.clock.runFor(500);
+    assert.equal(await p.locator('.laser-beam').first().innerHTML(), beam);
+    await p.screenshot({path:path.join(out,'laser-beam.png')});
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({passed:true,frostArea:true,secondarySlowOnly:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2.5,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
   } finally {await browser.close();}

@@ -18,7 +18,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.goto(base);
     assert.equal(await p.locator('#level-select option').count(), 10);
     const paths = await p.evaluate(() => {
-      const kinds = Object.keys(Garden.TOOLS).filter(kind => Garden.TOOLS[kind].rate);
+      const kinds = Object.keys(Garden.TOOLS).filter(kind => Garden.TOOLS[kind].rate && !['frost', 'pierce'].includes(kind));
       const probe = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       document.querySelector('#board').append(probe);
       const result = kinds.map(kind => {
@@ -26,20 +26,23 @@ const out = path.join(__dirname, '../dist/browser-check');
           probe.innerHTML = GardenArt.flight(kind, 100, 80, 300, 80, t, 0);
           const glyph = probe.querySelector(`use[href="#art-shot-${kind}"]`);
           const matrix = glyph?.transform.baseVal.getItem(0).matrix;
-          return { x: matrix?.e, y: matrix?.f, flare: !!probe.querySelector('.muzzle-flare'), trail: !!probe.querySelector('.shot-trail') };
+          return { x: matrix?.e, y: matrix?.f, flare: !!probe.querySelector('.muzzle-flare'), size: glyph?.getBBox().height, shadow: !!probe.querySelector('ellipse'), trail: !!probe.querySelector('.shot-trail') };
         }
         return { kind, launch: frame(.05), middle: frame(.5), impact: frame(1) };
       });
       probe.remove();
       return result;
     });
+    const size = kind => paths.find(p => p.kind === kind).middle.size;
+    assert.ok(size('cannon') > 2 * size('pea'));
+    assert.ok(size('molecular') > size('cannon'));
+    assert.equal(await p.locator('#art-shot-pierce, #art-shot-frost').count(), 0);
     for (const { kind, launch, middle, impact } of paths) {
-      assert.ok(launch.flare && middle.trail && !impact.flare, kind);
+      assert.ok(launch.flare && !middle.trail && !middle.shadow && !impact.flare, kind);
       assert.ok(middle.x > 100 && middle.x < 300, kind);
       assert.equal(impact.x, 300, kind); assert.equal(impact.y, 80, kind);
-      if (kind === 'cannon' || kind === 'flame') assert.ok(middle.y < 80, kind);
+      if (kind === 'cannon') assert.ok(middle.y < 80, kind);
       else assert.equal(middle.y, 80, kind);
-      if (kind === 'pierce') assert.equal(middle.x, 200);
     }
     assert.equal(await p.locator('#tower-info').isVisible(), false);
     assert.equal(await p.locator('#tools [aria-label*="枚金幣"] .tool-cost svg').count(), 8);

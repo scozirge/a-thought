@@ -34,26 +34,28 @@
       <ellipse cx="25.8" cy="-2" rx="3.4" ry="10.7" fill="#283d42" stroke-width="1.4"/>
       <path d="m-21 8 24 3-4 8h-21Z" fill="#a06439"/><circle cx="-12" cy="13" r="9" fill="#d79342"/><circle cx="-12" cy="13" r="3" fill="#ffe3a0"/>
       <circle cx="-23" cy="3" r="4" fill="#6a8387"/></g>`,
-    frost: `<g stroke="#276d85">
-      <path d="m-19 12-7-14 11-4 13 13 8 11-14 2Z" fill="#55b7d1"/>
-      <path d="m-11-2-6-16 9-6L5-7 4 10Z" fill="#a3ebf5"/>
-      <path d="m-16 9 9-13L23-15 31-8 14 9-4 17Z" fill="#87e3ed"/>
-      <path d="M-6 11 23-12 29-8 12 8-4 16Z" fill="#c6f9ff" stroke="none"/>
-      <path d="m-15 11 9 1L23-14M-13-15l5 12" fill="none" stroke="#f4ffff" stroke-width="2.7"/>
-      <path d="m-18 8 19 9-5 5-18-8Z" fill="#4b9bb8"/>
-      <path d="M-7-9V5m-6-11 12 7m-12 0 12-7" stroke="white" stroke-width="2.2"/></g>`,
+    frost: `<g stroke="#306a80">
+      <path d="m-22 7 6-19 17-8 18 10 6 18-13 12h-22Z" fill="#4f91a2"/>
+      <path d="m-20 5 6-15 15-7 15 8 5 14-12 10H-9Z" fill="#a9dce0"/>
+      <path d="m-18 6 3-18 11 8 2 13-9 3Zm25-9 11-11 1 18-9 6-8-5Z" fill="#7bd4eb"/>
+      <path d="m-10 0 8-22 9 8 6 14-12 11Z" fill="#8de7f3"/><path d="m-2-21 3 29 6-22Z" fill="#e1ffff" stroke="none"/>
+      <path d="m-9 14 10-3 10 3-10 5Z" fill="#5daac4"/>
+      <path d="M0-6v11m-5-8 10 5m-10 0 10-5" stroke="#f8ffff" stroke-width="2"/></g>`,
     flame: `<g stroke="#6d3c31">
       <path d="M-20-13q3-6 10-5l12 4v26l-17 4q-8 0-8-8Z" fill="#d56b45"/>
       <path d="m-19-9 16-3m-17 18 17 1" stroke="#ffcb85" stroke-width="4"/>
       <path d="M-3-10H9l5 5v12L8 11H-3Z" fill="#6b7375"/><path d="M7-10h7V9H7Z" fill="#ebb969"/>
       <path d="M15 8C8-4 20-7 20-19q5 4 4 11 7-5 10-12 5 16-2 25-7 10-17 3Z" fill="#ff793a"/>
       <path d="M18 6c-2-6 5-8 6-13l1 6 5-5q2 10-6 14-4 1-6-2Z" fill="#ffe266" stroke="none"/></g>`,
-    pierce: `<g stroke="#553f32">
-      <path d="M-16-23Q8-22 13-4v8q-5 18-29 20l9-8Q4 10 4 0q0-10-12-16Z" fill="#d79755"/>
-      <path d="m-16-22-4 22 4 23" fill="none" stroke="#725a41" stroke-width="2"/>
-      <path d="M-23-4h39v8h-39Z" fill="#91603d"/><path d="M-21 0h47" stroke="#fce5a3" stroke-width="3"/>
-      <path d="m11-7 19 7-19 7 4-7Z" fill="#83d2b3" stroke="#2f6557"/>
-      <path d="m-23-6 10 2 4 4-11-1Zm0 12 10-2 4-4-11 1Z" fill="#55a382" stroke="#2f6557"/></g>`,
+    pierce: `<g stroke="#344958">
+      <path d="m-23-10 7-7H0l10 8v17l-9 8h-18l-7-8Z" fill="#50727b"/>
+      <path d="m-21-9 7-5h12l6 4-7 4h-15Z" fill="#b5d7cb" stroke="none"/>
+      <path d="M-6-9H19l9 5v8l-9 5H-6l-5-5v-8Z" fill="#354956"/>
+      <path d="M-3-8h20l6 3H-4Z" fill="#a9cbc5" stroke="none"/>
+      <path d="M-6-12h6v24h-6Zm10 1h5v22H4Z" fill="#7ba7a5"/>
+      <path d="m16-10 8 1 6 5v8l-6 5-8 1Z" fill="#efbf80"/>
+      <ellipse cx="26" rx="5" ry="8" fill="#633747"/><ellipse cx="27" rx="2.9" ry="5.4" fill="#ff6581" stroke="none"/>
+      <path d="m-18-5 6-3 6 4-1 8-6 3-6-5Z" fill="#ea6986" stroke="#703949"/><path d="m-16-4 5-1 3 2" fill="none" stroke="#ffe8cf"/></g>`,
     push: `<g stroke="#344d58">
       <path d="m-25-8 5-5h8v25h-8l-5-5Z" fill="#528ba0"/>
       <path d="M-23-7h6v15h-6Z" fill="#a7d2d2" stroke="none"/>
@@ -191,60 +193,80 @@
     <path d="M-28 28q-11-10-7-16 8 2 10 10 1-10 6-12 4 9-2 18Zm49 4q-4-9 2-13 3 1 3 7 3-9 8-7 2 8-7 13Z" fill="#6b994f" stroke="#426744" stroke-width="1.6"/>
     <circle cx="-29" cy="18" r="3" fill="#ffc94b"/><circle cx="27" cy="21" r="2.7" fill="#f79971"/>`;
   const projectiles = {
-    pea: `<path d="M-7-3q2-5 8-4 6 1 7 7-2 6-8 6-5 0-7-5l-4 1 2-4Z" fill="#87c444" stroke="#354e33"/>
-      <path d="M-2-3q2-2 5 0" fill="none" stroke="#f3ffac" stroke-width="2.5"/>`,
-    cannon: `<circle r="9.2" fill="#354952" stroke="#29393b"/><path d="M-7-3q2-5 8-4" fill="none" stroke="#a4c2c4" stroke-width="2.9"/>
-      <path d="m-6-6-3-4-4 2" fill="none" stroke="#bc8546"/><path d="m-13-12 1 3 3 1-3 1-2 2v-3l-3-1Z" fill="#ffbe57" stroke="none"/>`,
-    frost: `<path d="m-14 0 8-6 8-2L13 0 1 7l-8-1Z" fill="#81dff1" stroke="#276b8b"/>
-      <path d="m-11 0 6-4 6-2 8 5-14 2Z" fill="#e0ffff" stroke="none"/><path d="m-5 1 6 5 9-6" fill="none" stroke="#4dabd2" stroke-width="1.4"/>`,
-    flame: `<path d="M-28-6c7 4 11 0 14-4 1 4 4 5 7 3C4-13 14-7 13 1c-1 7-9 11-17 8-5-2-6-4-13-2l4-5c-5 1-11-2-15-8Z" fill="#f46b35" stroke="#a5452d"/>
-      <path d="M-16-3q8 4 13-1C4-9 11-4 10 1 9 6 3 9-3 5q-4-4-9-3l3-2Z" fill="#ffb33e" stroke="none"/><path d="M-4 0q4 1 7-2 6-3 5 3-3 6-12-1Z" fill="#fff2a2" stroke="none"/>`,
-    pierce: `<path d="m-18-5 7 1 5 4-8 2-6-4 6 1Z" fill="#6bb79b" stroke="#365e51"/><path d="M-16 0H8" stroke="#5b4830" stroke-width="3.8"/>
-      <path d="m0-6 14 6L0 6l3-6Z" fill="#98dcb4" stroke="#34594d"/><path d="M4-3 11 0H4" stroke="none" fill="#f0ffda"/>`,
+    pea: `<circle r="3.8" fill="#a5cf43" stroke="#365131" stroke-width="1.7"/><circle cx="-1" cy="-1.2" r="1.1" fill="#f1ffb2"/>`,
+    cannon: `<circle r="12" fill="#394e58" stroke="#24343a" stroke-width="2.3"/><path d="M-8-4q3-6 9-5" fill="none" stroke="#adcbcd" stroke-width="3"/>
+      <path d="M4 8q3-1 4-4" fill="none" stroke="#607e85" stroke-width="2"/>`,
+    flame: `<path d="M-11 7c-4-7-1-13 5-16l-1-4q6 0 10 4l3-3q8 6 7 14-1 10-12 11-9 0-12-6Z" fill="#f98833" stroke="#aa4529"/>
+      <circle cx="1" cy="1" r="8.9" fill="url(#art-fireball-core)"/><path d="M-7 1q0-6 6-8m4 16q4-1 5-5" fill="none" stroke="#ffd257" stroke-width="2"/>`,
     push: `<path d="M-12-8Q-4 0-12 8M-5-11Q7 0-5 11M3-12Q17 0 3 12" fill="none" stroke="#39667b" stroke-width="4.6"/>
       <path d="M-5-9Q5 0-5 9M3-11Q14 0 3 11" fill="none" stroke="#d2faff" stroke-width="2.2"/>`,
-    molecular: `<ellipse rx="13" ry="7" fill="#70438d" stroke="#513369"/><path d="M-11 3Q-2-12 8-8q7 4-6 12-14 8-13-1Z" fill="none" stroke="#eabadf" stroke-width="2"/>
-      <path d="m0-6 2.5 4L8 0 2.5 2 0 6l-2-4-5-2 5-2Z" fill="#fff1a9" stroke="none"/><circle cx="7" cy="-8" r="2.8" fill="#a1eeed" stroke="#684778" stroke-width="1.2"/>`
+    molecular: `<circle r="17.5" fill="#b570ee" fill-opacity=".24" stroke="#a271d8" stroke-width="1.4"/>
+      <circle r="13.5" fill="url(#art-plasma-core)" stroke="#7449a5" stroke-width="1.8"/>
+      <path d="m-14 0 4-6 1 3 5-7m18 8-5 8-1-4-5 7" fill="none" stroke="#ddfaff" stroke-width="2.1"/>
+      <path d="m-6 2 5-8-1 5 7-3-6 10 1-6Z" fill="#fffbe7" stroke="none"/>`
   };
   const firePatch = `<path d="M-12 4c-4-9 4-11 3-20 5 2 7 6 6 10 5-5 8-10 7-17 6 5 7 13 5 17l5-5c2 9-1 17-7 20-7 3-15 1-19-5Z" fill="#ed6735" stroke="#a64c30" stroke-width="1.6"/>
     <path d="M-8 4c-2-5 2-8 3-12l3 5q8-8 7-13 5 7-1 15l6-4C9 8-3 13-8 4Z" fill="#ffad3d" stroke="none"/><path d="M-3 6q-2-4 2-8l2 4 4-3q2 6-3 8Z" fill="#fff1a1" stroke="none"/>`;
-  // Muzzle distance, visible trail length and ink colors in board pixels.
+  const recoilDistance = { pea: 3.8, cannon: 8, flame: 4.5, pierce: 2, push: 0, molecular: 6 };
   const flightStyles = {
-    pea:       { muzzle: 26, tail: 20, ink: '#5c8941', light: '#ebf7a6', width: 3 },
-    cannon:    { muzzle: 27, tail: 30, ink: '#8d795e', light: '#f3dec0', width: 5, arc: 23 },
-    frost:     { muzzle: 27, tail: 36, ink: '#388eac', light: '#d1fcff', width: 5 },
-    flame:     { muzzle: 28, tail: 42, ink: '#e76631', light: '#ffce5e', width: 7, arc: 8 },
-    pierce:    { muzzle: 28, tail: 48, ink: '#43836d', light: '#c8f7c5', width: 3 },
-    push:      { muzzle: 33, tail: 21, ink: '#5892ac', light: '#e5fcff', width: 4 },
-    molecular: { muzzle: 27, tail: 60, ink: '#9363bf', light: '#f1c7fa', width: 7 }
+    pea: { muzzle: 26, light: '#edf4a4' }, cannon: { muzzle: 27, light: '#ffe4a1', arc: 23 },
+    flame: { muzzle: 28, light: '#ffca55' }, push: { muzzle: 33, light: '#d9f9ff' },
+    molecular: { muzzle: 27, light: '#eac6ff' }
   };
   const launchFlare = `<path d="m0 0 3-7 3 4 9-2-4 5 6 2-10 1-2 4Z" fill="currentColor"/><path d="m2 0 4-2 4 1-6 3Z" fill="#fff8da"/>`;
   const snowflake = `<g fill="none" stroke="currentColor" stroke-width="2.5">${[0,60,120].map(a => `<path transform="rotate(${a})" d="M0-10v20m-3-17 3 3 3-3m-6 14 3-3 3 3"/>`).join('')}</g>`;
-  function shot(kind, x, y, angle) {
-    return ref('shot-' + kind, `class="${kind === 'pierce' ? 'piercing-shot' : 'shot-' + kind}" transform="translate(${x} ${y}) rotate(${angle})"`);
+  function shot(kind, x, y, angle, t = 0) {
+    const swell = Math.sin(Math.PI * t);
+    let pose = '';
+    if (kind === 'cannon') pose = `rotate(${t * 95})`;
+    if (kind === 'flame') pose = `rotate(${t * 120}) scale(${1 + .13 * swell} ${1 - .05 * swell})`;
+    if (kind === 'molecular') pose = `rotate(${t * 160}) scale(${.87 + .21 * swell})`;
+    if (kind === 'push') pose = `scale(${1 - .22 * swell} ${.75 + .6 * t})`;
+    return ref('shot-' + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
   }
-  function flight(kind, cx, cy, tx, ty, progress, launchAngle) {
-    const style = flightStyles[kind], dx = tx - cx, dy = ty - cy;
-    const range = Math.hypot(dx, dy), muzzle = Math.min(style.muzzle, range * .55);
+  function flight(kind, cx, cy, tx, ty, t, launchAngle) {
+    const style = flightStyles[kind];
+    const muzzle = Math.min(style.muzzle, Math.hypot(tx - cx, ty - cy) * .55);
     const angle = launchAngle * Math.PI / 180;
     const sx = cx + Math.cos(angle) * muzzle, sy = cy + Math.sin(angle) * muzzle;
-    const vx = tx - sx, vy = ty - sy, distance = Math.hypot(vx, vy);
-    const pierces = kind === 'pierce';
-    // A piercing arrow's tip stays at its simulated collision position.
-    const t = pierces ? Math.max(0, (progress * range - muzzle) / (distance || 1)) : progress;
-    const arc = Math.min(style.arc || 0, distance * .22);
+    const vx = tx - sx, vy = ty - sy;
+    const arc = Math.min(style.arc || 0, Math.hypot(vx, vy) * .22);
     const x = sx + vx * t, y = sy + vy * t - 4 * arc * t * (1 - t);
-    const back = Math.max(0, t - style.tail / (distance || 1));
-    const bx = sx + vx * back, by = sy + vy * back - 4 * arc * back * (1 - back);
-    const path = `M${bx} ${by}Q${(bx + x) / 2} ${(by + y) / 2 - 2 * arc * (t - back) ** 2} ${x} ${y}`;
-    const pulse = Math.max(0, 1 - (pierces ? progress * range / 48 : progress * 2.5));
+    const pulse = Math.max(0, 1 - t * 2.5);
     const flare = pulse > 0 ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
-    if (pierces && progress * range < muzzle) return flare;
-    const shadow = kind === 'cannon' ? `<ellipse cx="${x}" cy="${sy + vy * t + 6}" rx="6" ry="2.8" fill="#534834" opacity=".28"/>` : '';
-    const dots = kind === 'cannon' ? 'stroke-dasharray="2 6"' : '';
-    const trail = `<g class="shot-trail" fill="none" stroke-linecap="round" ${dots}><path d="${path}" stroke="${style.ink}" stroke-width="${style.width}" opacity=".58"/><path d="${path}" stroke="${style.light}" stroke-width="${style.width * .45}"/></g>`;
-    const heading = Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI;
-    return shadow + trail + shot(kind, x, y, heading) + flare;
+    return shot(kind, x, y, Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI, t) + flare;
+  }
+  function laser(angle, length, t, hitDistances = []) {
+    const start = Math.min(28, length * .7), path = `M${start} 0H${length}`;
+    const intensity = (1 - t) ** 2;
+    return `<g transform="rotate(${angle})" fill="none" stroke-linecap="round">
+      <path d="${path}" stroke="#fc597f" stroke-opacity=".3" stroke-width="${4 + 7 * intensity}"/>
+      <path d="${path}" stroke="#d64262" stroke-width="${2 + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
+      <circle cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
+      <g class="fx-accent" stroke="#ffe9b5" stroke-width="1.8">${hitDistances.map(d => `<g transform="translate(${d} 0)"><path d="M-2 ${-3 - 9 * t}l-2-3m4 ${17 + 18 * t} 2 3"/></g>`).join('')}</g></g>`;
+  }
+  function aura(radius, t) {
+    const spread = 1 - (1 - t) ** 2;
+    const front = 15 + (radius - 15) * spread;
+    return `<circle r="${radius}" fill="#91dce6" fill-opacity=".07" stroke="#74b8c3" stroke-opacity=".42" stroke-dasharray="5 8"/>
+      <circle r="${front}" fill="none" stroke="#81d6e2" stroke-opacity=".32" stroke-width="${4 + 6 * (1 - t)}"/>
+      <circle r="${front}" fill="none" stroke="#eaffff" stroke-width="2.1"/>
+      <g class="fx-accent" fill="none" stroke="#b5f7ff" stroke-width="1.8">
+        <circle r="${Math.max(1, front - 15 * spread)}" stroke-dasharray="${front * .46} ${front * .32}" transform="rotate(${t * 16})"/>
+        ${[18,78,138,198,258,318].map(angle => ref('snowflake', `color="#ebffff" transform="rotate(${angle}) translate(${front - 4} 0) rotate(${-angle + 38 * t}) scale(${.4 + .4 * Math.sin(Math.PI * t)})"`)).join('')}</g>`;
+  }
+  function chargeGlobe(progress) {
+    const radius = 2 + 8 * progress, orbit = radius + 5;
+    return `<g class="fx-accent" opacity="${.25 + .7 * progress}">
+      <circle r="${radius}" fill="url(#art-plasma-core)" stroke="#bba3e8" stroke-width="1.1"/>
+      <g transform="rotate(${progress * 320})" fill="none" stroke="#d6eefe" stroke-width="1.7"><path d="M${-orbit} 0q0 ${-orbit * .7} ${orbit * .8} ${-orbit}M${orbit} 0q0 ${orbit * .7} ${-orbit * .8} ${orbit}"/></g></g>`;
+  }
+  function impactBurst(kind, t) {
+    const flame = kind === 'flare', reach = flame ? 23 : 12;
+    const spread = 1 - (1 - t) ** 2;
+    const bits = flame ? [0, 63, 139, 201, 281] : [20, 145, 255];
+    return `<g class="fx-accent"><circle r="${2 + spread * reach}" fill="none" stroke="${flame ? '#ffbd58' : '#e5f7a5'}" stroke-width="${2.8 - 1.6 * t}"/>
+      ${bits.map((a,i) => `<g transform="rotate(${a}) translate(${(4 + spread * reach) * (i % 2 ? .82 : 1)} 0) scale(${1 - t * .7})"><path d="m-3 0 3-2 4 2-4 2Z" fill="${flame ? '#ffbc45' : '#b6da6d'}" stroke="${flame ? '#cb6c37' : '#689355'}" stroke-width="1"/></g>`).join('')}</g>`;
   }
   const pen = 'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"';
   const ref = (name, attrs = '') => `<use href="#art-${name}" ${attrs}/>`;
@@ -256,18 +278,27 @@
     for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
     const whiteShield = '<filter id="art-white-shield" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>';
-    return whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
+    const energy = `<radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
+      <radialGradient id="art-fireball-core"><stop offset="0" stop-color="#ffffc3"/><stop offset=".55" stop-color="#ffda58"/><stop offset="1" stop-color="#f86f21"/></radialGradient>`;
+    return energy + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
   }
   function icon(name, cls = '') {
     return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`;
   }
   function tower(kind, angle = -25, flash = 0, charge = 0) {
     if (kind === 'wall') return ref('wall');
-    const kick = Math.min(1, flash / .15);
+    // Snap into the stroke, then ease past rest as the mechanism settles.
+    const t = 1 - flash;
+    const kick = Math.sin(Math.min(1, t / .24) * Math.PI / 2) * flash * flash;
+    const rebound = Math.sin(t * Math.PI * 2) * flash;
+    if (kind === 'frost') {
+      return ref('plinth') + ref('tower-frost', `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
+        (flash > 0 ? `<g class="fx-accent" transform="translate(0 -5)" opacity="${flash}">${ref('snowflake', 'color="#f3ffff" transform="scale(.8)"')}</g>` : '');
+    }
     let style = '';
-    if (kind === 'push') style = `style="--punch-travel:${kick * 5}px;--spring-stretch:${1 + kick * .3}"`;
+    if (kind === 'push') style = `style="--punch-travel:${kick * 13 + rebound * 2}px;--spring-stretch:${1 + kick * .7 + rebound * .12}"`;
     if (kind === 'molecular') style = `style="--core-light:${Math.max(charge, kick)}"`;
-    const recoil = kind === 'push' ? 0 : kick * 3;
+    const recoil = (kick + rebound * .23) * recoilDistance[kind];
     return ref(mounts[kind] ? 'mount-' + kind : 'plinth') +
       ref('tower-' + kind, `transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
   }
@@ -297,5 +328,5 @@
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
-  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, splitPlateAt, house: () => ref('cabin') };
+  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, laser, aura, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
 })();

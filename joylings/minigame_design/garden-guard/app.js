@@ -7,10 +7,11 @@
   const BATTLE_SPEED = G.BATTLE_SPEED;
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastWorldTime = -1, lastPhase = '', lastLevel = -1, lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
+  let finishAge = null;
   let infoAnchor = null, infoTimer = 0;
   try { const saved = G.restore(JSON.parse(localStorage.getItem(STORAGE))); if (saved) state = saved; } catch {}
   $('level-select').innerHTML = G.LEVELS.map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
-  $('garden-art').innerHTML = A.definitions();
+  $('garden-art').innerHTML = A.definitions() + `<clipPath id="field-bounds"><rect x="${OX}" y="${OY}" width="${G.COLS * S}" height="${G.ROWS * S}" rx="6"/></clipPath>`;
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
   $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 枚金幣">${A.tool(kind)}<span class="tool-cost">${A.icon('coin')}${tool.cost}</span></button>`).join('');
 
@@ -143,24 +144,30 @@
     return b.aim ? Math.min(1, b.aim.age / (G.TOOLS[b.kind].aimSeconds * BATTLE_SPEED)) : 0;
   }
   function renderWorld() {
-    const lift = e => e.leap ? Math.sin(Math.PI * Math.min(1, e.leap.age / e.leap.duration)) * 50 : e.kind === 'flyer' ? 12 + Math.sin(state.time * 8 + e.id) * 2 : 0;
-    $('fire-layer').innerHTML = state.fires.map(f => {
+    const lift = e => G.enemyLift(e, state.time);
+    const settled = finishAge ?? 0;
+    const auras = state.effects.filter(e => e.kind === 'frost' && e.life > settled).map(e => {
+      const opacity = (e.life - settled) / e.duration;
+      return `<g class="frost-area-effect" opacity="${opacity}" transform="translate(${X(e.x)} ${Y(e.y)})">${A.aura(e.radius * S, 1 - opacity)}</g>`;
+    }).join('');
+    $('fire-layer').innerHTML = auras + state.fires.map(f => {
       const radius = G.TOOLS.flame.burnRadius * S;
       const flicker = Math.sin(state.time * 9 + f.id * 3);
       const rise = (state.time * 1.7 + f.id * .37) % 1;
+      const bloom = .45 + .55 * Math.min(1, (state.time + settled - f.bornAt) / .32);
       return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)})" opacity="${Math.min(1, f.life / .8)}">
         <circle r="${radius}" fill="#e97835" opacity=".13"/><circle r="${radius - 1}" fill="none" stroke="#b86237" stroke-width="1.8" stroke-dasharray="8 6" opacity=".65"/>
-        <ellipse cy="7" rx="30" ry="14" fill="#a65336" opacity=".28"/>
+        <g transform="scale(${bloom})"><ellipse cy="7" rx="30" ry="14" fill="#a65336" opacity=".28"/>
         <path d="m-25 11 9-4 8 3 8-7 8 2 10-7m-19 8 5 6 9 1" stroke="#f7ac55" stroke-width="2.8" fill="none" stroke-linecap="round"/>
         <use href="#art-firePatch" transform="translate(-17 8) scale(.68 ${.7 + flicker * .12})"/>
         <use href="#art-firePatch" transform="translate(3 1) skewX(${flicker * 6}) scale(.9 ${1 - flicker * .13})"/>
         <use href="#art-firePatch" transform="translate(19 12) scale(.58 ${.65 + flicker * .1})"/>
-        <path class="fx-accent" d="m-12-8 2-3m15-3 1-2m7 6 2-3" transform="translate(${rise * 5} ${-rise * 14})" opacity="${1 - rise}" stroke="#ffd576" stroke-width="2.5" stroke-linecap="round"/></g>`;
+        <path class="fx-accent" d="m-12-8 2-3m15-3 1-2m7 6 2-3" transform="translate(${rise * 5} ${-rise * 14})" opacity="${1 - rise}" stroke="#ffd576" stroke-width="2.5" stroke-linecap="round"/></g></g>`;
     }).join('');
     $('building-layer').innerHTML = state.buildings.map(b => {
       const hp = G.TOOLS[b.kind].hp;
       const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
-      return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, b.angle, b.flash, aimProgress(b))}${damage}</g>`;
+      return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, b.angle, Math.max(0, b.flash - settled / G.RECOIL_SECONDS), aimProgress(b))}${damage}</g>`;
     }).join('');
     drawEnemies(lift);
     const aiming = ['running', 'paused'].includes(state.phase) ? state.buildings.map(b => {
@@ -171,31 +178,22 @@
       const x = X(target.x), y = Y(target.y) - lift(target), radius = 28, length = 2 * Math.PI * radius;
       const muzzleAngle = b.angle * Math.PI / 180;
       return `<g class="molecular-aim" data-tower="${b.id}" data-target="${target.id}">
-        <path class="aim-line" d="M${X(b.c) + 25 * Math.cos(muzzleAngle)} ${Y(b.r) - 3 + 25 * Math.sin(muzzleAngle)}L${x} ${y}" stroke="#8552a2" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="4 6" opacity="${.5 + progress * .4}"/>
+        <path class="aim-line" d="M${X(b.c) + 25 * Math.cos(muzzleAngle)} ${Y(b.r) - 3 + 25 * Math.sin(muzzleAngle)}L${x} ${y}" stroke="#8552a2" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="4 6" stroke-dashoffset="${-progress * 40}" opacity="${.5 + progress * .4}"/>
+        <g transform="translate(${X(b.c) + 25 * Math.cos(muzzleAngle)} ${Y(b.r) - 3 + 25 * Math.sin(muzzleAngle)})">${A.chargeGlobe(progress)}</g>
         <g transform="translate(${x} ${y})" fill="none"><circle r="${radius}" stroke="#fff2d9" stroke-opacity=".85" stroke-width="3"/>
         <circle class="aim-charge" r="${radius}" stroke="#9657b0" stroke-width="3.8" stroke-dasharray="${length * progress} ${length}" transform="rotate(-90)"/>
         <path d="M-33 0h9m48 0h9M0-33v9m0 48v9" stroke="#794e90" stroke-width="2.6"/></g></g>`;
     }).join('') : '';
-    $('shot-layer').innerHTML = aiming + state.shots.map(s => {
-      if (s.kind === 'pierce') {
-        const range = G.TOOLS.pierce.range;
-        return A.flight(s.kind, X(s.c), Y(s.r), X(s.c + s.ux * range), Y(s.r + s.uy * range), 1 - s.remaining / range, s.angle);
-      }
-      const target = state.enemies.find(e => e.id === s.target);
-      const point = target ? G.impactPoint(target, s) : ['flame', 'push'].includes(s.kind) && Number.isFinite(s.impactX) ? { x: s.impactX, y: s.impactY } : null;
-      if (!point) return '';
-      return A.flight(s.kind, X(s.c), Y(s.r) - 3, X(point.x), Y(point.y) - (target ? lift(target) : 0), Math.min(1, s.age / s.duration), s.angle);
-    }).join('');
+    $('shot-layer').innerHTML = aiming + state.shots.map(s =>
+      A.flight(s.kind, X(s.c), Y(s.r) - 3, X(s.tipX), Y(s.tipY) - s.lift, Math.min(1, s.age / s.duration), s.angle)
+    ).join('');
     $('effects-layer').innerHTML = state.effects.map(e => {
-      const t = 1 - e.life / e.duration, x = X(e.x), y = Y(e.y);
+      const life = e.life - settled;
+      if (life <= 0 || e.kind === 'frost') return '';
+      const t = 1 - life / e.duration, x = X(e.x), y = Y(e.y) - (e.lift ?? 0);
       const at = `transform="translate(${x} ${y})" opacity="${1 - t}"`;
-      if (e.kind === 'frost') {
-        const radius = e.radius * S, front = (.32 + .68 * t) * radius;
-        return `<g class="frost-area-effect" ${at}><circle r="${radius}" fill="#a7ebf3" fill-opacity=".13"/>
-          <circle r="${front}" fill="none" stroke="#438eac" stroke-width="2.5"/><circle r="${Math.max(1,front - 3)}" fill="none" stroke="#e5ffff" stroke-width="2"/>
-          ${[15,105,195,285].map(a => `<g transform="rotate(${a}) translate(${front - 3} 0)"><path d="m-8 0 6-3 5 3-5 3Z" fill="#baf4ff" stroke="#579cb4" stroke-width="1.2"/></g>`).join('')}
-          <use href="#art-snowflake" color="#e7ffff" transform="scale(${1.2 - t * .5})"/></g>`;
-      }
+      if (e.kind === 'laser') return `<g clip-path="url(#field-bounds)"><g class="laser-beam" ${at}>${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S))}</g></g>`;
+      if (e.kind === 'spark' || e.kind === 'flare') return `<g class="${e.kind}-effect" ${at}><g transform="rotate(${e.angle ?? 0})">${A.impactBurst(e.kind, t)}</g></g>`;
       if (e.kind === 'push-cell') return `<g class="push-cell-effect" ${at}><rect x="-31" y="-31" width="62" height="62" rx="7" fill="#96cee1" fill-opacity=".14"/>
         <path d="M-29-15v-8q0-6 6-6h8m30 0h8q6 0 6 6v8m0 30v8q0 6-6 6h-8m-30 0h-8q-6 0-6-6v-8" fill="none" stroke="#4b8399" stroke-width="3.2" stroke-linecap="round"/>
         <circle r="${8 + t * 21}" fill="none" stroke="#e1faff" stroke-width="${3 - t}"/></g>`;
@@ -213,27 +211,28 @@
       }
       if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#688a38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="${(1 - t) * .75}"/>`;
       if (e.kind === 'blast') {
-        const front = (.22 + t * .78) * e.radius * S;
+        const front = (.18 + .82 * (1 - (1 - t) ** 2)) * e.radius * S;
         return `<g class="blast-effect" ${at}><circle r="${front}" fill="#f3a74b" fill-opacity=".1" stroke="#af7340" stroke-width="2.5"/>
           <circle r="${front - 4}" fill="none" stroke="#ffe5a8" stroke-width="2"/>
-          ${[15,78,142,204,274,325].map(a => `<g class="fx-accent" transform="rotate(${a}) translate(${front - 8} 0) scale(${1 - .45 * t})"><path d="M-8 1q-2-5 2-6 2-5 7-2 6-1 6 4 5 4 0 6-5 2-8 0-6 2-7-2Z" fill="#d3b18c" stroke="#a17e57" stroke-width="1.1"/></g>`).join('')}
+          ${[15,78,142,204,274,325].map(a => `<g class="fx-accent" transform="rotate(${a}) translate(${front - 8} 0) rotate(${t * 32}) scale(${.6 + .5 * Math.sin(Math.PI * t)})"><path d="M-8 1q-2-5 2-6 2-5 7-2 6-1 6 4 5 4 0 6-5 2-8 0-6 2-7-2Z" fill="#d3b18c" stroke="#a17e57" stroke-width="1.1"/></g>`).join('')}
           <path transform="scale(${1 - t})" d="m0-20 6 12 10-4-4 11 10 4-13 3 1 11-10-7-9 6 1-12-10-4 12-4-2-10Z" fill="#ffd170" stroke="#ce7437" stroke-width="2"/></g>`;
       }
-      if (e.kind === 'molecular') return `<g class="molecular-effect" ${at}><g transform="rotate(${t * 55}) scale(${.65 + t * .7})" fill="none" stroke="#8554a6" stroke-width="2.4">
-        <ellipse rx="24" ry="8" transform="rotate(32)"/><ellipse rx="24" ry="8" transform="rotate(-32)"/>
-        <g fill="#b6eeee" stroke="#735292" stroke-width="1.5"><circle cx="20" cy="-12" r="3.5"/><circle cx="-20" cy="-12" r="3"/></g></g>
-        <path transform="scale(${1 - .7 * t})" d="m0-15 4 11 11 4-11 4-4 12-4-12-11-4 11-4Z" fill="#fff1b7" stroke="#af7dbd" stroke-width="1.6"/></g>`;
+      if (e.kind === 'molecular') {
+        const spread = 1 - (1 - t) ** 2, radius = 7 + 23 * spread;
+        return `<g class="molecular-effect" ${at}><circle r="${radius}" fill="#bc9aec" fill-opacity=".13" stroke="#a47bc8" stroke-width="${3 - t}"/>
+          <g class="fx-accent" transform="rotate(${t * 45})" fill="none" stroke-linecap="round">
+          ${[15,130,255].map(angle => `<path transform="rotate(${angle}) translate(${radius - 5} 0)" d="m-7-7 5 2-2 5 5-2 2 6" stroke="#e6fbff" stroke-width="2.2"/>`).join('')}</g>
+          <path transform="scale(${(1 - t) ** 2})" d="m0-15 4 11 11 4-11 4-4 12-4-12-11-4 11-4Z" fill="#fff4c7" stroke="#a879b9" stroke-width="1.6"/></g>`;
+      }
       if (e.kind === 'push') return `<g class="push-effect" transform="translate(${x + e.ux * t * 68} ${y + e.uy * t * 68}) rotate(${Math.atan2(e.uy, e.ux) * 180 / Math.PI})" opacity="${1 - t}" fill="none" stroke-linecap="round"><path d="m-24-10 13 2m-16 7h12m-10 9 12-2" stroke="#6996aa" stroke-width="2.5"/><path d="M-7-11Q7 0-7 11" stroke="#497c95" stroke-width="4.5"/><path d="M-6-9Q4 0-6 9" stroke="#d8fbff" stroke-width="2.2"/></g>`;
       if (e.kind === 'burn') return `<g class="burn-effect" ${at}><use href="#art-firePatch" transform="translate(11 ${8 - t * 16}) scale(${.62 - t * .32})"/></g>`;
       if (e.kind === 'block') {
         const bx = e.vx * t * 60, by = e.vy * t * 60;
-        const color = G.TOOLS[e.shotKind]?.color || '#6a8d58';
         return `<g class="block-effect" data-blocked-enemy="${e.enemyId}" opacity="${1 - t}" transform="translate(${x} ${y})">
           <circle r="${5 + t * 21}" fill="none" stroke="#f6d77c" stroke-width="${3 * (1 - t)}"/>
           <path d="m0-11 3 7 8-3-5 7 5 4-8-1-3 8-3-8-8 1 5-4-5-7 8 3Z" fill="#fff4bc" stroke="#d5a34c" stroke-width="1.3" transform="scale(${1 + t * 0.7})"/>
           ${[-150, -115, -75, -35].map(a => { const r = a * Math.PI / 180 * (e.vy > 0 ? -1 : 1), d = 11 + t * 26; return `<path d="M${Math.cos(r) * d} ${Math.sin(r) * d}l${Math.cos(r) * 7} ${Math.sin(r) * 7}" stroke="#dbaa52" stroke-width="2.5" stroke-linecap="round"/>`; }).join('')}
-          <path d="M${bx - e.vx * 12} ${by - e.vy * 12}L${bx} ${by}" stroke="${color}" stroke-width="3" stroke-linecap="round" opacity=".55"/>
-          <g class="ricochet" transform="translate(${bx} ${by}) scale(.65)">${G.TOOLS[e.shotKind]?.rate ? A.shot(e.shotKind, 0, 0, Math.atan2(e.vy, e.vx) * 180 / Math.PI) : '<circle r="5" fill="#efaf55"/>'}</g>
+          ${['frost', 'pierce'].includes(e.shotKind) ? '' : `<g class="ricochet" transform="translate(${bx} ${by}) scale(.65)">${A.shot(e.shotKind, 0, 0, Math.atan2(e.vy, e.vx) * 180 / Math.PI)}</g>`}
         </g>`;
       }
       if (e.kind === 'home') return `<g ${at}><g transform="translate(-14 ${-12 - t * 16}) scale(1.15)">${A.icon('heart')}</g></g>`;
@@ -274,7 +273,7 @@
     $('result-secondary').textContent = won ? '看看花園' : '回到第一關';
     if (!$('result').open) $('result').showModal();
   }
-  function sync(force = false) {
+  function sync(force = false, settling = false) {
     if (lastLevel !== state.level) { hideInfo(); hover = null; lastLevel = state.level; ground(); }
     if (force || lastRevision !== state.revision) {
       selection(); lastRevision = state.revision;
@@ -286,6 +285,7 @@
     }
     if (lastPhase !== state.phase) {
       const finished = lastPhase === 'running' && (state.phase === 'planning' || state.phase === 'won');
+      finishAge = finished ? 0 : null;
       lastPhase = state.phase;
       if (state.phase === 'planning' || state.phase === 'running' || state.phase === 'won') save();
       if (finished) {
@@ -297,7 +297,7 @@
       if (state.phase === 'won' || state.phase === 'lost') outcome();
     }
     updateUI(force);
-    if (force || state.time !== lastWorldTime) { renderWorld(); lastWorldTime = state.time; }
+    if (force || settling || state.time !== lastWorldTime) { renderWorld(); lastWorldTime = state.time; }
   }
   function loadLevel(level, replacement = null) {
     hideInfo();
@@ -401,7 +401,10 @@
       accumulator += elapsed * BATTLE_SPEED;
       while (accumulator >= 1 / 60) { G.step(state, 1 / 60); accumulator -= 1 / 60; }
     } else accumulator = 0;
-    sync(); requestAnimationFrame(frame);
+    // Finish the last impact in deployment without stepping the next wave.
+    const settling = finishAge !== null && finishAge < 1;
+    if (settling) finishAge = Math.min(1, finishAge + elapsed * BATTLE_SPEED);
+    sync(false, settling); requestAnimationFrame(frame);
   }
   // Read-only diagnostics for verification. No test controls ship in normal play.
   window.gardenDebug = { getState: () => JSON.parse(JSON.stringify(state)), getRoutes: () => G.previews(state) };
