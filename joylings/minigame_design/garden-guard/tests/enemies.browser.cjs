@@ -80,6 +80,25 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await p.locator('.split-effect').first().locator('use[href="#art-splitPlate"]').count(), 3);
     await screenshot('splitter');
 
+    const stag = await p.evaluate(() => {
+      function sample(hp, time) {
+        const svg = new DOMParser().parseFromString(
+          `<svg xmlns="http://www.w3.org/2000/svg">${GardenArt.bug('giant',hp,time,0,0,false,'',218)}</svg>`, 'image/svg+xml');
+        return {
+          size: svg.querySelector('.bug-art').getAttribute('transform'),
+          jaws: [...svg.querySelectorAll('use[href="#art-stagJaw"]')].map(node =>
+            [node.getAttribute('transform'), node.parentElement.getAttribute('transform')])
+        };
+      }
+      return [sample(218, 0), sample(1, 0), sample(218, .3)];
+    });
+    const [full, injured, walking] = stag;
+    assert.deepEqual(injured, full, '同一隻巨蟲受傷後體型與大顎維持原樣');
+    assert.equal(full.jaws.length, 2);
+    assert.equal(full.jaws[1][1], 'scale(1 -1)');
+    assert.equal(walking.jaws[0][0], walking.jaws[1][0]);
+    assert.notEqual(walking.jaws[0][0], full.jaws[0][0], '成對大顎隨遊戲時間同步開合');
+
     // Compare the painted sprite with its legs hidden. A valid path can still
     // be entirely covered by an egg, wing, shield or health number.
     const { missingFeet, whiteShields } = await p.evaluate(async () => {

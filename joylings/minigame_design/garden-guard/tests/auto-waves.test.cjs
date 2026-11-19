@@ -176,25 +176,42 @@ test('第五至十關的解答要靠牆延長路線，把相同數量的牆移�
   }
 });
 
-test('終關打開兩格捷徑就會失守，把一座大砲換牆並補雷射能用同樣金幣過關', () => {
+test('終關打開兩格捷徑就會失守', () => {
   const open = G.createState(9);
   deploy(open, layouts[9]);
   assert.ok(G.remove(open,5,5).ok);
   assert.ok(G.remove(open,5,6).ok);
   G.startWave(open); finish(open);
   assert.equal(open.phase,'lost');
+});
 
-  const laser = G.createState(9);
-  deploy(laser, layouts[9]);
-  const remaining = laser.money;
-  assert.ok(G.remove(laser,1,3).ok);
-  assert.ok(G.build(laser,'wall',1,3).ok);
-  assert.ok(G.remove(laser,4,7).ok);
-  assert.ok(G.build(laser,'pierce',4,7).ok);
-  assert.equal(laser.money,remaining);
-  G.startWave(laser); finish(laser);
-  assert.equal(laser.phase,'won');
-  assert.equal(laser.hearts,2);
+test('後兩關解答的雷射能一次貫穿多隻蟲，終關分子砲會對巨蟲發射電漿', () => {
+  for (const level of [8, 9]) {
+    const s = G.createState(level);
+    deploy(s, layouts[level]);
+    G.startWave(s);
+    let piercedGroup = false, firedAtGiant = false;
+    for (let tick = 0; tick < 12000 && s.phase === 'running'; tick++) {
+      G.step(s, 1 / 60);
+      piercedGroup ||= s.effects.some(e => e.kind === 'laser' && e.hitDistances.length >= 3);
+      firedAtGiant ||= s.shots.some(shot => shot.kind === 'molecular' &&
+        s.enemies.some(e => e.id === shot.target && e.kind === 'giant'));
+    }
+    assert.ok(piercedGroup, `第 ${level + 1} 關雷射要打到成排的蟲`);
+    if (level === 9) assert.ok(firedAtGiant, '終關分子砲要實際向巨蟲開火');
+    assert.equal(s.phase, level === 9 ? 'won' : 'planning');
+  }
+});
+
+test('只把第八關的分子砲或第九關的雷射砲換成石牆，路線相同但現有火力會失守', () => {
+  for (const [level, kind] of [[7, 'molecular'], [8, 'pierce']]) {
+    const answer = G.createState(level), without = G.createState(level);
+    deploy(answer, layouts[level]);
+    deploy(without, layouts[level].map(([k,c,r]) => [k === kind ? 'wall' : k,c,r]));
+    assert.deepEqual(G.previews(without), G.previews(answer));
+    G.startWave(without); finish(without);
+    assert.equal(without.phase, 'lost', `第 ${level + 1} 關`);
+  }
 });
 
 test('上版花完預算的無牆通關陣形守不住新版終關', () => {

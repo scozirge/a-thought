@@ -27,7 +27,9 @@ function trial(level, layout) {
   const spent = G.LEVELS[level].money - s.money;
   G.startWave(s);
   let minHearts = s.hearts;
-  for (let i = 0; i < 14400 && s.phase === "running"; i++) {
+  // Repeated knockback in a long corridor can keep giants moving past four minutes.
+  const tickLimit = 8 * 60 * 60;
+  for (let i = 0; i < tickLimit && s.phase === "running"; i++) {
     const before = s.hearts;
     G.step(s, 1 / 60);
     if (s.level !== level) {
