@@ -6,11 +6,13 @@
   const STORAGE = 'garden-guard-v1';
   const BATTLE_SPEED = G.BATTLE_SPEED;
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
-  let lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
+  let lastWorldTime = -1, lastPhase = '', lastLevel = -1, lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
   let infoAnchor = null, infoTimer = 0;
   try { const saved = G.restore(JSON.parse(localStorage.getItem(STORAGE))); if (saved) state = saved; } catch {}
+  $('level-select').innerHTML = G.LEVELS.map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
+  $('garden-art').innerHTML = A.definitions();
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
-  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 顆種子">${A.tool(kind)}<span class="tool-cost">${A.icon('seed')}${tool.cost}</span></button>`).join('');
+  $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 枚金幣">${A.tool(kind)}<span class="tool-cost">${A.icon('coin')}${tool.cost}</span></button>`).join('');
 
   function hideInfo() {
     clearTimeout(infoTimer); $('tower-info').hidden = true;
@@ -23,7 +25,7 @@
     hideInfo(); infoAnchor = anchor;
     const info = $('tower-info');
     info.dataset.kind = kind;
-    info.innerHTML = `<strong>${tool.name}</strong><p>傷害 ${tool.damage}${tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : ''}</p><p>攻擊 ${tool.rate.toFixed(1)}次/s</p><p class="info-effect">${tool.effect}</p>`;
+    info.innerHTML = `<strong>${tool.name}</strong><p>傷害 ${tool.damage}${tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : ''}</p><p>攻擊 ${tool.rate}次/s</p><p class="info-target">目標 ${tool.targets.map(t => t === 'ground' ? '地' : '空').join('/')}</p><p class="info-effect">${tool.effect}</p>`;
     info.hidden = false; anchor.setAttribute('aria-describedby', 'tower-info');
     const zoom = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
     const rect = anchor.getBoundingClientRect(), box = info.getBoundingClientRect();
@@ -45,8 +47,9 @@
   }
 
   function save() {
-    if (state.phase !== 'planning') return;
-    try { localStorage.setItem(STORAGE, JSON.stringify(G.snapshot(state))); } catch {}
+    const data = state.phase === 'planning' || state.phase === 'won' ? G.snapshot(state) : state.checkpoint;
+    if (!data) return;
+    try { localStorage.setItem(STORAGE, JSON.stringify(data)); } catch {}
   }
   function feedback(text, c, r) {
     $('status').textContent = text;
@@ -54,28 +57,46 @@
     if (cell) { cell.classList.add('invalid'); setTimeout(() => cell.classList.remove('invalid'), 700); }
   }
   function ground() {
-    let s = '<rect x="69" y="33" width="782" height="526" rx="24" fill="#d2ddbc"/><rect x="72" y="36" width="776" height="520" rx="22" fill="#e4ebd5"/>';
+    let s = `<rect x="70" y="36" width="780" height="522" rx="13" fill="#3e5739" opacity=".38"/>
+      <rect x="72" y="36" width="776" height="520" rx="10" fill="none" stroke="#70583a" stroke-width="6"/>
+      <rect x="73" y="37" width="774" height="518" rx="9" fill="#d0de9e" fill-opacity=".39" stroke="#e6c18a" stroke-width="3"/>
+      <path d="M90 34h62m6 0h18m540 524h57m9 0h45" stroke="#fce0ab" stroke-width="1.3" stroke-linecap="round"/>`;
     const solid = G.terrain(state.level);
     const water = new Set(G.LEVELS[state.level].water.map(([c, r]) => G.key(c, r)));
     let hits = '';
     for (let r = 0; r < G.ROWS; r++) {
       hits += '<g role="row">';
       for (let c = 0; c < G.COLS; c++) {
-        const x = X(c), y = Y(r), reserved = c === 0 || c === G.COLS - 1 || solid.has(G.key(c, r));
-        s += `<rect x="${x - 31}" y="${y - 31}" width="62" height="62" rx="7" fill="${(c + r) % 2 ? '#e0e9cf' : '#e4ecd7'}"/><rect x="${x - 31}" y="${y - 31}" width="62" height="62" rx="7" fill="url(#grass)"/>`;
+        const x = X(c), y = Y(r), reserved = c === 0 || c === G.COLS - 1 || G.isEntrance(state.level, c, r) || solid.has(G.key(c, r));
+        const turf = reserved ? '#ecdfac' : (c + r) % 2 ? '#c6dea3' : '#def0be';
+        s += `<rect x="${x - 31.5}" y="${y - 31.5}" width="63" height="63" rx="4" fill="${turf}" fill-opacity=".8"/>`;
+        if ((c * 3 + r) % 7 === 0) s += `<path d="M${x + 16} ${y + 23}l-3-4m4 4 1-6m1 6 3-3" stroke="#7c9e5c" opacity=".32" stroke-width="1.5" stroke-linecap="round"/>`;
         if (water.has(G.key(c, r))) {
-          s += `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="13" fill="#b7d3d0"/><path d="M${x - 18} ${y - 9}q8 4 16 0m-7 20q8 4 16 0" stroke="#e1efdf" stroke-width="2.5" stroke-linecap="round" fill="none"/><ellipse cx="${x + 13}" cy="${y - 13}" rx="9" ry="6" fill="#88ad86"/>`;
+          s += `<g transform="translate(${x} ${y})"><rect x="-30" y="-30" width="60" height="60" rx="13" fill="#74baba" stroke="#508d83" stroke-width="2"/>
+            <path d="M-22-9q8 5 16 0m-7 21q8 5 16 0m7 7h8" stroke="#d5f3df" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M13-14l10 1a11 8 0 1 1-4-7Z" fill="#87b569" stroke="#518252" stroke-width="1.8"/></g>`;
         } else if (solid.has(G.key(c, r))) {
-          s += `<g transform="translate(${x} ${y})"><ellipse cy="20" rx="26" ry="7" fill="#40543812"/><path d="m-25 11 7-25 25-6 19 19-5 22h-39Z" fill="#b7bdab"/><path d="m-18-14 25-6-5 24-27 7Z" fill="#ccd1bd"/><path d="m2 4 24-5-5 22h-19Z" fill="#a8b29e"/><path d="m-23 20 3-7 5 3 5-3 4 9" fill="#8aa575"/></g>`;
+          s += `<g transform="translate(${x} ${y})" stroke-linejoin="round"><ellipse cy="21" rx="26" ry="6" fill="#30563a" opacity=".2"/>
+            <path d="m-25 9 7-22 22-9 20 12 4 17-10 13h-33Z" fill="#a2afa2" stroke="#586b60" stroke-width="2"/>
+            <path d="m-18-13 22-9 9 13L2 4-24 9Z" fill="#d0d5b9"/><path d="M2 4 13-9l11-1 4 17-10 13H4Z" fill="#87998b"/>
+            <path d="m-19-8 5-5 9-3m-18 34 4-4 5 3 5-4 4 6" stroke="#bdd092" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
         }
         const label = `${r + 1} 排 ${c + 1} 格${reserved ? '，通道或地形' : '，草地'}`;
         hits += `<rect class="cell-hit ${reserved ? 'reserved' : ''}" role="gridcell" tabindex="${c === focusCell.c && r === focusCell.r ? 0 : -1}" data-c="${c}" data-r="${r}" aria-label="${label}" x="${x - 31}" y="${y - 31}" width="62" height="62" rx="7"/>`;
       }
       hits += '</g>';
     }
-    s += `<g transform="translate(35 ${Y(G.GOAL.r)}) scale(.85)">${A.house()}</g>`;
-    for (const r of G.LEVELS[state.level].entries) s += `<g transform="translate(883 ${Y(r)})"><circle r="22" fill="#efecd9"/><path d="M10 0h-20m7-7-7 7 7 7" stroke="#aa9c78" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>`;
-    for (const [x, y, a] of [[93, 20, -20], [825, 572, 30], [41, 489, 10], [876, 82, -15]]) s += `<g transform="translate(${x} ${y}) rotate(${a})" opacity=".55"><path d="M0 9q-12-5-11-13Q1-3 0 9m1 0q12-5 11-13Q0-3 1 9" fill="#a6b98a"/><circle cx="16" cy="10" r="3" fill="#dbc78c"/></g>`;
+    s += `<g transform="translate(38 ${Y(G.GOAL.r)})">
+      <path d="M27 2q6-4 13-1m5-2 9-1" stroke="#c7ae79" stroke-width="6" stroke-linecap="round"/>
+      ${A.house()}</g>`;
+    for (const entry of G.entrances(state.level)) {
+      const x = entry.side === 'right' ? 877 : X(entry.c), y = entry.side === 'right' ? Y(entry.r) : entry.side === 'top' ? 19 : 573;
+      const angle = entry.side === 'top' ? -90 : entry.side === 'bottom' ? 90 : 0;
+      s += `<g class="entrance" data-side="${entry.side}" data-c="${entry.c}" data-r="${entry.r}" transform="translate(${x} ${y}) rotate(${angle})" stroke-linejoin="round">
+      <path d="M2 2h5v23H2Z" fill="#926c42" stroke="#5f5436" stroke-width="1.8"/>
+      <path d="m-18 0 9-10h23v20H-9Z" fill="#ffe4a2" stroke="#715a38" stroke-width="2.4"/>
+      <path d="M8 0H-7l5-5m-5 5 5 5" stroke="#77552f" stroke-width="3.2" fill="none" stroke-linecap="round"/></g>`;
+    }
     $('ground-layer').innerHTML = s; $('hit-layer').innerHTML = hits;
   }
   function selection() {
@@ -89,37 +110,121 @@
     const color = selected === 'remove' ? '#bb8967' : existing || valid ? '#7c9b6b' : '#c38c75';
     $('hover-layer').innerHTML = `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="8" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="2.5"/>${valid && selected !== 'remove' && !existing ? `<g transform="translate(${x} ${y})" opacity=".5">${A.tower(selected)}</g>` : ''}`;
   }
+  function drawEnemies(lift) {
+    const sprites = [], labels = [], occupied = [];
+    const flying = enemy => Number(!!enemy.leap || enemy.kind === 'flyer');
+    for (const e of state.enemies.slice().sort((a, b) => flying(a) - flying(b))) {
+      const x = X(e.x), y = Y(e.y) - lift(e), id = `bug-hp-${e.id}`;
+      sprites.push(`<g data-enemy="${e.id}" data-kind="${e.kind}" data-hp="${e.hp}" data-jumping="${!!e.leap}" transform="translate(${x} ${y})">
+        ${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0, id, e.maxHp)}</g>`);
+      // Prefer the free side of the shell. Nearby numbers can use the other
+      // edge of the same insect, so two health values don't read as one.
+      const upper = e.kind === 'shield_down', lowerEdge = 25, upperEdge = -5;
+      const first = upper ? upperEdge : lowerEdge, other = upper ? lowerEdge : upperEdge;
+      const halfWidth = String(e.hp).length * 8 + 3;
+      let bestX = x + 2, bestY = y + first, leastOverlap = Infinity;
+      for (const [dx, dy] of [[2, first], [2, other], [-13, first], [14, other]]) {
+        const cx = x + dx, cy = y + dy;
+        let overlap = 0;
+        for (const box of occupied) {
+          const w = Math.max(0, halfWidth + box.halfWidth - Math.abs(box.x - cx));
+          overlap += w * Math.max(0, 25 - Math.abs(box.y - cy));
+        }
+        if (overlap < leastOverlap) { bestX = cx; bestY = cy; leastOverlap = overlap; }
+        if (!overlap) break;
+      }
+      occupied.push({x: bestX, y: bestY, halfWidth});
+      labels.push(`<use href="#${id}" x="${bestX}" y="${bestY}"/>`);
+    }
+    $('bug-layer').innerHTML = sprites.join('');
+    $('health-layer').innerHTML = labels.join('');
+  }
+  function aimProgress(b) {
+    return b.aim ? Math.min(1, b.aim.age / (G.TOOLS[b.kind].aimSeconds * BATTLE_SPEED)) : 0;
+  }
   function renderWorld() {
     const lift = e => e.leap ? Math.sin(Math.PI * Math.min(1, e.leap.age / e.leap.duration)) * 50 : e.kind === 'flyer' ? 12 + Math.sin(state.time * 8 + e.id) * 2 : 0;
     $('fire-layer').innerHTML = state.fires.map(f => {
-      const pulse = 0.85 + Math.sin(state.time * 10 + f.id) * 0.15;
-      return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)})" opacity="${Math.min(1, f.life / 0.5)}"><rect x="-30" y="-30" width="60" height="60" rx="12" fill="#ec9a4b" opacity=".38"/><ellipse rx="29" ry="24" fill="#df6b38" opacity=".3"/>${[-17, 0, 17].map((x, i) => `<g transform="translate(${x} ${i % 2 ? -9 : 10}) scale(${pulse})"><path d="M0-19C7-9 13-5 10 3 6 14-9 10-10 2-12-6-4-8 0-19Z" fill="#e77535"/><path d="M0-8C6 0 5 7 0 8-6 7-5 0 0-8Z" fill="#ffe094"/></g>`).join('')}</g>`;
+      const radius = G.TOOLS.flame.burnRadius * S;
+      const flicker = Math.sin(state.time * 9 + f.id * 3);
+      const rise = (state.time * 1.7 + f.id * .37) % 1;
+      return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)})" opacity="${Math.min(1, f.life / .8)}">
+        <circle r="${radius}" fill="#e97835" opacity=".13"/><circle r="${radius - 1}" fill="none" stroke="#b86237" stroke-width="1.8" stroke-dasharray="8 6" opacity=".65"/>
+        <ellipse cy="7" rx="30" ry="14" fill="#a65336" opacity=".28"/>
+        <path d="m-25 11 9-4 8 3 8-7 8 2 10-7m-19 8 5 6 9 1" stroke="#f7ac55" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <use href="#art-firePatch" transform="translate(-17 8) scale(.68 ${.7 + flicker * .12})"/>
+        <use href="#art-firePatch" transform="translate(3 1) skewX(${flicker * 6}) scale(.9 ${1 - flicker * .13})"/>
+        <use href="#art-firePatch" transform="translate(19 12) scale(.58 ${.65 + flicker * .1})"/>
+        <path class="fx-accent" d="m-12-8 2-3m15-3 1-2m7 6 2-3" transform="translate(${rise * 5} ${-rise * 14})" opacity="${1 - rise}" stroke="#ffd576" stroke-width="2.5" stroke-linecap="round"/></g>`;
     }).join('');
     $('building-layer').innerHTML = state.buildings.map(b => {
       const hp = G.TOOLS[b.kind].hp;
       const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
-      return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, b.angle, b.flash)}${damage}</g>`;
+      return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, b.angle, b.flash, aimProgress(b))}${damage}</g>`;
     }).join('');
-    $('bug-layer').innerHTML = state.enemies.slice().sort((a, b) => Number(!!a.leap || a.kind === 'flyer') - Number(!!b.leap || b.kind === 'flyer')).map(e => `<g data-enemy="${e.id}" data-kind="${e.kind}" data-hp="${e.hp}" data-jumping="${!!e.leap}" transform="translate(${X(e.x)} ${Y(e.y) - lift(e)})">${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0)}</g>`).join('');
-    $('shot-layer').innerHTML = state.shots.map(s => {
-      if (s.kind === 'pierce') return `<g class="piercing-shot"><path d="M${X(s.x - s.ux * 0.34)} ${Y(s.y - s.uy * 0.34)}L${X(s.x)} ${Y(s.y)}" stroke="#4a8f88" stroke-width="7" stroke-linecap="round"/><circle cx="${X(s.x)}" cy="${Y(s.y)}" r="4" fill="#edffdf"/></g>`;
-      const target = state.enemies.find(e => e.id === s.target);
+    drawEnemies(lift);
+    const aiming = ['running', 'paused'].includes(state.phase) ? state.buildings.map(b => {
+      if (!b.aim) return '';
+      const target = state.enemies.find(e => e.id === b.aim.target && !e.dead);
       if (!target) return '';
-      const point = G.impactPoint(target, s);
-      const t = Math.min(1, s.age / s.duration), x = X(s.c + (point.x - s.c) * t), y = Y(s.r + (point.y - s.r) * t) - lift(target) * t;
-      const radius = { cannon: 8, frost: 6, flame: 7, molecular: 9, push: 7 }[s.kind] || 4.5;
-      return `<g class="shot-${s.kind}"><circle cx="${x}" cy="${y}" r="${radius}" fill="${G.TOOLS[s.kind].color}" stroke="#fffde9" stroke-width="1.5"/>${s.kind === 'molecular' ? `<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#c4a0cd" stroke-width="2"/>` : ''}${s.kind === 'push' ? `<circle cx="${x}" cy="${y}" r="11" fill="none" stroke="#b7bedb" stroke-width="2"/>` : ''}</g>`;
+      const progress = aimProgress(b);
+      const x = X(target.x), y = Y(target.y) - lift(target), radius = 28, length = 2 * Math.PI * radius;
+      const muzzleAngle = b.angle * Math.PI / 180;
+      return `<g class="molecular-aim" data-tower="${b.id}" data-target="${target.id}">
+        <path class="aim-line" d="M${X(b.c) + 25 * Math.cos(muzzleAngle)} ${Y(b.r) - 3 + 25 * Math.sin(muzzleAngle)}L${x} ${y}" stroke="#8552a2" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="4 6" opacity="${.5 + progress * .4}"/>
+        <g transform="translate(${x} ${y})" fill="none"><circle r="${radius}" stroke="#fff2d9" stroke-opacity=".85" stroke-width="3"/>
+        <circle class="aim-charge" r="${radius}" stroke="#9657b0" stroke-width="3.8" stroke-dasharray="${length * progress} ${length}" transform="rotate(-90)"/>
+        <path d="M-33 0h9m48 0h9M0-33v9m0 48v9" stroke="#794e90" stroke-width="2.6"/></g></g>`;
+    }).join('') : '';
+    $('shot-layer').innerHTML = aiming + state.shots.map(s => {
+      if (s.kind === 'pierce') {
+        const range = G.TOOLS.pierce.range;
+        return A.flight(s.kind, X(s.c), Y(s.r), X(s.c + s.ux * range), Y(s.r + s.uy * range), 1 - s.remaining / range, s.angle);
+      }
+      const target = state.enemies.find(e => e.id === s.target);
+      const point = target ? G.impactPoint(target, s) : ['flame', 'push'].includes(s.kind) && Number.isFinite(s.impactX) ? { x: s.impactX, y: s.impactY } : null;
+      if (!point) return '';
+      return A.flight(s.kind, X(s.c), Y(s.r) - 3, X(point.x), Y(point.y) - (target ? lift(target) : 0), Math.min(1, s.age / s.duration), s.angle);
     }).join('');
     $('effects-layer').innerHTML = state.effects.map(e => {
       const t = 1 - e.life / e.duration, x = X(e.x), y = Y(e.y);
-      if (e.kind === 'hatch') return `<g class="hatch-effect" transform="translate(${x} ${y})" opacity="${1 - t}"><ellipse rx="${8 + t * 20}" ry="${12 + t * 13}" fill="none" stroke="#efe7b6" stroke-width="3"/><path d="m-11-8 7-5 3 7 7-5 6 7" fill="none" stroke="#fffde6" stroke-width="3"/></g>`;
-      if (e.kind === 'split') return `<g class="split-effect" opacity="${1 - t}">${[0, 1, 2].map(i => { const a = i * Math.PI * 2 / 3; return `<circle cx="${x + Math.cos(a) * t * 42}" cy="${y + Math.sin(a) * t * 42}" r="${12 * (1 - t) + 4}" fill="#c5dfa1" stroke="#79a06b" stroke-width="2"/>`; }).join('')}</g>`;
-      if (e.kind === 'detonate') return `<g class="detonate-effect" opacity="${1 - t}"><rect x="${x - 96}" y="${y - 96}" width="192" height="192" rx="16" fill="#d9814522" stroke="#da8551" stroke-width="3"/><circle cx="${x}" cy="${y}" r="${15 + t * 77}" fill="#f5c66b" fill-opacity=".25" stroke="#d57549" stroke-width="5"/>${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4; return `<path d="M${x + Math.cos(a) * t * 65} ${y + Math.sin(a) * t * 65}l${Math.cos(a) * 14} ${Math.sin(a) * 14}" stroke="#e6a54c" stroke-width="4" stroke-linecap="round"/>`; }).join('')}</g>`;
-      if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#a5b881" stroke-width="3" stroke-dasharray="3 8" opacity="${(1 - t) * 0.65}"/>`;
-      if (e.kind === 'blast') return `<g class="blast-effect" opacity="${1 - t}"><circle cx="${x}" cy="${y}" r="${(0.25 + t * 0.75) * e.radius * S}" fill="#eec970" fill-opacity=".25" stroke="#c49946" stroke-width="4"/><circle cx="${x}" cy="${y}" r="${10 + t * 25}" fill="#ffedb0"/></g>`;
-      if (e.kind === 'molecular') return `<g class="molecular-effect" transform="translate(${x} ${y})" opacity="${1 - t}"><circle r="${10 + t * 32}" fill="#dfc2ed" fill-opacity=".35" stroke="#a16cab" stroke-width="3"/><path d="M-22 0h44M0-22v44m-16-16 32 32m-32 0 32-32" stroke="#f8e5ff" stroke-width="3"/></g>`;
-      if (e.kind === 'push') return `<g class="push-effect" transform="translate(${x + e.ux * t * 80} ${y + e.uy * t * 80}) rotate(${Math.atan2(e.uy, e.ux) * 180 / Math.PI})" opacity="${1 - t}" fill="none" stroke="#8491bf" stroke-width="4"><path d="m-15-15 13 15-13 15m14-30 13 15-13 15"/></g>`;
-      if (e.kind === 'burn') return `<circle class="burn-effect" cx="${x}" cy="${y}" r="${14 + t * 14}" fill="none" stroke="#ef9c49" stroke-width="3" opacity="${1 - t}"/>`;
+      const at = `transform="translate(${x} ${y})" opacity="${1 - t}"`;
+      if (e.kind === 'frost') {
+        const radius = e.radius * S, front = (.32 + .68 * t) * radius;
+        return `<g class="frost-area-effect" ${at}><circle r="${radius}" fill="#a7ebf3" fill-opacity=".13"/>
+          <circle r="${front}" fill="none" stroke="#438eac" stroke-width="2.5"/><circle r="${Math.max(1,front - 3)}" fill="none" stroke="#e5ffff" stroke-width="2"/>
+          ${[15,105,195,285].map(a => `<g transform="rotate(${a}) translate(${front - 3} 0)"><path d="m-8 0 6-3 5 3-5 3Z" fill="#baf4ff" stroke="#579cb4" stroke-width="1.2"/></g>`).join('')}
+          <use href="#art-snowflake" color="#e7ffff" transform="scale(${1.2 - t * .5})"/></g>`;
+      }
+      if (e.kind === 'push-cell') return `<g class="push-cell-effect" ${at}><rect x="-31" y="-31" width="62" height="62" rx="7" fill="#96cee1" fill-opacity=".14"/>
+        <path d="M-29-15v-8q0-6 6-6h8m30 0h8q6 0 6 6v8m0 30v8q0 6-6 6h-8m-30 0h-8q-6 0-6-6v-8" fill="none" stroke="#4b8399" stroke-width="3.2" stroke-linecap="round"/>
+        <circle r="${8 + t * 21}" fill="none" stroke="#e1faff" stroke-width="${3 - t}"/></g>`;
+      if (e.kind === 'hatch') return `<g class="hatch-effect" ${at} fill="#ffefc7" stroke="#a77f63" stroke-width="2">
+        <path transform="translate(${-t * 9} ${-t * 7}) rotate(${-t * 25})" d="M-9 1q-1-15 7-17 8 0 10 12L4-6 0-1-4-5Z"/>
+        <path transform="translate(${t * 9} ${t * 6}) rotate(${t * 20})" d="m-10 3 6-3 4 4 4-6 6 3C9 17-8 17-10 3Z"/></g>`;
+      if (e.kind === 'split') {
+        const start = G.enemyArtScale('splitter', e.maxHp);
+        const plates = e.offspring.map((child, i) => {
+          const dx = (child.x - e.x) * S * t + 2 * start * (1 - t);
+          const dy = (child.y - e.y) * S * t;
+          return A.splitPlateAt(i, dx, dy, start * (1 - t));
+        });
+        return `<g class="split-effect" ${at}>${plates.join('')}</g>`;
+      }
+      if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#688a38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="${(1 - t) * .75}"/>`;
+      if (e.kind === 'blast') {
+        const front = (.22 + t * .78) * e.radius * S;
+        return `<g class="blast-effect" ${at}><circle r="${front}" fill="#f3a74b" fill-opacity=".1" stroke="#af7340" stroke-width="2.5"/>
+          <circle r="${front - 4}" fill="none" stroke="#ffe5a8" stroke-width="2"/>
+          ${[15,78,142,204,274,325].map(a => `<g class="fx-accent" transform="rotate(${a}) translate(${front - 8} 0) scale(${1 - .45 * t})"><path d="M-8 1q-2-5 2-6 2-5 7-2 6-1 6 4 5 4 0 6-5 2-8 0-6 2-7-2Z" fill="#d3b18c" stroke="#a17e57" stroke-width="1.1"/></g>`).join('')}
+          <path transform="scale(${1 - t})" d="m0-20 6 12 10-4-4 11 10 4-13 3 1 11-10-7-9 6 1-12-10-4 12-4-2-10Z" fill="#ffd170" stroke="#ce7437" stroke-width="2"/></g>`;
+      }
+      if (e.kind === 'molecular') return `<g class="molecular-effect" ${at}><g transform="rotate(${t * 55}) scale(${.65 + t * .7})" fill="none" stroke="#8554a6" stroke-width="2.4">
+        <ellipse rx="24" ry="8" transform="rotate(32)"/><ellipse rx="24" ry="8" transform="rotate(-32)"/>
+        <g fill="#b6eeee" stroke="#735292" stroke-width="1.5"><circle cx="20" cy="-12" r="3.5"/><circle cx="-20" cy="-12" r="3"/></g></g>
+        <path transform="scale(${1 - .7 * t})" d="m0-15 4 11 11 4-11 4-4 12-4-12-11-4 11-4Z" fill="#fff1b7" stroke="#af7dbd" stroke-width="1.6"/></g>`;
+      if (e.kind === 'push') return `<g class="push-effect" transform="translate(${x + e.ux * t * 68} ${y + e.uy * t * 68}) rotate(${Math.atan2(e.uy, e.ux) * 180 / Math.PI})" opacity="${1 - t}" fill="none" stroke-linecap="round"><path d="m-24-10 13 2m-16 7h12m-10 9 12-2" stroke="#6996aa" stroke-width="2.5"/><path d="M-7-11Q7 0-7 11" stroke="#497c95" stroke-width="4.5"/><path d="M-6-9Q4 0-6 9" stroke="#d8fbff" stroke-width="2.2"/></g>`;
+      if (e.kind === 'burn') return `<g class="burn-effect" ${at}><use href="#art-firePatch" transform="translate(11 ${8 - t * 16}) scale(${.62 - t * .32})"/></g>`;
       if (e.kind === 'block') {
         const bx = e.vx * t * 60, by = e.vy * t * 60;
         const color = G.TOOLS[e.shotKind]?.color || '#6a8d58';
@@ -128,22 +233,24 @@
           <path d="m0-11 3 7 8-3-5 7 5 4-8-1-3 8-3-8-8 1 5-4-5-7 8 3Z" fill="#fff4bc" stroke="#d5a34c" stroke-width="1.3" transform="scale(${1 + t * 0.7})"/>
           ${[-150, -115, -75, -35].map(a => { const r = a * Math.PI / 180 * (e.vy > 0 ? -1 : 1), d = 11 + t * 26; return `<path d="M${Math.cos(r) * d} ${Math.sin(r) * d}l${Math.cos(r) * 7} ${Math.sin(r) * 7}" stroke="#dbaa52" stroke-width="2.5" stroke-linecap="round"/>`; }).join('')}
           <path d="M${bx - e.vx * 12} ${by - e.vy * 12}L${bx} ${by}" stroke="${color}" stroke-width="3" stroke-linecap="round" opacity=".55"/>
-          <circle class="ricochet" cx="${bx}" cy="${by}" r="${e.shotKind === 'frost' ? 5 : 4}" fill="${color}" stroke="#fff8db" stroke-width="1.5"/>
+          <g class="ricochet" transform="translate(${bx} ${by}) scale(.65)">${G.TOOLS[e.shotKind]?.rate ? A.shot(e.shotKind, 0, 0, Math.atan2(e.vy, e.vx) * 180 / Math.PI) : '<circle r="5" fill="#efaf55"/>'}</g>
         </g>`;
       }
-      const color = e.kind === 'chip' ? '#b4976e' : e.kind === 'home' ? '#c88570' : '#9da96c';
+      if (e.kind === 'home') return `<g ${at}><g transform="translate(-14 ${-12 - t * 16}) scale(1.15)">${A.icon('heart')}</g></g>`;
+      const color = e.kind === 'chip' ? '#aa7d51' : '#75a450';
       return `<g opacity="${1 - t}">${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${x + Math.cos(i * Math.PI / 3) * (10 + t * 27)}" cy="${y + Math.sin(i * Math.PI / 3) * (10 + t * 27)}" r="${4 * (1 - t) + 1}" fill="${color}"/>`).join('')}</g>`;
     }).join('');
   }
   function updateUI(force = false) {
+    const advancing = G.isAdvancing(state);
     const signature = [state.level, state.wave, state.phase, state.money, state.hearts, state.undo.length, selected].join(':');
     if (!force && signature === uiSignature) return;
     uiSignature = signature;
     $('money').textContent = state.money;
-    $('seeds').setAttribute('aria-label', `可用種子 ${state.money}`);
+    $('coins').setAttribute('aria-label', `可用金幣 ${state.money}`);
     $('health').textContent = state.hearts;
     $('hearts').setAttribute('aria-label', `小屋生命 ${state.hearts}`);
-    document.querySelectorAll('[data-level]').forEach(b => { const active = Number(b.dataset.level) === state.level; b.classList.toggle('active', active); b.setAttribute('aria-current', active ? 'step' : 'false'); });
+    $('level-select').value = String(state.level);
     document.querySelectorAll('[data-tool]').forEach(b => {
       b.classList.toggle('selected', b.dataset.tool === selected); b.setAttribute('aria-pressed', String(b.dataset.tool === selected));
       // Keep low-budget tools selectable to inspect their range.
@@ -151,22 +258,24 @@
     });
     $('remove').disabled = state.phase !== 'planning'; $('remove').classList.toggle('active', selected === 'remove'); $('remove').setAttribute('aria-pressed', String(selected === 'remove'));
     $('undo').disabled = state.phase !== 'planning' || state.undo.length === 0;
-    const label = state.phase === 'running' ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : '放小蟲';
-    $('action').innerHTML = A.icon(state.phase === 'running' ? 'pause' : 'play');
+    $('reset').setAttribute('aria-label', state.phase === 'planning' ? '清空部署，全額退款' : state.phase === 'won' ? '回到第一關' : '重試這關');
+    const label = advancing ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : state.level > 0 ? '下一關' : '開始';
+    $('action').innerHTML = state.phase === 'planning' ? label : A.icon(advancing ? 'pause' : 'play');
     $('action').setAttribute('aria-label', label);
-    $('action').classList.toggle('pause-state', state.phase === 'running');
+    $('action').classList.toggle('pause-state', advancing);
   }
   function outcome() {
     hideInfo();
     const won = state.phase === 'won';
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
-    $('result-title').textContent = won ? '守住了！' : '再試一次';
+    $('result-title').textContent = won ? '十關完成！' : '再試一次';
     $('result-hearts').innerHTML = Array.from({ length: 5 }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
-    $('result-primary').textContent = won ? state.level < G.LEVELS.length - 1 ? '下一園' : '再玩一次' : '重試這波';
-    $('result-secondary').textContent = won ? '看看花園' : '重新開始';
+    $('result-primary').textContent = won ? '再玩一次' : '重試這關';
+    $('result-secondary').textContent = won ? '看看花園' : '回到第一關';
     if (!$('result').open) $('result').showModal();
   }
   function sync(force = false) {
+    if (lastLevel !== state.level) { hideInfo(); hover = null; lastLevel = state.level; ground(); }
     if (force || lastRevision !== state.revision) {
       selection(); lastRevision = state.revision;
       for (const cell of $('hit-layer').querySelectorAll('[data-c]')) {
@@ -176,17 +285,26 @@
       if (infoAnchor?.classList.contains('cell-hit')) showCellInfo(infoAnchor);
     }
     if (lastPhase !== state.phase) {
+      const finished = lastPhase === 'running' && (state.phase === 'planning' || state.phase === 'won');
       lastPhase = state.phase;
-      if (state.phase === 'planning') save();
+      if (state.phase === 'planning' || state.phase === 'running' || state.phase === 'won') save();
+      if (finished) {
+        $('status').textContent = `過關，獲得 ${state.lastReward} 枚金幣${state.phase === 'planning' ? '，可以部署下一關' : ''}`;
+        $('reward').textContent = `+${state.lastReward}`; $('reward').hidden = false;
+        clearTimeout(rewardTimer); rewardTimer = setTimeout(() => { $('reward').hidden = true; }, 3000);
+      }
+      selection();
       if (state.phase === 'won' || state.phase === 'lost') outcome();
     }
-    updateUI(force); renderWorld();
+    updateUI(force);
+    if (force || state.time !== lastWorldTime) { renderWorld(); lastWorldTime = state.time; }
   }
   function loadLevel(level, replacement = null) {
     hideInfo();
     if ($('result').open) $('result').close();
     state = replacement || G.createState(level); selected = 'pea'; hover = null; $('status').textContent = ''; accumulator = 0;
-    lastPhase = ''; lastRevision = -1; uiSignature = ''; ground(); save(); sync(true);
+    clearTimeout(rewardTimer); $('reward').hidden = true;
+    lastPhase = ''; lastLevel = -1; lastRevision = -1; uiSignature = ''; save(); sync(true);
   }
   function interact(c, r) {
     if (!selected) { selected = G.at(state, c, r)?.kind || 'pea'; updateUI(true); return; }
@@ -214,8 +332,19 @@
   document.addEventListener('scroll', repositionInfo, true);
   $('remove').addEventListener('click', () => { selected = selected === 'remove' ? null : 'remove'; selection(); updateUI(true); });
   $('undo').addEventListener('click', () => { if (G.undo(state)) { save(); sync(true); } });
-  $('reset').addEventListener('click', () => loadLevel(state.level));
-  document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => loadLevel(+b.dataset.level)));
+  $('reset').addEventListener('click', () => {
+    if (state.checkpoint) loadLevel(state.level, G.retry(state));
+    else if (state.phase === 'planning') {
+      // Reorganise the current budget without erasing earned campaign funds.
+      for (const b of [...state.buildings]) G.remove(state, b.c, b.r);
+      state.undo = []; save(); sync(true);
+    } else loadLevel(0);
+  });
+  $('level-select').addEventListener('change', event => loadLevel(Number(event.target.value)));
+  $('solution').addEventListener('click', () => {
+    loadLevel(state.level, window.GardenSolutions.create(state.level));
+    $('status').textContent = '已重設本關並放上解答，按開始出怪';
+  });
   $('action').addEventListener('click', () => {
     hideInfo();
     hover = null; $('status').textContent = ''; selection();
@@ -257,18 +386,18 @@
   });
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
-    else loadLevel(state.level < G.LEVELS.length - 1 ? state.level + 1 : state.level);
+    else loadLevel(0);
   });
-  $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(state.level); else $('result').close(); });
+  $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else $('result').close(); });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden && state.phase === 'running') { G.togglePause(state); sync(true); }
+    if (document.hidden && G.isAdvancing(state)) { G.togglePause(state); save(); sync(true); }
     accumulator = 0; lastFrame = 0;
   });
 
   // Deterministic fixed simulation step; pause does not bank elapsed time.
   function frame(now) {
     const elapsed = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0; lastFrame = now;
-    if (state.phase === 'running') {
+    if (G.isAdvancing(state)) {
       accumulator += elapsed * BATTLE_SPEED;
       while (accumulator >= 1 / 60) { G.step(state, 1 / 60); accumulator -= 1 / 60; }
     } else accumulator = 0;

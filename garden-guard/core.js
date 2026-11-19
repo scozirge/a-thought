@@ -6,55 +6,74 @@
   'use strict';
   const COLS = 12, ROWS = 8;
   const BATTLE_SPEED = 1.5;
+  const SPAWN_INTERVAL = BATTLE_SPEED * 0.25;
+  const ENEMY_HEALTH_MULTIPLIER = 2;
   const GOAL = { c: 0, r: 3 };
   const TOOLS = {
-    pea: { name: '一般砲塔', cost: 6, range: 3.1, damage: 1, rate: 1.5, effect: '單體傷害', hp: 5, color: '#4b8058' },
-    cannon: { name: '大砲範圍塔', cost: 9, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
-    frost: { name: '冰凍塔', cost: 8, range: 2.65, damage: 1, rate: 0.9, effect: '冰凍緩速', hp: 5, color: '#619aa9' },
-    flame: { name: '火焰塔', cost: 10, range: 2.8, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
-    pierce: { name: '直線穿透塔', cost: 10, range: 4.2, damage: 1, rate: 1.5, effect: '穿透傷害', hp: 5, color: '#4a8f88' },
-    push: { name: '擊退塔', cost: 9, range: 3, damage: 1, rate: 0.5, knockback: 3, effect: '擊退 3 格', hp: 5, color: '#7882af' },
-    molecular: { name: '分子砲', cost: 14, range: 3.6, damage: 6, rate: 0.4, effect: '單體高傷害', hp: 5, color: '#a16cab' },
+    pea: { name: '一般砲塔', targets: ['ground', 'air'], cost: 4, range: 3.1, damage: 1, rate: 1.8, effect: '單體傷害', hp: 5, color: '#4b8058' },
+    cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 12, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
+    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 8, range: 2.65, damage: 1, rate: 0.9, radius: 1, slowDuration: 2.1, effect: '1 格範圍緩速', hp: 5, color: '#619aa9' },
+    flame: { name: '火焰塔', targets: ['ground'], cost: 8, range: 2.8, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
+    pierce: { name: '直線穿透塔', targets: ['ground', 'air'], cost: 12, range: 6.2, damage: 1, rate: 0.8, effect: '穿透傷害', hp: 5, color: '#4a8f88' },
+    push: { name: '擊退塔', targets: ['ground', 'air'], cost: 16, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
+    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 32, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', effect: '高血量優先・瞄準 2.5 秒', hp: 5, color: '#a16cab' },
     wall: { name: '小石牆', cost: 1, hp: 4, color: '#a48a66' }
   };
+  const PREVIOUS_PRICES = { pea: 6, cannon: 9, frost: 8, flame: 10, pierce: 10, push: 9, molecular: 14, wall: 1 };
   const ENEMIES = {
-    bug: { name: '小蟲', hp: 1, speed: 0.82, color: '#bd7657' },
-    shield: { name: '上盾蟲', hp: 3, speed: 0.68, shield: 'up', color: '#d3a15d' },
-    shield_down: { name: '下盾蟲', hp: 3, speed: 0.68, shield: 'down', color: '#78ad9b' },
-    hopper: { name: '跳蟲', hp: 3, speed: 0.85, color: '#8caa55' },
-    mother: { name: '母蟲', hp: 10, speed: 0.30, color: '#c58fa9' },
-    flyer: { name: '飛蟲', hp: 2, speed: 1, color: '#73a9bd' },
-    splitter: { name: '分裂蟲', hp: 4, speed: 0.70, color: '#87b77c' },
-    giant: { name: '巨蟲', hp: 20, speed: 0.35, color: '#9e8266' },
-    bomber: { name: '爆炸蟲', hp: 4, speed: 0.75, color: '#c96f58' },
-    swift: { name: '長腳蟲', hp: 2, speed: 1.65, color: '#c8a14b' }
+    bug: { name: '小蟲', hp: 1, artSpan: 52, speed: 0.82, color: '#bd7657' },
+    shield: { name: '上盾蟲', hp: 3, artSpan: 73, speed: 0.68, shield: 'up', color: '#d3a15d' },
+    shield_down: { name: '下盾蟲', hp: 3, artSpan: 73, speed: 0.68, shield: 'down', color: '#78ad9b' },
+    hopper: { name: '跳蟲', hp: 3, artSpan: 64, speed: 0.85, color: '#8caa55' },
+    mother: { name: '母蟲', hp: 10, artSpan: 69, speed: 0.30, color: '#c58fa9' },
+    flyer: { name: '飛蟲', airborne: true, hp: 2, artSpan: 60, speed: 1, color: '#73a9bd' },
+    splitter: { name: '分裂蟲', hp: 4, artSpan: 62, speed: 0.70, color: '#87b77c' },
+    giant: { name: '巨蟲', hp: 20, artSpan: 78, speed: 0.35, color: '#9e8266' },
+    swift: { name: '長腳蟲', hp: 2, artSpan: 64, speed: 1.65, color: '#c8a14b' }
   };
-  const group = (kind, hp, count) => ({ kind, hp, count });
+  const health = (kind, hp) => Math.max(1, hp * ENEMY_HEALTH_MULTIPLIER - (kind === 'flyer' ? 1 : 0));
+  for (const [kind, enemy] of Object.entries(ENEMIES)) enemy.hp = health(kind, enemy.hp);
+  const group = (kind, hp, count) => ({ kind, hp: health(kind, hp), count });
+  // One battlefield, ten manually started waves. Test selection uses the same
+  // total budget that a lossless campaign has earned by the start of that wave.
+  const stage = (name, entries, reward, groups) => ({ name, entries, reward, rocks: [], water: [], waves: [groups] });
   const LEVELS = [
-    { name: '青草地', money: 22, entries: [3], rocks: [], water: [], waves: [
-      [group('shield', 3, 5)],
-      [group('shield', 4, 3), group('bug', 1, 5)],
-      [group('shield_down', 3, 3), group('bug', 1, 6), group('swift', 2, 2)],
-      [group('shield', 4, 3), group('shield_down', 4, 3), group('swift', 2, 3), group('bug', 1, 4)]
-    ] },
-    { name: '小池塘', money: 25, entries: [3], rocks: [], water: [[5, 2], [6, 2], [5, 3], [6, 3]], waves: [
-      [group('shield', 4, 4), group('bug', 1, 3)],
-      [group('hopper', 3, 4), group('swift', 2, 3), group('shield_down', 3, 2)],
-      [group('mother', 9, 2), group('bug', 1, 3), group('shield', 4, 2)],
-      [group('flyer', 3, 4), group('hopper', 4, 2), group('mother', 10, 1), group('shield_down', 4, 2), group('swift', 3, 3)]
-    ] },
-    { name: '兩條路', money: 28, entries: [1, 6], rocks: [[6, 1], [6, 2], [6, 5], [6, 6]], water: [], waves: [
-      [group('bug', 1, 5), group('splitter', 4, 3), group('shield_down', 3, 2)],
-      [group('giant', 20, 2), group('shield', 4, 2), group('flyer', 3, 3), group('swift', 3, 2)],
-      [group('bomber', 4, 3), group('hopper', 4, 2), group('mother', 10, 1), group('bug', 1, 4)],
-      [group('shield', 5, 2), group('shield_down', 5, 2), group('hopper', 4, 2), group('mother', 12, 1), group('flyer', 3, 2), group('splitter', 5, 2), group('giant', 24, 1), group('bomber', 5, 2), group('swift', 3, 2), group('bug', 1, 4)]
-    ] }
+    stage('攻擊方向', [1, 3, 5], 10, [group('shield', 3, 18), group('bug', 1, 10)]),
+    stage('上下夾擊', [1, 3, 5], 12, [group('shield', 4, 12), group('shield_down', 3, 12), group('bug', 1, 8)]),
+    stage('快速包圍', [1, 2, 3, 5, 6], 12, [group('shield', 4, 10), group('shield_down', 4, 10), group('swift', 3, 10), group('bug', 1, 8)]),
+    stage('越過防線', [1, 2, 3, 5, 6], 14, [group('hopper', 4, 12), group('shield', 4, 8), group('shield_down', 4, 8), group('swift', 3, 10), group('bug', 1, 6)]),
+    stage('空中來襲', [1, 2, 3, 5, 6], 14, [group('flyer', 4, 14), group('hopper', 4, 10), group('shield', 5, 8), group('shield_down', 5, 8), group('swift', 3, 8), group('bug', 1, 4)]),
+    stage('分裂蟲群', [0, 1, 3, 4, 6, 7], 16, [group('splitter', 5, 10), group('flyer', 5, 14), group('hopper', 5, 10), group('shield', 5, 6), group('shield_down', 5, 6), group('swift', 4, 8), group('bug', 1, 6)]),
+    stage('源源不絕', [0, 1, 3, 4, 6, 7], 16, [group('mother', 14, 4), group('splitter', 6, 12), group('flyer', 6, 14), group('hopper', 6, 10), group('shield', 6, 6), group('shield_down', 6, 6), group('swift', 4, 8), group('bug', 1, 8)]),
+    stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 18, [group('giant', 28, 6), group('mother', 16, 4), group('splitter', 7, 10), group('flyer', 7, 16), group('hopper', 7, 10), group('shield', 7, 6), group('shield_down', 7, 6), group('swift', 5, 10), group('bug', 1, 8)]),
+    stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 28, [group('giant', 32, 9), group('mother', 18, 4), group('splitter', 8, 12), group('flyer', 8, 16), group('hopper', 8, 12), group('shield', 8, 8), group('shield_down', 8, 6), group('swift', 6, 10), group('bug', 1, 9)]),
+    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 20, [group('giant', 38, 12), group('mother', 20, 4), group('splitter', 9, 12), group('flyer', 9, 18), group('hopper', 9, 12), group('shield', 9, 10), group('shield_down', 9, 10), group('swift', 7, 12), group('bug', 1, 10)])
   ];
+  const PREVIOUS_BUDGETS = [42, 52, 64, 76, 90, 104, 120, 136, 154, 182];
+  const GENEROUS_BUDGETS = [60, 75, 93, 111, 132, 153, 177, 201, 228, 270];
+  const REWARDS = [12, 14, 14, 16, 18, 20, 24, 24, 36, 24];
+  let budget = 48;
+  for (const [i, level] of LEVELS.entries()) {
+    level.reward = REWARDS[i]; level.money = budget; budget += level.reward;
+    level.edgeEntries = i < 7 ? [] : i === 7 ? [{ c: 10, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
+      : i === 8 ? [{ c: 9, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
+      : [9, 10].flatMap(c => [{ c, r: 0, side: 'top' }, { c, r: 7, side: 'bottom' }]);
+  }
   const key = (c, r) => `${c},${r}`;
   const inside = (c, r) => Number.isInteger(c) && Number.isInteger(r) && c >= 0 && c < COLS && r >= 0 && r < ROWS;
   const clone = value => JSON.parse(JSON.stringify(value));
   const terrain = level => new Set([...LEVELS[level].rocks, ...LEVELS[level].water].map(([c, r]) => key(c, r)));
   const at = (state, c, r) => state.buildings.find(b => b.c === c && b.r === r);
+  const stageSeed = level => (0x9e3779b9 ^ (level + 1) * 65537) >>> 0;
+  const entrances = level => [...LEVELS[level].entries.map(r => ({ c: COLS - 1, r, side: 'right' })), ...LEVELS[level].edgeEntries];
+  const isEntrance = (level, c, r) => entrances(level).some(e => e.c === c && e.r === r);
+  function clearEntrances(state) {
+    const blocked = state.buildings.filter(b => isEntrance(state.level, b.c, b.r));
+    if (!blocked.length) return;
+    state.money += blocked.reduce((sum, b) => sum + b.paidCost, 0);
+    state.buildings = state.buildings.filter(b => !blocked.includes(b));
+    state.revision++;
+  }
 
   // Uniform-cost four-neighbour BFS. Breakable buildings are considered only
   // after proving that no completely open route exists.
@@ -88,23 +107,23 @@
     return { path: findPath(start, GOAL, buildings, solid, true) || [], breaking: true };
   }
   function previews(state, buildings = state.buildings) {
-    return LEVELS[state.level].entries.map(r => route(state, { c: COLS - 1, r }, buildings));
+    return entrances(state.level).map(entry => route(state, entry, buildings));
   }
   function createState(level = 0) {
     level = Number.isInteger(level) && LEVELS[level] ? level : 0;
     return {
-      level, wave: 0, phase: 'planning', money: LEVELS[level].money, hearts: 5,
+      level, wave: 0, phase: 'planning', money: LEVELS[level].money, hearts: 5, completed: false, lastReward: 0,
       buildings: [], enemies: [], shots: [], effects: [], fires: [], queue: [], spawnClock: 0,
-      time: 0, revision: 0, nextId: 1, rngState: (0x9e3779b9 ^ (level + 1) * 65537) >>> 0, undo: [], checkpoint: null,
-      stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, exploded: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0 }
+      time: 0, revision: 0, nextId: 1, rngState: stageSeed(level), undo: [], checkpoint: null,
+      stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0 }
     };
   }
   function canBuild(state, kind, c, r) {
-    if (state.phase !== 'planning') return '這波結束後再蓋';
+    if (state.phase !== 'planning') return '開始後不能建造';
     if (!TOOLS[kind] || !inside(c, r)) return '不能放這裡';
-    if (c === 0 || c === COLS - 1 || terrain(state.level).has(key(c, r))) return '留給小蟲走';
+    if (c === 0 || c === COLS - 1 || isEntrance(state.level, c, r) || terrain(state.level).has(key(c, r))) return '留給小蟲走';
     if (at(state, c, r)) return '這裡已經有了';
-    if (state.money < TOOLS[kind].cost) return '種子不夠';
+    if (state.money < TOOLS[kind].cost) return '金幣不夠';
     return '';
   }
   function remember(state) {
@@ -116,16 +135,16 @@
     if (error) return { ok: false, error };
     remember(state);
     state.money -= TOOLS[kind].cost;
-    state.buildings.push({ id: state.nextId++, kind, c, r, hp: TOOLS[kind].hp, cooldown: 0, angle: -90, flash: 0 });
+    state.buildings.push({ id: state.nextId++, kind, c, r, paidCost: TOOLS[kind].cost, hp: TOOLS[kind].hp, cooldown: 0, aim: null, angle: -25, flash: 0 });
     state.revision++;
     return { ok: true };
   }
   function remove(state, c, r) {
-    if (state.phase !== 'planning') return { ok: false, error: '這波結束後再移' };
+    if (state.phase !== 'planning') return { ok: false, error: '開始後不能移除' };
     const building = at(state, c, r);
     if (!building) return { ok: false, error: '點選要移走的物品' };
     remember(state);
-    state.money += TOOLS[building.kind].cost;
+    state.money += building.paidCost;
     state.buildings = state.buildings.filter(b => b.id !== building.id);
     state.revision++;
     return { ok: true };
@@ -137,41 +156,67 @@
     return true;
   }
   function snapshot(state) {
-    return { version: 3, level: state.level, wave: state.wave, money: state.money, hearts: state.hearts, rngState: state.rngState,
+    return { version: 9, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
       buildings: clone(state.buildings), stats: clone(state.stats) };
   }
   function restore(data) {
-    if (!data || ![1, 2, 3].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
-    if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= LEVELS[data.level].waves.length) return null;
+    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (data.version < 6 && data.level > 2) return null;
+    if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= (data.version < 6 ? 4 : 1)) return null;
+    if (data.version >= 6 && (typeof data.completed !== 'boolean' || (data.completed && data.level !== LEVELS.length - 1))) return null;
     if (!Number.isInteger(data.money) || data.money < 0 || data.money > 1000 || !Number.isInteger(data.hearts) || data.hearts < 1 || data.hearts > 5) return null;
     if (!Array.isArray(data.buildings) || data.buildings.length > COLS * ROWS) return null;
     const state = createState(data.level), used = new Set(), solid = terrain(data.level);
     for (const saved of data.buildings) {
       const b = saved?.kind === 'rapid' ? { ...saved, kind: 'cannon' } : saved;
       if (!b || !Object.hasOwn(TOOLS, b.kind) || !inside(b.c, b.r) || b.c === 0 || b.c === COLS - 1 || solid.has(key(b.c, b.r)) || used.has(key(b.c, b.r))) return null;
+      if (data.version >= 9 && isEntrance(data.level, b.c, b.r)) return null;
       if (!Number.isInteger(b.hp) || b.hp < 1 || b.hp > TOOLS[b.kind].hp) return null;
+      // Price changes never create refund profit or reduce an old purchase's
+      // refund. Version 8 saves each building's actual purchase price.
+      const paidCost = data.version < 8 ? PREVIOUS_PRICES[b.kind] : b.paidCost;
+      if (![PREVIOUS_PRICES[b.kind], TOOLS[b.kind].cost].includes(paidCost)) return null;
       used.add(key(b.c, b.r));
-      state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, hp: b.hp, cooldown: 0, angle: -90, flash: 0 });
+      state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, paidCost, hp: b.hp, cooldown: 0, aim: null, angle: -25, flash: 0 });
     }
-    state.wave = data.wave; state.money = data.money; state.hearts = data.hearts;
+    // A loaded deployment starts with a full home, including older saves.
+    // Completed campaigns keep their final health for the result screen.
+    state.money = data.money; state.hearts = data.version >= 6 && data.completed ? data.hearts : 5;
+    // Preserve old boards and funds; old sub-batches now restart as one stage.
+    if (data.version < 5) state.money = Math.min(1000, state.money + [60, 80, 100][state.level] - [22, 25, 28][state.level]);
+    // Normalize earlier economies, then apply the lower budget exactly once.
+    // Existing purchases remain intact, with their original refund values.
+    if (data.version === 6) state.money = Math.min(1000, state.money + GENEROUS_BUDGETS[state.level] - PREVIOUS_BUDGETS[state.level] + (data.completed ? 10 : 0));
+    if (data.version < 9) state.money = Math.max(0, state.money - GENEROUS_BUDGETS[state.level] + LEVELS[state.level].money - (data.completed ? 30 - LEVELS[state.level].reward : 0));
+    clearEntrances(state);
+    if (data.version >= 6 && data.completed) { state.completed = true; state.phase = 'won'; }
     if (Number.isInteger(data.rngState) && data.rngState > 0 && data.rngState <= 0xffffffff) state.rngState = data.rngState;
     if (data.stats) for (const k of Object.keys(state.stats)) if (Number.isInteger(data.stats[k]) && data.stats[k] >= 0) state.stats[k] = data.stats[k];
     return state;
   }
   function startWave(state) {
     if (state.phase !== 'planning') return false;
+    // Starting is explicit; no future stage is queued during deployment.
     state.checkpoint = snapshot(state);
-    state.undo = []; state.queue = []; state.spawnClock = 0.5;
+    state.undo = []; state.queue = []; state.spawnClock = SPAWN_INTERVAL;
+    state.fires = []; state.effects = []; state.shots = []; state.lastReward = 0;
     state.waveStats = { hits: 0, blocked: 0 };
     let index = 0;
-    for (const g of LEVELS[state.level].waves[state.wave]) {
-      for (let i = 0; i < g.count; i++) state.queue.push({ kind: g.kind, hp: g.hp, row: LEVELS[state.level].entries[index++ % LEVELS[state.level].entries.length] });
+    const entries = entrances(state.level);
+    for (let wave = state.wave; wave < LEVELS[state.level].waves.length; wave++) {
+      for (const g of LEVELS[state.level].waves[wave]) {
+        for (let i = 0; i < g.count; i++) {
+          const entry = entries[index++ % entries.length];
+          state.queue.push({ kind: g.kind, hp: g.hp, wave, row: entry.r, position: { x: entry.c, y: entry.r } });
+        }
+      }
     }
     state.phase = 'running';
-    for (const b of state.buildings) b.cooldown = 0;
+    for (const b of state.buildings) { b.cooldown = 0; b.aim = null; }
     return true;
   }
   function retry(state) { return restore(state.checkpoint) || createState(state.level); }
+  function isAdvancing(state) { return state.phase === 'running'; }
   function togglePause(state) {
     if (state.phase === 'running') state.phase = 'paused';
     else if (state.phase === 'paused') state.phase = 'running';
@@ -189,20 +234,28 @@
     const side = ENEMIES[enemy.kind]?.shield;
     return side === 'up' ? source.r < enemy.y - 0.001 : side === 'down' ? source.r > enemy.y + 0.001 : false;
   }
+  // Normalize each drawing's natural span, including legs and armor, to a
+  // 48–63 unit silhouette on a 64-unit tile. Collision rules use board units.
+  function enemyArtScale(kind, maxHp = ENEMIES[kind].hp) {
+    const fraction = Math.max(0, Math.min(1, (maxHp - 1) / 75));
+    return (48 + 15 * Math.sqrt(fraction)) / ENEMIES[kind].artSpan;
+  }
   function impactPoint(enemy, source) {
     if (!shieldBlocks(enemy, source)) return { x: enemy.x, y: enemy.y };
     const side = ENEMIES[enemy.kind].shield === 'down' ? 1 : -1;
     const dx = Math.max(-0.44, Math.min(0.44, (source.c - enemy.x) / Math.max(0.1, Math.abs(enemy.y - source.r)) * 0.38));
-    return { x: enemy.x + dx, y: enemy.y + side * (0.15 + 0.34 * Math.sqrt(1 - (dx / 0.47) ** 2)) };
+    const scale = enemyArtScale(enemy.kind, enemy.maxHp);
+    return { x: enemy.x + dx * scale, y: enemy.y + side * scale * (0.15 + 0.34 * Math.sqrt(1 - (dx / 0.47) ** 2)) };
   }
   function effect(state, kind, x, y, details = {}) {
-    const duration = kind === 'block' ? 0.6 : ['split', 'hatch', 'detonate', 'leap'].includes(kind) ? 0.9 : 0.45;
+    const duration = kind === 'block' ? 0.6 : ['split', 'hatch', 'leap'].includes(kind) ? 0.9 : 0.45;
     state.effects.push({ kind, x, y, life: duration, duration, ...details });
   }
-  function hit(state, enemy, source, options = {}) {
-    if (!enemy || enemy.dead) return false;
-    if (options.ground && (enemy.kind === 'flyer' || enemy.leap)) return false;
-    const incoming = options.ground ? { ...source, c: enemy.x, r: enemy.y + 1 } : source;
+  function canTarget(kind, enemy) {
+    const air = !!ENEMIES[enemy.kind]?.airborne || !!enemy.leap;
+    return !enemy.dead && !!TOOLS[kind]?.targets?.includes(air ? 'air' : 'ground');
+  }
+  function blockHit(state, enemy, incoming) {
     if (shieldBlocks(enemy, incoming)) {
       enemy.shieldFlash = 0.25;
       state.stats.blocked++; state.waveStats.blocked++;
@@ -212,19 +265,25 @@
       effect(state, 'block', point.x, point.y, {
         vx: (enemy.x - incoming.c) / distance,
         vy: side * Math.max(0.45, Math.abs(enemy.y - incoming.r) / distance),
-        shotKind: source.kind, enemyId: enemy.id
+        shotKind: incoming.kind, enemyId: enemy.id
       });
-      return false;
+      return true;
     }
+    return false;
+  }
+  function hit(state, enemy, source, options = {}) {
+    if (!enemy || enemy.dead) return false;
+    if (TOOLS[source.kind]?.targets && !canTarget(source.kind, enemy)) return false;
+    if (options.ground && (enemy.kind === 'flyer' || enemy.leap)) return false;
+    const incoming = options.ground ? { ...source, c: enemy.x, r: enemy.y + 1 } : source;
+    if (blockHit(state, enemy, incoming)) return false;
     const damage = options.damage ?? TOOLS[source.kind]?.damage ?? 1;
     enemy.hp = Math.max(0, enemy.hp - damage); enemy.flash = 0.18;
     state.stats.hits++; state.waveStats.hits++;
-    if (source.kind === 'frost') enemy.slow = 2.1;
-    if (enemy.hp <= 0) {
-      killEnemy(state, enemy);
-    }
+    if (source.kind === 'frost') enemy.slow = TOOLS.frost.slowDuration;
+    if (enemy.hp <= 0) killEnemy(state, enemy);
     if (!enemy.dead && enemy.kind === 'hopper' && !enemy.jumped) startLeap(state, enemy);
-    if (!enemy.dead && !enemy.leap && source.kind === 'push') pushEnemy(state, enemy, source);
+    if (!enemy.dead && !enemy.leap && source.kind === 'push') pushEnemy(state, enemy);
     return true;
   }
   function random(state) {
@@ -244,26 +303,18 @@
         const x = parent.x + Math.cos(angle) * radius, y = parent.y + Math.sin(angle) * radius;
         if (freePoint(state, x, y) && positions.every(p => Math.hypot(p.x - x, p.y - y) >= 0.4)) { point = { x, y }; break; }
       }
-      positions.push(point); spawn(state, 'bug', 1, 3, point);
-      effect(state, 'hatch', point.x, point.y);
+      positions.push(point); spawn(state, 'bug', ENEMIES.bug.hp, 3, point);
+      if (parent.kind === 'mother') effect(state, 'hatch', point.x, point.y);
     }
     return positions;
   }
   function killEnemy(state, enemy) {
     if (enemy.dead) return;
-    enemy.dead = true; state.money++; state.stats.defeated++;
-    effect(state, 'pop', enemy.x, enemy.y);
+    enemy.dead = true; state.stats.defeated++;
     if (enemy.kind === 'splitter') {
-      state.stats.split++; effect(state, 'split', enemy.x, enemy.y); hatch(state, enemy, 3);
-    } else if (enemy.kind === 'bomber') {
-      const c = Math.round(enemy.x), r = Math.round(enemy.y);
-      const destroyed = state.buildings.filter(b => Math.max(Math.abs(b.c - c), Math.abs(b.r - r)) <= 1);
-      state.buildings = state.buildings.filter(b => !destroyed.includes(b));
-      for (const b of destroyed) effect(state, 'chip', b.c, b.r);
-      state.stats.broken += destroyed.length; state.stats.exploded++;
-      if (destroyed.length) state.revision++;
-      effect(state, 'detonate', c, r);
-    }
+      state.stats.split++;
+      effect(state, 'split', enemy.x, enemy.y, { maxHp: enemy.maxHp, offspring: hatch(state, enemy, 3) });
+    } else effect(state, 'pop', enemy.x, enemy.y);
   }
   function jumpLanding(state, enemy) {
     const c0 = Math.round(enemy.x), r0 = Math.round(enemy.y), candidates = [];
@@ -286,23 +337,68 @@
     state.stats.jumped++; effect(state, 'leap', enemy.x, enemy.y, { toX: landing.c, toY: landing.r });
     return true;
   }
-  function pushEnemy(state, enemy, source) {
-    const dx = enemy.x - source.c, dy = enemy.y - source.r, distance = Math.hypot(dx, dy);
-    if (distance < 0.001) return;
-    const ux = dx / distance, uy = dy / distance, solid = terrain(state.level);
-    const free = (c, r) => inside(c, r) && (enemy.kind === 'flyer' || (!solid.has(key(c, r)) && !at(state, c, r)));
-    let x = enemy.x, y = enemy.y, pc = Math.round(x), pr = Math.round(y);
-    // Sweep the entire ray, including diagonal corners; never teleport through a wall.
-    for (let d = 0.05; d <= TOOLS.push.knockback + 1e-9; d += 0.05) {
-      const nx = enemy.x + ux * d, ny = enemy.y + uy * d, c = Math.round(nx), r = Math.round(ny);
-      if (nx < 0 || nx > COLS - 1 || ny < 0 || ny > ROWS - 1 || !free(c, r)) break;
-      if (c !== pc && r !== pr && (!free(c, pr) || !free(pc, r))) break;
-      x = nx; y = ny; pc = c; pr = r;
+  function pushEnemy(state, enemy) {
+    const solid = terrain(state.level);
+    const flying = ENEMIES[enemy.kind].airborne;
+    const blocked = new Set(state.buildings.map(b => key(b.c, b.r)));
+    const free = (c, r) => inside(c, r) && (flying || (!solid.has(key(c, r)) && !blocked.has(key(c, r))));
+    const directions = [[1, 0], [0, -1], [0, 1], [-1, 0]];
+    // Distance to home follows the same open paths as normal ground movement.
+    function distances(allowBreak) {
+      const field = new Map([[key(GOAL.c, GOAL.r), 0]]), queue = [GOAL];
+      for (let i = 0; i < queue.length; i++) for (const [dc, dr] of directions) {
+        const c = queue[i].c + dc, r = queue[i].r + dr, k = key(c, r);
+        if (!inside(c, r) || solid.has(k) || (!allowBreak && blocked.has(k)) || field.has(k)) continue;
+        field.set(k, field.get(key(queue[i].c, queue[i].r)) + 1); queue.push({ c, r });
+      }
+      return field;
     }
-    if (Math.hypot(x - enemy.x, y - enemy.y) < 0.01) return;
-    enemy.push = { fromX: enemy.x, fromY: enemy.y, x, y, age: 0, duration: 0.3 };
+    const origin = { x: enemy.x, y: enemy.y }, limit = TOOLS.push.knockback;
+    const anchors = [];
+    for (const c of new Set([Math.floor(enemy.x), Math.ceil(enemy.x)])) for (const r of new Set([Math.floor(enemy.y), Math.ceil(enemy.y)])) {
+      if (!free(c, r)) continue;
+      const length = Math.hypot(c - enemy.x, r - enemy.y);
+      const samples = Math.max(1, Math.ceil(length * 20));
+      if (Array.from({ length: samples }, (_, i) => (i + 1) / samples).some(t => !free(Math.round(enemy.x + (c - enemy.x) * t), Math.round(enemy.y + (r - enemy.y) * t)))) continue;
+      anchors.push({ c, r, length, points: length > 1e-9 ? [origin, { x: c, y: r }] : [origin] });
+    }
+    if (!anchors.length) return;
+    let field = flying ? null : distances(false);
+    // An entirely enclosed group will eventually break out. Its retreat still
+    // uses free cells, with the breakable-home distance as a finite fallback.
+    if (field && anchors.every(a => !field.has(key(a.c, a.r)))) field = distances(true);
+    const scoreCell = (c, r) => flying ? Math.hypot(c - GOAL.c, r - GOAL.r) : field.get(key(c, r));
+    const initialScore = Math.min(...anchors.map(a => (scoreCell(a.c, a.r) ?? Infinity) + a.length));
+    let best = null;
+    const consider = (points, length, score) => {
+      if (!Number.isFinite(score) || score <= initialScore + 1e-9 || length < 0.01) return;
+      const last = points[points.length - 1];
+      if (!best || score > best.score + 1e-9 || (Math.abs(score - best.score) < 1e-9 && last.x > best.x + 1e-9)) best = { points, length, score, x: last.x, y: last.y };
+    };
+    const queue = [...anchors], visited = new Map();
+    while (queue.length) {
+      queue.sort((a, b) => a.length - b.length);
+      const current = queue.shift(), k = key(current.c, current.r);
+      if (visited.has(k)) continue;
+      visited.set(k, current.length);
+      consider(current.points, current.length, scoreCell(current.c, current.r));
+      const travel = Math.min(1, limit - current.length);
+      if (travel <= 1e-9) continue;
+      for (const [dc, dr] of directions) {
+        const c = current.c + dc, r = current.r + dr;
+        if (!free(c, r) || visited.has(key(c, r))) continue;
+        const x = current.c + dc * travel, y = current.r + dr * travel;
+        const points = [...current.points, { x, y }], length = current.length + travel;
+        const score = flying ? Math.hypot(x - GOAL.c, y - GOAL.r) : scoreCell(current.c, current.r) * (1 - travel) + scoreCell(c, r) * travel;
+        consider(points, length, score);
+        if (travel === 1) queue.push({ c, r, length, points });
+      }
+    }
+    if (!best) return;
+    enemy.push = { fromX: enemy.x, fromY: enemy.y, x: best.x, y: best.y, points: best.points, length: best.length, age: 0, duration: 0.3 };
     enemy.next = null; enemy.attackId = null; enemy.attackClock = 0.65;
-    effect(state, 'push', enemy.x, enemy.y, { ux, uy });
+    const first = best.points[1], distance = Math.hypot(first.x - enemy.x, first.y - enemy.y);
+    effect(state, 'push', enemy.x, enemy.y, { ux: (first.x - enemy.x) / distance, uy: (first.y - enemy.y) / distance });
   }
   function ignite(state, x, y) {
     const c = Math.round(x), r = Math.round(y), tool = TOOLS.flame;
@@ -317,7 +413,7 @@
       if (fire.clock <= 1e-9) {
         fire.clock += BATTLE_SPEED;
         for (const enemy of [...state.enemies]) {
-          if (enemy.dead || enemy.burnCooldown > 1e-9 || Math.hypot(enemy.x - fire.c, enemy.y - fire.r) > 0.75) continue;
+          if (enemy.dead || enemy.burnCooldown > 1e-9 || Math.hypot(enemy.x - fire.c, enemy.y - fire.r) > TOOLS.flame.burnRadius) continue;
           // Ground fire reaches the underside; overlapping fires never stack damage.
           const damaged = hit(state, enemy, { kind: 'flame', c: fire.c, r: fire.r }, { ground: true, damage: TOOLS.flame.burnDamage });
           enemy.burnCooldown = BATTLE_SPEED;
@@ -328,14 +424,36 @@
     state.fires = state.fires.filter(f => f.life > 1e-9);
   }
   function resolveShot(state, shot) {
+    if (shot.kind === 'push') {
+      // Aim at one grid cell, using the target's last position if it died.
+      // Snapshot before damage so newly split bugs do not receive this hit.
+      const target = state.enemies.find(e => e.id === shot.target && !e.dead);
+      const x = target?.x ?? shot.impactX, y = target?.y ?? shot.impactY;
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+      const c = Math.round(x), r = Math.round(y);
+      const targets = state.enemies.filter(e => canTarget('push', e) && Math.round(e.x) === c && Math.round(e.y) === r && Math.hypot(e.x - shot.c, e.y - shot.r) <= TOOLS.push.range);
+      effect(state, 'push-cell', c, r);
+      for (const target of targets) hit(state, target, shot);
+      return;
+    }
     const enemy = state.enemies.find(e => e.id === shot.target && !e.dead);
-    if (!enemy) return;
+    if (!enemy) {
+      if (shot.kind === 'flame' && Number.isFinite(shot.impactX) && Number.isFinite(shot.impactY)) ignite(state, shot.impactX, shot.impactY);
+      return;
+    }
     const x = enemy.x, y = enemy.y;
-    const nearby = shot.kind === 'cannon' ? state.enemies.filter(e => e.id !== enemy.id && !e.dead && Math.hypot(e.x - x, e.y - y) <= TOOLS.cannon.radius) : [];
+    const area = shot.kind === 'cannon' || shot.kind === 'frost';
+    const nearby = area ? state.enemies.filter(e => e.id !== enemy.id && canTarget(shot.kind, e) && Math.hypot(e.x - x, e.y - y) <= TOOLS[shot.kind].radius) : [];
     if (!hit(state, enemy, shot)) return;
     if (shot.kind === 'cannon') {
       effect(state, 'blast', x, y, { radius: TOOLS.cannon.radius });
       for (const other of nearby) hit(state, other, shot);
+    } else if (shot.kind === 'frost') {
+      effect(state, 'frost', x, y, { radius: TOOLS.frost.radius });
+      for (const other of nearby) {
+        // Neighbours receive slow only: no extra damage or first-hit leap.
+        if (!other.dead && !blockHit(state, other, shot)) other.slow = TOOLS.frost.slowDuration;
+      }
     } else if (shot.kind === 'flame') ignite(state, x, y);
     else if (shot.kind === 'molecular') effect(state, 'molecular', x, y);
   }
@@ -366,7 +484,14 @@
     if (enemy.push) {
       const p = enemy.push; p.age += dt;
       const t = Math.min(1, p.age / p.duration), eased = 1 - (1 - t) ** 2;
-      enemy.x = p.fromX + (p.x - p.fromX) * eased; enemy.y = p.fromY + (p.y - p.fromY) * eased;
+      let remaining = p.length * eased;
+      for (let i = 1; i < p.points.length; i++) {
+        const a = p.points[i - 1], b = p.points[i], length = Math.hypot(b.x - a.x, b.y - a.y);
+        const progress = Math.min(1, remaining / length);
+        enemy.x = a.x + (b.x - a.x) * progress; enemy.y = a.y + (b.y - a.y) * progress;
+        if (remaining <= length) break;
+        remaining -= length;
+      }
       if (t >= 1) {
         enemy.c = Math.round(enemy.x); enemy.r = Math.round(enemy.y);
         enemy.next = { c: enemy.c, r: enemy.r }; enemy.push = null;
@@ -412,13 +537,15 @@
     } else { enemy.x += dx / dist * step; enemy.y += dy / dist * step; }
   }
   function step(state, dt) {
-    if (state.phase !== 'running' || !Number.isFinite(dt) || dt <= 0) return;
+    if (!isAdvancing(state) || !Number.isFinite(dt) || dt <= 0) return;
     dt = Math.min(dt, 0.05);
     state.time += dt;
     state.spawnClock -= dt;
     if (state.queue.length && state.spawnClock <= 0) {
-      const item = state.queue.shift(); spawn(state, item.kind, item.hp, item.row);
-      state.spawnClock = 1.45;
+      const item = state.queue.shift();
+      if (Number.isInteger(item.wave)) state.wave = item.wave;
+      spawn(state, item.kind, item.hp, item.row, item.position);
+      state.spawnClock += SPAWN_INTERVAL;
     }
     for (const enemy of [...state.enemies]) {
       if (enemy.dead) continue;
@@ -435,14 +562,29 @@
       b.flash = Math.max(0, b.flash - dt);
       if (b.kind === 'wall') continue;
       const tool = TOOLS[b.kind]; b.cooldown -= dt;
-      const inRange = state.enemies.filter(e => !e.dead && Math.hypot(e.x - b.c, e.y - b.r) <= tool.range);
-      inRange.sort((a, z) => (a.x + Math.abs(a.y - GOAL.r)) - (z.x + Math.abs(z.y - GOAL.r)) || a.id - z.id);
-      const target = inRange[0];
+      // Acquire the next target only after this tower's previous projectile has
+      // resolved, so the priority sees the HP remaining after its own damage.
+      if (tool.aimSeconds && state.shots.some(s => s.tower === b.id)) continue;
+      const inRange = state.enemies.filter(e => canTarget(b.kind, e) && Math.hypot(e.x - b.c, e.y - b.r) <= tool.range);
+      inRange.sort((a, z) => (tool.priority === 'highestHp' ? z.hp - a.hp : tool.priority === 'nearest' ? Math.hypot(a.x - b.c, a.y - b.r) - Math.hypot(z.x - b.c, z.y - b.r) : 0) ||
+        (a.x + Math.abs(a.y - GOAL.r)) - (z.x + Math.abs(z.y - GOAL.r)) || a.id - z.id);
+      let target = inRange[0];
+      if (tool.aimSeconds) {
+        // Keep tracking the same enemy. Losing it restarts the full aim time;
+        // a newly arrived high-HP enemy cannot steal an existing lock.
+        const locked = inRange.find(e => e.id === b.aim?.target);
+        if (locked) target = locked;
+        else b.aim = target ? { target: target.id, age: 0 } : null;
+        if (b.aim) b.aim.age += dt;
+      }
       if (!target) { b.cooldown = Math.max(0, b.cooldown); continue; }
       b.angle = Math.atan2(target.y - b.r, target.x - b.c) * 180 / Math.PI;
-      if (b.cooldown <= 0) {
-        b.cooldown += BATTLE_SPEED / tool.rate; b.flash = 0.15;
-        const shot = { id: state.nextId++, target: target.id, c: b.c, r: b.r, kind: b.kind, age: 0, duration: 0.2 };
+      if (tool.aimSeconds ? b.aim.age >= tool.aimSeconds * BATTLE_SPEED - 1e-9 : b.cooldown <= 0) {
+        if (tool.aimSeconds) { b.aim = null; b.cooldown = 0; }
+        else b.cooldown += BATTLE_SPEED / tool.rate;
+        b.flash = 0.15;
+        const shot = { id: state.nextId++, tower: b.id, target: target.id, c: b.c, r: b.r, kind: b.kind, angle: b.angle, age: 0, duration: 0.2 };
+        if (b.kind === 'flame' || b.kind === 'push') { shot.impactX = target.x; shot.impactY = target.y; }
         if (b.kind === 'pierce') {
           const dx = target.x - b.c, dy = target.y - b.r, distance = Math.hypot(dx, dy) || 1;
           Object.assign(shot, { x: b.c, y: b.r, ux: dx / distance, uy: dy / distance, remaining: tool.range, hitIds: [] });
@@ -452,6 +594,10 @@
     }
     for (const shot of state.shots) {
       if (shot.kind === 'pierce') { movePiercingShot(state, shot, dt); continue; }
+      if (shot.kind === 'flame' || shot.kind === 'push') {
+        const target = state.enemies.find(e => e.id === shot.target && !e.dead);
+        if (target) { shot.impactX = target.x; shot.impactY = target.y; }
+      }
       shot.age += dt;
       if (shot.age >= shot.duration) resolveShot(state, shot);
     }
@@ -461,15 +607,17 @@
     for (const e of state.effects) e.life -= dt;
     state.effects = state.effects.filter(e => e.life > 0);
     if (!state.queue.length && !state.enemies.length && !state.shots.length) {
-      state.money += 4; state.revision++;
-      if (state.wave + 1 === LEVELS[state.level].waves.length) state.phase = 'won';
-      else { state.wave++; state.phase = 'planning'; }
-      // Repair between waves so planning remains about placement, not upkeep.
-      for (const b of state.buildings) { b.hp = TOOLS[b.kind].hp; b.flash = 0; }
-      state.effects = [];
-      state.fires = [];
+      state.lastReward = LEVELS[state.level].reward;
+      state.money += state.lastReward;
+      state.undo = []; state.checkpoint = null; state.revision++;
+      for (const b of state.buildings) b.aim = null;
+      if (state.level === LEVELS.length - 1) { state.completed = true; state.phase = 'won'; }
+      else { state.level++; state.wave = 0; state.hearts = 5; state.rngState = stageSeed(state.level); state.phase = 'planning'; clearEntrances(state); }
+      // Surviving buildings and funds carry over; each new stage heals the home.
+      // The last fire
+      // remains visible during deployment, then clears when the player starts.
     }
   }
-  return { COLS, ROWS, BATTLE_SPEED, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, findPath, route, previews,
-    createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, togglePause, spawn, shieldBlocks, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
+  return { COLS, ROWS, BATTLE_SPEED, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
+    createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
 });
