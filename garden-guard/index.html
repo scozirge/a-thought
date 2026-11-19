@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#284e40">
   <meta name="description" content="安排小塔、改變路線，和小蟲一起學方向、數量與策略。">
   <title>小小守園隊</title>
-  <link rel="stylesheet" href="styles.css?v=5a2c079351f7">
+  <link rel="stylesheet" href="styles.css?v=39550c7b8d15">
 </head>
 <body>
   <main class="app" aria-label="小小守園隊">
@@ -22,7 +22,7 @@
       <div class="board-scroll" id="board-scroll">
         <svg id="board" viewBox="0 0 920 592" role="group" aria-label="戰場。選好工具後點草地放置，或用方向鍵移動、Enter 放置。">
           <defs id="garden-art"></defs>
-          <g id="ground-layer"></g><g id="fire-layer" pointer-events="none"></g><g id="range-layer" pointer-events="none"></g>
+          <g id="ground-layer"></g><g id="fire-layer" pointer-events="none" clip-path="url(#field-bounds)"></g><g id="range-layer" pointer-events="none"></g>
           <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
           <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g><g id="health-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
@@ -51,6 +51,6 @@
     <button id="result-primary" class="action-button">再玩一次</button>
     <button id="result-secondary" class="secondary-button">再玩一次</button>
   </dialog>
-  <script src="core.js?v=5a2c079351f7"></script><script src="solutions.js?v=5a2c079351f7"></script><script src="art.js?v=5a2c079351f7"></script><script src="app.js?v=5a2c079351f7"></script>
+  <script src="core.js?v=39550c7b8d15"></script><script src="solutions.js?v=39550c7b8d15"></script><script src="art.js?v=39550c7b8d15"></script><script src="app.js?v=39550c7b8d15"></script>
 </body>
 </html>

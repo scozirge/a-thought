@@ -12,9 +12,9 @@
   const TOOLS = {
     pea: { name: '一般砲塔', targets: ['ground', 'air'], cost: 4, range: 3.1, damage: 1, rate: 1.8, effect: '單體傷害', hp: 5, color: '#4b8058' },
     cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 12, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
-    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 8, range: 2.65, damage: 1, rate: 0.9, radius: 1, slowDuration: 2.1, effect: '1 格範圍緩速', hp: 5, color: '#619aa9' },
+    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 8, range: 2.65, damage: 1, rate: 0.9, slowDuration: 2.1, effect: '塔周圍 2.65 格緩速', hp: 5, color: '#619aa9' },
     flame: { name: '火焰塔', targets: ['ground'], cost: 8, range: 2.8, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
-    pierce: { name: '直線穿透塔', targets: ['ground', 'air'], cost: 12, range: 6.2, damage: 1, rate: 0.8, effect: '穿透傷害', hp: 5, color: '#4a8f88' },
+    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 12, range: 6.2, damage: 1, rate: 0.8, effect: '直線雷射穿透', hp: 5, color: '#4a8f88' },
     push: { name: '擊退塔', targets: ['ground', 'air'], cost: 16, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
     molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 32, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', effect: '高血量優先・瞄準 2.5 秒', hp: 5, color: '#a16cab' },
     wall: { name: '小石牆', cost: 1, hp: 4, color: '#a48a66' }
@@ -212,7 +212,7 @@
       }
     }
     state.phase = 'running';
-    for (const b of state.buildings) { b.cooldown = 0; b.aim = null; }
+    for (const b of state.buildings) { b.cooldown = 0; b.flash = 0; b.aim = null; }
     return true;
   }
   function retry(state) { return restore(state.checkpoint) || createState(state.level); }
@@ -247,8 +247,10 @@
     const scale = enemyArtScale(enemy.kind, enemy.maxHp);
     return { x: enemy.x + dx * scale, y: enemy.y + side * scale * (0.15 + 0.34 * Math.sqrt(1 - (dx / 0.47) ** 2)) };
   }
+  const RECOIL_SECONDS = .38;
+  const EFFECT_SECONDS = { block: .6, split: .9, hatch: .9, leap: .9, frost: .85, blast: .64, laser: .34, spark: .31, flare: .54, molecular: .65 };
   function effect(state, kind, x, y, details = {}) {
-    const duration = kind === 'block' ? 0.6 : ['split', 'hatch', 'leap'].includes(kind) ? 0.9 : 0.45;
+    const duration = EFFECT_SECONDS[kind] ?? 0.45;
     state.effects.push({ kind, x, y, life: duration, duration, ...details });
   }
   function canTarget(kind, enemy) {
@@ -404,7 +406,7 @@
     const c = Math.round(x), r = Math.round(y), tool = TOOLS.flame;
     const existing = state.fires.find(f => f.c === c && f.r === r);
     if (existing) { existing.life = tool.burnSeconds * BATTLE_SPEED; return; }
-    state.fires.push({ id: state.nextId++, c, r, life: tool.burnSeconds * BATTLE_SPEED, clock: BATTLE_SPEED });
+    state.fires.push({ id: state.nextId++, c, r, bornAt: state.time, life: tool.burnSeconds * BATTLE_SPEED, clock: BATTLE_SPEED });
   }
   function updateFires(state, dt) {
     for (const enemy of state.enemies) enemy.burnCooldown = Math.max(0, enemy.burnCooldown - dt);
@@ -423,56 +425,77 @@
     }
     state.fires = state.fires.filter(f => f.life > 1e-9);
   }
+  function frostAura(state, source, primary) {
+    const tool = TOOLS.frost;
+    const nearby = state.enemies.filter(e => canTarget('frost', e) && Math.hypot(e.x - source.c, e.y - source.r) <= tool.range);
+    effect(state, 'frost', source.c, source.r, { radius: tool.range });
+    for (const enemy of nearby) {
+      if (enemy === primary) hit(state, enemy, source);
+      else if (!blockHit(state, enemy, source)) enemy.slow = tool.slowDuration;
+    }
+  }
+  function fireLaser(state, source) {
+    const angle = source.angle * Math.PI / 180, ux = Math.cos(angle), uy = Math.sin(angle);
+    let length = TOOLS.pierce.range;
+    const contacts = [];
+    for (const enemy of state.enemies) {
+      if (!canTarget('pierce', enemy)) continue;
+      const dx = enemy.x - source.c, dy = enemy.y - source.r;
+      const along = dx * ux + dy * uy;
+      if (along >= 0 && along <= length && Math.abs(dx * uy - dy * ux) <= .32) contacts.push({ enemy, along });
+    }
+    contacts.sort((a, b) => a.along - b.along || a.enemy.id - b.enemy.id);
+    const hitDistances = [];
+    for (const { enemy, along } of contacts) {
+      if (!hit(state, enemy, source)) {
+        const point = impactPoint(enemy, source);
+        length = Math.max(0, Math.min(length, (point.x - source.c) * ux + (point.y - source.r) * uy));
+        break;
+      }
+      if (!hitDistances.length || along - hitDistances[hitDistances.length - 1] > .35) hitDistances.push(along);
+    }
+    effect(state, 'laser', source.c, source.r, { angle: source.angle, length, hitDistances });
+  }
   function resolveShot(state, shot) {
+    const target = state.enemies.find(e => e.id === shot.target && !e.dead);
+    if (shot.kind === 'frost') return frostAura(state, shot, target);
+    if (shot.kind === 'pierce') return fireLaser(state, shot);
+    // Instant resolutions can take a target alone. All in-flight shots carry
+    // the two coordinates captured when the tower fired.
+    const x = shot.impactX ?? target?.x, y = shot.impactY ?? target?.y;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     if (shot.kind === 'push') {
-      // Aim at one grid cell, using the target's last position if it died.
-      // Snapshot before damage so newly split bugs do not receive this hit.
-      const target = state.enemies.find(e => e.id === shot.target && !e.dead);
-      const x = target?.x ?? shot.impactX, y = target?.y ?? shot.impactY;
-      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
       const c = Math.round(x), r = Math.round(y);
       const targets = state.enemies.filter(e => canTarget('push', e) && Math.round(e.x) === c && Math.round(e.y) === r && Math.hypot(e.x - shot.c, e.y - shot.r) <= TOOLS.push.range);
       effect(state, 'push-cell', c, r);
-      for (const target of targets) hit(state, target, shot);
+      for (const enemy of targets) hit(state, enemy, shot);
       return;
     }
-    const enemy = state.enemies.find(e => e.id === shot.target && !e.dead);
-    if (!enemy) {
-      if (shot.kind === 'flame' && Number.isFinite(shot.impactX) && Number.isFinite(shot.impactY)) ignite(state, shot.impactX, shot.impactY);
-      return;
+    // Sample occupants before damage, so split offspring cannot be hit twice.
+    const radius = shot.kind === 'cannon' ? TOOLS.cannon.radius : .4;
+    const nearby = state.enemies.filter(e => canTarget(shot.kind, e) && Math.hypot(e.x - x, e.y - y) <= radius);
+    const distance = e => Math.hypot(e.x - x, e.y - y);
+    let contact = null;
+    for (const e of nearby) {
+      if (distance(e) > .4) continue;
+      if (e === target) { contact = e; break; }
+      if (!contact || distance(e) < distance(contact)) contact = e;
     }
-    const x = enemy.x, y = enemy.y;
-    const area = shot.kind === 'cannon' || shot.kind === 'frost';
-    const nearby = area ? state.enemies.filter(e => e.id !== enemy.id && canTarget(shot.kind, e) && Math.hypot(e.x - x, e.y - y) <= TOOLS[shot.kind].radius) : [];
-    if (!hit(state, enemy, shot)) return;
+    if (contact && !hit(state, contact, shot)) return;
     if (shot.kind === 'cannon') {
-      effect(state, 'blast', x, y, { radius: TOOLS.cannon.radius });
-      for (const other of nearby) hit(state, other, shot);
-    } else if (shot.kind === 'frost') {
-      effect(state, 'frost', x, y, { radius: TOOLS.frost.radius });
-      for (const other of nearby) {
-        // Neighbours receive slow only: no extra damage or first-hit leap.
-        if (!other.dead && !blockHit(state, other, shot)) other.slow = TOOLS.frost.slowDuration;
-      }
-    } else if (shot.kind === 'flame') ignite(state, x, y);
-    else if (shot.kind === 'molecular') effect(state, 'molecular', x, y);
+      effect(state, 'blast', x, y, { radius });
+      for (const other of nearby) if (other !== contact) hit(state, other, shot);
+    } else if (shot.kind === 'flame') {
+      effect(state, 'flare', x, y);
+      ignite(state, x, y);
+    } else if (contact) {
+      effect(state, shot.kind === 'molecular' ? 'molecular' : 'spark', x, y,
+        { lift: shot.lift ?? 0, angle: shot.angle ?? 0 });
+    }
   }
-  function movePiercingShot(state, shot, dt) {
-    const travel = Math.min(shot.remaining, 12 * dt);
-    const x = shot.x, y = shot.y, nx = x + shot.ux * travel, ny = y + shot.uy * travel;
-    const collisions = [];
-    for (const enemy of state.enemies) {
-      if (enemy.dead || shot.hitIds.includes(enemy.id)) continue;
-      const projection = (enemy.x - x) * shot.ux + (enemy.y - y) * shot.uy;
-      const t = Math.max(0, Math.min(travel, projection));
-      if (Math.hypot(enemy.x - x - shot.ux * t, enemy.y - y - shot.uy * t) <= 0.32) collisions.push({ enemy, t });
-    }
-    collisions.sort((a, b) => a.t - b.t || a.enemy.id - b.enemy.id);
-    for (const { enemy } of collisions) {
-      shot.hitIds.push(enemy.id);
-      if (!hit(state, enemy, shot)) { shot.remaining = 0; shot.x = enemy.x; shot.y = enemy.y; return; }
-    }
-    shot.x = nx; shot.y = ny; shot.remaining -= travel;
+  function enemyLift(enemy, time) {
+    if (enemy.leap) return Math.sin(Math.PI * Math.min(1, enemy.leap.age / enemy.leap.duration)) * 50;
+    return enemy.kind === 'flyer' ? 12 + Math.sin(time * 8 + enemy.id) * 2 : 0;
   }
   function moveEnemy(state, enemy, dt) {
     if (enemy.leap) {
@@ -518,7 +541,7 @@
         if (enemy.attackId !== obstacle.id) { enemy.attackId = obstacle.id; enemy.attackClock = 0.65; }
         enemy.attackClock -= dt;
         if (enemy.attackClock <= 0) {
-          enemy.attackClock += 0.65; obstacle.hp--; obstacle.flash = 0.2;
+          enemy.attackClock += 0.65; obstacle.hp--;
           effect(state, 'chip', obstacle.c, obstacle.r);
           if (obstacle.hp <= 0) {
             state.buildings = state.buildings.filter(b => b.id !== obstacle.id);
@@ -559,7 +582,7 @@
     }
     if (state.phase === 'lost') return;
     for (const b of state.buildings) {
-      b.flash = Math.max(0, b.flash - dt);
+      b.flash = Math.max(0, b.flash - dt / RECOIL_SECONDS);
       if (b.kind === 'wall') continue;
       const tool = TOOLS[b.kind]; b.cooldown -= dt;
       // Acquire the next target only after this tower's previous projectile has
@@ -582,26 +605,21 @@
       if (tool.aimSeconds ? b.aim.age >= tool.aimSeconds * BATTLE_SPEED - 1e-9 : b.cooldown <= 0) {
         if (tool.aimSeconds) { b.aim = null; b.cooldown = 0; }
         else b.cooldown += BATTLE_SPEED / tool.rate;
-        b.flash = 0.15;
-        const shot = { id: state.nextId++, tower: b.id, target: target.id, c: b.c, r: b.r, kind: b.kind, angle: b.angle, age: 0, duration: 0.2 };
-        if (b.kind === 'flame' || b.kind === 'push') { shot.impactX = target.x; shot.impactY = target.y; }
-        if (b.kind === 'pierce') {
-          const dx = target.x - b.c, dy = target.y - b.r, distance = Math.hypot(dx, dy) || 1;
-          Object.assign(shot, { x: b.c, y: b.r, ux: dx / distance, uy: dy / distance, remaining: tool.range, hitIds: [] });
+        b.flash = 1;
+        const source = { tower: b.id, target: target.id, c: b.c, r: b.r, kind: b.kind, angle: b.angle };
+        if (b.kind === 'frost' || b.kind === 'pierce') resolveShot(state, source);
+        else {
+          const tip = impactPoint(target, source);
+          state.shots.push({ ...source, id: state.nextId++, impactX: target.x, impactY: target.y,
+            tipX: tip.x, tipY: tip.y, lift: enemyLift(target, state.time), age: 0, duration: 0.2 });
         }
-        state.shots.push(shot);
       }
     }
     for (const shot of state.shots) {
-      if (shot.kind === 'pierce') { movePiercingShot(state, shot, dt); continue; }
-      if (shot.kind === 'flame' || shot.kind === 'push') {
-        const target = state.enemies.find(e => e.id === shot.target && !e.dead);
-        if (target) { shot.impactX = target.x; shot.impactY = target.y; }
-      }
       shot.age += dt;
       if (shot.age >= shot.duration) resolveShot(state, shot);
     }
-    state.shots = state.shots.filter(s => s.kind === 'pierce' ? s.remaining > 1e-9 : s.age < s.duration);
+    state.shots = state.shots.filter(s => s.age < s.duration);
     updateFires(state, dt);
     state.enemies = state.enemies.filter(e => !e.dead);
     for (const e of state.effects) e.life -= dt;
@@ -618,6 +636,6 @@
       // remains visible during deployment, then clears when the player starts.
     }
   }
-  return { COLS, ROWS, BATTLE_SPEED, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
-    createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
+  return { COLS, ROWS, BATTLE_SPEED, RECOIL_SECONDS, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
+    createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, enemyLift, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
 });
