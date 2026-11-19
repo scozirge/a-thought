@@ -10,15 +10,16 @@
   const ENEMY_HEALTH_MULTIPLIER = 2;
   const GOAL = { c: 0, r: 3 };
   const TOOLS = {
-    pea: { name: '一般砲塔', targets: ['ground', 'air'], cost: 4, range: 3.1, damage: 1, rate: 1.8, effect: '單體傷害', hp: 5, color: '#4b8058' },
-    cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 12, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
-    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 8, range: 2.65, damage: 0, rate: 0.9, slowDuration: 2.1, effect: '塔周圍 2.65 格緩速', hp: 5, color: '#619aa9' },
-    flame: { name: '火焰塔', targets: ['ground'], cost: 8, range: 2.8, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
-    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 12, range: 6.2, damage: 1, rate: 0.8, effect: '直線雷射穿透', hp: 5, color: '#4a8f88' },
-    push: { name: '擊退塔', targets: ['ground', 'air'], cost: 16, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
-    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 32, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', effect: '高血量優先・瞄準 2.5 秒', hp: 5, color: '#a16cab' },
+    pea: { name: '一般砲塔', targets: ['ground', 'air'], cost: 5, range: 3.1, damage: 1, rate: 1.55, effect: '單體傷害', hp: 5, color: '#4b8058' },
+    cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 11, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
+    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 7, range: 2.65, damage: 0, rate: 0.9, slowDuration: 2.1, effect: '塔周圍 2.65 格緩速', hp: 5, color: '#619aa9' },
+    flame: { name: '火焰塔', targets: ['ground'], cost: 7, range: 3.2, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
+    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 15, range: 6.2, damage: 1, rate: 0.8, effect: '直線雷射穿透', hp: 5, color: '#4a8f88' },
+    push: { name: '擊退塔', targets: ['ground', 'air'], cost: 9, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
+    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 22, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', effect: '高血量優先・瞄準 2.5 秒', hp: 5, color: '#a16cab' },
     wall: { name: '小石牆', cost: 1, hp: 4, color: '#a48a66' }
   };
+  const VERSION9_PRICES = { pea: 4, cannon: 12, frost: 8, flame: 8, pierce: 12, push: 16, molecular: 32, wall: 1 };
   const PREVIOUS_PRICES = { pea: 6, cannon: 9, frost: 8, flame: 10, pierce: 10, push: 9, molecular: 14, wall: 1 };
   const ENEMIES = {
     bug: { name: '小蟲', hp: 1, artSpan: 52, speed: 0.82, color: '#bd7657' },
@@ -38,26 +39,27 @@
   // total budget that a lossless campaign has earned by the start of that wave.
   const stage = (name, entries, reward, groups) => ({ name, entries, reward, rocks: [], water: [], waves: [groups] });
   const LEVELS = [
-    stage('攻擊方向', [1, 3, 5], 10, [group('shield', 3, 18), group('bug', 1, 10)]),
-    stage('上下夾擊', [1, 3, 5], 12, [group('shield', 4, 12), group('shield_down', 3, 12), group('bug', 1, 8)]),
-    stage('快速包圍', [1, 2, 3, 5, 6], 12, [group('shield', 4, 10), group('shield_down', 4, 10), group('swift', 3, 10), group('bug', 1, 8)]),
-    stage('越過防線', [1, 2, 3, 5, 6], 14, [group('hopper', 4, 12), group('shield', 4, 8), group('shield_down', 4, 8), group('swift', 3, 10), group('bug', 1, 6)]),
-    stage('空中來襲', [1, 2, 3, 5, 6], 14, [group('flyer', 4, 14), group('hopper', 4, 10), group('shield', 5, 8), group('shield_down', 5, 8), group('swift', 3, 8), group('bug', 1, 4)]),
-    stage('分裂蟲群', [0, 1, 3, 4, 6, 7], 16, [group('splitter', 5, 10), group('flyer', 5, 14), group('hopper', 5, 10), group('shield', 5, 6), group('shield_down', 5, 6), group('swift', 4, 8), group('bug', 1, 6)]),
-    stage('源源不絕', [0, 1, 3, 4, 6, 7], 16, [group('mother', 14, 4), group('splitter', 6, 12), group('flyer', 6, 14), group('hopper', 6, 10), group('shield', 6, 6), group('shield_down', 6, 6), group('swift', 4, 8), group('bug', 1, 8)]),
-    stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 18, [group('giant', 28, 6), group('mother', 16, 4), group('splitter', 7, 10), group('flyer', 7, 16), group('hopper', 7, 10), group('shield', 7, 6), group('shield_down', 7, 6), group('swift', 5, 10), group('bug', 1, 8)]),
-    stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 28, [group('giant', 32, 9), group('mother', 18, 4), group('splitter', 8, 12), group('flyer', 8, 16), group('hopper', 8, 12), group('shield', 8, 8), group('shield_down', 8, 6), group('swift', 6, 10), group('bug', 1, 9)]),
-    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 20, [group('giant', 38, 12), group('mother', 20, 4), group('splitter', 9, 12), group('flyer', 9, 18), group('hopper', 9, 12), group('shield', 9, 10), group('shield_down', 9, 10), group('swift', 7, 12), group('bug', 1, 10)])
+    stage('攻擊方向', [3], 12, [group('shield', 3, 3), group('bug', 1, 8)]),
+    stage('上下夾擊', [1, 3, 5], 14, [group('shield', 3, 8), group('shield_down', 3, 8), group('bug', 1, 9)]),
+    stage('快速包圍', [1, 2, 3, 5, 6], 14, [group('shield', 3, 8), group('shield_down', 3, 8), group('swift', 2, 8), group('bug', 1, 8)]),
+    stage('越過防線', [1, 2, 3, 5, 6], 16, [group('hopper', 4, 9), group('shield', 4, 7), group('shield_down', 3, 7), group('swift', 3, 8), group('bug', 1, 7)]),
+    stage('空中來襲', [1, 2, 3, 5, 6], 18, [group('flyer', 4, 9), group('hopper', 4, 8), group('shield', 4, 6), group('shield_down', 4, 6), group('swift', 3, 8), group('bug', 1, 7)]),
+    stage('分裂蟲群', [0, 1, 3, 4, 6, 7], 20, [group('splitter', 5, 7), group('flyer', 5, 9), group('hopper', 4, 8), group('shield', 4, 7), group('shield_down', 4, 6), group('swift', 3, 7), group('bug', 1, 8)]),
+    stage('源源不絕', [0, 1, 3, 4, 6, 7], 24, [group('mother', 10, 2), group('splitter', 5, 7), group('flyer', 5, 10), group('hopper', 4, 8), group('shield', 5, 8), group('shield_down', 5, 7), group('swift', 4, 8), group('bug', 1, 10)]),
+    stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 28, 6), group('mother', 16, 4), group('splitter', 7, 10), group('flyer', 7, 16), group('hopper', 7, 10), group('shield', 7, 6), group('shield_down', 7, 6), group('swift', 5, 10), group('bug', 1, 8)]),
+    stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 36, [group('giant', 32, 9), group('mother', 18, 4), group('splitter', 8, 12), group('flyer', 9, 16), group('hopper', 8, 12), group('shield', 8, 8), group('shield_down', 8, 6), group('swift', 6, 10), group('bug', 1, 9)]),
+    stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 49, 12), group('mother', 24, 4), group('splitter', 12, 12), group('flyer', 13, 18), group('hopper', 11, 12), group('shield', 10, 10), group('shield_down', 10, 10), group('swift', 7, 12), group('bug', 1, 10)])
   ];
   const PREVIOUS_BUDGETS = [42, 52, 64, 76, 90, 104, 120, 136, 154, 182];
   const GENEROUS_BUDGETS = [60, 75, 93, 111, 132, 153, 177, 201, 228, 270];
-  const REWARDS = [12, 14, 14, 16, 18, 20, 24, 24, 36, 24];
+  const SPAWN_GAPS = [.70, .40, .37, .36, .34, .33, .38, .30, .28, .25];
   let budget = 48;
   for (const [i, level] of LEVELS.entries()) {
-    level.reward = REWARDS[i]; level.money = budget; budget += level.reward;
-    level.edgeEntries = i < 7 ? [] : i === 7 ? [{ c: 10, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
-      : i === 8 ? [{ c: 9, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
-      : [9, 10].flatMap(c => [{ c, r: 0, side: 'top' }, { c, r: 7, side: 'bottom' }]);
+    level.money = budget; budget += level.reward;
+    level.spawnInterval = BATTLE_SPEED * SPAWN_GAPS[i];
+    level.edgeEntries = i < 7 ? [] : i === 7 ? [{ c: 8, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
+      : i === 8 ? [{ c: 7, r: 0, side: 'top' }, { c: 8, r: 7, side: 'bottom' }]
+      : [5, 9].flatMap(c => [{ c, r: 0, side: 'top' }, { c, r: 7, side: 'bottom' }]);
   }
   const key = (c, r) => `${c},${r}`;
   const inside = (c, r) => Number.isInteger(c) && Number.isInteger(r) && c >= 0 && c < COLS && r >= 0 && r < ROWS;
@@ -105,6 +107,18 @@
     const open = findPath(start, GOAL, buildings, solid);
     if (open) return { path: open, breaking: false };
     return { path: findPath(start, GOAL, buildings, solid, true) || [], breaking: true };
+  }
+  // Enemies repeatedly ask for the same route until a building changes the board.
+  const travelRoutes = new WeakMap();
+  function travelRoute(state, c, r) {
+    let cache = travelRoutes.get(state);
+    if (!cache || cache.revision !== state.revision || cache.level !== state.level || cache.buildings !== state.buildings) {
+      cache = { revision: state.revision, level: state.level, buildings: state.buildings, cells: new Map() };
+      travelRoutes.set(state, cache);
+    }
+    const cell = r * COLS + c;
+    if (!cache.cells.has(cell)) cache.cells.set(cell, route(state, { c, r }));
+    return cache.cells.get(cell);
   }
   function previews(state, buildings = state.buildings) {
     return entrances(state.level).map(entry => route(state, entry, buildings));
@@ -156,11 +170,11 @@
     return true;
   }
   function snapshot(state) {
-    return { version: 9, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
+    return { version: 10, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
       buildings: clone(state.buildings), stats: clone(state.stats) };
   }
   function restore(data) {
-    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
     if (data.version < 6 && data.level > 2) return null;
     if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= (data.version < 6 ? 4 : 1)) return null;
     if (data.version >= 6 && (typeof data.completed !== 'boolean' || (data.completed && data.level !== LEVELS.length - 1))) return null;
@@ -170,12 +184,12 @@
     for (const saved of data.buildings) {
       const b = saved?.kind === 'rapid' ? { ...saved, kind: 'cannon' } : saved;
       if (!b || !Object.hasOwn(TOOLS, b.kind) || !inside(b.c, b.r) || b.c === 0 || b.c === COLS - 1 || solid.has(key(b.c, b.r)) || used.has(key(b.c, b.r))) return null;
-      if (data.version >= 9 && isEntrance(data.level, b.c, b.r)) return null;
+      if (data.version >= 10 && isEntrance(data.level, b.c, b.r)) return null;
       if (!Number.isInteger(b.hp) || b.hp < 1 || b.hp > TOOLS[b.kind].hp) return null;
       // Price changes never create refund profit or reduce an old purchase's
       // refund. Version 8 saves each building's actual purchase price.
       const paidCost = data.version < 8 ? PREVIOUS_PRICES[b.kind] : b.paidCost;
-      if (![PREVIOUS_PRICES[b.kind], TOOLS[b.kind].cost].includes(paidCost)) return null;
+      if (![PREVIOUS_PRICES[b.kind], VERSION9_PRICES[b.kind], TOOLS[b.kind].cost].includes(paidCost)) return null;
       used.add(key(b.c, b.r));
       state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, paidCost, hp: b.hp, cooldown: 0, aim: null, angle: -25, flash: 0 });
     }
@@ -204,10 +218,17 @@
     let index = 0;
     const entries = entrances(state.level);
     for (let wave = state.wave; wave < LEVELS[state.level].waves.length; wave++) {
-      for (const g of LEVELS[state.level].waves[wave]) {
-        for (let i = 0; i < g.count; i++) {
-          const entry = entries[index++ % entries.length];
-          state.queue.push({ kind: g.kind, hp: g.hp, wave, row: entry.r, position: { x: entry.c, y: entry.r } });
+      const groups = LEVELS[state.level].waves[wave];
+      // Late waves send small mixed squads through the same rotating entrances.
+      const largestGroup = Math.max(...groups.map(g => g.count));
+      const packSize = state.level === 9 ? 3 : state.level === 8 ? 6 : largestGroup;
+      for (let offset = 0; offset < largestGroup; offset += packSize) {
+        for (const g of groups) {
+          const end = Math.min(g.count, offset + packSize);
+          for (let i = offset; i < end; i++) {
+            const entry = entries[index++ % entries.length];
+            state.queue.push({ kind: g.kind, hp: g.hp, wave, row: entry.r, position: { x: entry.c, y: entry.r } });
+          }
         }
       }
     }
@@ -331,7 +352,7 @@
     // Prefer an open shortest route; only consider a breaking route if necessary.
     for (let c = Math.max(0, c0 - 2); c < c0; c++) for (let r = Math.max(0, r0 - 2); r <= Math.min(ROWS - 1, r0 + 2); r++) {
       if (!freePoint(state, c, r)) continue;
-      const plan = route(state, { c, r });
+      const plan = travelRoute(state, c, r);
       if (plan.path.length) candidates.push({ c, r, breaking: plan.breaking, distance: plan.path.length - 1 });
     }
     candidates.sort((a, b) => Number(a.breaking) - Number(b.breaking) || a.distance - b.distance || a.c - b.c || Math.abs(a.r - r0) - Math.abs(b.r - r0) || a.r - b.r);
@@ -535,7 +556,7 @@
       effect(state, 'home', enemy.x, enemy.y); return;
     }
     if (!enemy.next) {
-      const plan = route(state, { c: enemy.c, r: enemy.r });
+      const plan = travelRoute(state, enemy.c, enemy.r);
       if (plan.path.length < 2) return;
       const next = plan.path[1], obstacle = at(state, next.c, next.r);
       if (obstacle) {
@@ -569,7 +590,7 @@
       const item = state.queue.shift();
       if (Number.isInteger(item.wave)) state.wave = item.wave;
       spawn(state, item.kind, item.hp, item.row, item.position);
-      state.spawnClock += SPAWN_INTERVAL;
+      state.spawnClock += LEVELS[state.level].spawnInterval;
     }
     for (const enemy of [...state.enemies]) {
       if (enemy.dead) continue;
