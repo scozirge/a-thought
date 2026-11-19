@@ -6,11 +6,20 @@
   const houseX = 38, houseY = Y(G.GOAL.r);
   const STORAGE = 'garden-guard-v1';
   const BATTLE_SPEED = G.BATTLE_SPEED;
+  const enemyHealth = $('enemy-health');
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
-  let lastWorldTime = -1, lastPhase = '', lastLevel = -1, lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
+  let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
   let finishAge = null, resultAfterHeart = false;
   let infoAnchor = null, infoTimer = 0;
-  try { const saved = G.restore(JSON.parse(localStorage.getItem(STORAGE))); if (saved) state = saved; } catch {}
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE));
+    const saved = G.restore(data);
+    if (saved) {
+      state = saved;
+      enemyHealth.checked = typeof data.showEnemyHealth === 'boolean' ? data.showEnemyHealth : state.level === 0;
+    }
+  } catch {}
+  let lastLevel = state.level;
   $('level-select').innerHTML = G.LEVELS.map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
   $('garden-art').innerHTML = A.definitions() + `<clipPath id="field-bounds"><rect x="${OX}" y="${OY}" width="${G.COLS * S}" height="${G.ROWS * S}" rx="6"/></clipPath>`;
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
@@ -51,7 +60,7 @@
   function save() {
     const data = state.phase === 'planning' || state.phase === 'won' ? G.snapshot(state) : state.checkpoint;
     if (!data) return;
-    try { localStorage.setItem(STORAGE, JSON.stringify(data)); } catch {}
+    try { localStorage.setItem(STORAGE, JSON.stringify({ ...data, showEnemyHealth: enemyHealth.checked })); } catch {}
   }
   function feedback(text, c, r) {
     $('status').textContent = text;
@@ -114,23 +123,25 @@
   }
   function drawEnemies(lift) {
     const sprites = [], labels = [], occupied = [];
+    const showHealth = enemyHealth.checked;
     const flying = enemy => Number(!!enemy.leap || enemy.kind === 'flyer');
     for (const e of state.enemies.slice().sort((a, b) => flying(a) - flying(b))) {
       const x = X(e.x), y = Y(e.y) - lift(e), id = `bug-hp-${e.id}`;
       sprites.push(`<g data-enemy="${e.id}" data-kind="${e.kind}" data-hp="${e.hp}" data-jumping="${!!e.leap}" transform="translate(${x} ${y})">
-        ${A.bug(e.kind, e.hp, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0, id, e.maxHp)}</g>`);
+        ${A.bug(e.kind, showHealth ? e.hp : null, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0, id, e.maxHp)}</g>`);
+      if (!showHealth) continue;
       // Prefer the free side of the shell. Nearby numbers can use the other
       // edge of the same insect, so two health values don't read as one.
       const upper = e.kind === 'shield_down', lowerEdge = 25, upperEdge = -5;
       const first = upper ? upperEdge : lowerEdge, other = upper ? lowerEdge : upperEdge;
-      const halfWidth = String(e.hp).length * 8 + 3;
+      const halfWidth = String(e.hp).length * 6.5 + 2;
       let bestX = x + 2, bestY = y + first, leastOverlap = Infinity;
       for (const [dx, dy] of [[2, first], [2, other], [-13, first], [14, other]]) {
         const cx = x + dx, cy = y + dy;
         let overlap = 0;
         for (const box of occupied) {
           const w = Math.max(0, halfWidth + box.halfWidth - Math.abs(box.x - cx));
-          overlap += w * Math.max(0, 25 - Math.abs(box.y - cy));
+          overlap += w * Math.max(0, 21 - Math.abs(box.y - cy));
         }
         if (overlap < leastOverlap) { bestX = cx; bestY = cy; leastOverlap = overlap; }
         if (!overlap) break;
@@ -274,7 +285,10 @@
     if (!$('result').open) $('result').showModal();
   }
   function sync(force = false, settling = false) {
-    if (lastLevel !== state.level) { hideInfo(); hover = null; lastLevel = state.level; ground(); }
+    if (lastLevel !== state.level) {
+      enemyHealth.checked = state.level === 0;
+      hideInfo(); hover = null; lastLevel = state.level; ground();
+    }
     if (force || lastRevision !== state.revision) {
       selection(); lastRevision = state.revision;
       for (const cell of $('hit-layer').querySelectorAll('[data-c]')) {
@@ -306,7 +320,7 @@
     if ($('result').open) $('result').close();
     state = replacement || G.createState(level); selected = 'pea'; hover = null; $('status').textContent = ''; accumulator = 0;
     clearTimeout(rewardTimer); $('reward').hidden = true;
-    lastPhase = ''; lastLevel = -1; lastRevision = -1; uiSignature = ''; save(); sync(true);
+    lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
   }
   function interact(c, r) {
     if (!selected) { selected = G.at(state, c, r)?.kind || 'pea'; updateUI(true); return; }
@@ -341,6 +355,13 @@
       for (const b of [...state.buildings]) G.remove(state, b.c, b.r);
       state.undo = []; save(); sync(true);
     } else loadLevel(0);
+  });
+  enemyHealth.closest('details').addEventListener('toggle', ({ currentTarget }) => {
+    if (currentTarget.open) currentTarget.scrollIntoView({ block: 'nearest' });
+  });
+  enemyHealth.addEventListener('change', () => {
+    save();
+    renderWorld();
   });
   $('level-select').addEventListener('change', event => loadLevel(Number(event.target.value)));
   const solution = $('solution');
