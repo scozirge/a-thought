@@ -91,7 +91,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.clock.runFor(100); assert.notEqual(await p.locator('.aim-line').getAttribute('d'),line,'瞄準線持續跟隨目標');
     await press('#action'); await p.locator('[data-tool="molecular"]').focus();
     assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 28'));
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'高血量優先・瞄準 2.5 秒');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'高血量優先・瞄準 2.5 秒・可穿盾');
     await p.screenshot({path:path.join(out,'molecular-aim.png')});
     const aimingPaused=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),aimingPaused);
     const aimLine=await p.locator('.aim-line').getAttribute('d');

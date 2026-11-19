@@ -253,13 +253,21 @@ test('雷射沿直線貫穿多隻怪物，每隻只傷害一次，不波及旁�
   assert.equal(s.stats.hits, 2); assert.equal(s.shots.length, 0);
 });
 
-test('雷射被上方盾甲擋住後停止，不穿過盾蟲傷到後方', () => {
-  const s = G.createState(); s.phase = 'running';
-  const a = enemy(s, 'shield', 5, 6, 2), b = enemy(s, 'bug', 5, 6, 3);
-  ray(s, 6, 0, 0, 1);
-  const beam = s.effects.find(e => e.kind === 'laser');
-  assert.ok(beam.length > 1 && beam.length < 2);
-  assert.deepEqual([a.hp, b.hp], [5, 5]); assert.equal(s.stats.blocked, 1); assert.equal(s.shots.length, 0);
+test('雷射從盾面貫穿上盾蟲和下盾蟲，並繼續命中盾後的蟲', () => {
+  for (const [kind, row, direction] of [['shield', 0, 1], ['shield_down', 7, -1]]) {
+    const s = G.createState();
+    const front = enemy(s, kind, 5, 6, row + 2 * direction);
+    const behind = enemy(s, 'bug', 5, 6, row + 3 * direction);
+    ray(s, 6, row, 0, direction);
+    const beam = s.effects.find(e => e.kind === 'laser');
+    assert.equal(beam.length, G.TOOLS.pierce.range);
+    assert.deepEqual(beam.hitDistances, [2, 3]);
+    assert.deepEqual([front.hp, behind.hp], [4, 4]);
+    assert.equal(s.stats.hits, 2);
+    assert.equal(s.stats.blocked, 0);
+    assert.equal(front.shieldFlash, 0);
+    assert.ok(!s.effects.some(e => e.kind === 'block'));
+  }
 });
 
 test('空地擊退往離家更遠的方向三格，動畫結束後仍可正常尋路', () => {
@@ -337,13 +345,25 @@ test('盾蟲擋住上方擊退，數字及位置都不變', () => {
   assert.equal(a.hp, 10); assert.equal(a.push, null); assert.equal(s.stats.blocked, 1);
 });
 
-test('分子砲單體高傷害，仍受盾甲方向限制，擊殺不重複發獎勵', () => {
-  const s = G.createState(), a = enemy(s, 'shield', 56, 6, 3), b = enemy(s, 'bug', 10, 7, 3), money = s.money;
-  G.resolveShot(s, { kind: 'molecular', target: a.id, c: 6, r: 1 }); assert.equal(a.hp, 56);
-  G.resolveShot(s, { kind: 'molecular', target: a.id, c: 6, r: 5 }); assert.equal(a.hp, 28); assert.equal(b.hp, 10);
-  G.resolveShot(s, { kind: 'molecular', target: a.id, c: 6, r: 5 });
-  G.resolveShot(s, { kind: 'molecular', target: a.id, c: 6, r: 5 });
-  assert.equal(a.hp, 0); assert.equal(s.money, money);
+test('分子砲從盾面命中上下盾蟲本體，每發只扣單一目標 28 血', () => {
+  for (const [kind, r] of [['shield', 1], ['shield_down', 5]]) {
+    const s = G.createState(), target = enemy(s, kind, 56, 6, 3);
+    const neighbor = enemy(s, 'bug', 10, 6.1, 3), money = s.money;
+    const shot = { kind: 'molecular', target: target.id, c: 6, r };
+    assert.deepEqual(G.impactPoint(target, shot), { x: target.x, y: target.y });
+    G.resolveShot(s, shot);
+    assert.equal(target.hp, 28);
+    assert.equal(s.effects.at(-1).kind, 'molecular');
+    G.resolveShot(s, shot);
+    G.resolveShot(s, shot);
+    assert.equal(target.hp, 0);
+    assert.equal(neighbor.hp, 10);
+    assert.equal(s.stats.hits, 2);
+    assert.equal(s.stats.blocked, 0);
+    assert.equal(target.shieldFlash, 0);
+    assert.ok(!s.effects.some(e => e.kind === 'block'));
+    assert.equal(s.money, money);
+  }
 });
 
 test('暫停時火地板、擊退動畫和雷射光束也全部停住', () => {

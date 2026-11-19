@@ -38,6 +38,22 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
       assert.match(await p.locator('#tower-info').innerText(), /攻擊 \d+(?:\.\d+)?次\/s/);
     }
+    for (const [shield, row, behindRow] of [['shield', 0, 4], ['shield_down', 7, 2]]) {
+      for (const tower of ['pierce', 'molecular']) {
+        const result = await p.evaluate(({ shield, row, behindRow, tower }) => {
+          const s = Garden.createState();
+          Garden.build(s, tower, 7, row);
+          Garden.startWave(s);
+          s.queue = [];
+          const front = Garden.spawn(s, shield, 56, 3, { x: 7, y: 3 });
+          const behind = Garden.spawn(s, 'bug', 7, behindRow, { x: 7, y: behindRow });
+          for (let frame = 0; frame < 420 && !s.stats.hits; frame++) Garden.step(s, 1 / 60);
+          return { hp: [front.hp, behind.hp], blocked: s.stats.blocked, flash: front.shieldFlash, effects: s.effects.map(e => e.kind) };
+        }, { shield, row, behindRow, tower });
+        const laser = tower === 'pierce';
+        assert.deepEqual(result, { hp: laser ? [55, 6] : [28, 7], blocked: 0, flash: 0, effects: [laser ? 'laser' : 'molecular'] }, tower + ' / ' + shield);
+      }
+    }
     await p.keyboard.press('Escape');
     await p.locator('[data-tool="pea"]').click();
     const fresh = await p.evaluate(() => gardenDebug.getState());

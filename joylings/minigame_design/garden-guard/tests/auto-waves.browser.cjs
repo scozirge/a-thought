@@ -104,7 +104,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await prepare({...G.snapshot(old),version:6,money:76});
     assert.equal((await read()).money,90); assert.equal((await read()).hearts,5); assert.equal(await p.locator('#health').textContent(),'5'); assert.equal((await read()).buildings.length,1);
     await p.reload(); assert.equal((await read()).money,90,'新版預算只調整一次');
-    await p.locator(cell(3,4)).focus(); assert.equal(await p.locator('#tower-info .info-effect').textContent(),'高血量優先・瞄準 2.5 秒');
+    await p.locator(cell(3,4)).focus(); assert.equal(await p.locator('#tower-info .info-effect').textContent(),'高血量優先・瞄準 2.5 秒・可穿盾');
     assert.ok(Math.abs(Number(await p.locator('#range-layer circle').getAttribute('r'))-6.6*64)<1e-9);
     await press('[data-tool="pierce"]'); await p.locator(cell(3,5)).focus();
     assert.ok(Math.abs(Number(await p.locator('#range-layer circle').getAttribute('r'))-6.2*64)<1e-9);

@@ -45,7 +45,7 @@ test('十關共用固定地形，所有右側入口都有路；尋路不穿越�
     }
   }
 });
-test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方依塔種扣血或緩速', () => {
+test('全新開局第一波就是盾蟲；正面僅雷射和分子砲穿盾，下方依塔種扣血或緩速', () => {
   for (const kind of Object.keys(G.TOOLS).filter(kind => kind !== 'wall')) {
     for (const r of [2, 4]) {
       // Restoring a previous first-wave save must also use the updated wave.
@@ -55,7 +55,7 @@ test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方�
       assert.ok(s.queue.slice(0, 3).every(e => e.kind === 'shield' && e.hp === 6));
       s.queue = s.queue.filter(e => e.kind === 'shield' && e.row === 3);
       simulate(s, kind === 'molecular' ? 5 : 3.5);
-      if (r === 2) {
+      if (r === 2 && kind !== 'pierce' && kind !== 'molecular') {
         assert.ok(s.stats.blocked > 0, kind);
         assert.equal(s.stats.hits, 0);
         assert.ok(s.enemies.length > 0);

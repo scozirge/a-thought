@@ -46,8 +46,9 @@ test('九種蟲分十關逐步增加，新生小蟲維持兩血，最後兩關�
   assert.ok(G.ENEMIES.giant.hp >= 20 && G.ENEMIES.giant.speed < G.ENEMIES.bug.speed / 2);
 });
 
-test('下盾蟲擋住七種塔的下方攻擊，從上方及同高側面攻擊有效', () => {
-  for (const [kind, tool] of Object.entries(G.TOOLS).filter(([, t]) => t.rate)) {
+test('下盾蟲擋住無穿盾能力的下方攻擊，從上方及同高側面攻擊有效', () => {
+  for (const kind of ['pea', 'cannon', 'frost', 'flame', 'push']) {
+    const tool = G.TOOLS[kind];
     const s = G.createState(), e = at(s, 'shield_down', 6, 3, 60);
     assert.equal(G.hit(s, e, { kind, c: 8, r: 5 }), false);
     assert.equal(e.hp, 60); assert.equal(e.slow, 0); assert.equal(e.push, null);
