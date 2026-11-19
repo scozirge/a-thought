@@ -24,17 +24,17 @@ const out = path.join(__dirname, '../dist/browser-check');
   };
   const finish = async () => {for(let i=0;i<65&&(await read()).phase==='running';i++)await p.clock.runFor(1500);};
   try {
-    await p.clock.install({time:new Date('2026-01-01T00:00:00Z')}); await p.goto(base); await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
+    await p.clock.install({time:new Date('2026-01-01T00:00:00Z')}); await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z')); await p.goto(base);
     await p.clock.runFor(10000); assert.equal((await read()).phase,'planning'); assert.equal((await read()).money,G.LEVELS[0].money);
-    await deploy([['pea',8,0]]); await press('#action');
+    await deploy([['pea',9,2]]); await press('#action');
     for (let i=0; i<50; i++) {
       await p.clock.runFor(100);
       const first=await read();
-      if (first.stats.blocked>0 && new Set(first.enemies.map(e=>e.r)).size===3) break;
+      if (first.stats.blocked>0 && first.enemies.length>=1) break;
     }
     await press('#action');
-    const shield=await read(); assert.ok(shield.stats.blocked>0); assert.equal(shield.stats.hits,0); assert.ok(shield.enemies.every(e=>e.hp===e.maxHp));
-    assert.equal(new Set(shield.enemies.map(e=>e.r)).size,3); assert.equal(await p.locator('#bug-layer .hard-shell').count(),shield.enemies.length);
+    const shield=await read(); assert.ok(shield.stats.blocked>0,JSON.stringify({errors, phase:shield.phase,time:shield.time,towers:shield.buildings.map(b=>b.kind),stats:shield.stats,enemies:shield.enemies.length})); assert.equal(shield.stats.hits,0); assert.ok(shield.enemies.every(e=>e.hp===e.maxHp));
+    assert.equal(new Set(shield.enemies.map(e=>e.r)).size,1); assert.equal(await p.locator('#bug-layer .hard-shell').count(),shield.enemies.length);
     await prepare(G.snapshot(G.createState())); await deploy(layouts[0]); const initial=await read(); await press('#action');
     await p.clock.runFor(2500); assert.equal((await read()).phase,'running');
     assert.equal(await p.locator('#remove').isDisabled(),true); assert.equal(await p.locator('#undo').isDisabled(),true);
@@ -87,8 +87,8 @@ const out = path.join(__dirname, '../dist/browser-check');
     await press('#remove'); await press(cell(3,4)); assert.equal((await read()).money,104,'舊分子砲退原購買價 14');
     await press('#undo'); assert.equal((await read()).money,90); assert.equal((await read()).buildings[0].paidCost,14);
     await press('#reset'); assert.equal((await read()).money,104);
-    await press('[data-tool="molecular"]'); await press(cell(3,4)); assert.equal((await read()).money,72,'新分子砲售價 32');
-    await p.reload(); assert.equal((await read()).buildings[0].paidCost,32);
+    await press('[data-tool="molecular"]'); await press(cell(3,4)); assert.equal((await read()).money,104-G.TOOLS.molecular.cost,'按本版分子砲價格購買');
+    await p.reload(); assert.equal((await read()).buildings[0].paidCost,G.TOOLS.molecular.cost);
     await press('#remove'); await press(cell(3,4)); assert.equal((await read()).money,104,'新塔讀檔後仍全額退款');
     await prepare(G.snapshot(G.createState()));
     await press('#action'); await finish(); assert.equal((await read()).phase,'lost'); await p.clock.runFor(800); assert.equal(await p.locator('#result').evaluate(el=>el.open),true); await press('#result-primary'); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);

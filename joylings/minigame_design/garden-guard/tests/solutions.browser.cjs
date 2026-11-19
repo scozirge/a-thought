@@ -13,7 +13,13 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
   const placements=s=>s.buildings.map(b=>[b.kind,b.c,b.r]);
   try {
     await p.clock.install({time:new Date('2026-01-01T00:00:00Z')});
-    await p.goto(base);await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
+    const url=new URL(base);
+    for(const value of [null,'false','1','True']) {
+      if(value===null)url.searchParams.delete('tip');else url.searchParams.set('tip',value);
+      await p.goto(url.href);assert.equal(await p.locator('#solution').count(),0);
+    }
+    url.searchParams.set('tip','true');
+    await p.goto(url.href);await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));
     for(let level=0;level<10;level++) {
       await p.locator('#level-select').selectOption(String(level));
       await p.locator('[data-tool="pea"]').click();

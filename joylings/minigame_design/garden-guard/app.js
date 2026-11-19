@@ -343,10 +343,14 @@
     } else loadLevel(0);
   });
   $('level-select').addEventListener('change', event => loadLevel(Number(event.target.value)));
-  $('solution').addEventListener('click', () => {
-    loadLevel(state.level, window.GardenSolutions.create(state.level));
-    $('status').textContent = '已重設本關並放上解答，按開始出怪';
-  });
+  const solution = $('solution');
+  if (new URLSearchParams(location.search).get('tip') === 'true') {
+    solution.hidden = false;
+    solution.addEventListener('click', () => {
+      loadLevel(state.level, window.GardenSolutions.create(state.level));
+      $('status').textContent = '已重設本關並放上解答，按開始出怪';
+    });
+  } else solution.remove();
   $('action').addEventListener('click', () => {
     hideInfo();
     hover = null; $('status').textContent = ''; selection();

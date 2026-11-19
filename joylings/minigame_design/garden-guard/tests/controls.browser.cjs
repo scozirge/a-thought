@@ -14,12 +14,27 @@ const out = path.join(__dirname, '../dist/browser-check');
   const read=()=>p.evaluate(()=>gardenDebug.getState());
   const press=selector=>p.locator(selector).dispatchEvent('click');
   const prepare=async kind=>{
-    const s=G.createState(); assert.equal(G.build(s,kind,9,6).ok,true);
+    const s=G.createState(2); assert.equal(G.build(s,kind,9,6).ok,true);
     await p.evaluate(data=>{
       if(gardenDebug.getState().phase==='running')document.querySelector('#action').click();
       localStorage.setItem('garden-guard-v1',JSON.stringify(data));
     },G.snapshot(s));
-    await p.reload(); await press('#action');
+    await p.reload();
+    if (kind === 'push') {
+      // Put two moving targets in one cell so the area hit is independent of the campaign spawn tempo.
+      await p.evaluate(() => {
+        const start = Garden.startWave;
+        Garden.startWave = state => {
+          const started = start(state);
+          if (started) {
+            state.queue = [];
+            for (const x of [8, 8.1]) Garden.spawn(state, 'bug', 4, 5, {x, y:5});
+          }
+          return started;
+        };
+      });
+    }
+    await press('#action');
   };
   try {
     await p.clock.install({time:new Date('2026-01-01T00:00:00Z')}); await p.goto(base); await p.clock.pauseAt(new Date('2026-01-01T01:00:00Z'));

@@ -5,6 +5,7 @@
   "description": "小小守園隊：方向、數量與路徑規劃的塔防原型",
   "scripts": {
     "balance": "node balance.cjs",
+    "balance:campaign": "node campaign-balance.cjs 32 73001 campaign-balance.json strategies && node campaign-balance.cjs 12 81001 campaign-pairs.json pairs && node campaign-balance.cjs 32 92001 campaign-moves.json moves",
     "start": "node serve.cjs",
     "test": "node --test tests/core.test.cjs tests/towers.test.cjs tests/enemies.test.cjs tests/auto-waves.test.cjs",
     "test:browser": "node tests/browser.cjs && node tests/enemies.browser.cjs && node tests/controls.browser.cjs && node tests/auto-waves.browser.cjs && node tests/solutions.browser.cjs",

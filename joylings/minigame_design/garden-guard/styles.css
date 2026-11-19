@@ -63,7 +63,7 @@ svg { display: block; }
 #action { width: 85px; flex-shrink: 0; font-size: 19px; }
 #action .icon { width: 25px; height: 25px; }
 .tower-info { position: fixed; z-index: 10; width: max-content; max-width: min(290px, calc(100vw - 16px)); padding: 12px 17px; border: 2px solid #708768; border-radius: 13px; background: #fffbea; box-shadow: 0 4px 0 #46664244, 0 8px 24px #293e3233; font-size: 18px; line-height: 1.5; }
-.tower-info[hidden] { display: none; }
+[hidden] { display: none !important; }
 .tower-info strong { display: block; font-size: 21px; margin-bottom: 4px; color: #284d3b; }
 .tower-info p { margin: 0; }
 .tower-info .info-effect { color: #4c6747; }

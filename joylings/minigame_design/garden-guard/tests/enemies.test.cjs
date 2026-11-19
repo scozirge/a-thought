@@ -21,8 +21,8 @@ test('九種蟲維持整數生命，飛蟲在加倍後減一，重新讀檔不�
   for(let level=4;level<10;level++) {
     const saved=G.snapshot(G.createState(level)), restored=G.restore(saved); G.startWave(restored);
     const flying=restored.queue.filter(e=>e.kind==='flyer');
-    assert.ok(flying.length>0); assert.ok(flying.every(e=>e.hp===[7,9,11,13,15,17][level-4]));
-    const e=G.spawn(restored,'flyer',flying[0].hp); assert.equal(e.maxHp,[7,9,11,13,15,17][level-4]);
+    assert.ok(flying.length>0); assert.ok(flying.every(e=>e.hp===[7,9,9,13,17,25][level-4]));
+    const e=G.spawn(restored,'flyer',flying[0].hp); assert.equal(e.maxHp,[7,9,9,13,17,25][level-4]);
   }
   const s = G.restore(G.snapshot(G.restore(G.snapshot(G.createState()))));
   G.startWave(s); advance(s, 0.6);

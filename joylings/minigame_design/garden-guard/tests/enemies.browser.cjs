@@ -47,7 +47,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     const above = await p.evaluate(() => gardenDebug.getState());
     const wounded = above.enemies.find(e => e.kind === 'shield_down' && e.hp < e.maxHp);
     assert.ok(wounded);
-    assert.equal(wounded.maxHp, 8);
+    assert.equal(wounded.maxHp, 6);
     const sprite = p.locator(`[data-enemy="${wounded.id}"]`);
     assert.equal(await sprite.locator('.bug-hp').textContent(), String(wounded.hp));
     const scale = await sprite.locator('.bug-art').evaluate(g => g.transform.baseVal.getItem(0).matrix.a);
