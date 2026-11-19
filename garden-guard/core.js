@@ -14,9 +14,9 @@
     cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 11, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
     frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 7, range: 2.65, damage: 0, rate: 0.9, slowDuration: 2.1, effect: '塔周圍 2.65 格緩速', hp: 5, color: '#619aa9' },
     flame: { name: '火焰塔', targets: ['ground'], cost: 7, range: 3.2, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
-    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 15, range: 6.2, damage: 1, rate: 0.8, effect: '直線雷射穿透', hp: 5, color: '#4a8f88' },
+    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 15, range: 6.2, damage: 1, rate: 0.8, piercesShield: true, effect: '沿直線穿過盾牌和蟲群', hp: 5, color: '#4a8f88' },
     push: { name: '擊退塔', targets: ['ground', 'air'], cost: 9, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
-    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 22, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', effect: '高血量優先・瞄準 2.5 秒', hp: 5, color: '#a16cab' },
+    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 22, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', piercesShield: true, effect: '高血量優先・瞄準 2.5 秒・可穿盾', hp: 5, color: '#a16cab' },
     wall: { name: '小石牆', cost: 1, hp: 4, color: '#a48a66' }
   };
   const VERSION9_PRICES = { pea: 4, cannon: 12, frost: 8, flame: 8, pierce: 12, push: 16, molecular: 32, wall: 1 };
@@ -254,6 +254,7 @@
   function shieldBlocks(enemy, source) {
     // 'Above' is world/screen vertical, independent of the bug's movement heading.
     const side = ENEMIES[enemy.kind]?.shield;
+    if (!side || TOOLS[source.kind]?.piercesShield) return false;
     return side === 'up' ? source.r < enemy.y - 0.001 : side === 'down' ? source.r > enemy.y + 0.001 : false;
   }
   // Normalize each drawing's natural span, including legs and armor, to a
@@ -460,7 +461,7 @@
   }
   function fireLaser(state, source) {
     const angle = source.angle * Math.PI / 180, ux = Math.cos(angle), uy = Math.sin(angle);
-    let length = TOOLS.pierce.range;
+    const length = TOOLS.pierce.range;
     const contacts = [];
     for (const enemy of state.enemies) {
       if (!canTarget('pierce', enemy)) continue;
@@ -471,11 +472,7 @@
     contacts.sort((a, b) => a.along - b.along || a.enemy.id - b.enemy.id);
     const hitDistances = [];
     for (const { enemy, along } of contacts) {
-      if (!hit(state, enemy, source)) {
-        const point = impactPoint(enemy, source);
-        length = Math.max(0, Math.min(length, (point.x - source.c) * ux + (point.y - source.r) * uy));
-        break;
-      }
+      if (!hit(state, enemy, source)) continue;
       if (!hitDistances.length || along - hitDistances[hitDistances.length - 1] > .35) hitDistances.push(along);
     }
     effect(state, 'laser', source.c, source.r, { tower: source.tower, angle: source.angle, length, hitDistances });
