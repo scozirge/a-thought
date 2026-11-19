@@ -122,6 +122,19 @@
   function splitPlateAt(index, x = 0, y = 0, scale = 1) {
     return `<use href="#art-splitPlate" transform="translate(${x} ${y}) rotate(${index * 120}) scale(${scale})"/>`;
   }
+  // One forewing and one jaw are mirrored around the beetle's midline.
+  const stagElytron = `<path d="M-1-1Q-3-8 0-15C9-20 28-16 35-8Q39-4 38-1Z" fill="#985231" stroke="#382c28"/>
+    <path d="M4-12Q18-15 29-8" fill="none" stroke="#dfa06a" stroke-width="2.5"/>
+    <path d="M9-6Q21-7 30-4" fill="none" stroke="#693b2b" stroke-width="1.4"/>`;
+  const stagJaw = `<path d="M-19-5Q-26-6-34-10L-39-13-38-9Q-45-10-49-4Q-48-13-41-17C-35-20-28-16-22-13L-18-11Z" fill="#743e2f" stroke="#302a28"/>
+    <path d="M-35-12l2 5 4-4" fill="#743e2f" stroke="#302a28" stroke-width="1.5"/>
+    <path d="M-27-13q-7-4-12-2" fill="none" stroke="#c28a60" stroke-width="1.8"/>`;
+  const stagHead = `<g fill="none" stroke="#3b312b" stroke-width="2.2">
+    <path d="M-19-9l-5-12-7-2m12 32-5 12-7 2"/>
+    <path d="m-28-23-2-3m0 3-3-2m5 48-2 3m0-3-3 2"/></g>
+    <path d="M-24-8l3-5q6-3 12 1l3 5V7l-3 5q-6 4-12 1l-3-5 2-4v-8Z" fill="#3c3832" stroke="#302c2a"/>
+    <path d="M-20-9q4-3 8-1" stroke="#aa9171" fill="none"/>
+    <g fill="#f5cb7f" stroke="#302c2a" stroke-width="1.4"><circle cx="-21" cy="-8" r="2.5"/><circle cx="-21" cy="8" r="2.5"/></g>`;
   const shells = {
     bug: `<ellipse cx="1" rx="17" ry="13" fill="#dc5844"/>
       <path d="M-10-8Q3-18 13-6" stroke="#fc9380" stroke-width="3.4" fill="none"/>
@@ -144,11 +157,9 @@
       <path d="M-17-7Q-14-16-7-16L6-12 18-5 21 2 8 13-7 17-15 9Z" fill="#784655" stroke="#583c47"/>
       ${[0, 1, 2].map(index => splitPlateAt(index)).join('')}
       <circle r="2" fill="#754550" stroke="none"/></g>`,
-    giant: `<path d="M-24-5q-2-14 12-18 20-8 33 3 12 11 8 24-4 17-22 20-19 1-28-10Z" fill="#784d3e"/>
-      <path d="M-7-19q18-8 28 4l5 8L-5-3Z" fill="#ad6950" stroke="#694736"/>
-      <path d="M-6 1h33q-1 13-13 18L-5 19Z" fill="#946148" stroke="#694736"/>
-      <path d="M-25-11q13-10 18-6l2 32q-13 3-20-6Z" fill="#4a5145"/>
-      <path d="m3-16 11-1" stroke="#e4ac79" stroke-width="3"/>`,
+    giant: `<use href="#art-stagElytron"/><use href="#art-stagElytron" transform="scale(1 -1)"/>
+      <path d="M-12-12q5-7 13-4l2 6v20l-2 6q-8 3-13-4l-2-6V-6Z" fill="#4d4336" stroke="#352f2a"/>
+      <path d="M-9-11q3-3 7-3" fill="none" stroke="#bea178" stroke-width="2.4"/>`,
     swift: `<path d="M-17-3q3-9 14-7L22-4l4 4-6 5-23 4q-11 0-14-6Z" fill="#d48537"/>
       <path d="m-4-7 11 7-11 7m12-12 8 5-8 5" stroke="#ffe8a0" stroke-width="2.6" fill="none"/>`
   };
@@ -167,7 +178,7 @@
     mother: '<path d="M-17-6 L-25-20 -32-22 M-6-9 L-7-24 -13-28 M6-8 L20-23 29-24" stroke="#715467"/>',
     flyer: '<path d="M-13-5 L-18-15 -23-16 M-5-6 L-6-18 -11-20 M5-5 L17-15 23-15" stroke="#755630"/>',
     splitter: '<path d="M-14-7 L-23-18 -29-19 M-2-9 L-2-22 -8-26 M12-8 L23-21 30-20" stroke="#6c4745"/>',
-    giant: '<path d="M-17-8 L-25-24 -32-25 M-4-10 L-5-29 -11-33 M11-9 L23-25 32-26" stroke="#5d503d" stroke-width="4.4"/>',
+    giant: '<path d="M-12-8l-7-9-3-9-6-2 M0-11l1-11-7-7-1-3 M11-9l7-11 9-4 4-5" stroke="#46382f" stroke-width="3.8"/>',
     swift: '<path d="M-12-5 L-22-19 -31-21 M-3-6 L1-21 -6-29 M7-4 L22-15 30-23" stroke="#875830"/>'
   };
   const wings = `<path d="M-4-5q-12-25-1-27 12-2 17 26Zm2 2q8-22 18-18 8 6-9 18Z" fill="#e4faf2" stroke="#648f98"/>
@@ -176,11 +187,10 @@
     <path d="m-25-12 6-10 13-6-4 15Z" fill="#eff8ee" opacity=".32" stroke="none"/>
     <path d="m-28-9 7 4h43l7-4-2 7-6 3h-40l-6-3Z" fill="#e4d4a6" stroke="#4a5754"/>
     <g fill="#faf0c5" stroke="none"><circle cx="-20" cy="-10.5" r="2"/><circle cx="20" cy="-10.5" r="2"/></g>`;
-  const horns = `<path d="M-21-8q-11-4-14-14-4 8 0 15l-7-2q7 11 17 9m4 7q-11 4-14 14-4-8 0-15l-7 2q7-11 17-9" fill="#e9bc78" stroke="#634b35"/>`;
   const enemyShapes = {
     bug: { head: -14, shadow: 16 }, shield: { head: -17, shadow: 23 }, shield_down: { head: -17, shadow: 23 },
     hopper: { head: -15, shadow: 23 }, mother: { head: -21, shadow: 26 }, flyer: { head: -15, shadow: 16 },
-    splitter: { head: -16, shadow: 22 }, giant: { head: -24, shadow: 32 }, swift: { head: -14, shadow: 20 }
+    splitter: { head: -16, shadow: 22 }, giant: { shadow: 30 }, swift: { head: -14, shadow: 20 }
   };
   const cabin = `<ellipse cy="30" rx="33" ry="8" fill="#204c39" opacity=".29"/>
     <g stroke="#554a37"><path d="M-23-7 0-27 24-8v36l-4 3h-42Z" fill="#ffdea0"/>
@@ -280,7 +290,7 @@
   const pen = 'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"';
   const ref = (name, attrs = '') => `<use href="#art-${name}" ${attrs}/>`;
   function definitions() {
-    const drawings = { plinth, wall, face, wings, shieldPlate: shield, splitPlate, horns, cabin, firePatch, snowflake, launchFlare };
+    const drawings = { plinth, wall, face, wings, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, cabin, firePatch, snowflake, launchFlare };
     for (const [kind, drawing] of Object.entries(mounts)) drawings['mount-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(feet)) drawings['feet-' + kind] = `<g fill="none" stroke-width="3.3">${drawing}</g>`;
     for (const [kind, drawing] of Object.entries(projectiles)) drawings['shot-' + kind] = drawing;
@@ -329,6 +339,13 @@
     const label = hp === null ? '' : `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
     const health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
     const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
+    let faceLayer;
+    if (kind === 'giant') {
+      const jaw = ref('stagJaw', `transform="rotate(${3.5 * Math.sin(time * 4)} -20 -8)"`);
+      faceLayer = jaw + `<g transform="scale(1 -1)">${jaw}</g>` + ref('stagHead');
+    } else {
+      faceLayer = ref('face', `transform="translate(${head} 0)"`);
+    }
     const cold = slow ? 'filter="url(#art-cold-shell)"' : '';
     const shieldLayer = armored ? `<g class="hard-shell ${down ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${down ? -1 : 1})">
       ${ref('shieldPlate', cold)}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
@@ -337,8 +354,7 @@
       ${kind === 'flyer' ? `<g class="bug-wings" transform="scale(1 ${beat})">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
       <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="skewX(${stride * 5})">
         ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
-      ${kind === 'giant' ? ref('horns') : ''}
-      ${body}${ref('face', `transform="translate(${head} 0)"`)}
+      ${body}${faceLayer}
       </g>${shieldLayer}</g>
       ${flash > 0 ? `<path d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
       ${slow ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}

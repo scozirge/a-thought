@@ -29,7 +29,7 @@
     mother: { name: '母蟲', hp: 10, artSpan: 69, speed: 0.30, color: '#c58fa9' },
     flyer: { name: '飛蟲', airborne: true, hp: 2, artSpan: 60, speed: 1, color: '#73a9bd' },
     splitter: { name: '分裂蟲', hp: 4, artSpan: 62, speed: 0.70, color: '#87b77c' },
-    giant: { name: '巨蟲', hp: 20, artSpan: 78, speed: 0.35, color: '#9e8266' },
+    giant: { name: '巨蟲', hp: 20, artSpan: 89, speed: 0.35, color: '#9e8266' },
     swift: { name: '長腳蟲', hp: 2, artSpan: 64, speed: 1.65, color: '#c8a14b' }
   };
   const health = (kind, hp) => Math.max(1, hp * ENEMY_HEALTH_MULTIPLIER - (kind === 'flyer' ? 1 : 0));

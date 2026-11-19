@@ -21,10 +21,10 @@
     [["cannon",3,0],["pea",3,1],["wall",3,3],["pea",3,4],["wall",3,5],["molecular",3,7],["pea",5,1],["wall",5,2],["cannon",5,3],["pea",5,4],["wall",5,5],["pea",5,6],["wall",5,7],["pea",8,0],["flame",8,1],["wall",8,2],["push",8,3],["wall",8,4],["frost",8,5],["wall",8,7],["molecular",6,5],["wall",6,2],["push",4,7],["pea",2,2]],
     // 第 8 關　用深淺不同的缺口接住側面來的巨蟲
     [["wall",3,0],["frost",3,2],["pierce",3,3],["pea",3,4],["pea",3,5],["wall",3,6],["cannon",3,7],["pierce",6,0],["pea",6,1],["wall",6,2],["pea",6,3],["frost",6,4],["push",6,5],["pea",6,6],["wall",9,1],["pea",9,2],["wall",9,3],["pea",9,4],["cannon",9,5],["push",9,6],["wall",9,7],["wall",7,5],["flame",5,2],["wall",1,6],["molecular",1,2],["push",2,2]],
-    // 第 9 關　上下入口換邊後，把折返路線接回同一區
-    [["pea",2,1],["pea",2,2],["wall",6,2],["wall",2,4],["pea",2,6],["pea",2,7],["flame",4,0],["frost",4,1],["wall",4,2],["cannon",4,3],["pea",4,4],["pea",4,5],["cannon",4,7],["frost",7,2],["push",7,3],["push",7,4],["pea",7,5],["cannon",7,6],["pea",7,7],["pea",10,0],["wall",10,1],["push",10,2],["cannon",10,4],["wall",8,6],["pea",9,1],["pea",6,4],["frost",8,5],["flame",1,6],["flame",2,5],["cannon",6,6],["pea",3,1]],
-    // 第 10 關　轉折處交叉射擊，再用小屋前的火力收尾
-    [["pea",5,4],["flame",2,3],["frost",6,2],["cannon",8,2],["frost",7,3],["flame",6,3],["pea",7,4],["pea",7,5],["pea",8,3],["pea",5,2],["pea",2,2],["flame",7,2],["push",5,1],["pea",9,2],["wall",3,2],["pea",10,3],["wall",3,3],["cannon",5,3],["pea",4,7],["pea",4,6],["wall",5,5],["cannon",3,1],["wall",2,1],["wall",5,6],["push",2,0],["pea",3,6],["pea",9,4],["cannon",7,0],["frost",10,0],["wall",8,0],["frost",10,7],["cannon",1,3],["pea",7,6],["push",6,5],["pea",1,0],["pea",6,4],["pea",3,4],["frost",3,0]]
+    // 第 9 關　把雷射架在下方缺口，貫穿折返的蟲群
+    [["pea",2,1],["pea",2,2],["wall",6,2],["wall",2,4],["pea",2,6],["pea",2,7],["flame",4,0],["frost",4,1],["wall",4,2],["cannon",4,3],["pea",4,4],["pea",4,5],["pierce",4,7],["frost",7,2],["push",7,3],["push",7,4],["pea",7,5],["cannon",7,6],["pea",7,7],["pea",10,0],["wall",10,1],["push",10,2],["cannon",10,4],["wall",8,6],["pea",9,1],["pea",6,4],["wall",8,5],["flame",1,6],["flame",2,5],["cannon",6,6],["pea",3,1]],
+    // 第 10 關　雷射守下方折返處，分子砲從另一側鎖定巨蟲
+    [["pea",5,4],["flame",2,3],["frost",6,2],["cannon",8,2],["frost",7,3],["wall",6,3],["pea",7,4],["pea",7,5],["pea",8,3],["pea",5,2],["pea",2,2],["molecular",7,2],["push",5,1],["wall",9,2],["wall",3,2],["wall",10,3],["wall",3,3],["cannon",5,3],["pierce",4,7],["wall",4,6],["wall",5,5],["cannon",3,1],["wall",2,1],["wall",5,6],["push",2,0],["pea",3,6],["pea",9,4],["cannon",7,0],["frost",10,0],["wall",8,0],["frost",10,7],["wall",1,3],["pea",7,6],["push",6,5],["pea",1,0],["pea",6,4],["pea",3,4],["frost",3,0]]
   ];
   function create(level) {
     if (!Number.isInteger(level) || !layouts[level]) throw new RangeError('無效關卡');
