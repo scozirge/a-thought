@@ -329,12 +329,18 @@
     return ref(mounts[kind] ? 'mount-' + kind : 'plinth') +
       ref('tower-' + kind, `transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
   }
+  function bugPose(kind, time) {
+    return {
+      legs: `skewX(${5 * Math.sin(time * (kind === 'swift' ? 19 : 12))})`,
+      wings: kind === 'flyer' ? `scale(1 ${0.79 + Math.sin(time * 28) * 0.2})` : '',
+      jaw: kind === 'giant' ? `rotate(${3.5 * Math.sin(time * 4)} -20 -8)` : ''
+    };
+  }
   function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false, labelId = '', maxHp) {
     const { head, shadow } = enemyShapes[kind];
     const size = window.Garden.enemyArtScale(kind, maxHp);
     const down = kind === 'shield_down', armored = down || kind === 'shield';
-    const stride = Math.sin(time * (kind === 'swift' ? 19 : 12));
-    const beat = 0.79 + Math.sin(time * 28) * 0.2;
+    const pose = bugPose(kind, time);
     const leg = 'feet-' + (down ? 'shield' : kind);
     let health = '';
     if (hp !== null) {
@@ -344,7 +350,7 @@
     const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
     let faceLayer;
     if (kind === 'giant') {
-      const jaw = ref('stagJaw', `transform="rotate(${3.5 * Math.sin(time * 4)} -20 -8)"`);
+      const jaw = ref('stagJaw', `transform="${pose.jaw}"`);
       faceLayer = jaw + `<g transform="scale(1 -1)">${jaw}</g>` + ref('stagHead');
     } else {
       faceLayer = ref('face', `transform="translate(${head} 0)"`);
@@ -354,16 +360,16 @@
       ${ref('shieldPlate', cold)}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
     return `<g class="bug-art" transform="scale(${size})"><ellipse cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>
       <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g ${slow ? 'class="chilled-shell"' : ''} ${cold}>
-      ${kind === 'flyer' ? `<g class="bug-wings" transform="scale(1 ${beat})">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
-      <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="skewX(${stride * 5})">
+      ${kind === 'flyer' ? `<g class="bug-wings" transform="${pose.wings}">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
+      <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="${pose.legs}">
         ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
       ${body}${faceLayer}
       </g>${shieldLayer}</g>
-      ${flash > 0 ? `<path d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
+      ${flash > 0 ? `<path class="hit-flash" d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
       ${slow ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}
       </g>${health}`;
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
-  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
+  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
 })();

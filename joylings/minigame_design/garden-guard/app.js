@@ -9,7 +9,7 @@
   const enemyHealth = $('enemy-health');
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
-  let finishAge = null, resultAfterHeart = false;
+  let finishAge = null, resultAfterHeart = false, frameId = null;
   let infoAnchor = null, infoTimer = 0;
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE));
@@ -121,15 +121,69 @@
     const color = selected === 'remove' ? '#bb8967' : existing || valid ? '#7c9b6b' : '#c38c75';
     $('hover-layer').innerHTML = `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="8" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="2.5"/>${valid && selected !== 'remove' && !existing ? `<g transform="translate(${x} ${y})" opacity=".5">${A.tower(selected)}</g>` : ''}`;
   }
+  const svg = tag => document.createElementNS('http://www.w3.org/2000/svg', tag);
+  const enemyViews = new Map();
+  function placeAfter(parent, node, previous) {
+    const next = previous ? previous.nextElementSibling : parent.firstElementChild;
+    if (node !== next) parent.insertBefore(node, next);
+  }
+  function updateEnemy(view, enemy, showHealth) {
+    const time = state.time + enemy.id, slow = enemy.slow > 0;
+    const hp = showHealth ? enemy.hp : null;
+    const appearance = [hp, slow, enemy.flash > 0, enemy.shieldFlash > 0].join('/');
+    if (view.appearance !== appearance) {
+      const node = view.node;
+      node.innerHTML = A.bug(enemy.kind, hp, time, enemy.flash, enemy.shieldFlash, slow, view.labelId, enemy.maxHp);
+      view.legs = node.querySelector('.bug-legs');
+      view.wings = node.querySelector('.bug-wings');
+      view.jaws = enemy.kind === 'giant' ? node.querySelectorAll('use[href="#art-stagJaw"]') : null;
+      view.hit = node.querySelector('.hit-flash');
+      view.block = node.querySelector('.shield-flash');
+      view.appearance = appearance;
+    } else {
+      const pose = A.bugPose(enemy.kind, time);
+      view.legs.setAttribute('transform', pose.legs);
+      if (view.wings) view.wings.setAttribute('transform', pose.wings);
+      if (view.jaws) for (const jaw of view.jaws) jaw.setAttribute('transform', pose.jaw);
+      if (view.hit) view.hit.setAttribute('opacity', Math.min(1, enemy.flash * 8));
+      if (view.block) view.block.setAttribute('opacity', Math.min(1, enemy.shieldFlash / .12));
+    }
+    if (view.hp !== enemy.hp) {
+      view.node.dataset.hp = enemy.hp;
+      view.hp = enemy.hp;
+    }
+    const jumping = !!enemy.leap;
+    if (view.jumping !== jumping) {
+      view.node.dataset.jumping = jumping;
+      view.jumping = jumping;
+    }
+  }
   function drawEnemies(lift) {
-    const sprites = [], labels = [], occupied = [];
+    const layer = $('bug-layer'), labels = $('health-layer'), occupied = [];
     const showHealth = enemyHealth.checked;
+    const living = new Set(state.enemies);
+    for (const [enemy, view] of enemyViews) {
+      if (living.has(enemy)) continue;
+      view.node.remove(); view.label?.remove(); enemyViews.delete(enemy);
+    }
     const flying = enemy => Number(!!enemy.leap || enemy.kind === 'flyer');
+    let previous = null, previousLabel = null;
     for (const e of state.enemies.slice().sort((a, b) => flying(a) - flying(b))) {
-      const x = X(e.x), y = Y(e.y) - lift(e), id = `bug-hp-${e.id}`;
-      sprites.push(`<g data-enemy="${e.id}" data-kind="${e.kind}" data-hp="${e.hp}" data-jumping="${!!e.leap}" transform="translate(${x} ${y})">
-        ${A.bug(e.kind, showHealth ? e.hp : null, state.time + e.id, e.flash, e.shieldFlash, e.slow > 0, id, e.maxHp)}</g>`);
-      if (!showHealth) continue;
+      let view = enemyViews.get(e);
+      if (!view) {
+        view = { node: svg('g'), labelId: `bug-hp-${e.id}` };
+        view.node.dataset.enemy = e.id; view.node.dataset.kind = e.kind;
+        enemyViews.set(e, view);
+      }
+      const x = X(e.x), y = Y(e.y) - lift(e);
+      updateEnemy(view, e, showHealth);
+      view.node.setAttribute('transform', `translate(${x} ${y})`);
+      placeAfter(layer, view.node, previous);
+      previous = view.node;
+      if (!showHealth) {
+        if (view.label) { view.label.remove(); view.label = null; }
+        continue;
+      }
       // Prefer the free side of the shell. Nearby numbers can use the other
       // edge of the same insect, so two health values don't read as one.
       const upper = e.kind === 'shield_down', lowerEdge = 25, upperEdge = -5;
@@ -147,13 +201,39 @@
         if (!overlap) break;
       }
       occupied.push({x: bestX, y: bestY, halfWidth});
-      labels.push(`<use href="#${id}" x="${bestX}" y="${bestY}"/>`);
+      if (!view.label) {
+        view.label = svg('use');
+        view.label.setAttribute('href', '#' + view.labelId);
+      }
+      view.label.setAttribute('x', bestX); view.label.setAttribute('y', bestY);
+      placeAfter(labels, view.label, previousLabel);
+      previousLabel = view.label;
     }
-    $('bug-layer').innerHTML = sprites.join('');
-    $('health-layer').innerHTML = labels.join('');
   }
   function aimProgress(b) {
     return b.aim ? Math.min(1, b.aim.age / (G.TOOLS[b.kind].aimSeconds * BATTLE_SPEED)) : 0;
+  }
+  let buildingBoard, buildingRevision, buildingViews;
+  function drawBuildings(beams, visibleFlash) {
+    if (buildingBoard !== state || buildingRevision !== state.revision) {
+      buildingBoard = state; buildingRevision = state.revision;
+      buildingViews = state.buildings.map(b => {
+        const node = svg('g');
+        node.setAttribute('transform', `translate(${X(b.c)} ${Y(b.r)})`);
+        node.dataset.building = b.kind; node.dataset.c = b.c; node.dataset.r = b.r;
+        return { building: b, node };
+      });
+      $('building-layer').replaceChildren(...buildingViews.map(view => view.node));
+    }
+    for (const view of buildingViews) {
+      const b = view.building, angle = beams.get(b.id)?.angle ?? b.angle;
+      const flash = visibleFlash(b), charge = aimProgress(b);
+      if (view.angle === angle && view.flash === flash && view.charge === charge && view.hp === b.hp) continue;
+      view.angle = angle; view.flash = flash; view.charge = charge; view.hp = b.hp;
+      const hp = G.TOOLS[b.kind].hp;
+      const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
+      view.node.innerHTML = A.tower(b.kind, angle, flash, charge) + damage;
+    }
   }
   function renderWorld() {
     const lift = e => G.enemyLift(e, state.time);
@@ -175,11 +255,7 @@
         <use href="#art-firePatch" transform="translate(15 -4) scale(.23 ${.25 - flicker * .05})"/>
         <use href="#art-firePatch" transform="translate(6 13) scale(.16 ${.18 + flicker * .04})"/></g>`;
     }).join('');
-    $('building-layer').innerHTML = state.buildings.map(b => {
-      const hp = G.TOOLS[b.kind].hp;
-      const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
-      return `<g transform="translate(${X(b.c)} ${Y(b.r)})" data-building="${b.kind}" data-c="${b.c}" data-r="${b.r}">${A.tower(b.kind, beams.get(b.id)?.angle ?? b.angle, visibleFlash(b), aimProgress(b))}${damage}</g>`;
-    }).join('');
+    drawBuildings(beams, visibleFlash);
     drawEnemies(lift);
     const aiming = ['running', 'paused'].includes(state.phase) ? state.buildings.map(b => {
       if (!b.aim) return '';
@@ -291,9 +367,10 @@
     }
     if (force || lastRevision !== state.revision) {
       selection(); lastRevision = state.revision;
+      const solid = G.terrain(state.level);
       for (const cell of $('hit-layer').querySelectorAll('[data-c]')) {
         const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
-        cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.TOOLS[b.kind].name : G.terrain(state.level).has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
+        cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.TOOLS[b.kind].name : solid.has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
       }
       if (infoAnchor?.classList.contains('cell-hit')) showCellInfo(infoAnchor);
     }
@@ -314,6 +391,7 @@
     }
     updateUI(force);
     if (force || settling || state.time !== lastWorldTime) { renderWorld(); lastWorldTime = state.time; }
+    scheduleFrame();
   }
   function loadLevel(level, replacement = null) {
     hideInfo();
@@ -377,6 +455,7 @@
     hover = null; $('status').textContent = ''; selection();
     if (state.phase === 'planning') { save(); G.startWave(state); }
     else if (state.phase === 'running' || state.phase === 'paused') G.togglePause(state);
+    else if (state.phase === 'lost') { loadLevel(state.level, G.retry(state)); return; }
     else outcome();
     sync(true);
   });
@@ -395,6 +474,10 @@
   $('board').addEventListener('pointerleave', () => { hover = null; selection(); deferHideInfo(); });
   $('hit-layer').addEventListener('focusin', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
+    if (cell.getAttribute('tabindex') !== '0') {
+      $('hit-layer').querySelector('[tabindex="0"]')?.setAttribute('tabindex', '-1');
+      cell.setAttribute('tabindex', '0');
+    }
     focusCell = hover = { c: +cell.dataset.c, r: +cell.dataset.r }; selection();
     showCellInfo(cell);
   });
@@ -404,8 +487,7 @@
     if (moves[event.key]) {
       event.preventDefault(); const [dc, dr] = moves[event.key];
       focusCell = { c: Math.max(0, Math.min(G.COLS - 1, focusCell.c + dc)), r: Math.max(0, Math.min(G.ROWS - 1, focusCell.r + dr)) };
-      $('hit-layer').querySelectorAll('[tabindex="0"]').forEach(el => el.setAttribute('tabindex', '-1'));
-      const next = $('hit-layer').querySelector(`[data-c="${focusCell.c}"][data-r="${focusCell.r}"]`); next.setAttribute('tabindex', '0'); next.focus();
+      $('hit-layer').querySelector(`[data-c="${focusCell.c}"][data-r="${focusCell.r}"]`).focus();
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(focusCell.c, focusCell.r); }
   });
   document.addEventListener('keydown', event => {
@@ -419,10 +501,20 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && G.isAdvancing(state)) { G.togglePause(state); save(); sync(true); }
     accumulator = 0; lastFrame = 0;
+    scheduleFrame();
   });
 
   // Deterministic fixed simulation step; pause does not bank elapsed time.
+  function scheduleFrame() {
+    if (!document.hidden && (G.isAdvancing(state) || (finishAge !== null && finishAge < 1))) {
+      if (frameId === null) frameId = requestAnimationFrame(frame);
+    } else {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      frameId = null; lastFrame = 0; accumulator = 0;
+    }
+  }
   function frame(now) {
+    frameId = null;
     const elapsed = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0; lastFrame = now;
     if (G.isAdvancing(state)) {
       accumulator += elapsed * BATTLE_SPEED;
@@ -433,9 +525,8 @@
     if (settling) finishAge = Math.min(1, finishAge + elapsed * BATTLE_SPEED);
     sync(false, settling);
     if (settling && finishAge === 1 && resultAfterHeart) outcome();
-    requestAnimationFrame(frame);
   }
   // Read-only diagnostics for verification. No test controls ship in normal play.
   window.gardenDebug = { getState: () => JSON.parse(JSON.stringify(state)), getRoutes: () => G.previews(state) };
-  ground(); sync(true); requestAnimationFrame(frame);
+  ground(); sync(true);
 })();

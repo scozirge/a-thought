@@ -132,6 +132,8 @@ test('沒有防守會失敗；重試恢復這一波開始前的盤面與資源',
   const s = G.createState(); G.build(s, 'wall', 5, 0);
   const before = G.snapshot(s); G.startWave(s); simulate(s);
   assert.equal(s.phase, 'lost'); assert.equal(s.hearts, 0);
+  assert.ok(s.enemies.every(e => !e.dead), '最後進屋的蟲離開戰場');
+  assert.ok(s.effects.some(e => e.kind === 'home'), '碎心動畫保留到結算');
   const retry = G.retry(s); assert.equal(retry.phase, 'planning');
   assert.equal(retry.money, before.money); assert.equal(retry.hearts, before.hearts);
   assert.equal(retry.buildings.length, 1); assert.equal(retry.wave, 0);

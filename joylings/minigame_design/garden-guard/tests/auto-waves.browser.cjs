@@ -32,6 +32,11 @@ const out = path.join(__dirname, '../dist/browser-check');
       const first=await read();
       if (first.stats.blocked>0 && first.enemies.length>=1) break;
     }
+    const enemyNode = await p.locator('#bug-layer [data-enemy]').first().elementHandle();
+    const towerNode = await p.locator('#building-layer [data-building]').first().elementHandle();
+    await p.clock.runFor(40);
+    assert.ok(await enemyNode.evaluate(n => n.isConnected), '行進時沿用同一隻蟲的圖形');
+    assert.ok(await towerNode.evaluate(n => n.isConnected), '砲塔轉動時保留原圖形容器');
     await press('#action');
     const shield=await read(); assert.ok(shield.stats.blocked>0,JSON.stringify({errors, phase:shield.phase,time:shield.time,towers:shield.buildings.map(b=>b.kind),stats:shield.stats,enemies:shield.enemies.length})); assert.equal(shield.stats.hits,0); assert.ok(shield.enemies.every(e=>e.hp===e.maxHp));
     assert.equal(await p.locator('#health-layer use').count(), shield.enemies.length);
@@ -110,7 +115,18 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.reload(); assert.equal((await read()).buildings[0].paidCost,G.TOOLS.molecular.cost);
     await press('#remove'); await press(cell(3,4)); assert.equal((await read()).money,104,'新塔讀檔後仍全額退款');
     await prepare(G.snapshot(G.createState()));
-    await press('#action'); await finish(); assert.equal((await read()).phase,'lost'); await p.clock.runFor(800); assert.equal(await p.locator('#result').evaluate(el=>el.open),true); await press('#result-primary'); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
+    for (const dismiss of [false, true]) {
+      await press('#action'); await finish();
+      assert.equal((await read()).phase,'lost');
+      await p.clock.runFor(800);
+      assert.ok(await p.locator('#result').evaluate(el => el.open));
+      if (dismiss) {
+        await p.keyboard.press('Escape');
+        await p.getByRole('button', {name:'再試一次', exact:true}).click();
+      } else await press('#result-primary');
+      assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
+      assert.equal(await p.locator('#result').evaluate(el => el.open), false);
+    }
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({passed:true,stages:10,retainedBuildings:true,refund:true,manualNext:true,rewardOnce:true,testSelection:true,completionSaved:true,retry:true,budgetMigration:true,longerRanges:true,browserErrors:errors}));
   } finally {await browser.close();}
