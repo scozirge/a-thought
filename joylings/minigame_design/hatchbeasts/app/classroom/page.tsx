@@ -1,6 +1,6 @@
-import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2, PencilRuler } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, ClipboardList, Crosshair, FlaskConical, Gamepad2, Music2, PencilRuler, Sprout } from 'lucide-react';
 import { assetUrl } from '@/lib/assets';
-import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL, TOGETHER_ONLINE_PUBLIC_URL, LITTLE_ENGINEER_PUBLIC_URL } from '@/lib/release';
+import { PUZZLE_PARTY_PUBLIC_URL, GAME_PUBLIC_URL, GAME_VERSION, RED_BLUE_GAME_PUBLIC_URL, WITCH_POTIONS_PUBLIC_URL, WOOD_EXIT_PUBLIC_URL, NEON_IMPACT_PUBLIC_URL, TOGETHER_ONLINE_PUBLIC_URL, LITTLE_ENGINEER_PUBLIC_URL, GARDEN_GUARD_PUBLIC_URL } from '@/lib/release';
 import { CourseHeader, UnitIcon } from './course-ui';
 import { activities, potionChallenges, potionRetrospective, puzzlePartyRetrospective, redBlueQuestions, units } from './course-data';
 import weaponQuestions from './red-blue-battle/weapon-questions.json';
@@ -18,6 +18,11 @@ export default function ClassroomHome() {
               遊戲<span className="crayon-underline">設計</span>
             </h1>
             <div className="catalog-actions">
+              <a className="course-button" href={GARDEN_GUARD_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                <Sprout size={20} aria-hidden="true" />
+                玩小小守園隊
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </a>
               <a className="course-button" href={LITTLE_ENGINEER_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
                 <PencilRuler size={20} aria-hidden="true" />
                 玩小小工程師
@@ -423,6 +428,19 @@ export default function ClassroomHome() {
               <p className="catalog-question-context">整體效果不錯，是值得繼續延伸的活動設計。不過，維持課堂秩序也變得更困難。後續若延伸活動，需要一併思考如何安排發言與提問，讓上台的孩子能安心說明，台下也能專心聆聽。</p>
             </div>
           </details>
+
+          <section className="ninth-course" id="ninth-course" aria-labelledby="ninth-course-title">
+            <h2 id="ninth-course-title">第 9 週課程</h2>
+            <a className="unit-card card-green" href={GARDEN_GUARD_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+              <span className="unit-icon tint-green"><Sprout size={28} aria-hidden="true" /></span>
+              <span className="sixth-game-copy"><span className="unit-title">小小守園隊</span><span className="unit-meta">看盾牌方向，用金幣布置防線</span></span>
+              <ArrowUpRight size={22} aria-hidden="true" />
+            </a>
+            <div className="activity-content">
+              <p className="catalog-question-context">兩人一組，一人猜蟲會走哪條路，另一人選一座塔、點草地蓋好，再按「開始」。看見整片盾牌閃白時，留意子彈從哪一邊飛來。</p>
+              <p className="catalog-question-context">下一次把塔換到路的另一側，看看蟲身上的數字有沒有變小。過關後交換工作，討論金幣要拿來蓋新塔，還是用石牆讓蟲多繞一段路。</p>
+            </div>
+          </section>
 
           <div className="unit-grid">
             {units.slice(1).map((unit) => (

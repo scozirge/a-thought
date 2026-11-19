@@ -26,8 +26,8 @@ test('完全封路才沿最短路線拆牆，拆開後重新找路', () => {
   const plan = G.route(s, { c: 11, r: 3 });
   assert.equal(plan.breaking, true); assert.equal(plan.path.length - 1, 11);
   G.startWave(s); simulate(s);
-  assert.ok(s.stats.broken >= 1); assert.equal(G.at(s, 6, 3), undefined);
-  assert.equal(G.at(s, 6, 0).hp, 4); assert.equal(G.previews(s)[0].breaking, false);
+  assert.ok(s.stats.broken >= 1); assert.ok(G.LEVELS[0].entries.some(r => !G.at(s, 6, r)));
+  assert.equal(G.at(s, 6, 0).hp, 4); assert.ok(G.previews(s).every(p => !p.breaking));
 });
 test('破牆路線選步數最短，而不是繞路去找較薄的牆', () => {
   const s = G.createState();
@@ -35,7 +35,9 @@ test('破牆路線選步數最短，而不是繞路去找較薄的牆', () => {
   G.at(s, 6, 0).hp = 1;
   assert.ok(G.route(s, { c: 11, r: 3 }).path.some(p => p.c === 6 && p.r === 3));
 });
-test('池塘與固定石頭永遠不能穿過，兩個入口都有路', () => {
+test('十關共用固定地形，所有右側入口都有路；尋路不穿越固定障礙', () => {
+  const solids = new Set(['5,3', '5,2']);
+  assert.ok(G.findPath({ c: 11, r: 3 }, G.GOAL, [], solids).every(p => !solids.has(G.key(p.c, p.r))));
   for (let level = 0; level < G.LEVELS.length; level++) {
     const s = G.createState(level), terrain = G.terrain(level);
     for (const p of G.previews(s)) {
@@ -45,18 +47,18 @@ test('池塘與固定石頭永遠不能穿過，兩個入口都有路', () => {
 });
 test('全新開局第一波就是盾蟲；七種上方塔都不扣血，下方塔會扣血', () => {
   for (const kind of Object.keys(G.TOOLS).filter(kind => kind !== 'wall')) {
-    for (const r of [1, 5]) {
+    for (const r of [0, 7]) {
       // Restoring a previous first-wave save must also use the updated wave.
       const s = G.restore(G.snapshot(G.createState()));
       assert.equal(G.build(s, kind, 8, r).ok, true);
       G.startWave(s);
-      assert.ok(s.queue.every(e => e.kind === 'shield' && e.hp === 3));
-      simulate(s, 8);
-      if (r === 1) {
+      assert.ok(s.queue.slice(0, 5).every(e => e.kind === 'shield' && e.hp === 6));
+      simulate(s, kind === 'molecular' ? 5 : 3.5);
+      if (r === 0) {
         assert.ok(s.stats.blocked > 0, kind);
         assert.equal(s.stats.hits, 0);
         assert.ok(s.enemies.length > 0);
-        assert.ok(s.enemies.every(e => e.kind === 'shield' && e.hp === 3 && e.slow === 0));
+        assert.ok(s.enemies.every(e => e.kind === 'shield' && e.hp === e.maxHp && e.slow === 0));
       } else {
         assert.ok(s.stats.hits > 0, kind);
         assert.equal(s.stats.blocked, 0);
@@ -96,23 +98,23 @@ test('盾固定朝畫面上方，轉彎不旋轉；同高度為側面有效攻�
   assert.equal(G.shieldBlocks(e, { c: 2, r: 5 }), false);
   assert.equal(G.shieldBlocks(e, { c: 2, r: 4 }), false);
 });
-test('傷害 1 的砲塔逐次扣除生命，死亡只給一次種子', () => {
+test('傷害 1 的砲塔逐次扣除生命，擊殺不額外產錢', () => {
   for (const kind of ['pea', 'frost']) {
     const s = G.createState(), e = G.spawn(s, 'bug', 3), before = s.money;
     for (let i = 0; i < 3; i++) { G.hit(s, e, { c: 5, r: 5, kind }); assert.equal(e.hp, 2 - i); }
-    assert.equal(e.dead, true); assert.equal(s.money, before + 1);
-    G.hit(s, e, { c: 5, r: 5, kind }); assert.equal(s.money, before + 1);
+    assert.equal(e.dead, true); assert.equal(s.money, before);
+    G.hit(s, e, { c: 5, r: 5, kind }); assert.equal(s.money, before);
   }
 });
 test('數量與放置限制、全額退回、撤回與地形驗證', () => {
   const s = G.createState(1), before = s.money;
-  assert.equal(G.build(s, 'pea', 5, 2).ok, false);
+  assert.equal(G.build(s, 'pea', 5, -1).ok, false);
   assert.equal(G.build(s, 'wall', 0, 3).ok, false);
   assert.equal(G.build(s, 'wall', 11, 3).ok, false);
-  assert.equal(G.build(s, 'pea', 6, 5).ok, true); assert.equal(s.money, before - 6);
+  assert.equal(G.build(s, 'pea', 6, 5).ok, true); assert.equal(s.money, before - G.TOOLS.pea.cost);
   assert.equal(G.build(s, 'pea', 6, 5).ok, false);
   assert.equal(G.remove(s, 6, 5).ok, true); assert.equal(s.money, before);
-  G.undo(s); assert.ok(G.at(s, 6, 5)); assert.equal(s.money, before - 6);
+  G.undo(s); assert.ok(G.at(s, 6, 5)); assert.equal(s.money, before - G.TOOLS.pea.cost);
   G.undo(s); assert.equal(s.buildings.length, 0); assert.equal(s.money, before);
   s.money = 0; assert.equal(G.build(s, 'pea', 6, 5).ok, false);
 });
@@ -144,25 +146,4 @@ test('多隻小蟲同時拆同一座塔不會重複扣除或卡住', () => {
   for (let i = 0; i < 4; i++) { const e = G.spawn(s, 'shield', 50); e.c = e.x = 9; }
   simulate(s, 30);
   assert.equal(G.at(s, 8, 3), undefined); assert.equal(s.stats.broken, 1); assert.equal(s.enemies.length, 0);
-});
-test('三個花園共十二波都有合法預算內的滿生命解法', () => {
-  const layouts = require('./layouts.cjs');
-  for (let level = 0; level < layouts.length; level++) {
-    const s = G.createState(level);
-    for (let wave = 0; wave < 4; wave++) {
-      for (const placement of layouts[level][wave]) assert.equal(G.build(s, ...placement).ok, true, `${level}/${wave}: ${placement}`);
-      G.startWave(s); simulate(s);
-      assert.equal(s.hearts, 5, `花園 ${level + 1} 第 ${wave + 1} 波`);
-      assert.equal(s.phase, wave === 3 ? 'won' : 'planning');
-    }
-  }
-});
-test('池塘同一組火力，拿掉引導牆後會漏怪，路徑規劃確實影響結果', () => {
-  const layouts = require('./layouts.cjs')[1], s = G.createState(1);
-  for (let wave = 0; wave < 4; wave++) {
-    for (const placement of layouts[wave]) if (placement[0] !== 'wall') assert.equal(G.build(s, ...placement).ok, true);
-    G.startWave(s); simulate(s);
-    if (s.phase === 'lost') break;
-  }
-  assert.ok(s.hearts < 5, '有引導牆可滿生命，拿掉引導牆會損失生命');
 });

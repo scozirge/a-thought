@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f5ed">
+  <meta name="theme-color" content="#284e40">
   <meta name="description" content="安排小塔、改變路線，和小蟲一起學方向、數量與策略。">
   <title>小小守園隊</title>
   <link rel="stylesheet" href="styles.css">
@@ -12,24 +12,19 @@
   <main class="app" aria-label="小小守園隊">
     <section class="field-panel" aria-label="花園戰場">
       <header class="hud">
-        <nav class="levels" aria-label="選擇花園">
-          <button data-level="0" aria-label="花園一：青草地">1</button>
-          <button data-level="1" aria-label="花園二：小池塘">2</button>
-          <button data-level="2" aria-label="花園三：兩條路">3</button>
-        </nav>
+        <h1><svg class="crest" viewBox="0 0 40 44" aria-hidden="true"><path d="m20 2 16 5v15c0 9-10 16-16 20C14 38 4 31 4 22V7Z" fill="#f7cf73" stroke="#143c32" stroke-width="2"/><path d="m20 6 12 4v12c0 6-6 12-12 16C14 34 8 28 8 22V10Z" fill="#477c5b"/><path d="M18 28C7 27 10 18 10 18q9-2 11 9C16 18 21 12 29 12c1 9-4 15-9 16l-1 5-3-1Z" fill="#ffe7a1"/></svg>小小守園隊</h1>
+        <select id="level-select" aria-label="測試選關，切換會重設盤面" title="測試選關：切換會重設盤面"></select>
         <div class="resources">
           <div class="heart-count" id="hearts" aria-label="小屋生命 5"><span data-icon="heart"></span><strong id="health">5</strong></div>
-          <div class="seed-count" id="seeds" aria-label="可用種子 22"><span data-icon="seed"></span><strong id="money">22</strong></div>
+          <div class="coin-count" id="coins" aria-label="可用金幣 48"><span data-icon="coin"></span><strong id="money">48</strong><span id="reward" aria-hidden="true" hidden></span></div>
         </div>
       </header>
       <div class="board-scroll" id="board-scroll">
         <svg id="board" viewBox="0 0 920 592" role="group" aria-label="戰場。選好工具後點草地放置，或用方向鍵移動、Enter 放置。">
-          <defs>
-            <pattern id="grass" width="29" height="29" patternUnits="userSpaceOnUse"><path d="m7 18 2-4 2 4m13-9 1-3" stroke="#597853" stroke-opacity=".07" stroke-width="1.2" fill="none"/></pattern>
-          </defs>
+          <defs id="garden-art"></defs>
           <g id="ground-layer"></g><g id="fire-layer" pointer-events="none"></g><g id="range-layer" pointer-events="none"></g>
           <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
-          <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g>
+          <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g><g id="health-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
         </svg>
       </div>
@@ -39,10 +34,11 @@
       <div id="tools" class="tools"></div>
       <div class="edit-controls">
         <button id="undo" class="icon-button" aria-label="退一步" data-icon="undo" disabled></button>
-        <button id="remove" class="icon-button" aria-label="移走物品，退回種子" aria-pressed="false" data-icon="erase"></button>
-        <button id="reset" class="icon-button" aria-label="重新開始這個花園" data-icon="reset"></button>
+        <button id="remove" class="icon-button" aria-label="移走物品，退回金幣" aria-pressed="false" data-icon="erase"></button>
+        <button id="reset" class="icon-button" aria-label="重試這關" data-icon="reset"></button>
+        <button id="solution" class="icon-button" aria-label="清空並部署本關解答，重設本關預算" title="重設本關，放上預算內的解答">解答</button>
       </div>
-      <button id="action" class="action-button" aria-label="放小蟲" data-icon="play"></button>
+      <button id="action" class="action-button" aria-label="開始" data-icon="play"></button>
     </div>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
   </main>
@@ -52,9 +48,9 @@
     <div class="result-illustration" id="result-art"></div>
     <h2 id="result-title">守住了！</h2>
     <div id="result-hearts" class="result-hearts"></div>
-    <button id="result-primary" class="action-button">下一園</button>
+    <button id="result-primary" class="action-button">再玩一次</button>
     <button id="result-secondary" class="secondary-button">再玩一次</button>
   </dialog>
-  <script src="core.js"></script><script src="art.js"></script><script src="app.js"></script>
+  <script src="core.js"></script><script src="solutions.js"></script><script src="art.js"></script><script src="app.js"></script>
 </body>
 </html>

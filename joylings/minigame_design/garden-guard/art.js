@@ -1,71 +1,301 @@
 (function () {
   'use strict';
+
+  // Static drawings are defined once. The board only moves the instances.
   const icons = {
-    leaf: '<path d="M5 19C1 6 15 3 21 3c0 12-6 20-15 15" fill="currentColor"/><path d="M5 21 16 9" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>',
-    seed: '<path d="M12 22C2 17 4 8 12 2c8 6 10 15 0 20Z" fill="currentColor"/><path d="M12 17V8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
-    heart: '<path d="M12 21S2 15 2 8a5.5 5.5 0 0 1 10-3 5.5 5.5 0 0 1 10 3c0 7-10 13-10 13Z" fill="currentColor"/>',
-    play: '<path d="m8 4 13 8-13 8Z" fill="currentColor"/>',
-    pause: '<rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>',
-    undo: '<path d="M8 6 3 11l5 5M4 11h10a6 6 0 1 1 0 12" transform="translate(0 -3)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    reset: '<path d="M5 7a8 8 0 1 1-1 9M4 3v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    erase: '<path d="m5 16-2-2a2 2 0 0 1 0-3l8-8a2 2 0 0 1 3 0l7 7a2 2 0 0 1 0 3l-7 7H9Zm3-9 10 10M9 20h13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    path: '<path d="M3 19h8a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h12m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    arrow: '<path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    check: '<path d="m5 12 5 5L20 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
-    close: '<path d="m6 6 12 12M6 18 18 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    shield: '<path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6Z" fill="currentColor"/><path d="M12 6v11" stroke="white" stroke-opacity=".7" stroke-width="2"/>',
-    snow: '<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7m-12-3L12 7l3-3m-6 16 3-3 3 3M3 11l4-1V6m14 7-4 1v4M3 13l4 1v4m14-7-4-1V6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-    trophy: '<path d="M7 3h10v7a5 5 0 0 1-10 0Zm0 2H3v3a5 5 0 0 0 5 5m9-8h4v3a5 5 0 0 1-5 5M12 15v5m-5 1h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+    coin: `<circle cx="12" cy="13" r="10" fill="#d89015" stroke="#8c5516" stroke-width="1.4"/>
+      <circle cx="11.5" cy="10.8" r="9.2" fill="#ffcc41" stroke="#a06314" stroke-width="1.4"/>
+      <circle cx="11.5" cy="10.8" r="6.7" fill="#ffdf72" stroke="#df9b21" stroke-width="1.4"/>
+      <path d="m11.5 5.6 3.8 5.2-3.8 5.2-3.8-5.2Z" fill="#e4991b"/><path d="M4.9 8.1q1-3.2 4.1-4.2" fill="none" stroke="#fff5ba" stroke-width="2" stroke-linecap="round"/>`,
+    heart: `<path d="M12 21.8C9.5 20 1.5 14.3 1.5 8.4c0-5.7 6.7-8.1 10.5-3.1 3.8-5 10.5-2.6 10.5 3.1 0 5.9-8 11.6-10.5 13.4Z" fill="var(--heart-fill,#ed3947)" stroke="var(--heart-edge,#a62842)" stroke-width="1.5"/>
+      <path d="M4.9 8.4q.3-3.2 3.3-2.7" fill="none" stroke="var(--heart-shine,#ffd1cd)" stroke-width="2.3" stroke-linecap="round"/>`,
+    leaf: `<path d="M3 19C0 10 8 3 20.8 2.8c.5 11.7-4.7 19.4-14.6 16.4Z" fill="#83b956" stroke="#305c41" stroke-width="1.6"/><path d="M3 22 16.5 8m-7.2 7.2-.4-4.4m3 .7 4.6-.5" fill="none" stroke="#315f43" stroke-width="1.7" stroke-linecap="round"/>`,
+    play: '<path d="M6 4.5a1.6 1.6 0 0 1 2.4-1.3L21 10.7a1.6 1.6 0 0 1 0 2.6L8.4 20.8A1.6 1.6 0 0 1 6 19.5Z" fill="currentColor"/>',
+    pause: '<path d="M5 4h5v16H5zm9 0h5v16h-5z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+    undo: '<path d="m9 4-6 6 6 5m-5-5h9c5 0 7.5 3.2 7.5 8.5" class="icon-line"/>',
+    reset: '<path d="M4.2 10A8 8 0 1 1 5.7 18M4 4v6h6" class="icon-line"/>',
+    erase: '<path d="m3 13 9-10a2 2 0 0 1 3 0l6 5a2 2 0 0 1 0 3l-9 10H9l-6-5q-1.5-1.5 0-3Z" fill="#f5a491" stroke="#754d44" stroke-width="1.7"/><path d="m7 9 8 7 6-6-8-7Z" fill="#ffe0ad" stroke="#754d44" stroke-width="1.5"/><path d="M12 21h10" class="icon-line"/>',
+    trophy: '<path d="M6.5 3h11v7.3a5.5 5.5 0 0 1-11 0Z" fill="#ffcf4e" stroke="#98601e" stroke-width="1.6"/><path d="M6 5H2.5v3q0 4.2 5.1 4.2M18 5h3.5v3q0 4.2-5.1 4.2M12 16v4m-4.5 1h9" fill="none" stroke="#98601e" stroke-width="2" stroke-linecap="round"/><path d="m12 5 .9 2 2.1.2-1.5 1.5.4 2.1-1.9-1-1.9 1 .4-2.1L9 7.2l2.1-.2Z" fill="#fff6ba"/>'
   };
-  function icon(name, cls = '') { return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`; }
-  function tower(kind, angle = -90, flash = 0) {
-    if (kind === 'wall') return '<ellipse cy="19" rx="24" ry="8" fill="#354a3418"/><path d="m-24-9 10-11h29l11 11v29h-50Z" fill="#c8b799"/><path d="m-24-9 10-11h29l11 11Z" fill="#e3d8bf"/><path d="M-24 3H26M-6-9V3M9 3v17" stroke="#9e8d75" stroke-width="2.2"/><path d="m-22 20 2-7 5 3 5-3 3 7" fill="#7c9566"/><path d="M11-15h8" stroke="#f4ecd9" stroke-width="3" stroke-linecap="round"/>';
-    const dark = { pea: '#346247', cannon: '#6d604d', frost: '#527f94', flame: '#9c5235', pierce: '#346e68', push: '#555e88', molecular: '#744c83' }[kind];
-    const heads = {
-      pea: '<path d="M-12 12C-28 8-24-10-16-17c9-8 24-4 29 6l7 1v18l-10 1C4 17-4 18-12 12" fill="#578961"/><ellipse cx="19" cy="-1" rx="6" ry="10" fill="#346247"/><ellipse cx="19" cy="-2" rx="3" ry="5" fill="#233f31"/><path d="M-15-11q7-7 15-3" fill="none" stroke="#9fbf82" stroke-width="4" stroke-linecap="round"/>',
-      cannon: '<circle cx="-8" r="18" fill="#b8a27d" stroke="#786b57" stroke-width="2"/><path d="m-6-12 30-4v32l-30-4Z" fill="#777b72" stroke="#4e584e" stroke-width="2"/><path d="M-2-9 24-12v6L-2-3Z" fill="#b6beb0"/><ellipse cx="24" rx="5" ry="16" fill="#444f46"/><ellipse cx="25" rx="2.5" ry="10" fill="#26392f"/><circle cx="-10" cy="12" r="8" fill="#b68a43" stroke="#f0d390" stroke-width="2"/>',
-      frost: '<path d="m0-24 8 10 12-1-4 12 6 10-12 3-6 11-8-10-12 1 4-12-6-10 12-3Z" fill="#b1d6dd" stroke="#77a8b4" stroke-width="1.5"/><circle r="11" fill="#719fac"/><path d="M0-7v14m-6-10 12 6m-12 0 12-6" stroke="#ecfcff" stroke-width="2.5" stroke-linecap="round"/>',
-      flame: '<rect x="-22" y="-16" width="24" height="32" rx="8" fill="#ca7444" stroke="#925533" stroke-width="2"/><path d="M-18-8h16m-16 16h16" stroke="#f1ba75" stroke-width="4"/><path d="M-2-8h18l7 8-7 8H-2Z" fill="#8e7460"/><path d="M16 0c9-13 7-10 14-14-2 9 7 12 1 21-6 6-12 0-15-7Z" fill="#eea449"/><path d="m21 0 8-6c-3 5 2 7-2 10Z" fill="#fff1b0"/>',
-      pierce: '<path d="M-9-24Q15-19 20 0 15 19-9 24l6-10 11-14-11-14Z" fill="#59978b" stroke="#376e64" stroke-width="2"/><path d="M-7-22 9 0-7 22" fill="none" stroke="#dfdfb4" stroke-width="2"/><path d="M-23-4H18v8h-41Z" fill="#81b8aa"/><path d="m15-8 17 8-17 8 3-8Z" fill="#e1eee5" stroke="#4f8278" stroke-width="1.5"/>',
-      push: '<path d="m-18-12 21-3 20-11v52L3 15l-21-3Z" fill="#8994bc" stroke="#5c688e" stroke-width="2"/><ellipse cx="23" rx="6" ry="26" fill="#bbc7df"/><ellipse cx="24" rx="3" ry="18" fill="#63759b"/><path d="M-14-6H3m-17 12H3" stroke="#dce7f4" stroke-width="3"/><path d="M31-12q5 12 0 24" fill="none" stroke="#7d9cba" stroke-width="2"/>',
-      molecular: '<circle r="18" fill="#8c679b" stroke="#6c4d7b" stroke-width="2"/><ellipse rx="24" ry="9" fill="none" stroke="#d5b2dc" stroke-width="2" transform="rotate(55)"/><ellipse rx="24" ry="9" fill="none" stroke="#d5b2dc" stroke-width="2" transform="rotate(-55)"/><path d="M5-7h18l8 7-8 7H5Z" fill="#af86bd"/><circle cx="1" r="8" fill="#efd6f8"/><circle cx="1" r="4" fill="#fff9ff"/><circle cx="-17" cy="-15" r="3" fill="#fff0ff"/>'
-    };
-    const head = heads[kind] || heads.pea;
-    return `<ellipse cy="22" rx="24" ry="7" fill="#354a3418"/><path d="M-17 7h34l-4 19h-26Z" fill="#d9c6a2"/><path d="M-18 6h36v7h-36Z" fill="#e9d9b9"/><path d="M0 7V-6" stroke="${dark}" stroke-width="6" stroke-linecap="round"/><path d="M-2 6q-19 3-17-12Q-4-8-2 6M2 10Q20 9 18-4 5-4 2 10" fill="#759765"/><g transform="translate(0 -8) rotate(${angle}) scale(${flash > 0 ? 1.06 : 1})">${head}</g>`;
+  const heads = {
+    pea: `<g stroke="#294f43">
+      <path d="M-17-13H-2l7 7V7l-7 7h-15l-6-6V-6Z" fill="#52896d"/>
+      <path d="M-17-13H-2l7 7H-9l-7 9h-7V-6Z" fill="#9dc88c"/>
+      <path d="M-10-8H20v12h-30l-4-4v-4Z" fill="#477665"/>
+      <path d="M-8-7h27v4H-9Z" fill="#c7ddaa" stroke="none"/>
+      <path d="M12-10h11l4 3V5l-4 3H12Z" fill="#e5ac58"/>
+      <ellipse cx="24" cy="-1" rx="4.6" ry="8.2" fill="#f9cf80"/><ellipse cx="24.5" cy="-1" rx="2.3" ry="4.8" fill="#264d42" stroke="none"/>
+      <path d="M-18-15h9l2 5h-13Z" fill="#e6b873"/>
+      <circle cx="-13" cy="5" r="5" fill="#38614e"/><circle cx="-13" cy="5" r="2.3" fill="#f9d890" stroke="none"/></g>`,
+    cannon: `<g stroke="#423e35">
+      <path d="M-22 5q0-17 15-18l21-3 6 29-28 6q-13 2-14-14Z" fill="#334f58"/>
+      <path d="m-9-10 25-5 2 6-25 6Z" fill="#78919a" stroke="none"/>
+      <path d="m11-16 12-2 5 31-13 2Z" fill="#ecae50"/><ellipse cx="25" cy="-2" rx="6" ry="16" transform="rotate(-9 25 -2)" fill="#efc66c"/>
+      <ellipse cx="25.8" cy="-2" rx="3.4" ry="10.7" fill="#283d42" stroke-width="1.4"/>
+      <path d="m-21 8 24 3-4 8h-21Z" fill="#a06439"/><circle cx="-12" cy="13" r="9" fill="#d79342"/><circle cx="-12" cy="13" r="3" fill="#ffe3a0"/>
+      <circle cx="-23" cy="3" r="4" fill="#6a8387"/></g>`,
+    frost: `<g stroke="#276d85">
+      <path d="m-19 12-7-14 11-4 13 13 8 11-14 2Z" fill="#55b7d1"/>
+      <path d="m-11-2-6-16 9-6L5-7 4 10Z" fill="#a3ebf5"/>
+      <path d="m-16 9 9-13L23-15 31-8 14 9-4 17Z" fill="#87e3ed"/>
+      <path d="M-6 11 23-12 29-8 12 8-4 16Z" fill="#c6f9ff" stroke="none"/>
+      <path d="m-15 11 9 1L23-14M-13-15l5 12" fill="none" stroke="#f4ffff" stroke-width="2.7"/>
+      <path d="m-18 8 19 9-5 5-18-8Z" fill="#4b9bb8"/>
+      <path d="M-7-9V5m-6-11 12 7m-12 0 12-7" stroke="white" stroke-width="2.2"/></g>`,
+    flame: `<g stroke="#6d3c31">
+      <path d="M-20-13q3-6 10-5l12 4v26l-17 4q-8 0-8-8Z" fill="#d56b45"/>
+      <path d="m-19-9 16-3m-17 18 17 1" stroke="#ffcb85" stroke-width="4"/>
+      <path d="M-3-10H9l5 5v12L8 11H-3Z" fill="#6b7375"/><path d="M7-10h7V9H7Z" fill="#ebb969"/>
+      <path d="M15 8C8-4 20-7 20-19q5 4 4 11 7-5 10-12 5 16-2 25-7 10-17 3Z" fill="#ff793a"/>
+      <path d="M18 6c-2-6 5-8 6-13l1 6 5-5q2 10-6 14-4 1-6-2Z" fill="#ffe266" stroke="none"/></g>`,
+    pierce: `<g stroke="#553f32">
+      <path d="M-16-23Q8-22 13-4v8q-5 18-29 20l9-8Q4 10 4 0q0-10-12-16Z" fill="#d79755"/>
+      <path d="m-16-22-4 22 4 23" fill="none" stroke="#725a41" stroke-width="2"/>
+      <path d="M-23-4h39v8h-39Z" fill="#91603d"/><path d="M-21 0h47" stroke="#fce5a3" stroke-width="3"/>
+      <path d="m11-7 19 7-19 7 4-7Z" fill="#83d2b3" stroke="#2f6557"/>
+      <path d="m-23-6 10 2 4 4-11-1Zm0 12 10-2 4-4-11 1Z" fill="#55a382" stroke="#2f6557"/></g>`,
+    push: `<g stroke="#344d58">
+      <path d="m-25-8 5-5h8v25h-8l-5-5Z" fill="#528ba0"/>
+      <path d="M-23-7h6v15h-6Z" fill="#a7d2d2" stroke="none"/>
+      <g style="transform:scaleX(var(--spring-stretch,1));transform-origin:-13px 0">
+        <path d="M-14-3h19v6h-19Z" fill="#7192a0"/>
+        <path d="m-13 7 4-14 3 14 4-14 3 14 4-14" fill="none" stroke-width="4.4"/>
+        <path d="m-12 4 3-10m4 10 3-10m4 10 3-10" fill="none" stroke="#d6edf0" stroke-width="1.8"/></g>
+      <g style="transform:translateX(var(--punch-travel,0px))">
+        <path d="M1-10h8l4 4V9l-5 4H1Z" fill="#e8b459"/>
+        <path d="M7-9q0-6 6-7 4-3 8-1 6-1 9 4 5 7 1 16-3 7-12 9l-9-1-4-7Z" fill="#e76250" stroke="#773f39"/>
+        <path d="M10-9q2-5 8-5m4 0q4 0 5 3" fill="none" stroke="#ffb89a" stroke-width="3"/>
+        <path d="M7 4q-1 7 4 10 5 3 9-2l2-4q1-3-2-4-3-1-6 3" fill="#ef8064" stroke="#994a40" stroke-width="1.7"/>
+        <path d="M23 8q4-1 6-5" fill="none" stroke="#c44b42" stroke-width="2.2"/></g></g>`,
+    molecular: `<g stroke="#453955">
+      <path d="M-24-9l9-9 13 3 8 9V6l-8 10-14 2-8-9Z" fill="#6a5982"/>
+      <path d="m-22-9 8-6 9 2-8 5Z" fill="#aa9ec2" stroke="none"/>
+      <path d="M-9-11 0-15l24 3 6 6-13 2-15-3-11 3Z" fill="#aea3ca"/>
+      <path d="m1-12 19 2 4 3-22-2Z" fill="#f0ddf5" stroke="none"/>
+      <path d="m-9 10 11-2 15-4 13 2-6 7-25 4-8-3Z" fill="#84729d"/>
+      <path d="m2 11 18-5 4 1-5 4-17 3Z" fill="#dfc9ed" stroke="none"/>
+      <path d="M-3-3h21l7 3-7 3H-3Z" fill="#4d3b67"/>
+      <ellipse cx="-6" rx="12.5" ry="12" fill="#4d365f"/>
+      <g stroke="#e4b3f6" stroke-width="3"><path d="M-15-8-3-1-10 9" fill="none"/></g>
+      <circle cx="-15" cy="-8" r="3.8" fill="#9edee1" stroke="#634e7c" stroke-width="1.4"/>
+      <circle cx="-10" cy="9" r="3.4" fill="#bfa8ef" stroke="#634e7c" stroke-width="1.3"/>
+      <circle cx="-3.5" cy="-1.5" r="5.7" fill="#e3a4f0" stroke="#674f85" stroke-width="1.6"/>
+      <circle cx="-4.6" cy="-3" r="2" fill="#fff6da" stroke="none"/>
+      <g fill="#fff5ab" stroke="none" opacity="var(--core-light,0)">
+        <circle cx="-3.5" cy="-1.5" r="4.6"/><path d="M5-1.5h14l6 1.5-6 1.5H5Z"/></g></g>`
+
+  };
+  const plinth = `<ellipse cy="23" rx="23" ry="5.5" fill="#214738" opacity=".18"/>
+    <path d="m-18 8 6-6h24l7 6-2 12-8 5H-9l-9-5Z" fill="#a56a47" stroke="#5a4937"/>
+    <path d="m-18 8 7-6h23l7 6-6 8h-25Z" fill="#edc991" stroke="#6f563c"/>
+    <path d="m-10 18 1 4M10 18l-1 4" stroke="#d99b62" stroke-width="2.5"/>`;
+  const mounts = {
+    pea: `<ellipse cy="21" rx="22" ry="5" fill="#294f37" opacity=".2"/>
+      <path d="m-19 9 9-6 21 1 9 6-2 10-10 5h-17l-10-5Z" fill="#798b80" stroke="#41594d"/>
+      <path d="m-19 9 9-6 21 1 9 6-9 6h-21Z" fill="#b9c4ac" stroke="#52685c"/>
+      <path d="M-12 17v3m23-4v3" stroke="#d9dfc3" stroke-width="2.3"/>`,
+    push: `<ellipse cy="22" rx="22" ry="5" fill="#294f37" opacity=".2"/>
+      <path d="m-12 2-9 14v6h12l3-9h11l4 9h12v-6L12 2Z" fill="#508498" stroke="#365569"/>
+      <path d="m-17 15 7-11h7l-8 11Zm26 1L4 4h6l6 12Z" fill="#b6d9d5" stroke="none"/>
+      <path d="M-22 20h12m20 0h12" stroke="#354d58" stroke-width="4"/>`,
+    molecular: `<ellipse cy="22" rx="24" ry="5.5" fill="#294f37" opacity=".2"/>
+      <path d="m-20 9 9-9h22l10 9v11l-10 5h-22l-9-5Z" fill="#615875" stroke="#493f59"/>
+      <path d="m-20 9 9-9h22l10 9-9 6h-24Z" fill="#a69cb8" stroke="#5e5270"/>
+      <path d="M-8 19H8" stroke="#d2a2ef" stroke-width="3" stroke-linecap="round"/>`
+  };
+  const wall = `<ellipse cy="21" rx="28" ry="6" fill="#31533f" opacity=".19"/>
+    <g stroke="#58675d"><path d="m-25-2 8-8h34l9 8v21l-5 4h-43l-4-4Z" fill="#94a39b"/>
+    <path d="M-24 8h49m-38-8v8M7-1v9m-9 1v12" fill="none"/>
+    <path d="m-24-8 6-8h12v12h8v-12h14l7 7v10h-47Z" fill="#d2d9bb"/>
+    <path d="m-23-8 5-7h10m12 1h12" stroke="#f5edd0" stroke-width="3" fill="none"/></g>
+    <path d="M-22 20q-6-3-7-10 7 1 10 7-1-7 4-10 3 8-1 13Z" fill="#679657"/>`;
+
+  // Three spotted shell plates meet at a dark seam. A broken plate uses the
+  // same shape and orientation as it travels to its newly spawned bug.
+  const splitPlate = `<path d="M1 0 6-6Q12-13 19-11c8 1 10 8 6 14-3 5-8 8-15 6L5 4Z" fill="#e98c59" stroke="#623e45" stroke-width="2.1"/>
+    <path d="M5 0q8-11 15-9" stroke="#ffdb91" stroke-width="2.6" fill="none"/>
+    <path d="M8 5q11 6 16-4" stroke="#bd6050" stroke-width="1.8" fill="none"/>
+    <ellipse cx="17" cy="-2" rx="3.5" ry="2.8" fill="#63414a" stroke="none" transform="rotate(-22 17 -2)"/>`;
+  function splitPlateAt(index, x = 0, y = 0, scale = 1) {
+    return `<use href="#art-splitPlate" transform="translate(${x} ${y}) rotate(${index * 120}) scale(${scale})"/>`;
   }
-  function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false) {
-    const color = window.Garden?.ENEMIES[kind]?.color || '#c48769';
-    const dark = { shield: '#85633c', shield_down: '#426f62', hopper: '#546d36', mother: '#865b77', flyer: '#447387', splitter: '#4e7953', giant: '#625240', bomber: '#883f33', swift: '#97773c' }[kind] || '#8c5843';
-    const [rx, ry] = { bug: [18, 14], mother: [32, 24], giant: [35, 27], swift: [19, 14], flyer: [20, 15], hopper: [24, 17] }[kind] || [25, 19];
-    const head = -rx + 2;
-    const wiggle = Math.sin(time * 14) * 3;
-    const legLength = kind === 'swift' ? 26 : kind === 'giant' ? 22 : 12;
-    const legs = [-13, 0, 13].map((x, i) => `<path d="M${x}-8l${i % 2 ? -8 : 8}-${legLength + wiggle}m${i % 2 ? 8 : -8} ${legLength + wiggle + 16}l${i % 2 ? 8 : -8} ${legLength - wiggle}" fill="none" stroke="${dark}" stroke-width="${kind === 'giant' ? 4.5 : 3}" stroke-linecap="round"/>`).join('');
-    const wings = kind === 'flyer' ? `<g class="bug-wings" fill="#edf9f5" fill-opacity=".85" stroke="#88bdc9" stroke-width="1.5"><ellipse cx="3" cy="-19" rx="26" ry="10" transform="rotate(${-24 + Math.sin(time * 30) * 14})"/><ellipse cx="3" cy="19" rx="26" ry="10" transform="rotate(${24 - Math.sin(time * 30) * 14})"/></g>` : '';
-    const shield = ['shield', 'shield_down'].includes(kind) ? `<g class="hard-shell ${kind === 'shield_down' ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${kind === 'shield_down' ? -1 : 1})">
-      <path d="m-30-8 6-15 15-9H9l16 10 6 15-6 8h-49Z" fill="#293846" stroke="#253240" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="m-29-10 6-13 14-9H9l15 10 6 12-9 6h-42Z" fill="${shieldFlash > 0 ? '#c7e2ef' : '#536c7c'}"/>
-      <path d="m-23-23 14-9-4 23-16-1Z" fill="#7792a0"/><path d="m9-32 15 10 6 12-16 1Z" fill="#3c5263"/>
-      <path d="M-9-32H9l5 23h-27Z" fill="${shieldFlash > 0 ? '#f8ffff' : '#688594'}"/>
-      <path d="m-29-10 8 6h42l9-6v5l-8 7h-44l-7-7Z" fill="#a4b6bd" stroke="#344957" stroke-width="1.5"/>
-      <path d="m-18-23 10-5H6" stroke="#c5d5d8" stroke-width="2.7" stroke-linecap="round" fill="none"/>
-      <g fill="#d8e1df" stroke="#344957" stroke-width="1"><circle cx="-21" cy="-12" r="2.4"/><circle cx="0" cy="-11" r="2.4"/><circle cx="21" cy="-12" r="2.4"/></g>
-      ${shieldFlash > 0 ? '<path d="m-33-8 7-18 17-10H10l18 12 7 16" fill="none" stroke="#fff0a9" stroke-width="3" stroke-linejoin="round"/>' : ''}
-    </g>` : '';
-    const details = {
-      hopper: `<g class="spring-legs" fill="none" stroke="#587536" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="m10-9 21-13-9 21M10 9l21 13-9-21"/><path d="m24-22 9-5m-9 49 9 5"/></g>`,
-      mother: '<g class="brood-eggs" fill="#f9e7ef" stroke="#9f6d8c" stroke-width="1.5"><ellipse cx="-12" cy="17" rx="7" ry="9"/><ellipse cx="3" cy="21" rx="7" ry="9"/><ellipse cx="18" cy="17" rx="7" ry="9"/></g><path d="M-10-15q12-10 26 1" fill="none" stroke="#eac2d4" stroke-width="4" stroke-linecap="round"/>',
-      splitter: '<g class="split-lobes" fill="#b3d6a4" stroke="#5d8a5b" stroke-width="1.5"><circle cx="-11" cy="-2" r="10"/><circle cx="11" cy="-2" r="10"/><circle cx="0" cy="12" r="10"/></g>',
-      giant: '<path d="M-13-22q5 22 0 44M4-24q6 24 0 48m17-43q4 20 0 39" fill="none" stroke="#6f5d47" stroke-width="3"/><path d="m-30-15-10-8 4 14m6 24-10 8 4-14" fill="#d5c29c" stroke="#7f6c50" stroke-width="2"/>',
-      bomber: `<g class="bomb-fuse"><path d="M9-15q13-6 14-17" fill="none" stroke="#6e4b38" stroke-width="3"/><circle cx="23" cy="-31" r="${3 + Math.sin(time * 18)}" fill="#ffe09a" stroke="#dc8a39" stroke-width="2"/></g><path d="m-12-14-5 8m30-9 5 8m-31 19 5 7m20-7-5 7" stroke="#f0c770" stroke-width="5"/>`,
-      swift: '<path d="m2-9 13 9L2 9" fill="none" stroke="#f1dba0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
-    }[kind] || '';
-    return `<ellipse cy="${kind === 'flyer' ? 32 : ry}" rx="${rx + 2}" ry="7" fill="#354a3419"/>${wings}${legs}<ellipse rx="${rx}" ry="${ry}" fill="${flash > 0 ? '#fff6da' : color}" stroke="${dark}" stroke-width="1.5"/><path d="M7-${ry - 4}v${(ry - 4) * 2}" stroke="${dark}" stroke-width="1.5" opacity=".35"/>${details}<path d="m${head}-10-7-8m7 27-7 8" stroke="${dark}" stroke-width="2" stroke-linecap="round"/><circle cx="${head}" cy="-7" r="5" fill="#fffaf1"/><circle cx="${head}" cy="7" r="5" fill="#fffaf1"/><circle cx="${head - 2}" cy="-7" r="2.2" fill="#283d37"/><circle cx="${head - 2}" cy="7" r="2.2" fill="#283d37"/>${shield}${slow ? `<ellipse rx="${rx + 6}" ry="${ry + 7}" fill="none" stroke="#8ccde0" stroke-width="2" stroke-dasharray="3 5"/>` : ''}${hp !== null ? `<text x="3" y="9" text-anchor="middle" font-size="28" font-weight="800" fill="${flash > 0 ? dark : '#fffdf4'}" stroke="${dark}" stroke-width="1.2" paint-order="stroke">${hp}</text>` : ''}`;
+  const shells = {
+    bug: `<ellipse cx="1" rx="17" ry="13" fill="#dc5844"/>
+      <path d="M-10-8Q3-18 13-6" stroke="#fc9380" stroke-width="3.4" fill="none"/>
+      <path d="M-9 0h26" stroke="#743e37" stroke-width="1.7"/>
+      <g fill="#483c36" stroke="none"><circle cx="-2" cy="-8" r="3.5"/><circle cx="10" cy="-4" r="2.7"/><circle cx="-1" cy="7" r="3.4"/><circle cx="11" cy="5" r="2.4"/></g>`,
+    shield: `<path d="M-17-10Q-4-21 15-12q12 8 8 19-8 13-27 9-14-2-13-16Z" fill="var(--shell-body,#d69c52)"/>
+      <path d="M-6-11q8 12 1 23M7-12q9 11 2 24" fill="none" stroke="#806342"/>`,
+    hopper: `<path d="M-16-5Q-8-16 8-12l20 7-15 12Q0 15-12 8Z" fill="#85b641"/>
+      <path d="M-6-5q12-5 29 0L4 3Z" fill="#bcd66b" stroke="#618238" stroke-width="1.4"/>`,
+    mother: `<ellipse cx="-7" rx="17" ry="15" fill="#ae6393"/>
+      <path d="M-12-12q12-9 24-4l10 8-6 19-21 7-5-12Z" fill="#cb81ab"/>
+      <g fill="#fff1cf" stroke="#926473" stroke-width="1.8">
+      <ellipse cx="13" cy="-12" rx="7" ry="9"/><ellipse cx="23" cy="-4" rx="7.5" ry="9"/><ellipse cx="24" cy="9" rx="7.5" ry="9"/><ellipse cx="12" cy="13" rx="8" ry="9"/><ellipse cx="12" cy="0" rx="7.5" ry="9"/>
+      </g><path d="m12-15 1-1m10 11 1-1m0 13 1-1m-13 6 1-1m-2-11 1-1" stroke="#dbb79b" stroke-width="2.3"/>`,
+    flyer: `<path d="M26 0 18-3v6Z" fill="#4e4634"/>
+      <ellipse cx="3" rx="20" ry="11" fill="#ffcb4a"/>
+      <path d="M0-10q4 10 0 20m10-19q5 8 0 18" fill="none" stroke="#594b38" stroke-width="5"/>
+      <ellipse cx="-9" rx="8" ry="10" fill="#e69d3b"/>`,
+    splitter: `<g transform="translate(2 0)">
+      <path d="M-17-7Q-14-16-7-16L6-12 18-5 21 2 8 13-7 17-15 9Z" fill="#784655" stroke="#583c47"/>
+      ${[0, 1, 2].map(index => splitPlateAt(index)).join('')}
+      <circle r="2" fill="#754550" stroke="none"/></g>`,
+    giant: `<path d="M-24-5q-2-14 12-18 20-8 33 3 12 11 8 24-4 17-22 20-19 1-28-10Z" fill="#784d3e"/>
+      <path d="M-7-19q18-8 28 4l5 8L-5-3Z" fill="#ad6950" stroke="#694736"/>
+      <path d="M-6 1h33q-1 13-13 18L-5 19Z" fill="#946148" stroke="#694736"/>
+      <path d="M-25-11q13-10 18-6l2 32q-13 3-20-6Z" fill="#4a5145"/>
+      <path d="m3-16 11-1" stroke="#e4ac79" stroke-width="3"/>`,
+    swift: `<path d="M-17-3q3-9 14-7L22-4l4 4-6 5-23 4q-11 0-14-6Z" fill="#d48537"/>
+      <path d="m-4-7 11 7-11 7m12-12 8 5-8 5" stroke="#ffe8a0" stroke-width="2.6" fill="none"/>`
+  };
+  const face = `<path d="m-4-4-9-8m9 16-9 7" fill="none" stroke-width="1.9"/>
+    <ellipse rx="7.8" ry="9.8" fill="#425141"/><ellipse cx="-4" cy="-4.5" rx="3.4" ry="3.9" fill="#fff9dc" stroke="none"/>
+    <ellipse cx="-4" cy="4.6" rx="3.4" ry="3.8" fill="#fff9dc" stroke="none"/>
+    <path d="M-5.3-5.4v1.9m0 7.1v1.9" stroke="#263d39" stroke-width="2.7"/>`;
+  // Each path starts at an explicit joint on one flank. Mirror the whole
+  // flank so both sets of feet stay attached throughout the walking cycle.
+  const feet = {
+    bug: '<path d="M-10-6 L-16-16 -23-17 M-2-8 L0-19 -4-22 M8-6 L16-16 22-16" stroke="#53563d"/>',
+    shield: '<path d="M-14-8 L-28-15 -29-22 -35-23 M-2-11 L0-29 -5-35 -10-35 M11-8 L27-16 29-22 35-23" stroke="#505548"/>',
+    hopper: `<path d="M-12-5 L-17-15 -23-16 M-3-6 L-4-18 -10-20" stroke="#51693a"/>
+      <path d="M4-5 18-24 27-8 33-11" stroke="#466238" stroke-width="3.6"/>
+      <path d="M1-5 15-24q3-3 5 0l-2 7L7-3Z" fill="#abcb58" stroke="#526d39" stroke-width="2"/>`,
+    mother: '<path d="M-17-6 L-25-20 -32-22 M-6-9 L-7-24 -13-28 M6-8 L20-23 29-24" stroke="#715467"/>',
+    flyer: '<path d="M-13-5 L-18-15 -23-16 M-5-6 L-6-18 -11-20 M5-5 L17-15 23-15" stroke="#755630"/>',
+    splitter: '<path d="M-14-7 L-23-18 -29-19 M-2-9 L-2-22 -8-26 M12-8 L23-21 30-20" stroke="#6c4745"/>',
+    giant: '<path d="M-17-8 L-25-24 -32-25 M-4-10 L-5-29 -11-33 M11-9 L23-25 32-26" stroke="#5d503d" stroke-width="4.4"/>',
+    swift: '<path d="M-12-5 L-22-19 -31-21 M-3-6 L1-21 -6-29 M7-4 L22-15 30-23" stroke="#875830"/>'
+  };
+  const wings = `<path d="M-4-5q-12-25-1-27 12-2 17 26Zm2 2q8-22 18-18 8 6-9 18Z" fill="#e4faf2" stroke="#648f98"/>
+    <path d="m-4-8-2-17m7 20 12-12" fill="none" stroke="#9cc9c8" stroke-width="1.4"/>`;
+  const shield = `<path d="m-28-9 6-14 16-8 17 1 15 9 4 13-6 5h-47Z" fill="var(--plate,#5b8798)" stroke="#364e57"/>
+    <path d="m-25-12 6-10 13-6-4 15Z" fill="#eff8ee" opacity=".32" stroke="none"/>
+    <path d="m-28-9 7 4h43l7-4-2 7-6 3h-40l-6-3Z" fill="#e4d4a6" stroke="#4a5754"/>
+    <g fill="#faf0c5" stroke="none"><circle cx="-20" cy="-10.5" r="2"/><circle cx="20" cy="-10.5" r="2"/></g>`;
+  const horns = `<path d="M-21-8q-11-4-14-14-4 8 0 15l-7-2q7 11 17 9m4 7q-11 4-14 14-4-8 0-15l-7 2q7-11 17-9" fill="#e9bc78" stroke="#634b35"/>`;
+  const enemyShapes = {
+    bug: { head: -14, shadow: 16 }, shield: { head: -17, shadow: 23 }, shield_down: { head: -17, shadow: 23 },
+    hopper: { head: -15, shadow: 23 }, mother: { head: -21, shadow: 26 }, flyer: { head: -15, shadow: 16 },
+    splitter: { head: -16, shadow: 22 }, giant: { head: -24, shadow: 32 }, swift: { head: -14, shadow: 20 }
+  };
+  const cabin = `<ellipse cy="30" rx="33" ry="8" fill="#204c39" opacity=".29"/>
+    <g stroke="#554a37"><path d="M-23-7 0-27 24-8v36l-4 3h-42Z" fill="#ffdea0"/>
+    <path d="M13-29v-13h9v22Z" fill="#ae6b50"/><path d="M11-42h13v5H11Z" fill="#f3b67e"/>
+    <path d="m-32-7 26-28q6-6 12 0L33-8 28-2 0-23-27 0Z" fill="#ac523a"/>
+    <path d="m-31-9 24-27q6-7 14 0L31-11l-3 5L0-28-27-5Z" fill="#dd7d4d"/>
+    <path d="m-20-21 8-8m21 6 9 8" stroke="#f9af70" stroke-width="3"/>
+    <path d="M-6 30V12q0-9 8-9t8 9v18Z" fill="#50836a"/><path d="M-19 3h9v12h-9Z" fill="#91cdd0"/>
+    <path d="M-20 17h12" stroke="#c5854b" stroke-width="3"/><circle cx="6" cy="17" r="1.4" fill="#fff1b9" stroke="none"/>
+    <path d="M-10 30h23l3 4h-29Z" fill="#cbb18a"/></g>
+    <path d="M-28 28q-11-10-7-16 8 2 10 10 1-10 6-12 4 9-2 18Zm49 4q-4-9 2-13 3 1 3 7 3-9 8-7 2 8-7 13Z" fill="#6b994f" stroke="#426744" stroke-width="1.6"/>
+    <circle cx="-29" cy="18" r="3" fill="#ffc94b"/><circle cx="27" cy="21" r="2.7" fill="#f79971"/>`;
+  const projectiles = {
+    pea: `<path d="M-7-3q2-5 8-4 6 1 7 7-2 6-8 6-5 0-7-5l-4 1 2-4Z" fill="#87c444" stroke="#354e33"/>
+      <path d="M-2-3q2-2 5 0" fill="none" stroke="#f3ffac" stroke-width="2.5"/>`,
+    cannon: `<circle r="9.2" fill="#354952" stroke="#29393b"/><path d="M-7-3q2-5 8-4" fill="none" stroke="#a4c2c4" stroke-width="2.9"/>
+      <path d="m-6-6-3-4-4 2" fill="none" stroke="#bc8546"/><path d="m-13-12 1 3 3 1-3 1-2 2v-3l-3-1Z" fill="#ffbe57" stroke="none"/>`,
+    frost: `<path d="m-14 0 8-6 8-2L13 0 1 7l-8-1Z" fill="#81dff1" stroke="#276b8b"/>
+      <path d="m-11 0 6-4 6-2 8 5-14 2Z" fill="#e0ffff" stroke="none"/><path d="m-5 1 6 5 9-6" fill="none" stroke="#4dabd2" stroke-width="1.4"/>`,
+    flame: `<path d="M-28-6c7 4 11 0 14-4 1 4 4 5 7 3C4-13 14-7 13 1c-1 7-9 11-17 8-5-2-6-4-13-2l4-5c-5 1-11-2-15-8Z" fill="#f46b35" stroke="#a5452d"/>
+      <path d="M-16-3q8 4 13-1C4-9 11-4 10 1 9 6 3 9-3 5q-4-4-9-3l3-2Z" fill="#ffb33e" stroke="none"/><path d="M-4 0q4 1 7-2 6-3 5 3-3 6-12-1Z" fill="#fff2a2" stroke="none"/>`,
+    pierce: `<path d="m-18-5 7 1 5 4-8 2-6-4 6 1Z" fill="#6bb79b" stroke="#365e51"/><path d="M-16 0H8" stroke="#5b4830" stroke-width="3.8"/>
+      <path d="m0-6 14 6L0 6l3-6Z" fill="#98dcb4" stroke="#34594d"/><path d="M4-3 11 0H4" stroke="none" fill="#f0ffda"/>`,
+    push: `<path d="M-12-8Q-4 0-12 8M-5-11Q7 0-5 11M3-12Q17 0 3 12" fill="none" stroke="#39667b" stroke-width="4.6"/>
+      <path d="M-5-9Q5 0-5 9M3-11Q14 0 3 11" fill="none" stroke="#d2faff" stroke-width="2.2"/>`,
+    molecular: `<ellipse rx="13" ry="7" fill="#70438d" stroke="#513369"/><path d="M-11 3Q-2-12 8-8q7 4-6 12-14 8-13-1Z" fill="none" stroke="#eabadf" stroke-width="2"/>
+      <path d="m0-6 2.5 4L8 0 2.5 2 0 6l-2-4-5-2 5-2Z" fill="#fff1a9" stroke="none"/><circle cx="7" cy="-8" r="2.8" fill="#a1eeed" stroke="#684778" stroke-width="1.2"/>`
+  };
+  const firePatch = `<path d="M-12 4c-4-9 4-11 3-20 5 2 7 6 6 10 5-5 8-10 7-17 6 5 7 13 5 17l5-5c2 9-1 17-7 20-7 3-15 1-19-5Z" fill="#ed6735" stroke="#a64c30" stroke-width="1.6"/>
+    <path d="M-8 4c-2-5 2-8 3-12l3 5q8-8 7-13 5 7-1 15l6-4C9 8-3 13-8 4Z" fill="#ffad3d" stroke="none"/><path d="M-3 6q-2-4 2-8l2 4 4-3q2 6-3 8Z" fill="#fff1a1" stroke="none"/>`;
+  // Muzzle distance, visible trail length and ink colors in board pixels.
+  const flightStyles = {
+    pea:       { muzzle: 26, tail: 20, ink: '#5c8941', light: '#ebf7a6', width: 3 },
+    cannon:    { muzzle: 27, tail: 30, ink: '#8d795e', light: '#f3dec0', width: 5, arc: 23 },
+    frost:     { muzzle: 27, tail: 36, ink: '#388eac', light: '#d1fcff', width: 5 },
+    flame:     { muzzle: 28, tail: 42, ink: '#e76631', light: '#ffce5e', width: 7, arc: 8 },
+    pierce:    { muzzle: 28, tail: 48, ink: '#43836d', light: '#c8f7c5', width: 3 },
+    push:      { muzzle: 33, tail: 21, ink: '#5892ac', light: '#e5fcff', width: 4 },
+    molecular: { muzzle: 27, tail: 60, ink: '#9363bf', light: '#f1c7fa', width: 7 }
+  };
+  const launchFlare = `<path d="m0 0 3-7 3 4 9-2-4 5 6 2-10 1-2 4Z" fill="currentColor"/><path d="m2 0 4-2 4 1-6 3Z" fill="#fff8da"/>`;
+  const snowflake = `<g fill="none" stroke="currentColor" stroke-width="2.5">${[0,60,120].map(a => `<path transform="rotate(${a})" d="M0-10v20m-3-17 3 3 3-3m-6 14 3-3 3 3"/>`).join('')}</g>`;
+  function shot(kind, x, y, angle) {
+    return ref('shot-' + kind, `class="${kind === 'pierce' ? 'piercing-shot' : 'shot-' + kind}" transform="translate(${x} ${y}) rotate(${angle})"`);
   }
-  function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-36 -36 72 72" aria-hidden="true">${bug(kind, hp)}</svg>`; }
-  function tool(kind) { return `<svg class="tool-art" viewBox="-36 -40 72 76" aria-hidden="true">${tower(kind)}</svg>`; }
-  function house() {
-    return '<ellipse cy="39" rx="39" ry="12" fill="#354a341b"/><path d="M-28-5h56v45h-56Z" fill="#f7edd4" stroke="#d9caa7" stroke-width="2"/><path d="M17-40h10v25H17Z" fill="#b57959"/><path d="m-39-6 39-36L39-6l-5 7L0-28-34 1Z" fill="#4f7560"/><path d="m-30-5 30-28L30-5Z" fill="#71927a"/><rect x="-9" y="15" width="18" height="25" rx="8" fill="#b58a63"/><circle cx="5" cy="29" r="1.6" fill="#f5dfab"/><rect x="-22" y="6" width="10" height="12" rx="3" fill="#aac7c3"/><rect x="12" y="6" width="10" height="12" rx="3" fill="#aac7c3"/><path d="M-22 12h10M17 6v12" stroke="#fff6e4" stroke-width="2"/><path d="M-34 40q-10-20-16-5-10-14-12 6m89-1q4-21 12-9 11-15 14 11" fill="#86a06c"/>';
+  function flight(kind, cx, cy, tx, ty, progress, launchAngle) {
+    const style = flightStyles[kind], dx = tx - cx, dy = ty - cy;
+    const range = Math.hypot(dx, dy), muzzle = Math.min(style.muzzle, range * .55);
+    const angle = launchAngle * Math.PI / 180;
+    const sx = cx + Math.cos(angle) * muzzle, sy = cy + Math.sin(angle) * muzzle;
+    const vx = tx - sx, vy = ty - sy, distance = Math.hypot(vx, vy);
+    const pierces = kind === 'pierce';
+    // A piercing arrow's tip stays at its simulated collision position.
+    const t = pierces ? Math.max(0, (progress * range - muzzle) / (distance || 1)) : progress;
+    const arc = Math.min(style.arc || 0, distance * .22);
+    const x = sx + vx * t, y = sy + vy * t - 4 * arc * t * (1 - t);
+    const back = Math.max(0, t - style.tail / (distance || 1));
+    const bx = sx + vx * back, by = sy + vy * back - 4 * arc * back * (1 - back);
+    const path = `M${bx} ${by}Q${(bx + x) / 2} ${(by + y) / 2 - 2 * arc * (t - back) ** 2} ${x} ${y}`;
+    const pulse = Math.max(0, 1 - (pierces ? progress * range / 48 : progress * 2.5));
+    const flare = pulse > 0 ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
+    if (pierces && progress * range < muzzle) return flare;
+    const shadow = kind === 'cannon' ? `<ellipse cx="${x}" cy="${sy + vy * t + 6}" rx="6" ry="2.8" fill="#534834" opacity=".28"/>` : '';
+    const dots = kind === 'cannon' ? 'stroke-dasharray="2 6"' : '';
+    const trail = `<g class="shot-trail" fill="none" stroke-linecap="round" ${dots}><path d="${path}" stroke="${style.ink}" stroke-width="${style.width}" opacity=".58"/><path d="${path}" stroke="${style.light}" stroke-width="${style.width * .45}"/></g>`;
+    const heading = Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI;
+    return shadow + trail + shot(kind, x, y, heading) + flare;
   }
-  window.GardenArt = { icon, tower, bug, badge, tool, house };
+  const pen = 'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"';
+  const ref = (name, attrs = '') => `<use href="#art-${name}" ${attrs}/>`;
+  function definitions() {
+    const drawings = { plinth, wall, face, wings, shieldPlate: shield, splitPlate, horns, cabin, firePatch, snowflake, launchFlare };
+    for (const [kind, drawing] of Object.entries(mounts)) drawings['mount-' + kind] = drawing;
+    for (const [kind, drawing] of Object.entries(feet)) drawings['feet-' + kind] = `<g fill="none" stroke-width="3.3">${drawing}</g>`;
+    for (const [kind, drawing] of Object.entries(projectiles)) drawings['shot-' + kind] = drawing;
+    for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
+    for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
+    const whiteShield = '<filter id="art-white-shield" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>';
+    return whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
+  }
+  function icon(name, cls = '') {
+    return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`;
+  }
+  function tower(kind, angle = -25, flash = 0, charge = 0) {
+    if (kind === 'wall') return ref('wall');
+    const kick = Math.min(1, flash / .15);
+    let style = '';
+    if (kind === 'push') style = `style="--punch-travel:${kick * 5}px;--spring-stretch:${1 + kick * .3}"`;
+    if (kind === 'molecular') style = `style="--core-light:${Math.max(charge, kick)}"`;
+    const recoil = kind === 'push' ? 0 : kick * 3;
+    return ref(mounts[kind] ? 'mount-' + kind : 'plinth') +
+      ref('tower-' + kind, `transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
+  }
+  function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false, labelId = '', maxHp) {
+    const { head, shadow } = enemyShapes[kind];
+    const size = window.Garden.enemyArtScale(kind, maxHp);
+    const down = kind === 'shield_down', armored = down || kind === 'shield';
+    const stride = Math.sin(time * (kind === 'swift' ? 19 : 12));
+    const beat = 0.79 + Math.sin(time * 28) * 0.2;
+    const leg = 'feet-' + (down ? 'shield' : kind);
+    const label = hp === null ? '' : `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
+    const health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
+    const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
+    const shieldLayer = armored ? `<g class="hard-shell ${down ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${down ? -1 : 1})">
+      ${ref('shieldPlate')}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
+    return `<g class="bug-art" transform="scale(${size})"><ellipse cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>
+      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}">
+      ${kind === 'flyer' ? `<g class="bug-wings" transform="scale(1 ${beat})">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
+      <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="skewX(${stride * 5})">
+        ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
+      ${kind === 'giant' ? ref('horns') : ''}
+      ${body}${ref('face', `transform="translate(${head} 0)"`)}
+      ${shieldLayer}</g>
+      ${flash > 0 ? `<path d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
+      ${slow ? `<ellipse rx="${shadow + 4}" ry="21" fill="#b0f3ff" fill-opacity=".12" stroke="#338fb2" stroke-width="2.2" stroke-dasharray="5 4"/>` : ''}
+      </g>${health}`;
+  }
+  function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
+  function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
+  window.GardenArt = { definitions, icon, tower, bug, badge, tool, shot, flight, splitPlateAt, house: () => ref('cabin') };
 })();

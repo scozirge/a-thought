@@ -17,7 +17,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     assert.equal(response.status(), 200);
     assert.equal(normalize(await response.text()), normalize(expectedHtml));
     const checkedFiles = ['index.html'];
-    for (const file of ['styles.css', 'core.js', 'art.js', 'app.js']) {
+    for (const file of ['styles.css', 'core.js', 'solutions.js', 'art.js', 'app.js']) {
       const selector = file.endsWith('.css') ? `link[href="${file}?v=${version}"]` : `script[src="${file}?v=${version}"]`;
       assert.equal(await p.locator(selector).count(), 1, `${file} 有版本號`);
       const asset = await p.request.get(`${base}${file}?v=${version}`);
@@ -27,38 +27,40 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     }
     assert.equal(await p.locator('#route-toggle, #route-layer, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
     assert.equal(await p.locator('[data-tool]').count(), 8);
-    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 10);
+    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 9);
+    assert.equal(await p.locator('#level-select option').count(), 10);
     for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
       await p.locator(`[data-tool="${kind}"]`).hover();
       assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
-      assert.match(await p.locator('#tower-info').innerText(), /攻擊 \d+\.\d次\/s/);
+      assert.match(await p.locator('#tower-info').innerText(), /攻擊 \d+(?:\.\d+)?次\/s/);
     }
     await p.keyboard.press('Escape');
     await p.locator('[data-tool="pea"]').click();
     const fresh = await p.evaluate(() => gardenDebug.getState());
     assert.equal(fresh.level, 0); assert.equal(fresh.wave, 0); assert.equal(fresh.phase, 'planning');
-    await p.locator('.cell-hit[data-c="8"][data-r="1"]').click();
+    await p.locator('.cell-hit[data-c="8"][data-r="0"]').click();
     await p.locator('#action').click();
     await p.waitForFunction(() => gardenDebug.getState().stats.blocked >= 3 && document.querySelector('.ricochet'), null, { timeout: 20000 });
     await p.evaluate(() => document.querySelector('#action').click());
     const above = await p.evaluate(() => gardenDebug.getState());
     assert.equal(above.stats.hits, 0);
-    assert.ok(above.enemies.length > 0 && above.enemies.every(e => e.kind === 'shield' && e.hp === 3));
+    assert.ok(above.enemies.length > 0 && above.enemies.every(e => e.kind === 'shield' && e.hp === e.maxHp));
     assert.equal(await p.locator('#bug-layer .hard-shell').count(), above.enemies.length);
-    for (const e of above.enemies) assert.equal(await p.locator(`[data-enemy="${e.id}"] text`).textContent(), '3');
+    for (const e of above.enemies) assert.equal(await p.locator(`[data-enemy="${e.id}"] text`).textContent(), String(e.hp));
     fs.mkdirSync(path.join(dist, 'browser-check'), { recursive: true });
     await p.mouse.move(20, 20);
     await p.screenshot({ path: path.join(dist, 'browser-check/published-shield.png'), fullPage: true });
     await p.locator('#reset').click();
-    await p.locator('.cell-hit[data-c="8"][data-r="5"]').click();
+    await p.locator('#reset').click();
+    await p.locator('.cell-hit[data-c="8"][data-r="7"]').click();
     await p.locator('#action').click();
     await p.waitForFunction(() => gardenDebug.getState().stats.hits >= 1, null, { timeout: 15000 });
     await p.evaluate(() => document.querySelector('#action').click());
     const below = await p.evaluate(() => gardenDebug.getState());
     assert.equal(below.stats.blocked, 0);
-    assert.ok(below.enemies.some(e => e.kind === 'shield' && e.hp < 3));
+    assert.ok(below.enemies.some(e => e.kind === 'shield' && e.hp < 6));
     await p.evaluate(() => {
-      const s = Garden.createState(); s.wave = 2; Garden.build(s, 'pea', 8, 5);
+      const s = Garden.createState(1); Garden.build(s, 'pea', 8, 7);
       localStorage.setItem('garden-guard-v1', JSON.stringify(Garden.snapshot(s)));
     });
     await p.reload(); await p.locator('#action').click();
@@ -67,11 +69,10 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       return false;
     }, null, { timeout: 15000 });
     const lowerShield = await p.evaluate(() => gardenDebug.getState());
-    assert.equal(lowerShield.stats.hits, 0);
-    assert.ok(lowerShield.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === 3));
+    assert.ok(lowerShield.enemies.filter(e => e.kind === 'shield_down').every(e => e.hp === 6));
     await p.screenshot({ path: path.join(dist, 'browser-check/published-lower-shield.png'), fullPage: true });
     assert.deepEqual(errors, []);
-    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: 10, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: 9, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
     fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally { await browser.close(); }

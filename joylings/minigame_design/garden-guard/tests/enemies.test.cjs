@@ -4,28 +4,57 @@ const G = require('../core.js');
 const at = (s, kind, x, y, hp) => G.spawn(s, kind, hp, y, { x, y });
 function advance(s, seconds) { for (let i = 0; i < Math.round(seconds * 60); i++) G.step(s, 1 / 60); }
 
-test('十種蟲分三關逐步增加為四、七、十種，小蟲固定一血', () => {
-  assert.equal(Object.keys(G.ENEMIES).length, 10);
+test('九種蟲的初始生命越高體型越大，最大接近一格', () => {
+  for (const [kind, spec] of Object.entries(G.ENEMIES)) {
+    const span = hp => G.enemyArtScale(kind, hp) * spec.artSpan;
+    const sizes = [1, 6, 18, 40, 76].map(span);
+    assert.ok(sizes.every((size, i) => !i || size > sizes[i - 1]));
+    assert.ok(Math.abs(sizes[0] - 48) < 1e-8);
+    assert.ok(Math.abs(sizes[4] - 63) < 1e-8);
+    assert.equal(span(1000), sizes[4]);
+  }
+});
+
+test('九種蟲維持整數生命，飛蟲在加倍後減一，重新讀檔不會重複調整', () => {
+  assert.deepEqual(Object.values(G.ENEMIES).map(e => e.hp), [2, 6, 6, 6, 20, 3, 8, 40, 4]);
+  assert.ok(G.LEVELS.every(l => l.waves.flat().every(g => g.hp > 0 && g.hp % 2 === (g.kind === 'flyer' ? 1 : 0))));
+  for(let level=4;level<10;level++) {
+    const saved=G.snapshot(G.createState(level)), restored=G.restore(saved); G.startWave(restored);
+    const flying=restored.queue.filter(e=>e.kind==='flyer');
+    assert.ok(flying.length>0); assert.ok(flying.every(e=>e.hp===[7,9,11,13,15,17][level-4]));
+    const e=G.spawn(restored,'flyer',flying[0].hp); assert.equal(e.maxHp,[7,9,11,13,15,17][level-4]);
+  }
+  const s = G.restore(G.snapshot(G.restore(G.snapshot(G.createState()))));
+  G.startWave(s); advance(s, 0.6);
+  assert.equal(s.enemies[0].hp, 6); assert.equal(s.enemies[0].maxHp, 6);
+});
+
+test('九種蟲分十關逐步增加，小蟲維持兩血，最後兩關以巨蟲取代爆炸蟲', () => {
+  assert.equal(Object.keys(G.ENEMIES).length, 9); assert.equal(G.ENEMIES.bomber,undefined);
   let previous = new Set();
   G.LEVELS.forEach((level, i) => {
     const kinds = new Set(level.waves.flat().map(g => g.kind));
-    assert.equal(kinds.size, [4, 7, 10][i]);
+    assert.equal(kinds.size, [2, 3, 4, 5, 6, 7, 8, 9, 9, 9][i]);
+    assert.equal(kinds.has('bomber'),false);
+    if(i>=8)assert.equal(level.waves.flat().find(g=>g.kind==='giant').count,i===8?9:12);
     for (const kind of previous) assert.ok(kinds.has(kind));
-    for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.equal(g.hp, 1); }
+    for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.equal(g.hp, 2); }
     previous = kinds;
   });
-  assert.equal(G.spawn(G.createState(), 'bug').hp, 1);
+  assert.equal(G.spawn(G.createState(), 'bug').hp, 2);
   assert.ok(G.ENEMIES.swift.speed > G.ENEMIES.bug.speed * 1.8);
   assert.ok(G.ENEMIES.giant.hp >= 20 && G.ENEMIES.giant.speed < G.ENEMIES.bug.speed / 2);
 });
 
 test('下盾蟲擋住七種塔的下方攻擊，從上方及同高側面攻擊有效', () => {
   for (const [kind, tool] of Object.entries(G.TOOLS).filter(([, t]) => t.rate)) {
-    const s = G.createState(), e = at(s, 'shield_down', 6, 3, 20);
+    const s = G.createState(), e = at(s, 'shield_down', 6, 3, 60);
     assert.equal(G.hit(s, e, { kind, c: 8, r: 5 }), false);
-    assert.equal(e.hp, 20); assert.equal(e.slow, 0); assert.equal(e.push, null);
+    assert.equal(e.hp, 60); assert.equal(e.slow, 0); assert.equal(e.push, null);
     const block = s.effects.at(-1); assert.ok(block.y > e.y && block.vy > 0);
-    assert.equal(G.hit(s, e, { kind, c: 8, r: 1 }), true); assert.equal(e.hp, 20 - tool.damage);
+    assert.equal(G.hit(s, e, { kind, c: 8, r: 1 }), true); assert.equal(e.hp, 60 - tool.damage);
+    const point = G.impactPoint(e, { c: 8, r: 5 });
+    assert.deepEqual(point, { x: block.x, y: block.y });
     assert.equal(G.shieldBlocks(e, { c: 4, r: 3 }), false);
   }
 });
@@ -81,33 +110,40 @@ test('跳躍中的跳蟲不被擊退拉回障礙物，落地仍在有效格子',
   advance(s, 0.3); assert.equal(e.leap, null); assert.equal(G.at(s, e.c, e.r), undefined);
 });
 
-test('母蟲每實際三秒產生一隻一血小蟲，死亡後停止產卵', () => {
+test('母蟲每實際三秒產生一隻兩血小蟲，死亡後停止產卵', () => {
   const s = G.createState(), mother = G.spawn(s, 'mother'); s.phase = 'running';
   advance(s, 3 * G.BATTLE_SPEED - 1 / 60); assert.equal(s.stats.hatched, 0);
   advance(s, 1 / 60); assert.equal(s.stats.hatched, 1);
-  const baby = s.enemies.find(e => e.kind === 'bug'); assert.equal(baby.hp, 1);
+  const baby = s.enemies.find(e => e.kind === 'bug'); assert.equal(baby.hp, 2);
   assert.ok(Math.hypot(baby.x - mother.x, baby.y - mother.y) <= 1 + 1e-9);
   advance(s, 3 * G.BATTLE_SPEED); assert.equal(s.stats.hatched, 2);
-  G.hit(s, mother, { kind: 'molecular', c: 8, r: 5 }); G.hit(s, mother, { kind: 'molecular', c: 8, r: 5 });
+  while (!mother.dead) G.hit(s, mother, { kind: 'molecular', c: 8, r: 5 });
   advance(s, 3 * G.BATTLE_SPEED); assert.equal(s.stats.hatched, 2);
 });
 
 test('飛蟲直飛小屋，完整牆列與池塘都無法擋住，也不拆牆', () => {
   const s = G.createState(); s.money = 100;
   for (let r = 0; r < G.ROWS; r++) G.build(s, 'wall', 6, r);
+  // Keep the stage open so the next stage's healing cannot hide home damage.
+  s.queue = [{ kind: 'bug', hp: 2, row: 3, wave: 0 }]; s.spawnClock = 60;
   const e = G.spawn(s, 'flyer'); s.phase = 'running'; advance(s, 6);
   assert.ok(e.x < 6); assert.equal(s.stats.broken, 0); assert.ok(s.buildings.every(b => b.hp === 4));
   advance(s, 6); assert.equal(s.hearts, 4); assert.equal(s.enemies.length, 0);
+  assert.equal(s.phase, 'running'); s.queue = []; advance(s, 1 / 60);
+  assert.equal(s.phase, 'planning'); assert.equal(s.level, 1); assert.equal(s.hearts, 5);
   const pool = G.createState(1), f = G.spawn(pool, 'flyer'); pool.phase = 'running'; advance(pool, 6);
   assert.ok(f.x < 6); assert.equal(f.attackId, null);
 });
 
 test('分裂蟲死亡只分裂一次，三隻小蟲隨機出現在一格內的安全位置', () => {
-  const s = G.createState(); G.build(s, 'wall', 7, 3); const e = at(s, 'splitter', 6, 3, 2), money = s.money;
+  const s = G.createState(); G.build(s, 'wall', 7, 3); const e = at(s, 'splitter', 6, 3, 18), money = s.money;
+  G.hit(s, e, { kind: 'pea', c: 6, r: 5 }, { damage: 16 });
   G.hit(s, e, { kind: 'cannon', c: 6, r: 5 }); G.hit(s, e, { kind: 'cannon', c: 6, r: 5 });
   const babies = s.enemies.filter(b => b.kind === 'bug'); assert.equal(babies.length, 3); assert.equal(s.stats.split, 1);
-  assert.equal(s.money, money + 1); assert.ok(new Set(babies.map(b => `${b.x},${b.y}`)).size > 1);
-  for (const b of babies) { assert.equal(b.hp, 1); assert.ok(Math.hypot(b.x - 6, b.y - 3) <= 1); assert.equal(G.at(s, b.c, b.r), undefined); }
+  assert.equal(s.effects.find(fx => fx.kind === 'split').maxHp, 18);
+  assert.ok(babies.every(b => b.maxHp === 2));
+  assert.equal(s.money, money); assert.ok(new Set(babies.map(b => `${b.x},${b.y}`)).size > 1);
+  for (const b of babies) { assert.equal(b.hp, 2); assert.ok(Math.hypot(b.x - 6, b.y - 3) <= 1); assert.equal(G.at(s, b.c, b.r), undefined); }
   G.hit(s, babies[0], { kind: 'pea', c: 6, r: 5 }); assert.equal(s.stats.split, 1);
 });
 
@@ -115,7 +151,7 @@ test('範圍砲擊殺分裂蟲後，不會把同次爆炸剛出生的小蟲再�
   const s = G.createState(), e = at(s, 'splitter', 6, 3, 2);
   G.resolveShot(s, { kind: 'cannon', target: e.id, c: 6, r: 5 });
   const babies = s.enemies.filter(b => b.kind === 'bug');
-  assert.equal(babies.length, 3); assert.ok(babies.every(b => !b.dead && b.hp === 1));
+  assert.equal(babies.length, 3); assert.ok(babies.every(b => !b.dead && b.hp === 2));
 });
 
 test('分裂位置在邊界和密集建築旁也不會落在地圖外或牆上', () => {
@@ -127,23 +163,21 @@ test('分裂位置在邊界和密集建築旁也不會落在地圖外或牆上',
   }
 });
 
-test('爆炸蟲死亡炸毀周圍一格的塔和牆（含斜角），範圍外保持完整', () => {
+test('巨蟲死亡不炸毀周圍的塔和牆', () => {
   const s = G.createState(); s.money = 100;
   for (let c = 5; c <= 7; c++) for (let r = 2; r <= 4; r++) if (c !== 6 || r !== 3) G.build(s, c % 2 ? 'wall' : 'pea', c, r);
   G.build(s, 'pea', 8, 3);
-  const e = at(s, 'bomber', 6, 3, 1), revision = s.revision;
+  const e = at(s, 'giant', 6, 3, 1), revision = s.revision, buildings=JSON.stringify(s.buildings);
   G.hit(s, e, { kind: 'pea', c: 8, r: 5 }); G.hit(s, e, { kind: 'pea', c: 8, r: 5 });
-  assert.equal(s.buildings.length, 1); assert.equal(s.buildings[0].c, 8); assert.equal(s.buildings[0].hp, 5);
-  assert.equal(s.stats.broken, 8); assert.equal(s.stats.exploded, 1); assert.equal(s.revision, revision + 1);
+  assert.equal(e.dead,true); assert.equal(JSON.stringify(s.buildings),buildings);
+  assert.equal(s.stats.broken,0); assert.equal(s.revision,revision);
 });
 
-test('爆炸拆開封路後重新取得通路；進家消失不觸發死亡能力', () => {
-  const s = G.createState(); for (let r = 0; r < G.ROWS; r++) G.build(s, 'wall', 6, r);
-  const e = at(s, 'bomber', 7, 3, 1); assert.equal(G.previews(s)[0].breaking, true);
-  G.hit(s, e, { kind: 'pea', c: 8, r: 5 }); assert.equal(G.previews(s)[0].breaking, false);
-  for (const kind of ['bomber', 'splitter', 'mother']) {
-    const home = G.createState(); at(home, kind, 0, 3); home.phase = 'running'; advance(home, 1 / 60);
-    assert.equal(home.hearts, 4); assert.equal(home.stats.exploded, 0); assert.equal(home.stats.split, 0); assert.equal(home.stats.hatched, 0);
+test('進家消失不觸發分裂或產卵能力', () => {
+  for (const kind of ['splitter', 'mother']) {
+    const home = G.createState(); home.queue = [{ kind: 'bug', hp: 2, row: 3, wave: 0 }]; home.spawnClock = 60;
+    at(home, kind, 0, 3); home.phase = 'running'; advance(home, 1 / 60);
+    assert.equal(home.hearts, 4); assert.equal(home.stats.split, 0); assert.equal(home.stats.hatched, 0);
   }
 });
 
