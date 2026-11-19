@@ -444,6 +444,19 @@ export default function ClassroomHome() {
             </div>
           </section>
 
+          <details className="lesson-review-action" id="ninth-course-retrospective">
+            <summary className="course-button">
+              <ClipboardList size={20} aria-hidden="true" />
+              第九堂課・課後復盤
+              <ChevronDown size={18} aria-hidden="true" />
+            </summary>
+            <div className="activity-content">
+              <p className="catalog-question-context">這次的《小小守園隊》對小朋友來說太難了。塔蓋在哪一格，除了影響能打到哪些蟲，也會改變地面蟲往小屋走的路線。</p>
+              <p className="catalog-question-context">想讓蟲多經過幾座塔，孩子得先想出一條繞路的走法，再推想：「如果我把塔蓋在這一格，蟲會從哪一邊繞過去？」</p>
+              <p className="catalog-question-context">想出路線靠創意，判斷蟲會不會照那條路走則要用到邏輯。從這堂課來看，要孩子在決定塔位時同時做這兩件事，比單獨解邏輯題或自由創作，更難讓他們發揮。</p>
+            </div>
+          </details>
+
           <div className="unit-grid">
             {units.slice(1).map((unit) => (
               <a
