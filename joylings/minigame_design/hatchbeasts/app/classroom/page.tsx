@@ -457,6 +457,19 @@ export default function ClassroomHome() {
             </div>
           </details>
 
+          <section className="tenth-course" id="tenth-course" aria-labelledby="tenth-course-title">
+            <h2 id="tenth-course-title">第 10 週課程</h2>
+            <a className="unit-card card-green" href={GARDEN_GUARD_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+              <span className="unit-icon tint-green"><Sprout size={28} aria-hidden="true" /></span>
+              <span className="sixth-game-copy"><span className="unit-title">小小守園隊・一顆晶石給誰？</span><span className="unit-meta">兩人一組，選一座塔升級</span></span>
+              <ArrowUpRight size={22} aria-hidden="true" />
+            </a>
+            <div className="activity-content">
+              <p className="catalog-question-context">照老師的圖蓋好第一關，守住城堡就能拿到一顆晶石。換手後，在下一關開始前按「升級」，點選一座塔。</p>
+              <p className="catalog-question-context">先猜猜看：蟲離開火地後還會燒多久？換成震盪拳塔，同格的蟲會一起被推到哪裡？一人操作，一人盯著一隻蟲看，再把看到的結果告訴夥伴。</p>
+            </div>
+          </section>
+
           <div className="unit-grid">
             {units.slice(1).map((unit) => (
               <a

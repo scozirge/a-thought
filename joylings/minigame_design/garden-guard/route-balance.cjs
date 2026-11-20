@@ -145,7 +145,7 @@ function withoutDetour(level, kinds, random) {
   return layout;
 }
 
-// Keep all towers, wall count and spending; move walls off the tower-only routes.
+// Keep all towers, wall count and spending without increasing any entrance distance.
 function unusedWalls(level, random) {
   const answer = solutions[level],
     state = G.createState(level);
@@ -156,7 +156,24 @@ function unusedWalls(level, random) {
   );
   const free = cellsFor(level).filter(([c, r]) => !reserved.has(G.key(c, r)) && !G.at(state, c, r));
   const count = answer.length - guns.length;
-  if (free.length < count) throw Error("沒有足夠空格移走所有引導牆");
+  if (free.length < count) {
+    // Dense answers can use more walls than fit outside the specific paths chosen by BFS.
+    // Build a pool that still permits an equally short path from every entrance.
+    const lengths = routeLengths(state);
+    const cells = cellsFor(level);
+    for (const order of [shuffled(cells, random), cells.sort((a, b) => a[1] - b[1])]) {
+      free.length = 0;
+      for (const [c, r] of order) {
+        if (!G.build(state, "wall", c, r).ok) continue;
+        if (routeLengths(state).some((length, i) => length !== lengths[i])) G.undo(state);
+        else free.push([c, r]);
+        if (free.length === count) break;
+      }
+      if (free.length === count) break;
+      for (const [c, r] of free) G.remove(state, c, r);
+    }
+  }
+  if (free.length < count) throw Error("沒有足夠空格在維持路線長度的前提下配置所有牆");
   return [
     ...guns,
     ...shuffled(free, random)

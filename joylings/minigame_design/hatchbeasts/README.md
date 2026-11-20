@@ -18,6 +18,8 @@
 
 [第五次課程：女巫的藥水訂單](https://scozirge.github.io/classroom/#fifth-course) · [月見藥水舖單機 H5](https://scozirge.github.io/a-thought/witch-potions/)：十關、十位不同客人，使用 2～5 個無刻度量杯。第一關直接裝杯入鍋，第 5 關起進階，最後三關挑戰；支援大字圖像介面、撤回、提示與進度保存。兩人可共用一台電腦輪流操作。
 
+[第十週課程：小小守園隊・一顆晶石給誰？](https://scozirge.github.io/classroom/#tenth-course) · [開始遊戲](https://scozirge.github.io/a-thought/garden-guard/)。沿用老師的部署，比較火焰與擊退兩種升級。
+
 [第九週課程：小小守園隊](https://scozirge.github.io/classroom/#ninth-course) · [開始遊戲](https://scozirge.github.io/a-thought/garden-guard/)：兩人共用電腦，利用盾牌方向、路線與金幣規劃防線。
 
 [第八週課程：小小工程師](https://scozirge.github.io/classroom/#eighth-course) · [開始遊戲](https://scozirge.github.io/little-engineer/)：出題者上台描述造型，其他人連線畫圖，由出題者結束後一起看作品。
@@ -54,7 +56,7 @@ npm test
 
 ## 課堂短網址發布
 
-[網站首頁](https://scozirge.github.io/) 會直接進入[課堂目錄](https://scozirge.github.io/classroom/)。課程依第一至第九堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
+[網站首頁](https://scozirge.github.io/) 會直接進入[課堂目錄](https://scozirge.github.io/classroom/)。課程依第一至第十堂排列，復盤跟在對應課程後；原本 `/a-thought/hatchbeasts/classroom/` 入口仍保留。
 
 執行 `npm run build:classroom-site`，輸出 `dist/classroom-site/`；將內容發布到 `scozirge/scozirge.github.io` 的 `main` 分支根目錄，Pages 來源為 `main` 的 `/`。此輸出使用根路徑，教材內返回目錄及各課連結維持 `/classroom/`；遊戲入口繼續指向既有的公開遊戲。`npm run build:h5` 仍建置原本 `/a-thought/hatchbeasts` 前綴版本。
 

@@ -33,6 +33,8 @@ const out = path.join(__dirname, '../dist/browser-check');
       probe.remove();
       return result;
     });
+    const fireballWidth = await p.evaluate(() => ['art-shot-flame', 'art-advanced-shot-flame'].map(id => document.getElementById(id).getBBox().width));
+    assert.ok(fireballWidth[1] >= 1.7 * fireballWidth[0]);
     const size = kind => paths.find(p => p.kind === kind).middle.size;
     assert.ok(size('cannon') > 2 * size('pea'));
     assert.ok(size('molecular') > size('cannon'));
@@ -62,7 +64,7 @@ const out = path.join(__dirname, '../dist/browser-check');
       assert.equal(await p.locator('#tower-info strong').textContent(), tool.name);
       assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 ' + tool.damage));
       assert.ok((await p.locator('#tower-info').innerText()).includes('攻擊 ' + tool.rate + '次/s'));
-      assert.equal(await p.locator('#tower-info .info-target').textContent(), ['cannon','flame'].includes(kind) ? '目標 地' : '目標 地/空');
+      assert.equal(await p.locator('#tower-info .info-target').textContent(), ['cannon','flame','frost'].includes(kind) ? '目標 地' : '目標 地/空');
       assert.equal(await p.locator('#tower-info .info-effect').textContent(), tool.effect);
     }
     await p.keyboard.press('Escape'); assert.equal(await p.locator('#tower-info').isVisible(), false);
@@ -106,9 +108,11 @@ const out = path.join(__dirname, '../dist/browser-check');
       await phone.setViewportSize({width,height});
       await phone.locator('.display-settings summary').tap();
       const hpSetting = phone.getByLabel('顯示本關怪物血量');
-      const label = await phone.locator('.display-settings label').boundingBox();
       const controls = await phone.locator('.control-panel').boundingBox();
-      assert.ok(label.y >= 0 && label.y + label.height <= controls.y, '展開後的設定應位於固定工具列上方');
+      for (const item of await phone.locator('.display-settings label').all()) {
+        const label = await item.boundingBox();
+        assert.ok(label.y >= 0 && label.y + label.height <= controls.y, '展開後的設定應位於固定工具列上方');
+      }
       const checked = await hpSetting.isChecked();
       await hpSetting.tap();
       assert.equal(await hpSetting.isChecked(), !checked);

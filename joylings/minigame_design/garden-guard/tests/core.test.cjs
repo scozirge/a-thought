@@ -145,11 +145,15 @@ test('存檔只保留有效準備盤面，拒絕損壞與重疊資料', () => {
   const invalid = G.snapshot(s); invalid.money = -1; assert.equal(G.restore(invalid), null);
   const off = G.snapshot(s); off.buildings[0].c = 999; assert.equal(G.restore(off), null);
 });
-test('多隻小蟲同時拆同一座塔不會重複扣除或卡住', () => {
-  const s = G.createState(); s.money = 100;
+test('四隻盾蟲打爆砲塔只退款一次，接關與重讀都保留正確餘額', () => {
+  const s = G.createState();
   for (let r = 0; r < G.ROWS; r++) G.build(s, r === 3 ? 'pea' : 'wall', 8, r);
   s.phase = 'running';
   for (let i = 0; i < 4; i++) { const e = G.spawn(s, 'shield', 50); e.c = e.x = 9; }
   simulate(s, 30);
   assert.equal(G.at(s, 8, 3), undefined); assert.equal(s.stats.broken, 1); assert.equal(s.enemies.length, 0);
+  assert.equal(s.level, 1); assert.equal(s.phase, 'planning');
+  assert.equal(s.money, 48 - 5 - 7 + 5 + 12); assert.equal(s.upgradeItems, 1);
+  const loaded = G.restore(G.snapshot(s));
+  assert.equal(loaded.money, 53); assert.equal(G.at(loaded, 8, 3), undefined);
 });

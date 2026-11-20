@@ -12,13 +12,26 @@
   const TOOLS = {
     pea: { name: '一般砲塔', targets: ['ground', 'air'], cost: 5, range: 3.1, damage: 1, rate: 1.55, effect: '單體傷害', hp: 5, color: '#4b8058' },
     cannon: { name: '大砲範圍塔', targets: ['ground'], cost: 11, range: 2.8, damage: 2, rate: 1.2, radius: 1.25, effect: '範圍傷害', hp: 5, color: '#b68a43' },
-    frost: { name: '冰凍塔', targets: ['ground', 'air'], cost: 7, range: 2.65, damage: 0, rate: 0.9, slowDuration: 2.1, effect: '塔周圍 2.65 格緩速', hp: 5, color: '#619aa9' },
+    frost: { name: '冰凍塔', targets: ['ground'], cost: 7, range: 2.65, damage: 0, rate: 0.9, slowDuration: 2.1, slowMultiplier: .7, effect: '塔周圍 2.65 格緩速 30%', hp: 5, color: '#619aa9' },
     flame: { name: '火焰塔', targets: ['ground'], cost: 7, range: 3.2, damage: 1, rate: 0.6, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '地板燃燒 3 秒', hp: 5, color: '#d37643' },
-    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 15, range: 6.2, damage: 1, rate: 0.8, piercesShield: true, effect: '沿直線穿過盾牌和蟲群', hp: 5, color: '#4a8f88' },
-    push: { name: '擊退塔', targets: ['ground', 'air'], cost: 9, range: 4, damage: 1, rate: 0.35, priority: 'nearest', knockback: 3, effect: '同格沿路退 3 格・最近優先', hp: 5, color: '#7882af' },
-    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 22, range: 6.6, damage: 28, rate: 0.4, aimSeconds: 2.5, priority: 'highestHp', piercesShield: true, effect: '高血量優先・瞄準 2.5 秒・可穿盾', hp: 5, color: '#a16cab' },
+    pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 15, range: 6.2, damage: 1, rate: 0.8, piercesShield: true, stunSeconds: .1, effect: '直線穿盾，觸電停住 0.1 秒', hp: 5, color: '#4a8f88' },
+    push: { name: '擊退塔', targets: ['ground', 'air'], cost: 9, range: 4, damage: 1, rate: 0.35, knockback: 3, effect: '同格沿路退 3 格・靠近城堡優先', hp: 5, color: '#7882af' },
+    molecular: { name: '分子砲', targets: ['ground', 'air'], cost: 18, range: 6.6, damage: 28, rate: 0.5, aimSeconds: 2, priority: 'highestHp', piercesShield: true, effect: '高血量優先・瞄準 2 秒・可穿盾', hp: 5, color: '#a16cab' },
     wall: { name: '小石牆', cost: 1, hp: 4, color: '#a48a66' }
   };
+  const weapons = { ...TOOLS, castle: { name: '城堡', targets: TOOLS.pea.targets, rate: TOOLS.pea.rate, range: 3, damage: 2, effect: '3 格內自動射箭', color: '#597581' } };
+  const upgrades = {
+    pea: { name: '雙管連射塔', rate: TOOLS.pea.rate * 2.5, effect: '雙管連射，攻速變為 2.5 倍' },
+    push: { name: '震盪拳塔', damage: TOOLS.push.damage + 3, knockback: 4, effect: '同格每隻受 4 點傷害，擊退 4 格後暈 1 秒，每少退一整格多暈 1 秒' },
+    molecular: { name: '連鎖分子砲', chainRange: 3, effect: '穿盾電漿彈射到 3 格內下一隻蟲，傷害 28 → 9 → 3 → 1' },
+    cannon: { name: '重裝大砲', damage: 4, effect: '巨型砲彈，範圍內每隻蟲受 4 點傷害' },
+    frost: { name: '霜晶冰凍塔', rate: TOOLS.frost.rate * 1.2, damage: 1, effect: '靈氣攻速快 20%，每次緩速並造成 1 點傷害' },
+    flame: { name: '餘燼火焰塔', damage: 3, afterburnSeconds: 5, effect: '火球直擊 3 點，離開火地後每秒燒 1 點，持續 5 秒' },
+    pierce: { name: '電弧雷射砲', stunSeconds: .4, effect: '直線穿盾，觸電停住 0.4 秒' },
+    wall: { name: '尖刺石牆', range: 1, targets: ['ground', 'air'], rate: 1, damage: 1, stunSeconds: .1, effect: '每秒刺擊 1 格內的蟲，暈眩 0.1 秒' }
+  };
+  for (const kind of Object.keys(upgrades)) upgrades[kind] = { ...TOOLS[kind], ...upgrades[kind] };
+  const toolFor = (kind, upgraded) => upgraded ? upgrades[kind] : weapons[kind];
   const VERSION9_PRICES = { pea: 4, cannon: 12, frost: 8, flame: 8, pierce: 12, push: 16, molecular: 32, wall: 1 };
   const PREVIOUS_PRICES = { pea: 6, cannon: 9, frost: 8, flame: 10, pierce: 10, push: 9, molecular: 14, wall: 1 };
   const ENEMIES = {
@@ -50,7 +63,7 @@
     stage('巨蟲壓境', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 38, 8), group('mother', 21, 4), group('splitter', 10, 11), group('flyer', 7, 16), group('hopper', 13, 11), group('shield', 11, 8), group('shield_down', 11, 8), group('swift', 10, 12), group('bug', 4, 10)]),
     stage('巨蟲浪潮', [0, 1, 2, 3, 4, 5, 6, 7], 36, [group('giant', 53, 11), group('mother', 27, 5), group('splitter', 12, 13), group('flyer', 9, 17), group('hopper', 16, 13), group('shield', 13, 9), group('shield_down', 13, 9), group('swift', 13, 14), group('bug', 5, 11)]),
     stage('最後防線', [0, 1, 2, 3, 4, 5, 6, 7], 24, [group('giant', 109, 16), group('mother', 45, 7), group('splitter', 24, 15), group('flyer', 13, 20), group('hopper', 26, 14), group('shield', 22, 11), group('shield_down', 22, 11), group('swift', 22, 18), group('bug', 6, 16)]),
-    stage('一心守園', [3, 1, 6, 0, 7, 2, 5, 4], 0,
+    stage('四面守園', [3], 0,
       [group('swift', 17, 12), group('mother', 43, 5), group('flyer', 13, 12), group('shield_down', 22, 12)],
       [group('giant', 109, 12), group('flyer', 13, 12), group('splitter', 24, 14), group('hopper', 25, 12)],
       [group('shield', 22, 12), group('giant', 109, 6), group('swift', 22, 12), group('mother', 40, 4), group('bug', 7, 18)])
@@ -58,17 +71,16 @@
   const largestSpawnHp = Math.max(...LEVELS.flatMap(level => level.waves.flat().map(g => g.hp)));
   const PREVIOUS_BUDGETS = [42, 52, 64, 76, 90, 104, 120, 136, 154, 182];
   const GENEROUS_BUDGETS = [60, 75, 93, 111, 132, 153, 177, 201, 228, 270];
-  const SPAWN_GAPS = [.50, .39, .36, .34, .32, .31, .30, .28, .25, .22, .20];
+  const SPAWN_GAPS = [.50, .39, .36, .34, .32, .31, .30, .28, .25, .22, .42];
   let budget = 48;
   for (const [i, level] of LEVELS.entries()) {
-    level.hearts = i === BONUS_LEVEL ? 1 : 5;
+    level.hearts = 5;
+    level.goal = i === BONUS_LEVEL ? { c: 5, r: 3 } : GOAL;
     level.money = budget; budget += level.reward;
     level.spawnInterval = BATTLE_SPEED * SPAWN_GAPS[i];
     level.edgeEntries = i < 7 ? [] : i === 7 ? [{ c: 8, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
       : i === 8 ? [{ c: 7, r: 0, side: 'top' }, { c: 8, r: 7, side: 'bottom' }]
-      : i === BONUS_LEVEL ? [{ c: 5, r: 0, side: 'top' }, { c: 6, r: 7, side: 'bottom' },
-          { c: 7, r: 0, side: 'top' }, { c: 8, r: 7, side: 'bottom' },
-          { c: 9, r: 0, side: 'top' }, { c: 10, r: 7, side: 'bottom' }]
+      : i === BONUS_LEVEL ? [{ c: 0, r: level.goal.r, side: 'left' }, { c: level.goal.c, r: 0, side: 'top' }, { c: level.goal.c, r: ROWS - 1, side: 'bottom' }]
       : [5, 9].flatMap(c => [{ c, r: 0, side: 'top' }, { c, r: 7, side: 'bottom' }]);
   }
   const key = (c, r) => `${c},${r}`;
@@ -79,9 +91,14 @@
   const stageSeed = level => (0x9e3779b9 ^ (level + 1) * 65537) >>> 0;
   const entrances = level => [...LEVELS[level].entries.map(r => ({ c: COLS - 1, r, side: 'right' })), ...LEVELS[level].edgeEntries];
   const isEntrance = (level, c, r) => entrances(level).some(e => e.c === c && e.r === r);
-  function clearEntrances(state) {
-    const blocked = state.buildings.filter(b => isEntrance(state.level, b.c, b.r));
+  function isHome(level, c, r) {
+    const goal = LEVELS[level].goal;
+    return c === goal.c && r === goal.r;
+  }
+  function clearReservedBuildings(state) {
+    const blocked = state.buildings.filter(b => isEntrance(state.level, b.c, b.r) || isHome(state.level, b.c, b.r));
     if (!blocked.length) return;
+    state.upgradeItems += blocked.filter(b => b.upgraded).length;
     state.money += blocked.reduce((sum, b) => sum + b.paidCost, 0);
     state.buildings = state.buildings.filter(b => !blocked.includes(b));
     state.revision++;
@@ -114,9 +131,9 @@
   }
   function route(state, start, buildings = state.buildings) {
     const solid = terrain(state.level);
-    const open = findPath(start, GOAL, buildings, solid);
+    const open = findPath(start, LEVELS[state.level].goal, buildings, solid);
     if (open) return { path: open, breaking: false };
-    return { path: findPath(start, GOAL, buildings, solid, true) || [], breaking: true };
+    return { path: findPath(start, LEVELS[state.level].goal, buildings, solid, true) || [], breaking: true };
   }
   // Enemies repeatedly ask for the same route until a building changes the board.
   const travelRoutes = new WeakMap();
@@ -136,22 +153,23 @@
   function createState(level = 0) {
     level = Number.isInteger(level) && LEVELS[level] ? level : 0;
     return {
-      level, wave: 0, phase: 'planning', money: LEVELS[level].money, hearts: LEVELS[level].hearts, bonusUnlocked: level === BONUS_LEVEL, completed: false, lastReward: 0,
-      buildings: [], enemies: [], shots: [], effects: [], fires: [], queue: [], spawnClock: 0,
+      level, wave: 0, phase: 'planning', upgradeItems: 0, money: LEVELS[level].money, hearts: LEVELS[level].hearts, bonusUnlocked: level === BONUS_LEVEL, completed: false, lastReward: 0,
+      castle: null, buildings: [], enemies: [], shots: [], effects: [], fires: [], queue: [], spawnClock: 0,
       time: 0, revision: 0, nextId: 1, rngState: stageSeed(level), undo: [], checkpoint: null,
-      stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0 }
+      stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0, damageByTower: {} }
     };
   }
   function canBuild(state, kind, c, r) {
     if (state.phase !== 'planning') return '開始後不能建造';
     if (!TOOLS[kind] || !inside(c, r)) return '不能放這裡';
+    if (isHome(state.level, c, r)) return '這裡是城堡';
     if (c === 0 || c === COLS - 1 || isEntrance(state.level, c, r) || terrain(state.level).has(key(c, r))) return '留給小蟲走';
     if (at(state, c, r)) return '這裡已經有了';
     if (state.money < TOOLS[kind].cost) return '金幣不夠';
     return '';
   }
   function remember(state) {
-    state.undo.push({ buildings: clone(state.buildings), money: state.money });
+    state.undo.push({ buildings: clone(state.buildings), money: state.money, upgradeItems: state.upgradeItems });
     if (state.undo.length > 100) state.undo.shift();
   }
   function build(state, kind, c, r) {
@@ -159,7 +177,19 @@
     if (error) return { ok: false, error };
     remember(state);
     state.money -= TOOLS[kind].cost;
-    state.buildings.push({ id: state.nextId++, kind, c, r, paidCost: TOOLS[kind].cost, hp: TOOLS[kind].hp, cooldown: 0, aim: null, angle: -25, flash: 0 });
+    state.buildings.push({ id: state.nextId++, kind, c, r, upgraded: false, paidCost: TOOLS[kind].cost, hp: TOOLS[kind].hp, lastDamage: null, cooldown: 0, aim: null, angle: -25, flash: 0 });
+    state.revision++;
+    return { ok: true };
+  }
+  function upgrade(state, c, r) {
+    if (state.phase !== 'planning') return { ok: false, error: '部署時才能升級' };
+    const building = at(state, c, r);
+    if (!building) return { ok: false, error: '點一座塔或石牆升級' };
+    if (building.upgraded) return { ok: false, error: '這座已經升級了' };
+    if (state.upgradeItems < 1) return { ok: false, error: '過關可獲得升級晶石' };
+    remember(state);
+    state.upgradeItems--;
+    building.upgraded = true;
     state.revision++;
     return { ok: true };
   }
@@ -169,6 +199,7 @@
     if (!building) return { ok: false, error: '點選要移走的物品' };
     remember(state);
     state.money += building.paidCost;
+    if (building.upgraded) state.upgradeItems++;
     state.buildings = state.buildings.filter(b => b.id !== building.id);
     state.revision++;
     return { ok: true };
@@ -176,15 +207,15 @@
   function undo(state) {
     if (state.phase !== 'planning' || !state.undo.length) return false;
     const previous = state.undo.pop();
-    state.buildings = previous.buildings; state.money = previous.money; state.revision++;
+    state.buildings = previous.buildings; state.money = previous.money; state.upgradeItems = previous.upgradeItems; state.revision++;
     return true;
   }
   function snapshot(state) {
-    return { version: 11, bonusUnlocked: state.bonusUnlocked, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
+    return { version: 14, lastReward: state.lastReward, upgradeItems: state.upgradeItems, bonusUnlocked: state.bonusUnlocked, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
       buildings: clone(state.buildings), stats: clone(state.stats) };
   }
   function restore(data) {
-    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
     if (data.level === BONUS_LEVEL && (data.version < 11 || data.bonusUnlocked !== true)) return null;
     if (data.version < 6 && data.level > 2) return null;
     if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= (data.version < 6 ? 4 : 1)) return null;
@@ -192,18 +223,28 @@
     if (!Number.isInteger(data.money) || data.money < 0 || data.money > 1000 || !Number.isInteger(data.hearts) || data.hearts < 1 || data.hearts > LEVELS[data.level].hearts) return null;
     if (!Array.isArray(data.buildings) || data.buildings.length > COLS * ROWS) return null;
     const state = createState(data.level), used = new Set(), solid = terrain(data.level);
+    const earned = data.level + Number(data.completed === true);
+    state.upgradeItems = data.version >= 12 ? data.upgradeItems : earned;
+    if (!Number.isInteger(state.upgradeItems) || state.upgradeItems < 0 || state.upgradeItems > earned) return null;
     for (const saved of data.buildings) {
       const b = saved?.kind === 'rapid' ? { ...saved, kind: 'cannon' } : saved;
       if (!b || !Object.hasOwn(TOOLS, b.kind) || !inside(b.c, b.r) || b.c === 0 || b.c === COLS - 1 || solid.has(key(b.c, b.r)) || used.has(key(b.c, b.r))) return null;
-      if (data.version >= 10 && isEntrance(data.level, b.c, b.r)) return null;
+      const oldBonusMap = data.level === BONUS_LEVEL && data.version < 14;
+      if (!oldBonusMap && data.version >= 10 && (isEntrance(data.level, b.c, b.r) || isHome(data.level, b.c, b.r))) return null;
       if (!Number.isInteger(b.hp) || b.hp < 1 || b.hp > TOOLS[b.kind].hp) return null;
       // Price changes never create refund profit or reduce an old purchase's
       // refund. Version 8 saves each building's actual purchase price.
       const paidCost = data.version < 8 ? PREVIOUS_PRICES[b.kind] : b.paidCost;
-      if (![PREVIOUS_PRICES[b.kind], VERSION9_PRICES[b.kind], TOOLS[b.kind].cost].includes(paidCost)) return null;
+      if (![PREVIOUS_PRICES[b.kind], VERSION9_PRICES[b.kind], TOOLS[b.kind].cost].includes(paidCost) && !(b.kind === 'molecular' && paidCost === 22)) return null;
+      if (data.version >= 12 && typeof b.upgraded !== 'boolean') return null;
+      const lastDamage = data.version >= 13 ? b.lastDamage ?? null : null;
+      if (lastDamage !== null && (!Number.isSafeInteger(lastDamage) || lastDamage < 0)) return null;
       used.add(key(b.c, b.r));
-      state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, paidCost, hp: b.hp, cooldown: 0, aim: null, angle: -25, flash: 0 });
+      state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, upgraded: data.version >= 12 && b.upgraded, paidCost, hp: b.hp, lastDamage, cooldown: 0, aim: null, angle: -25, flash: 0 });
     }
+    if (state.upgradeItems + state.buildings.filter(b => b.upgraded).length > earned) return null;
+    if (data.completed) state.lastReward = LEVELS[data.level].reward;
+    else if (data.level > 0 && data.lastReward === LEVELS[data.level - 1].reward) state.lastReward = data.lastReward;
     // A loaded deployment starts with a full home, including older saves.
     // Completed campaigns keep their final health for the result screen.
     state.money = data.money; state.hearts = data.version >= 6 && data.completed ? data.hearts : LEVELS[data.level].hearts;
@@ -214,36 +255,43 @@
     // Existing purchases remain intact, with their original refund values.
     if (data.version === 6) state.money = Math.min(1000, state.money + GENEROUS_BUDGETS[state.level] - PREVIOUS_BUDGETS[state.level] + (data.completed ? 10 : 0));
     if (data.version < 9) state.money = Math.max(0, state.money - GENEROUS_BUDGETS[state.level] + LEVELS[state.level].money - (data.completed ? 30 - LEVELS[state.level].reward : 0));
-    clearEntrances(state);
+    clearReservedBuildings(state);
     if (data.version >= 6 && data.completed) { state.completed = true; state.phase = 'won'; }
     if (Number.isInteger(data.rngState) && data.rngState > 0 && data.rngState <= 0xffffffff) state.rngState = data.rngState;
     if (data.stats) for (const k of Object.keys(state.stats)) if (Number.isInteger(data.stats[k]) && data.stats[k] >= 0) state.stats[k] = data.stats[k];
     return state;
   }
-  function startWave(state) {
-    if (state.phase !== 'planning') return false;
-    // Starting is explicit; no future stage is queued during deployment.
-    state.checkpoint = snapshot(state);
-    state.undo = []; state.queue = []; state.spawnClock = SPAWN_INTERVAL;
-    state.fires = []; state.effects = []; state.shots = []; state.lastReward = 0;
-    state.waveStats = { hits: 0, blocked: 0 };
+  function spawnQueue(level, firstWave = 0) {
+    const queue = [];
     let index = 0;
-    const entries = entrances(state.level);
-    for (let wave = state.wave; wave < LEVELS[state.level].waves.length; wave++) {
-      const groups = LEVELS[state.level].waves[wave];
+    const entries = entrances(level);
+    for (let wave = firstWave; wave < LEVELS[level].waves.length; wave++) {
+      const groups = LEVELS[level].waves[wave];
       // Late waves send small mixed squads through the same rotating entrances.
       const largestGroup = Math.max(...groups.map(g => g.count));
-      const packSize = state.level === BONUS_LEVEL ? 2 : state.level === 9 ? 3 : state.level === 8 ? 6 : largestGroup;
+      const packSize = level === BONUS_LEVEL ? 2 : level === 9 ? 3 : level === 8 ? 6 : largestGroup;
       for (let offset = 0; offset < largestGroup; offset += packSize) {
         for (const g of groups) {
           const end = Math.min(g.count, offset + packSize);
           for (let i = offset; i < end; i++) {
             const entry = entries[index++ % entries.length];
-            state.queue.push({ kind: g.kind, hp: g.hp, wave, row: entry.r, position: { x: entry.c, y: entry.r } });
+            queue.push({ kind: g.kind, hp: g.hp, wave, row: entry.r, position: { x: entry.c, y: entry.r } });
           }
         }
       }
     }
+    return queue;
+  }
+  function startWave(state) {
+    if (state.phase !== 'planning') return false;
+    // Starting is explicit; no future stage is queued during deployment.
+    state.checkpoint = snapshot(state);
+    state.checkpoint.lastReward = 0;
+    state.undo = []; state.spawnClock = SPAWN_INTERVAL;
+    state.fires = []; state.effects = []; state.shots = []; state.lastReward = 0;
+    state.waveStats = { hits: 0, blocked: 0, damageByTower: {} };
+    state.castle = { kind: 'castle', id: 'castle', ...LEVELS[state.level].goal, cooldown: 0, flash: 0, angle: 0 };
+    state.queue = spawnQueue(state.level, state.wave);
     state.phase = 'running';
     for (const b of state.buildings) { b.cooldown = 0; b.flash = 0; b.aim = null; }
     return true;
@@ -257,7 +305,7 @@
   function spawn(state, kind, hp = ENEMIES[kind].hp, row = 3, position = null) {
     const x = position?.x ?? COLS - 1, y = position?.y ?? row, c = Math.round(x), r = Math.round(y);
     const enemy = { id: state.nextId++, kind, hp, maxHp: hp, x, y, facing: 0,
-      c, r, next: Math.hypot(x - c, y - r) > 1e-9 ? { c, r } : null, slow: 0, flash: 0, shieldFlash: 0, burnCooldown: 0,
+      c, r, next: Math.hypot(x - c, y - r) > 1e-9 ? { c, r } : null, slow: 0, flash: 0, shieldFlash: 0, burnCooldown: 0, burnTicks: 0, burnClock: 0, stun: 0, shock: 0,
       push: null, leap: null, jumped: false, broodClock: BATTLE_SPEED * 3, bornAt: state.time, attackClock: 0.65, attackId: null, dead: false };
     state.enemies.push(enemy);
     return enemy;
@@ -282,14 +330,14 @@
     return { x: enemy.x + dx * scale, y: enemy.y + side * scale * (0.15 + 0.34 * Math.sqrt(1 - (dx / 0.47) ** 2)) };
   }
   const RECOIL_SECONDS = .38;
-  const EFFECT_SECONDS = { home: .95, block: .6, split: .9, hatch: .9, leap: .9, frost: .85, blast: .64, laser: .34, spark: .31, flare: .54, molecular: .65 };
+  const EFFECT_SECONDS = { home: .95, block: .6, split: .9, hatch: .9, leap: .9, frost: .85, blast: .64, laser: .43, plasmaArc: .93, spikeHit: .32, spark: .31, flare: .54, molecular: .65 };
   function effect(state, kind, x, y, details = {}) {
     const duration = EFFECT_SECONDS[kind] ?? 0.45;
     state.effects.push({ kind, x, y, life: duration, duration, ...details });
   }
   function canTarget(kind, enemy) {
     const air = !!ENEMIES[enemy.kind]?.airborne || !!enemy.leap;
-    return !enemy.dead && !!TOOLS[kind]?.targets?.includes(air ? 'air' : 'ground');
+    return !enemy.dead && !!weapons[kind]?.targets?.includes(air ? 'air' : 'ground');
   }
   function blockHit(state, enemy, incoming) {
     if (shieldBlocks(enemy, incoming)) {
@@ -301,7 +349,7 @@
       effect(state, 'block', point.x, point.y, {
         vx: (enemy.x - incoming.c) / distance,
         vy: side * Math.max(0.45, Math.abs(enemy.y - incoming.r) / distance),
-        shotKind: incoming.kind, enemyId: enemy.id
+        shotKind: incoming.kind, upgraded: incoming.upgraded, enemyId: enemy.id
       });
       return true;
     }
@@ -309,7 +357,7 @@
   }
   function hit(state, enemy, source, options = {}) {
     if (!enemy || enemy.dead) return false;
-    if (TOOLS[source.kind]?.targets && !canTarget(source.kind, enemy)) return false;
+    if (weapons[source.kind]?.targets && !canTarget(source.kind, enemy)) return false;
     if (options.ground && (enemy.kind === 'flyer' || enemy.leap)) return false;
     const incoming = options.ground ? { ...source, c: enemy.x, r: enemy.y + 1 } : source;
     if (source.kind === 'frost') {
@@ -318,16 +366,40 @@
         return false;
       }
       enemy.slow = TOOLS.frost.slowDuration;
+      if (source.upgraded) damageEnemy(state, enemy, toolFor('frost', true).damage, source.tower);
       return true;
     }
     if (blockHit(state, enemy, incoming)) return false;
-    const damage = options.damage ?? TOOLS[source.kind]?.damage ?? 1;
+    const tool = toolFor(source.kind, source.upgraded);
+    damageEnemy(state, enemy, options.damage ?? tool?.damage ?? 1, source.tower);
+    if (source.kind === 'wall' && source.upgraded) {
+      effect(state, 'spikeHit', enemy.x, enemy.y, { lift: enemyLift(enemy, state.time) });
+      enemy.stun = Math.max(enemy.stun, tool.stunSeconds * BATTLE_SPEED);
+    }
+    if (enemy.dead) return true;
+    if (source.kind === 'push') {
+      const limit = toolFor('push', source.upgraded).knockback;
+      const distance = enemy.leap ? 0 : pushEnemy(state, enemy, limit);
+      if (source.upgraded) enemy.stun = Math.max(enemy.stun, (1 + Math.floor(limit - distance + 1e-8)) * BATTLE_SPEED);
+    }
+    if (source.kind === 'pierce') enemy.shock = Math.max(enemy.shock, tool.stunSeconds * BATTLE_SPEED);
+    if (source.upgraded && source.kind === 'flame') {
+      enemy.burnTicks = tool.afterburnSeconds; enemy.burnClock = BATTLE_SPEED; enemy.burnOwner = source.emberOwner ?? source.tower;
+    }
+    return true;
+  }
+  function damageEnemy(state, enemy, damage, tower) {
+    if (tower != null) {
+      const totals = state.waveStats.damageByTower;
+      totals[tower] = (totals[tower] ?? 0) + Math.min(enemy.hp, damage);
+    }
     enemy.hp = Math.max(0, enemy.hp - damage); enemy.flash = 0.18;
     state.stats.hits++; state.waveStats.hits++;
     if (enemy.hp <= 0) killEnemy(state, enemy);
     if (!enemy.dead && enemy.kind === 'hopper' && !enemy.jumped) startLeap(state, enemy);
-    if (!enemy.dead && !enemy.leap && source.kind === 'push') pushEnemy(state, enemy);
-    return true;
+  }
+  function finishDamage(state, buildings) {
+    for (const b of buildings) b.lastDamage = state.waveStats.damageByTower[b.id] ?? 0;
   }
   function random(state) {
     let x = state.rngState; x ^= x << 13; x ^= x >>> 17; x ^= x << 5;
@@ -361,14 +433,17 @@
   }
   function jumpLanding(state, enemy) {
     const c0 = Math.round(enemy.x), r0 = Math.round(enemy.y), candidates = [];
-    // Two cells forward, with a two-cell sideways search for a safe landing.
-    // Prefer an open shortest route; only consider a breaking route if necessary.
-    for (let c = Math.max(0, c0 - 2); c < c0; c++) for (let r = Math.max(0, r0 - 2); r <= Math.min(ROWS - 1, r0 + 2); r++) {
+    const goal = LEVELS[state.level].goal;
+    const dx = goal.c - c0, dy = goal.r - r0;
+    const vertical = state.level === BONUS_LEVEL && Math.abs(dy) > Math.abs(dx);
+    const direction = state.level === BONUS_LEVEL ? Math.sign(vertical ? dy : dx) : -1;
+    for (let forward = 1; direction && forward <= 2; forward++) for (let side = -2; side <= 2; side++) {
+      const c = c0 + (vertical ? side : forward * direction), r = r0 + (vertical ? forward * direction : side);
       if (!freePoint(state, c, r)) continue;
       const plan = travelRoute(state, c, r);
-      if (plan.path.length) candidates.push({ c, r, breaking: plan.breaking, distance: plan.path.length - 1 });
+      if (plan.path.length) candidates.push({ c, r, forward, side, breaking: plan.breaking, distance: plan.path.length - 1 });
     }
-    candidates.sort((a, b) => Number(a.breaking) - Number(b.breaking) || a.distance - b.distance || a.c - b.c || Math.abs(a.r - r0) - Math.abs(b.r - r0) || a.r - b.r);
+    candidates.sort((a, b) => Number(a.breaking) - Number(b.breaking) || a.distance - b.distance || b.forward - a.forward || Math.abs(a.side) - Math.abs(b.side) || a.side - b.side);
     return candidates[0] || null;
   }
   function startLeap(state, enemy) {
@@ -380,7 +455,8 @@
     state.stats.jumped++; effect(state, 'leap', enemy.x, enemy.y, { toX: landing.c, toY: landing.r });
     return true;
   }
-  function pushEnemy(state, enemy) {
+  function pushEnemy(state, enemy, limit = TOOLS.push.knockback) {
+    const goal = LEVELS[state.level].goal;
     const solid = terrain(state.level);
     const flying = ENEMIES[enemy.kind].airborne;
     const blocked = new Set(state.buildings.map(b => key(b.c, b.r)));
@@ -388,7 +464,7 @@
     const directions = [[1, 0], [0, -1], [0, 1], [-1, 0]];
     // Distance to home follows the same open paths as normal ground movement.
     function distances(allowBreak) {
-      const field = new Map([[key(GOAL.c, GOAL.r), 0]]), queue = [GOAL];
+      const field = new Map([[key(goal.c, goal.r), 0]]), queue = [goal];
       for (let i = 0; i < queue.length; i++) for (const [dc, dr] of directions) {
         const c = queue[i].c + dc, r = queue[i].r + dr, k = key(c, r);
         if (!inside(c, r) || solid.has(k) || (!allowBreak && blocked.has(k)) || field.has(k)) continue;
@@ -396,7 +472,7 @@
       }
       return field;
     }
-    const origin = { x: enemy.x, y: enemy.y }, limit = TOOLS.push.knockback;
+    const origin = { x: enemy.x, y: enemy.y };
     const anchors = [];
     for (const c of new Set([Math.floor(enemy.x), Math.ceil(enemy.x)])) for (const r of new Set([Math.floor(enemy.y), Math.ceil(enemy.y)])) {
       if (!free(c, r)) continue;
@@ -405,12 +481,12 @@
       if (Array.from({ length: samples }, (_, i) => (i + 1) / samples).some(t => !free(Math.round(enemy.x + (c - enemy.x) * t), Math.round(enemy.y + (r - enemy.y) * t)))) continue;
       anchors.push({ c, r, length, points: length > 1e-9 ? [origin, { x: c, y: r }] : [origin] });
     }
-    if (!anchors.length) return;
+    if (!anchors.length) return 0;
     let field = flying ? null : distances(false);
     // An entirely enclosed group will eventually break out. Its retreat still
     // uses free cells, with the breakable-home distance as a finite fallback.
     if (field && anchors.every(a => !field.has(key(a.c, a.r)))) field = distances(true);
-    const scoreCell = (c, r) => flying ? Math.hypot(c - GOAL.c, r - GOAL.r) : field.get(key(c, r));
+    const scoreCell = (c, r) => flying ? Math.hypot(c - goal.c, r - goal.r) : field.get(key(c, r));
     const initialScore = Math.min(...anchors.map(a => (scoreCell(a.c, a.r) ?? Infinity) + a.length));
     let best = null;
     const consider = (points, length, score) => {
@@ -432,23 +508,32 @@
         if (!free(c, r) || visited.has(key(c, r))) continue;
         const x = current.c + dc * travel, y = current.r + dr * travel;
         const points = [...current.points, { x, y }], length = current.length + travel;
-        const score = flying ? Math.hypot(x - GOAL.c, y - GOAL.r) : scoreCell(current.c, current.r) * (1 - travel) + scoreCell(c, r) * travel;
+        const score = flying ? Math.hypot(x - goal.c, y - goal.r) : scoreCell(current.c, current.r) * (1 - travel) + scoreCell(c, r) * travel;
         consider(points, length, score);
         if (travel === 1) queue.push({ c, r, length, points });
       }
     }
-    if (!best) return;
+    if (!best) return 0;
     enemy.push = { fromX: enemy.x, fromY: enemy.y, x: best.x, y: best.y, points: best.points, length: best.length, age: 0, duration: 0.3 };
     enemy.next = null; enemy.attackId = null; enemy.attackClock = 0.65;
+    return best.length;
   }
-  function ignite(state, x, y) {
+  function ignite(state, x, y, upgraded = false, tower) {
     const c = Math.round(x), r = Math.round(y), tool = TOOLS.flame;
     const existing = state.fires.find(f => f.c === c && f.r === r);
-    if (existing) { existing.life = tool.burnSeconds * BATTLE_SPEED; return; }
-    state.fires.push({ id: state.nextId++, c, r, bornAt: state.time, life: tool.burnSeconds * BATTLE_SPEED, clock: BATTLE_SPEED });
+    if (existing) {
+      existing.life = tool.burnSeconds * BATTLE_SPEED;
+      existing.tower = tower;
+      if (upgraded) { existing.emberLife = existing.life; existing.emberOwner = tower; }
+      return;
+    }
+    state.fires.push({ id: state.nextId++, c, r, tower, emberOwner: upgraded ? tower : null, bornAt: state.time, emberLife: upgraded ? tool.burnSeconds * BATTLE_SPEED : 0, life: tool.burnSeconds * BATTLE_SPEED, clock: BATTLE_SPEED });
   }
   function updateFires(state, dt) {
+    if (!state.fires.length && !state.enemies.some(e => e.burnCooldown > 0 || e.burnTicks)) return;
     for (const enemy of state.enemies) enemy.burnCooldown = Math.max(0, enemy.burnCooldown - dt);
+    const emberFires = state.fires.filter(f => f.emberLife > 1e-9);
+    const touchingEmber = enemy => !enemy.leap && emberFires.find(f => Math.hypot(enemy.x - f.c, enemy.y - f.r) <= TOOLS.flame.burnRadius);
     for (const fire of state.fires) {
       fire.life -= dt; fire.clock -= dt;
       if (fire.clock <= 1e-9) {
@@ -456,18 +541,32 @@
         for (const enemy of [...state.enemies]) {
           if (enemy.dead || enemy.burnCooldown > 1e-9 || Math.hypot(enemy.x - fire.c, enemy.y - fire.r) > TOOLS.flame.burnRadius) continue;
           // Ground fire reaches the underside; overlapping fires never stack damage.
-          const damaged = hit(state, enemy, { kind: 'flame', c: fire.c, r: fire.r }, { ground: true, damage: TOOLS.flame.burnDamage });
+          const ember = fire.emberLife > 1e-9 ? fire : touchingEmber(enemy);
+          const damaged = hit(state, enemy, { kind: 'flame', tower: fire.tower, upgraded: !!ember, emberOwner: ember?.emberOwner, c: fire.c, r: fire.r }, { ground: true, damage: TOOLS.flame.burnDamage });
           enemy.burnCooldown = BATTLE_SPEED;
           if (damaged) effect(state, 'burn', enemy.x, enemy.y);
         }
       }
     }
+    for (const enemy of state.enemies) {
+      if (!enemy.burnTicks || enemy.dead) continue;
+      if (touchingEmber(enemy)) { enemy.burnTicks = upgrades.flame.afterburnSeconds; enemy.burnClock = BATTLE_SPEED; continue; }
+      enemy.burnClock -= dt;
+      if (enemy.burnClock <= 1e-9) {
+        enemy.burnClock += BATTLE_SPEED; enemy.burnTicks--;
+        if (enemy.burnCooldown <= 1e-9) {
+          damageEnemy(state, enemy, 1, enemy.burnOwner); enemy.burnCooldown = BATTLE_SPEED;
+          effect(state, 'burn', enemy.x, enemy.y);
+        }
+      }
+    }
+    for (const fire of state.fires) fire.emberLife = Math.max(0, fire.emberLife - dt);
     state.fires = state.fires.filter(f => f.life > 1e-9);
   }
   function frostAura(state, source) {
     const tool = TOOLS.frost;
     const nearby = state.enemies.filter(e => canTarget('frost', e) && Math.hypot(e.x - source.c, e.y - source.r) <= tool.range);
-    effect(state, 'frost', source.c, source.r, { radius: tool.range });
+    effect(state, 'frost', source.c, source.r, { radius: tool.range, upgraded: source.upgraded });
     for (const enemy of nearby) hit(state, enemy, source);
   }
   function fireLaser(state, source) {
@@ -486,7 +585,24 @@
       if (!hit(state, enemy, source)) continue;
       if (!hitDistances.length || along - hitDistances[hitDistances.length - 1] > .35) hitDistances.push(along);
     }
-    effect(state, 'laser', source.c, source.r, { tower: source.tower, angle: source.angle, length, hitDistances });
+    effect(state, 'laser', source.c, source.r, { tower: source.tower, angle: source.angle, length, hitDistances, upgraded: source.upgraded });
+  }
+  function chainPlasma(state, shot, first, candidates) {
+    const tool = toolFor('molecular', true), visited = new Set([first.id]);
+    let previous = first;
+    for (let damage = Math.floor(tool.damage / 3); damage >= 1; damage = Math.floor(damage / 3)) {
+      let next = null, nearest = Infinity;
+      for (const enemy of candidates) {
+        if (enemy.dead || visited.has(enemy.id)) continue;
+        const distance = Math.hypot(enemy.x - previous.x, enemy.y - previous.y);
+        if (distance <= tool.chainRange && distance < nearest) { next = enemy; nearest = distance; }
+      }
+      if (!next) break;
+      effect(state, 'plasmaArc', previous.x, previous.y, { lift: enemyLift(previous, state.time),
+        toX: next.x, toY: next.y, toLift: enemyLift(next, state.time), hop: visited.size - 1, damage });
+      hit(state, next, shot, { damage });
+      visited.add(next.id); previous = next;
+    }
   }
   function resolveShot(state, shot) {
     if (shot.kind === 'frost') return frostAura(state, shot);
@@ -512,14 +628,16 @@
       if (e === target) { contact = e; break; }
       if (!contact || distance(e) < distance(contact)) contact = e;
     }
+    const chain = contact && shot.kind === 'molecular' && shot.upgraded ? state.enemies.slice() : null;
     if (contact && !hit(state, contact, shot)) return;
     if (shot.kind === 'cannon') {
-      effect(state, 'blast', x, y, { radius });
+      effect(state, 'blast', x, y, { radius, upgraded: shot.upgraded });
       for (const other of nearby) if (other !== contact) hit(state, other, shot);
     } else if (shot.kind === 'flame') {
       effect(state, 'flare', x, y);
-      ignite(state, x, y);
+      ignite(state, x, y, shot.upgraded, shot.tower);
     } else if (contact) {
+      if (chain) chainPlasma(state, shot, contact, chain);
       effect(state, shot.kind === 'molecular' ? 'molecular' : 'spark', x, y,
         { lift: shot.lift ?? 0, angle: shot.angle ?? 0 });
     }
@@ -536,6 +654,7 @@
     else enemy.facing = Math.round(Math.atan2(-dy, -dx) * 180 / Math.PI);
   }
   function moveEnemy(state, enemy, dt) {
+    const goal = LEVELS[state.level].goal;
     if (enemy.leap) {
       const p = enemy.leap; p.age += dt; const t = Math.min(1, p.age / p.duration);
       faceTravel(enemy, p.x - p.fromX, p.y - p.fromY);
@@ -563,16 +682,17 @@
       }
       return;
     }
+    const speed = ENEMIES[enemy.kind].speed * (enemy.slow > 0 ? TOOLS.frost.slowMultiplier : 1);
     if (enemy.kind === 'flyer') {
-      const dx = GOAL.c - enemy.x, dy = GOAL.r - enemy.y, distance = Math.hypot(dx, dy);
+      const dx = goal.c - enemy.x, dy = goal.r - enemy.y, distance = Math.hypot(dx, dy);
       faceTravel(enemy, dx, dy);
-      const travel = ENEMIES.flyer.speed * (enemy.slow > 0 ? 0.48 : 1) * dt;
+      const travel = speed * dt;
       if (distance <= travel) {
-        enemy.x = GOAL.c; enemy.y = GOAL.r; enemy.dead = true; state.hearts = Math.max(0, state.hearts - 1); effect(state, 'home', enemy.x, enemy.y);
+        enemy.x = goal.c; enemy.y = goal.r; enemy.dead = true; state.hearts = Math.max(0, state.hearts - 1); effect(state, 'home', enemy.x, enemy.y);
       } else { enemy.x += dx / distance * travel; enemy.y += dy / distance * travel; enemy.c = Math.round(enemy.x); enemy.r = Math.round(enemy.y); }
       return;
     }
-    if (enemy.c === GOAL.c && enemy.r === GOAL.r && !enemy.next) {
+    if (enemy.c === goal.c && enemy.r === goal.r && !enemy.next) {
       enemy.dead = true; state.hearts = Math.max(0, state.hearts - 1);
       effect(state, 'home', enemy.x, enemy.y); return;
     }
@@ -589,6 +709,7 @@
           effect(state, 'chip', obstacle.c, obstacle.r);
           if (obstacle.hp <= 0) {
             state.buildings = state.buildings.filter(b => b.id !== obstacle.id);
+            state.money += obstacle.paidCost;
             state.stats.broken++; state.revision++;
           }
         }
@@ -596,7 +717,6 @@
       }
       enemy.attackId = null; enemy.attackClock = 0.65; enemy.next = next;
     }
-    const speed = ENEMIES[enemy.kind].speed * (enemy.slow > 0 ? 0.48 : 1);
     const dx = enemy.next.c - enemy.x, dy = enemy.next.r - enemy.y, dist = Math.hypot(dx, dy);
     faceTravel(enemy, dx, dy);
     const step = speed * dt;
@@ -605,22 +725,67 @@
     } else { enemy.x += dx / dist * step; enemy.y += dy / dist * step; }
   }
   function chooseTarget(state, tower) {
-    const tool = TOOLS[tower.kind], rangeSquared = tool.range * tool.range;
+    const goal = LEVELS[state.level].goal;
+    const tool = weapons[tower.kind], rangeSquared = tool.range * tool.range;
     let best = null, bestPriority = Infinity, bestHome = Infinity;
     for (const enemy of state.enemies) {
       const dx = enemy.x - tower.c, dy = enemy.y - tower.r;
       const distanceSquared = dx * dx + dy * dy;
       if (distanceSquared > rangeSquared || !canTarget(tower.kind, enemy)) continue;
       if (enemy.id === tower.aim?.target) return enemy;
-      const priority = tool.priority === 'highestHp' ? -enemy.hp
-        : tool.priority === 'nearest' ? distanceSquared : 0;
-      const home = enemy.x + Math.abs(enemy.y - GOAL.r);
+      const priority = tool.priority === 'highestHp' ? -enemy.hp : 0;
+      const home = tower.kind === 'push' ? (enemy.x - goal.c) ** 2 + (enemy.y - goal.r) ** 2
+        : Math.abs(enemy.x - goal.c) + Math.abs(enemy.y - goal.r);
       if (priority < bestPriority || (priority === bestPriority &&
           (home < bestHome || (home === bestHome && enemy.id < best.id)))) {
         best = enemy; bestPriority = priority; bestHome = home;
       }
     }
     return best;
+  }
+  function updateTower(state, b, dt) {
+    b.flash = Math.max(0, b.flash - dt / RECOIL_SECONDS);
+    if (b.kind === 'wall' && !b.upgraded) return;
+    const tool = toolFor(b.kind, b.upgraded); b.cooldown -= dt;
+    if (b.kind === 'wall') {
+      if (b.cooldown > 1e-9) return;
+      const nearby = state.enemies.filter(e => !e.dead && Math.hypot(e.x - b.c, e.y - b.r) <= tool.range);
+      if (nearby.length) {
+        b.flash = 1; b.cooldown = BATTLE_SPEED / tool.rate;
+        const source = { kind: 'wall', tower: b.id, c: b.c, r: b.r, upgraded: true };
+        for (const e of nearby) hit(state, e, source);
+      } else b.cooldown = 0;
+      return;
+    }
+    // Acquire the next target only after this tower's previous projectile has
+    // resolved, so the priority sees the HP remaining after its own damage.
+    if (tool.aimSeconds && state.shots.some(s => s.tower === b.id)) return;
+    const target = chooseTarget(state, b);
+    if (tool.aimSeconds) {
+      if (!target) b.aim = null;
+      else {
+        if (b.aim?.target !== target.id) b.aim = { target: target.id, age: 0 };
+        b.aim.age += dt;
+      }
+    }
+    if (!target) { b.cooldown = Math.max(0, b.cooldown); return; }
+    b.angle = Math.atan2(target.y - b.r, target.x - b.c) * 180 / Math.PI;
+    if (tool.aimSeconds ? b.aim.age >= tool.aimSeconds * BATTLE_SPEED - 1e-9 : b.cooldown <= 0) {
+      if (tool.aimSeconds) { b.aim = null; b.cooldown = 0; }
+      else b.cooldown += BATTLE_SPEED / tool.rate;
+      b.flash = 1;
+      const source = { upgraded: b.upgraded, tower: b.id, target: target.id, c: b.c, r: b.r, kind: b.kind, angle: b.angle };
+      if (b.kind === 'pea' && b.upgraded) {
+        b.barrelOffset = b.barrelOffset === 8 ? -8 : 8;
+        source.barrelOffset = b.barrelOffset;
+      }
+      if (b.kind === 'frost' || b.kind === 'pierce') resolveShot(state, source);
+      else {
+        const tip = impactPoint(target, source);
+        state.shots.push({ ...source, id: state.nextId++, impactX: target.x, impactY: target.y,
+          tipX: tip.x, tipY: tip.y, lift: enemyLift(target, state.time), age: 0, duration: 0.2 });
+      }
+    }
   }
   function step(state, dt) {
     if (!isAdvancing(state) || !Number.isFinite(dt) || dt <= 0) return;
@@ -638,7 +803,10 @@
       const enemy = state.enemies[i];
       if (enemy.dead) continue;
       enemy.slow = Math.max(0, enemy.slow - dt); enemy.flash = Math.max(0, enemy.flash - dt); enemy.shieldFlash = Math.max(0, enemy.shieldFlash - dt);
-      moveEnemy(state, enemy, dt);
+      const shocked = enemy.shock > 1e-9, stunned = enemy.stun > 1e-9 && !enemy.push;
+      if (shocked) enemy.shock = Math.max(0, enemy.shock - dt);
+      if (stunned) enemy.stun = Math.max(0, enemy.stun - dt);
+      if (!shocked && !stunned) moveEnemy(state, enemy, dt);
       if (!enemy.dead && enemy.kind === 'mother') {
         enemy.broodClock -= dt;
         if (enemy.broodClock <= 1e-9) { enemy.broodClock += BATTLE_SPEED * 3; hatch(state, enemy, 1); state.stats.hatched++; }
@@ -646,39 +814,13 @@
       if (state.hearts === 0) { state.phase = 'lost'; break; }
     }
     if (state.phase === 'lost') {
+      finishDamage(state, state.buildings);
+      if (state.checkpoint) finishDamage(state, state.checkpoint.buildings);
       state.enemies = state.enemies.filter(e => !e.dead);
       return;
     }
-    for (const b of state.buildings) {
-      b.flash = Math.max(0, b.flash - dt / RECOIL_SECONDS);
-      if (b.kind === 'wall') continue;
-      const tool = TOOLS[b.kind]; b.cooldown -= dt;
-      // Acquire the next target only after this tower's previous projectile has
-      // resolved, so the priority sees the HP remaining after its own damage.
-      if (tool.aimSeconds && state.shots.some(s => s.tower === b.id)) continue;
-      const target = chooseTarget(state, b);
-      if (tool.aimSeconds) {
-        if (!target) b.aim = null;
-        else {
-          if (b.aim?.target !== target.id) b.aim = { target: target.id, age: 0 };
-          b.aim.age += dt;
-        }
-      }
-      if (!target) { b.cooldown = Math.max(0, b.cooldown); continue; }
-      b.angle = Math.atan2(target.y - b.r, target.x - b.c) * 180 / Math.PI;
-      if (tool.aimSeconds ? b.aim.age >= tool.aimSeconds * BATTLE_SPEED - 1e-9 : b.cooldown <= 0) {
-        if (tool.aimSeconds) { b.aim = null; b.cooldown = 0; }
-        else b.cooldown += BATTLE_SPEED / tool.rate;
-        b.flash = 1;
-        const source = { tower: b.id, target: target.id, c: b.c, r: b.r, kind: b.kind, angle: b.angle };
-        if (b.kind === 'frost' || b.kind === 'pierce') resolveShot(state, source);
-        else {
-          const tip = impactPoint(target, source);
-          state.shots.push({ ...source, id: state.nextId++, impactX: target.x, impactY: target.y,
-            tipX: tip.x, tipY: tip.y, lift: enemyLift(target, state.time), age: 0, duration: 0.2 });
-        }
-      }
-    }
+    for (const b of state.buildings) updateTower(state, b, dt);
+    if (state.castle) updateTower(state, state.castle, dt);
     for (const shot of state.shots) {
       shot.age += dt;
       if (shot.age >= shot.duration) resolveShot(state, shot);
@@ -690,16 +832,17 @@
     state.effects = state.effects.filter(e => e.life > 0);
     if (!state.queue.length && !state.enemies.length && !state.shots.length) {
       state.lastReward = LEVELS[state.level].reward;
-      state.money += state.lastReward;
-      state.undo = []; state.checkpoint = null; state.revision++;
+      state.money += state.lastReward; state.upgradeItems++;
+      state.undo = []; state.checkpoint = null; state.castle = null; state.revision++;
+      finishDamage(state, state.buildings);
       for (const b of state.buildings) b.aim = null;
       if (state.level >= BONUS_LEVEL - 1) { state.bonusUnlocked = true; state.completed = true; state.phase = 'won'; }
-      else { state.level++; state.wave = 0; state.hearts = 5; state.rngState = stageSeed(state.level); state.phase = 'planning'; clearEntrances(state); }
+      else { state.level++; state.wave = 0; state.hearts = 5; state.rngState = stageSeed(state.level); state.phase = 'planning'; clearReservedBuildings(state); }
       // Surviving buildings and funds carry over; each new stage heals the home.
       // The last fire
       // remains visible during deployment, then clears when the player starts.
     }
   }
-  return { COLS, ROWS, BONUS_LEVEL, BATTLE_SPEED, RECOIL_SECONDS, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, findPath, route, previews,
-    createState, canBuild, build, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, enemyLift, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
+  return { COLS, ROWS, BONUS_LEVEL, BATTLE_SPEED, RECOIL_SECONDS, SPAWN_INTERVAL, GOAL, TOOLS, ENEMIES, LEVELS, key, terrain, at, entrances, isEntrance, isHome, findPath, route, previews,
+    spawnQueue, toolFor, createState, canBuild, build, upgrade, remove, undo, snapshot, restore, startWave, retry, isAdvancing, togglePause, spawn, canTarget, shieldBlocks, enemyArtScale, enemyLift, impactPoint, hit, pushEnemy, ignite, updateFires, resolveShot, jumpLanding, startLeap, step };
 });

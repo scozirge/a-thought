@@ -102,10 +102,11 @@ function relocate(level, count, seed) {
   const random = randomSource(seed);
   const original = require("./solutions.js").layouts[level];
   const occupied = new Set(original.map(([, c, r]) => c + "," + r));
+  const emptyBoard = G.createState(level);
   const destinations = [];
   for (let c = 1; c < G.COLS - 1; c++) {
     for (let r = 0; r < G.ROWS; r++) {
-      if (!occupied.has(c + "," + r) && !G.isEntrance(level, c, r)) destinations.push([c, r]);
+      if (!occupied.has(c + "," + r) && !G.canBuild(emptyBoard, "wall", c, r)) destinations.push([c, r]);
     }
   }
   const indices = original.map((_, i) => i);

@@ -14,16 +14,21 @@
       <header class="hud">
         <h1><svg class="crest" viewBox="0 0 40 44" aria-hidden="true"><path d="m20 2 16 5v15c0 9-10 16-16 20C14 38 4 31 4 22V7Z" fill="#f7cf73" stroke="#143c32" stroke-width="2"/><path d="m20 6 12 4v12c0 6-6 12-12 16C14 34 8 28 8 22V10Z" fill="#477c5b"/><path d="M18 28C7 27 10 18 10 18q9-2 11 9C16 18 21 12 29 12c1 9-4 15-9 16l-1 5-3-1Z" fill="#ffe7a1"/></svg>小小守園隊</h1>
         <select id="level-select" aria-label="測試選關，切換會重設盤面" title="測試選關：切換會重設盤面"></select>
+        <button id="upgrade" aria-pressed="false" title="用一顆晶石升級一座塔或石牆" hidden><span data-icon="crystal"></span><span>升級 <b id="upgrade-count">0</b></span></button>
         <div class="resources">
-          <div class="heart-count" id="hearts" aria-label="小屋生命 5"><span data-icon="heart"></span><strong id="health">5</strong></div>
-          <div class="coin-count" id="coins" aria-label="可用金幣 48"><span data-icon="coin"></span><strong id="money">48</strong><span id="reward" aria-hidden="true" hidden></span></div>
+          <div class="heart-count" id="hearts" aria-label="城堡生命 5"><span data-icon="heart"></span><strong id="health">5</strong></div>
+          <div class="coin-count" id="coins" aria-label="可用金幣 48"><span data-icon="coin"></span><strong id="money">48</strong></div>
         </div>
       </header>
+      <div id="victory" hidden>
+        <strong><span data-icon="trophy"></span><span id="victory-title"></span></strong>
+        <span id="victory-loot" class="victory-loot"></span>
+      </div>
       <div class="board-scroll" id="board-scroll">
         <svg id="board" viewBox="0 0 920 592" role="group" aria-label="戰場。選好工具後點草地放置，或用方向鍵移動、Enter 放置。">
           <defs id="garden-art"></defs>
-          <g id="ground-layer"></g><g id="fire-layer" pointer-events="none" clip-path="url(#field-bounds)"></g><g id="range-layer" pointer-events="none"></g>
-          <g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
+          <g id="ground-layer"></g><g id="route-layer" pointer-events="none" aria-hidden="true"></g><g id="fire-layer" pointer-events="none" clip-path="url(#field-bounds)"></g><g id="range-layer" pointer-events="none"></g>
+          <g id="home-layer" pointer-events="none"></g><g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
           <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g><g id="health-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
         </svg>
@@ -42,6 +47,7 @@
     </div>
     <details class="display-settings">
       <summary>顯示設定</summary>
+      <label><input id="route-toggle" type="checkbox" checked autocomplete="off">顯示部署路線</label>
       <label><input id="enemy-health" type="checkbox" checked autocomplete="off">顯示本關怪物血量</label>
     </details>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
@@ -51,6 +57,7 @@
   <dialog id="result" aria-labelledby="result-title">
     <div class="result-illustration" id="result-art"></div>
     <h2 id="result-title">守住了！</h2>
+    <div id="win-crystal" class="victory-loot" hidden></div>
     <p id="bonus-invite" hidden></p>
     <div id="result-hearts" class="result-hearts"></div>
     <button id="result-primary" class="action-button">再玩一次</button>

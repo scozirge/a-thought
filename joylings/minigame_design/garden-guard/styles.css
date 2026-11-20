@@ -27,13 +27,25 @@ svg { display: block; }
 .hud h1 { white-space: nowrap; display: flex; gap: 10px; align-items: center; flex-shrink: 0; margin: 0; font-size: clamp(23px, 2.3vw, 32px); line-height: 1.25; letter-spacing: .08em; font-weight: 850; }
 .crest { width: 35px; height: 40px; }
 #level-select { min-height: 48px; max-width: 138px; padding: 6px 8px; color: #ffedbd; background: #234637; border: 1px solid #749069; border-radius: 9px; font-size: 18px; font-weight: 700; }
+#upgrade { display: inline-flex; gap: 5px; min-height: 48px; padding: 4px 12px; align-items: center; justify-content: center; border: 1.5px solid #dfb9ff; border-radius: 12px; background: #f3e6ff; color: #513466; font-weight: 750; white-space: nowrap; }
+#upgrade[hidden] { display: none; }
+#upgrade[aria-pressed="true"] { background: #745285; color: #fff; outline: 2px solid #efccff; }
+#upgrade-count { display: inline-grid; place-items: center; min-width: 1.4em; background: #ffffffad; color: #483156; border-radius: 6px; }
+#board.upgrade-mode .cell-hit.upgradable { fill: #d7b4ff30; stroke: #80539a; stroke-width: 2.8px; stroke-dasharray: 6 3; cursor: pointer; }
+.tower-info .next-upgrade { border-top: 1px solid #d8c8db; margin-top: 5px; padding-top: 4px; color: #67407a; }
 .resources { display: flex; gap: 9px; align-items: center; margin-left: auto; }
 .heart-count, .coin-count { display: flex; align-items: center; gap: 7px; padding: 2px 12px 3px 8px; min-width: 67px; background: #fff4d5; border: 1px solid #d8ba79; border-radius: 22px; box-shadow: 0 2px 0 #173b2d; }
 .heart-count { color: #8f2e3e; }
 .coin-count { color: #705020; position: relative; }
 .resources .icon { width: 27px; height: 27px; }
 .resources strong { font-size: 23px; font-weight: 800; font-variant-numeric: tabular-nums; }
-#reward { position: absolute; right: 0; top: 100%; z-index: 2; padding: 0 8px; border: 1px solid #cf9e46; border-radius: 8px; background: #ffe6a4; color: #6e4c1c; white-space: nowrap; font-size: 18px; font-weight: 750; }
+#victory { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 20px; padding: 7px 12px; color: #36583b; background: #fff1c4; border-bottom: 2px solid #d5b76b; }
+#victory strong, .victory-loot, .victory-loot > span { display: inline-flex; gap: 5px; align-items: center; }
+#victory strong { font-size: 22px; }
+.victory-loot { flex-wrap: wrap; justify-content: center; gap: 3px 14px; font-size: 18px; font-weight: 700; }
+#victory[hidden], .victory-loot[hidden] { display: none; }
+#win-crystal { margin-bottom: 12px; }
+.tower-info .last-damage { font-weight: 700; color: #684832; }
 .board-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #88986a #e4e7c7; }
 #board { width: 100%; min-width: 736px; aspect-ratio: 920 / 592; user-select: none; -webkit-user-select: none; background: #a6c37b url("garden.webp") center / 100% 100% no-repeat; }
 #bonus-invite { font-size: 18px; line-height: 1.5; margin: .25em 0; }
@@ -113,6 +125,12 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
   .hud h1 { font-size: 20px; letter-spacing: 0; }
   .crest { display: none; }
   #level-select { font-size: 18px; }
+}
+@media (max-width: 540px) {
+  .hud:has(#upgrade:not([hidden])) { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; }
+  .hud:has(#upgrade:not([hidden])) .resources { grid-row: 1; grid-column: 2; }
+  .hud:has(#upgrade:not([hidden])) #level-select { grid-row: 2; grid-column: 1; justify-self: start; }
+  #upgrade { grid-row: 2; grid-column: 2; justify-self: end; }
 }
 @media (max-width: 365px) {
   .hud { grid-template-columns: 1fr auto; }

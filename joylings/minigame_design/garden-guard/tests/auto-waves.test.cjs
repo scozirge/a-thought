@@ -29,7 +29,10 @@ test('依關卡間距出怪，後三關加入上、下方入口，開始只排�
     const before = JSON.stringify(s); advance(s, 20); assert.equal(JSON.stringify(s), before);
     G.startWave(s); assert.equal(s.queue.length, G.LEVELS[level].waves.flat().reduce((n,g) => n + g.count, 0));
     assert.ok(s.queue.every((e,i) => e.position.x === entries[i % entries.length].c && e.position.y === entries[i % entries.length].r));
-    assert.ok(entries.every(e=>e.side==='right' || (level>=7 && e.c>=5 && (e.r===0 || e.r===7))));
+    if (level === G.BONUS_LEVEL) {
+      assert.deepEqual(entries.map(e => e.side).sort(), ['bottom','left','right','top']);
+      assert.ok(G.previews(s).every(plan => G.isHome(level, plan.path.at(-1).c, plan.path.at(-1).r)));
+    } else assert.ok(entries.every(e=>e.side==='right' || (level>=7 && e.c>=5 && (e.r===0 || e.r===7))));
     const births = [], seen = new Set(), expected = s.queue.slice(0, Math.max(entries.length,3));
     for (let i = 0; i < 600 && births.length < expected.length; i++) {
       G.step(s, 1 / 60);
@@ -105,10 +108,11 @@ test('十關可用正常累積獎金連續通關，關間可退款重佈，保�
     for (const b of [...s.buildings]) if (b.kind !== 'wall' || b.hp < G.TOOLS[b.kind].hp) G.remove(s, b.c, b.r);
     deploy(s, layouts[level]); shared += s.buildings.filter(b => ids.has(b.id)).length;
     const money = s.money;
-    const entryRefund = level + 1 < G.BONUS_LEVEL ? s.buildings
-      .filter(b => G.isEntrance(level + 1, b.c, b.r)).reduce((sum,b) => sum+b.paidCost,0) : 0;
+    const invested = s.buildings.reduce((sum,b) => sum + b.paidCost, 0);
     G.startWave(s); finish(s);
-    assert.ok(s.hearts > 0, `第 ${level + 1} 關`); assert.equal(s.money, money + G.LEVELS[level].reward + entryRefund);
+    assert.ok(s.hearts > 0, `第 ${level + 1} 關`);
+    const survivingValue = s.buildings.reduce((sum,b) => sum + b.paidCost, 0);
+    assert.equal(s.money + survivingValue, money + invested + G.LEVELS[level].reward);
     assert.equal(s.phase, level === 9 ? 'won' : 'planning');
   }
   assert.ok(shared > 0); assert.equal(s.completed, true);
@@ -122,6 +126,8 @@ test('失敗重試回到當關部署，保留前關成果；不重領獎金也�
   assert.equal(s.phase, 'lost'); assert.equal(s.money, prepared.money);
   const before = JSON.stringify(s); advance(s, 100); assert.equal(JSON.stringify(s), before);
   const retry = G.retry(s); assert.equal(retry.level, 4); assert.equal(retry.phase, 'planning');
+  assert.equal(retry.buildings[0].lastDamage, 0);
+  prepared.buildings[0].lastDamage = 0;
   assert.deepEqual(G.snapshot(retry), prepared); assert.equal(retry.hearts, 5);
 });
 
@@ -149,7 +155,7 @@ test('預算內解答能完成混合防線，少建火力會降低通關數', ()
   assert.ok(wins[1] > wins[0], `舊預算通關 ${wins[0]}，新預算通關 ${wins[1]}`);
 });
 
-test('第五至十關的解答要靠牆延長路線，把相同數量的牆移到路外會失守', () => {
+test('第五至十關的解答要靠牆延長路線，同樣數量的牆若沒有延長路線就會失守', () => {
   for (let level = 4; level < G.BONUS_LEVEL; level++) {
     const full = G.createState(level), misplaced = G.createState(level);
     const layout = layouts[level];
@@ -162,16 +168,19 @@ test('第五至十關的解答要靠牆延長路線，把相同數量的牆移�
     assert.ok(long.every(route => !route.breaking));
     const gain = long.reduce((total, route, i) => total + route.path.length - short[i].path.length, 0);
     assert.ok(gain / long.length >= 4, `第 ${level+1} 關的石牆要延長地面路線`);
-    const occupiedRoutes = new Set(short.flatMap(route => route.path.map(p => G.key(p.c, p.r))));
+    const distances = short.map(route => route.path.length);
     let remaining = layout.filter(([kind]) => kind === 'wall').length;
     for (let r = 0; r < G.ROWS && remaining; r++) {
       for (let c = 1; c < G.COLS - 1 && remaining; c++) {
-        if (!occupiedRoutes.has(G.key(c,r)) && G.build(misplaced,'wall',c,r).ok) remaining--;
+        if (!G.build(misplaced,'wall',c,r).ok) continue;
+        // Several equally short routes may exist. Keep the wall only if every entrance still has one.
+        if (G.previews(misplaced).some((p, i) => p.breaking || p.path.length !== distances[i])) G.remove(misplaced,c,r);
+        else remaining--;
       }
     }
     assert.equal(remaining, 0);
     assert.equal(misplaced.money, full.money);
-    assert.deepEqual(G.previews(misplaced), short);
+    assert.deepEqual(G.previews(misplaced).map(p => p.path.length), distances);
     G.startWave(misplaced); finish(misplaced);
     assert.equal(misplaced.phase, 'lost', `第 ${level+1} 關亂擺牆不應過關`);
   }
@@ -191,25 +200,25 @@ test('舊存檔通過第十關即可解鎖，新開局與未過關的存檔仍�
   assert.equal(G.restore({ ...G.snapshot(G.createState(10)), bonusUnlocked: false }), null);
 });
 
-test('隱藏關只有一顆心，空盤失守後可重試，解答能守住三段攻勢', () => {
+test('隱藏關中央小屋有五顆心，空盤失守後可重試，解答能守住三段攻勢', () => {
   const s = G.createState(10);
   assert.equal(s.money, 250);
-  assert.equal(s.hearts, 1);
+  assert.equal(s.hearts, 5);
   G.startWave(s); finish(s);
   assert.equal(s.phase, 'lost');
-  assert.equal(G.retry(s).hearts, 1);
+  assert.equal(G.retry(s).hearts, 5);
   const challenge = require('../solutions.js').create(10);
   G.startWave(challenge); finish(challenge);
   assert.equal(challenge.wave, 2);
   assert.equal(challenge.phase, 'won');
-  assert.equal(challenge.hearts, 1);
+  assert.ok(challenge.hearts > 0 && challenge.hearts <= 5);
   assert.equal(G.restore(G.snapshot(challenge)).phase, 'won');
 });
 
-test('隱藏關打開關鍵牆口或撤掉雷射火力，這套解答就會失守', () => {
+test('隱藏關移除導引石牆或撤掉雷射火力，這套解答就會失守', () => {
   const answer = layouts[G.BONUS_LEVEL];
   const plans = [
-    answer.filter(([, c, r]) => c !== 6 || r !== 5),
+    answer.filter(([kind]) => kind !== 'wall'),
     answer.map(([kind, c, r]) => [kind === 'pierce' ? 'wall' : kind, c, r])
   ];
   for (const plan of plans) {
@@ -269,7 +278,7 @@ test('上版花完預算的無牆通關陣形守不住新版終關', () => {
   ];
   const state = G.createState(9);
   for (const placement of towers) assert.ok(G.build(state, ...placement).ok);
-  assert.equal(state.money, 0);
+  assert.equal(state.money, 4, '分子砲降價後多出四枚金幣');
   G.startWave(state);
   for (let tick = 0; state.phase === 'running' && tick < 14400; tick++) G.step(state, 1 / 60);
   assert.equal(state.phase, 'lost');
@@ -367,4 +376,42 @@ test('後期新增入口不能蓋塔，前關已蓋在新入口的建築全額�
   old.version=9;old.money=G.LEVELS[7].money-4;
   assert.equal(G.restore(old).money,G.LEVELS[7].money); assert.equal(G.restore(old).buildings.length,0);
   old.version=10;assert.equal(G.restore(old),null);
+});
+
+test('四面守園保護中央格，舊盤面搬家會退還原價與晶石且只退一次', () => {
+  const level=G.BONUS_LEVEL, s=G.createState(level), goal=G.LEVELS[level].goal;
+  assert.deepEqual(goal,{c:5,r:3});
+  assert.equal(G.build(s,'pea',5,3).ok,false);
+  const old=G.snapshot(s); old.version=13; old.hearts=1; old.money-=27;
+  old.buildings=[
+    {kind:'molecular',c:5,r:3,hp:5,paidCost:22,upgraded:true,lastDamage:30},
+    {kind:'pea',c:5,r:7,hp:5,paidCost:5,upgraded:false,lastDamage:1}
+  ];
+  const migrated=G.restore(old);
+  assert.equal(migrated.hearts,5); assert.equal(migrated.money,250);
+  assert.equal(migrated.upgradeItems,1); assert.equal(migrated.buildings.length,0);
+  assert.equal(G.restore(G.snapshot(migrated)).money,250);
+  s.phase='running';
+  for (const entry of G.entrances(level)) G.spawn(s,'flyer',5,entry.r,{x:entry.c,y:entry.r});
+  let homeHits=0;
+  while(s.phase==='running') {
+    const hearts=s.hearts; G.step(s,1/60);
+    if(s.hearts<hearts) {
+      const impact=s.effects.find(e=>e.kind==='home' && e.x===goal.c && e.y===goal.r);
+      assert.ok(impact);homeHits+=hearts-s.hearts;
+    }
+  }
+  assert.equal(homeHits,4);assert.equal(s.hearts,1);assert.equal(s.phase,'won');
+});
+
+test('中央關跳蟲從四面都朝小屋跳，擊退讓飛蟲遠離中央', () => {
+  const lvl=G.BONUS_LEVEL, {c,r}=G.LEVELS[lvl].goal;
+  for(const entry of G.entrances(lvl)) {
+    const s=G.createState(lvl);
+    const bug=G.spawn(s,'hopper',10,entry.r,{x:entry.c,y:entry.r});
+    const land=G.jumpLanding(s,bug);
+    assert.ok(Math.hypot(land.c-c,land.r-r)<Math.hypot(bug.x-c,bug.y-r));
+  }
+  const s=G.createState(lvl), fly=G.spawn(s,'flyer',10,r,{x:c-2,y:r});
+  G.pushEnemy(s,fly);assert.ok(Math.hypot(fly.push.x-c,fly.push.y-r)>2);
 });

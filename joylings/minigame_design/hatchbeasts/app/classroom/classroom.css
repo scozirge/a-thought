@@ -298,12 +298,12 @@ details.lesson-review-action > summary {
   margin-left: auto;
   cursor: pointer;
 }
-.sixth-course, .seventh-course, .eighth-course, .ninth-course { margin: 28px 0; scroll-margin-top: 24px; }
-.sixth-course h2, .seventh-course h2, .eighth-course h2, .ninth-course h2 { font-size: 28px; margin-bottom: 18px; }
+.sixth-course, .seventh-course, .eighth-course, .ninth-course, .tenth-course { margin: 28px 0; scroll-margin-top: 24px; }
+.sixth-course h2, .seventh-course h2, .eighth-course h2, .ninth-course h2, .tenth-course h2 { font-size: 28px; margin-bottom: 18px; }
 .sixth-game-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 18px; }
-.sixth-game-choices .unit-meta, .ninth-course .unit-meta { font-size: 18px; line-height: 1.6; }
+.sixth-game-choices .unit-meta, .ninth-course .unit-meta, .tenth-course .unit-meta { font-size: 18px; line-height: 1.6; }
 .sixth-game-copy { display: grid; gap: 6px; min-width: 0; }
-.sixth-course .catalog-question-context, .seventh-course .catalog-question-context, .eighth-course .catalog-question-context, .ninth-course .catalog-question-context { font-size: 18px; line-height: 1.7; }
+.sixth-course .catalog-question-context, .seventh-course .catalog-question-context, .eighth-course .catalog-question-context, .ninth-course .catalog-question-context, .tenth-course .catalog-question-context { font-size: 18px; line-height: 1.7; }
 #eighth-course-retrospective .catalog-question-context { font-size: 18px; line-height: 1.8; }
 #eighth-course-retrospective > summary { font-size: 18px; }
 @media (max-width: 640px) { .sixth-game-choices { grid-template-columns: 1fr; } }

@@ -17,7 +17,8 @@ function sample(queue, kind, support) {
   if(support) for(const [c,r] of [[5,4],[3,4]]) G.build(s,'pea',c,r);
   // A straight lane is the piercing tower's intended placement advantage.
   if(kind) G.build(s,kind,kind==='pierce'?1:6,kind==='pierce'?3:4);
-  G.startWave(s); s.queue=queue.map(e=>({...e})); let escaped=0;
+  G.startWave(s); s.castle=null; // Isolate purchased towers from the castle in these damage samples.
+  s.queue=queue.map(e=>({...e})); let escaped=0;
   for(let i=0;i<18000 && s.phase==='running';i++) {
     const existing=[...s.enemies]; G.step(s,1/60);
     for(const e of existing) if(e.dead&&e.hp>0) escaped+=e.hp;
