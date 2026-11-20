@@ -98,8 +98,7 @@
   function clearReservedBuildings(state) {
     const blocked = state.buildings.filter(b => isEntrance(state.level, b.c, b.r) || isHome(state.level, b.c, b.r));
     if (!blocked.length) return;
-    state.upgradeItems += blocked.filter(b => b.upgraded).length;
-    state.money += blocked.reduce((sum, b) => sum + b.paidCost, 0);
+    for (const building of blocked) refundBuilding(state, building);
     state.buildings = state.buildings.filter(b => !blocked.includes(b));
     state.revision++;
   }
@@ -153,7 +152,7 @@
   function createState(level = 0) {
     level = Number.isInteger(level) && LEVELS[level] ? level : 0;
     return {
-      level, wave: 0, phase: 'planning', upgradeItems: 0, money: LEVELS[level].money, hearts: LEVELS[level].hearts, bonusUnlocked: level === BONUS_LEVEL, completed: false, lastReward: 0,
+      level, wave: 0, phase: 'planning', upgradeItems: level, money: LEVELS[level].money, hearts: LEVELS[level].hearts, bonusUnlocked: level === BONUS_LEVEL, completed: false, lastReward: 0,
       castle: null, buildings: [], enemies: [], shots: [], effects: [], fires: [], queue: [], spawnClock: 0,
       time: 0, revision: 0, nextId: 1, rngState: stageSeed(level), undo: [], checkpoint: null,
       stats: { hits: 0, blocked: 0, defeated: 0, broken: 0, hatched: 0, split: 0, jumped: 0 }, waveStats: { hits: 0, blocked: 0, damageByTower: {} }
@@ -193,13 +192,16 @@
     state.revision++;
     return { ok: true };
   }
+  function refundBuilding(state, building) {
+    state.money += building.paidCost;
+    if (building.upgraded) state.upgradeItems++;
+  }
   function remove(state, c, r) {
     if (state.phase !== 'planning') return { ok: false, error: '開始後不能移除' };
     const building = at(state, c, r);
     if (!building) return { ok: false, error: '點選要移走的物品' };
     remember(state);
-    state.money += building.paidCost;
-    if (building.upgraded) state.upgradeItems++;
+    refundBuilding(state, building);
     state.buildings = state.buildings.filter(b => b.id !== building.id);
     state.revision++;
     return { ok: true };
@@ -211,11 +213,11 @@
     return true;
   }
   function snapshot(state) {
-    return { version: 14, lastReward: state.lastReward, upgradeItems: state.upgradeItems, bonusUnlocked: state.bonusUnlocked, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
+    return { version: 15, lastReward: state.lastReward, upgradeItems: state.upgradeItems, bonusUnlocked: state.bonusUnlocked, level: state.level, wave: 0, completed: state.completed, money: state.money, hearts: state.hearts, rngState: state.rngState,
       buildings: clone(state.buildings), stats: clone(state.stats) };
   }
   function restore(data) {
-    if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].includes(data.version) || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
+    if (!data || !Number.isInteger(data.version) || data.version < 1 || data.version > 15 || !Number.isInteger(data.level) || !LEVELS[data.level]) return null;
     if (data.level === BONUS_LEVEL && (data.version < 11 || data.bonusUnlocked !== true)) return null;
     if (data.version < 6 && data.level > 2) return null;
     if (!Number.isInteger(data.wave) || data.wave < 0 || data.wave >= (data.version < 6 ? 4 : 1)) return null;
@@ -242,7 +244,10 @@
       used.add(key(b.c, b.r));
       state.buildings.push({ id: state.nextId++, kind: b.kind, c: b.c, r: b.r, upgraded: data.version >= 12 && b.upgraded, paidCost, hp: b.hp, lastDamage, cooldown: 0, aim: null, angle: -25, flash: 0 });
     }
-    if (state.upgradeItems + state.buildings.filter(b => b.upgraded).length > earned) return null;
+    const available = earned - state.buildings.filter(b => b.upgraded).length;
+    if (state.upgradeItems > available || (data.version >= 15 && state.upgradeItems !== available)) return null;
+    // Older mid-campaign starts and destroyed towers could leave crystals unaccounted for.
+    state.upgradeItems = available;
     if (data.completed) state.lastReward = LEVELS[data.level].reward;
     else if (data.level > 0 && data.lastReward === LEVELS[data.level - 1].reward) state.lastReward = data.lastReward;
     // A loaded deployment starts with a full home, including older saves.
@@ -709,7 +714,7 @@
           effect(state, 'chip', obstacle.c, obstacle.r);
           if (obstacle.hp <= 0) {
             state.buildings = state.buildings.filter(b => b.id !== obstacle.id);
-            state.money += obstacle.paidCost;
+            refundBuilding(state, obstacle);
             state.stats.broken++; state.revision++;
           }
         }

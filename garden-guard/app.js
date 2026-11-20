@@ -510,7 +510,7 @@
     else {
       if (selected === 'upgrade') {
         const building = G.at(state, c, r);
-        $('status').textContent = `已升級為${G.toolFor(building.kind, true).name}`;
+        $('status').textContent = `已升級為${G.toolFor(building.kind, true).name}，剩 ${state.upgradeItems} 顆晶石`;
         showCellInfo($('hit-layer').querySelector(`[data-c="${c}"][data-r="${r}"]`));
         if (!state.upgradeItems) selected = building.kind;
       } else $('status').textContent = '';
@@ -564,7 +564,6 @@
     solution.hidden = false;
     solution.addEventListener('click', () => {
       const demo = window.GardenSolutions.create(state.level);
-      demo.upgradeItems = Math.min(state.level, state.upgradeItems + state.buildings.filter(b => b.upgraded).length);
       loadLevel(state.level, demo);
       $('status').textContent = '已重設本關並放上解答，按開始出怪';
     });
@@ -616,9 +615,7 @@
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
     else if (state.level === G.BONUS_LEVEL - 1) {
-      const bonus = G.createState(G.BONUS_LEVEL);
-      bonus.upgradeItems = state.upgradeItems + state.buildings.filter(b => b.upgraded).length;
-      loadLevel(G.BONUS_LEVEL, bonus);
+      loadLevel(G.BONUS_LEVEL);
     } else loadLevel(0);
   });
   $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else $('result').close(); });
