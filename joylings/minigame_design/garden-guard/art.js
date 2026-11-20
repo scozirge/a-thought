@@ -351,6 +351,45 @@
     const flare = pulse > 0 && style.light ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
     return shot(kind, x, y, Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI, t, upgraded) + flare;
   }
+  function plasmaArc(x, y, tx, ty, age, hop, reducedMotion) {
+    // Each pulse arrives just as the next link launches.
+    const flightTime = .22, afterglow = .32;
+    const localAge = age - hop * flightTime;
+    if (localAge < 0 || localAge >= flightTime + afterglow) return '';
+    const dx = tx - x, dy = ty - y, length = Math.hypot(dx, dy);
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    const bend = Math.min(19, length * .24) * (hop % 2 ? 1 : -1);
+    const size = 1 - hop * .16;
+    const t = Math.min(1, localAge / flightTime);
+    const decay = Math.max(0, (localAge - flightTime) / afterglow);
+    const opacity = 1 - decay;
+    // The core and both edges of its ribbon share the same quadratic curve.
+    const atY = u => 4 * bend * u * (1 - u);
+    const tail = Math.max(0, t - .52) + decay * .52;
+    const hx = length * t, hy = atY(t), sx = length * tail, sy = atY(tail);
+    const cx = (sx + hx) / 2, cy = sy + 2 * bend * (1 - 2 * tail) * (t - tail);
+    const width = Math.min(length * .16, 8 * size) * opacity;
+    const track = `M0 0 Q${hx / 2} ${2 * bend * t} ${hx} ${hy}`;
+    const ring = 4 + 17 * (1 - opacity ** 2);
+    let light;
+    if (reducedMotion) {
+      light = `<path d="M0 0 Q${length / 2} ${2 * bend} ${length} 0" fill="none" stroke="#8055ad" stroke-width="${2.5 * size}"/>
+        <circle cx="${length}" r="${5 * size}" fill="#d8f6ff" stroke="#7950a5" stroke-width="1.6"/>`;
+    } else {
+      const trail = length < 1 ? '' : `<path d="${track}" fill="none" stroke="#714caa" stroke-width="${4 * size}" stroke-opacity=".65"/>
+        <path d="${track}" fill="none" stroke="#e4c5ff" stroke-width="${1.7 * size}"/>
+        <path d="M${sx} ${sy} Q${cx} ${cy - width} ${hx} ${hy} Q${cx} ${cy + width} ${sx} ${sy}Z" fill="#a9e9ff" stroke="#9986f0" stroke-width=".8"/>`;
+      const pulse = t < 1 ? `<g transform="translate(${hx} ${hy}) scale(${size})">
+        <circle r="16" fill="url(#art-chain-glow)"/><circle r="6.5" fill="url(#art-plasma-core)" stroke="#7950ac" stroke-width="1.2"/>
+        <g transform="rotate(${-36 + 60 * t})"><ellipse rx="9" ry="3.3" fill="none" stroke="#ede4ff" stroke-width="1.2"/><circle cx="9" r="1.7" fill="#faf5ff"/></g>
+        <circle cx="-1.3" cy="-1.5" r="2" fill="#fff"/></g>` : `<g class="plasma-contact" transform="translate(${length} 0) scale(${size})">
+        <circle r="${ring}" fill="none" stroke="#8354ae" stroke-width="3"/><circle r="${ring}" fill="none" stroke="#e5e8ff" stroke-width="1.4"/>
+        <g transform="rotate(24)" fill="#d6f9ff" stroke="#9668c3" stroke-width="1">${[0,120,240].map(a => `<path transform="rotate(${a}) translate(${ring + 1} 0) scale(${opacity})" d="M-4 0 1-2 7 0 1 2Z"/>`).join('')}</g>
+        <path transform="scale(${opacity ** 2})" d="M-8 0-2-2 0-9 2-2 8 0 2 2 0 9-2 2Z" fill="#f4ffff"/></g>`;
+      light = trail + pulse;
+    }
+    return `<g class="plasma-arc" data-hop="${hop}" transform="translate(${x} ${y}) rotate(${angle})" opacity="${opacity}" stroke-linecap="round">${light}</g>`;
+  }
   function laser(angle, length, t, hitDistances, flash, upgraded = false) {
     const recoil = recoilOffset('pierce', flash);
     const start = laserLensX - recoil;
@@ -409,6 +448,7 @@
     const coldShell = '<filter id="art-cold-shell" color-interpolation-filters="sRGB"><feColorMatrix values=".065 .16 .025 0 .025  .15 .48 .07 0 .125  .18 .59 .08 0 .27  0 0 0 1 0"/></filter>';
     const energy = `<radialGradient id="art-warm-soil"><stop stop-color="#fd7449" stop-opacity=".84"/><stop offset=".53" stop-color="#e64936" stop-opacity=".79"/><stop offset=".83" stop-color="#cb3f33" stop-opacity=".43"/><stop offset="1" stop-color="#bc443c" stop-opacity="0"/></radialGradient>
       <radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
+      <radialGradient id="art-chain-glow"><stop offset="0" stop-color="#efffff"/><stop offset=".47" stop-color="#a7cfff" stop-opacity=".85"/><stop offset="1" stop-color="#a56df2" stop-opacity="0"/></radialGradient>
       <radialGradient id="art-fireball-core"><stop offset="0" stop-color="#ffffc3"/><stop offset=".55" stop-color="#ffda58"/><stop offset="1" stop-color="#f86f21"/></radialGradient>`;
     return energy + coldShell + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
   }
@@ -482,5 +522,5 @@
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
-  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, castle: () => ref('castle') + `<g transform="translate(0 -13)">${ref('castleBow', 'id="castle-bow"')}</g>` };
+  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, plasmaArc, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, castle: () => ref('castle') + `<g transform="translate(0 -13)">${ref('castleBow', 'id="castle-bow"')}</g>` };
 })();

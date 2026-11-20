@@ -11,7 +11,7 @@
     "balance:opening": "node route-balance.cjs --all-opening",
     "start": "node serve.cjs",
     "test": "node --test tests/core.test.cjs tests/towers.test.cjs tests/enemies.test.cjs tests/auto-waves.test.cjs",
-    "test:browser": "node tests/browser.cjs && node tests/enemies.browser.cjs && node tests/controls.browser.cjs && node tests/auto-waves.browser.cjs && node tests/solutions.browser.cjs",
+    "test:browser": "node tests/browser.cjs && node tests/viewport.browser.cjs && node tests/enemies.browser.cjs && node tests/controls.browser.cjs && node tests/auto-waves.browser.cjs && node tests/solutions.browser.cjs",
     "test:controls": "node tests/controls.browser.cjs",
     "test:auto-waves": "node tests/auto-waves.browser.cjs",
     "test:published": "node tests/published.cjs",

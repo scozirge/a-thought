@@ -13,8 +13,9 @@ const out = path.join(__dirname, '../dist/browser-check');
   p.on('pageerror',e=>errors.push(e.message));
   const read=()=>p.evaluate(()=>gardenDebug.getState());
   const press=selector=>p.locator(selector).dispatchEvent('click');
-  const prepare=async kind=>{
+  const prepare=async (kind, upgraded = false)=>{
     const s=G.createState(2); assert.equal(G.build(s,kind,9,6).ok,true);
+    if (upgraded) assert.ok(G.upgrade(s,9,6).ok);
     await p.evaluate(data=>{
       if(gardenDebug.getState().phase==='running')document.querySelector('#action').click();
       localStorage.setItem('garden-guard-v1',JSON.stringify(data));
@@ -29,6 +30,21 @@ const out = path.join(__dirname, '../dist/browser-check');
           if (started) {
             state.queue = [];
             for (const x of [8, 8.1]) Garden.spawn(state, 'bug', 4, 5, {x, y:5});
+          }
+          return started;
+        };
+      });
+    }
+    if (upgraded && kind === 'molecular') {
+      await p.evaluate(() => {
+        const start = Garden.startWave;
+        Garden.startWave = state => {
+          const started = start(state);
+          if (started) {
+            state.queue = [];
+            for (const [kind, hp, x, y] of [['giant',90,7,5], ['shield',50,8,3], ['flyer',40,10,4], ['bug',30,11,2]]) {
+              Garden.spawn(state, kind, hp, y, {x, y});
+            }
           }
           return started;
         };
@@ -111,6 +127,29 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await p.locator('#tower-info .info-target').textContent(),'目標 地');
     await p.locator('[data-tool="pierce"]').focus(); assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 1'));
     assert.ok((await p.locator('#tower-info').innerText()).includes('攻擊 0.8次/s'));
+    await prepare('molecular', true);
+    const arc = hop => p.locator(`.plasma-arc[data-hop="${hop}"]`);
+    for (let i = 0; i < 130 && !await arc(0).count(); i++) await p.clock.runFor(32);
+    assert.ok(await arc(0).isVisible());
+    assert.equal(await arc(1).count(), 0);
+    assert.deepEqual((await read()).effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [9,3,1]);
+    for (let hop = 1; hop <= 2; hop++) {
+      for (let i = 0; i < 10 && !await arc(hop).count(); i++) await p.clock.runFor(24);
+      assert.ok(await arc(hop).isVisible());
+      assert.ok(await arc(hop - 1).locator('.plasma-contact').isVisible(), '上一跳抵達才傳出下一跳');
+    }
+    await press('#action');
+    const links = await p.locator('#effects-layer').innerHTML();
+    await p.clock.runFor(1000);
+    assert.equal(await p.locator('#effects-layer').innerHTML(), links);
+    await p.emulateMedia({reducedMotion:'reduce'});
+    await press('#action');
+    await p.clock.runFor(32);
+    assert.ok(await arc(2).isVisible(), '減少動態時仍顯示連鎖目標');
+    assert.equal(await arc(2).locator('[fill="url(#art-chain-glow)"]').count(), 0);
+    await p.clock.runFor(800);
+    assert.equal(await p.locator('.plasma-arc').count(), 0);
+    await p.emulateMedia({reducedMotion:'no-preference'});
     await prepare('pierce');
     for (let i = 0; i < 40 && !await p.locator('.laser-beam').count(); i++) await p.clock.runFor(50);
     await press('#action');

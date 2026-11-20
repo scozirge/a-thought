@@ -111,7 +111,7 @@ const out = path.join(__dirname, '../dist/browser-check');
       const controls = await phone.locator('.control-panel').boundingBox();
       for (const item of await phone.locator('.display-settings label').all()) {
         const label = await item.boundingBox();
-        assert.ok(label.y >= 0 && label.y + label.height <= controls.y, '展開後的設定應位於固定工具列上方');
+        assert.ok(label.y >= 0 && label.y + label.height <= controls.y, '直向開啟顯示設定時能直接點選兩項設定');
       }
       const checked = await hpSetting.isChecked();
       await hpSetting.tap();
