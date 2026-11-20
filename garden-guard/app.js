@@ -3,13 +3,15 @@
   const G = window.Garden, A = window.GardenArt;
   const $ = id => document.getElementById(id);
   const S = 64, OX = 76, OY = 40, X = c => OX + (c + 0.5) * S, Y = r => OY + (r + 0.5) * S;
-  const houseX = 38, houseY = Y(G.GOAL.r);
+  const castleX = () => X(G.LEVELS[state.level].goal.c);
+  const castleY = () => Y(G.LEVELS[state.level].goal.r);
+  const castleScale = () => state.level === G.BONUS_LEVEL ? .78 : 1;
   const STORAGE = 'garden-guard-v1';
   const UNLOCK = 'garden-guard-bonus-unlocked';
   const BATTLE_SPEED = G.BATTLE_SPEED;
-  const enemyHealth = $('enemy-health');
+  const enemyHealth = $('enemy-health'), showRoutes = $('route-toggle');
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
-  let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0, rewardTimer = 0;
+  let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
   let finishAge = null, resultAfterHeart = false, frameId = null;
   let infoAnchor = null, infoTimer = 0, unlockSaved = false;
   try {
@@ -17,6 +19,7 @@
     const saved = G.restore(data);
     if (saved) {
       state = saved;
+      showRoutes.checked = data.showRoutes !== false;
       enemyHealth.checked = typeof data.showEnemyHealth === 'boolean' ? data.showEnemyHealth : state.level === 0;
     }
     unlockSaved = localStorage.getItem(UNLOCK) === '1';
@@ -33,13 +36,14 @@
     infoAnchor?.removeAttribute('aria-describedby'); infoAnchor = null;
   }
   function deferHideInfo() { clearTimeout(infoTimer); infoTimer = setTimeout(hideInfo, 140); }
-  function showInfo(kind, anchor) {
-    const tool = G.TOOLS[kind];
-    if (!tool?.rate) { hideInfo(); return; }
+  function showInfo(kind, anchor, upgraded = false, building = null) {
+    const tool = G.toolFor(kind, upgraded), next = G.toolFor(kind, true);
+    if (!tool || (!tool.rate && !state.upgradeItems && !building)) { hideInfo(); return; }
     hideInfo(); infoAnchor = anchor;
     const info = $('tower-info');
     info.dataset.kind = kind;
-    info.innerHTML = `<strong>${tool.name}</strong><p>傷害 ${tool.damage}${tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : ''}</p><p>攻擊 ${tool.rate}次/s</p><p class="info-target">目標 ${tool.targets.map(t => t === 'ground' ? '地' : '空').join('/')}</p><p class="info-effect">${tool.effect}</p>`;
+    const stats = tool.rate ? `<p>傷害 ${tool.damage}${tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : ''}</p><p>攻擊 ${tool.rate}次/s</p><p class="info-target">目標 ${tool.targets.map(t => t === 'ground' ? '地' : '空').join('/')}</p><p class="info-effect">${tool.effect}</p>` : '<p>擋住去路，引導蟲群繞行。</p>';
+    info.innerHTML = `<strong>${tool.name}</strong>${building ? `<p class="last-damage">${building.lastDamage == null ? '尚無上局傷害紀錄' : `上局傷害 ${building.lastDamage} 點`}</p>` : ''}${stats}${next && !upgraded && state.upgradeItems ? `<p class="next-upgrade">升級為${next.name}<br>${next.effect}</p>` : ''}`;
     info.hidden = false; anchor.setAttribute('aria-describedby', 'tower-info');
     const zoom = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
     const rect = anchor.getBoundingClientRect(), box = info.getBoundingClientRect();
@@ -50,8 +54,10 @@
     info.style.left = `${left}px`; info.style.top = `${Math.max(8, Math.min(vh - h - 8, top))}px`;
   }
   function showCellInfo(cell) {
-    const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
-    if (b) showInfo(b.kind, cell); else hideInfo();
+    const c = +cell.dataset.c, r = +cell.dataset.r, b = G.at(state, c, r);
+    if (b) showInfo(b.kind, cell, b.upgraded, b);
+    else if (G.isHome(state.level, c, r)) showInfo('castle', cell);
+    else hideInfo();
   }
   function repositionInfo() {
     if (!infoAnchor) return;
@@ -68,7 +74,7 @@
         localStorage.setItem(UNLOCK, '1');
         unlockSaved = true;
       }
-      localStorage.setItem(STORAGE, JSON.stringify({ ...data, showEnemyHealth: enemyHealth.checked }));
+      localStorage.setItem(STORAGE, JSON.stringify({ ...data, showRoutes: showRoutes.checked, showEnemyHealth: enemyHealth.checked }));
     } catch {}
   }
   function feedback(text, c, r) {
@@ -87,7 +93,7 @@
     for (let r = 0; r < G.ROWS; r++) {
       hits += '<g role="row">';
       for (let c = 0; c < G.COLS; c++) {
-        const x = X(c), y = Y(r), reserved = c === 0 || c === G.COLS - 1 || G.isEntrance(state.level, c, r) || solid.has(G.key(c, r));
+        const x = X(c), y = Y(r), reserved = c === 0 || c === G.COLS - 1 || G.isEntrance(state.level, c, r) || G.isHome(state.level, c, r) || solid.has(G.key(c, r));
         const turf = reserved ? '#ecdfac' : (c + r) % 2 ? '#c6dea3' : '#def0be';
         s += `<rect x="${x - 31.5}" y="${y - 31.5}" width="63" height="63" rx="4" fill="${turf}" fill-opacity=".8"/>`;
         if ((c * 3 + r) % 7 === 0) s += `<path d="M${x + 16} ${y + 23}l-3-4m4 4 1-6m1 6 3-3" stroke="#7c9e5c" opacity=".32" stroke-width="1.5" stroke-linecap="round"/>`;
@@ -106,12 +112,12 @@
       }
       hits += '</g>';
     }
-    s += `<g transform="translate(${houseX} ${houseY})">
-      <path d="M27 2q6-4 13-1m5-2 9-1" stroke="#c7ae79" stroke-width="6" stroke-linecap="round"/>
-      ${A.house()}</g>`;
+    $('home-layer').innerHTML = `<g class="garden-home" transform="translate(${castleX()} ${castleY()}) scale(${castleScale()})">${A.castle()}</g>`;
     for (const entry of G.entrances(state.level)) {
-      const x = entry.side === 'right' ? 877 : X(entry.c), y = entry.side === 'right' ? Y(entry.r) : entry.side === 'top' ? 19 : 573;
-      const angle = entry.side === 'top' ? -90 : entry.side === 'bottom' ? 90 : 0;
+      const horizontal = entry.side === 'left' || entry.side === 'right';
+      const x = horizontal ? (entry.side === 'right' ? 877 : 38) : X(entry.c);
+      const y = horizontal ? Y(entry.r) : entry.side === 'top' ? 19 : 573;
+      const angle = { left: 180, right: 0, top: -90, bottom: 90 }[entry.side];
       s += `<g class="entrance" data-side="${entry.side}" data-c="${entry.c}" data-r="${entry.r}" transform="translate(${x} ${y}) rotate(${angle})" stroke-linejoin="round">
       <path d="M2 2h5v23H2Z" fill="#926c42" stroke="#5f5436" stroke-width="1.8"/>
       <path d="m-18 0 9-10h23v20H-9Z" fill="#ffe4a2" stroke="#715a38" stroke-width="2.4"/>
@@ -119,14 +125,40 @@
     }
     $('ground-layer').innerHTML = s; $('hit-layer').innerHTML = hits;
   }
+  function drawRoutes() {
+    const layer = $('route-layer');
+    if (state.phase !== 'planning' || !showRoutes.checked) { layer.replaceChildren(); return; }
+    const segments = new Map(), fliers = new Map();
+    for (const plan of G.previews(state)) {
+      for (let i = 1; i < plan.path.length; i++) {
+        const a = plan.path[i - 1], b = plan.path[i];
+        const key = `${a.c},${a.r}/${b.c},${b.r}`;
+        // Shared sections need just one line, even when several entrances merge.
+        if (!segments.has(key) || !plan.breaking) segments.set(key, { a, b, breaking: plan.breaking });
+      }
+    }
+    for (const item of G.spawnQueue(state.level)) {
+      if (G.ENEMIES[item.kind].airborne) fliers.set(G.key(item.position.x, item.position.y), item.position);
+    }
+    const air = [...fliers.values()].map(p => `M${X(p.x)} ${Y(p.y)} L${X(G.LEVELS[state.level].goal.c)} ${Y(G.LEVELS[state.level].goal.r)}`).join(' ');
+    const ground = [...segments.values()].map(({a, b, breaking}) => {
+      const x = X(a.c), y = Y(a.r), dx = X(b.c) - x, dy = Y(b.r) - y;
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      const color = breaking ? '#a56137' : '#527b49';
+      return `<g class="ground-route" transform="translate(${x} ${y}) rotate(${angle})" stroke="${color}"><path d="M0 0h${S}" stroke-width="2.5" stroke-dasharray="3 5"/><path d="m27-3 5 3-5 3" stroke-width="2.4" stroke-linejoin="round"/></g>`;
+    }).join('');
+    layer.innerHTML = `<g fill="none" stroke-linecap="round" opacity=".73">${ground}${air ? `<path class="air-route" d="${air}" stroke="#417c99" opacity=".65" stroke-width="2" stroke-dasharray="8 7"/>` : ''}</g>`;
+  }
   function selection() {
     $('hover-layer').innerHTML = ''; $('range-layer').innerHTML = '';
     if (!hover) return;
     const x = X(hover.c), y = Y(hover.r), existing = G.at(state, hover.c, hover.r);
-    const kind = existing ? existing.kind : selected;
-    if (kind && G.TOOLS[kind]?.range) $('range-layer').innerHTML = `<circle cx="${x}" cy="${y}" r="${G.TOOLS[kind].range * S}" fill="${G.TOOLS[kind].color}" fill-opacity=".065" stroke="${G.TOOLS[kind].color}" stroke-width="2" stroke-opacity=".42" stroke-dasharray="5 6"/>`;
-    if (state.phase !== 'planning') return;
-    const valid = selected === 'remove' ? !!existing : selected && !G.canBuild(state, selected, hover.c, hover.r);
+    const home = G.isHome(state.level, hover.c, hover.r);
+    const kind = home ? 'castle' : existing?.kind ?? selected;
+    const tool = G.toolFor(kind, existing?.upgraded || (existing && selected === 'upgrade'));
+    if (tool?.range) $('range-layer').innerHTML = `<circle cx="${x}" cy="${y}" r="${tool.range * S}" fill="${tool.color}" fill-opacity=".065" stroke="${tool.color}" stroke-width="2" stroke-opacity=".42" stroke-dasharray="5 6"/>`;
+    if (home || state.phase !== 'planning') return;
+    const valid = selected === 'upgrade' ? existing && !existing.upgraded && state.upgradeItems > 0 : selected === 'remove' ? !!existing : selected && !G.canBuild(state, selected, hover.c, hover.r);
     const color = selected === 'remove' ? '#bb8967' : existing || valid ? '#7c9b6b' : '#c38c75';
     $('hover-layer').innerHTML = `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="8" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="2.5"/>${valid && selected !== 'remove' && !existing ? `<g transform="translate(${x} ${y})" opacity=".5">${A.tower(selected)}</g>` : ''}`;
   }
@@ -139,10 +171,17 @@
   function updateEnemy(view, enemy, showHealth) {
     const time = state.time + enemy.id, slow = enemy.slow > 0;
     const hp = showHealth ? enemy.hp : null;
-    const appearance = [hp, slow, enemy.flash > 0, enemy.shieldFlash > 0].join('/');
+    const burning = enemy.burnTicks > 0, stunned = enemy.stun > 1e-9 && !enemy.push, shocked = enemy.shock > 1e-9;
+    const appearance = [hp, slow, burning, stunned, shocked, enemy.flash > 0, enemy.shieldFlash > 0].join('/');
     if (view.appearance !== appearance) {
       const node = view.node;
       node.innerHTML = A.bug(enemy.kind, hp, time, enemy.flash, enemy.shieldFlash, slow, view.labelId, enemy.maxHp);
+      if (burning || shocked || stunned) {
+        node.insertAdjacentHTML('beforeend', `<g class="bug-status">
+          ${burning ? '<use href="#art-firePatch" transform="translate(13 -9) scale(.44)"/>' : ''}
+          ${shocked ? '<path d="m-22-12 7-5-1 8 7-3m18 21 6-9 1 6 6-5" fill="none" stroke="#315f88" stroke-width="4.5"/><path d="m-22-12 7-5-1 8 7-3m18 21 6-9 1 6 6-5" fill="none" stroke="#befbff" stroke-width="2.2"/>' : ''}
+          ${stunned ? '<g stroke="#a17533" fill="#ffe795" stroke-width="1.2"><path d="m-11-19 1-4 3 3 4 1-4 2-2 4-1-4-4-1Zm17-3 2-4 2 3 4 2-4 1-2 4-1-4-4-2Z"/></g>' : ''}</g>`);
+      }
       view.legs = node.querySelector('.bug-legs');
       view.wings = node.querySelector('.bug-wings');
       view.jaws = enemy.kind === 'giant' ? node.querySelectorAll('use[href="#art-stagJaw"]') : null;
@@ -233,7 +272,7 @@
       buildingViews = state.buildings.map(b => {
         const node = svg('g');
         node.setAttribute('transform', `translate(${X(b.c)} ${Y(b.r)})`);
-        node.dataset.building = b.kind; node.dataset.c = b.c; node.dataset.r = b.r;
+        node.dataset.upgraded = b.upgraded; node.dataset.building = b.kind; node.dataset.c = b.c; node.dataset.r = b.r;
         return { building: b, node };
       });
       $('building-layer').replaceChildren(...buildingViews.map(view => view.node));
@@ -245,17 +284,18 @@
       view.angle = angle; view.flash = flash; view.charge = charge; view.hp = b.hp;
       const hp = G.TOOLS[b.kind].hp;
       const damage = b.hp < hp ? `<path d="M-6-12 0-3-5 7 4 18" fill="none" stroke="#7d6253" stroke-width="2"/><g transform="translate(${-hp * 4} 29)">${Array.from({ length: hp }, (_, i) => `<circle cx="${i * 8}" r="2.5" fill="${i < b.hp ? '#ae8b65' : '#d4cbb7'}"/>`).join('')}</g>` : '';
-      view.node.innerHTML = A.tower(b.kind, angle, flash, charge) + damage;
+      view.node.innerHTML = A.tower(b.kind, angle, flash, charge, b.upgraded) + damage;
     }
   }
   function renderWorld() {
+    $('castle-bow').setAttribute('transform', `rotate(${state.castle?.angle ?? 0})`);
     const lift = e => G.enemyLift(e, state.time);
     const settled = finishAge ?? 0;
     const beams = new Map(state.effects.filter(e => e.kind === 'laser' && e.life > settled).map(e => [e.tower, e]));
     const visibleFlash = b => Math.max(0, b.flash - settled / G.RECOIL_SECONDS);
     const auras = state.effects.filter(e => e.kind === 'frost' && e.life > settled).map(e => {
       const opacity = (e.life - settled) / e.duration;
-      return `<g class="frost-area-effect" opacity="${opacity}" transform="translate(${X(e.x)} ${Y(e.y)})">${A.aura(e.radius * S, 1 - opacity)}</g>`;
+      return `<g class="frost-area-effect" opacity="${opacity}" transform="translate(${X(e.x)} ${Y(e.y)})">${A.aura(e.radius * S, 1 - opacity, e.upgraded)}</g>`;
     }).join('');
     $('fire-layer').innerHTML = auras + state.fires.map(f => {
       const radius = G.TOOLS.flame.burnRadius * S;
@@ -264,6 +304,7 @@
       return `<g class="ground-fire" transform="translate(${X(f.c)} ${Y(f.r)}) scale(${bloom})" opacity="${Math.min(1, f.life / .65)}">
         <circle class="heated-soil" r="${radius}" fill="url(#art-warm-soil)" opacity="${.91 + .07 * flicker}"/>
         <path d="m-25 7 8-3 6 2 9-5 7 3 10-5m-24 8 5 6 7-1" fill="none" stroke="#ffa079" stroke-width="1.7" opacity=".72" stroke-linecap="round"/>
+        ${f.emberLife > 0 ? `<g fill="#ffd174" stroke="#cb5f34" stroke-width="1.1"><circle cx="-10" cy="${-7 - flicker * 3}" r="2"/><circle cx="8" cy="${4 + flicker * 2}" r="1.7"/></g>` : ''}
         <use href="#art-firePatch" transform="translate(-16 6) skewX(${flicker * 5}) scale(.30 ${.32 + flicker * .05})"/>
         <use href="#art-firePatch" transform="translate(15 -4) scale(.23 ${.25 - flicker * .05})"/>
         <use href="#art-firePatch" transform="translate(6 13) scale(.16 ${.18 + flicker * .04})"/></g>`;
@@ -285,7 +326,7 @@
         <path d="M-33 0h9m48 0h9M0-33v9m0 48v9" stroke="#794e90" stroke-width="2.6"/></g></g>`;
     }).join('') : '';
     $('shot-layer').innerHTML = aiming + state.shots.map(s =>
-      A.flight(s.kind, X(s.c), Y(s.r) - 3, X(s.tipX), Y(s.tipY) - s.lift, Math.min(1, s.age / s.duration), s.angle)
+      A.flight(s.kind, X(s.c), Y(s.r) - (s.kind === 'castle' ? 13 * castleScale() : 3), X(s.tipX), Y(s.tipY) - s.lift, Math.min(1, s.age / s.duration), s.angle, s.upgraded, s.barrelOffset)
     ).join('');
     $('effects-layer').innerHTML = state.effects.map(e => {
       const life = e.life - settled;
@@ -294,7 +335,26 @@
       const at = `transform="translate(${x} ${y})" opacity="${1 - t}"`;
       if (e.kind === 'laser') {
         const tower = state.buildings.find(b => b.id === e.tower);
-        return `<g clip-path="url(#field-bounds)"><g class="laser-beam" ${at}>${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S), tower ? visibleFlash(tower) : 0)}</g></g>`;
+        return `<g clip-path="url(#field-bounds)"><g class="laser-beam" ${at}>${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S), tower ? visibleFlash(tower) : 0, e.upgraded)}</g></g>`;
+      }
+      if (e.kind === 'plasmaArc') {
+        const dx = X(e.toX) - x, dy = Y(e.toY) - e.toLift - y, length = Math.hypot(dx, dy) || 1;
+        const age = e.duration - life - e.hop * .12;
+        if (age < 0) return '';
+        const progress = Math.min(1, age / .21), fade = Math.min(1, life / .25);
+        const bend = Math.min(13, length * .23);
+        const points = [0, .18, .32, .56, .72, .9, 1].map((u, i) => {
+          const shift = i === 0 || i === 6 ? 0 : (i % 2 ? 1 : -1) * bend * (.75 + .25 * Math.sin(age * 24 + i));
+          return `${dx * u - dy * shift / length},${dy * u + dx * shift / length}`;
+        }).join(' ');
+        const stroke = `points="${points}" pathLength="1" stroke-dasharray="${progress} 2"`;
+        return `<g class="plasma-arc" transform="translate(${x} ${y})" opacity="${fade}" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline ${stroke} stroke="#ae61ed" stroke-width="12" opacity=".4"/><polyline ${stroke} stroke="#7440a1" stroke-width="6.5"/><polyline ${stroke} stroke="#f5deff" stroke-width="3.1"/>
+          <circle cx="${dx * progress}" cy="${dy * progress}" r="4.8" fill="#fff6b0" stroke="#9754c5" stroke-width="2"/>
+          ${progress === 1 ? `<circle cx="${dx}" cy="${dy}" r="${6 + Math.min(1, age) * 16}" stroke="#e0c2ff" stroke-width="2.6"/>` : ''}</g>`;
+      }
+      if (e.kind === 'spikeHit') {
+        return `<g class="spike-hit" ${at} fill="none" stroke-linecap="round"><circle r="${3 + t * 12}" stroke="#fff3b4" stroke-width="2.5"/>${[15,135,255].map(a => `<path transform="rotate(${a})" d="M${6 + 8 * t} 0h6" stroke="#866744" stroke-width="3"/>`).join('')}</g>`;
       }
       if (e.kind === 'spark' || e.kind === 'flare') return `<g class="${e.kind}-effect" ${at}><g transform="rotate(${e.angle ?? 0})">${A.impactBurst(e.kind, t)}</g></g>`;
       if (e.kind === 'hatch') return `<g class="hatch-effect" ${at} fill="#ffefc7" stroke="#a77f63" stroke-width="2">
@@ -313,7 +373,7 @@
       if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#688a38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="${(1 - t) * .75}"/>`;
       if (e.kind === 'blast') {
         const front = (.18 + .82 * (1 - (1 - t) ** 2)) * e.radius * S;
-        return `<g class="blast-effect" ${at}><circle r="${front}" fill="#f3a74b" fill-opacity=".1" stroke="#af7340" stroke-width="2.5"/>
+        return `<g class="blast-effect" ${at}>${e.upgraded ? `<circle r="${front * .78}" fill="none" stroke="#fbbf68" stroke-width="${7 * (1 - t)}"/>` : ''}<circle r="${front}" fill="#f3a74b" fill-opacity=".1" stroke="#af7340" stroke-width="2.5"/>
           <circle r="${front - 4}" fill="none" stroke="#ffe5a8" stroke-width="2"/>
           ${[15,78,142,204,274,325].map(a => `<g class="fx-accent" transform="rotate(${a}) translate(${front - 8} 0) rotate(${t * 32}) scale(${.6 + .5 * Math.sin(Math.PI * t)})"><path d="M-8 1q-2-5 2-6 2-5 7-2 6-1 6 4 5 4 0 6-5 2-8 0-6 2-7-2Z" fill="#d3b18c" stroke="#a17e57" stroke-width="1.1"/></g>`).join('')}
           <path transform="scale(${1 - t})" d="m0-20 6 12 10-4-4 11 10 4-13 3 1 11-10-7-9 6 1-12-10-4 12-4-2-10Z" fill="#ffd170" stroke="#ce7437" stroke-width="2"/></g>`;
@@ -332,23 +392,31 @@
           <circle r="${5 + t * 21}" fill="none" stroke="#f6d77c" stroke-width="${3 * (1 - t)}"/>
           <path d="m0-11 3 7 8-3-5 7 5 4-8-1-3 8-3-8-8 1 5-4-5-7 8 3Z" fill="#fff4bc" stroke="#d5a34c" stroke-width="1.3" transform="scale(${1 + t * 0.7})"/>
           ${[-150, -115, -75, -35].map(a => { const r = a * Math.PI / 180 * (e.vy > 0 ? -1 : 1), d = 11 + t * 26; return `<path d="M${Math.cos(r) * d} ${Math.sin(r) * d}l${Math.cos(r) * 7} ${Math.sin(r) * 7}" stroke="#dbaa52" stroke-width="2.5" stroke-linecap="round"/>`; }).join('')}
-          ${e.shotKind === 'pierce' ? '' : `<g class="ricochet" transform="translate(${bx} ${by}) scale(.65)">${A.shot(e.shotKind, 0, 0, Math.atan2(e.vy, e.vx) * 180 / Math.PI)}</g>`}
+          ${e.shotKind === 'wall' || e.shotKind === 'pierce' ? '' : `<g class="ricochet" transform="translate(${bx} ${by}) scale(.65)">${A.shot(e.shotKind, 0, 0, Math.atan2(e.vy, e.vx) * 180 / Math.PI, 0, e.upgraded)}</g>`}
         </g>`;
       }
-      if (e.kind === 'home') return `<g class="home-damage" transform="translate(${houseX} ${houseY - 49})">${A.brokenHeart(t)}</g>`;
+      if (e.kind === 'home') return `<g class="home-damage" transform="translate(${castleX()} ${castleY() - 49})">${A.brokenHeart(t)}</g>`;
       const color = e.kind === 'chip' ? '#aa7d51' : '#75a450';
       return `<g opacity="${1 - t}">${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${x + Math.cos(i * Math.PI / 3) * (10 + t * 27)}" cy="${y + Math.sin(i * Math.PI / 3) * (10 + t * 27)}" r="${4 * (1 - t) + 1}" fill="${color}"/>`).join('')}</g>`;
     }).join('');
   }
   function updateUI(force = false) {
     const advancing = G.isAdvancing(state);
-    const signature = [state.level, state.wave, state.phase, state.money, state.hearts, state.undo.length, selected].join(':');
+    const signature = [state.level, state.wave, state.phase, state.money, state.hearts, state.undo.length, state.upgradeItems, selected].join(':');
     if (!force && signature === uiSignature) return;
     uiSignature = signature;
+    const upgrading = selected === 'upgrade' && state.phase === 'planning' && state.upgradeItems > 0;
+    const button = $('upgrade');
+    button.hidden = state.level === 0 && !state.upgradeItems;
+    button.disabled = state.phase !== 'planning' || state.upgradeItems === 0;
+    button.setAttribute('aria-pressed', String(upgrading));
+    button.setAttribute('aria-label', `升級建築，剩餘 ${state.upgradeItems} 顆晶石`);
+    $('upgrade-count').textContent = state.upgradeItems;
+    $('board').classList.toggle('upgrade-mode', upgrading);
     $('money').textContent = state.money;
     $('coins').setAttribute('aria-label', `可用金幣 ${state.money}`);
     $('health').textContent = state.hearts;
-    $('hearts').setAttribute('aria-label', `小屋生命 ${state.hearts}`);
+    $('hearts').setAttribute('aria-label', `城堡生命 ${state.hearts}`);
     const selector = $('level-select');
     if (state.bonusUnlocked && selector.options.length === G.BONUS_LEVEL) {
       const option = new Option('第 11 關', G.BONUS_LEVEL);
@@ -369,15 +437,20 @@
     $('action').setAttribute('aria-label', label);
     $('action').classList.toggle('pause-state', advancing);
   }
+  function victoryLoot(gold) {
+    return `<span>${A.icon('coin')}金幣 +${gold}</span><span>${A.icon('crystal')}升級晶石 +1</span>`;
+  }
   function outcome() {
     resultAfterHeart = false;
     hideInfo();
     const won = state.phase === 'won', bonus = state.level === G.BONUS_LEVEL;
+    $('win-crystal').hidden = !won;
+    if (won) $('win-crystal').innerHTML = victoryLoot(state.lastReward);
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
-    $('result-title').textContent = won ? (bonus ? '一心守園成功！' : '十關完成！') : '再試一次';
+    $('result-title').textContent = won ? (bonus ? '隱藏關勝利！' : '第 10 關勝利！') : '再試一次';
     const invite = $('bonus-invite');
     invite.hidden = !(won && !bonus);
-    invite.textContent = invite.hidden ? '' : '隱藏關「一心守園」已開啟，小屋只有一顆心。';
+    invite.textContent = invite.hidden ? '' : '隱藏關「四面守園」已開啟，守住中央的城堡！';
     $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
     $('result-primary').textContent = won ? (bonus ? '再玩一次' : '挑戰第 11 關') : '重試這關';
     $('result-secondary').textContent = won ? '看看花園' : '回到第一關';
@@ -388,12 +461,14 @@
       enemyHealth.checked = state.level === 0;
       hideInfo(); hover = null; lastLevel = state.level; ground();
     }
+    if (force || lastRevision !== state.revision || lastPhase !== state.phase) drawRoutes();
     if (force || lastRevision !== state.revision) {
       selection(); lastRevision = state.revision;
       const solid = G.terrain(state.level);
       for (const cell of $('hit-layer').querySelectorAll('[data-c]')) {
         const b = G.at(state, +cell.dataset.c, +cell.dataset.r);
-        cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.TOOLS[b.kind].name : solid.has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
+        cell.classList.toggle('upgradable', !!b && !b.upgraded);
+        cell.setAttribute('aria-label', `${+cell.dataset.r + 1} 排 ${+cell.dataset.c + 1} 格，${b ? G.toolFor(b.kind, b.upgraded).name : G.isHome(state.level, +cell.dataset.c, +cell.dataset.r) ? '城堡' : solid.has(G.key(+cell.dataset.c, +cell.dataset.r)) ? '地形' : '空地'}`);
       }
       if (infoAnchor?.classList.contains('cell-hit')) showCellInfo(infoAnchor);
     }
@@ -403,12 +478,14 @@
       resultAfterHeart = ended && lastPhase === 'running' && state.effects.some(e => e.kind === 'home');
       finishAge = finished || resultAfterHeart ? 0 : null;
       lastPhase = state.phase;
-      if (state.phase === 'planning' || state.phase === 'running' || state.phase === 'won') save();
-      if (finished && state.lastReward > 0) {
-        $('status').textContent = `過關，獲得 ${state.lastReward} 枚金幣${state.phase === 'planning' ? '，可以部署下一關' : ''}`;
-        $('reward').textContent = `+${state.lastReward}`; $('reward').hidden = false;
-        clearTimeout(rewardTimer); rewardTimer = setTimeout(() => { $('reward').hidden = true; }, 3000);
+      if (state.phase !== 'paused') save();
+      const showVictory = state.phase === 'planning' && state.lastReward > 0;
+      $('victory').hidden = !showVictory;
+      if (showVictory) {
+        $('victory-title').textContent = `第 ${state.level} 關勝利！`;
+        $('victory-loot').innerHTML = victoryLoot(state.lastReward);
       }
+      if (finished) $('status').textContent = `勝利！獲得 ${state.lastReward} 枚金幣和 1 顆升級晶石`;
       selection();
       if (ended && !resultAfterHeart) outcome();
     }
@@ -423,15 +500,22 @@
     const next = replacement || G.createState(level);
     next.bonusUnlocked ||= state.bonusUnlocked;
     state = next; selected = 'pea'; hover = null; accumulator = 0;
-    $('status').textContent = level === G.BONUS_LEVEL ? '守住最後一顆心，別讓蟲進屋！' : '';
-    clearTimeout(rewardTimer); $('reward').hidden = true;
+    $('status').textContent = level === G.BONUS_LEVEL ? '守住中央城堡，小蟲會從四面進攻！' : '';
     lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
   }
   function interact(c, r) {
     if (!selected) { selected = G.at(state, c, r)?.kind || 'pea'; updateUI(true); return; }
-    const result = selected === 'remove' ? G.remove(state, c, r) : G.build(state, selected, c, r);
+    const result = selected === 'upgrade' ? G.upgrade(state, c, r) : selected === 'remove' ? G.remove(state, c, r) : G.build(state, selected, c, r);
     if (!result.ok) feedback(result.error, c, r);
-    else { $('status').textContent = ''; save(); }
+    else {
+      if (selected === 'upgrade') {
+        const building = G.at(state, c, r);
+        $('status').textContent = `已升級為${G.toolFor(building.kind, true).name}`;
+        showCellInfo($('hit-layer').querySelector(`[data-c="${c}"][data-r="${r}"]`));
+        if (!state.upgradeItems) selected = building.kind;
+      } else $('status').textContent = '';
+      save();
+    }
     sync(true);
   }
   $('tools').addEventListener('click', event => {
@@ -451,6 +535,11 @@
   document.addEventListener('pointerdown', event => { if (!event.target.closest('#tower-info, [data-tool]')) hideInfo(); });
   window.addEventListener('resize', repositionInfo);
   document.addEventListener('scroll', repositionInfo, true);
+  $('upgrade').addEventListener('click', () => {
+    selected = selected === 'upgrade' ? null : 'upgrade';
+    hideInfo(); hover = null; selection(); updateUI(true);
+    $('status').textContent = selected ? '點選框起來的塔或石牆升級' : '';
+  });
   $('remove').addEventListener('click', () => { selected = selected === 'remove' ? null : 'remove'; selection(); updateUI(true); });
   $('undo').addEventListener('click', () => { if (G.undo(state)) { save(); sync(true); } });
   $('reset').addEventListener('click', () => {
@@ -464,6 +553,7 @@
   enemyHealth.closest('details').addEventListener('toggle', ({ currentTarget }) => {
     if (currentTarget.open) currentTarget.scrollIntoView({ block: 'nearest' });
   });
+  showRoutes.addEventListener('change', () => { drawRoutes(); save(); });
   enemyHealth.addEventListener('change', () => {
     save();
     renderWorld();
@@ -473,7 +563,9 @@
   if (new URLSearchParams(location.search).get('tip') === 'true') {
     solution.hidden = false;
     solution.addEventListener('click', () => {
-      loadLevel(state.level, window.GardenSolutions.create(state.level));
+      const demo = window.GardenSolutions.create(state.level);
+      demo.upgradeItems = Math.min(state.level, state.upgradeItems + state.buildings.filter(b => b.upgraded).length);
+      loadLevel(state.level, demo);
       $('status').textContent = '已重設本關並放上解答，按開始出怪';
     });
   } else solution.remove();
@@ -488,7 +580,8 @@
   });
   $('hit-layer').addEventListener('click', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
-    if (event.pointerType === 'touch' && selected !== 'remove' && G.at(state, +cell.dataset.c, +cell.dataset.r)) { showCellInfo(cell); return; }
+    if (G.isHome(state.level, +cell.dataset.c, +cell.dataset.r)) { showCellInfo(cell); return; }
+    if (event.pointerType === 'touch' && selected !== 'remove' && selected !== 'upgrade' && G.at(state, +cell.dataset.c, +cell.dataset.r)) { showCellInfo(cell); return; }
     interact(+cell.dataset.c, +cell.dataset.r);
   });
   $('hit-layer').addEventListener('pointermove', event => {
@@ -522,7 +615,11 @@
   });
   $('result-primary').addEventListener('click', () => {
     if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
-    else loadLevel(state.level === G.BONUS_LEVEL - 1 ? G.BONUS_LEVEL : 0);
+    else if (state.level === G.BONUS_LEVEL - 1) {
+      const bonus = G.createState(G.BONUS_LEVEL);
+      bonus.upgradeItems = state.upgradeItems + state.buildings.filter(b => b.upgraded).length;
+      loadLevel(G.BONUS_LEVEL, bonus);
+    } else loadLevel(0);
   });
   $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else $('result').close(); });
   document.addEventListener('visibilitychange', () => {

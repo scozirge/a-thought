@@ -3,6 +3,7 @@
 
   // Static drawings are defined once. The board only moves the instances.
   const icons = {
+    crystal: '<path d="m12 1 8 6 2 7-10 9L2 14l2-7Z" fill="#ba83de" stroke="#59386a" stroke-width="1.6"/><path d="m12 2 4 6-4 13L7 8Z" fill="#f2d8ff"/><path d="m3 13 4-5 5 13Z" fill="#9061b1"/><path d="m12 2-5 6H5Z" fill="#fff4ff"/>',
     coin: `<circle cx="12" cy="13" r="10" fill="#d89015" stroke="#8c5516" stroke-width="1.4"/>
       <circle cx="11.5" cy="10.8" r="9.2" fill="#ffcc41" stroke="#a06314" stroke-width="1.4"/>
       <circle cx="11.5" cy="10.8" r="6.7" fill="#ffdf72" stroke="#df9b21" stroke-width="1.4"/>
@@ -192,18 +193,26 @@
     hopper: { head: -15, shadow: 23 }, mother: { head: -21, shadow: 26 }, flyer: { head: -15, shadow: 16 },
     splitter: { head: -16, shadow: 22 }, giant: { shadow: 30 }, swift: { head: -14, shadow: 20 }
   };
-  const cabin = `<ellipse cy="30" rx="33" ry="8" fill="#204c39" opacity=".29"/>
-    <g stroke="#554a37"><path d="M-23-7 0-27 24-8v36l-4 3h-42Z" fill="#ffdea0"/>
-    <path d="M13-29v-13h9v22Z" fill="#ae6b50"/><path d="M11-42h13v5H11Z" fill="#f3b67e"/>
-    <path d="m-32-7 26-28q6-6 12 0L33-8 28-2 0-23-27 0Z" fill="#ac523a"/>
-    <path d="m-31-9 24-27q6-7 14 0L31-11l-3 5L0-28-27-5Z" fill="#dd7d4d"/>
-    <path d="m-20-21 8-8m21 6 9 8" stroke="#f9af70" stroke-width="3"/>
-    <path d="M-6 30V12q0-9 8-9t8 9v18Z" fill="#50836a"/><path d="M-19 3h9v12h-9Z" fill="#91cdd0"/>
-    <path d="M-20 17h12" stroke="#c5854b" stroke-width="3"/><circle cx="6" cy="17" r="1.4" fill="#fff1b9" stroke="none"/>
-    <path d="M-10 30h23l3 4h-29Z" fill="#cbb18a"/></g>
-    <path d="M-28 28q-11-10-7-16 8 2 10 10 1-10 6-12 4 9-2 18Zm49 4q-4-9 2-13 3 1 3 7 3-9 8-7 2 8-7 13Z" fill="#6b994f" stroke="#426744" stroke-width="1.6"/>
-    <circle cx="-29" cy="18" r="3" fill="#ffc94b"/><circle cx="27" cy="21" r="2.7" fill="#f79971"/>`;
+  const castle = `<ellipse cy="25" rx="32" ry="7" fill="#234838" opacity=".28"/>
+    <g stroke="#354c52" stroke-linejoin="round">
+      <path d="M-3-17v-25" fill="none" stroke-width="3"/><path d="M-2-41q6-4 11 0t12 0l-5 6 5 3q-7 3-13-1t-10 0Z" fill="#db6752"/>
+      <path d="M-17-12v-13h7v5h7v-6h7v6h7v-5h7v13l-3 4v26h-29V-8Z" fill="#adc2c3"/>
+      <path d="M-18-10h36v5h-36Z" fill="#769099"/>
+      <path d="M-23-1h46v25h-46Z" fill="#b9ced0"/><path d="M-23 0h46v5h-46Z" fill="#819ba0"/>
+      <path d="M-9 25V13a9 9 0 0 1 18 0v12Z" fill="#495957"/><path d="M-5 24V14a5 5 0 0 1 10 0v10Z" fill="#aa7650"/>
+      <path d="M0 13v10m-5-6h10" fill="none" stroke="#6f533e" stroke-width="1.6"/>
+      ${[-23,23].map(x => `<g transform="translate(${x} 0)"><path d="M-8-13h16v34l-3 3H-6l-2-4Z" fill="#93adb5"/>
+        <path d="M-8-10h4v29h-4Z" fill="#c1d5d4" stroke="none"/><path d="M-10-18h5v4h3v-5h5v5h3v-4h5v9l-3 3H-7l-3-3Z" fill="#d6dfda"/>
+        <path d="M0-2v7" stroke-width="3"/><path d="M-7 12h5m2 4h6" stroke="#66838b" stroke-width="1.6"/></g>`).join('')}
+      <path d="M-11 26h22l4 3h-30Z" fill="#dfc48e"/>
+    </g>`;
+  const castleBow = `<path d="M-7-9Q10-7 10 0T-7 9" fill="none" stroke="#513e31" stroke-width="3.8"/>
+    <path d="M-7-9-3 0-7 9" fill="none" stroke="#fff0bc" stroke-width="1.3"/>
+    <path d="M-7 0H9" stroke="#bd8550" stroke-width="3"/><circle r="2.4" fill="#e3b45b" stroke="#5a4a37"/>`;
   const projectiles = {
+    castle: `<path d="M-10 0H8" stroke="#503c2b" stroke-width="3.5"/><path d="M-8-.6H7" stroke="#e8b562" stroke-width="1.3"/>
+      <path d="m-6 0-5-4-5 .6 5 3.4-5 3.4 5 .6Z" fill="#e3674d" stroke="#593d33" stroke-width="1"/>
+      <path d="m5-3.5 9 3.5-9 3.5 1-3.5Z" fill="#e3f3ef" stroke="#38565b" stroke-width="1.3"/>`,
     pea: `<circle r="3.8" fill="#a5cf43" stroke="#365131" stroke-width="1.7"/><circle cx="-1" cy="-1.2" r="1.1" fill="#f1ffb2"/>`,
     cannon: `<circle r="12" fill="#394e58" stroke="#24343a" stroke-width="2.3"/><path d="M-8-4q3-6 9-5" fill="none" stroke="#adcbcd" stroke-width="3"/>
       <path d="M4 8q3-1 4-4" fill="none" stroke="#607e85" stroke-width="2"/>`,
@@ -220,34 +229,71 @@
     <path d="M-8 4c-2-5 2-8 3-12l3 5q8-8 7-13 5 7-1 15l6-4C9 8-3 13-8 4Z" fill="#ffad3d" stroke="none"/><path d="M-3 6q-2-4 2-8l2 4 4-3q2 6-3 8Z" fill="#fff1a1" stroke="none"/>`;
   const recoilDistance = { pea: 3.8, cannon: 8, flame: 4.5, pierce: 2, push: 0, molecular: 6 };
   const flightStyles = {
+    castle: { muzzle: 0 },
     pea: { muzzle: 26, light: '#edf4a4' }, cannon: { muzzle: 27, light: '#ffe4a1', arc: 23 },
     flame: { muzzle: 28, light: '#ffca55' }, push: { muzzle: 33, light: '#d9f9ff' },
     molecular: { muzzle: 27, light: '#eac6ff' }
   };
   const launchFlare = `<path d="m0 0 3-7 3 4 9-2-4 5 6 2-10 1-2 4Z" fill="currentColor"/><path d="m2 0 4-2 4 1-6 3Z" fill="#fff8da"/>`;
   const snowflake = `<g fill="none" stroke="currentColor" stroke-width="2.5">${[0,60,120].map(a => `<path transform="rotate(${a})" d="M0-10v20m-3-17 3 3 3-3m-6 14 3-3 3 3"/>`).join('')}</g>`;
-  function shot(kind, x, y, angle, t = 0) {
+  const advancedHeads = {
+    pea: `<g stroke="#284e43"><path d="m-24-9 6-9h15l9 9v18l-8 8h-15l-7-8Z" fill="#59836c"/>
+      ${[-8,8].map(y => `<g transform="translate(0 ${y})"><path d="M-12-5h33l6 3v4l-6 3h-33Z" fill="#6da38a"/><path d="M-7-3H18" stroke="#d7e7ac"/><path d="M17-6h9v12h-9Z" fill="#efbc61"/><ellipse cx="26" rx="2.4" ry="4" fill="#263c38"/></g>`).join('')}
+      <path d="m-22-6 6-3 5 4v10l-6 3-5-4Z" fill="#e8bb60"/></g>`,
+    cannon: `<g stroke="#384650"><path d="m-26-10 7-8 37-2 12 10v20l-10 9-38-2-8-8Z" fill="#405c68"/>
+      <path d="m-20-13 36-3 7 5-39 3Z" fill="#91aab0" stroke="none"/><path d="m-12-17 6-1v34l-6-1Zm25-2 7-1v39l-7-1Z" fill="#ca9755"/>
+      <ellipse cx="26" rx="8" ry="18" fill="#e0b064"/><ellipse cx="27" rx="4.8" ry="12.5" fill="#26393e"/><path d="M-21 6h6m1-6h5" stroke="#edc882"/></g>`,
+    push: `<use href="#art-tower-push"/><g stroke="#65493f"><path d="m-25-10 7-7h9v5h-6l-4 15h-5Z" fill="#dab168"/>
+      <g style="transform:translateX(var(--punch-travel,0px))"><path d="m10-12 4-6 11-1 7 6-2 4-10-4-8 4Z" fill="#ffcb77"/><path d="m20-13 3 4m3-3 3 4" stroke="#704c40"/></g></g>`,
+    molecular: `<use href="#art-tower-molecular"/><g stroke="#4d386e">
+      ${[-1,1].map(side => `<g transform="scale(1 ${side})"><path d="m-18-11 6-10 12-2 18 5 4 5-22-4-9 2-4 6Z" fill="#9d7ac1"/><circle cx="18" cy="-16" r="4" fill="#bef7ff"/><circle cx="-10" cy="-18" r="3" fill="#f5caff"/></g>`).join('')}</g>`,
+    frost: `<use href="#art-tower-frost"/><g stroke="#38779d">
+      ${[-56,0,56].map(a => `<g transform="translate(0 4) rotate(${a})"><path d="m0-32 6 12-2 13-5 5-5-9-1-10Z" fill="#78d8fa"/><path d="M0-30 1-8l4-12Z" fill="#e5ffff" stroke="none"/></g>`).join('')}
+      <path d="m-13 11 6 5 8-6 8 6 6-4-4 9h-20Z" fill="#d9eff7"/></g>`,
+    flame: `<use href="#art-tower-flame"/><g stroke="#743d32"><path d="m-24-10 5-9 13-3 5 5-4 10-13 5Z" fill="#984a3a"/>
+      <path d="m-19-10 3-6m3 5 3-7m3 5 2-5" stroke="#ffca67" stroke-width="2.5"/><path d="m-13 9 7 2 16-2 3 4-5 5-20 1-7-4Z" fill="#c66b3e"/>
+      <path d="m16 0 3-8 1 3 5-5-3 10Z" fill="#fff3a5" stroke="none"/></g>`,
+    pierce: `<use href="#art-tower-pierce"/><g stroke="#335168">${[-1,1].map(side => `<g transform="scale(1 ${side})">
+      <path d="m-18-11 6-8 15-1 16 5 8 7-10-3-16-4-9 1-5 5Z" fill="#61a2b0"/><path d="m-6-16 7-1 13 4" fill="none" stroke="#c8feff"/>
+      <circle cx="22" cy="-10" r="3" fill="#fbd67c"/></g>`).join('')}</g>`
+  };
+  const upgradedShots = {
+    pea: '<path d="m-11-3 13-1 7 4-7 4-13-1Z" fill="#f5ca61" stroke="#617642"/><path d="M-7-1h10" stroke="#fff7c6"/>',
+    cannon: '<g transform="scale(1.6)"><use href="#art-shot-cannon"/><path d="M-11 2Q-2 7 10-5" fill="none" stroke="#e1ac58" stroke-width="3"/><circle cx="-4" cy="-6" r="2" fill="#e2efdc"/></g>',
+    push: '<use href="#art-shot-push"/><path d="m-15-14 8-3m-8 31 8 3m12-32 5 3m-5 26 5-3" fill="none" stroke="#efbc64" stroke-width="3"/>',
+    flame: '<g transform="scale(1.8)"><circle r="14" fill="#ffae31" opacity=".25"/><use href="#art-shot-flame"/><path d="m-17-2 5 2-2 4m18-18 3-4m6 16 3 2" fill="none" stroke="#ffc234" stroke-width="2.8"/><path d="m2-6 4 6-3 6-4-3Z" fill="#ffffce"/></g>',
+    molecular: '<use href="#art-shot-molecular"/><ellipse rx="22" ry="9" transform="rotate(-32)" fill="none" stroke="#f7ccff" stroke-width="2"/><circle cx="18" cy="-10" r="3.2" fill="#f9e5ff" stroke="#8752ab"/>'
+  };
+  function spikeWall(flash) {
+    const elapsed = 1 - flash;
+    const thrust = flash > 0 ? Math.min(1, elapsed / .13) * Math.min(1, flash / .75) ** 2 : 0;
+    const spikes = [0,45,90,135,180,225,270,315].map(a =>
+      `<g transform="rotate(${a})"><path d="m17-4 ${10 + 21 * thrust} 4-${10 + 21 * thrust} 4Z" fill="#e9f1db" stroke="#4c655e" stroke-width="1.8"/>${thrust > .3 ? `<path d="M28-6h${8 * thrust}m-6 12h${6 * thrust}" stroke="#f6eccb" stroke-width="1.6"/>` : ''}</g>`).join('');
+    return `<g class="spike-wall">${spikes}${ref('wall')}<path d="m-13-4 12-7 13 5-1 10-11 7-13-5Z" fill="#637d74" stroke="#475b50" stroke-width="2"/><path d="m-6 0 6-5 6 5-6 5Z" fill="#d4e2b7"/></g>`;
+  }
+  function shot(kind, x, y, angle, t = 0, upgraded = false) {
     const swell = Math.sin(Math.PI * t);
     let pose = '';
     if (kind === 'cannon') pose = `rotate(${t * 95})`;
     if (kind === 'flame') pose = `rotate(${t * 120}) scale(${1 + .13 * swell} ${1 - .05 * swell})`;
     if (kind === 'molecular') pose = `rotate(${t * 160}) scale(${.87 + .21 * swell})`;
     if (kind === 'push') pose = `scale(${1 - .22 * swell} ${.75 + .6 * t})`;
-    return ref('shot-' + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
+    return ref((upgraded ? 'advanced-shot-' : 'shot-') + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
   }
-  function flight(kind, cx, cy, tx, ty, t, launchAngle) {
+  function flight(kind, cx, cy, tx, ty, t, launchAngle, upgraded = false, barrelOffset = 0) {
     const style = flightStyles[kind];
     const muzzle = Math.min(style.muzzle, Math.hypot(tx - cx, ty - cy) * .55);
     const angle = launchAngle * Math.PI / 180;
-    const sx = cx + Math.cos(angle) * muzzle, sy = cy + Math.sin(angle) * muzzle;
+    const sx = cx + Math.cos(angle) * muzzle - Math.sin(angle) * barrelOffset;
+    const sy = cy + Math.sin(angle) * muzzle + Math.cos(angle) * barrelOffset;
     const vx = tx - sx, vy = ty - sy;
     const arc = Math.min(style.arc || 0, Math.hypot(vx, vy) * .22);
     const x = sx + vx * t, y = sy + vy * t - 4 * arc * t * (1 - t);
     const pulse = Math.max(0, 1 - t * 2.5);
-    const flare = pulse > 0 ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
-    return shot(kind, x, y, Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI, t) + flare;
+    const flare = pulse > 0 && style.light ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
+    return shot(kind, x, y, Math.atan2(vy - 4 * arc * (1 - 2 * t), vx) * 180 / Math.PI, t, upgraded) + flare;
   }
-  function laser(angle, length, t, hitDistances, flash) {
+  function laser(angle, length, t, hitDistances, flash, upgraded = false) {
     const recoil = recoilOffset('pierce', flash);
     const start = laserLensX - recoil;
     const path = `M${start} 0H${Math.max(start, length)}`;
@@ -255,13 +301,16 @@
     return `<g transform="translate(0 ${headY}) rotate(${angle})" fill="none" stroke-linecap="round">
       <path d="${path}" stroke="#fc597f" stroke-opacity=".3" stroke-width="${4 + 7 * intensity}"/>
       <path d="${path}" stroke="#d64262" stroke-width="${2 + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
+      ${upgraded ? `<path d="M${start} 0${Array.from({length: 16}, (_, i) => `L${start + (length - start) * (i + 1) / 16} ${i === 15 ? 0 : (i % 2 ? -1 : 1) * (2 + 3 * intensity)}`).join('')}" stroke="#9ffaff" stroke-width="2.8"/>` : ''}
       <circle class="laser-origin" cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
-      <g class="fx-accent" stroke="#ffe9b5" stroke-width="1.8">${hitDistances.map(d => `<g transform="translate(${d} 0)"><path d="M-2 ${-3 - 9 * t}l-2-3m4 ${17 + 18 * t} 2 3"/></g>`).join('')}</g></g>`;
+      <g class="laser-hits">${hitDistances.map(d => `<g transform="translate(${d} 0)"><circle r="${4 + t * 12}" stroke="${upgraded ? '#a8efff' : '#ffcb77'}" stroke-width="2.7"/>
+        <path transform="rotate(${22 * t}) scale(${1 - .55 * t})" d="m0-13 3 8 8-3-5 7 6 5-9-1-3 9-2-9-8 3 4-7-6-4 8 1Z" fill="#fff5c9" stroke="${upgraded ? '#4e9aa4' : '#c65340'}" stroke-width="1.7"/></g>`).join('')}</g></g>`;
   }
-  function aura(radius, t) {
+  function aura(radius, t, upgraded = false) {
     const spread = 1 - (1 - t) ** 2;
     const front = 15 + (radius - 15) * spread;
-    return `<circle r="${radius}" fill="#91dce6" fill-opacity=".07" stroke="#74b8c3" stroke-opacity=".42" stroke-dasharray="5 8"/>
+    const crystals = upgraded ? [0,60,120,180,240,300].map(a => `<path transform="rotate(${a + 20 * t}) translate(${front} 0)" d="m-10 0 9-4 7 4-7 4Z" fill="#d1faff" stroke="#448cb9" stroke-width="1.5"/>`).join('') : '';
+    return `${crystals}<circle r="${radius}" fill="#91dce6" fill-opacity=".07" stroke="#74b8c3" stroke-opacity=".42" stroke-dasharray="5 8"/>
       <circle r="${front}" fill="none" stroke="#81d6e2" stroke-opacity=".32" stroke-width="${4 + 6 * (1 - t)}"/>
       <circle r="${front}" fill="none" stroke="#eaffff" stroke-width="2.1"/>
       <g class="fx-accent" fill="none" stroke="#b5f7ff" stroke-width="1.8">
@@ -290,10 +339,12 @@
   const pen = 'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"';
   const ref = (name, attrs = '') => `<use href="#art-${name}" ${attrs}/>`;
   function definitions() {
-    const drawings = { plinth, wall, face, wings, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, cabin, firePatch, snowflake, launchFlare };
+    const drawings = { plinth, wall, face, wings, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, castle, castleBow, firePatch, snowflake, launchFlare };
     for (const [kind, drawing] of Object.entries(mounts)) drawings['mount-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(feet)) drawings['feet-' + kind] = `<g fill="none" stroke-width="3.3">${drawing}</g>`;
     for (const [kind, drawing] of Object.entries(projectiles)) drawings['shot-' + kind] = drawing;
+    for (const [kind, drawing] of Object.entries(advancedHeads)) drawings['advanced-' + kind] = drawing;
+    for (const [kind, drawing] of Object.entries(upgradedShots)) drawings['advanced-shot-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
     const whiteShield = '<filter id="art-white-shield" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>';
@@ -315,11 +366,12 @@
   function recoilOffset(kind, flash) {
     return (recoilKick(flash) + recoilRebound(flash) * .23) * recoilDistance[kind];
   }
-  function tower(kind, angle = -25, flash = 0, charge = 0) {
-    if (kind === 'wall') return ref('wall');
+  function tower(kind, angle = -25, flash = 0, charge = 0, upgraded = false) {
+    if (kind === 'wall') return upgraded ? spikeWall(flash) : ref('wall');
+    const head = (upgraded ? 'advanced-' : 'tower-') + kind;
     const kick = recoilKick(flash);
     if (kind === 'frost') {
-      return ref('plinth') + ref('tower-frost', `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
+      return ref('plinth') + ref(head, `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
         (flash > 0 ? `<g class="fx-accent" transform="translate(0 -5)" opacity="${flash}">${ref('snowflake', 'color="#f3ffff" transform="scale(.8)"')}</g>` : '');
     }
     let style = '';
@@ -327,7 +379,7 @@
     if (kind === 'molecular') style = `style="--core-light:${Math.max(charge, kick)}"`;
     const recoil = recoilOffset(kind, flash);
     return ref(mounts[kind] ? 'mount-' + kind : 'plinth') +
-      ref('tower-' + kind, `transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
+      ref(head, `transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
   }
   function bugPose(kind, time) {
     return {
@@ -371,5 +423,5 @@
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
   function tool(kind) { return `<svg class="tool-art" viewBox="-37 -38 74 70" aria-hidden="true">${tower(kind)}</svg>`; }
-  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, house: () => ref('cabin') };
+  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, laser, aura, brokenHeart, chargeGlobe, impactBurst, splitPlateAt, castle: () => ref('castle') + `<g transform="translate(0 -13)">${ref('castleBow', 'id="castle-bow"')}</g>` };
 })();
