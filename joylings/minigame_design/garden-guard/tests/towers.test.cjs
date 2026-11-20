@@ -56,7 +56,7 @@ test('分子砲優先射程內剩餘血量最高者，忽略射程外、死亡�
   G.step(s, 1 / 60); assert.equal(s.buildings[0].aim.target, high.id); assert.equal(s.shots.length, 0);
   advance(s, 2 * G.BATTLE_SPEED - 2 / 60); assert.equal(s.shots.length, 0); assert.equal(high.hp, 40);
   G.step(s, 1 / 60); assert.equal(s.shots[0].target, high.id);
-  advance(s, 0.25); assert.deepEqual([small.hp, injured.hp, high.hp, outside.hp], [2, 1, 12, 200]);
+  advance(s, .36 * G.BATTLE_SPEED); assert.deepEqual([small.hp, injured.hp, high.hp, outside.hp], [2, 1, 12, 200]);
   const flying = enemy(s, 'flyer', 250, 7, 3); high.dead = true;
   G.step(s, 1 / 60); assert.equal(s.buildings[0].aim.target, flying.id, '重新瞄準也可選空中目標');
 });
@@ -81,7 +81,7 @@ test('分子砲持續追蹤同一目標，暫停凍結瞄準，每次射擊前�
   G.togglePause(s); advance(s,2*G.BATTLE_SPEED-age-1/60);
   assert.equal(tower.aim.target,first.id); assert.equal(s.shots.length,0);
   G.step(s,1/60); assert.equal(s.shots[0].target,first.id);
-  advance(s,0.25); assert.equal(first.hp,22); assert.equal(later.hp,100); assert.equal(tower.aim.target,later.id);
+  advance(s,.36 * G.BATTLE_SPEED + 1/60); assert.equal(first.hp,22); assert.equal(later.hp,100); assert.equal(tower.aim.target,later.id);
   advance(s,2*G.BATTLE_SPEED-tower.aim.age-1/60); assert.equal(s.shots.length,0);
   G.step(s,1/60); assert.equal(s.shots[0].target,later.id);
 });
@@ -104,7 +104,7 @@ test('分子砲命中後才重新選敵，不會以扣血前的數字再次鎖�
   const first=enemy(s,'giant',56,8,3), other=enemy(s,'giant',45,8,4), tower=s.buildings[0];
   advance(s,2*G.BATTLE_SPEED); assert.equal(s.shots[0].target,first.id);
   advance(s,0.1); assert.equal(first.hp,56); assert.equal(tower.aim,null);
-  advance(s,0.15); assert.equal(first.hp,28); assert.equal(tower.aim.target,other.id);
+  advance(s,.36 * G.BATTLE_SPEED - .1 + 1/60); assert.equal(first.hp,28); assert.equal(tower.aim.target,other.id);
   assert.ok(tower.aim.age<0.1); assert.equal(other.hp,45);
 });
 
@@ -144,7 +144,7 @@ test('冰凍、火焰與大砲只對地，其餘四種砲塔可對空', () => {
     const s = G.createState(); G.build(s, kind, 6, 4); s.phase = 'running';
     const flying = enemy(s, 'flyer', 100, 7, 3), groundOnly = ['cannon', 'flame', 'frost'].includes(kind);
     assert.equal(G.canTarget(kind, flying), !groundOnly);
-    advance(s, kind === 'molecular' ? 2 * G.BATTLE_SPEED + 0.25 : 0.5);
+    advance(s, kind === 'molecular' ? 2.36 * G.BATTLE_SPEED + 1/60 : 0.5);
     assert.equal(flying.hp, groundOnly ? 100 : 100 - G.TOOLS[kind].damage);
     assert.equal(s.stats.hits, groundOnly ? 0 : 1);
     if (kind === 'frost') assert.equal(flying.slow, 0);
@@ -155,9 +155,10 @@ test('冰凍、火焰與大砲只對地，其餘四種砲塔可對空', () => {
 test('地面塔略過較靠近家的飛蟲，直接選中射程內的地面蟲', () => {
   for (const kind of ['cannon', 'flame']) {
     const s = G.createState(); G.build(s, kind, 6, 4); s.phase = 'running';
-    const flying = enemy(s, 'flyer', 20, 5, 3), ground = enemy(s, 'bug', 20, 7, 3);
+    const flying = enemy(s, 'flyer', 20, 5, 3), ground = enemy(s, 'bug', 20, 8, 3);
+    ground.shock = 2;
     G.step(s, 1 / 60); assert.equal(s.shots[0].target, ground.id);
-    advance(s, 0.25); assert.equal(flying.hp, 20); assert.equal(ground.hp, 20 - G.TOOLS[kind].damage);
+    advance(s, kind === 'flame' ? G.BATTLE_SPEED : .25); assert.equal(flying.hp, 20); assert.equal(ground.hp, 20 - G.TOOLS[kind].damage);
   }
 });
 
@@ -173,12 +174,13 @@ test('大砲爆炸只波及地面目標，同範圍內的飛蟲與跳躍中跳�
 test('地面子彈飛行途中跳蟲起跳則不命中，落地後恢復可攻擊', () => {
   for (const kind of ['cannon', 'flame']) {
     const s = G.createState(); G.build(s, kind, 6, 4); s.phase = 'running';
-    const jumping = enemy(s, 'hopper', 20, 7, 3);
+    const jumping = enemy(s, 'hopper', 20, 8, 3);
     G.step(s, 1 / 60); assert.equal(s.shots[0].target, jumping.id);
     G.hit(s, jumping, { kind: 'pea', c: 6, r: 5 }); assert.ok(jumping.leap);
-    advance(s, 0.25); assert.equal(jumping.hp, 19); assert.equal(s.stats.hits, 1); assert.equal(s.fires.length, kind === 'flame' ? 1 : 0);
+    if (kind === 'flame') jumping.shock = G.BATTLE_SPEED;
+    advance(s, kind === 'flame' ? G.BATTLE_SPEED : .25); assert.equal(jumping.hp, 19); assert.equal(s.stats.hits, 1); assert.equal(s.fires.length, kind === 'flame' ? 1 : 0);
     assert.equal(G.canTarget(kind, jumping), false);
-    advance(s, 0.4); assert.equal(jumping.leap, null); assert.equal(G.canTarget(kind, jumping), true);
+    advance(s, 0.65); assert.equal(jumping.leap, null); assert.equal(G.canTarget(kind, jumping), true);
     G.resolveShot(s, { kind, target: jumping.id, c: 6, r: 4 });
     assert.equal(jumping.hp, 19 - G.TOOLS[kind].damage);
   }
@@ -191,12 +193,12 @@ test('大砲只傷害爆炸範圍內的目標，中心不重複扣血', () => {
   assert.equal(s.stats.hits, 2); assert.ok(s.effects.some(e => e.kind === 'blast'));
 });
 
-test('盾蟲從上方擋住大砲與火球，不爆炸、不點火', () => {
+test('盾蟲從上方擋住直接傷害，火石仍在落點點火', () => {
   for (const kind of ['cannon', 'flame']) {
     const s = G.createState(), a = enemy(s, 'shield', 8, 6, 3), b = enemy(s, 'bug', 8, 7, 3);
     G.resolveShot(s, { kind, target: a.id, c: 6, r: 1 });
     assert.deepEqual([a.hp, b.hp], [8, 8]); assert.equal(s.stats.blocked, 1);
-    assert.equal(s.fires.length, 0); assert.equal(b.slow, 0); assert.ok(s.effects.every(e => e.kind === 'block'));
+    assert.equal(s.fires.length, Number(kind === 'flame')); assert.equal(b.slow, 0); assert.equal(s.effects.filter(e => e.kind === 'block').length, 1);
   }
 });
 
@@ -216,17 +218,19 @@ test('冰凍靈氣從塔中心緩速地面目標，全體維持原血量', () =>
   for (const e of [center,edge,diagonal,flying,hopper]) assert.equal(e.slow, 0);
 });
 
-test('冰凍範圍各自檢查盾甲方向，一血分裂蟲只緩速，不會分裂或觸發命中特效', () => {
+test('冰凍靈氣無視上下盾，一血分裂蟲只緩速，升級每隻盾蟲各扣一血', () => {
   const s = G.createState(), center = enemy(s,'splitter',1,6,3);
   const up = enemy(s,'shield',10,6.2,3), down = enemy(s,'shield_down',10,5.8,3);
   G.resolveShot(s,{kind:'frost',target:center.id,c:6,r:5});
-  assert.equal(center.dead,false); assert.equal(center.hp,1); assert.equal(center.flash,0); assert.equal(up.slow,G.TOOLS.frost.slowDuration); assert.equal(down.slow,0);
-  assert.deepEqual([up.hp,down.hp],[10,10]); assert.equal(s.stats.blocked,1);
+  assert.equal(center.dead,false); assert.equal(center.hp,1); assert.equal(center.flash,0); assert.equal(up.slow,G.TOOLS.frost.slowDuration); assert.equal(down.slow,G.TOOLS.frost.slowDuration);
+  assert.deepEqual([up.hp,down.hp],[10,10]); assert.equal(s.stats.blocked,0);
   assert.equal(s.stats.split,0); assert.deepEqual(s.effects.map(e=>e.kind),['frost']);
+  G.resolveShot(s,{kind:'frost',upgraded:true,c:6,r:1});
+  assert.deepEqual([up.hp,down.hp,up.shieldFlash,down.shieldFlash,s.stats.blocked],[9,9,0,0,0]);
 });
 
 test('火焰命中後在地板燃燒三秒，每實際一秒扣一次血，火區重疊不疊傷', () => {
-  const s = G.createState(), a = enemy(s, 'shield', 10, 6, 3);
+  const s = G.createState(), a = enemy(s, 'shield', 13, 6, 3);
   G.resolveShot(s, { kind: 'flame', target: a.id, c: 6, r: 5 });
   assert.equal(a.hp, 9); assert.equal(s.fires.length, 1);
   G.ignite(s, 6, 3); assert.equal(s.fires.length, 1, '同格只延長燃燒');
@@ -307,7 +311,7 @@ test('擊退只影響命中格內地空目標，相鄰格不受影響', () => {
   assert.equal(outside.hp,10); assert.equal(outside.push,null); assert.equal(s.stats.hits,targets.length);
   assert.deepEqual(s.effects, []);
   G.resolveShot(s,{kind:'push',upgraded:true,target:targets[0].id,c:5,r:5});
-  assert.deepEqual(targets.map(e=>e.hp),[5,5,5,5]); assert.equal(outside.hp,10);
+  assert.deepEqual(targets.map(e=>e.hp),[6,6,6,6]); assert.equal(outside.hp,10);
 });
 
 test('擊退塔每次冷卻只攻擊一格，射程四格並優先最靠近小屋的目標', () => {
@@ -403,19 +407,19 @@ test('火焰塔擊殺整關最後一隻怪物，結算畫面仍保留地面火�
 });
 
 test('火球飛行途中目標先被擊殺，仍落在發射時的位置並點燃地板', () => {
-  const s = G.createState(); G.build(s, 'flame', 6, 5); s.phase = 'running';
+  const s = G.createState(); G.build(s, 'flame', 6, 6); s.phase = 'running';
   const a = enemy(s, 'bug', 1, 6, 3); G.step(s, 1 / 60);
   assert.equal(s.shots.length, 1); const impact = [s.shots[0].impactX, s.shots[0].impactY];
-  G.hit(s, a, { kind: 'pea', c: 6, r: 5 }); advance(s, 0.3);
+  G.hit(s, a, { kind: 'pea', c: 6, r: 5 }); advance(s, G.BATTLE_SPEED);
   assert.equal(s.fires.length, 1); assert.equal(s.fires[0].c, Math.round(impact[0])); assert.equal(s.fires[0].r, Math.round(impact[1]));
 });
 
-test('冰凍塔直接釋放靈氣，主目標格擋時其他方向仍生效', () => {
+test('冰凍塔直接釋放靈氣，盾蟲和範圍內地面蟲同時緩速', () => {
   const s = G.createState(); G.build(s, 'frost', 6, 3); s.phase = 'running';
   const shield = enemy(s, 'shield', 8, 5, 4), nearby = enemy(s, 'bug', 12, 8, 3);
   G.step(s, 1 / 60);
   assert.equal(s.shots.length, 0);
-  assert.equal(shield.hp, 8); assert.equal(shield.slow, 0);
+  assert.equal(shield.hp, 8); assert.ok(shield.slow > 0);
   assert.equal(nearby.hp, 12); assert.ok(nearby.slow > 0);
   assert.ok(s.effects.some(e => e.kind === 'frost' && e.x === 6 && e.y === 3));
 });
@@ -423,7 +427,7 @@ test('冰凍塔直接釋放靈氣，主目標格擋時其他方向仍生效', ()
 test('開火後落點固定，蟲走開時以原位置判定命中、點火與爆炸', () => {
   for (const kind of ['pea', 'cannon', 'flame', 'push', 'molecular']) {
     const s = G.createState(); G.build(s, kind, 6, 4); s.phase = 'running';
-    const original = enemy(s, 'giant', 50, 7, 3);
+    const original = enemy(s, 'giant', 50, 8, 3);
     if (kind === 'molecular') s.buildings[0].aim = { target: original.id, age: 2 * G.BATTLE_SPEED };
     G.step(s, 1 / 60);
     const shot = s.shots[0], { impactX, impactY, tipX, tipY } = shot;
@@ -431,10 +435,11 @@ test('開火後落點固定，蟲走開時以原位置判定命中、點火與�
     const replacement = enemy(s, 'giant', 45, impactX, impactY);
     G.step(s, 1 / 60);
     assert.deepEqual([shot.impactX, shot.impactY, shot.tipX, shot.tipY], [impactX, impactY, tipX, tipY], kind);
-    advance(s, .23);
+    replacement.shock = 2;
+    advance(s, kind === 'flame' ? .5 * G.BATTLE_SPEED : kind === 'molecular' ? .36 * G.BATTLE_SPEED : .23);
     assert.equal(original.hp, 50, kind);
     assert.equal(replacement.hp, 45 - G.TOOLS[kind].damage, kind);
-    if (kind === 'flame') assert.deepEqual(s.fires.map(f => [f.c, f.r]), [[7, 3]]);
+    if (kind === 'flame') assert.deepEqual(s.fires.map(f => [f.c, f.r]), [[8, 3]]);
     if (kind === 'cannon') assert.ok(s.effects.some(e => e.kind === 'blast' && e.x === impactX && e.y === impactY));
   }
 });
@@ -518,7 +523,7 @@ test('連射塔的實際射速為原本的 2.5 倍，重裝大砲的直擊和爆
 test('震盪拳擊退四格後才開始暈眩，完全無路可退時暈五秒', () => {
   const s = G.createState(); s.phase = 'running';
   const a = enemy(s, 'giant', 100, 4, 3), source = { kind: 'push', upgraded: true, c: 2, r: 3 };
-  G.hit(s, a, source); assert.equal(a.hp, 96); assert.equal(a.push.length, 4); assert.equal(a.stun, G.BATTLE_SPEED);
+  G.hit(s, a, source); assert.equal(a.hp, 97); assert.equal(a.push.length, 4); assert.equal(a.stun, G.BATTLE_SPEED);
   while (a.push) G.step(s, 1 / 60);
   assert.equal(a.stun, G.BATTLE_SPEED);
   const x = a.x, y = a.y;
@@ -527,31 +532,37 @@ test('震盪拳擊退四格後才開始暈眩，完全無路可退時暈五秒',
   const closed = G.createState();
   for (const [c,r] of [[4,3],[6,3],[5,2],[5,4]]) G.build(closed, 'wall', c, r);
   const b = enemy(closed, 'bug', 10, 5, 3);
-  G.hit(closed, b, source); assert.equal(b.hp, 6); assert.equal(b.push, null); assert.equal(b.stun, 5 * G.BATTLE_SPEED);
+  G.hit(closed, b, source); assert.equal(b.hp, 7); assert.equal(b.push, null); assert.equal(b.stun, 5 * G.BATTLE_SPEED);
 });
 
 test('連鎖電漿從實際命中的蟲彈射，按 28、9、3、1 衰減，不折返也不跨越三格空隙', () => {
   const s = G.createState();
   const targets = [1,3,5,7,9].map(x => enemy(s, 'shield', 50, x, 3));
   G.resolveShot(s, {kind: 'molecular', upgraded: true, c: 1, r: 1, target: targets[0].id});
+  s.phase = 'running';
+  targets.forEach(e => e.shock = 5);
+  for (const [hop, expected] of [[0,[22,50,50,50,50]], [1,[22,41,50,50,50]], [2,[22,41,47,50,50]]]) {
+    assert.deepEqual(targets.map(e => e.hp), expected);
+    assert.equal(s.effects.find(arc => arc.kind === 'plasmaArc' && arc.hop === hop).damage, [9,3,1][hop]);
+    advance(s, .3 * G.BATTLE_SPEED);
+  }
   assert.deepEqual(targets.map(e => e.hp), [22,41,47,49,50]);
-  assert.deepEqual(s.effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [9,3,1]);
   const sparse = G.createState(), a = enemy(sparse, 'bug', 20, 1, 3), far = enemy(sparse, 'flyer', 20, 4.01, 3);
   G.resolveShot(sparse, {kind: 'molecular', upgraded: true, c: 1, r: 1, target: a.id});
   assert.equal(a.dead, true); assert.equal(far.hp, 20);
 });
 
-test('霜晶直接傷害並緩速，電弧穿盾並讓同線每隻蟲停住 0.4 秒', () => {
+test('霜晶直接傷害並緩速，電弧穿盾並讓同線每隻蟲停住 0.2 秒', () => {
   const s = G.createState(); s.phase = 'running';
   const a = enemy(s, 'giant', 10, 4, 3), b = enemy(s, 'shield', 10, 5, 3);
   const aura = {kind:'frost', c:4, r:2, upgraded:true};
   assert.equal(G.toolFor('frost', true).rate, 1.08);
-  G.resolveShot(s, aura); assert.deepEqual([a.hp,b.hp], [9,10]);
-  G.resolveShot(s, aura); assert.deepEqual([a.hp,b.hp], [8,10]);
+  G.resolveShot(s, aura); assert.deepEqual([a.hp,b.hp], [9,9]);
+  G.resolveShot(s, aura); assert.deepEqual([a.hp,b.hp], [8,8]);
   G.resolveShot(s, {kind:'pierce', c:3, r:3, angle:0, upgraded:true});
-  assert.deepEqual([a.hp,b.hp], [7,9]);
-  assert.equal(b.shock, .4 * G.BATTLE_SPEED);
-  advance(s, .4 * G.BATTLE_SPEED); assert.deepEqual([a.x,b.x], [4,5]);
+  assert.deepEqual([a.hp,b.hp], [6,6]);
+  assert.equal(b.shock, .2 * G.BATTLE_SPEED);
+  advance(s, .2 * G.BATTLE_SPEED); assert.deepEqual([a.x,b.x], [4,5]);
   advance(s, .1); assert.ok(a.x < 4 && b.x < 5);
 });
 
@@ -566,14 +577,60 @@ test('餘燼火地燒到的蟲離開後完整灼燒五秒，重疊與重新進�
   assert.equal(a.burnTicks, 0);
 });
 
-test('尖刺石牆每秒傷害一格內的蟲，範圍外目標安全', () => {
-  const s = G.createState(1); s.upgradeItems = 1; G.build(s, 'wall', 5, 3); G.upgrade(s, 5, 3);
+test('尖刺石牆一次暈住周圍八格內每隻地面蟲，正面盾牌仍擋傷害', () => {
+  const s = G.createState(1); G.build(s, 'wall', 5, 3); G.upgrade(s, 5, 3);
   s.phase = 'running';
-  const a = enemy(s, 'bug', 10, 6, 3), b = enemy(s, 'flyer', 10, 5.5, 3), far = enemy(s, 'giant', 10, 6.01, 3);
-  for (const e of [a,b,far]) e.shock = 5 * G.BATTLE_SPEED;
-  G.step(s, 1 / 60); assert.equal(s.buildings[0].flash, 1);
-  advance(s, G.BATTLE_SPEED - 1 / 60); assert.deepEqual([a.hp,b.hp,far.hp], [9,9,10]);
-  G.step(s, 1 / 60); assert.deepEqual([a.hp,b.hp,far.hp], [8,8,10]);
+  const targets = [];
+  for (const dy of [-1, 0, 1]) for (const dx of [-1, 0, 1]) {
+    if (dx || dy) targets.push(enemy(s, 'bug', 10, 5 + dx, 3 + dy));
+  }
+  const flyer = enemy(s, 'flyer', 10, 6.49, 4.49);
+  const shields = [enemy(s, 'shield', 10, 6, 4), enemy(s, 'shield_down', 10, 4, 2)];
+  const far = enemy(s, 'giant', 10, 6.51, 4);
+  for (const e of s.enemies) e.shock = 1 / 60;
+  G.step(s, 1 / 60);
+  assert.ok(targets.every(e => e.hp === 9));
+  assert.equal(flyer.hp,10); assert.equal(flyer.spikeStun,0);
+  assert.ok(shields.every(e => e.hp === 10 && e.shieldFlash > 0));
+  assert.equal(far.hp, 10); assert.equal(far.spikeStun, 0);
+  const struck = [...targets, ...shields];
+  assert.ok(struck.every(e => e.spikeStun === .3 * G.BATTLE_SPEED));
+  assert.equal(s.effects.filter(e => e.kind === 'spikeHit').length, struck.length);
+  const positions = struck.map(e => [e.x, e.y]);
+  advance(s, .3 * G.BATTLE_SPEED);
+  assert.deepEqual(struck.map(e => [e.x, e.y]), positions);
+  G.step(s, 1 / 60);
+  assert.ok(struck.some((e, i) => e.x !== positions[i][0] || e.y !== positions[i][1]));
+});
+
+test('尖刺牆旁只有飛蟲和起跳的跳蟲時不出刺，跳蟲落地後才攻擊', () => {
+  const s = G.createState(1); G.build(s,'wall',5,3); G.upgrade(s,5,3); s.phase='running';
+  const wall = G.at(s,5,3), fly = enemy(s,'flyer',12,6,3), hopper = enemy(s,'hopper',12,6,4);
+  G.startLeap(s,hopper); hopper.shock = 1;
+  G.step(s,1/60);
+  assert.equal(wall.flash,0); assert.equal(wall.cooldown,0);
+  assert.equal(G.hit(s,fly,{kind:'wall',upgraded:true,c:5,r:3}),false);
+  assert.deepEqual([fly.hp,hopper.hp,fly.spikeStun,hopper.spikeStun],[12,12,0,0]);
+  assert.ok(!s.effects.some(e=>e.kind==='spikeHit'));
+  hopper.leap=null; G.step(s,1/60);
+  assert.equal(hopper.hp,11); assert.ok(hopper.spikeStun>0); assert.equal(fly.hp,12);
+});
+
+test('尖刺石牆持續出刺每 2 秒 1 次，暈眩也能立即停住擊退中的蟲', () => {
+  const s = G.createState(1); G.build(s, 'wall', 5, 3); G.upgrade(s, 5, 3);
+  s.phase = 'running';
+  const held = enemy(s, 'bug', 20, 6, 4); held.shock = 20 * G.BATTLE_SPEED;
+  const pushed = enemy(s, 'bug', 20, 5, 4);
+  G.hit(s, pushed, {kind:'push', c:2, r:4, upgraded:true});
+  G.step(s, 1 / 60);
+  const age = pushed.push.age, landingStun = pushed.stun;
+  advance(s, .3 * G.BATTLE_SPEED);
+  assert.equal(pushed.push.age, age);
+  assert.equal(pushed.stun, landingStun);
+  G.step(s, 1 / 60); assert.ok(pushed.push.age > age);
+  while (s.time < 10 * G.BATTLE_SPEED - .02) G.step(s, 1 / 60);
+  assert.equal(held.hp, 15);
+  advance(s, .05); assert.equal(held.hp, 14);
 });
 
 test('各塔分別記錄實際扣血，沿用舊紀錄到結算，忽略格擋與溢傷', () => {
@@ -586,7 +643,9 @@ test('各塔分別記錄實際扣血，沿用舊紀錄到結算，忽略格擋�
   G.hit(s, a, {kind:'pea', tower:pea.id, c:3, r:1});
   assert.equal(a.hp, 5);
   G.resolveShot(s, {kind:'molecular', tower:plasma.id, upgraded:true, target:a.id, c:4, r:1});
-  assert.equal(plasma.lastDamage, 2); assert.equal(a.dead, true); assert.equal(b.dead, true);
+  assert.equal(plasma.lastDamage, 2); assert.equal(a.dead, true); assert.equal(b.dead, false);
+  s.castle = null; pea.cooldown = 5;
+  advance(s,.3 * G.BATTLE_SPEED); assert.equal(b.dead, true);
   G.step(s, 1 / 60);
   assert.equal(plasma.lastDamage, 13); assert.equal(pea.lastDamage, 0);
   const saved = G.restore(G.snapshot(s));
@@ -595,8 +654,39 @@ test('各塔分別記錄實際扣血，沿用舊紀錄到結算，忽略格擋�
   assert.deepEqual(saved.buildings.map(b => b.lastDamage), [0,0]);
 });
 
+test('火石只鎖定兩格外至五格的地面目標，半秒後命中固定格內全部地面蟲', () => {
+  const s = G.createState(2); G.build(s,'flame',5,3); s.phase = 'running';
+  const close = enemy(s,'bug',20,3,3), far = enemy(s,'bug',20,10.01,3), air = enemy(s,'flyer',20,7,2);
+  for (const e of s.enemies) e.shock = 5;
+  G.step(s,1/60); assert.equal(s.shots.length,0);
+  const edge = enemy(s,'bug',20,10,3); edge.shock = 5;
+  G.step(s,1/60); assert.deepEqual([s.shots[0].impactX,s.shots[0].impactY],[10,3]);
+  const same = enemy(s,'bug',20,10.45,3.45), next = enemy(s,'bug',20,9.49,3);
+  same.shock = next.shock = 5; air.x = 10; air.y = 3;
+  advance(s,.5 * G.BATTLE_SPEED-2/60); assert.equal(s.fires.length,0); assert.equal(edge.hp,20);
+  G.step(s,1/60);
+  assert.deepEqual([edge.hp,same.hp,far.hp,close.hp,next.hp,air.hp],[16,16,16,20,20,20]);
+  assert.equal(s.fires.length,1); assert.ok(s.effects.some(e=>e.kind==='stoneImpact'));
+});
+
+test('城堡升級耗一晶石，多一心、同時雙箭，支援復原、重試、過關與舊存檔', () => {
+  const s = G.createState(2), {c,r} = G.LEVELS[2].goal;
+  const old = G.snapshot(s); delete old.castleUpgraded; old.version = 15;
+  assert.equal(G.restore(old).castleUpgraded,false);
+  assert.ok(G.upgrade(s,c,r).ok); assert.equal(s.upgradeItems,1); assert.equal(s.hearts,6);
+  assert.equal(G.upgrade(s,c,r).ok,false);
+  assert.ok(G.undo(s)); assert.equal(s.hearts,5); assert.equal(s.upgradeItems,2);
+  G.upgrade(s,c,r); assert.ok(G.remove(s,c,r).ok); assert.equal(s.upgradeItems,2);
+  G.undo(s); const loaded=G.restore(G.snapshot(s)); assert.equal(loaded.hearts,6);
+  G.startWave(loaded); const retry=G.retry(loaded); assert.ok(retry.castleUpgraded); assert.equal(retry.upgradeItems,1);
+  loaded.queue=[]; const target=enemy(loaded,'bug',4,c+2,r); target.shock=3;
+  G.step(loaded,1/60); assert.deepEqual(loaded.shots.map(a=>a.barrelOffset),[-5,5]);
+  advance(loaded,.22); assert.equal(loaded.phase,'planning'); assert.equal(loaded.hearts,6);
+  assert.equal(loaded.upgradeItems,2); assert.ok(G.restore(G.snapshot(loaded)).castleUpgraded);
+});
+
 test('火球、地板、離開後的餘燼，各點傷害只歸屬一次', () => {
-  const s = G.createState(), a = enemy(s, 'giant', 10, 4, 3);
+  const s = G.createState(), a = enemy(s, 'giant', 13, 4, 3);
   G.resolveShot(s, {kind:'flame', tower:1, upgraded:true, target:a.id, c:3, r:3});
   assert.equal(a.hp, 7); assert.equal(a.burnTicks, 5);
   G.ignite(s, 4, 3, false, 2);
@@ -604,16 +694,16 @@ test('火球、地板、離開後的餘燼，各點傷害只歸屬一次', () =>
   assert.equal(a.hp, 6);
   a.y = 5; burn(s, 5 * G.BATTLE_SPEED);
   assert.equal(a.hp, 1);
-  assert.deepEqual(s.waveStats.damageByTower, {1:8,2:1});
+  assert.deepEqual(s.waveStats.damageByTower, {1:11,2:1});
 });
 
-test('普通雷射與尖刺石牆都暈眩 0.1 秒，尖刺只在命中時留下特效', () => {
+test('普通雷射暈眩 0.1 秒、尖刺石牆暈眩 0.3 秒，尖刺只在命中時留下特效', () => {
   const s = G.createState(1);
   const a = enemy(s, 'giant', 10, 4, 3);
   G.resolveShot(s, {kind:'pierce', c:2, r:3, angle:0, tower:1});
   assert.equal(a.shock, .1 * G.BATTLE_SPEED);
   G.hit(s, a, {kind:'wall', upgraded:true, c:3, r:3, tower:2});
-  assert.equal(a.stun, .1 * G.BATTLE_SPEED);
+  assert.equal(a.spikeStun, .3 * G.BATTLE_SPEED);
   assert.equal(s.effects.filter(e => e.kind === 'spikeHit').length, 1);
   assert.deepEqual(s.waveStats.damageByTower, {1:1,2:1});
 });

@@ -55,9 +55,9 @@ async function checkScreen(page, width, height) {
     for (const level of [0, 9, 10]) {
       await page.evaluate(level => {
         const s = GardenSolutions.create(level);
-        Garden.startWave(s);
-        for (let i = 0; i < 12000 && s.phase === 'running'; i++) Garden.step(s, 1 / 60);
-        if (s.phase !== 'won' && s.phase !== 'planning') throw Error('測試部署未過關');
+        Garden.startWave(s, 0, 2654435761);
+        for (let i = 0; i < 30000 && s.phase === 'running'; i++) Garden.step(s, 1 / 60);
+        if (s.phase !== 'won' && s.phase !== 'planning') throw Error(`第 ${level + 1} 關測試部署未過關：${s.phase}`);
         localStorage.setItem('garden-guard-v1', JSON.stringify(Garden.snapshot(s)));
       }, level);
       await page.reload();

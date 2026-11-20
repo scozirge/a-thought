@@ -45,7 +45,7 @@ test('十關共用固定地形，所有右側入口都有路；尋路不穿越�
     }
   }
 });
-test('全新開局第一波就是盾蟲；正面僅雷射和分子砲穿盾，下方依塔種扣血或緩速', () => {
+test('全新開局第一波就是盾蟲；雷射、分子砲與冰凍靈氣能穿盾', () => {
   for (const kind of Object.keys(G.TOOLS).filter(kind => kind !== 'wall')) {
     for (const r of [2, 4]) {
       // Restoring a previous first-wave save must also use the updated wave.
@@ -54,8 +54,11 @@ test('全新開局第一波就是盾蟲；正面僅雷射和分子砲穿盾，�
       G.startWave(s);
       assert.ok(s.queue.slice(0, 3).every(e => e.kind === 'shield' && e.hp === 6));
       s.queue = s.queue.filter(e => e.kind === 'shield' && e.row === 3);
-      simulate(s, kind === 'molecular' ? 5 : 3.5);
-      if (r === 2 && kind !== 'pierce' && kind !== 'molecular') {
+      if (kind === 'flame') {
+        s.queue = []; G.spawn(s, 'shield', 6, 3, {x:11,y:3}).shock = 2;
+      }
+      simulate(s, kind === 'flame' ? 1.6 : kind === 'molecular' ? 5 : 3.5);
+      if (r === 2 && !G.TOOLS[kind].piercesShield) {
         assert.ok(s.stats.blocked > 0, kind);
         assert.equal(s.stats.hits, 0);
         assert.ok(s.enemies.length > 0);
@@ -71,11 +74,11 @@ test('全新開局第一波就是盾蟲；正面僅雷射和分子砲穿盾，�
   }
 });
 
-test('盾蟲抵擋上方：不扣數字、不減速；下方冰凍緩速、一般彈減 1', () => {
+test('冰凍靈氣從上下兩側都能緩速盾蟲，普通冰塔不扣血', () => {
   const s = G.createState(), e = G.spawn(s, 'shield', 4);
   e.y = 3;
-  assert.equal(G.hit(s, e, { c: 8, r: 1, kind: 'frost' }), false);
-  assert.equal(e.hp, 4); assert.equal(e.slow, 0); assert.equal(s.stats.blocked, 1);
+  assert.equal(G.hit(s, e, { c: 8, r: 1, kind: 'frost' }), true);
+  assert.equal(e.hp, 4); assert.ok(e.slow > 0); assert.equal(s.stats.blocked, 0);
   assert.equal(G.hit(s, e, { c: 8, r: 5, kind: 'frost' }), true);
   assert.equal(e.hp, 4); assert.ok(e.slow > 0); assert.equal(e.flash, 0);
   assert.equal(G.hit(s, e, { c: 8, r: 5, kind: 'pea' }), true); assert.equal(e.hp, 3);

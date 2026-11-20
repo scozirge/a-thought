@@ -28,7 +28,16 @@ const out = path.join(__dirname, '../dist/browser-check');
           const matrix = glyph?.transform.baseVal.getItem(0).matrix;
           return { x: matrix?.e, y: matrix?.f, flare: !!probe.querySelector('.muzzle-flare'), size: glyph?.getBBox().height, shadow: !!probe.querySelector('ellipse'), trail: !!probe.querySelector('.shot-trail') };
         }
-        return { kind, launch: frame(.05), middle: frame(.5), impact: frame(1) };
+        if (kind === 'flame' && frame(.05).x !== undefined) throw Error('投石臂尚在揮動，石頭應留在石斗裡');
+        if (kind === 'flame') {
+          for (const peak of [.25, .55, .85]) {
+            probe.innerHTML = GardenArt.flight('flame', 100,80,300,80,peak,0);
+            const fire = probe.querySelector('.meteor-flame'), rock = probe.querySelector('.meteor-stone');
+            if (!fire || !rock || fire.contains(rock) || fire.transform.baseVal.getItem(1).matrix.a >= 0)
+              throw Error('火焰應持續朝向水平速度的後方，且與岩塊分開旋轉');
+          }
+        }
+        return { kind, launch: frame(kind === 'flame' ? .18 : .05), middle: frame(.5), impact: frame(1) };
       });
       probe.remove();
       return result;
@@ -40,10 +49,11 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok(size('molecular') > size('cannon'));
     assert.equal(await p.locator('#art-shot-pierce, #art-shot-frost').count(), 0);
     for (const { kind, launch, middle, impact } of paths) {
-      assert.ok(launch.flare && !middle.trail && !middle.shadow && !impact.flare, kind);
+      assert.equal(launch.flare, kind !== 'flame', kind);
+      assert.ok(!middle.trail && !middle.shadow && !impact.flare, kind);
       assert.ok(middle.x > 100 && middle.x < 300, kind);
       assert.equal(impact.x, 300, kind); assert.equal(impact.y, 80, kind);
-      if (kind === 'cannon') assert.ok(middle.y < 80, kind);
+      if (['cannon','flame','molecular'].includes(kind)) assert.ok(middle.y < 80, kind);
       else assert.equal(middle.y, 80, kind);
     }
     assert.equal(await p.locator('#tower-info').isVisible(), false);
@@ -81,6 +91,21 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok((await read()).buildings.some(b => b.c === 7 && b.r === 4 && b.kind === 'wall'));
     await press('#reset'); assert.equal((await read()).money, G.LEVELS[0].money); assert.equal((await read()).buildings.length, 0);
     await p.locator('#level-select').selectOption('9'); assert.equal((await read()).level, 9); assert.equal((await read()).money, G.LEVELS[9].money);
+    const castle = G.LEVELS[9].goal;
+    const castleCell = p.locator(cell(castle.c,castle.r)), preview = p.locator('#tower-info .next-upgrade');
+    await castleCell.hover(); assert.equal(await preview.count(),0);
+    await p.locator('[data-tool="pierce"]').hover(); assert.equal(await preview.count(),0);
+    await press('#upgrade'); await p.locator('[data-tool="pierce"]').hover();
+    assert.match(await preview.innerText(),/電弧雷射砲/);
+    await press('#upgrade'); await castleCell.hover(); assert.equal(await preview.count(),0);
+    await press('#upgrade'); await castleCell.hover(); assert.match(await preview.innerText(),/雙弩城堡/);
+    await press(cell(castle.c,castle.r));
+    assert.equal(await preview.count(),0);
+    assert.equal((await read()).upgradeItems,8); assert.equal((await read()).hearts,6);
+    assert.equal(await p.locator('#castle-bow use').count(),2);
+    await p.reload(); assert.ok((await read()).castleUpgraded);
+    await press('#remove'); await press(cell(castle.c,castle.r));
+    assert.equal((await read()).upgradeItems,9); assert.equal(await p.locator('#castle-bow use').count(),1);
     assert.equal(await p.locator('#action').textContent(), '下一關');
     assert.doesNotMatch(await p.locator('body').innerText(), /移動路徑|盾甲蟲|從下方打/);
     for (const width of [1440,900,390,320]) {

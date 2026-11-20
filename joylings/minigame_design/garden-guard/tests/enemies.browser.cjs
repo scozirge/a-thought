@@ -32,7 +32,7 @@ const out = path.join(__dirname, '../dist/browser-check');
   async function screenshot(name) { await p.mouse.move(20, 20); await p.screenshot({ path: path.join(out, `enemy-${name}.png`), fullPage: true }); }
   try {
     await p.goto(base);
-    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 9);
+    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 12);
     assert.equal(await p.evaluate(() => Garden.LEVELS.every(l=>l.waves.flat().every(g=>g.kind!=='bomber'))),true);
     for (const dy of [-1, 1]) {
       const walls = [['wall', 9, 3]];
@@ -111,7 +111,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     const stag = await p.evaluate(() => {
       function sample(hp, time) {
         const svg = new DOMParser().parseFromString(
-          `<svg xmlns="http://www.w3.org/2000/svg">${GardenArt.bug('giant',hp,time,0,0,false,'',218)}</svg>`, 'image/svg+xml');
+          `<svg xmlns="http://www.w3.org/2000/svg">${GardenArt.bug('stagBoss',hp,time,0,0,false,'',218)}</svg>`, 'image/svg+xml');
         return {
           size: svg.querySelector('.bug-art').getAttribute('transform'),
           jaws: [...svg.querySelectorAll('use[href="#art-stagJaw"]')].map(node =>
@@ -191,6 +191,6 @@ const out = path.join(__dirname, '../dist/browser-check');
     });
     await screenshot('catalog');
     assert.deepEqual(errors, []);
-    console.log(JSON.stringify({ passed: true, enemyKinds: 9, lowerShield: true, leap: true, hatching: true, flying: true, flyerHp:7, splitting: true, bomberRemoved:true, browserErrors: errors }));
+    console.log(JSON.stringify({ passed: true, enemyKinds: 12, lowerShield: true, leap: true, hatching: true, flying: true, flyerHp:7, splitting: true, bomberRemoved:true, browserErrors: errors }));
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

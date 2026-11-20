@@ -37,17 +37,17 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
       await p.locator('.cell-hit[data-c="2"][data-r="7"]').click();
       await p.locator('#solution').click();
       const state=await read(),expected=S.create(level);
-      assert.equal(state.upgradeItems, level);
+      assert.equal(state.upgradeItems, expected.upgradeItems);
       assert.deepEqual(placements(state),S.layouts[level]);
       assert.equal(state.money,expected.money);assert.ok(state.money>=0);
-      assert.equal(state.phase,'planning');assert.equal(state.hearts,G.LEVELS[level].hearts);assert.equal(state.time,0);
+      assert.equal(state.phase,'planning');assert.equal(state.hearts,expected.hearts);assert.equal(state.time,0);
       for(const key of ['enemies','shots','effects','fires','queue','undo'])assert.equal(state[key].length,0,key);
       assert.equal(await p.locator('#undo').isDisabled(),true);
       const entries=await p.locator('.entrance').evaluateAll(nodes=>nodes.map(n=>({c:+n.dataset.c,r:+n.dataset.r,side:n.dataset.side})));
       assert.deepEqual(entries,G.entrances(level));
       for(const e of entries.filter(e=>e.side!=='right'))assert.ok(await p.locator(`.cell-hit[data-c="${e.c}"][data-r="${e.r}"]`).evaluate(n=>n.classList.contains('reserved')));
       // Each shipped answer is played through with the same engine and budget.
-      G.startWave(expected);for(let i=0;i<12000 && expected.phase==='running';i++)G.step(expected,1/60);
+      G.startWave(expected);for(let i=0;i<30000 && expected.phase==='running';i++)G.step(expected,1/60);
       assert.equal(expected.phase,level>=9?'won':'planning',`第 ${level+1} 關解答`);
       report.push({level:level+1,cost:G.LEVELS[level].money-state.money,budget:G.LEVELS[level].money,passed:true});
     }
@@ -68,11 +68,11 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
       await p.screenshot({path:path.join(__dirname,`../dist/browser-check/solution-${width}.png`),fullPage:true});
     }
     await p.locator('#action').click();
-    for (let seconds = 0; seconds < 180 && (await read()).phase === 'running'; seconds += 5) {
+    for (let seconds = 0; seconds < 300 && (await read()).phase === 'running'; seconds += 5) {
       await p.clock.runFor(5000);
     }
     const clearedBonus = await read();
-    assert.equal(clearedBonus.phase, 'won'); assert.ok(clearedBonus.hearts > 0 && clearedBonus.hearts <= 5);
+    assert.equal(clearedBonus.phase, 'won'); assert.ok(clearedBonus.hearts > 0 && clearedBonus.hearts <= 5 + Number(clearedBonus.castleUpgraded));
     assert.equal(await p.locator('#result-title').textContent(), '隱藏關勝利！');
     assert.match(await p.locator('#win-crystal').innerText(), /金幣\s+\+0/);
     assert.match(await p.locator('#win-crystal').innerText(), /升級晶石\s+\+1/);

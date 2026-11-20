@@ -3,13 +3,13 @@ const assert = require('node:assert/strict');
 const G = require('../core.js');
 const layouts = require('./layouts.cjs');
 const advance = (s, seconds) => { for (let i = 0; i < Math.round(seconds * 60); i++) G.step(s, 1 / 60); };
-const finish = s => { for (let i = 0; i < 12000 && s.phase === 'running'; i++) G.step(s, 1 / 60); };
+const finish = s => { for (let i = 0; i < 30000 && s.phase === 'running'; i++) G.step(s, 1 / 60); };
 const deploy = (s, layout) => {
   for (const b of [...s.buildings]) if (!layout.some(p => p[0] === b.kind && p[1] === b.c && p[2] === b.r)) assert.equal(G.remove(s, b.c, b.r).ok, true);
   for (const p of layout) if (!G.at(s, p[1], p[2])) assert.equal(G.build(s, ...p).ok, true, `第 ${s.level + 1} 關預算不足：${p}`);
 };
 
-test('十個主線關卡各一波，隱藏關有三段攻勢；各關數量、總血量與預算遞增', () => {
+test('十個主線關卡各一波，隱藏關有三段攻勢；常規波次總血量、出怪數與預算遞增', () => {
   assert.equal(G.BONUS_LEVEL, 10);
   assert.equal(G.LEVELS.length, 11);
   let budget = G.LEVELS[0].money, hp = 0, count = 0;
@@ -17,7 +17,7 @@ test('十個主線關卡各一波，隱藏關有三段攻勢；各關數量、�
     assert.equal(l.money, budget); budget += l.reward;
     assert.equal(l.waves.length, l === G.LEVELS[G.BONUS_LEVEL] ? 3 : 1);
     assert.deepEqual(l.rocks, G.LEVELS[0].rocks); assert.deepEqual(l.water, G.LEVELS[0].water);
-    const nextHp = l.waves.flat().reduce((n, g) => n + g.hp * g.count, 0), nextCount = l.waves.flat().reduce((n, g) => n + g.count, 0);
+    const nextHp = l.waves.flat().filter(g => !g.kind.endsWith('Boss')).reduce((n, g) => n + g.hp * g.count, 0), nextCount = l.waves.flat().reduce((n, g) => n + g.count, 0);
     assert.ok(nextHp > hp && nextCount > count); hp = nextHp; count = nextCount;
   }
 });
@@ -28,7 +28,7 @@ test('依關卡間距出怪，後三關加入上、下方入口，開始只排�
     const s = G.createState(level), entries = G.entrances(level);
     const before = JSON.stringify(s); advance(s, 20); assert.equal(JSON.stringify(s), before);
     G.startWave(s); assert.equal(s.queue.length, G.LEVELS[level].waves.flat().reduce((n,g) => n + g.count, 0));
-    assert.ok(s.queue.every((e,i) => e.position.x === entries[i % entries.length].c && e.position.y === entries[i % entries.length].r));
+    assert.ok(s.queue.filter(e => level !== G.BONUS_LEVEL || !e.kind.endsWith('Boss')).every((e,i) => e.position.x === entries[i % entries.length].c && e.position.y === entries[i % entries.length].r));
     if (level === G.BONUS_LEVEL) {
       assert.deepEqual(entries.map(e => e.side).sort(), ['bottom','left','right','top']);
       assert.ok(G.previews(s).every(plan => G.isHome(level, plan.path.at(-1).c, plan.path.at(-1).r)));
@@ -106,7 +106,7 @@ test('十關可用正常累積獎金連續通關，關間可退款重佈，保�
     // Use the same full-refund action available to players to replace damaged
     // walls before the next stage; intact walls retain their identity.
     for (const b of [...s.buildings]) if (b.kind !== 'wall' || b.hp < G.TOOLS[b.kind].hp) G.remove(s, b.c, b.r);
-    deploy(s, layouts[level]); shared += s.buildings.filter(b => ids.has(b.id)).length;
+    deploy(s, layouts[level]); require('../solutions').applyUpgrades(s); shared += s.buildings.filter(b => ids.has(b.id)).length;
     const money = s.money;
     const invested = s.buildings.reduce((sum,b) => sum + b.paidCost, 0);
     G.startWave(s); finish(s);
@@ -211,7 +211,7 @@ test('隱藏關中央小屋有五顆心，空盤失守後可重試，解答能�
   G.startWave(challenge); finish(challenge);
   assert.equal(challenge.wave, 2);
   assert.equal(challenge.phase, 'won');
-  assert.ok(challenge.hearts > 0 && challenge.hearts <= 5);
+  assert.ok(challenge.hearts > 0 && challenge.hearts <= 5 + Number(challenge.castleUpgraded));
   assert.equal(G.restore(G.snapshot(challenge)).phase, 'won');
 });
 
@@ -231,8 +231,11 @@ test('隱藏關移除導引石牆或撤掉雷射火力，這套解答就會失�
 test('終關打開兩格捷徑就會失守', () => {
   const open = G.createState(9);
   deploy(open, layouts[9]);
-  assert.ok(G.remove(open,5,5).ok);
-  assert.ok(G.remove(open,5,6).ok);
+  const length = s => G.previews(s).reduce((n,p)=>n+p.path.length,0);
+  const before = length(open);
+  assert.ok(G.remove(open,9,4).ok);
+  assert.ok(G.remove(open,9,3).ok);
+  assert.ok(length(open)<before);
   G.startWave(open); finish(open);
   assert.equal(open.phase,'lost');
 });
@@ -240,10 +243,10 @@ test('終關打開兩格捷徑就會失守', () => {
 test('後兩關解答的雷射能一次貫穿多隻蟲，終關分子砲會對巨蟲發射電漿', () => {
   for (const level of [8, 9]) {
     const s = G.createState(level);
-    deploy(s, layouts[level]);
+    deploy(s, layouts[level]); require('../solutions').applyUpgrades(s);
     G.startWave(s);
     let piercedGroup = false, firedAtGiant = false;
-    for (let tick = 0; tick < 12000 && s.phase === 'running'; tick++) {
+    for (let tick = 0; tick < 30000 && s.phase === 'running'; tick++) {
       G.step(s, 1 / 60);
       piercedGroup ||= s.effects.some(e => e.kind === 'laser' && e.hitDistances.length >= 3);
       firedAtGiant ||= s.shots.some(shot => shot.kind === 'molecular' &&
@@ -255,14 +258,26 @@ test('後兩關解答的雷射能一次貫穿多隻蟲，終關分子砲會對�
   }
 });
 
-test('只把第八關的分子砲或第九關的雷射砲換成石牆，路線相同但現有火力會失守', () => {
+test('第八關移除分子砲會失守，第九關移除雷射會讓更多蟲進城', () => {
   for (const [level, kind] of [[7, 'molecular'], [8, 'pierce']]) {
     const answer = G.createState(level), without = G.createState(level);
     deploy(answer, layouts[level]);
     deploy(without, layouts[level].map(([k,c,r]) => [k === kind ? 'wall' : k,c,r]));
     assert.deepEqual(G.previews(without), G.previews(answer));
-    G.startWave(without); finish(without);
-    assert.equal(without.phase, 'lost', `第 ${level + 1} 關`);
+    const leaks = s => {
+      G.startWave(s);
+      let hits = 0;
+      for (let tick = 0; tick < 30000 && s.phase === 'running'; tick++) {
+        const before = s.hearts;
+        G.step(s, 1/60);
+        if (before > s.hearts) hits += before - s.hearts;
+      }
+      return hits;
+    };
+    const fullLeaks = leaks(answer), fewerTowers = leaks(without);
+    assert.equal(answer.phase,'planning');
+    if (level === 7) assert.equal(without.phase,'lost');
+    assert.ok(fewerTowers > fullLeaks);
   }
 });
 

@@ -70,7 +70,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(frost.shots.length, 0);
     assert.ok(frost.effects.some(e => e.kind === 'frost' && e.x === 9 && e.y === 6 && e.radius === G.TOOLS.frost.range));
     await p.locator('[data-tool="frost"]').focus();
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'塔周圍 2.65 格緩速 30%');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'穿盾靈氣，周圍 2.65 格地面蟲緩速 30%');
     await p.screenshot({path:path.join(out,'frost-area-slow.png')});
     const frozen=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),frozen);
 
@@ -122,7 +122,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     const shot=fired.shots.find(s=>s.kind==='molecular'); assert.ok(shot); assert.equal(shot.target,tower.aim.target);
     const lockStarted=aiming.time-tower.aim.age;
     assert.ok(fired.time-lockStarted>=2*G.BATTLE_SPEED-1e-6);
-    await p.clock.runFor(200); assert.ok((await read()).stats.defeated>0);
+    await p.clock.runFor(400); assert.ok((await read()).stats.defeated>0);
     await press('#action'); await p.locator('[data-tool="cannon"]').focus();
     assert.equal(await p.locator('#tower-info .info-target').textContent(),'目標 地');
     await p.locator('[data-tool="pierce"]').focus(); assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 1'));
@@ -132,9 +132,9 @@ const out = path.join(__dirname, '../dist/browser-check');
     for (let i = 0; i < 130 && !await arc(0).count(); i++) await p.clock.runFor(32);
     assert.ok(await arc(0).isVisible());
     assert.equal(await arc(1).count(), 0);
-    assert.deepEqual((await read()).effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [9,3,1]);
+    assert.deepEqual((await read()).effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [9]);
     for (let hop = 1; hop <= 2; hop++) {
-      for (let i = 0; i < 10 && !await arc(hop).count(); i++) await p.clock.runFor(24);
+      for (let i = 0; i < 18 && !await arc(hop).count(); i++) await p.clock.runFor(24);
       assert.ok(await arc(hop).isVisible());
       assert.ok(await arc(hop - 1).locator('.plasma-contact').isVisible(), '上一跳抵達才傳出下一跳');
     }
@@ -199,6 +199,27 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok(heart.y + heart.height/2 < house.y,'碎心出現在屋頂上方');
     assert.equal(await p.locator('.broken-heart').first().locator(':scope > g').count(),2);
     await p.screenshot({path:path.join(out,'house-broken-heart.png')});
+    const bonus = G.createState(G.BONUS_LEVEL), goal = G.LEVELS[G.BONUS_LEVEL].goal;
+    assert.ok(G.upgrade(bonus, goal.c, goal.r).ok);
+    await p.evaluate(data => localStorage.setItem('garden-guard-v1', JSON.stringify(data)), G.snapshot(bonus));
+    await p.reload(); await press('#action');
+    const volley = p.locator('#shot-layer use[href="#art-shot-castle"]');
+    for (let i = 0; i < 180 && await volley.count() !== 2; i++) await p.clock.runFor(64);
+    assert.equal(await volley.count(), 2);
+    const dualArrows = await p.evaluate(() => {
+      const shots = gardenDebug.getState().shots.filter(s => s.kind === 'castle');
+      const bows = Array.from(document.querySelectorAll('#castle-bow use'));
+      const arrows = Array.from(document.querySelectorAll('#shot-layer use[href="#art-shot-castle"]'));
+      const board = document.querySelector('#board').getCTM().inverse();
+      const origin = node => new DOMPoint(0, 0).matrixTransform(node.getCTM()).matrixTransform(board);
+      return shots.map((s, i) => {
+        const start = origin(bows[i]), actual = origin(arrows[i]), t = s.age / s.duration;
+        const endX = 76 + (s.tipX + .5) * 64, endY = 40 + (s.tipY + .5) * 64 - s.lift;
+        return { x: start.x, error: Math.hypot(actual.x - start.x - (endX - start.x) * t, actual.y - start.y - (endY - start.y) * t) };
+      });
+    });
+    assert.ok(dualArrows[1].x - dualArrows[0].x > 30, '兩座弩台分立在左右塔樓');
+    assert.ok(dualArrows.every(arrow => arrow.error < .01), '中央城堡縮小時兩支箭仍各從自己的塔樓射出');
     assert.deepEqual(errors,[]);
     console.log(JSON.stringify({passed:true,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
   } finally {await browser.close();}

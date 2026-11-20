@@ -33,7 +33,9 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     assert.ok(await p.locator('#route-toggle').isChecked());
     assert.ok(await p.locator('#route-layer .ground-route').count() > 0);
     assert.equal(await p.locator('[data-tool]').count(), 8);
-    assert.equal(await p.evaluate(() => Object.keys(Garden.ENEMIES).length), 9);
+    const enemyKinds = await p.evaluate(() => Object.keys(Garden.ENEMIES));
+    assert.equal(enemyKinds.length, 12);
+    assert.deepEqual(enemyKinds.filter(kind => kind.endsWith('Boss')).sort(), ['rhinoBoss','spiderBoss','stagBoss']);
     assert.equal(await p.locator('#level-select option').count(), 10);
     for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
       await p.locator(`[data-tool="${kind}"]`).hover();
@@ -102,7 +104,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     assert.equal(await labels.count(), 0);
     await p.screenshot({ path: path.join(dist, 'browser-check/published-lower-shield.png'), fullPage: true });
     assert.deepEqual(errors, []);
-    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: 9, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: enemyKinds.length, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
     fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally { await browser.close(); }

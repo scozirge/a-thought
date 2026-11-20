@@ -187,4 +187,6 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
   .secondary-button { margin: 0; }
 }
 @media (hover: none) { .tower-info { pointer-events: none; } }
+.rhino-wings { display: none; }
+[data-kind="rhinoBoss"][data-jumping="true"] .rhino-wings { display: inline; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } .fx-accent { display: none; } }
