@@ -382,14 +382,15 @@ test('四面守園保護中央格，舊盤面搬家會退還原價與晶石且�
   const level=G.BONUS_LEVEL, s=G.createState(level), goal=G.LEVELS[level].goal;
   assert.deepEqual(goal,{c:5,r:3});
   assert.equal(G.build(s,'pea',5,3).ok,false);
-  const old=G.snapshot(s); old.version=13; old.hearts=1; old.money-=27;
+  const old=G.snapshot(s); old.version=13; old.hearts=1; old.money-=27; old.upgradeItems=0;
   old.buildings=[
     {kind:'molecular',c:5,r:3,hp:5,paidCost:22,upgraded:true,lastDamage:30},
     {kind:'pea',c:5,r:7,hp:5,paidCost:5,upgraded:false,lastDamage:1}
   ];
   const migrated=G.restore(old);
   assert.equal(migrated.hearts,5); assert.equal(migrated.money,250);
-  assert.equal(migrated.upgradeItems,1); assert.equal(migrated.buildings.length,0);
+  assert.equal(migrated.upgradeItems,10); assert.equal(migrated.buildings.length,0);
+  assert.equal(G.restore(G.snapshot(migrated)).upgradeItems,10);
   assert.equal(G.restore(G.snapshot(migrated)).money,250);
   s.phase='running';
   for (const entry of G.entrances(level)) G.spawn(s,'flyer',5,entry.r,{x:entry.c,y:entry.r});

@@ -31,10 +31,13 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
         await p.reload(); await p.locator('#result-primary').click();
       }
       await p.locator('#level-select').selectOption(String(level));
+      assert.equal((await read()).upgradeItems, level);
+      assert.equal(await p.locator('#upgrade-count').textContent(), String(level));
       await p.locator('[data-tool="pea"]').click();
       await p.locator('.cell-hit[data-c="2"][data-r="7"]').click();
       await p.locator('#solution').click();
       const state=await read(),expected=S.create(level);
+      assert.equal(state.upgradeItems, level);
       assert.deepEqual(placements(state),S.layouts[level]);
       assert.equal(state.money,expected.money);assert.ok(state.money>=0);
       assert.equal(state.phase,'planning');assert.equal(state.hearts,G.LEVELS[level].hearts);assert.equal(state.time,0);

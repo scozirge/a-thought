@@ -466,20 +466,35 @@ test('升級晶石只在通關時發一次，拆除與復原同步還原晶石�
   assert.equal(G.restore({ ...s.checkpoint, upgradeItems: 1 }), null);
 });
 
-test('戰鬥摧毀升級塔立即退原價，接關只領獎金與通關晶石，重試恢復戰前部署', () => {
+test('摧毀升級塔退回原價與晶石，重試不重複退款，過關另得一顆', () => {
   const s = G.createState(1); s.upgradeItems = 1;
   for (let r = 0; r < G.ROWS; r++) G.build(s, r === 3 ? 'pea' : 'wall', 8, r);
   G.upgrade(s, 8, 3); const money = s.money;
   G.startWave(s); s.queue = [];
   for (let i = 0; i < 4; i++) enemy(s, 'shield', 100, 9, 3);
   for (let i = 0; i < 3000 && !s.stats.broken; i++) G.step(s, 1 / 60);
-  assert.equal(s.stats.broken, 1); assert.equal(s.money, money + G.TOOLS.pea.cost); assert.equal(s.upgradeItems, 0);
+  assert.equal(s.stats.broken, 1); assert.equal(s.money, money + G.TOOLS.pea.cost); assert.equal(s.upgradeItems, 1);
   const retry = G.retry(s);
   assert.equal(G.at(retry, 8, 3).upgraded, true); assert.equal(retry.money, money); assert.equal(retry.upgradeItems, 0);
   advance(s, 30);
   const next = G.restore(G.snapshot(s));
   assert.equal(next.level, 2); assert.equal(G.at(next, 8, 3), undefined);
-  assert.equal(next.money, money + G.TOOLS.pea.cost + G.LEVELS[1].reward); assert.equal(next.upgradeItems, 1);
+  assert.equal(next.money, money + G.TOOLS.pea.cost + G.LEVELS[1].reward); assert.equal(next.upgradeItems, 2);
+});
+
+test('選關、舊部署與完成存檔的晶石總數等於已過關數，重讀不會重複補發', () => {
+  for (let level = 0; level < G.LEVELS.length; level++) {
+    assert.equal(G.createState(level).upgradeItems, level);
+  }
+  for (const completed of [false, true]) {
+    const s = G.createState(9);
+    G.build(s, 'pea', 3, 3); G.upgrade(s, 3, 3);
+    const old = { ...G.snapshot(s), version: 14, completed, upgradeItems: 2 };
+    const restored = G.restore(old), available = (completed ? 10 : 9) - 1;
+    assert.equal(restored.upgradeItems, available);
+    assert.equal(G.at(restored, 3, 3).upgraded, true);
+    assert.equal(G.restore(G.snapshot(restored)).upgradeItems, available);
+  }
 });
 
 test('連射塔的實際射速為原本的 2.5 倍，重裝大砲的直擊和爆風同為四點', () => {
