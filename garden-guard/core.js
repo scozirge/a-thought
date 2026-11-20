@@ -335,7 +335,7 @@
     return { x: enemy.x + dx * scale, y: enemy.y + side * scale * (0.15 + 0.34 * Math.sqrt(1 - (dx / 0.47) ** 2)) };
   }
   const RECOIL_SECONDS = .38;
-  const EFFECT_SECONDS = { home: .95, block: .6, split: .9, hatch: .9, leap: .9, frost: .85, blast: .64, laser: .43, plasmaArc: .93, spikeHit: .32, spark: .31, flare: .54, molecular: .65 };
+  const EFFECT_SECONDS = { home: .95, block: .6, split: .9, hatch: .9, leap: .9, frost: .85, blast: .64, laser: .43, plasmaArc: .98, spikeHit: .32, spark: .31, flare: .54, molecular: .65 };
   function effect(state, kind, x, y, details = {}) {
     const duration = EFFECT_SECONDS[kind] ?? 0.45;
     state.effects.push({ kind, x, y, life: duration, duration, ...details });
@@ -603,8 +603,8 @@
         if (distance <= tool.chainRange && distance < nearest) { next = enemy; nearest = distance; }
       }
       if (!next) break;
-      effect(state, 'plasmaArc', previous.x, previous.y, { lift: enemyLift(previous, state.time),
-        toX: next.x, toY: next.y, toLift: enemyLift(next, state.time), hop: visited.size - 1, damage });
+      effect(state, 'plasmaArc', previous.x, previous.y, { fromEnemy: previous, toEnemy: next,
+        lift: enemyLift(previous, state.time), toLift: enemyLift(next, state.time), hop: visited.size - 1, damage });
       hit(state, next, shot, { damage });
       visited.add(next.id); previous = next;
     }

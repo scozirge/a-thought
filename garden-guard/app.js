@@ -10,15 +10,19 @@
   const UNLOCK = 'garden-guard-bonus-unlocked';
   const BATTLE_SPEED = G.BATTLE_SPEED;
   const enemyHealth = $('enemy-health'), showRoutes = $('route-toggle');
+  const settings = document.querySelector('.display-settings');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let state = G.createState(), selected = 'pea', hover = null, focusCell = { c: 6, r: 5 };
   let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
   let finishAge = null, resultAfterHeart = false, frameId = null;
   let infoAnchor = null, infoTimer = 0, unlockSaved = false;
+  let seenRewardLevel = null;
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE));
     const saved = G.restore(data);
     if (saved) {
       state = saved;
+      seenRewardLevel = data.seenRewardLevel ?? null;
       showRoutes.checked = data.showRoutes !== false;
       enemyHealth.checked = typeof data.showEnemyHealth === 'boolean' ? data.showEnemyHealth : state.level === 0;
     }
@@ -74,7 +78,7 @@
         localStorage.setItem(UNLOCK, '1');
         unlockSaved = true;
       }
-      localStorage.setItem(STORAGE, JSON.stringify({ ...data, showRoutes: showRoutes.checked, showEnemyHealth: enemyHealth.checked }));
+      localStorage.setItem(STORAGE, JSON.stringify({ ...data, seenRewardLevel, showRoutes: showRoutes.checked, showEnemyHealth: enemyHealth.checked }));
     } catch {}
   }
   function feedback(text, c, r) {
@@ -338,20 +342,9 @@
         return `<g clip-path="url(#field-bounds)"><g class="laser-beam" ${at}>${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S), tower ? visibleFlash(tower) : 0, e.upgraded)}</g></g>`;
       }
       if (e.kind === 'plasmaArc') {
-        const dx = X(e.toX) - x, dy = Y(e.toY) - e.toLift - y, length = Math.hypot(dx, dy) || 1;
-        const age = e.duration - life - e.hop * .12;
-        if (age < 0) return '';
-        const progress = Math.min(1, age / .21), fade = Math.min(1, life / .25);
-        const bend = Math.min(13, length * .23);
-        const points = [0, .18, .32, .56, .72, .9, 1].map((u, i) => {
-          const shift = i === 0 || i === 6 ? 0 : (i % 2 ? 1 : -1) * bend * (.75 + .25 * Math.sin(age * 24 + i));
-          return `${dx * u - dy * shift / length},${dy * u + dx * shift / length}`;
-        }).join(' ');
-        const stroke = `points="${points}" pathLength="1" stroke-dasharray="${progress} 2"`;
-        return `<g class="plasma-arc" transform="translate(${x} ${y})" opacity="${fade}" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <polyline ${stroke} stroke="#ae61ed" stroke-width="12" opacity=".4"/><polyline ${stroke} stroke="#7440a1" stroke-width="6.5"/><polyline ${stroke} stroke="#f5deff" stroke-width="3.1"/>
-          <circle cx="${dx * progress}" cy="${dy * progress}" r="4.8" fill="#fff6b0" stroke="#9754c5" stroke-width="2"/>
-          ${progress === 1 ? `<circle cx="${dx}" cy="${dy}" r="${6 + Math.min(1, age) * 16}" stroke="#e0c2ff" stroke-width="2.6"/>` : ''}</g>`;
+        const from = e.fromEnemy, to = e.toEnemy;
+        return A.plasmaArc(X(from.x), Y(from.y) - (from.dead ? e.lift : lift(from)),
+          X(to.x), Y(to.y) - (to.dead ? e.toLift : lift(to)), e.duration - life, e.hop, reducedMotion.matches);
       }
       if (e.kind === 'spikeHit') {
         return `<g class="spike-hit" ${at} fill="none" stroke-linecap="round"><circle r="${3 + t * 12}" stroke="#fff3b4" stroke-width="2.5"/>${[15,135,255].map(a => `<path transform="rotate(${a})" d="M${6 + 8 * t} 0h6" stroke="#866744" stroke-width="3"/>`).join('')}</g>`;
@@ -438,23 +431,36 @@
     $('action').classList.toggle('pause-state', advancing);
   }
   function victoryLoot(gold) {
-    return `<span>${A.icon('coin')}金幣 +${gold}</span><span>${A.icon('crystal')}升級晶石 +1</span>`;
+    return `<span class="loot-coin">${A.icon('coin')}<span>金幣 <b>+${gold}</b></span></span><span class="loot-crystal">${A.icon('crystal')}<span>升級晶石 <b>+1</b></span></span>`;
   }
+  const clearedLevel = () => state.phase === 'won' ? state.level + 1 : state.level;
   function outcome() {
     resultAfterHeart = false;
     hideInfo();
-    const won = state.phase === 'won', bonus = state.level === G.BONUS_LEVEL;
+    const nextStage = state.phase === 'planning', won = nextStage || state.phase === 'won';
+    const bonus = state.level === G.BONUS_LEVEL;
     $('win-crystal').hidden = !won;
     if (won) $('win-crystal').innerHTML = victoryLoot(state.lastReward);
     $('result-art').innerHTML = A.icon(won ? 'trophy' : 'leaf');
-    $('result-title').textContent = won ? (bonus ? '隱藏關勝利！' : '第 10 關勝利！') : '再試一次';
+    $('result-title').textContent = won ? (bonus ? '隱藏關勝利！' : `第 ${clearedLevel()} 關勝利！`) : '再試一次';
     const invite = $('bonus-invite');
-    invite.hidden = !(won && !bonus);
+    invite.hidden = !(state.phase === 'won' && !bonus);
     invite.textContent = invite.hidden ? '' : '隱藏關「四面守園」已開啟，守住中央的城堡！';
-    $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
-    $('result-primary').textContent = won ? (bonus ? '再玩一次' : '挑戰第 11 關') : '重試這關';
+    $('result-hearts').hidden = nextStage;
+    if (!nextStage) $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
+    $('result-primary').textContent = nextStage ? `部署第 ${state.level + 1} 關` : won ? (bonus ? '再玩一次' : '挑戰第 11 關') : '重試這關';
+    $('result-secondary').hidden = nextStage;
     $('result-secondary').textContent = won ? '看看花園' : '回到第一關';
+    if (won) $('result').setAttribute('aria-describedby', invite.hidden ? 'win-crystal' : 'win-crystal bonus-invite');
+    else $('result').removeAttribute('aria-describedby');
     if (!$('result').open) $('result').showModal();
+  }
+  function dismissOutcome() {
+    if (state.phase !== 'lost') {
+      seenRewardLevel = clearedLevel();
+      save();
+    }
+    $('result').close();
   }
   function sync(force = false, settling = false) {
     if (lastLevel !== state.level) {
@@ -479,15 +485,9 @@
       finishAge = finished || resultAfterHeart ? 0 : null;
       lastPhase = state.phase;
       if (state.phase !== 'paused') save();
-      const showVictory = state.phase === 'planning' && state.lastReward > 0;
-      $('victory').hidden = !showVictory;
-      if (showVictory) {
-        $('victory-title').textContent = `第 ${state.level} 關勝利！`;
-        $('victory-loot').innerHTML = victoryLoot(state.lastReward);
-      }
-      if (finished) $('status').textContent = `勝利！獲得 ${state.lastReward} 枚金幣和 1 顆升級晶石`;
+      const hasReward = state.phase === 'won' || (state.phase === 'planning' && state.lastReward > 0);
       selection();
-      if (ended && !resultAfterHeart) outcome();
+      if (!resultAfterHeart && (state.phase === 'lost' || (hasReward && seenRewardLevel !== clearedLevel()))) outcome();
     }
     updateUI(force);
     if (force || settling || state.time !== lastWorldTime) { renderWorld(); lastWorldTime = state.time; }
@@ -499,6 +499,7 @@
     if ($('result').open) $('result').close();
     const next = replacement || G.createState(level);
     next.bonusUnlocked ||= state.bonusUnlocked;
+    seenRewardLevel = null;
     state = next; selected = 'pea'; hover = null; accumulator = 0;
     $('status').textContent = level === G.BONUS_LEVEL ? '守住中央城堡，小蟲會從四面進攻！' : '';
     lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
@@ -532,7 +533,10 @@
   }
   $('tower-info').addEventListener('pointerenter', () => clearTimeout(infoTimer));
   $('tower-info').addEventListener('pointerleave', deferHideInfo);
-  document.addEventListener('pointerdown', event => { if (!event.target.closest('#tower-info, [data-tool]')) hideInfo(); });
+  document.addEventListener('pointerdown', event => {
+    if (!event.target.closest('#tower-info, [data-tool]')) hideInfo();
+    if (settings.open && !settings.contains(event.target)) settings.open = false;
+  });
   window.addEventListener('resize', repositionInfo);
   document.addEventListener('scroll', repositionInfo, true);
   $('upgrade').addEventListener('click', () => {
@@ -610,15 +614,20 @@
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(focusCell.c, focusCell.r); }
   });
   document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && settings.open && !$('result').open) {
+      settings.open = false; settings.querySelector('summary').focus(); return;
+    }
     if (event.key === 'Escape' && !$('result').open) { hideInfo(); selected = null; hover = null; selection(); updateUI(true); }
   });
   $('result-primary').addEventListener('click', () => {
-    if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
+    if (state.phase === 'planning') dismissOutcome();
+    else if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
     else if (state.level === G.BONUS_LEVEL - 1) {
       loadLevel(G.BONUS_LEVEL);
     } else loadLevel(0);
   });
-  $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else $('result').close(); });
+  $('result-secondary').addEventListener('click', () => { if (state.phase === 'lost') loadLevel(0); else dismissOutcome(); });
+  $('result').addEventListener('cancel', event => { event.preventDefault(); dismissOutcome(); });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && G.isAdvancing(state)) { G.togglePause(state); save(); sync(true); }
     accumulator = 0; lastFrame = 0;
