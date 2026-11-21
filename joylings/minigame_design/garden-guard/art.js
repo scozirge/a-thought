@@ -3,6 +3,13 @@
 
   // Static drawings are defined once. The board only moves the instances.
   const icons = {
+    hammer: `<g transform="rotate(38 12 12)" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M10 8h4l.4 12.4-1.1 2h-2.7l-1-2Z" fill="#773e34" stroke="#503037" stroke-width="1.2"/>
+      <path d="M10.6 13.3h2.9m-3 2.8 3-.9m-3 3.8 3-.9" stroke="#cf8c58" stroke-width="1.3"/>
+      <path d="M3 3.4 6 2l2.5 1.2h6.3L18 2l3 1.3v6.2l-2.8 1.3-3.7-1.6H8.3L5.4 11 3 9.6Z" fill="#ecba59" stroke="#593c33" stroke-width="1.3"/>
+      <path d="M5.4 4.4 8 5h7.4L18 3.9v4.7L15 7.5H8l-2.6 1.3Z" fill="#536579"/>
+      <path d="m12 4.1 2.3 2.1L12 8.5 9.7 6.2Z" fill="#faf0b4" stroke="#9b702e" stroke-width=".7"/>
+      <path d="m3.8 3.9 1.7-.9m13.2.1 1.5.6M10.6 10.2h2.9m-3.2 10.4h3.3" fill="none" stroke="#fff1a3" stroke-width="1.2"/></g>`,
     crystal: '<path d="m12 1 8 6 2 7-10 9L2 14l2-7Z" fill="#ba83de" stroke="#59386a" stroke-width="1.6"/><path d="m12 2 4 6-4 13L7 8Z" fill="#f2d8ff"/><path d="m3 13 4-5 5 13Z" fill="#9061b1"/><path d="m12 2-5 6H5Z" fill="#fff4ff"/>',
     coin: `<circle cx="12" cy="13" r="10" fill="#d89015" stroke="#8c5516" stroke-width="1.4"/>
       <circle cx="11.5" cy="10.8" r="9.2" fill="#ffcc41" stroke="#a06314" stroke-width="1.4"/>
@@ -31,20 +38,20 @@
     if (t < .24) return 65 + 5 * Math.sin((t - slingRelease) * Math.PI / .1);
     return 65 * (1 - ease((t - .24) / .47));
   }
-  function catapult(heavy) {
+  function catapult(heavy, mounted = false) {
     const timber = heavy ? '#884932' : '#b17a45', iron = heavy ? '#494b58' : '#826045';
     const rim = heavy ? '#e9ae50' : '#d7a15d';
     const wheels = [-17, 16].map(x => `<g transform="translate(${x} 17)">
       <circle r="8" fill="${iron}" stroke-width="2.3"/><circle r="5.5" fill="${rim}"/>
       <path d="M-4.5 0h9M0-4.5v9" stroke="${iron}" stroke-width="1.6"/><circle r="1.8" fill="#ffe2a0" stroke="none"/></g>`).join('');
     return `<g class="catapult" stroke="#48372c">
-      <ellipse cx="0" cy="24" rx="27" ry="4" fill="#344534" stroke="none" opacity=".23"/>
+      ${mounted ? '' : `<ellipse cx="0" cy="24" rx="27" ry="4" fill="#344534" stroke="none" opacity=".23"/>
       <path d="m-25 9 6-6h38l6 6-3 6h-44Z" fill="${timber}"/>
-      <path d="M-22 9h43" stroke="#e7b57a"/>
+      <path d="M-22 9h43" stroke="#e7b57a"/>`}
       <path d="m-20 9 15-21h5L16 10h-7L-3-5-14 10Z" fill="${timber}"/>
       <path d="M-16 7-4-9" stroke="#f3cb92" stroke-width="2"/>
       ${heavy ? '<path d="m-11-6 5-7h8l5 8-4 3-4-5-6 5Z" fill="#59616a"/><path d="M-24 9h10v6h-10Zm37 0h10v6H13Z" fill="#d19b4b"/>' : ''}
-      ${wheels}
+      ${mounted ? '' : wheels}
       <g style="transform-origin:-2px -7px;transform:rotate(var(--sling-swing,0deg))">
         <path d="m-25-18 3-6L14-1 11 5Z" fill="${timber}"/><path d="M-17-18 8-2" stroke="#f2c281" stroke-width="2"/>
         <path d="m8-3 6 1 2 8-7 1-3-5Z" fill="${iron}"/>
@@ -430,7 +437,8 @@
     const id = upgraded ? 'advanced-shot-flame' : 'shot-flame';
     return flame + ref(id, `class="shot-flame meteor-stone" transform="translate(${x} ${y}) rotate(${spin}) scale(${.83 + .17 * ease(t / .15)})"`);
   }
-  function shot(kind, x, y, angle, t = 0, upgraded = false) {
+  function shot(kind, x, y, angle, t = 0, upgraded = false, weapon) {
+    if (fusionRounds[weapon]) return ref('round-' + weapon, `class="fusion-round" transform="translate(${x} ${y}) rotate(${angle}) scale(${upgraded ? 1.15 : 1})"`);
     if (kind === 'flame') {
       const a = angle * Math.PI / 180;
       return meteor(x, y, Math.cos(a) * 160, Math.sin(a) * 160, t, upgraded);
@@ -442,27 +450,29 @@
     if (kind === 'push') pose = `scale(${1 - .22 * swell} ${.75 + .6 * t})`;
     return ref((upgraded && kind !== 'castle' ? 'advanced-shot-' : 'shot-') + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
   }
-  function flight(kind, cx, cy, tx, ty, t, launchAngle, upgraded = false, barrelOffset = 0) {
+  function flight(kind, cx, cy, tx, ty, t, launchAngle, upgraded = false, barrelOffset = 0, scale = 1, weapon) {
     if (kind === 'flame') {
       if (t < slingRelease) return ''; // The stone is still visible in the moving spoon.
       t = (t - slingRelease) / (1 - slingRelease);
     }
-    const style = flightStyles[kind];
-    const muzzle = Math.min(style.muzzle, Math.hypot(tx - cx, ty - cy) * .55);
+    const style = flightStyles[weapon] ?? flightStyles[kind];
+    const muzzle = Math.min((weapon === 'magCannon' ? 25 : style.muzzle) * scale, Math.hypot(tx - cx, ty - cy) * .55);
     const angle = launchAngle * Math.PI / 180;
     const cupX = kind === 'flame' ? (Math.cos(angle) < 0 ? -7 : 7) : 0;
-    const sx = cx + Math.cos(angle) * muzzle - Math.sin(angle) * barrelOffset + cupX;
+    const sx = cx + Math.cos(angle) * muzzle - Math.sin(angle) * barrelOffset * scale + cupX * scale;
     // The fully raised stone cup and the plasma orb both release above their carriage.
-    const releaseHeight = kind === 'flame' ? 32 : kind === 'molecular' ? 26 : 0;
-    const sy = cy + Math.sin(angle) * muzzle + Math.cos(angle) * barrelOffset - releaseHeight;
+    const releaseHeight = kind === 'flame' ? 32 : kind === 'molecular' && weapon !== 'magCannon' ? 26 : 0;
+    const sy = cy + Math.sin(angle) * muzzle + Math.cos(angle) * barrelOffset * scale - releaseHeight * scale;
     const vx = tx - sx, vy = ty - sy;
     const arc = Math.min(style.arc || 0, Math.hypot(vx, vy) * (kind === 'flame' ? .42 : .22));
     const x = sx + vx * t, y = sy + vy * t - 4 * arc * t * (1 - t);
     const velocityY = vy - 4 * arc * (1 - 2 * t);
     if (kind === 'flame') return meteor(x, y, vx, velocityY, t, upgraded);
+    const direction = Math.atan2(velocityY, vx) * 180 / Math.PI;
+    const round = shot(kind, x, y, direction, t, upgraded, weapon);
     const pulse = Math.max(0, 1 - t * 2.5);
     const flare = pulse > 0 && style.light ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
-    return shot(kind, x, y, Math.atan2(velocityY, vx) * 180 / Math.PI, t, upgraded) + flare;
+    return round + flare;
   }
   function plasmaArc(x, y, tx, ty, age, hop, reducedMotion) {
     // Each pulse arrives just as the next link launches.
@@ -503,15 +513,32 @@
     }
     return `<g class="plasma-arc" data-hop="${hop}" transform="translate(${x} ${y}) rotate(${angle})" opacity="${opacity}" stroke-linecap="round">${light}</g>`;
   }
-  function laser(angle, length, t, hitDistances, flash, upgraded = false) {
+  function laser(angle, length, t, hitDistances, flash, upgraded = false, scale = 1, weapon) {
     const recoil = recoilOffset('pierce', flash);
-    const start = laserLensX - recoil;
+    const start = (laserLensX - recoil) * scale;
     const path = `M${start} 0H${Math.max(start, length)}`;
     const intensity = (1 - t) ** 2;
-    return `<g transform="translate(0 ${headY}) rotate(${angle})" fill="none" stroke-linecap="round">
-      <path d="${path}" stroke="#fc597f" stroke-opacity=".3" stroke-width="${(upgraded ? 6 : 4) + 7 * intensity}"/>
-      <path d="${path}" stroke="#d64262" stroke-width="${(upgraded ? 3.5 : 2) + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
+    const rail = weapon === 'mapLaser';
+    if (weapon === 'recoilRay') return `<g class="recoil-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" stroke-linecap="round" fill="none">
+      <path d="${path}" stroke="#4e8c83" stroke-width="7" opacity=".65"/><path d="${path}" stroke="#a5f3ca" stroke-width="3.7"/><path d="${path}" stroke="#fffbd1" stroke-width="1.4"/>
+      <circle class="laser-origin" cx="${start}" r="4.5" fill="#e4ffc9"/>
+      ${hitDistances.map(d=>`<g transform="translate(${d+9*t} 0) scale(${.65+.4*t})"><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#397b76" stroke-width="4.4"/><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#d9ffbf" stroke-width="2"/></g>`).join('')}</g>`;
+    if (weapon === 'heatRay') return `<g class="heat-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
+      <g transform="scale(1 ${upgraded?2:1})"><path d="${path}" stroke="#e96137" stroke-opacity=".43" stroke-width="${9+7*intensity}"/>
+      <path d="${path}" stroke="#c64c34" stroke-width="6.4"/><path d="${path}" stroke="#ffae44" stroke-width="4.7"/><path d="${path}" stroke="#ffefb3" stroke-width="2"/>
+      <path d="${path}" stroke="#fffbd7" stroke-width="3.8" stroke-dasharray="11 35" stroke-dashoffset="${-58*t}"/></g>
+      <ellipse class="laser-origin" cx="${start}" rx="${4+4*intensity}" ry="4" fill="#fff3a0"/>
+      ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${-angle})"><path d="m-8-2 4-5-1-6m10 8 4-3 1-4" stroke="#f9ad47" stroke-width="2.3"/>${ref('firePatch',`transform="translate(0 ${-7-6*t}) scale(${.63-.18*t})"`)}</g>`).join('')}</g>`;
+    if (weapon === 'cryoBeam') return `<g class="cryo-beam" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
+      <g transform="scale(1 ${upgraded?2:1})"><path d="${path}" stroke="#3476b5" stroke-width="${5+5*intensity}" opacity=".55"/><path d="${path}" stroke="#8befff" stroke-width="4.6"/><path d="${path}" stroke="#fff" stroke-width="1.6"/>
+      <path class="fx-accent" d="${path}" stroke="#edfaff" stroke-width="5.8" stroke-dasharray="2 24" stroke-dashoffset="${-48*t}"/></g>
+      <circle class="laser-origin" cx="${start}" r="${3+2*intensity}" fill="#f1ffff"/>
+      ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${25*t}) scale(${.42+.45*t})">${ref('snowflake','color="#f6ffff" stroke="#559acc"')}</g>`).join('')}</g>`;
+    return `<g transform="translate(0 ${headY * scale}) rotate(${angle})" fill="none" stroke-linecap="round">
+      <path d="${path}" stroke="${rail ? '#59ddff' : '#fc597f'}" stroke-opacity=".3" stroke-width="${(upgraded ? 6 : 4) + 7 * intensity}"/>
+      <path d="${path}" stroke="${rail ? '#397dad' : '#d64262'}" stroke-width="${(upgraded ? 3.5 : 2) + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
       ${upgraded ? `<path d="M${start} 0${Array.from({length: 16}, (_, i) => `L${start + (length - start) * (i + 1) / 16} ${i === 15 ? 0 : (i % 2 ? -1 : 1) * (2 + 3 * intensity)}`).join('')}" stroke="#9ffaff" stroke-width="2.8"/>` : ''}
+      ${rail ? `<path d="${path}" stroke="#98f9ff" stroke-width="2" stroke-dasharray="14 32" stroke-dashoffset="${-120 * t}"/>` : ''}
       <circle class="laser-origin" cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
       <g class="laser-hits">${hitDistances.map(d => `<g transform="translate(${d} 0)"><circle r="${4 + t * 12}" stroke="${upgraded ? '#a8efff' : '#ffcb77'}" stroke-width="2.7"/>
         <path transform="rotate(${22 * t}) scale(${1 - .55 * t})" d="m0-13 3 8 8-3-5 7 6 5-9-1-3 9-2-9-8 3 4-7-6-4 8 1Z" fill="#fff5c9" stroke="${upgraded ? '#4e9aa4' : '#c65340'}" stroke-width="1.7"/></g>`).join('')}</g></g>`;
@@ -593,8 +620,355 @@
   };
   const rhinoWings = `<g class="rhino-wings">${rhinoPair('rhinoWing', 'flight-wing')}</g>`;
   const rhinoCovers = rhinoPair('rhinoCover', 'wing-cover');
+  const fusionMaterials = `
+    <linearGradient id="gg-painted-steel" x2=".22" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#c3d5c9"/><stop offset=".55" stop-color="#7d9f9b"/><stop offset="1" stop-color="#476267"/></linearGradient>
+    <linearGradient id="gg-olive-armor" x2=".25" y2="1"><stop stop-color="#c6cb97"/><stop offset=".5" stop-color="#93a270"/><stop offset="1" stop-color="#63764e"/></linearGradient>
+    <linearGradient id="gg-ice-facet" x2=".3" y2="1"><stop stop-color="#ffffff"/><stop offset=".42" stop-color="#bcf6ff"/><stop offset="1" stop-color="#57b8d8"/></linearGradient>
+    <linearGradient id="gg-cast-bronze" x2="0" y2="1"><stop stop-color="#98593e"/><stop offset=".27" stop-color="#f7b65d"/><stop offset=".48" stop-color="#e58d46"/><stop offset="1" stop-color="#934b37"/></linearGradient>
+    <linearGradient id="gg-laser-glass" x2="0" y2="1"><stop stop-color="#5b4797"/><stop offset=".3" stop-color="#d6aaff"/><stop offset=".53" stop-color="#a97ce1"/><stop offset="1" stop-color="#614a9d"/></linearGradient>
+    <linearGradient id="gg-pressure-enamel" x1="0" y1="0" x2=".15" y2="1"><stop stop-color="#d8f3e4"/><stop offset=".3" stop-color="#75c8b9"/><stop offset=".65" stop-color="#419b94"/><stop offset="1" stop-color="#286b72"/></linearGradient>`;
+  const fusionHeads = {
+    tacticalAir: `
+      <g stroke="#283f43" stroke-width="2">
+        <path d="M-14 4q-3-11 6-17 10-4 17 3l2 13-9 7-12-1Z" fill="url(#gg-painted-steel)"/>
+        <path d="M-4-12 22-12l3 2-2 4H-4Zm0 14 27 1 2 3-3 3-26-2Z" fill="#46545a"/>
+        <path d="M4-11h13M4 3l13 1" stroke="#bacdc5" fill="none"/>
+        <path d="M18-13h8v7h-8Zm0 15 8 1v7l-8-1Z" fill="#263b42"/>
+        <path d="M-9-3h12v7H-9Z" fill="#acd4cc"/><path d="M-10 5v-8" stroke="#e9c36c"/>
+      </g>`,
+    tacticalGround: `
+      <g stroke="#344337" stroke-width="2.2">
+        <path d="M-17 4q-1-14 12-17 12-1 17 9l-1 13q-14 10-26 0Z" fill="url(#gg-olive-armor)"/>
+        <path d="M-3-7 20-5l4 4-3 7L-3 7Q-6 0-3-7Z" fill="#7b8b64"/>
+        <path d="m4-4 14 1" stroke="#d6d4a2"/>
+        <path d="m17-10 10 1 3 4v11l-4 4-11-2Z" fill="#c4bb87"/>
+        <ellipse cx="26.5" cy=".2" rx="3.2" ry="7" fill="#28373a"/><path d="M26-4v6" stroke="#0e2025"/>
+        <path d="m-12-4 7-4" stroke="#d3d9ac"/>
+      </g>`,
+    iceCannon: `
+      <g stroke="#295979" stroke-width="2">
+        <path d="m-9-8 14-2 17 3 8 7-10 8L1 10-11 5Z" fill="#426d96"/>
+        <path d="m0-7 18-4 13 10-14 3-17-2Z" fill="url(#gg-ice-facet)"/>
+        <path d="m-1 1 19-1 13-1-12 9L3 9Z" fill="#65c5e3"/>
+        <path d="m12-5 7-2 7 5" stroke="#f0ffff" fill="none"/>
+        <path d="M2-8 5-8 7 7 3 9Z" fill="#6a8bb8"/>
+        <circle cx="-7" r="12" fill="#3d93bd"/><circle cx="-7" r="9" fill="#53b6d8" stroke="none"/>
+      </g>
+      <g transform="translate(-7 0)" fill="none" stroke="#f5ffff" stroke-width="1.5">
+        ${[0,60,120,180,240,300].map(a => `<path transform="rotate(${a})" d="M0 0v-8.4m-2.2 2L0-4.5l2.2-1.9"/>`).join('')}
+      </g>`,
+    fireCannon: `
+      <g stroke="#63392d" stroke-width="2">
+        <path d="M-14-9q7-6 18-1l10 4 8-2 5-4q5 1 5 12t-5 12l-6-4-7-1-12 5q-14 4-19-7-3-8 3-14Z" fill="url(#gg-cast-bronze)"/>
+        <path d="M-7-11q-5 11 0 22l4 1q-4-12 0-24Z" fill="#764b3d"/>
+        <path d="M-5-6q6-3 15 0" stroke="#ffe3a2" stroke-width="2.6" fill="none"/>
+        <path d="M19-8q-5 8 0 16l5 2q-5-11 0-20Z" fill="#ae6340"/>
+        <ellipse cx="27" rx="5" ry="11" fill="#ffa24c"/>
+        <ellipse cx="27.8" rx="2.6" ry="7.4" fill="#873b28" stroke-width="1"/>
+        <path d="M27 4q-2-4 .5-7 3 6 0 8" fill="#ffe494" stroke="none"/>
+      </g>`,
+    mapLaser: `
+      <g stroke="#393c60" stroke-width="1.9">
+        <path d="M-22-5h8v10h-8Z" fill="#718096"/><ellipse cx="-21" rx="2.5" ry="5" fill="#373f59"/>
+        <path d="m-16-9 12-2 8 4-1 15-16 2q-6-9-3-19Z" fill="#626889"/>
+        <path d="M-7-8 14-7 19-4v9l-5 3-22-1Z" fill="url(#gg-laser-glass)"/>
+        <path d="m-4 1 19-2" stroke="#fff4ff" stroke-width="2.4"/><path d="m-1-5 8 0" stroke="#efd4ff"/>
+        <path d="M-10-9h4v18h-4Zm23 0h4v18h-4Z" fill="#c5b48c"/>
+        <path d="m16-7 9-5 5 3v17l-5 4-9-5Z" fill="#687993"/>
+        <ellipse cx="26.5" rx="4.1" ry="9.1" fill="#53d7e7"/><ellipse cx="27" rx="1.9" ry="5.6" fill="#e4ffff" stroke="none"/>
+      </g>`,
+    impactCannon: `<g stroke="#294c50" stroke-linejoin="round">
+      <ellipse cy="3" rx="21.5" ry="15" fill="#3e6967" stroke-width="2"/>
+      <g transform="scale(1 .76)">
+        <circle r="21.5" fill="#cb9554" stroke-width="2.2"/><circle r="17.6" fill="#36615c" stroke-width="1.6"/>
+        <circle r="14.6" fill="url(#gg-pressure-enamel)" stroke="#9edecd" stroke-width="2.3"/>
+        <circle r="10.8" fill="#244950" stroke="#304e50"/><circle r="8.1" fill="#78c8b7" stroke="#102f35"/>
+        <path d="M-6 0a6 6 0 0 1 9-5" fill="none" stroke="#e5fff0" stroke-width="2"/>
+        ${[0,60,120,180,240,300].map(a=>`<path transform="rotate(${a})" d="m-2-21 4 0-.6 3.5h-2.8Z" fill="#ffe19a" stroke="#7e633e" stroke-width=".9"/>`).join('')}
+      </g></g>`,
+    magCannon: '<path fill="#515d80" d="m-16-8 10-7 14 5 6 10-9 10-16 2-7-7Z"/><path fill="#737aa4" d="M-4-11 19-11 28-7 25-4 4-5 1 0-7-4Z"/><path fill="#738db3" d="m-4 11 23 0 9-4-3-3-21 1-3-5-8 4Z"/><path d="M4-11v6m5-6v6m6-6v6M4 5v6m5-6v6m6-6v6" stroke="#e9a776" stroke-width="2.6"/><path d="M1-3h18m-18 6h18" fill="none" stroke="#87ecff" stroke-width="1.6"/><circle cx="-7" r="5" fill="#81dffd"/><circle cx="-8" cy="-1" r="2" fill="#f3ffff" stroke="none"/>'
+  };
+  const fusionRounds = {
+    gravityCannon: `<g stroke="#59517d" stroke-width="1.4"><circle r="9.8" fill="#8276bc"/><circle r="7.4" fill="#302e51"/><ellipse rx="13" ry="4.8" transform="rotate(-25)" stroke="#c9b8ff" stroke-width="2.6" fill="none"/><path d="M-4-5q3-3 7-1" stroke="#dddeff" fill="none"/></g>`,
+    cryoPlasma: `<g stroke="#566a9f" stroke-width="1.6"><ellipse rx="11" ry="8.8" fill="#87c9ea"/><path d="m-8-1 4-6 7-1 6 6-5 6-7 2Z" fill="#c0f4ff"/><path d="m-4 0 5-5 4 3-4 5Z" fill="#fff" stroke="none"/><ellipse rx="5" ry="13" transform="rotate(22)" fill="none" stroke="#b7f8ff" stroke-width="2"/></g>`,
+    tacticalAir: '<path d="m-7-2 8-1 6 3-6 3-8-1Z" fill="#ffe6a3"/><path d="M-5-2v4" stroke="#9eaeb0"/>',
+    tacticalGround: '<path d="M-8-5-3-8 5-7 10-1 7 6-2 8-9 4Z" fill="#6b7377"/><path d="m-5-6 3 13" stroke="#e8b15a" stroke-width="3"/>',
+    iceCannon: '<path d="m-10 0 5-5 9 1 6 4-9 5-7-1Z" fill="#8bdeef" stroke="#357a99"/><path d="m-6 0 7-2 7 2-9 1Z" fill="#efffff" stroke="none"/>',
+    fireCannon: '<path d="M-10-4-5-3-7-8 1-5Q9-7 9 0 8 8 0 6l-9 1 4-5-7-2Z" fill="#ff9140" stroke="#a14c36"/><path d="m-4 0 4-3q6-1 6 3 0 4-6 3Z" fill="#ffed9a" stroke="none"/>',
+    magCannon: '<path d="m-12 0 10-6 10 3 4 3-6 4-9 2Z" fill="#85b8ff" stroke="#586ca8"/><path d="m-6 0 8-3 6 3-7 2Z" fill="#f1ffff" stroke="none"/><ellipse rx="3" ry="8" transform="rotate(18)" fill="none" stroke="#a0f4ff" stroke-width="1.6"/>'
+  };
+  const fusionPlatforms = {
+    tacticalAir: `
+      <g stroke="#424d38" stroke-width="2" stroke-linejoin="round">
+        <path d="m-27-9 7-11 22-5 18 9 5 20-10 16-29 1-13-12Z" fill="#62735a"/>
+        <path d="m-26-11 8-10 22-4 17 10-2 13-11 12-23-2-11-10Z" fill="url(#gg-olive-armor)"/>
+        <path d="m-25 4 8 7 7 1-1 9-9-2-8-8Zm18 9 10 1 2 9-13-1Zm14 0 10-6 6 3-5 10-10 2Z" fill="#b6aa7d"/>
+        <path d="m-23 8 9 6m11 3h5m10-2 8-5" stroke="#e3d8ac"/>
+        <path d="m-14-16-2-8m-4 3 5-7 5 1q-1 7-10 6Z" fill="#afc6b0"/>
+      </g>`,
+    iceCannon: `
+      <g stroke="#396888" stroke-width="1.7" stroke-linejoin="round">
+        <path d="m-25 3 8-13 20-5 20 10 1 13-13 12-25-1-10-8Z" fill="#75b8ce"/>
+        <path d="m-25 3 11-11 18-4 20 9-10 11-25 2Z" fill="#c4eff1"/>
+        <path d="m-17 7-10-13 2-14 12 8 4 14Z" fill="url(#gg-ice-facet)"/>
+        <path d="m-25-18 5 16 4 6" fill="none" stroke="#eaffff"/>
+        <path d="m-12 2-5-20 6-13 9 13-3 18Z" fill="#87dff0"/>
+        <path d="m-11-29 1 24 7-12Z" fill="#d9ffff" stroke="none"/>
+        <path d="m2-9 1-11 9-6 1 12-6 8Z" fill="#a5ebf7"/>
+        <path d="m-9 18 4-10 5 10 4-7 3 9" fill="#e8ffff" stroke-width="1.2"/>
+      </g>`,
+    fireCannon: `
+      <g stroke="#633e33" stroke-width="2" stroke-linejoin="round">
+        <path d="m-20 4 5-14 23-3 12 14v15l-6 6-26 1-8-6Z" fill="#925342"/>
+        <path d="m-22 3 7-15 23-1L22 0l-7 7-28 2Z" fill="#cc8760"/>
+        <path d="M-12 19v-5q0-10 12-11 12 1 12 11v5Z" fill="#392f31"/>
+        <path d="M-9 18q-4-5 2-10l2 4 6-8q-1 7 4 8l2-3q6 9-1 10Z" fill="#ff7c2d" stroke="none"/>
+        <path d="M-5 18q0-3 3-5l2 2 3-5q2 7 0 9Z" fill="#ffe87a" stroke="none"/>
+        <path d="M-14 20h29m-22-9v7m12-8v8" fill="none" stroke="#65504a" stroke-width="2.6"/>
+        <path d="m-22-3 1-14 10-1 1 17Z" fill="#795043"/><path d="m-24-15 1-5 13-1 1 5Z" fill="#c28960"/>
+        <path d="M-21-18q-5-4-1-10l2 3q4-5 3-11 7 6 5 12l3-2q0 9-6 9Z" fill="#ff8136" stroke="#a34f31" stroke-width="1.2"/>
+        <path d="M-19-18q-3-3 1-7l1 2 2-6q3 7-1 11Z" fill="#fff19a" stroke="none"/>
+      </g>`,
+    mapLaser: `
+      <g stroke="#3b4857" stroke-width="2" stroke-linejoin="round">
+        <path d="m-4 0 2-22 5-3 4 2-3 24Z" fill="#96a6aa"/>
+        <path d="m-4 5-15 21-7-2 2-5L-9 1Zm8-4 19 20-1 5-6-1L0 7Z" fill="#aec2bd"/>
+        <path d="m-22 19 6 3m33-3 5-3" stroke="#62757c"/>
+        <path d="m-24 21 7 3-2 4-8-2Zm40 1 6-4 5 5-7 4Z" fill="#394854"/>
+        <path d="M-11 3q0-7 11-8t12 6v7q-11 9-23 0Z" fill="#586e80"/>
+        <ellipse cy="1" rx="12" ry="7.7" fill="#acbac0"/>
+        <path d="M-8 11v-17l4-4h7l5 4v15l-5 4Z" fill="#566578"/>
+      </g>`,
+    impactCannon: `<g stroke="#304c4c" stroke-linejoin="round">
+      <path d="m-25-2 7-11 17-6 18 5 9 11-1 12-10 10-14 5-17-4-10-10Z" fill="#4b6462"/>
+      <ellipse cy="3" rx="24" ry="16" fill="#78948a" stroke-width="2"/>
+      <path d="M-17 0q17 13 34 0v9q-16 13-34 0Z" fill="#355353"/>
+      <path d="M-16 3q16 12 32 0m-32 4q16 12 32 0" fill="none" stroke="#8fbaaa" stroke-width="2"/>
+      ${[-1,1].map(side=>`<g transform="scale(${side} 1)"><path d="m15 13 4-5 8-2 1 7-8 5Z" fill="#bd935d"/><path d="m19 13 5-3" stroke="#ffdda1" stroke-width="1.5"/></g>`).join('')}
+      <path d="m-4 19 4 2 4-2" fill="none" stroke="#83dacc" stroke-width="2.2"/>
+      </g>`,
+    magCannon: '<g stroke="#484e6f"><ellipse cy="6" rx="20" ry="15" fill="#687893"/><path d="m-21-8 6-5 7 4-1 21-6 3-7-4Z" fill="#8e94ad"/><path d="m-20-3 9-3m-9 8 9-3m-9 8 9-3" stroke="#f5b382"/><path d="M-7 16q17 10 27-5" fill="none" stroke="#a9edf9" stroke-width="3"/><circle cx="19" cy="10" r="4" fill="#95e9fa"/></g>'
+  };
+  const fusionUpgrades = {
+    tacticalAir: '<path d="m-19-11-1-10 5-1 2 10Z" fill="#687e7b"/><path d="M-27-21q-2-6 1-11l18 11q-10 7-19 0Z" fill="#e1e8ce"/><path d="m-25-29 17 10m-10-5 4-6" stroke="#536c72"/><circle cx="-14" cy="-30" r="2.1" fill="#f3bd61"/>',
+    iceCannon: '<g stroke="#527fb6"><path d="m5 17 4-13 7-4 1 10-7 10Z" fill="#9cd9fa"/><path d="m12 18 7-11 7-1-3 11-9 5Z" fill="#c9faff"/></g>',
+    fireCannon: '<path d="m11 1 1-16 9-2 1 17Z" fill="#9e674b"/><path d="m10-12 1-5 11-2 1 6Z" fill="#e2ad61"/><path d="M14-17q-3-4 0-8l3 3 3-8q4 7 0 13Z" fill="#ffb342" stroke="#ab5937"/>',
+    mapLaser: '<path d="m-18 16-6-4 0-9 6-6 6 5-1 9Z" fill="#8772af"/><path d="m-23 4 5-5 4 4-5 7Z" fill="#cdbdff"/><path d="m10 12 9 6" fill="none" stroke="#dabd70" stroke-width="3.5"/>',
+    magCannon: '<path d="m-23 2 5 3 4 10-6-3Zm44-6-5 2 3 11 5-6Z" fill="#ffcc6d"/><path d="m-3 12 4-4 4 4-4 4Z" fill="#e4bcff"/>'
+  };
+  const fusionHeadUpgrades = {
+    tacticalAir: '<path d="M-13-4q1-10 11-10l3 4-8 5Z" fill="#d2b972"/><path d="M15-13h4v7h-4Zm0 15 4 1v7l-4-1Z" fill="#dbc37d"/>',
+    tacticalGround: '<path d="M7-8 13-7 12 8 6 7Z" fill="#eac675"/><path d="M24-10h5l2 3v13l-4 4-4-1Z" fill="#b29b63"/><ellipse cx="28" rx="2.6" ry="6" fill="#253c40"/>',
+    iceCannon: '<path d="m-1-10 5-5 12-3-6 9-8 3Z" fill="#b1efff" stroke="#4772aa"/><path d="m2 9 10 1 10-4-7 10-11-1Z" fill="#8fcdea" stroke="#4772aa"/><path d="m4-8 4-1 1 16-4 2Z" fill="#d3b585"/>',
+    fireCannon: '<path d="m1-11 5 1q-3 9 0 19l-5 2q-3-11 0-22Z" fill="#f2be67"/><path d="M14-7q-3 8 0 15l4 1q-3-9 0-18Z" fill="#f2be67"/>',
+    mapLaser: '<path d="m4-8 6-7 15-1 5 3-10 2-8 5Z" fill="#8ba4ab"/><path d="m5 9 7 5 16 1 2-3-11-2-6-5Z" fill="#82989f"/><path d="m13-12 10-1m-10 24 10 2" stroke="#a3ffff" fill="none"/>',
+  };
+  const tacticalMounts = { tacticalAir: { x: -10, y: -11, scale: .75 }, tacticalGround: { x: 6, y: 9, scale: .82 } };
+  // Each dual-weapon tower has one chassis. The sockets also locate its shots and beams.
+  const centeredMount = {x:0,y:0,scale:1};
+  function mountFor(building, weapon) {
+    return building?.kind === 'pea' && building.fusionKind ? tacticalMounts[weapon] ?? centeredMount : centeredMount;
+  }
+  const snowball = `<g stroke="#658da2" stroke-linejoin="round"><path d="M-12-4q1-6 8-8 8-3 13 3 7 4 4 12-1 7-9 9-7 2-13-4-6-4-3-12Z" fill="#d9f1f4" stroke-width="1.8"/>
+    <path d="M-8 5q7 6 16-1-1 7-10 7Z" fill="#9bc9d8" stroke="none"/><path d="m-7-4 4-4 6-1" stroke="#fff" fill="none" stroke-width="3"/><path d="m5 0 2 1m-10 2 2 1" stroke="#a4ccd8" stroke-width="1.7"/></g>`;
+  const fallingRock = `<g stroke="#663b3d" stroke-linejoin="round"><path d="m-13 2 4-12 11-4 10 6 3 11-8 9-13-1Z" fill="#80534c" stroke-width="2"/>
+    <path d="m-11 1 5-9 8-3-4 7Z" fill="#bf8365" stroke="none"/><path d="m-9 7 6-7 5 2 6-8m-6 8 3 8" fill="none" stroke="#ffae4c" stroke-width="2.4"/></g>`;
+  const cometStar = '<path d="m0-10 3.2 6.3 6.8 1.2-5.1 5 .9 7.1L0 6.3l-6 3.3 1-7.2-5-4.9 6.9-1.2Z" fill="#ffe698" stroke="#80528f" stroke-width="1.6"/><path d="m0-6.5 1.4 5L6-1 1.4 1.4 0 5-1.2 1.2-5-1l4-1Z" fill="#fff9dc"/>';
+  const cannonBodies = {
+    snowCannon: `<g stroke="#3b627a" stroke-width="2.2"><path d="m-23-10 8-10h25l15 11v20l-9 10h-33l-8-9Z" fill="#668ca2"/>
+      <path d="m-23 10 5 10h33l7-7m-44 1-4 4 1 6h18m18-7 6 1-2 7H8" fill="none" stroke="#44708b" stroke-width="3.5"/><path d="m-21-10 7-9H8l13 8-3 6-8-3-8 4-8-4-12 1Z" fill="#e6fcfa"/>
+      <circle r="10" fill="#91b6c9"/></g>`,
+    meteorTower: `<g stroke="#543b43" stroke-width="2.2"><path d="m-23 10 5-14 18-10L19-5l7 17-10 10-28 1Z" fill="#765351"/>
+      <path d="m-23 10 10 5 13 2 17-5 9 0-10 10-28 1Z" fill="#553c43"/><path d="m-12 13 5 3 3-5 6 7 8-4" fill="none" stroke="#fa9746"/>
+      <path d="m-20 4-6-23 6-5 8 24Zm31-3 9-23 6 3-5 24Z" fill="#995c4b"/>
+      <path d="m-22-19 3 9m39-8-3 8" stroke="#ffbc60"/><ellipse cy="1" rx="13" ry="6" fill="#e48746"/><ellipse cy="1" rx="8" ry="3" fill="#ffdd80" stroke="none"/></g>`,
+    cometCannon: `<g stroke="#4f4568" stroke-width="2"><path d="m-20 16 8-18 16-7 12 12 9 14-11 4-9-13-14 14Z" fill="#84769e"/>
+      <ellipse cy="8" rx="21" ry="12" fill="#67577f"/><ellipse cy="4" rx="20" ry="10" fill="#a891aa"/>
+      <path d="M-21 1q0-20 20-20t23 17" fill="none" stroke="#d4ad67" stroke-width="3"/>
+      <path d="m-21-8 3 1m4-9 2 3m10-6v4m12-1-2 3" stroke="#fbdf96"/></g>`,
+    sonicCannon: `<g stroke="#484855" stroke-width="2"><path d="m-23-10 9-7 23-3 14 9v23l-9 9-28 1-10-9Z" fill="#636879"/>
+      <path d="m-22 9 9 9 29-2 7-7v7l-8 7-29 1-9-8Z" fill="#484e5d"/><path d="m-14 12 4 3m3-4 4 4m3-4 4 3" stroke="#eda859" stroke-width="2.8"/>
+      <circle cy="-1" r="11" fill="#a89175"/></g>`,
+    crossCoil: `<g stroke="#47405d" stroke-width="2"><path d="m-15-15 15-7 16 8 5 16-7 14-16 7-17-9-3-15Z" fill="#686081"/>
+      ${[0,90,180,270].map(a=>`<g transform="rotate(${a})"><path d="M8-5h13l5 5-4 5H8Z" fill="#bf9965"/><path d="M14-5v10m4-10V5" stroke="#78547d"/><circle cx="26" r="4" fill="#ccfaff"/></g>`).join('')}
+      <path d="m-11 0 5-12 12 0 6 12-6 10H-5Z" fill="#9476ca"/><path d="m-6-2 8-7-3 7h5l-9 10 3-8Z" fill="#eeffff" stroke="none"/></g>`
+  };
+  const cannonHeads = {
+    snowCannon: `<g stroke="#385870" stroke-width="2"><path d="m-20-8 10-5 25 2 9 5v12l-9 6-25 1-11-6Z" fill="#86bbd0"/>
+      <path d="M-13-7 14-7 22 0 14 7h-27Z" fill="#527b95"/>${ref('snowball','transform="translate(-3 -2) scale(.76)"')}
+      <path d="M-10 6 20 4l6-4-2 8-9 6-23-2Z" fill="#a3d9e3"/><path d="m-6 8 21 1" stroke="#f3ffff"/></g>`,
+    cometCannon: `<g stroke="#514568" stroke-width="2"><path d="M-23-7-15-9 12-8l12-5 5 6v14l-6 5-10-5-27 2-8-5Z" fill="#8066a4"/>
+      <path d="M-13-8h4v17h-4Zm24-1 5-1v20l-5-2Z" fill="#e4bc78"/>
+      <ellipse cx="24" rx="5" ry="10" fill="#373c63"/><ellipse cx="24" rx="2.6" ry="6" fill="#9ed9ec"/>
+      ${ref('cometStar','transform="translate(-2 1) scale(.72)"')}</g>`,
+    sonicCannon: `<g stroke="#4e4957" stroke-width="2"><path d="m-21-8 10-6 12 5 19-9 7 4v28l-7 5L1 9l-13 4-9-5Z" fill="#ab825f"/>
+      <path d="M-17-6h9m-9 5h9m-9 5h9" stroke="#ead6a2"/><ellipse cx="19" rx="9" ry="18" fill="#e6b465"/>
+      <ellipse cx="20" rx="6.6" ry="14" fill="#58505c"/><ellipse cx="21" rx="4.1" ry="9.5" fill="#a78587"/><ellipse cx="22" rx="2.4" ry="5.4" fill="#ffda90"/></g>`
+  };
+  function cannonFusion(weapon, angle, flash) {
+    const kick = recoilKick(flash);
+    let head;
+    if (weapon === 'meteorTower') head = ref('fallingRock', `transform="translate(0 ${-16-5*kick}) rotate(${-12+14*kick}) scale(.8)"`);
+    else if (weapon === 'crossCoil') head = flash > 0 ? `<circle r="${9+7*(1-flash)}" fill="none" stroke="#ddffff" stroke-width="2" opacity="${flash}"/>` : '';
+    else {
+      const facing = weapon === 'snowCannon' ? Math.round(angle/90)*90 : angle;
+      head = ref('cannon-head-'+weapon, `transform="translate(0 -3) rotate(${facing}) translate(${-4*kick} 0)"`);
+    }
+    return `<g class="fusion-tower" data-weapon="${weapon}">${ref('cannon-body-'+weapon)}${head}</g>`;
+  }
+  const frostBodies = {
+    frostfireJet: `<g stroke="#45535b" stroke-width="2.1"><path d="m-22-8 12-10 24 3 9 10-2 21-13 7-25-4-7-8Z" fill="#667c80"/>
+      <path d="m-23 8 11 9 23 1 12-9-1 9-12 6-24-3-9-8Z" fill="#506365"/>
+      <rect x="-22" y="-12" width="13" height="29" rx="6" fill="#7dd4e6"/><rect x="8" y="-11" width="13" height="29" rx="6" fill="#d88852"/>
+      <path d="M-21 8h11m19 1h11" stroke="#e7d7a6" stroke-width="3"/><circle r="9" fill="#a2b5a7"/></g>`,
+    cryoBeam: `<g stroke="#3b597a" stroke-width="2.1"><path d="m-21-6 3-10 17-6 18 6 7 16-7 16-19 8-20-10Z" fill="#557995"/>
+      <path d="m-20-4 6-11 13-5 16 6 4 10L7 8l-19 2Z" fill="#a9dbe4"/>
+      <path d="m-18 10-7-12 2-8 11 7Zm25 6 8-13 8-1-2 12-12 7Z" fill="url(#gg-ice-facet)"/>
+      <circle r="9" fill="#657ea1"/></g>`,
+    weatherStation: `<g stroke="#435766" stroke-width="2.2"><path d="m-22 15 8-8h23l12 8-4 6-30 1-10-4Z" fill="#758e97"/>
+      <path d="m-14 15 12-23h5l12 23-5 1L1-1l-9 18Z" fill="#cab489"/>
+      <path d="M-3 13V-18h5v31Z" fill="#d6e9df"/><path d="M2-10h12l-5 4-7-1Z" fill="#e9aa5c"/>
+      <rect x="-11" y="4" width="15" height="10" rx="2" fill="#345667"/><path d="m-8 10 3-2 2 3 3-5" fill="none" stroke="#92ede2" stroke-width="1.5"/></g>`,
+    cryoPlasma: `<g stroke="#485076" stroke-width="2"><path d="m-23 8 9-12 24-3 14 13-4 14-18 5-21-5Z" fill="#63749d"/>
+      <ellipse cy="8" rx="20" ry="8" fill="#89a8c6"/><path d="M-14 12v5m7-4v5m13-5v4m7-7v4" stroke="#dfbd7e" stroke-width="2.6"/>
+      <path d="m-12 6-10-19 3-8 4 3 7 17Zm23 0 11-19-3-8-5 4-7 17Z" fill="url(#gg-ice-facet)"/>
+      <path d="m-5 5 3-29h4L7 5Z" fill="#7586b1"/>
+      ${[[-2,12],[-10,9],[-17,6]].map(([y,rx])=>`<ellipse cy="${y}" rx="${rx}" ry="3.7" fill="none" stroke="#535880" stroke-width="4"/><path d="M${-rx} ${y}q${rx} 6 ${2*rx} 0" fill="none" stroke="#d1daed" stroke-width="2.1"/>`).join('')}
+      <path d="m-5-26 5-8 6 6-3 6-5 2Z" fill="#b4f8ff"/><path d="m0-30 1 7 3-4Z" fill="#fff" stroke="none"/></g>`
+  };
+  const frostHeads = {
+    frostfireJet: `<g stroke="#43505a" stroke-width="1.9"><path d="m-17-10 9-5 13 4 8 9-8 13-14 2-10-7Z" fill="#728692"/>
+      <path d="M-7-11h23l9 3v6H-7Z" fill="#75c9db"/><path d="M-7 2h24l9 3v6H-7Z" fill="#d28b58"/>
+      <path d="M15-12h8l3 3v8l-9 1Zm1 12 8 1 3 3v8l-10 1Z" fill="#c2baa5"/>
+      <ellipse cx="24" cy="-5.5" rx="2.6" ry="4" fill="#c6fcff"/><ellipse cx="25" cy="7" rx="2.6" ry="4" fill="#ffb253"/>
+      <path d="M-2-8h12m-12 13h12" stroke="#fff3d3" stroke-width="1.6"/></g>`,
+    cryoBeam: `<g stroke="#345779" stroke-width="1.9"><path d="m-19-6 7-8 14 2 6 7v12l-9 6-12-2-7-7Z" fill="#5b80a7"/>
+      <path d="m-6-6 24-3 10 7-10 9-24-1Z" fill="#90dbea"/><path d="m-4-4 20-3 8 4-22 2Z" fill="#e8ffff" stroke="none"/>
+      <path d="m1-10 6-4 13 1 4 3-16 2Zm0 19 7 2 16-3-4 6-14 2Z" fill="#7194bd"/>
+      <path d="m18-7 8-3 5 9-5 9-8-2 5-7Z" fill="#b7fbff"/><path d="m26-5 2 5-2 4" stroke="#fff" fill="none"/></g>`
+  };
+  const windCups = `<g stroke="#435c71" stroke-width="1.8">${[0,120,240].map(a=>`<g transform="rotate(${a})"><path d="M0 0 13-2" stroke="#5c7584" stroke-width="3"/><path d="M10-5q4-7 12-3l-1 8q-7 4-11-5Z" fill="#88cada"/><path d="m15-6 5-1" stroke="#dcf7fa"/></g>`).join('')}<circle r="4" fill="#efc783"/></g>`;
+  function frostFusion(weapon, angle, flash, charge) {
+    let active;
+    if (weapon === 'weatherStation') active = ref('windCups',`transform="translate(0 -16) scale(1 .64) rotate(${angle})"`);
+    else if (weapon === 'cryoPlasma') active = charge || flash ? `<g transform="translate(0 -29)" opacity="${Math.max(charge,flash)}"><circle r="${4+4*charge}" fill="#c9fbff" stroke="#88c5f9"/><path d="m-16 12 5-6 3 2 6-6m16 10-5-5-3 2-5-5" stroke="#c8ffff" fill="none"/></g>` : '';
+    else {
+      const recoil = weapon === 'cryoBeam' ? recoilOffset('pierce',flash) : 3*recoilKick(flash);
+      active = ref('frost-head-'+weapon,`transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)"`);
+    }
+    return `<g class="fusion-tower" data-weapon="${weapon}">${ref('frost-body-'+weapon)}${active}</g>`;
+  }
+  const flameParts = {
+    heatRayBase: `<g stroke="#563e3b" stroke-width="2.3"><path d="m-21-6 9-10 16-2 15 9 4 15-8 14-21 4-15-10Z" fill="#6c5960"/>
+      <path d="m-19-4 8-9 16-1 12 8 3 10-8 10-18 3-12-8Z" fill="#b48566"/><ellipse cy="1" rx="14" ry="11" fill="#724b44"/>
+      <path d="m-14 9 7 4m10 1 8-3" stroke="#ffc570" stroke-width="3"/></g>`,
+    heatRayHead: `<g stroke="#603a3b" stroke-width="2" stroke-linejoin="round">
+      <path d="m-17-10 15-4 13 8v13l-13 6-15-6-3-8Z" fill="#9d5145"/>
+      <path d="m-16-7 12-4 10 5-11 4-11-2Z" fill="#d88e58"/><path d="M-11 1 2-4h20v10H1l-10 4Z" fill="#c99357"/>
+      ${[-4,2,8].map(x=>`<path d="M${x}-10l4 2v16l-4 2Z" fill="#765353"/><path d="m${x+1}-8 1 1v10" stroke="#ffc068" stroke-width="1.5"/>`).join('')}
+      <path d="m12-6 9-3 7 3 2 6-3 7-8 1-7-4Z" fill="#af6b4f"/><ellipse cx="26" rx="4.2" ry="7.4" fill="#643c42"/><ellipse cx="27" rx="2.5" ry="5.1" fill="#ffb441" stroke="#f9d178"/><path d="M27-2v3" stroke="#fffbce"/></g>`,
+    fireStationBase: `<g stroke="#60423e" stroke-width="2"><path d="m-21 11 6-12 11-5 15 3 9 12-4 7-20 5-15-4Z" fill="#80594d"/>
+      <path d="M-14 12-8 0l10-3 10 7 3 11-15 4Z" fill="#b07950"/><path d="M-7 13V7Q-1-3 6 6v7Z" fill="#593d40"/>
+      <path d="M-5 12q-2-4 2-6l2 2 2-5q6 5 3 9Z" fill="#ffb545" stroke="#f7833d" stroke-width="1.3"/>
+      <path d="M-4-2v-17h6v17Z" fill="#9d7260"/><path d="M-1-20v18" stroke="#e2b879"/><path d="M2-13h13l-5 4-8-1Z" fill="#e47949"/></g>`,
+    fireVanes: `<g stroke="#73483e" stroke-width="1.8">${[0,120,240].map(a=>`<g transform="rotate(${a})"><path d="M0 0 14-3" stroke-width="3.6"/><path d="M9-5q1-6 10-7l-2 4 7-2q-1 9-10 12l-5-2Z" fill="#d57748"/><path d="m13-2 5-4-1 4" fill="none" stroke="#ffd172"/></g>`).join('')}<circle r="4.2" fill="#ffe091"/></g>`,
+    mortarBase: `<g stroke="#594247" stroke-width="2.4" stroke-linejoin="round"><path d="m-24 9 10-9 26-2 13 9-5 15-13 3-23-2Z" fill="#595564"/>
+      <path d="m-23 9 14 7 26-2 7-7-15-7-21 2Z" fill="#947064"/><path d="m-11 17 15 2 9-3" fill="none" stroke="#e98645" stroke-width="2.8"/>
+      <path d="m-17 12 11-23 7-3 15 25-6 2L-2-3l-9 19Z" fill="#b38458"/>
+      <circle cx="16" cy="13" r="6" fill="#604950"/><circle cx="16" cy="13" r="2.3" fill="#e8a967"/></g>`,
+    mortarArm: `<g stroke="#604039" stroke-width="2" stroke-linejoin="round"><path d="m-26-5 8-1L8-2l10-5 2 5-10 7-30-6Z" fill="#c39863"/>
+      <path d="m-32-7 4 6 8 2 6-4-1-5-4 3-9-1Z" fill="#81594f"/><circle r="4.8" fill="#9a6f55"/><circle r="2" fill="#ffcd81"/></g>`,
+    magmaStone: `<g stroke="#593b40" stroke-linejoin="round" stroke-width="2"><path d="m-13-3 5-9 11-3 10 6 3 11-8 10-13-1-8-7Z" fill="#794944"/>
+      <path d="m-12-3 8 1 4-6 4 6 9-1-6 6 1 7-7-5-6 4 1-7Z" fill="#ff9b35" stroke="#bf5733" stroke-width="1"/>
+      <path d="m-5 0 5-4 2 4 5 1-6 2-3-1-2 3Z" fill="#ffde68" stroke="none"/><path d="m-7-8 7-3 3 1" stroke="#d19a70" fill="none"/></g>`
+  };
+  function flameFusion(weapon,angle,flash) {
+    let art;
+    if (weapon === 'heatRay') {
+      art = ref('heatRayBase') + ref('heatRayHead',`transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoilOffset('pierce',flash)} 0)"`);
+    } else if (weapon === 'fireStation') {
+      art = ref('fireStationBase') + ref('fireVanes',`transform="translate(-1 -18) scale(1 .7) rotate(${angle})"`);
+    } else {
+      const facing = Math.cos(angle*Math.PI/180)<0 ? -1 : 1;
+      const cycle = 1-flash, loaded = cycle<slingRelease ? 1 : ease((cycle-.72)/.2);
+      art = `<g transform="scale(${facing} 1)">${ref('mortarBase')}<g transform="translate(1 2) rotate(${slingAngle(cycle)})">
+        ${ref('mortarArm')}${ref('magmaStone',`transform="translate(-23 -10) scale(${.56*loaded})"`)}</g></g>`;
+    }
+    return `<g class="fusion-tower" data-weapon="${weapon}">${art}</g>`;
+  }
+  function moltenFlight(cx,cy,tx,ty,t) {
+    if (t<slingRelease) return '';
+    const p=(t-slingRelease)/(1-slingRelease), sy=cy-24;
+    const height=Math.min(102,32+Math.hypot(tx-cx,ty-cy)*.24);
+    const x=cx+(tx-cx)*p, y=sy+(ty-sy)*p-4*height*p*(1-p);
+    const heading=Math.atan2(ty-sy-4*height*(1-2*p),tx-cx)*180/Math.PI;
+    return `<g class="molten-flight" transform="translate(${x} ${y})">
+      <g transform="rotate(${heading})"><path d="M5-5Q-6-10-22-5l7 4-13 1q11 5 27 6Z" fill="#f49a49"/><path d="m0-4-17 2 7 2-6 2 16 2Z" fill="#ffe398"/></g>
+      ${ref('magmaStone',`transform="rotate(${175*p}) scale(${.56+.20*Math.sin(Math.PI*p)})"`)}</g>`;
+  }
+  const beamParts = {
+    recoilBase: `<g stroke="#405957" stroke-width="2.1"><path d="m-22-9 12-7 22 1 10 9-2 19-14 9-20-4-9-12Z" fill="#607a74"/><path d="m-21-8 12-7 20 2 10 8-5 12-22 6-15-9Z" fill="#a6b49a"/><ellipse rx="12" ry="10" fill="#546d68"/><path d="m-14 12 7 3m14-3 7-3" stroke="#eac583"/></g>`,
+    recoilHead: `<g stroke="#395655" stroke-width="2"><path d="m-19-8 7-6 13 3 7 8-4 12-17 2-8-6Z" fill="#668d7e"/><path d="M-9-9H16v5H-9Zm0 14h25v5H-9Z" fill="#bbab7e"/>
+      <path d="m-7-4 27-1v10L-7 5Z" fill="#719386"/><path d="m-5-5 4 9 3-9 4 9 3-9 3 9" stroke="#e2c389" fill="none"/>
+      <path d="m15-9 7-3 7 4 2 7-3 9-10 2-6-6Z" fill="#639d8e"/><ellipse cx="27" rx="3.6" ry="7" fill="#d1ffd3"/><path d="m-16-6 5-4 7 2" stroke="#c1d0a6" fill="none"/></g>`,
+    disintegratorBase: `<g stroke="#41496b" stroke-width="2"><path d="m-21-7 8-12 20-2 14 12 3 14-12 15-17 4-15-11Z" fill="#5a6a87"/><path d="m-19-8 8-9 17-2 13 11 1 12-12 11-16 2-11-9Z" fill="#8b9cb6"/><circle r="12" fill="#475579"/><path d="m-13 11 5 3m16-1 6-4" stroke="#9befe1" stroke-width="3.3"/></g>`,
+    disintegratorHead: `<g stroke="#424b72" stroke-width="2"><path d="m-18-8 13-6 12 7v15l-12 6-13-7Z" fill="#707aa8"/><path d="m-6-8 10-5 17-1 7 5-18 2-7 5Z" fill="#9aabca"/><path d="m-6 8 10 5 17 1 7-5-18-2-7-5Z" fill="#8793b5"/><path d="m-5 0 8-6 16 2 6 4-8 4-14 2Z" fill="#7aeedc"/><path d="m1 0 7-3 12 2-8 3Z" fill="#e1ffff" stroke="none"/><path d="m9-9 11-2m-11 20 11 2" stroke="#d7d7f0"/></g>`,
+    gravityBase: `<g stroke="#4c4568" stroke-width="2.2"><path d="m-23 8 8-11 20-3 16 11-2 12-17 6-22-5Z" fill="#696181"/><ellipse cy="8" rx="19" ry="8" fill="#9887aa"/><path d="m-14 11 6 2m10 2 8-2" stroke="#dfb77c"/>
+      <path d="M-7 6-12-3l-8-10 1-10 5 2 5 10L-1-4l8-7 6-14 4-1 2 8-7 15-7 8Z" fill="#82769f"/><path d="m-15-18 4 9 7 6m15-4 6-14" fill="none" stroke="#c7bdfa"/>
+      <ellipse cy="-25" rx="10.4" ry="8.6" fill="#37334f"/><ellipse cy="-25" rx="15" ry="4" transform="rotate(-18 0 -25)" fill="none" stroke="#c0a4e5" stroke-width="2.4"/><path d="m-6-29 4-3 6 1" stroke="#e6d9fc" fill="none"/></g>`
+  };
+  function beamFusion(weapon,angle,flash,charge) {
+    let art;
+    if (weapon==='gravityCannon') {
+      art=ref('gravityBase');
+      if (charge || flash) art+=`<g transform="translate(0 -26) scale(${.7+.42*charge}) rotate(${charge*160})" fill="none" opacity="${Math.max(charge,flash)}"><circle r="12" stroke="#cebdff" stroke-dasharray="15 7" stroke-width="2.2"/><circle r="6.5" fill="#343053"/></g>`;
+    } else {
+      const recoil=weapon==='recoilRay', offset=recoil ? recoilOffset('pierce',flash) : 0;
+      art=ref(recoil?'recoilBase':'disintegratorBase')+ref(recoil?'recoilHead':'disintegratorHead',`transform="translate(0 -3) rotate(${angle}) translate(${-offset} 0)"`);
+    }
+    return `<g class="fusion-tower" data-weapon="${weapon}">${art}</g>`;
+  }
+  function fusionResult(building, angle = -25, flash = 0, charge = 0, angle2 = building.kind === 'pea' && building.fusionKind === 'cannon' ? 12 : -25, flash2 = 0, charge2 = 0) {
+    const { kind, upgraded } = building;
+    if (kind === 'pea') return fusionTower(window.Garden.primaryWeapon(building), angle, flash, charge, upgraded, angle2, flash2);
+    if (kind === 'cannon') return cannonFusion(window.Garden.primaryWeapon(building), angle, flash);
+    if (kind === 'frost') return frostFusion(window.Garden.primaryWeapon(building), angle, flash, charge);
+    if (kind === 'flame') return flameFusion(window.Garden.primaryWeapon(building),angle,flash);
+    return beamFusion(window.Garden.primaryWeapon(building),angle,flash,charge);
+  }
+  function fusionTower(weapon, angle = -25, flash = 0, charge = 0, upgraded = false, angle2 = 15, flash2 = 0) {
+    const base = `<g stroke="#3e514e" stroke-width="2" stroke-linejoin="round">
+      ${fusionPlatforms[weapon]}
+      ${upgraded ? fusionUpgrades[weapon] : ''}
+      </g>`;
+    if (weapon === 'impactCannon') {
+      const y = -5 - 3 * charge + 5 * flash;
+      const glow = Math.max(charge * .82, flash);
+      return `<g class="fusion-tower impact-resonator" data-weapon="impactCannon">${base}
+        <g transform="translate(0 ${y})">${ref('fusion-impactCannon')}
+          <g transform="scale(1 .76)" fill="none" opacity="${glow}"><circle r="13.8" stroke="#c5ffdf" stroke-width="2.6"/>
+            <circle r="7" fill="#b1ffe0" stroke="#f0ffe9" stroke-width="1.6"/></g></g></g>`;
+    }
+    function head(id, direction, kick) {
+      const recoil = id === 'mapLaser' ? recoilOffset('pierce', kick) : recoilKick(kick) * (id === 'tacticalGround' ? 6 : 3);
+      const mount = tacticalMounts[id] ?? {x:0, y:0, scale:1};
+      const field = id === 'magCannon' && charge ? `<g transform="translate(24 0)" opacity="${.4 + .6 * charge}"><ellipse rx="${3 + charge * 4}" ry="${2 + charge * 3}" fill="#d5fbff"/><path d="m-18-6 4 3 4-2 5 5 5 0m-18 7 5-4 4 1 4-4" stroke="#9beaff" fill="none" stroke-width="1.6"/></g>` : '';
+      const equipment = upgraded && fusionHeadUpgrades[id] ? ref('equipment-' + id) : '';
+      return `<g transform="translate(${mount.x} ${mount.y}) scale(${mount.scale}) translate(0 ${headY}) rotate(${direction}) translate(${-recoil} 0)">${ref('fusion-' + id)}${equipment}${field}</g>`;
+    }
+    return `<g class="fusion-tower" data-weapon="${weapon}">${base}${head(weapon,angle,flash)}${weapon === 'tacticalAir' ? head('tacticalGround',angle2,flash2) : ''}</g>`;
+  }
   function definitions() {
     const drawings = { plinth, wall, siegeCarriage, spikeHousing, wallBlade, face, wings, rhinoWing, rhinoCover, silkNet, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, castle, royalCastle, castleBow, firePatch, snowflake, launchFlare };
+    Object.assign(drawings, {badgeCrystal:icons.crystal,badgeHammer:icons.hammer,snowball, fallingRock, cometStar, windCups}, flameParts, beamParts);
+    for (const [kind, shape] of Object.entries(frostBodies)) drawings['frost-body-' + kind] = shape;
+    for (const [kind, shape] of Object.entries(frostHeads)) drawings['frost-head-' + kind] = shape;
+    for (const [kind, shape] of Object.entries(cannonBodies)) drawings['cannon-body-' + kind] = shape;
+    for (const [kind, shape] of Object.entries(cannonHeads)) drawings['cannon-head-' + kind] = shape;
+    drawings['mounted-sling'] = catapult(false, true);
+    for (const [id, art] of Object.entries(fusionHeadUpgrades)) drawings['equipment-' + id] = '<g stroke="#454956" stroke-width="1.4">' + art + '</g>';
+    for (const [id, art] of Object.entries(fusionHeads)) drawings['fusion-' + id] = '<g stroke="#354650" stroke-width="1.65">' + art + '</g>';
+    for (const [id, art] of Object.entries(fusionRounds)) drawings['round-' + id] = '<g stroke="#515b60" stroke-width="1.25">' + art + '</g>';
     for (const [kind, drawing] of Object.entries(mounts)) drawings['mount-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(feet)) drawings['feet-' + kind] = `<g fill="none" stroke-width="3.3">${drawing}</g>`;
     for (const [kind, drawing] of Object.entries(projectiles)) drawings['shot-' + kind] = drawing;
@@ -613,7 +987,7 @@
       <radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
       <radialGradient id="art-chain-glow"><stop offset="0" stop-color="#efffff"/><stop offset=".47" stop-color="#a7cfff" stop-opacity=".85"/><stop offset="1" stop-color="#a56df2" stop-opacity="0"/></radialGradient>
       <radialGradient id="art-fireball-core"><stop offset="0" stop-color="#ffffc3"/><stop offset=".55" stop-color="#ffda58"/><stop offset="1" stop-color="#f86f21"/></radialGradient>`;
-    return energy + coldShell + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
+    return fusionMaterials + energy + coldShell + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
   }
   function icon(name, cls = '') {
     return `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.leaf}</svg>`;
@@ -627,12 +1001,12 @@
   function recoilOffset(kind, flash) {
     return (recoilKick(flash) + recoilRebound(flash) * .23) * recoilDistance[kind];
   }
-  function tower(kind, angle = -25, flash = 0, charge = 0, upgraded = false) {
+  function tower(kind, angle = -25, flash = 0, charge = 0, upgraded = false, mounted = false) {
     if (kind === 'wall') return upgraded ? spikeWall(flash) : ref('wall');
-    const head = (upgraded ? 'advanced-' : 'tower-') + kind;
+    const head = mounted && kind === 'flame' ? 'mounted-sling' : (upgraded ? 'advanced-' : 'tower-') + kind;
     const kick = recoilKick(flash);
     if (kind === 'molecular') {
-      const coil = ref('mount-molecular') + ref(head, `transform="translate(0 ${headY})"`);
+      const coil = (mounted ? '' : ref('mount-molecular')) + ref(head, `transform="translate(0 ${headY})"`);
       if (flash <= 0) return coil;
       const travel = 1 - flash;
       const forks = upgraded ? '<path d="m-23 7 7-6 1 4 8-6m30 8-7-6-1 4-8-6" fill="none" stroke="#cfaeff" stroke-width="2.7"/>' : '';
@@ -641,7 +1015,7 @@
         <circle r="${2 + 5 * flash}" fill="#f5fcff"/>${forks}</g>`;
     }
     if (kind === 'frost') {
-      return ref('plinth') + ref(head, `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
+      return (mounted ? '' : ref('plinth')) + ref(head, `transform="translate(0 ${-3 - kick * 4}) scale(${1 + kick * .06})"`) +
         (flash > 0 ? `<g class="fx-accent" transform="translate(0 -5)" opacity="${flash}">${ref('snowflake', 'color="#f3ffff" transform="scale(.8)"')}</g>` : '');
     }
     if (kind === 'flame') {
@@ -655,7 +1029,7 @@
     if (kind === 'push') style = `style="--punch-travel:${kick * 13 + recoilRebound(flash) * 2}px;--spring-stretch:${1 + kick * .7 + recoilRebound(flash) * .12}"`;
     const recoil = recoilOffset(kind, flash);
     const mount = (upgraded && upgradedMounts[kind]) || (mounts[kind] ? 'mount-' + kind : 'plinth');
-    return ref(mount) +
+    return (mounted ? '' : ref(mount)) +
       ref(head, `transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoil} 0)" ${style}`);
   }
   function bugPose(kind, time) {
@@ -719,5 +1093,5 @@
     });
     return ref('royalCastle') + `<g id="castle-bow">${stations.join('')}</g>`;
   }
-  window.GardenArt = { definitions, icon, tower, bug, bugPose, badge, tool, shot, flight, plasmaArc, laser, aura, spiderWebFlight, brokenHeart, chargeGlobe, stoneImpact, impactBurst, splitPlateAt, castle: castleArt, castleBowPosition };
+  window.GardenArt = { definitions, icon, tower, fusionTower, fusionResult, mountFor, tacticalMounts, bug, bugPose, badge, tool, shot, flight, moltenFlight, plasmaArc, laser, aura, spiderWebFlight, brokenHeart, chargeGlobe, stoneImpact, impactBurst, splitPlateAt, castle: castleArt, castleBowPosition };
 })();

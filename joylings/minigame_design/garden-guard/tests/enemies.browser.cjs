@@ -75,7 +75,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     const sprite = p.locator(`[data-enemy="${wounded.id}"]`);
     assert.equal(await p.locator('#health-layer use').count(), 0);
     await p.getByLabel('顯示設定', { exact: true }).click();
-    await p.getByLabel('顯示本關怪物血量').check();
+    await p.getByLabel('顯示蟲蟲血量').check();
     assert.equal(await p.locator('#health-layer use').count(), above.enemies.length);
     assert.equal(await sprite.locator('.bug-hp').textContent(), String(wounded.hp));
     const scale = await sprite.locator('.bug-art').evaluate(g => g.transform.baseVal.getItem(0).matrix.a);

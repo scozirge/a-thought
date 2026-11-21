@@ -33,6 +33,11 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     assert.ok(await p.locator('#route-toggle').isChecked());
     assert.ok(await p.locator('#route-layer .ground-route').count() > 0);
     assert.equal(await p.locator('[data-tool]').count(), 8);
+    const vortices = await p.evaluate(() => ['weatherStation','fireStation'].flatMap(weapon => [false,true].map(upgraded => {
+      const {radius,lifetime,rate,damage}=Garden.toolFor(weapon,upgraded);
+      return [radius,lifetime,rate,damage];
+    })));
+    assert.deepEqual(vortices,[[1,8,.4,2],[1.6,8,.4,2],[1,6,.4,1],[1.5,6,.25,2]]);
     const enemyKinds = await p.evaluate(() => Object.keys(Garden.ENEMIES));
     assert.equal(enemyKinds.length, 12);
     assert.deepEqual(enemyKinds.filter(kind => kind.endsWith('Boss')).sort(), ['rhinoBoss','spiderBoss','stagBoss']);
@@ -40,7 +45,8 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
       await p.locator(`[data-tool="${kind}"]`).hover();
       assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
-      assert.match(await p.locator('#tower-info').innerText(), /攻擊 \d+(?:\.\d+)?次\/s/);
+      const timing = kind === 'molecular' ? /瞄準 2 秒/ : /攻擊 \d+(?:\.\d+)?次\/s/;
+      assert.match(await p.locator('#tower-info').innerText(), timing);
     }
     for (const [shield, row, behindRow] of [['shield', 0, 4], ['shield_down', 7, 2]]) {
       for (const tower of ['pierce', 'molecular']) {
@@ -98,13 +104,13 @@ const normalize = text => text.replace(/\r\n/g, '\n');
     const labels = p.locator('#health-layer use');
     assert.equal(await labels.count(), 0, '第二關預設隱藏血量');
     await p.locator('.display-settings summary').click();
-    await p.getByLabel('顯示本關怪物血量').check();
+    await p.getByLabel('顯示蟲蟲血量').check();
     assert.equal(await labels.count(), lowerShield.enemies.length);
-    await p.getByLabel('顯示本關怪物血量').uncheck();
+    await p.getByLabel('顯示蟲蟲血量').uncheck();
     assert.equal(await labels.count(), 0);
     await p.screenshot({ path: path.join(dist, 'browser-check/published-lower-shield.png'), fullPage: true });
     assert.deepEqual(errors, []);
-    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, enemyKinds: enemyKinds.length, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
+    const report = { url: `${base}?v=${version}`, version, status: 200, checkedFiles, towerInfo: 7, vortices, enemyKinds: enemyKinds.length, firstWaveShield: true, upperBlocks: above.stats.blocked, upperHits: above.stats.hits, lowerHits: below.stats.hits, lowerShieldBlocks: lowerShield.stats.blocked, lowerShieldHits: lowerShield.stats.hits, browserErrors: errors };
     fs.writeFileSync(path.join(dist, 'published-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report));
   } finally { await browser.close(); }

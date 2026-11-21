@@ -70,7 +70,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(frost.shots.length, 0);
     assert.ok(frost.effects.some(e => e.kind === 'frost' && e.x === 9 && e.y === 6 && e.radius === G.TOOLS.frost.range));
     await p.locator('[data-tool="frost"]').focus();
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'穿盾靈氣，周圍 2.65 格地面蟲緩速 30%');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'穿盾靈氣，周圍 2.65 格附加冰凍');
     await p.screenshot({path:path.join(out,'frost-area-slow.png')});
     const frozen=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),frozen);
 
@@ -107,7 +107,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.clock.runFor(100); assert.notEqual(await p.locator('.aim-line').getAttribute('d'),line,'瞄準線持續跟隨目標');
     await press('#action'); await p.locator('[data-tool="molecular"]').focus();
     assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 28'));
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'高血量優先・瞄準 2 秒・可穿盾');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'優先打血量最高的蟲，可穿盾');
     await p.screenshot({path:path.join(out,'molecular-aim.png')});
     const aimingPaused=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),aimingPaused);
     const aimLine=await p.locator('.aim-line').getAttribute('d');
@@ -220,7 +220,136 @@ const out = path.join(__dirname, '../dist/browser-check');
     });
     assert.ok(dualArrows[1].x - dualArrows[0].x > 30, '兩座弩台分立在左右塔樓');
     assert.ok(dualArrows.every(arrow => arrow.error < .01), '中央城堡縮小時兩支箭仍各從自己的塔樓射出');
+    for (const second of ['cannon','frost','flame','pierce','push','molecular']) {
+      const saved = G.createState(3);
+      G.build(saved,'pea',5,4); assert.ok(G.build(saved,second,5,4).fused);
+      await p.evaluate(data => {
+        if (gardenDebug.getState().phase === 'running') document.querySelector('#action').click();
+        localStorage.setItem('garden-guard-v1', JSON.stringify(data));
+      }, G.snapshot(saved));
+      await p.reload();
+      const weapon = G.primaryWeapon(saved.buildings[0]);
+      assert.equal(await p.locator('.fusion-tower[data-weapon="' + weapon + '"]').count(),1);
+      await p.evaluate(() => {
+        const start = Garden.startWave;
+        Garden.startWave = state => {
+          if (!start(state)) return false;
+          state.queue = [];
+          for (const [kind,x,y] of [['giant',7,4],['flyer',7,3]]) {
+            const e = Garden.spawn(state,kind,120,4,{x,y}); e.shock=100;
+          }
+          return true;
+        };
+      });
+      await press('#action');
+      if (second === 'molecular') {
+        await p.clock.runFor(300); assert.equal(await p.locator('.molecular-aim').count(),1);
+      }
+      if (weapon === 'impactCannon') {
+        assert.equal(await p.locator('.impact-resonator').count(),1);
+        await p.clock.runFor(2800); assert.equal(await p.locator('.impact-pulse').count(),0);
+        await p.clock.runFor(400);
+        assert.equal(await p.locator('.impact-pulse').count(),1);
+        assert.equal(await p.locator('#shot-layer [href="#art-round-impactCannon"]').count(),0);
+        await press('#action');
+        continue;
+      }
+      const projectile = p.locator(second === 'pierce' ? '.laser-beam' : '#shot-layer [href="#art-round-' + weapon + '"]');
+      for(let i=0;i<60 && !await projectile.count();i++) await p.clock.runFor(32);
+      assert.ok(await projectile.count(), weapon);
+      if (second === 'cannon') assert.ok(await p.locator('#shot-layer [href="#art-round-tacticalGround"]').count());
+      assert.ok(await projectile.first().evaluate(node => node.getBBox().width > 0));
+      await press('#action');
+    }
+    for (const [baseTower,material, flight, impact] of [
+      ['cannon','frost','.rolling-snow','#effects-layer use[href="#art-snowflake"]'],
+      ['cannon','flame','.strike-warning[data-weapon="meteorTower"]','.cell-strike[data-weapon="meteorTower"]'],
+      ['cannon','pierce','.homing-comet','.comet-burst'],
+      ['cannon','push','.sonic-transmission','.cell-strike[data-weapon="sonicCannon"]'],
+      ['cannon','molecular',null,'.cell-strike[data-weapon="crossCoil"]'],
+      ['frost','flame',null,'.frostfire-spray'],
+      ['frost','pierce',null,'.cryo-beam'],
+      ['frost','push',null,'.ice-vortex'],
+      ['frost','molecular','#shot-layer [href="#art-round-cryoPlasma"]','.ice-prison'],
+      ['flame','pierce',null,'.heat-ray'],
+      ['flame','push',null,'.fire-vortex'],
+      ['flame','molecular','.molten-flight','.armed-firestone'],
+      ['pierce','push',null,'.recoil-ray'],
+      ['pierce','molecular',null,'.disintegration-beam'],
+      ['push','molecular','.gravity-charge','.gravity-well']
+    ]) {
+      const s=G.createState(3); G.build(s,material,5,4); G.build(s,baseTower,5,4);
+      await p.evaluate(data=>localStorage.setItem('garden-guard-v1',JSON.stringify(data)),G.snapshot(s));
+      await p.reload();
+      const weapon=G.primaryWeapon(s.buildings[0]);
+      assert.ok(await p.locator('#building-layer [data-weapon="'+weapon+'"]').isVisible());
+      await p.evaluate(() => {
+        const start=Garden.startWave;
+        Garden.startWave=state=>{
+          if(!start(state)) return false;
+          state.queue=[];state.castle=null;
+          for(const kind of ['giant','flyer']) Garden.spawn(state,kind,60,4,{x:6,y:4}).spikeStun=99;
+          return true;
+        };
+      });
+      await press('#action'); await p.clock.runFor(48);
+      if(flight) {
+        const launch=p.locator(flight).first();
+        for(let i=0;i<80 && !await launch.count();i++) await p.clock.runFor(40);
+        assert.ok(await launch.isVisible(),weapon+' 發射');
+        if (weapon==='gravityCannon') {
+          assert.equal(await launch.getAttribute('data-cell'),'6,4');
+          const radius=Number(await launch.locator('.gravity-core').getAttribute('r'));
+          await p.clock.runFor(280);
+          assert.ok(Number(await launch.locator('.gravity-core').getAttribute('r'))>radius);
+        }
+      }
+      const fx=p.locator(impact).first();
+      for(let i=0;i<100 && !await fx.count();i++) await p.clock.runFor(40);
+      assert.ok(await fx.isVisible(),weapon+' 命中');
+      if (weapon==='gravityCannon') {
+        const disk=fx.locator('.gravity-collapse');
+        const burst=Number(await disk.getAttribute('r'));
+        assert.ok(burst>25);
+        await p.clock.runFor(210);
+        assert.ok(Number(await disk.getAttribute('r'))<burst);
+        await p.clock.runFor(400);
+        assert.equal(await fx.count(),0);
+      }
+      if(weapon==='snowCannon') {
+        const ball=p.locator('.rolling-snow').first();
+        const readScale=()=>ball.evaluate(el=>el.transform.baseVal.getItem(1).matrix.a);
+        const near=await readScale();
+        const texture=await ball.locator('.snow-surface').innerHTML();
+        await p.clock.runFor(650);
+        assert.ok(await readScale()>near+.15,'雪球滾遠後會變大');
+        assert.notEqual(await ball.locator('.snow-surface').innerHTML(),texture,'俯視球面紋理隨滾動翻面');
+        const burst=p.locator('.snow-burst');
+        for(let i=0;i<100 && !await burst.count();i++) await p.clock.runFor(40);
+        assert.ok(await burst.isVisible(),'地圖邊界可見碎冰爆裂');
+      }
+      if(weapon==='meteorTower') {
+        assert.equal(await fx.locator('rect').count(),5);
+        assert.equal(await p.locator('.ground-fire').count(),5);
+      }
+      if(weapon==='disintegrationBeam') {
+        assert.equal(await fx.getAttribute('data-power'),'1');
+        await p.clock.runFor(1550);assert.equal(await fx.getAttribute('data-power'),'4');
+        await p.clock.runFor(500);assert.equal(await fx.getAttribute('data-power'),'5');
+      }
+      if(weapon==='cometCannon') assert.equal(await fx.locator('.emp-boundary').getAttribute('r'),'128');
+      if(weapon==='sonicCannon') assert.equal(await fx.locator('.sonic-impact').count(),5);
+      if(weapon==='fireStation') assert.equal(await fx.locator('.vortex-boundary').getAttribute('r'),'64');
+      if(weapon==='moltenMortar') {
+        assert.equal(await fx.locator('rect').count(),9);
+        const blast=p.locator('.molten-blast');
+        for(let i=0;i<60 && !await blast.count();i++) await p.clock.runFor(40);
+        assert.equal(await blast.locator('rect').count(),9);
+        assert.equal(await p.locator('.ground-fire').count(),9);
+      }
+      await press('#action');
+    }
     assert.deepEqual(errors,[]);
-    console.log(JSON.stringify({passed:true,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
+    console.log(JSON.stringify({passed:true,fusionWeapons:21,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

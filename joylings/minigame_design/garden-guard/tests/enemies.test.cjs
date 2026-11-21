@@ -140,11 +140,18 @@ test('獨角仙飛行中連續被擊暈仍準時落地，在地面暈完再前�
     assert.equal(boss.leap,null); assert.equal(G.enemyLift(boss,s.time),0);
     assert.deepEqual([boss.x,boss.y],[flight.x,flight.y]);
     assert.ok(boss.hp<250 && G.canTarget('frost',boss));
-    const duration=(kind==='push'?5:G.toolFor('pierce',true).stunSeconds)*G.BATTLE_SPEED;
+    let seconds=G.toolFor('pierce',true).stunSeconds;
+    if (kind==='push') {
+      const distance=boss.push?.length ?? 0;
+      seconds=1+Math.floor(G.toolFor('push',true).knockback-distance+1e-8);
+      if (distance) assert.equal(boss.stun,0);
+      while(boss.push) G.step(s,1/60);
+    }
+    const duration=seconds*G.BATTLE_SPEED, landing=[boss.x,boss.y];
     assert.ok(Math.abs(boss[status]-duration)<1e-8);
     advance(s,duration);
-    assert.deepEqual([boss.x,boss.y],[flight.x,flight.y]);
-    G.step(s,1/60); assert.ok(boss.x<flight.x);
+    assert.deepEqual([boss.x,boss.y],landing);
+    advance(s,.1); assert.notDeepEqual([boss.x,boss.y],landing);
   }
 });
 

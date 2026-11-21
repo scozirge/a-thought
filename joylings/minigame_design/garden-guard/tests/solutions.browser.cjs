@@ -75,7 +75,7 @@ const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../di
     assert.equal(clearedBonus.phase, 'won'); assert.ok(clearedBonus.hearts > 0 && clearedBonus.hearts <= 5 + Number(clearedBonus.castleUpgraded));
     assert.equal(await p.locator('#result-title').textContent(), '隱藏關勝利！');
     assert.match(await p.locator('#win-crystal').innerText(), /金幣\s+\+0/);
-    assert.match(await p.locator('#win-crystal').innerText(), /升級晶石\s+\+1/);
+    assert.match(await p.locator('#win-crystal').innerText(), /升級水晶\s+\+1/);
     assert.equal(await p.locator('#bonus-invite').isVisible(), false);
     await p.reload(); assert.equal((await read()).phase, 'won');
     await p.locator('#result-primary').click();

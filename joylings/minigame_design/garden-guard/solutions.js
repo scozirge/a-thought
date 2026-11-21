@@ -10,7 +10,7 @@
     // 第 2 關　從不同方向壓制上下盾
     [["cannon",7,1],["frost",7,2],["cannon",6,5],["frost",6,4],["pea",7,6],["flame",10,7],["pea",10,1],["pea",2,7]],
     // 第 3 關　牆縫集中快蟲，在轉角接應
-    [["pea",6,0],["wall",6,2],["wall",6,3],["wall",6,4],["pea",6,5],["push",6,6],["wall",6,7],["flame",9,3],["cannon",4,2],["frost",4,1],["pea",1,6],["pea",2,1],["frost",10,7],["flame",5,0]],
+    [["pea",6,0],["wall",6,2],["pea",6,3],["wall",6,4],["wall",6,5],["push",6,6],["wall",6,7],["flame",9,3],["cannon",4,2],["frost",4,1],["pea",1,6],["pea",2,1],["frost",10,7],["flame",5,0]],
     // 第 4 關　用兩排缺口牆防跳蟲穿過第一線
     [["push",3,0],["wall",3,1],["wall",3,2],["wall",3,3],["wall",3,4],["wall",3,5],["wall",3,6],["frost",6,1],["pea",6,2],["frost",6,3],["wall",6,4],["wall",6,5],["wall",6,6],["cannon",6,7],["cannon",2,5],["cannon",4,4],["pea",7,2],["cannon",8,2]],
     // 第 5 關　引導地面蟲折返，另留對空火力
@@ -20,7 +20,7 @@
     // 第 7 關　前後交錯的牆把產卵區留在射程內
     [["pea",3,0],["pea",3,1],["wall",3,3],["pea",3,4],["wall",3,5],["pea",3,7],["pea",5,1],["wall",5,2],["cannon",5,3],["cannon",5,4],["wall",5,5],["pea",5,6],["wall",5,7],["pea",8,0],["flame",8,1],["wall",8,2],["push",8,3],["wall",8,4],["frost",8,5],["wall",8,7],["molecular",6,5],["wall",6,2],["push",4,7],["molecular",2,2]],
     // 第 8 關　用深淺不同的缺口接住側面來的巨蟲
-    [["wall",3,0],["pea",3,2],["pierce",3,3],["pea",3,4],["pea",3,5],["wall",3,6],["flame",3,7],["pierce",6,0],["pea",6,1],["wall",6,2],["pea",6,3],["frost",6,4],["push",6,5],["pea",6,6],["wall",9,1],["frost",9,2],["wall",9,3],["pea",9,4],["cannon",9,5],["push",9,6],["wall",9,7],["wall",7,5],["push",5,2],["wall",1,6],["molecular",1,2],["flame",2,2],["pea",1,0]],
+    [["wall",3,0],["pea",3,2],["pierce",3,3],["pierce",3,4],["pea",3,5],["wall",3,6],["flame",3,7],["pea",6,0],["pea",6,1],["wall",6,2],["pea",6,3],["frost",6,4],["push",6,5],["pea",6,6],["wall",9,1],["frost",9,2],["wall",9,3],["pea",9,4],["cannon",9,5],["push",9,6],["wall",9,7],["wall",7,5],["push",5,2],["wall",1,6],["molecular",1,2],["flame",2,2],["pea",1,0]],
     // 第 9 關　把雷射架在下方缺口，貫穿折返的蟲群
     [["pea",2,1],["push",2,2],["wall",6,2],["pea",2,4],["pea",2,6],["pea",2,7],["flame",4,0],["cannon",4,1],["wall",4,2],["cannon",4,3],["pea",4,4],["pea",4,5],["pierce",4,7],["frost",7,2],["push",7,3],["push",7,4],["wall",7,5],["cannon",7,6],["pea",7,7],["pea",9,0],["wall",10,1],["wall",10,2],["cannon",10,4],["wall",8,6],["pea",9,1],["pea",6,4],["pea",8,5],["flame",1,6],["flame",2,5],["frost",6,6],["pea",3,1]],
     // 第 10 關　用石牆拉長路線，雷射守中路，分子砲從下方鎖定巨蟲
@@ -29,7 +29,7 @@
     [["flame",5,5],["push",7,4],["frost",6,6],["pea",6,4],["molecular",5,2],["wall",7,2],["pea",4,3],["pierce",4,4],["push",3,2],["flame",3,3],["pea",3,4],["cannon",9,5],["cannon",4,6],["cannon",9,3],["cannon",9,4],["wall",9,2],["molecular",9,7],["push",8,1],["push",8,6],["push",7,1],["frost",6,5],["pierce",6,1],["wall",1,6],["wall",3,1],["push",5,6],["wall",2,6],["wall",9,1],["wall",1,4],["frost",3,6],["wall",10,7],["pea",4,1],["wall",5,1],["pea",4,2],["wall",2,5],["pea",2,3],["pea",6,2],["pea",1,2]]
   ];
   // The late answers spend crystals earned in earlier stages at their normal cost.
-  const upgradeSquares = { 9: [[3,1],[5,2],[0,3],[5,3],[2,3]], 10: [[8,1],[6,5],[5,3],[7,4],[3,2],[5,5],[4,4]] };
+  const upgradeSquares = { 9: [[3,1],[5,2],[0,3],[5,3],[2,3]], 10: [[8,1],[6,5],[5,3],[7,4],[3,2],[5,5],[4,4],[5,2],[3,3],[6,6]] };
   function applyUpgrades(state) {
     for (const [c,r] of upgradeSquares[state.level] ?? []) {
       if (G.isHome(state.level,c,r) ? state.castleUpgraded : G.at(state,c,r)?.upgraded) continue;

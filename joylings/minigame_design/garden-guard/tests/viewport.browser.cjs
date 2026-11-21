@@ -12,7 +12,7 @@ async function checkScreen(page, width, height) {
   const problems = await page.evaluate(() => {
     const errors = [];
     if (document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight) errors.push('頁面需要捲動');
-    const targets = document.querySelectorAll('#board, .cell-hit, .entrance, .tool-card, .icon-button, #action, #upgrade, #level-select, .resources, .display-settings summary');
+    const targets = document.querySelectorAll('#board, .cell-hit, .entrance, .tool-card, .icon-button, #action, #crystals, #hammers, #level-select, .resources, .display-settings summary');
     for (const el of targets) {
       if (!el.getClientRects().length) continue;
       const r = el.getBoundingClientRect(), name = el.getAttribute('aria-label') || el.id || el.tagName;
