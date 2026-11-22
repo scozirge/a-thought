@@ -82,6 +82,15 @@
     }).join('');
     const next = preview ? kinds.map(k => upgradePreview(k, building?.fusionKind && kinds.length === 1 ? G.buildingName(building) + '+' : null)).join('') : '';
     info.innerHTML = `<strong>${name}</strong>${ingredients ? `<p class="info-ingredients">（${ingredients.join('＋')}）</p>` : ''}${building ? `<p class="last-damage">${building.lastDamage == null ? '尚無上局傷害紀錄' : `上局傷害 ${building.lastDamage} 點`}</p>` : ''}${details}${next}`;
+    if (preview) {
+      const art = building?.fusionKind ? A.fusionResult({...building, upgraded:true})
+        : kind === 'castle' ? A.castle(true,true) : A.tower(kind,-25,0,0,true);
+      info.querySelector('.next-upgrade').insertAdjacentHTML('afterbegin', `<svg class="grade-portrait" viewBox="-43 -46 86 82" aria-hidden="true">${art}</svg>`);
+    }
+    positionInfo(anchor);
+  }
+  function positionInfo(anchor) {
+    const info = $('tower-info');
     info.hidden = false; anchor.setAttribute('aria-describedby', 'tower-info');
     const zoom = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
     info.style.maxHeight = '';
@@ -111,7 +120,8 @@
     if (!infoAnchor) return;
     const anchor = infoAnchor, rect = anchor.getBoundingClientRect();
     if (rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || (!anchor.matches(':hover') && document.activeElement !== anchor)) { hideInfo(); return; }
-    if (anchor === $('edit-grade')) previewGrade();
+    if (anchor.dataset.unavailable) showShortage(anchor);
+    else if (anchor === $('edit-grade')) previewGrade();
     else if (anchor.dataset.tool) showInfo(anchor.dataset.tool, anchor); else showCellInfo(anchor);
   }
 
@@ -364,7 +374,11 @@
   }
   const towerWeb = '<use class="tower-web" href="#art-silkNet" transform="scale(1.27)"/>';
   function fusionPortrait(building) {
-    return `<svg class="fusion-portrait" viewBox="-36 -35 72 66" aria-hidden="true" focusable="false">${A.fusionResult(building)}</svg>`;
+    const frame = building.upgraded ? '-39 -39 78 74' : '-36 -35 72 66';
+    return `<svg class="fusion-portrait" viewBox="${frame}" aria-hidden="true" focusable="false">${A.fusionResult(building)}</svg>`;
+  }
+  function recipeEquation(base, material, recipe) {
+    return `<span class="recipe-equation" aria-hidden="true">${A.tool(base)}<b>+</b>${A.tool(material)}<b>=</b>${fusionPortrait(recipe)}</span>`;
   }
   let buildingBoard, buildingRevision, buildingViews;
   function drawBuildings(beams, visibleFlash) {
@@ -416,6 +430,19 @@
   }
   function frostfireSpray(e,t) {
     const reach = 26 + 40*Math.min(1,t*5), wav = 4*Math.sin(t*9);
+    if (e.upgraded) {
+      const end = Math.min(reach, Math.hypot(X(e.impactX)-X(e.x),Y(e.impactY)-Y(e.y)));
+      const mid = 25+(end-25)*.5, phase = reducedMotion.matches ? 0 : Math.sin(t*11)*3;
+      const jets = [[-1,'#438bb3','#bffaff'],[1,'#c4663e','#ffcf71']].map(([side,edge,light])=>{
+        const d=`M25 ${7*side}Q${mid-7} ${(14+phase)*side} ${mid} 0T${end} ${3*side}`;
+        return `<path d="${d}" stroke="${edge}" stroke-width="7"/><path d="${d}" stroke="${light}" stroke-width="4.3"/>`;
+      }).join('');
+      const steam = Math.max(0,Math.min(1,(t-.12)*4));
+      return `<g class="frostfire-spray braided-jet" transform="translate(${X(e.x)} ${Y(e.y)-3}) rotate(${e.angle})" opacity="${Math.min(1,2.4*(1-t))}" stroke-linecap="round" fill="none">
+        ${jets}<g transform="translate(${end} 0) rotate(${-e.angle}) scale(${steam})" stroke="#97b3b8" stroke-width="2">
+        <path d="M-10 2q-8-2-6-8 1-5 7-4-1-6 5-8 7-2 9 5 8-2 10 5 6 7-3 10" transform="translate(0 ${-7*t})" fill="#f4f6e6" fill-opacity=".78"/>
+        <path d="m-7-7 2-4m6 0 2 3" stroke="#fff"/></g></g>`;
+    }
     return `<g class="frostfire-spray" transform="translate(${X(e.x)} ${Y(e.y)-3}) rotate(${e.angle})" opacity="${Math.min(1,2.1*(1-t))}" stroke-linecap="round">
       <path d="M23-6 Q43 ${-13+wav} ${reach+4} ${-8-wav} Q${reach-4} 0 24-3Z" fill="#adf5ff" stroke="#439fc1" stroke-width="2"/>
       <path d="M24 6 Q40 ${13-wav} ${reach+6} ${8+wav} L${reach-1} 4 ${reach+3} 1 Q43 5 25 3Z" fill="#ffca5c" stroke="#cf6340" stroke-width="2"/>
@@ -428,6 +455,20 @@
     const pulse=age%1, spin=reducedMotion.matches ? 0 : age*5.6+v.id;
     const position=`transform="translate(${X(v.x)} ${Y(v.y)})" opacity="${Math.min(1,.35+age*4,(span-age)*4)}"`;
     if (tool.vortex === 'fire') {
+      if (v.upgraded) {
+        const radius=tool.radius*S, drift=4*Math.sin(spin);
+        const leaves=[0,1,2,3,4].map(i=>{
+          const a=spin+i*Math.PI*2/5, w=19+3*(i%2);
+          return `<use href="#art-firePetal" transform="translate(${Math.cos(a)*w} ${-27+Math.sin(a)*8}) rotate(${a*180/Math.PI+55}) scale(.65)"/>`;
+        }).join('');
+        return `<g class="fire-vortex furnace-vortex" ${position}>
+          <circle class="vortex-boundary" r="${radius}" fill="#ed8547" fill-opacity=".08" stroke="#cd7446" stroke-opacity=".72" stroke-dasharray="7 6"/>
+          <ellipse rx="21" ry="8" fill="#ac4d3b" fill-opacity=".4"/><path d="M-14 1Q0 9 14 0M-9 3Q-2 8 7 4" fill="none" stroke="#ffbc66" stroke-width="2.5"/>
+          <g transform="skewX(${drift})"><path d="M0 4C-12-5 6-14-12-21q-10-8-10-17 8 7 15 6-3-14 4-20 2 11 10 14 9 3 14-8 2 12-6 21C0-11 5-6 0 4Z" fill="#fa9643" stroke="#b95f43" stroke-width="2"/>
+          <path d="M0 0q-3-11 3-18 5-8-3-18 12 5 13-1 2 10-5 16Q1-10 0 0Z" fill="#ffe793"/>
+          <path d="M-21-33C-8-21 8-36 23-32Q11-23-10-22T6-14Q-10-8-1 0" fill="none" stroke="#ad5143" stroke-width="5" stroke-linecap="round"/>
+          <path d="M-21-34C-8-22 8-37 23-33Q11-24-10-23T6-15Q-10-9-1 0" fill="none" stroke="#ffd37c" stroke-width="2.6" stroke-linecap="round"/></g>${leaves}</g>`;
+      }
       const coils=[0,1,2].map(i=>{
         const w=8+6*i, shift=3*Math.sin(spin+i);
         return `<g transform="translate(${shift} ${-9-9*i})"><path d="M${-w} -5 Q-1 4 ${w} -6 Q${w+5} 4 ${-w+4} 12 Q6 4 ${-w} 1Z" fill="${i===2?'#ffad49':'#e97a3e'}" stroke="#b2573d" stroke-width="1.6"/>
@@ -443,7 +484,7 @@
         <path d="M1 1q-1-7 5-12l2-8q3 7-1 12Z" fill="#ffed9b"/>${coils}${sparks}</g>`;
     }
     const ribbons=[0,1,2].map(i=>{
-      const y=-8-i*9, width=10+i*6, shift=3*Math.sin(spin+i);
+      const y=-8-i*9, width=(10+i*6)*(v.upgraded ? 1.2 : 1), shift=3*Math.sin(spin+i);
       return `<g transform="translate(${shift} ${y})"><path d="M${-width} -4 C${-width+4} 5 ${width-2} 3 ${width} -4 Q${width+4} 6 ${-width+6} 12 Q${width/2} 5 ${-width} 1Z" fill="${i===2?'#d4f8ff':'#8fd5e9'}" stroke="#579bb8" stroke-width="1.4"/>
         <path d="M${-width+4} -3 Q1 3 ${width-3} -4" fill="none" stroke="#f2ffff" stroke-width="2.4"/></g>`;
     }).join('');
@@ -469,15 +510,19 @@
       return `<g transform="translate(${x} ${13*lane}) scale(${front} 1)"><path d="m-2.8-.6 1.4-1 2.4.6 1.1 1.1-2.3.7Z" fill="#83b7ca"/><path d="m-2.6-.8 1.3-1.1 2.4.7" fill="none" stroke="#fff" stroke-width=".8"/></g>`;
     }).join('');
     return `<g clip-path="url(#field-bounds)"><g class="rolling-snow" transform="translate(${X(s.x)} ${Y(s.y)}) scale(${scale})">
+      ${s.upgraded ? `<g class="ice-plough" transform="rotate(${s.angle})"><path d="M-4-11q-10-1-18-7l5 7-8-1q8 8 16 9Zm0 22q-10 1-18 7l5-7-8 1q8-8 16-9Z" fill="#d5f5ff" stroke="#72a9c2" stroke-width="1.2"/></g>` : ''}
       <circle r="14" fill="url(#rolling-snow-light)" stroke="#5c91a7" stroke-width="1.3"/>
-      <g class="snow-surface" transform="rotate(${s.angle})">${facets}</g>
+      <g class="snow-surface" transform="rotate(${s.angle})">${facets}${s.upgraded ? [0,2.1,4.2].map(a=>{
+        const front=Math.cos(phase+a);
+        return front<=0 ? '' : `<g transform="translate(${12*Math.sin(phase+a)} 0) scale(${front} 1)"><path d="m-3-10 5 4-3 6 3 5-4 5-3-5 2-5-2-6Z" fill="#8dcfe4" stroke="#5a99b9" stroke-width="1"/><path d="m-1-7 1 3-1 3" fill="none" stroke="#fff"/></g>`;
+      }).join('') : ''}</g>
       <path d="M-10-6q2-4 6-5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></g></g>`;
   }
   function snowBurstArt(e,t) {
     const radius = S * e.radius, spread = 1-(1-t)**3;
     const shards = [9,58,97,141,190,226,275,318].map((angle,i) => {
       const reach = radius*(.65 + (i%3)*.14)*spread;
-      return `<g transform="rotate(${angle}) translate(${reach} 0) rotate(${t*75})"><path d="m-5 1 3-4 6 2-1 4-6 1Z" fill="#e7fbff" stroke="#6da6bc" stroke-width="1.3"/></g>`;
+      return `<g transform="rotate(${angle}) translate(${reach} 0) rotate(${t*75})">${e.upgraded ? '<use href="#art-breakIce" transform="rotate(80) scale(.78)"/>' : '<path d="m-5 1 3-4 6 2-1 4-6 1Z" fill="#e7fbff" stroke="#6da6bc" stroke-width="1.3"/>'}</g>`;
     }).join('');
     return `<g clip-path="url(#field-bounds)"><g class="snow-burst" transform="translate(${X(e.x)} ${Y(e.y)})" opacity="${1-t*t}">
       <circle r="${radius*spread}" fill="#d7f9ff" fill-opacity="${.28*(1-t)}" stroke="#eefcff" stroke-width="${3*(1-t)}"/>${shards}</g></g>`;
@@ -491,19 +536,22 @@
     return `<g clip-path="url(#field-bounds)"><g class="comet-burst" transform="translate(${X(e.x)} ${Y(e.y)})" fill="none" opacity="${Math.min(1,(1-t)*3.6)}">
       <circle class="emp-boundary" r="${radius}" fill="#9383ed" fill-opacity=".1" stroke="#6c60ad" stroke-width="2.2" stroke-dasharray="7 4"/>
       <circle r="${front}" stroke="#8e73d0" stroke-width="5"/><circle r="${front}" stroke="#d1fdff" stroke-width="1.7"/>
+      ${e.upgraded ? `<g class="comet-constellation" transform="scale(${front/radius})">
+        <path d="M0 -${radius*.83} ${radius*.72} -${radius*.42} ${radius*.72} ${radius*.42} 0 ${radius*.83} -${radius*.72} ${radius*.42} -${radius*.72} -${radius*.42}Z" stroke="#dfbb75" stroke-width="2" stroke-dasharray="13 5"/>
+        ${[0,60,120,180,240,300].map(a=>`<use href="#art-cometStar" transform="rotate(${a}) translate(0 ${-radius*.83}) scale(.62)"/>`).join('')}</g>` : ''}
       <g stroke-linecap="round" stroke-linejoin="round">${arcs}</g>
       <use href="#art-cometStar" transform="translate(0 ${-e.lift}) scale(${Math.max(0,1.2-1.8*t)})"/></g></g>`;
   }
   function moltenShotArt(s) {
     const x=X(s.impactX), y=Y(s.impactY), t=Math.min(1,s.age/s.duration);
     if (!s.armed) return `<g class="molten-target"><g fill="#d66e43" fill-opacity=".09" stroke="#be724a" stroke-dasharray="5 6">${tileMark(s.impactX,s.impactY)}</g>
-      ${A.moltenFlight(X(s.c),Y(s.r),x,y,t)}</g>`;
+      ${A.moltenFlight(X(s.c),Y(s.r),x,y,t,s.upgraded)}</g>`;
     const cells=G.attackCells(s.weapon,s.impactX,s.impactY).map(p=>tileMark(p.c,p.r)).join('');
     const glow=reducedMotion.matches ? t : .5+.5*Math.sin(t*Math.PI*(5+5*t));
     return `<g class="armed-firestone"><g fill="#ed7b40" fill-opacity="${.04+.09*t}" stroke="#a65c42" stroke-dasharray="5 8" opacity="${.35+.45*t}">${cells}</g>
       <g transform="translate(${x} ${y})"><circle r="17" fill="none" stroke="#734844" stroke-width="3.6"/>
       <circle r="17" fill="none" stroke="#ffd275" stroke-width="3.2" pathLength="1" stroke-dasharray="${1-t} 1" transform="rotate(-90)"/>
-      <circle r="${15+3*glow}" fill="url(#art-ember-halo)"/><use href="#art-magmaStone" transform="translate(0 -2) scale(${.76+.13*t})"/>
+      <circle r="${15+3*glow}" fill="url(#art-ember-halo)"/><use href="#art-${s.upgraded ? 'moltenBomb' : 'magmaStone'}" transform="translate(0 -2) scale(${(s.upgraded ? 1 : .76)+.13*t})"/>
       <path d="m-7-3 4 1 4-5 2 6 6-1" stroke="#fff0a3" opacity="${glow}" stroke-width="2" fill="none"/></g></g>`;
   }
   function moltenBlastArt(e,t) {
@@ -517,7 +565,11 @@
     }).join('');
     return `<g class="molten-blast" clip-path="url(#field-bounds)" opacity="${Math.min(1,(1-t)*3)}">
       <g fill="#ffaf4b" fill-opacity="${.3*(1-t)}" stroke="#de8644" stroke-opacity="${1-t}">${e.cells.map(p=>tileMark(p.c,p.r)).join('')}</g>${bursts}
-      <g transform="translate(${x} ${y})">${A.stoneImpact(t,true)}</g></g>`;
+      <g transform="translate(${x} ${y})">${A.stoneImpact(t,true)}</g>${e.upgraded ? `<g class="molten-fracture">${e.cells.filter(p=>p.c!==e.x || p.r!==e.y).map(p=>{
+        const angle=Math.atan2(p.r-e.y,p.c-e.x)*180/Math.PI, d=Math.hypot(p.c-e.x,p.r-e.y)*S*front;
+        return `<g transform="translate(${x} ${y}) rotate(${angle})"><path d="M4 0 ${d*.38} 3 ${d*.54} -3 ${d*.76} 1 ${d} 0" fill="none" stroke="#ffdf83" stroke-width="${3-1.5*t}"/>
+          <use href="#art-hotFragment" transform="translate(${d} ${-9*Math.sin(Math.PI*t)}) rotate(${85*t}) scale(${1-.55*t})"/></g>`;
+      }).join('')}</g>` : ''}</g>`;
   }
   function delayedStrikeArt(s) {
     const t = Math.min(1,s.age/s.duration), meteor = s.kind === 'meteorTower';
@@ -529,7 +581,7 @@
       incoming = `<g transform="translate(${x+53*(1-fall)} ${y-188*(1-fall)})" opacity="${Math.min(1,t*6)}">
         <path d="M-10-5q1-20 16-43l-2 24 11-16-5 26-6 13Z" fill="#fc9650" stroke="#c96948" stroke-width="1.7"/>
         <path d="m-3-7 5-15 2 7 7-10-5 19Z" fill="#ffe493"/>
-        <use href="#art-fallingRock" transform="rotate(${t*75})"/></g>`;
+        <use href="#art-fallingRock" transform="rotate(${t*75}) scale(${s.upgraded ? 1.24 : 1})"/></g>`;
     } else {
       const sx=X(s.c), sy=Y(s.r)-3, a=Math.atan2(y-sy,x-sx)*180/Math.PI;
       const d=Math.hypot(x-sx,y-sy), start=Math.min(22,d);
@@ -551,10 +603,18 @@
       const ex=X(p.c),ey=Y(p.r);
       if (e.weapon === 'crossCoil') {
         const angle=Math.atan2(ey-y,ex-x)*180/Math.PI;
+        if (e.upgraded) {
+          const fork = 6+3*(1-t);
+          const wires=[-1,1].map(side=>{
+            const d=`M18 ${side*4} 28 ${side*fork} 34 ${side*3} 41 ${side*11} 49 ${side*5} 56 ${side*7} 64 0`;
+            return `<path d="${d}" stroke="#7355a0" stroke-width="5"/><path d="${d}" stroke="${side===1?'#a2f8ff':'#e6bcff'}" stroke-width="2.4"/>`;
+          }).join('');
+          return `<g class="forked-discharge" transform="translate(${x} ${y}) rotate(${angle})" fill="none" stroke-linejoin="round">${wires}<circle cx="64" r="${4+8*t}" stroke="#e9edff" stroke-width="2.2"/></g>`;
+        }
         const bolt=`M12 0 25 -4 30 3 37 -5 46 4 49 -2 62 0`;
         return `<g transform="translate(${x} ${y}) rotate(${angle})" fill="none" stroke-linejoin="round"><path d="${bolt}" stroke="#7751ac" stroke-width="6"/><path d="${bolt}" stroke="#dbffff" stroke-width="2.6"/><circle cx="62" r="${2+5*(1-t)}" fill="#efffff"/></g>`;
       }
-      if (e.weapon === 'meteorTower') return `<g transform="translate(${ex} ${ey}) scale(${.9-.2*t})">${A.stoneImpact(t,false)}</g>`;
+      if (e.weapon === 'meteorTower') return `<g transform="translate(${ex} ${ey}) scale(${.9-.2*t})">${A.stoneImpact(t,e.upgraded && p.c===e.x && p.r===e.y)}</g>`;
       const wave=4+23*Math.min(1,t*1.65);
       return `<g class="sonic-impact" fill="none" transform="translate(${ex} ${ey})">
         <circle r="${wave}" stroke="#785584" stroke-width="6"/><circle r="${wave}" stroke="#fff0a4" stroke-width="2.8"/>
@@ -606,6 +666,11 @@
           <g transform="translate(${dx} ${dy})"><circle r="${core+4}" fill="#9173bb" opacity=".38"/>
           <g transform="rotate(${reducedMotion.matches?0:progress*160})" fill="none" stroke="#b7a4e8" stroke-width="2.4" stroke-linecap="round">
           ${[0,120,240].map(a=>`<path transform="rotate(${a})" d="M${orbit} 0Q${orbit} ${-orbit*.7} ${core*.6} ${-core*.7}"/>`).join('')}</g>
+          ${b.upgraded ? `<g class="gravity-lens" transform="rotate(-24)" fill="none" stroke-linecap="round">
+            <ellipse rx="${core+13}" ry="${core*.5+4}" stroke="#f4c383" stroke-width="2.3"/>
+            ${[0,120,240].map(a=>{const phi=a*Math.PI/180+(reducedMotion.matches?0:progress*6), orbitRadius=core+14+(1-progress)*15;
+              return `<path transform="translate(${Math.cos(phi)*orbitRadius} ${Math.sin(phi)*orbitRadius*.55}) rotate(${a+progress*80})" d="m-4 0 4-2 4 2-4 2Z" fill="#fff0b7" stroke="#ad819f"/>`;
+            }).join('')}</g>` : ''}
           <circle class="gravity-core" r="${core}" fill="#201b33" stroke="#d0baff" stroke-width="2"/></g></g>`;
       }
       const target = state.enemies.find(e => e.id === b.aim.target && !e.dead);
@@ -616,7 +681,11 @@
         const line=`M${start} 0H${distance}`;
         return `<g class="disintegration-beam" data-power="${power}" transform="translate(${cx} ${cy}) rotate(${trackingAngle(b,target)})" fill="none" stroke-linecap="round">
           <path d="${line}" stroke="#585396" stroke-width="${4+power*1.8}" opacity=".66"/><path d="${line}" stroke="#75edda" stroke-width="${2+power*.88}"/><path d="${line}" stroke="#edffff" stroke-width="1.4"/>
-          <path d="${line}" stroke="#fff" stroke-width="2.7" stroke-dasharray="3 13" stroke-dashoffset="${reducedMotion.matches?0:-state.time*22}"/>
+          <path d="${line}" stroke="#fff" stroke-width="2.7" stroke-dasharray="${b.upgraded ? '6 8' : '3 13'}" stroke-dashoffset="${reducedMotion.matches?0:-state.time*(b.upgraded ? 38 : 22)}"/>
+          ${b.upgraded ? `<g class="beam-packets">${Array.from({length:power},(_,i)=>{
+            const p=((reducedMotion.matches ? .5 : state.time*1.6)+i/power)%1;
+            return `<g transform="translate(${start+(distance-start)*p} 0) skewX(-12)"><ellipse rx="3.1" ry="${4+power}" stroke="#4d7592" stroke-width="3.8"/><ellipse rx="3.1" ry="${4+power}" stroke="#c3ffde" stroke-width="1.8"/></g>`;
+          }).join('')}</g>` : ''}
           <g transform="translate(${distance} 0) rotate(${reducedMotion.matches?0:state.time*32})"><circle r="${3.8+power}" stroke="#dcfff1" stroke-width="2"/>
           <circle r="${7+power}" stroke="#6abfca" stroke-width="2" stroke-dasharray="5 5"/></g></g>`;
       }
@@ -641,7 +710,7 @@
         const x=X(s.x), y=Y(s.y)-s.lift-3;
         const track=[...s.trail.map(p=>[X(p.x),Y(p.y)-p.lift-3]),[x,y]];
         const path=track.map(([px,py],i)=>(i?'L':'M')+px+' '+py).join(' ');
-        return `<g class="homing-comet"><g fill="none" stroke-linecap="round"><path d="${path}" stroke="#a876b9" stroke-width="7"/><path d="${path}" stroke="#ffe2b3" stroke-width="3"/></g><use href="#art-cometStar" transform="translate(${x} ${y}) rotate(${s.angle+16})"/></g>`;
+        return `<g class="homing-comet"><g fill="none" stroke-linecap="round"><path d="${path}" stroke="#a876b9" stroke-width="7"/><path d="${path}" stroke="#ffe2b3" stroke-width="3"/></g><g transform="translate(${x} ${y}) rotate(${s.angle+16})">${s.upgraded ? '<ellipse rx="13" ry="6" transform="rotate(-30)" fill="none" stroke="#c6c4ff" stroke-width="2"/>' : ''}<use href="#art-cometStar"/></g></g>`;
       }
       if (s.kind === 'meteorTower' || s.kind === 'sonicCannon') return delayedStrikeArt(s);
       if (s.kind === 'spiderWeb') {
@@ -669,9 +738,17 @@
         const collapse=t<.1 ? .52+.48*t/.1 : ((1-t)/.9)**1.65;
         const r=Math.max(.3,edge*collapse);
         return `<g class="gravity-well" clip-path="url(#field-bounds)"><g ${at} fill="none">
-          <circle class="gravity-collapse" r="${r}" fill="#251c38" fill-opacity=".82" stroke="#ceb7fc" stroke-width="2.4"/>
-          <g transform="rotate(${reducedMotion.matches?0:110*t})">${[0,90,180,270].map(a=>`<path transform="rotate(${a})" d="M${r} 0Q${r} ${-r*.62} 4 -6" stroke="#675391" stroke-width="5"/><path transform="rotate(${a})" d="M${r} 0Q${r} ${-r*.62} 4 -6" stroke="#d7ccff" stroke-width="2"/>`).join('')}</g>
-          <circle r="${Math.max(.2,r*.24)}" fill="#171322"/></g></g>`;
+          <circle class="gravity-collapse" r="${r}" fill="${e.upgraded ? 'url(#art-gravity-field)' : '#251c38'}" fill-opacity=".82" stroke="#ceb7fc" stroke-opacity=".8" stroke-width="2.4"/>
+          <g transform="rotate(${reducedMotion.matches?0:110*t})">${[0,90,180,270].map(a=>`<path transform="rotate(${a})" d="M${r} 0Q${r} ${-r*.62} 4 -6" stroke="#675391" stroke-opacity=".55" stroke-width="4"/><path transform="rotate(${a})" d="M${r} 0Q${r} ${-r*.62} 4 -6" stroke="#e0d2ff" stroke-opacity=".8" stroke-width="1.5"/>`).join('')}</g>
+          ${e.upgraded ? `<g transform="rotate(-24) scale(${r/100})" stroke-linecap="round">
+            <g class="gravity-infall" transform="rotate(${reducedMotion.matches ? 0 : t*96})">
+              ${[0,120,240].map(a=>`<g transform="rotate(${a})"><path d="M88 0C85 39 31 48 15 20Q6 5 0 0" stroke="#d7ae7d" stroke-width="2.5"/><path d="m80-1 7-5 7 5-7 4Z" fill="#e4d0a4" stroke="#705178"/></g>`).join('')}</g>
+            <ellipse rx="73" ry="23" stroke="url(#art-accretion)" stroke-width="4.2"/>
+            <path d="M-64 6C-36 29 43 21 69 5M-67-5C-58-18-27-25-6-23" stroke="#ede2ff" stroke-width="1.6"/>
+            <ellipse rx="31" ry="12" fill="#8065ac" fill-opacity=".36"/>
+            <circle r="15" fill="#211b32" stroke="#c8a4eb" stroke-width="2.4"/>
+            <path d="M-53 8Q-13 26 40 12" stroke="url(#art-accretion)" stroke-width="4.5"/>
+            <path d="M-39 14Q-16 20 4 18" stroke="#fff2cd" stroke-width="1.6"/></g>` : `<circle r="${Math.max(.2,r*.24)}" fill="#171322"/>`}</g></g>`;
       }
       if (e.kind==='disintegrateHit') {
         let lastPulse='';
@@ -690,12 +767,12 @@
       if (e.kind === 'laser') {
         const tower = state.buildings.find(b => b.id === e.tower);
         const mount = A.mountFor(tower, 'pierce'), gun = tower?.secondary?.kind === 'pierce' ? tower.secondary : tower;
-        return `<g clip-path="url(#field-bounds)"><g class="laser-beam" transform="translate(${x + mount.x} ${y + mount.y})" opacity="${1 - t}">${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S), gun ? visibleFlash(gun) : 0, e.upgraded, mount.scale, e.weapon)}</g></g>`;
+        return `<g clip-path="url(#field-bounds)"><g class="laser-beam" transform="translate(${x + mount.x} ${y + mount.y})" opacity="${1 - t}">${A.laser(e.angle, e.length * S, t, e.hitDistances.map(d => d * S), gun ? visibleFlash(gun) : 0, e.upgraded, mount.scale, e.weapon, reducedMotion.matches)}</g></g>`;
       }
       if (e.kind === 'plasmaArc') {
         const from = e.fromEnemy, to = e.toEnemy;
         return A.plasmaArc(X(from.x), Y(from.y) - (from.dead ? e.lift : lift(from)),
-          X(to.x), Y(to.y) - (to.dead ? e.toLift : lift(to)), e.duration - life, e.hop, reducedMotion.matches);
+          X(to.x), Y(to.y) - (to.dead ? e.toLift : lift(to)), e.duration - life, e.hop, reducedMotion.matches, e.weapon);
       }
       if (e.kind === 'webHit') {
         return `<g class="web-hit" ${at} fill="none" stroke="#fff8ff" stroke-width="2.4" stroke-linecap="round">
@@ -722,13 +799,22 @@
         const echo = reducedMotion.matches ? edge - 8 : Math.max(13,front - 8 - 9*Math.sin(Math.PI*travel));
         return `<g clip-path="url(#field-bounds)"><g class="impact-pulse" transform="translate(${x} ${y})" fill="none" opacity="${Math.min(1,(1-t)*2.7)}">
           <circle class="impact-ring" r="${front}" stroke="#366d6c" stroke-width="${5-2*travel}" opacity=".84"/>
+          ${e.upgraded ? `<circle r="${Math.max(1,front-5)}" stroke="#f7d98d" stroke-width="3" stroke-dasharray="14 7 3 7"/>` : ''}
           <circle r="${front-1}" stroke="#d7ffdb" stroke-width="2.5"/>
           <circle r="${echo}" stroke="#77d2bd" stroke-width="${4-2*travel}" opacity="${.85-.45*travel}"/>
           <g class="fx-accent" stroke-linecap="round" stroke="#fff1b6" opacity="${.85*(1-t)}">
             ${[0,45,90,135,180,225,270,315].map(a=>`<path transform="rotate(${a})" d="M${front-9} 0h6" stroke-width="2.5"/>`).join('')}
           </g></g></g>`;
       }
-      if (e.kind === 'spark' && e.weapon === 'iceCannon') return `<g class="ice-impact" ${at}>${[0,72,144,216,288].map(a => `<path transform="rotate(${a}) translate(0 ${-4 - t * 11})" d="m0-5 2 4-2 4-2-4Z" fill="#dbffff" stroke="#69aec4"/>`).join('')}</g>`;
+      if (e.kind === 'spark' && e.weapon === 'iceCannon') {
+        if (e.upgraded) return `<g class="ice-impact ice-trident" ${at}><g transform="rotate(${e.angle+90})">
+          ${[-36,0,36].map(a=>`<use href="#art-iceSpear" transform="rotate(${a}) translate(0 ${-2-13*t}) scale(${1.12-.24*t})"/>`).join('')}
+          <path d="M-7 3Q0 10 7 3" fill="none" stroke="#f0ffff" stroke-width="2"/></g></g>`;
+        return `<g class="ice-impact" ${at}>${[0,72,144,216,288].map(a => `<path transform="rotate(${a}) translate(0 ${-4 - t * 11})" d="m0-5 2 4-2 4-2-4Z" fill="#dbffff" stroke="#69aec4"/>`).join('')}</g>`;
+      }
+      if (e.kind === 'spark' && e.weapon === 'tacticalAir' && e.upgraded) return `<g class="airburst-glint" ${at}><g transform="rotate(${e.angle})">
+        <path d="M-12-3-4-2 0-10 2-3 12-7 6 0 14 4 3 4-2 10-3 3Z" transform="scale(${.8+.45*t})" fill="#fff2ac" stroke="#c77b43" stroke-width="1.4"/>
+        <path d="M6-5l6-4m-3 10 7 2" transform="translate(${8*t} 0)" fill="none" stroke="#ffc770" stroke-width="2"/></g></g>`;
       if (e.kind === 'spark' && e.weapon === 'fireCannon') return `<g class="ember-impact" ${at}><use href="#art-firePatch" transform="translate(0 ${4 - 7 * t}) scale(${.68 - t * .32})"/></g>`;
       if (e.kind === 'spark' || e.kind === 'flare') return `<g class="${e.kind}-effect" ${at}><g transform="rotate(${e.angle ?? 0})">${A.impactBurst(e.kind, t)}</g></g>`;
       if (e.kind === 'hatch') return `<g class="hatch-effect" ${at} fill="#ffefc7" stroke="#a77f63" stroke-width="2">
@@ -747,10 +833,20 @@
       if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#688a38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="${(1 - t) * .75}"/>`;
       if (e.kind === 'blast') {
         const front = (.18 + .82 * (1 - (1 - t) ** 2)) * e.radius * S;
+        if (e.upgraded && e.weapon === 'tacticalGround') return `<g class="blast-effect shell-impact" ${at} fill="none">
+          <circle r="${front}" stroke="#e9af6a" stroke-width="3.3" stroke-dasharray="12 4"/>
+          <circle r="${front*.73}" stroke="#fff0a7" stroke-width="2"/>
+          ${[30,150,270].map(a=>`<path transform="rotate(${a}) scale(${front})" d="m.08 -.08 .21 -.12 .1 .06 .32 -.22 -.18 .25 -.18 .02 -.18 .14Z" fill="#f5a25b" stroke="#b97b54" stroke-width=".035"/>`).join('')}</g>`;
         return `<g class="blast-effect" ${at}>${e.upgraded ? `<circle r="${front * .78}" fill="none" stroke="#fbbf68" stroke-width="${7 * (1 - t)}"/>` : ''}<circle r="${front}" fill="#f3a74b" fill-opacity=".1" stroke="#af7340" stroke-width="2.5"/>
           <circle r="${front - 4}" fill="none" stroke="#ffe5a8" stroke-width="2"/>
           ${[15,78,142,204,274,325].map(a => `<g class="fx-accent" transform="rotate(${a}) translate(${front - 8} 0) rotate(${t * 32}) scale(${.6 + .5 * Math.sin(Math.PI * t)})"><path d="M-8 1q-2-5 2-6 2-5 7-2 6-1 6 4 5 4 0 6-5 2-8 0-6 2-7-2Z" fill="#d3b18c" stroke="#a17e57" stroke-width="1.1"/></g>`).join('')}
           <path transform="scale(${1 - t})" d="m0-20 6 12 10-4-4 11 10 4-13 3 1 11-10-7-9 6 1-12-10-4 12-4-2-10Z" fill="#ffd170" stroke="#ce7437" stroke-width="2"/></g>`;
+      }
+      if (e.kind === 'molecular' && e.weapon === 'cryoPlasma' && e.upgraded) {
+        const close=1-Math.min(1,t/.34);
+        return `<g class="cryo-impact crystal-lock" ${at}>
+          <use href="#art-hexCage" transform="scale(${.76+.24*(1-close)})"/>
+          ${[0,120,240].map(a=>`<use href="#art-breakIce" transform="rotate(${a}) translate(0 ${-11-12*close}) rotate(180) scale(.62)"/>`).join('')}</g>`;
       }
       if (e.kind === 'molecular' && e.weapon === 'cryoPlasma') return `<g class="cryo-impact" ${at}>
         <circle r="${9+24*t}" stroke="#77c4e2" stroke-width="2.2" fill="#defaff" fill-opacity=".18"/>
@@ -784,6 +880,8 @@
     uiSignature = signature;
     $('upgrade-count').textContent = state.upgradeItems;
     $('hammer-count').textContent = state.fusionHammers;
+    $('crystals').title = state.upgradeItems ? '升級水晶' : '水晶不足';
+    $('hammers').title = state.fusionHammers ? '融合槌' : '合成槌不足';
     $('crystals').hidden = state.level < 1;
     $('hammers').hidden = state.level < 3;
     $('crystals').setAttribute('aria-label', `升級水晶 ${state.upgradeItems} 顆`);
@@ -894,6 +992,7 @@
     lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
   }
   function closeMenu() {
+    if (infoAnchor && $('building-menu').contains(infoAnchor)) hideInfo();
     menuCell = null;
     $('building-menu').hidden = true;
   }
@@ -911,18 +1010,19 @@
   }
   function showFusionOptions(building) {
     const panel = $('fusion-options'), list = $('fusion-recipes');
+    $('fusion-locked').hidden = !building || state.level >= 3 || building.kind === 'wall' || !!building.fusionKind;
     panel.hidden = !building || state.level < 3 || building.kind === 'wall' || !!building.fusionKind;
     list.replaceChildren();
     if (panel.hidden) return;
-    $('fusion-label').textContent = state.fusionHammers ? '每次融合用 1 把融合槌' : '融合槌不足';
+    $('fusion-label').textContent = state.fusionHammers ? '每次合成用 1 把槌子' : '合成槌不足';
     for (const [material, tool] of Object.entries(G.TOOLS)) {
       const recipe = G.fusionRecipe(building.kind, material);
       if (!recipe) continue;
-      const error = G.canBuild(state, material, building.c, building.r);
+      const error = state.fusionHammers ? G.canBuild(state, material, building.c, building.r) : '合成槌不足';
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.fuse = material;
-      button.disabled = !!error;
+      setAvailability(button, error);
       const vortex = G.toolFor(G.primaryWeapon(recipe)).vortex;
       const result = vortex ? recipe.name + (vortex === 'fire' ? '（火龍捲）' : '（冰龍捲）') : recipe.name;
       const weapons = [G.primaryWeapon(recipe), G.secondaryWeapon(recipe)].filter(Boolean);
@@ -931,7 +1031,7 @@
       button.title = error || `${result}（${targetLabel}）`;
       const pair = G.TOOLS[building.kind].name + '＋' + tool.name;
       button.setAttribute('aria-label', `${pair}合成${result}，目標${targetLabel}，${tool.cost} 金幣、1 把融合槌${error ? '，' + error : ''}`);
-      button.innerHTML = `${fusionPortrait(recipe)}<span class="recipe-pair">${pair}</span><span class="recipe-result">→ ${result} <small class="recipe-target">${targetLabel}</small></span><span class="recipe-cost">${A.icon('coin')}${tool.cost}</span>`;
+      button.innerHTML = `${recipeEquation(building.kind,material,recipe)}<span class="recipe-result">${result}<small class="recipe-target">${targetLabel}</small></span><span class="recipe-cost">${A.icon('coin')}${tool.cost}</span>`;
       list.append(button);
     }
     list.scrollTop = 0;
@@ -946,17 +1046,17 @@
     const grade = $('edit-grade');
     grade.innerHTML = A.icon('crystal') + (upgraded ? '取消升級' : '升級');
     grade.hidden = false;
-    grade.disabled = grade.hidden || (!upgraded && !state.upgradeItems);
-    grade.title = upgraded ? '退回 1 顆升級水晶' : grade.disabled ? '過關可獲得升級水晶' : '使用 1 顆升級水晶';
+    setAvailability(grade, !upgraded && !state.upgradeItems ? '水晶不足' : '');
+    grade.title = grade.dataset.unavailable || (upgraded ? '退回 1 顆升級水晶' : '使用 1 顆升級水晶');
     $('edit-remove').hidden = home;
     showFusionOptions(b);
     $('building-menu').hidden = false;
     positionMenu();
-    const focusTarget = !$('fusion-options').hidden ? $('building-menu') : grade.disabled ? (home ? $('building-menu') : $('edit-remove')) : grade;
+    const focusTarget = !$('fusion-options').hidden || grade.dataset.unavailable ? $('building-menu') : grade;
     focusTarget.focus({ preventScroll: true });
   }
   function previewGrade() {
-    if (!menuCell || $('edit-grade').disabled) return;
+    if (!menuCell || $('edit-grade').dataset.unavailable) return;
     const { c, r } = menuCell, b = G.at(state, c, r);
     if (b?.upgraded || (!b && state.castleUpgraded)) return;
     showInfo(b?.kind || 'castle', $('edit-grade'), false, b, true);
@@ -1002,9 +1102,40 @@
   }
   $('tower-info').addEventListener('pointerenter', () => clearTimeout(infoTimer));
   $('tower-info').addEventListener('pointerleave', deferHideInfo);
+  function setAvailability(button, reason) {
+    button.setAttribute('aria-disabled', String(!!reason));
+    if (reason) button.dataset.unavailable = reason;
+    else delete button.dataset.unavailable;
+  }
+  function showShortage(button) {
+    hideInfo();
+    infoAnchor = button;
+    const info = $('tower-info');
+    info.dataset.kind = 'shortage';
+    info.textContent = button.dataset.unavailable;
+    positionInfo(button);
+  }
+  const menu = $('building-menu');
+  for (const type of ['pointerover', 'focusin']) menu.addEventListener(type, event => {
+    const button = event.target.closest('[data-unavailable]');
+    if (button && button !== infoAnchor) showShortage(button);
+  });
+  for (const type of ['pointerout', 'focusout']) menu.addEventListener(type, event => {
+    const button = event.target.closest('[data-unavailable]');
+    if (button && !button.contains(event.relatedTarget)) deferHideInfo();
+  });
+  menu.addEventListener('click', event => {
+    const button = event.target.closest('[data-unavailable]');
+    if (button) { event.preventDefault(); event.stopPropagation(); showShortage(button); }
+  }, true);
+  document.addEventListener('click', event => {
+    if (menuCell && !menu.contains(event.target)) {
+      event.preventDefault(); event.stopPropagation(); closeMenu(); hideInfo();
+    }
+  }, true);
   document.addEventListener('pointerdown', event => {
+    if (menuCell && !menu.contains(event.target)) { event.preventDefault(); return; }
     if (!event.target.closest('#tower-info, [data-tool]')) hideInfo();
-    if (!event.target.closest('#building-menu, #hit-layer')) closeMenu();
     if (settings.open && !settings.contains(event.target)) settings.open = false;
   });
   window.addEventListener('resize', repositionInfo);
@@ -1016,7 +1147,7 @@
   document.addEventListener('scroll', positionMenu, true);
   $('fusion-recipes').addEventListener('click', event => {
     const button = event.target.closest('[data-fuse]');
-    if (!button || button.disabled || !menuCell || state.phase !== 'planning') return;
+    if (!button || button.dataset.unavailable || !menuCell || state.phase !== 'planning') return;
     const { c, r } = menuCell, b = G.at(state, c, r);
     if (!b || b.fusionKind || !G.fusionRecipe(b.kind, button.dataset.fuse)) return;
     const result = G.build(state, button.dataset.fuse, c, r);
@@ -1134,7 +1265,7 @@
     $('lesson-title').textContent = fusion ? '用融合槌合成新塔' : '用水晶升級建築';
     const steps = fusion ? [
       step(tower, '點場上砲塔'),
-      step('<span class="lesson-recipe">砲塔＋大砲<br>→ 戰術砲臺</span>', '點選配方'),
+      step(recipeEquation('pea','cannon',G.fusionRecipe('pea','cannon')), '點選配方'),
       step(tile(A.fusionResult(G.fusionRecipe('pea', 'cannon'))), '戰術砲臺')
     ] : [
       step(tower, '點選建築'),

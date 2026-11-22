@@ -131,6 +131,33 @@ function upgradedFusion(first, second) {
   G.startWave(s,0,4242); s.queue=[]; s.castle=null;
   return s;
 }
+test('砲塔移除後，已發射的彈藥仍使用發射時的升級命中特效', () => {
+  const cases = [
+    ['pea','cannon','spark','tacticalAir'],
+    ['pea','cannon','blast','tacticalGround'],
+    ['pea','frost','spark','iceCannon'],
+    ['frost','molecular','molecular','cryoPlasma'],
+    ['cannon','pierce','cometBurst'],
+    ['cannon','frost','snowBurst']
+  ];
+  for (const upgraded of [false,true]) for (const [first,second,kind,weapon] of cases) {
+    const s = G.createState(3);
+    assert.ok(G.build(s,first,5,4).ok && G.build(s,second,5,4).fused);
+    if (upgraded) assert.ok(G.upgrade(s,5,4).ok);
+    G.startWave(s,0,4242); s.queue=[]; s.castle=null;
+    stationary(s,'giant',6,4);
+    stationary(s,'flyer',6,4);
+    for (let i=0;i<240 && !s.shots.length;i++) G.step(s,1/60);
+    assert.ok(s.shots.length);
+    s.buildings=[];
+    let impact;
+    for (let i=0;i<320 && !impact;i++) {
+      G.step(s,1/60);
+      impact=s.effects.find(e=>e.kind===kind && (!weapon || e.weapon===weapon));
+    }
+    assert.equal(impact?.upgraded,upgraded,weapon || kind);
+  }
+});
 test('不同砲塔共用五層冰凍，結凍中不累積，解凍後正常移動', () => {
   const s=G.createState(3);
   G.startWave(s); s.queue=[]; s.castle=null;
@@ -169,7 +196,7 @@ test('升級攻擊格形與光束的實際寬度', () => {
     const s=graded ? upgradedFusion(material,'pierce') : artillery('pierce',material);
     // The enemy nearest the castle is on the beam axis and sets the aim.
     stationary(s,'giant',2,4);
-    const edge=stationary(s,'giant',3,4.5), outside=stationary(s,'giant',3,4.66);
+    const edge=stationary(s,'giant',3,4.54), outside=stationary(s,'giant',3,4.55);
     G.step(s,1/60);
     assert.equal(edge.hp,graded?48:50); assert.equal(outside.hp,50);
   }
@@ -178,7 +205,7 @@ test('火氣象儀+ 本體每秒 2，火路使用同一格普通地火；冰龍�
   for(const material of ['flame','frost']){
     const s=upgradedFusion(material,'push'), fire=material==='flame';
     const e=stationary(s,'flyer',5,4);
-    advance(s,(fire?4:2.5)*G.BATTLE_SPEED); assert.equal(s.vortices.length,1);
+    advance(s,(fire?4:3)*G.BATTLE_SPEED); assert.equal(s.vortices.length,1);
     s.buildings=[]; const v=s.vortices[0]; const firstHp=e.hp;
     for(let i=0;i<60*G.BATTLE_SPEED;i++){
       e.x=v.x; e.y=v.y; G.step(s,1/60);
@@ -279,17 +306,21 @@ test('隕石全圖鎖定原格，一秒後打十字五格的地面蟲並持續�
   assert.equal(late.hp,47);assert.equal(s.fires.length,0);
   assert.deepEqual(G.attackCells('meteorTower',0,0),[{c:0,r:0},{c:1,r:0},{c:0,r:1}]);
 });
-test('音波砲在三格內鎖定，一秒後對十字五格地空暈眩一秒，不追隨原目標', () => {
-  const s=artillery('push'), lure=stationary(s,'giant',9,4);
-  assert.equal(G.toolFor('sonicCannon').rate,G.TOOLS.push.rate);
-  G.step(s,1/60); assert.equal(s.shots.length,0);
-  lure.x=8; G.step(s,1/60); assert.deepEqual([s.shots[0].impactX,s.shots[0].impactY],[8,4]);
-  lure.y=6;s.buildings=[];
-  const targets=[[8,4],[7,4],[9,4],[8,3],[8,5]].map(([x,y],i)=>stationary(s,i%2?'flyer':'giant',x,y));
-  const off=stationary(s,'giant',9,5);
-  advance(s,G.BATTLE_SPEED-2/60); assert.ok(targets.every(e=>e.hp===50));
-  G.step(s,1/60); assert.ok(targets.every(e=>e.hp===47 && e.stun===G.BATTLE_SPEED));
-  assert.deepEqual([lure.hp,off.hp],[50,50]);
+test('音波砲鎖格後打十字 3 傷，升級打九宮格 4 傷，兩者都暈眩一秒', () => {
+  for (const upgraded of [false,true]) {
+    const s=upgraded ? upgradedFusion('cannon','push') : artillery('push');
+    const lure=stationary(s,'giant',9,4);
+    assert.equal(G.toolFor('sonicCannon',upgraded).rate,G.TOOLS.push.rate);
+    G.step(s,1/60); assert.equal(s.shots.length,0);
+    lure.x=8; G.step(s,1/60); assert.deepEqual([s.shots[0].impactX,s.shots[0].impactY],[8,4]);
+    lure.y=6; s.buildings=[];
+    const targets=[[8,4],[7,4],[9,4],[8,3],[8,5]].map(([x,y],i)=>stationary(s,i%2?'flyer':'giant',x,y));
+    const corner=stationary(s,'giant',9,5);
+    advance(s,G.BATTLE_SPEED-2/60); assert.ok(targets.every(e=>e.hp===50));
+    G.step(s,1/60);
+    assert.ok(targets.every(e=>e.hp===(upgraded?46:47) && e.stun===G.BATTLE_SPEED));
+    assert.equal(corner.hp,upgraded?46:50); assert.equal(lure.hp,50);
+  }
 });
 test('追尾流星直擊三傷，兩格內其餘飛蟲各受一傷並暈眩', () => {
   const s=artillery('pierce'), land=stationary(s,'giant',4,4);
@@ -342,11 +373,11 @@ test('急凍光束沿用雷射射程與射速，穿盾直線對地空各造成�
   assert.equal(beam.weapon,'cryoBeam'); assert.equal(beam.hitDistances.length,2);
   assert.ok([ground,air].every(e=>e.hp===48 && e.slow>0 && e.shock===G.TOOLS.pierce.stunSeconds*G.BATTLE_SPEED));
 });
-test('冰火氣象儀每 2.5 秒召喚，冰龍捲最多四個、火龍捲最多三個，暫停與清場正確', () => {
+test('冰龍捲每 3 秒召喚、普通火龍捲每 2.5 秒召喚，各最多三個，暫停與清場正確', () => {
   for (const element of ['frost','flame']) {
     const s=artillery('push',element);
     stationary(s,'giant',0,0);
-    const interval = 2.5*G.BATTLE_SPEED;
+    const interval = (element==='frost' ? 3 : 2.5)*G.BATTLE_SPEED;
     for (let count=1;count<=3;count++) {
       advance(s,interval-1/60); assert.equal(s.vortices.length,count-1);
       G.step(s,1/60); assert.equal(s.vortices.length,count);
@@ -354,19 +385,19 @@ test('冰火氣象儀每 2.5 秒召喚，冰龍捲最多四個、火龍捲最多
     const oldest=s.vortices[0], before=[oldest.age,oldest.x,oldest.y];
     G.togglePause(s); advance(s,1); assert.deepEqual([oldest.age,oldest.x,oldest.y],before);
     G.togglePause(s); advance(s,interval-1/60);
-    assert.equal(s.vortices.length,element==='frost' ? 3 : 2);
-    G.step(s,1/60); assert.equal(s.vortices.length,element==='frost' ? 4 : 3);
-    assert.equal(s.vortices.includes(oldest),element==='frost');
+    assert.equal(s.vortices.length,2);
+    G.step(s,1/60); assert.equal(s.vortices.length,3);
+    assert.equal(s.vortices.includes(oldest),false);
     advance(s,.5*G.BATTLE_SPEED); assert.equal(s.vortices.length,3); assert.ok(!s.vortices.includes(oldest));
     s.enemies=[];G.step(s,1/60);assert.equal(s.vortices.length,0);assert.ok(!G.isAdvancing(s));
   }
 });
 test('冰龍捲升級擴大半徑，兩種等級都只打八次，圈外地面蟲不受影響', () => {
-  for (const [upgraded,radius] of [[false,1],[true,1.6]]) {
+  for (const [upgraded,radius] of [[false,1],[true,1.2]]) {
     const s=upgraded ? upgradedFusion('frost','push') : artillery('push','frost');
     const tower=s.buildings[0].id;
     const ground=stationary(s,'shield',6,4), sky=stationary(s,'flyer',6,4), outside=stationary(s,'giant',6,4);
-    advance(s,2.5*G.BATTLE_SPEED);
+    advance(s,3*G.BATTLE_SPEED);
     const v=s.vortices[0]; s.buildings=[];
     for(let i=0;i<8*60*G.BATTLE_SPEED;i++){
       ground.x=v.x+radius-.05; sky.x=v.x-radius+.05; outside.x=v.x+radius+.05;
@@ -545,14 +576,15 @@ test('黑洞砲優先選能吸最多蟲的地格，瞄準 3.5 秒後在原地格
   assert.ok(nearby.pull);assert.equal(nearby.hp,30);assert.equal(target.hp,50);assert.equal(lone.hp,500);
   assert.ok(s.effects.some(e=>e.kind==='gravityWell' && e.x===7 && e.y===4));assert.equal(s.shots.length,0);
 });
-test('黑洞砲兩格內最近一隻受二十傷、其餘各一傷，地空蟲按各自原距離內移後暈 0.2 秒',()=>{
+test('黑洞砲半徑 2.5 格內最近一隻受二十傷、其餘各一傷，地空蟲按各自原距離內移後暈 0.2 秒',()=>{
   const s=artillery('molecular','push'), tower=s.buildings[0];s.buildings=[];
-  const a=stationary(s,'giant',7.1,4), ground=stationary(s,'shield',7,6);
-  const air=stationary(s,'flyer',6.2,4), outside=stationary(s,'giant',7,6.001);
+  const a=stationary(s,'giant',7.1,4), ground=stationary(s,'shield',7,6.5);
+  const air=stationary(s,'flyer',6.2,4), outside=stationary(s,'giant',7,6.501);
   a.hp=20;
   const second=stationary(s,'giant',7.2,4);
   const shot={kind:'molecular',weapon:'gravityCannon',tower:tower.id,c:5,r:4,impactX:7,impactY:4};
   G.resolveShot(s,shot);assert.ok(a.dead);assert.equal(s.effects.at(-1).kind,'gravityWell');
+  assert.equal(s.effects.at(-1).radius,2.5);
   const landings = [ground,air,second].map(e=>[e.pull.x,e.pull.y]);
   for (const e of [ground,air,second]) {
     const dx=e.x-7, dy=e.y-4, px=e.pull.x-7, py=e.pull.y-4;
@@ -569,7 +601,7 @@ test('黑洞砲兩格內最近一隻受二十傷、其餘各一傷，地空蟲�
   assert.equal(new Set([ground,air,second].map(e=>e.x+','+e.y)).size,3);
   advance(s,.2*G.BATTLE_SPEED);assert.ok(ground.stun<1e-9);
   assert.equal(s.waveStats.damageByTower[tower.id],23);
-  assert.ok(!outside.pull);assert.deepEqual([outside.x,outside.y,outside.hp],[7,6.001,50]);
+  assert.ok(!outside.pull);assert.deepEqual([outside.x,outside.y,outside.hp],[7,6.501,50]);
 });
 test('黑洞在角落也將蟲分散到合法落點，相同種子可重播、不同種子會改變位置',()=>{
   function positions(seed) {

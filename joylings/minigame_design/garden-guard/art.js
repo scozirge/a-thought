@@ -404,18 +404,28 @@
   const wallBlade = `<path d="M14-5h8l10 5-10 5h-8Z" fill="#b7c9be" stroke="#465d55" stroke-width="1.9"/>
     <path d="M18-3h4l8 3H18Z" fill="#f7f2da" stroke="none"/>`;
   const upgradedShots = {
+    castle: '<use href="#art-shot-castle"/><path d="m-5 0-7-5 5-1 5 5m-3 1-7 5 5 .5 5-5" fill="#b54e51" stroke="#6d4744" stroke-width="1"/><path d="m4-2 4-1 5 3-6 2Z" fill="#fff0b4" stroke="#77634c" stroke-width="1"/>',
     pea: '<path d="m-11-3 13-1 7 4-7 4-13-1Z" fill="#f5ca61" stroke="#617642"/><path d="M-7-1h10" stroke="#fff7c6"/>',
     cannon: '<g transform="scale(1.6)"><use href="#art-shot-cannon"/><path d="M-11 2Q-2 7 10-5" fill="none" stroke="#e1ac58" stroke-width="3"/><circle cx="-4" cy="-6" r="2" fill="#e2efdc"/></g>',
     push: '<use href="#art-shot-push"/><path d="m-15-14 8-3m-8 31 8 3m12-32 5 3m-5 26 5-3" fill="none" stroke="#efbc64" stroke-width="3"/>',
     flame: '<g transform="scale(1.8)"><use href="#art-shot-flame"/><path d="m-4-5 .6 2.4 2.5 1.9M3.8 4.8l-.2 1.2" fill="none" stroke="#ffca6a" stroke-width="1"/></g>',
     molecular: '<use href="#art-shot-molecular"/><ellipse rx="22" ry="9" transform="rotate(-32)" fill="none" stroke="#f7ccff" stroke-width="2"/><circle cx="18" cy="-10" r="3.2" fill="#f9e5ff" stroke="#8752ab"/>'
   };
+  const forgedRounds = {
+    tacticalAir: '<path d="m-9-2 11-1 7 3-7 3-11-1Z" fill="#efba55"/><path d="m0-1 4-1 4 2H0Z" fill="#fff6c7" stroke="none"/>',
+    tacticalGround: '<path d="m-10-4 5-4 10 1 7 7-7 7-10 1-5-4Z" fill="url(#gg-painted-steel)"/><path d="m-4-7 2 14m2-14 2 13" stroke="#f5bd65" stroke-width="2.2"/>',
+    iceCannon: '<path d="m-12 0 6-5 6 1 11 4L0 5l-7 1Z" fill="url(#gg-ice-facet)"/><path d="m-9 0 8-2 10 2-11 1Z" fill="#f8ffff" stroke="none"/>',
+    fireCannon: '<path d="m-11-2 3-2-3-4 9 3 6-1 7 6-7 6-7-1-7 3 3-5-5-1Z" fill="url(#art-fireball-core)" stroke="#b85e37"/><path d="m-3-1 5-2 5 3-5 2Z" fill="#fff9bf" stroke="none"/>',
+    magCannon: '<path d="m-12 0 9-7 10 2 5 5-7 6-10-1Z" fill="url(#art-plasma-core)"/><path d="m-13-5 6 4-3 4 9-4m3 2 5-3 4 2" fill="none" stroke="#d6ffff" stroke-width="2"/>',
+    cryoPlasma: '<path d="m-11-2 4-8 12-2 8 9-3 10-12 4-10-4Z" fill="url(#gg-ice-facet)" stroke="#50729e"/><path d="m-7-7 6 7 8-8m-8 8 1 9m-1-9 9 3" fill="none" stroke="#fbffff" stroke-width="1.7"/>'
+  };
+
   function spikeWall(flash) {
     const elapsed = 1 - flash;
     const thrust = flash > 0 ? Math.min(1, elapsed / .13) * Math.min(1, flash / .75) ** 2 : 0;
     const spikes = [0,45,90,135,180,225,270,315].map(a =>
       ref('wallBlade', `transform="rotate(${a}) translate(${16 * thrust} 0)"`)).join('');
-    return `<g class="spike-wall">${spikes}${ref('spikeHousing')}</g>`;
+    return `<g class="spike-wall">${spikes}${ref('spikeHousing')}${ref('fitting-wall')}</g>`;
   }
   // Airflow bends the attached flame opposite the screen-space velocity. Buoyancy
   // lifts it near the apex. Only the basalt core inherits the stone's spin.
@@ -437,8 +447,23 @@
     const id = upgraded ? 'advanced-shot-flame' : 'shot-flame';
     return flame + ref(id, `class="shot-flame meteor-stone" transform="translate(${x} ${y}) rotate(${spin}) scale(${.83 + .17 * ease(t / .15)})"`);
   }
+  // Shared silhouettes stay legible at one board-cell scale and cost one instance per flash.
+  const fusionFx = {
+    tracer: '<path d="M-21 0-8-2.6 2 0-8 2.6Z" fill="#ffcb6d" stroke="#96683e" stroke-width="1.2"/><path d="M-13 0-5-1 0 0-5 1Z" fill="#fffbd8"/>',
+    shellWake: '<path d="m-19-6 11 3-3 3 3 3-11 4 6-7Z" fill="#ffb363" stroke="#9d5c43" stroke-width="1.2"/><path d="m-24-4 5 4-5 4m-5-5 2 1-2 1" fill="none" stroke="#ffe5a5" stroke-width="2"/>',
+    dartFins: '<path d="m-20-7 11 1 6 5-10-2Zm0 14 7-4 10-2-6 5Z" fill="#baf4ff" stroke="#438cbd" stroke-width="1.3"/><path d="m-18 0 10-1 4 1-4 1Z" fill="#fff"/>',
+    iceSpear: '<path d="M-3 0-1-11 2-15 4-5 1 1Z" fill="#b8f4ff" stroke="#518bb7" stroke-width="1.3"/><path d="M0-2 2-13 2-5Z" fill="#fff"/>',
+    hexCage: '<path d="M0-21 18-10V10L0 21-18 10v-20Z" fill="#a9e6ff" fill-opacity=".19" stroke="#4d84af" stroke-width="3.3"/><path d="M0-21 18-10V10L0 21-18 10v-20Z M-18-10 0 0 18-10M0 0v20" fill="none" stroke="#ddffff" stroke-width="1.7"/><path d="m-16 6 3-3 2 6-2 2Zm18-22 5 3-5 2-3-3Z" fill="#fff" stroke="none"/>',
+    impulseBand: '<path d="M-6-11Q7 0-6 11M0-8Q9 0 0 8" fill="none" stroke="#357e75" stroke-width="4.6"/><path d="M-6-11Q7 0-6 11M0-8Q9 0 0 8" fill="none" stroke="#dbffc0" stroke-width="2"/>',
+    prismGate: '<path d="m-4 0 4-7 5 7-5 7Z" fill="#abe8ff" stroke="#477cb4" stroke-width="1.5"/><path d="m-1 0 2-4 1 4-2 4Z" fill="#f7ffff"/>',
+    breakIce: '<path d="M-4 2-5-7 1-17 5-9 3-1Z" fill="url(#gg-glacier)" stroke="#477ea7" stroke-width="1.6"/><path d="m-3-4 4-10-1 9Z" fill="#f5ffff"/>',
+    firePetal: '<path d="M-4 2q-5-6 2-12l2-6 3 8 3-2q1 9-6 14Z" fill="#ff974d" stroke="#a55442" stroke-width="1.5"/><path d="m-1 1 1-7 3 4-2 4Z" fill="#fff2a0"/>',
+    hotFragment: '<path d="M-6-3 0-7 6-3 4 3-2 6-7 2Z" fill="#614b56" stroke="#784c40" stroke-width="1.3"/><path d="m-6-2 5 1 2-4 2 5-5 3Z" fill="#ffc268"/>',
+    fluxLink: '<path d="M-10 0-4-6 4-6 10 0 4 6-4 6Z" fill="#526685" stroke="#f1c07b" stroke-width="2"/><path d="m-6 1 5-5 1 3 5-1-6 6V1Z" fill="#c6ffff" stroke="none"/>'
+  };
+  const flightAccents = {tacticalAir:'tracer',tacticalGround:'shellWake',iceCannon:'dartFins'};
   function shot(kind, x, y, angle, t = 0, upgraded = false, weapon) {
-    if (fusionRounds[weapon]) return ref('round-' + weapon, `class="fusion-round" transform="translate(${x} ${y}) rotate(${angle}) scale(${upgraded ? 1.15 : 1})"`);
+    if (fusionRounds[weapon]) return ref((upgraded && forgedRounds[weapon] ? 'forged-round-' : 'round-') + weapon, `class="fusion-round" transform="translate(${x} ${y}) rotate(${angle}) scale(${upgraded ? 1.15 : 1})"`);
     if (kind === 'flame') {
       const a = angle * Math.PI / 180;
       return meteor(x, y, Math.cos(a) * 160, Math.sin(a) * 160, t, upgraded);
@@ -448,7 +473,7 @@
     if (kind === 'cannon') pose = `rotate(${t * 95})`;
     if (kind === 'molecular') pose = `rotate(${t * 160}) scale(${.87 + .21 * swell})`;
     if (kind === 'push') pose = `scale(${1 - .22 * swell} ${.75 + .6 * t})`;
-    return ref((upgraded && kind !== 'castle' ? 'advanced-shot-' : 'shot-') + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
+    return ref((upgraded ? 'advanced-shot-' : 'shot-') + kind, `class="shot-${kind}" transform="translate(${x} ${y}) rotate(${angle}) ${pose}"`);
   }
   function flight(kind, cx, cy, tx, ty, t, launchAngle, upgraded = false, barrelOffset = 0, scale = 1, weapon) {
     if (kind === 'flame') {
@@ -472,9 +497,15 @@
     const round = shot(kind, x, y, direction, t, upgraded, weapon);
     const pulse = Math.max(0, 1 - t * 2.5);
     const flare = pulse > 0 && style.light ? ref('launchFlare', `class="fx-accent muzzle-flare" color="${style.light}" opacity="${pulse}" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.6 + pulse * .7})"`) : '';
-    return round + flare;
+    const collar = upgraded && pulse > 0 && style.light ? `<path class="fx-accent" transform="translate(${sx} ${sy}) rotate(${launchAngle}) scale(${.58+(1-pulse)*.48})" d="M3-8Q-3 0 3 8M7-6Q3 0 7 6" fill="none" stroke="${style.light}" stroke-width="1.8" opacity="${pulse}"/>` : '';
+    const accent = upgraded && flightAccents[weapon];
+    const wake = accent ? ref(accent, `transform="translate(${x} ${y}) rotate(${direction}) scale(${Math.min(1,Math.hypot(x-sx,y-sy)/25)})"`) : '';
+    let field = '';
+    if (upgraded && weapon === 'magCannon') field = `<g class="flux-shell" transform="translate(${x} ${y}) rotate(${direction})" fill="none">
+      <ellipse rx="5" ry="13" transform="rotate(-23)" stroke="#eeb778" stroke-width="2.2"/><ellipse rx="5" ry="13" transform="rotate(23)" stroke="#aeedff" stroke-width="1.6"/></g>`;
+    return wake + round + field + flare + collar;
   }
-  function plasmaArc(x, y, tx, ty, age, hop, reducedMotion) {
+  function plasmaArc(x, y, tx, ty, age, hop, reducedMotion, weapon) {
     // Each pulse arrives just as the next link launches.
     const flightTime = .3 * window.Garden.BATTLE_SPEED, afterglow = .52;
     const localAge = age;
@@ -495,7 +526,14 @@
     const track = `M0 0 Q${hx / 2} ${2 * bend * t} ${hx} ${hy}`;
     const ring = 4 + 17 * (1 - opacity ** 2);
     let light;
-    if (reducedMotion) {
+    if (weapon === 'magCannon') {
+      const tip = reducedMotion ? length : hx, lift = reducedMotion ? 0 : hy;
+      const fork = Math.min(10,tip*.15)*size, polarity = hop%2 ? -1 : 1;
+      const wire = `M0 0 L${tip*.28} ${lift*.28-fork*polarity} l${tip*.13} ${fork*1.45*polarity} L${tip*.68} ${lift*.68-fork*polarity} ${tip} ${lift}`;
+      light = `<g class="magnetic-relay" fill="none" stroke-linejoin="round"><path d="${wire}" stroke="#555680" stroke-width="5.4"/><path d="${wire}" stroke="#b5faff" stroke-width="2.2"/>
+        <path d="M0 0Q${tip*.52} ${lift+fork*2.1*polarity} ${tip} ${lift}" stroke="#e9ad64" stroke-width="1.8" stroke-dasharray="7 4"/>
+        ${ref('fluxLink',`transform="translate(${tip} ${lift}) scale(${size*(.8+.45*decay)})"`)}</g>`;
+    } else if (reducedMotion) {
       light = `<path d="M0 0 Q${length / 2} ${2 * bend} ${length} 0" fill="none" stroke="#8055ad" stroke-width="${2.5 * size}"/>
         <circle cx="${length}" r="${5 * size}" fill="#d8f6ff" stroke="#7950a5" stroke-width="1.6"/>`;
     } else {
@@ -513,26 +551,30 @@
     }
     return `<g class="plasma-arc" data-hop="${hop}" transform="translate(${x} ${y}) rotate(${angle})" opacity="${opacity}" stroke-linecap="round">${light}</g>`;
   }
-  function laser(angle, length, t, hitDistances, flash, upgraded = false, scale = 1, weapon) {
+  function laser(angle, length, t, hitDistances, flash, upgraded = false, scale = 1, weapon, reducedMotion = false) {
     const recoil = recoilOffset('pierce', flash);
     const start = (laserLensX - recoil) * scale;
     const path = `M${start} 0H${Math.max(start, length)}`;
     const intensity = (1 - t) ** 2;
     const rail = weapon === 'mapLaser';
+    const travel = reducedMotion ? .22 : t;
     if (weapon === 'recoilRay') return `<g class="recoil-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" stroke-linecap="round" fill="none">
       <path d="${path}" stroke="#4e8c83" stroke-width="7" opacity=".65"/><path d="${path}" stroke="#a5f3ca" stroke-width="3.7"/><path d="${path}" stroke="#fffbd1" stroke-width="1.4"/>
+      ${upgraded ? `<g class="impulse-train">${[0,.34,.67].map(offset=>ref('impulseBand',`transform="translate(${start+Math.max(0,length-start)*((travel+offset)%1)} 0) scale(.74)"`)).join('')}</g>` : ''}
       <circle class="laser-origin" cx="${start}" r="4.5" fill="#e4ffc9"/>
       ${hitDistances.map(d=>`<g transform="translate(${d+9*t} 0) scale(${.65+.4*t})"><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#397b76" stroke-width="4.4"/><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#d9ffbf" stroke-width="2"/></g>`).join('')}</g>`;
     if (weapon === 'heatRay') return `<g class="heat-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
-      <g transform="scale(1 ${upgraded?2:1})"><path d="${path}" stroke="#e96137" stroke-opacity=".43" stroke-width="${9+7*intensity}"/>
+      <g transform="scale(1 ${window.Garden.toolFor(weapon,upgraded).beamWidth || 1})"><path d="${path}" stroke="#e96137" stroke-opacity=".43" stroke-width="${9+7*intensity}"/>
       <path d="${path}" stroke="#c64c34" stroke-width="6.4"/><path d="${path}" stroke="#ffae44" stroke-width="4.7"/><path d="${path}" stroke="#ffefb3" stroke-width="2"/>
       <path d="${path}" stroke="#fffbd7" stroke-width="3.8" stroke-dasharray="11 35" stroke-dashoffset="${-58*t}"/></g>
       <ellipse class="laser-origin" cx="${start}" rx="${4+4*intensity}" ry="4" fill="#fff3a0"/>
       ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${-angle})"><path d="m-8-2 4-5-1-6m10 8 4-3 1-4" stroke="#f9ad47" stroke-width="2.3"/>${ref('firePatch',`transform="translate(0 ${-7-6*t}) scale(${.63-.18*t})"`)}</g>`).join('')}</g>`;
     if (weapon === 'cryoBeam') return `<g class="cryo-beam" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
-      <g transform="scale(1 ${upgraded?2:1})"><path d="${path}" stroke="#3476b5" stroke-width="${5+5*intensity}" opacity=".55"/><path d="${path}" stroke="#8befff" stroke-width="4.6"/><path d="${path}" stroke="#fff" stroke-width="1.6"/>
+      ${upgraded ? `<g class="prism-beam"><path d="M${start} 0l6-5H${Math.max(start+6,length)}M${start} 0l6 5H${Math.max(start+6,length)}" stroke="#648fcf" stroke-width="2.8"/><path d="${path}" stroke="#adceff" stroke-width="12" stroke-opacity=".23"/></g>` : ''}
+      <g transform="scale(1 ${window.Garden.toolFor(weapon,upgraded).beamWidth || 1})"><path d="${path}" stroke="#3476b5" stroke-width="${5+5*intensity}" opacity=".55"/><path d="${path}" stroke="#8befff" stroke-width="4.6"/><path d="${path}" stroke="#fff" stroke-width="1.6"/>
       <path class="fx-accent" d="${path}" stroke="#edfaff" stroke-width="5.8" stroke-dasharray="2 24" stroke-dashoffset="${-48*t}"/></g>
       <circle class="laser-origin" cx="${start}" r="${3+2*intensity}" fill="#f1ffff"/>
+      ${upgraded ? [.16,.52,.84].map(offset=>ref('prismGate',`transform="translate(${start+Math.max(0,length-start)*((offset+travel*.7)%1)} 0)"`)).join('') : ''}
       ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${25*t}) scale(${.42+.45*t})">${ref('snowflake','color="#f6ffff" stroke="#559acc"')}</g>`).join('')}</g>`;
     return `<g transform="translate(0 ${headY * scale}) rotate(${angle})" fill="none" stroke-linecap="round">
       <path d="${path}" stroke="${rail ? '#59ddff' : '#fc597f'}" stroke-opacity=".3" stroke-width="${(upgraded ? 6 : 4) + 7 * intensity}"/>
@@ -621,6 +663,10 @@
   const rhinoWings = `<g class="rhino-wings">${rhinoPair('rhinoWing', 'flight-wing')}</g>`;
   const rhinoCovers = rhinoPair('rhinoCover', 'wing-cover');
   const fusionMaterials = `
+    <radialGradient id="gg-packed-snow" cx=".33" cy=".27" r=".83"><stop offset=".22" stop-color="#fffef2"/><stop offset=".52" stop-color="#eaf8fa"/><stop offset=".84" stop-color="#b3dde7"/><stop offset="1" stop-color="#83b3cb"/></radialGradient>
+    <linearGradient id="gg-titanium" x2=".24" y2="1"><stop stop-color="#ecf0dc"/><stop offset=".32" stop-color="#b6ccc8"/><stop offset=".65" stop-color="#8099a0"/><stop offset="1" stop-color="#506876"/></linearGradient>
+    <linearGradient id="gg-aurum" x2=".16" y2="1"><stop stop-color="#fff1b6"/><stop offset=".32" stop-color="#edc57c"/><stop offset=".68" stop-color="#c79358"/><stop offset="1" stop-color="#987050"/></linearGradient>
+    <linearGradient id="gg-glacier" x2=".5" y2="1"><stop stop-color="#fffefa"/><stop offset=".36" stop-color="#d0faff"/><stop offset=".62" stop-color="#8fdae8"/><stop offset="1" stop-color="#628abf"/></linearGradient>
     <linearGradient id="gg-painted-steel" x2=".22" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#c3d5c9"/><stop offset=".55" stop-color="#7d9f9b"/><stop offset="1" stop-color="#476267"/></linearGradient>
     <linearGradient id="gg-olive-armor" x2=".25" y2="1"><stop stop-color="#c6cb97"/><stop offset=".5" stop-color="#93a270"/><stop offset="1" stop-color="#63764e"/></linearGradient>
     <linearGradient id="gg-ice-facet" x2=".3" y2="1"><stop stop-color="#ffffff"/><stop offset=".42" stop-color="#bcf6ff"/><stop offset="1" stop-color="#57b8d8"/></linearGradient>
@@ -750,19 +796,174 @@
     magCannon: '<g stroke="#484e6f"><ellipse cy="6" rx="20" ry="15" fill="#687893"/><path d="m-21-8 6-5 7 4-1 21-6 3-7-4Z" fill="#8e94ad"/><path d="m-20-3 9-3m-9 8 9-3m-9 8 9-3" stroke="#f5b382"/><path d="M-7 16q17 10 27-5" fill="none" stroke="#a9edf9" stroke-width="3"/><circle cx="19" cy="10" r="4" fill="#95e9fa"/></g>'
   };
   const fusionUpgrades = {
-    tacticalAir: '<path d="m-19-11-1-10 5-1 2 10Z" fill="#687e7b"/><path d="M-27-21q-2-6 1-11l18 11q-10 7-19 0Z" fill="#e1e8ce"/><path d="m-25-29 17 10m-10-5 4-6" stroke="#536c72"/><circle cx="-14" cy="-30" r="2.1" fill="#f3bd61"/>',
-    iceCannon: '<g stroke="#527fb6"><path d="m5 17 4-13 7-4 1 10-7 10Z" fill="#9cd9fa"/><path d="m12 18 7-11 7-1-3 11-9 5Z" fill="#c9faff"/></g>',
     fireCannon: '<path d="m11 1 1-16 9-2 1 17Z" fill="#9e674b"/><path d="m10-12 1-5 11-2 1 6Z" fill="#e2ad61"/><path d="M14-17q-3-4 0-8l3 3 3-8q4 7 0 13Z" fill="#ffb342" stroke="#ab5937"/>',
-    mapLaser: '<path d="m-18 16-6-4 0-9 6-6 6 5-1 9Z" fill="#8772af"/><path d="m-23 4 5-5 4 4-5 7Z" fill="#cdbdff"/><path d="m10 12 9 6" fill="none" stroke="#dabd70" stroke-width="3.5"/>',
-    magCannon: '<path d="m-23 2 5 3 4 10-6-3Zm44-6-5 2 3 11 5-6Z" fill="#ffcc6d"/><path d="m-3 12 4-4 4 4-4 4Z" fill="#e4bcff"/>'
+    mapLaser: '<path d="m-18 16-6-4 0-9 6-6 6 5-1 9Z" fill="#8772af"/><path d="m-23 4 5-5 4 4-5 7Z" fill="#cdbdff"/><path d="m10 12 9 6" fill="none" stroke="#dabd70" stroke-width="3.5"/>'
   };
   const fusionHeadUpgrades = {
-    tacticalAir: '<path d="M-13-4q1-10 11-10l3 4-8 5Z" fill="#d2b972"/><path d="M15-13h4v7h-4Zm0 15 4 1v7l-4-1Z" fill="#dbc37d"/>',
-    tacticalGround: '<path d="M7-8 13-7 12 8 6 7Z" fill="#eac675"/><path d="M24-10h5l2 3v13l-4 4-4-1Z" fill="#b29b63"/><ellipse cx="28" rx="2.6" ry="6" fill="#253c40"/>',
-    iceCannon: '<path d="m-1-10 5-5 12-3-6 9-8 3Z" fill="#b1efff" stroke="#4772aa"/><path d="m2 9 10 1 10-4-7 10-11-1Z" fill="#8fcdea" stroke="#4772aa"/><path d="m4-8 4-1 1 16-4 2Z" fill="#d3b585"/>',
     fireCannon: '<path d="m1-11 5 1q-3 9 0 19l-5 2q-3-11 0-22Z" fill="#f2be67"/><path d="M14-7q-3 8 0 15l4 1q-3-9 0-18Z" fill="#f2be67"/>',
-    mapLaser: '<path d="m4-8 6-7 15-1 5 3-10 2-8 5Z" fill="#8ba4ab"/><path d="m5 9 7 5 16 1 2-3-11-2-6-5Z" fill="#82989f"/><path d="m13-12 10-1m-10 24 10 2" stroke="#a3ffff" fill="none"/>',
+    mapLaser: '<path d="m4-8 6-7 15-1 5 3-10 2-8 5Z" fill="#8ba4ab"/><path d="m5 9 7 5 16 1 2-3-11-2-6-5Z" fill="#82989f"/><path d="m13-12 10-1m-10 24 10 2" stroke="#a3ffff" fill="none"/>'
   };
+  // These parts share the pivot of the barrel, rotor or chassis they are attached to.
+  const mirrorPair = shape => shape + `<g transform="scale(1 -1)">${shape}</g>`;
+  const radialParts = (count, shape) => Array.from({length:count}, (_,i) => `<g transform="rotate(${i*360/count})">${shape}</g>`).join('');
+  const brass = 'url(#gg-cast-bronze)', steel = 'url(#gg-painted-steel)', iceGlass = 'url(#gg-ice-facet)';
+  function lensJaws(glass, light) {
+    return mirrorPair(`<path d="M-9-8-3-16 11-18 27-12 29-8 22-7 9-12 1-8Z" fill="${glass}"/>
+      <path d="M-3-14 10-16 22-12" fill="none" stroke="${light}" stroke-width="1.7"/>`) +
+      `<ellipse cx="26" rx="3.6" ry="9.4" fill="${glass}"/><path d="M26-6v8" stroke="${light}" stroke-width="1.6"/>`;
+  }
+  const feedWheel = `<g><circle r="11" fill="${brass}"/><circle r="7.7" fill="#536863"/>
+    ${radialParts(6,'<path d="M4-1.6h3.6l2 1.6-2 1.6H4Z" fill="#ffda85" stroke="none"/>')}<circle r="3.2" fill="#c2c8a4"/></g>`;
+  const buildingFittings = {
+    pea: `<g transform="translate(-16 0) scale(.8)">${feedWheel}</g>`,
+    cannon: mirrorPair(`<path d="m-22-10 4-7 10-2 4 4-6 3-5 7Z" fill="${steel}"/><path d="m-16-13 5-2" stroke="#f1cc86"/>`),
+    push: `<path d="m-27-9 6-4 9 1 3 3-8 5-9 1Z" fill="${steel}"/><path d="m-24-7 4-2 2 1 4-2" fill="none" stroke="#fff1ad"/>`,
+    flame: `<path d="M-12 12q12-7 24 0l-3 9H-9Z" fill="#59454b"/><path d="m-7 17 2-6 4 3 3-5 4 6-1 3Z" fill="#ffc563" stroke="#bc643f"/>`,
+    frost: `<g transform="translate(0 11) scale(1 .55)">${radialParts(6,'<path d="M11-3l6-3 9 6-10 4-5-3Z" fill="url(#gg-ice-facet)"/>')}</g>`,
+    pierce: `<path d="M-17-9-9-16l14 2 6 5-11-1-5-2-8 6Z" fill="url(#gg-laser-glass)"/><path d="m-9-13 7 1" stroke="#fff3ec"/>`,
+    molecular: `<ellipse cy="-26" rx="11" ry="3.4" transform="rotate(-22 0 -26)" fill="none" stroke="#ffe2a1"/><circle cx="10" cy="-30" r="2" fill="#fff2aa"/>`,
+    wall: `<g transform="translate(0 -3) scale(1 .78)"><circle r="8" fill="${steel}"/>${radialParts(4,'<path d="m3-2 5 2-5 2Z" fill="#fce39c"/>')}<circle r="2.8" fill="#5d7670"/></g>`,
+    castle: `<g fill="#a33846" stroke="#603e4b"><path d="M-18-13v13l4-3 4 2v-13Zm28-1v13l4-2 4 3v-13Z"/><path d="m-15-10 1 2 2-2m24 0 2 2 1-2" fill="none" stroke="#ffdb83"/></g>`
+  };
+
+  const forgeParts = {
+    fireCannon: lensJaws(brass,'#fff2b2'),
+    mapLaser: `<path d="M-18-4l6-14 10-3 6 7-4 6-11 4Z" fill="${steel}"/><path d="m-10-13 6-4 5 3-5 5Z" fill="url(#gg-laser-glass)"/><path d="m-7-14 3-1" stroke="#f4ddff"/>`,
+    impactCannon: `<g transform="scale(1 .76)">${radialParts(8,`<path d="M15-5 23-6l5 3v6l-5 3-8-1 3-4Z" fill="url(#gg-pressure-enamel)"/><path d="M21-3l2 3-2 3" fill="none" stroke="#f1e0a5"/>`)}
+      <circle r="12" fill="none" stroke="#f8ce81" stroke-width="2.6"/></g>`,
+    meteorTower: `<g transform="translate(0 -17) scale(1 .57)">${radialParts(4,`<path d="m11-3 6-2 3-5 5-1-2 10-6 5-6-2Z" fill="${brass}"/>`)}
+      <circle r="17" fill="none" stroke="#ffcc77" stroke-width="2"/></g>`,
+    sonicCannon: mirrorPair(`<path d="M-16-8-12-16 3-20 14-20l3 9-7 4-11-6-9 5Z" fill="${brass}"/>
+      <ellipse cx="13" cy="-15" rx="3.3" ry="5.6" fill="#5d4866"/><ellipse cx="13.6" cy="-15" rx="1.4" ry="2.6" fill="#ffe69d"/>`),
+    weatherStation: `<g transform="translate(0 -16) scale(1 .67)"><circle r="23" fill="none" stroke="#40677d" stroke-width="4.6"/>
+      <circle r="23" fill="none" stroke="#bcf8ff" stroke-width="2.4"/>${radialParts(4,'<path d="m19 0 4-4 4 4-4 3Z" fill="#d4fbff"/>')}</g>`,
+    heatRay: lensJaws(brass,'#fff1a3')
+  };
+  const forgePart = (weapon, upgraded) => upgraded && forgeParts[weapon] ? ref('forge-'+weapon) : '';
+  const iceImpeller = radialParts(4, '<path d="M0-2l13-3 4-6 7 2-2 8-7 3-2-4-12 2Z" fill="url(#gg-ice-facet)" stroke="#48738c" stroke-width="1.8"/><path d="m15-4 4-3 3 1" fill="none" stroke="white"/>') + '<circle r="4" fill="#f5d794" stroke="#536c72"/>';
+  const forgeImpeller = radialParts(5, '<path d="M0-2 8-5Q9-15 22-18l-2 7 7-3Q26 0 13 4L6 2Z" fill="url(#gg-cast-bronze)" stroke="#66414a" stroke-width="1.8"/><path d="m10-4 9-9-2 6 6-3-7 8Z" fill="#ffcb6c"/><path d="m10-4 4 1 5-4" fill="none" stroke="#fff0ae" stroke-width="1.3"/>') + '<circle r="5.5" fill="#754b48" stroke="#523b49"/><circle r="3" fill="#ffdf84"/>';
+
+  const titanium = 'url(#gg-titanium)', gold = 'url(#gg-aurum)', glacier = 'url(#gg-glacier)';
+  const bothSides = part => part + `<g transform="scale(-1 1)">${part}</g>`;
+  const turntable = '<ellipse cy="3" rx="14" ry="9" fill="#334654"/><ellipse cy="1" rx="13" ry="8" fill="url(#gg-titanium)"/>';
+  const upgradedChassis = {
+    tacticalAir: `<g stroke="#304450">
+      ${bothSides(`<path d="M-30-8-25-16-17-14-16 17-21 23-29 20Z" fill="${titanium}"/><path d="m-27-7 6-2m-6 9 6-2m-6 9 6-2m-5 9 5-2" fill="none" stroke="#91a9ac" stroke-width="2.6"/>`)}
+      <path d="m-25-11 11-11 26 1 14 12v25l-12 8h-28l-11-9Z" fill="#455965"/>
+      <path d="m-24-10 11-10 24 1 13 11-7 13-27 5-13-8Z" fill="${titanium}"/>
+      <path d="m-18 13 9 4 25-4-3 7-20 3-10-4Z" fill="#29414b"/><path d="m-7 18 6-1m3 0 6-1" stroke="#a8f5ec" stroke-width="2.6"/>
+      <path d="m-22-12 2-14 5-1-1 17Z" fill="${gold}"/><path d="M-30-31q-3 11 10 15 6 2 10-1Z" fill="#a3c6bd"/>
+      <path d="m-28-30 17 12m-12-6 6-7" fill="none" stroke="#4e6d78"/><circle cx="-17" cy="-31" r="2.4" fill="#ffe49c"/></g>`,
+    iceCannon: `<g stroke="#415781"><path d="M-23 12-14-6 0-15 15-7 25 12 18 22 1 26-18 22Z" fill="#626591"/>
+      ${bothSides(`<path d="M-5 15-16 4-25-2l-3 4 4 17 16 5Z" fill="${glacier}"/><path d="m-25 3 5 12 10 5" fill="none" stroke="#deffff"/>`)}
+      <ellipse cy="7" rx="15" ry="9" fill="#354c72"/><ellipse cy="3" rx="15" ry="9" fill="${titanium}"/><path d="m-7 18 7-3 7 3-7 5Z" fill="#abf6ff"/></g>`,
+    cryoBeam: `<g stroke="#414e77"><path d="m0-23 15 11 8 20-9 15H-13l-11-16 10-20Z" fill="#52658a"/>
+      ${bothSides(`<path d="M-4 19-16 9-29 6l4 10 14 11 7-1Z" fill="${glacier}"/><path d="m-24 11 13 10 3 1" stroke="#e2ffff" fill="none"/>`)}
+      <path d="m0-19 8 11-8 6-8-5Z" fill="#c3c6ef"/>${turntable}</g>`,
+    recoilRay: `<g stroke="#344b4c">${bothSides(`<path d="m-10-5-14-5-5 4 7 10-8 13 4 7 11-2 8-17Z" fill="${titanium}"/><path d="m-25 16 9-1-5 6-5 1" fill="#dad5ad"/>`)}
+      <path d="m-17-6 8-11 14-1 14 12-3 22-12 7-15-4-8-10Z" fill="#3f7771"/><path d="m-14-6 8-8 10-1 12 10-4 7-18 6-9-7Z" fill="url(#gg-pressure-enamel)"/>
+      <path d="m-6 16 5 4 7-6m-11-1 4 3 4-3" fill="none" stroke="#f1c787" stroke-width="2"/>${turntable}</g>`,
+    snowCannon: `<g stroke="#36586d">${bothSides(`<path d="m-27-14 5-6 5 3 1 34-4 8-8-3 2-7Z" fill="${titanium}"/><path d="M-25 15q1 8 6 6" fill="none" stroke="#c1ecf2" stroke-width="2.6"/>`)}
+      <path d="m-22-11 7-7 29 1 9 7-3 22-9 6-24-2-9-8Z" fill="#597f8a"/><path d="m-22-9 8-8 26 1 9 6-4 4-31 3-8-2Z" fill="#f0faf2"/>
+      <path d="m-17 4 3 10 8 2 17-1 7-5" stroke="#d8a860" stroke-width="3" fill="none"/>${turntable}</g>`,
+    crossCoil: `<g stroke="#3a3756">
+      ${radialParts(4,`<path d="M4-6 15-9l4-5 7 2 4 5-3 5-9 3-6 5-7-2Z" fill="#555273"/>
+        <path d="M10-5l6-5 5 2v12l-8 3-3-4Z" fill="${gold}"/><path d="M14-6v10m4-11V2" stroke="#865574" stroke-width="2"/>
+        <path d="m20-6 3-8 5-2 3 4-7 8 5 2-1 5-9 2Z" fill="${titanium}"/><circle cx="28" cy="-12" r="3.1" fill="#d4ffff" stroke="#6a6bb6"/><circle cx="28" cy="1" r="2.2" fill="#b5f4ff"/>`)}
+      <path d="m-14-3 7-11 14-1 8 10-3 13-12 6-12-6Z" fill="url(#gg-laser-glass)"/>
+      <path d="m-8-3 8-8 9 6-2 9-8 6-6-5Z" fill="#55499c"/><path d="m1-9-7 11h5l-1 7L7-3H2l3-6Z" fill="#f5f2ff" stroke="#aad5ff" stroke-width="1"/></g>`,
+    magCannon: `<g stroke="#424667"><path d="m-21-4 8-12 18-4 16 9 5 17-9 14-17 5-18-8Z" fill="#455272"/>
+      ${bothSides(`<path d="m-17-6-8-4-4 6 2 17 10 9 6-4-8-12Z" fill="${brass}"/><path d="m-25-1 4 10 6 5" fill="none" stroke="#ffe2a2"/>`)}
+      <ellipse cy="4" rx="13" ry="8" fill="${titanium}"/><path d="m-6 21 5-4 6 2-4 5Z" fill="#8fe8ff"/></g>`,
+    cometCannon: `<g stroke="#43425e"><path d="m-8-6 15-2 14 24-6 7-15-15-11 18-11-3Z" fill="#66577d"/><path d="m-10 20 9-15 4-1-9 19Z" fill="${gold}"/>
+      <path d="M-26 8Q-24-19-5-24q21-4 30 16l-5 4Q13-21-1-19T-19 12Z" fill="${gold}"/><path d="m-19-8 3 2m3-11 2 3m8-7 1 3m9-3-1 3" stroke="#685781"/>
+      <ellipse cy="10" rx="18" ry="10" fill="#475472"/><path d="M-17 9q16 13 33 0" stroke="#dfc384" fill="none" stroke-width="2.6"/>${turntable}</g>`,
+    frostfireJet: `<g stroke="#3e4c57"><path d="m-23-5 12-13 21-1 15 15-3 24-14 6-20-4-12-10Z" fill="#4f606a"/>
+      ${[['#5bb9d4','#d4fcff',-18],['#d17945','#ffce81',18]].map(([color,light,x])=>`<g transform="translate(${x} 3)"><rect x="-8" y="-19" width="16" height="37" rx="8" fill="${color}"/><ellipse cy="-13" rx="7" ry="4" fill="${light}"/><path d="M-7 5q7 4 14 0m-14 6q7 4 14 0" fill="none" stroke="#5a5a58" stroke-width="2.5"/><path d="M-4-8v9" stroke="${light}" stroke-width="2.6"/></g>`).join('')}
+      <path d="m-8 14 8 5 8-4-2 7-7 3-7-6Z" fill="${titanium}"/>${turntable}</g>`,
+    disintegrationBeam: `<g stroke="#40445d"><path d="m-25-4 12-14 20-4 18 11-2 22-18 15-21-6-9-13Z" fill="#5d6389"/>
+      <path d="m-24-6 12-13 18-3 17 10-5 9-17 8-17-3Z" fill="#c4cacd"/><path d="m-21 6 6 9 19 5 17-13-5 10-12 9-22-6-7-10Z" fill="#374761"/>
+      <path d="m-11 16 3 1m2 1 3 1m2 0 3 1m2-2 3-1m2-2 3-2" stroke="#8afbdc" stroke-width="2.5"/>${turntable}</g>`,
+    fireStation: `<g stroke="#573b40"><path d="m-24 12 4-15 11-11 18-3 14 12 5 17-11 11-25 2Z" fill="#614a50"/>
+      <path d="m-21 9 6-14 10-5 13-2 12 13 3 10-15 8-19-2Z" fill="${brass}"/><path d="m-18 13 8 5 15 2 15-7-3 8-11 6-22-3Z" fill="#41404b"/>
+      <path d="M-11 12V7q0-8 10-10 10 2 10 10v7L0 17Z" fill="#5d3440"/><path d="M-7 11q-3-4 2-9l3 4 4-8q6 6 3 12l-4 4Z" fill="url(#art-fireball-core)"/>
+      <path d="m-18 2 2-7m31 10-5-10" stroke="#ffe0a1" stroke-width="2.4"/><path d="m-6-7 2-16h7l3 16-5 3Z" fill="${titanium}"/></g>`,
+    moltenMortar: `<g stroke="#523c42"><path d="m-24 7 8-10 25-4 19 10-4 16-16 7-23-3-10-8Z" fill="#4f454e"/>
+      <path d="m-24 6 9-8 23-3 17 8-8 8-25 4-15-3Z" fill="${brass}"/>
+      ${bothSides(`<g transform="translate(-16 16)"><circle r="9" fill="${titanium}"/><circle r="5.5" fill="${brass}"/><path d="m-4-2 7 5m-4-7 1 8" stroke="#62454b" stroke-width="1.8"/><circle r="1.6" fill="#ffe0a0"/></g>`)}
+      <path d="M-21 9-8-13 2-16 18 6l-6 6L-1-7-14 13Z" fill="#993e34"/><path d="M-17 7-6-10l5-2" stroke="#ffc578" fill="none" stroke-width="2.5"/>
+      <path d="m-6 14 8-2 7 2-2 7-6 3-7-5Z" fill="#4b3c44"/><path d="m-2 17 3 3 3-4" fill="none" stroke="#ffb15a"/></g>`,
+    cryoPlasma: `<g stroke="#3c5373"><path d="m-25 10 9-9 28-2 14 10-3 13-19 5-23-4Z" fill="#4b647e"/>
+      <path d="m-23 8 10-8 24-1 13 8-9 9-27 1Z" fill="${glacier}"/><path d="m-19 16 9 4 24-2" stroke="#d4fcff" fill="none" stroke-width="2"/>
+      <path d="M-15 6-18-17l7-9 23 1 7 9-4 22-13 5Z" fill="#4d94b0"/>
+      <path d="m-14-16 5-7 18 1 5 7-3 16-12 5-13-6Z" fill="${glacier}"/>
+      <path d="m-6-11 6-9 8 10-7 12Z" fill="#776cd1"/><path d="m0-18 2 9-2 8 6-9Z" fill="#c3b8ff" stroke="none"/>
+      ${bothSides(`<path d="m-21 6-6-18 4-12 7 3-2 10 3 14Z" fill="${titanium}"/><path d="m-24-13 3-5 2 1-1 8Z" fill="#abfaff"/>`)}
+      <ellipse cy="-24" rx="12" ry="5" fill="${titanium}"/><path d="m-8-26 6-9 8 4 2 5-6 5Z" fill="${glacier}"/><path d="m-1-31 1 6 5-4Z" fill="#fff" stroke="none"/></g>`,
+    gravityCannon: `<g stroke="#453952"><path d="m-25 11 8-13 23-3 19 11-3 12-19 8-21-6Z" fill="${titanium}"/>
+      <ellipse cy="9" rx="21" ry="9" fill="#4d4764"/><ellipse cy="8" rx="13" ry="4.5" fill="#a985bd"/>
+      <path d="m-7 5 2-23 6-10 6 12-2 21Z" fill="url(#gg-laser-glass)"/>
+      ${bothSides(`<path d="M-16 14-29-3l3-18 9-7 4 3-6 9-1 12 9 12Z" fill="${gold}"/><path d="m-25-7 2-11 5-5" fill="none" stroke="#ffedb1"/><path d="m-26 0 6 1 6 8-3 4Z" fill="#756182"/>`)}
+      <g transform="translate(0 -15) rotate(-25)"><ellipse rx="22" ry="10" fill="#5e467e"/><circle r="13" fill="#272339" stroke="#a58bd2" stroke-width="2.6"/>
+      <ellipse rx="24" ry="7" fill="none" stroke="url(#art-accretion)" stroke-width="4.3"/><path d="M-19 3Q-9 11 12 6" stroke="#fff0bd" fill="none" stroke-width="1.8"/>
+      <circle r="6.5" fill="#1b1b2b" stroke="none"/></g><path d="m-5 19 6-3 5 2-5 4Z" fill="#dbc0fc"/></g>`
+  };
+
+  // Moving assemblies use the same pivot and discharge point as the tower's attack.
+  function meterLights(stages, color) {
+    return Array.from({length:stages}, (_,i) => `<path d="m${-14-i*.27} ${-5+i*3} 6-1" stroke="${color}" stroke-linecap="round" stroke-width="1.8"/>`).join('');
+  }
+  const upgradedHeads = {
+    tacticalAir: `<g stroke="#344657">
+      <path d="m-18-6 5-7 13-1 8 7v11L1 12l-13 1-7-7Z" fill="${titanium}"/>
+      ${mirrorPair(`<path d="M-3-13 5-14l3 3h15l5 2-2 5H5l-6 3-4-4Z" fill="#354a59"/><path d="M7-10h15v3H7Z" fill="#b6ccce" stroke="none"/><path d="M17-12h8l3 2v5h-9Z" fill="#637f8d"/><path d="M25-10v4" stroke="#d8fffa" stroke-width="2"/>`)}
+      <path d="m-14-6 8-4 10 4-4 6-11 3-5-4Z" fill="#69908f"/><path d="m-12-5 7-2 4 2-7 3Z" fill="#abfff4"/></g>`,
+    tacticalGround: `<g stroke="#3c4749"><path d="m-19-6 7-10 14 2 6 7-1 13-13 7-12-5Z" fill="#6c817a"/>
+      <path d="m-16-6 7-6 11 2-3 6-12 3Z" fill="${titanium}"/><path d="M-4-8 11-7l7-3 9 2 3 4v8l-5 5-9-1-6-3-13 1Z" fill="${gold}"/>
+      <path d="M1-6h5v13H1Zm10 0 4-1v14l-4-2Z" fill="#5b6865"/><ellipse cx="25" cy="0" rx="4.4" ry="7" fill="#304452"/><ellipse cx="26" cy="0" rx="1.6" ry="3.8" fill="#ffbc75" stroke="none"/></g>`,
+    iceCannon: `<g stroke="#455774"><path d="m-21-9 9-8 13 3 7 12-7 13-15 3-10-8Z" fill="#6769a2"/>
+      <circle cx="-9" cy="-2" r="10" fill="#44577d"/><circle cx="-9" cy="-2" r="6.7" fill="${glacier}"/><path d="m-12-4 4-3 4 4-4 5Z" fill="#edfaff"/>
+      ${mirrorPair(`<path d="M-3-8 3-16l14-1 7 3-9 6-12 4Z" fill="${glacier}"/><path d="m3-12 13-3-7 5Z" fill="#fff" stroke="none"/>`)}
+      <path d="m-3-4 9-4 13 2 9 6-9 6-14 1-8-4Z" fill="#4c708e"/><path d="m4-4 13 0 9 4-9 2-13-1Z" fill="#bcffff"/><path d="M2-6v12" stroke="#dcb77c" stroke-width="3"/></g>`,
+    cryoBeam: `<g stroke="#435777"><path d="M-23-1-15-11 1-15 12-10 16 1 6 12-11 15-22 7Z" fill="#7375a9"/>
+      ${mirrorPair(`<path d="M-18-5-19-15l8-6 15 2 17 8 7 8-14-3-10-6-12 3Z" fill="${glacier}"/><path d="M-15-15-9-18 3-17 17-11l-13-2-9-2Z" fill="#fff" stroke="none"/>`)}
+      <path d="m-10 0 8-7 15 0 14 7-14 7H-2Z" fill="#5c9ed9"/><path d="m-1 0 5-4 10 1 11 3-12 3-10 1Z" fill="#defeff" stroke="#b0d2fb"/><path d="m-13-2 4-3 4 4-5 4Z" fill="#e1be87"/></g>`,
+    recoilRay: `<g stroke="#354b50"><path d="M-24-11h10l6 5v12l-5 5h-11l2-8Z" fill="${titanium}"/>
+      ${mirrorPair(`<path d="M-20-13-16-17H8l6 5-2 5h-30Z" fill="#46696c"/><path d="M-14-13H11" stroke="#bedad2" stroke-width="3"/>
+        <path d="m-12-9 3-8m3 8 3-8m3 8 3-8m3 8 3-7" fill="none" stroke="#f2c77d" stroke-width="2.7"/>`)}
+      <path d="M-17-5 6-7l7 3v7L5 7l-22-3Z" fill="${titanium}"/><path d="M-8-2H9" stroke="#bafbe5" stroke-width="2.6"/>
+      <path d="m12-10 8-4 7 5 1 15-7 7-9-4Z" fill="url(#gg-pressure-enamel)"/><ellipse cx="24" cy="0" rx="4.4" ry="8.6" fill="#365763"/><path d="M25-5v9" stroke="#b6ffe3" stroke-width="3"/></g>`,
+    snowCannon: `<g stroke="#3d5e70"><path d="M-23-10-15-16 2-15 19-9 24 0 15 11-5 16-21 11Z" fill="#597e8a"/>
+      <circle cx="9" cy="-1" r="14" fill="url(#gg-packed-snow)"/><path d="M-1-5q1-7 9-8" stroke="#fff" stroke-width="2.5" fill="none"/>
+      ${mirrorPair(`<path d="M-21-9-13-17l10-3 5 3-10 4 1 4 7-1 0 4-12 4-5-6Z" fill="${glacier}"/><path d="m-20-10 7-5 3 1-7 6Z" fill="${gold}"/><path d="M9-14q8 0 12-4l5 3q-4 7-10 8Z" fill="${titanium}"/><path d="m16-11 7-3" stroke="#efc07b" stroke-width="2.4"/>`)}
+      <path d="M3 4q6 5 14-2m-5-6 2 1m-12 0 2-1" stroke="#8dbdcb" stroke-width="1.5" fill="none"/></g>`,
+    magCannon: `<g stroke="#424768"><path d="M-21-11-10-17 0-11l5 10-6 12-12 5-10-9Z" fill="#435576"/>
+      ${mirrorPair(`<path d="M-17-5q4-16 19-15l20 6 5 7-7 4-18-7-9 9Z" fill="${brass}"/><path d="M-12-9q6-8 14-7l15 5" stroke="#ffe1a0" fill="none" stroke-width="2"/>
+        <path d="m8-17 4 1-3 8-4-1Zm7 1 4 1-3 9-4-2Z" fill="#6b5282"/><path d="m20-12 7 2 1 5-5 1-6-3Z" fill="#98eef7"/>`)}
+      <circle cx="-9" r="7.5" fill="url(#art-plasma-core)"/><path d="m-3 0 6-4 4 5 6-3 6 2" fill="none" stroke="#bbf5ff" stroke-width="2.2"/></g>`,
+    cometCannon: `<g stroke="#504467"><path d="M-22 0q1-16 18-21l13 2q-12 4-13 14L7 9l15-4Q14 20-2 19T-22 0Z" fill="${gold}"/>
+      <path d="M-18 2q-2-13 11-18" fill="none" stroke="#fff2bf" stroke-width="2.2"/>
+      <path d="M-12 0-3-9l18-2 10 7 2 7-12 7L-3 9Z" fill="#605487"/><path d="M7-6 18-6l7 6-9 4L7 4Z" fill="${titanium}"/><ellipse cx="23" rx="3" ry="5" fill="#aff8ff"/>
+      <circle cx="-3" r="10" fill="#3c688f"/><path d="m-3-8 3 5 6 1-4 4 1 6-6-3-5 3 1-6-4-4 6-1Z" fill="#ffe494" stroke="#9a784c" stroke-width="1.2"/></g>`,
+    frostfireJet: `<g stroke="#384b54"><path d="m-19-7 8-7 13 3 6 10-6 12-15 3-7-6Z" fill="${titanium}"/>
+      ${[[-1,'#66badd','#d4ffff'],[1,'#e78045','#ffe1a1']].map(([side,color,light])=>`<g transform="scale(1 ${side})"><path d="M-18 5q-3 13 10 13 7 0 12-8l8-2" fill="none" stroke="#334654" stroke-width="7"/><path d="M-18 5q-3 13 10 13 7 0 12-8l8-2" fill="none" stroke="${color}" stroke-width="4.2"/>
+        <path d="m-2 3 12-3 6 3 10 0 3 3-2 5-11 2-6-3-10 3Z" fill="${color}"/><path d="m3 5 9-2 7 3" fill="none" stroke="${light}" stroke-width="2"/>
+        <path d="m21 3 5-1 2 3-2 7-5 1Z" fill="${titanium}"/><path d="m26 6-1 4" stroke="${light}" stroke-width="2.5"/></g>`).join('')}
+      <path d="m-14-2 6-4 6 5-6 5Z" fill="#fcdda1"/></g>`,
+    disintegrationBeam: `<g stroke="#434862"><path d="M-21-7-13-14 0-13l10 8-1 12-12 8-14-3-5-6Z" fill="#576084"/>
+      <path d="M-9-4 16-6l10 5-2 4-26 3-9-3Z" fill="${titanium}"/>
+      ${[[0,14],[9,11],[17,8]].map(([x,r])=>`<g transform="translate(${x} 0) rotate(-7)"><ellipse rx="4.3" ry="${r}" fill="none" stroke="#434c66" stroke-width="5"/><ellipse rx="4.3" ry="${r}" fill="none" stroke="#f2edd7" stroke-width="2.8"/></g>`).join('')}
+      <path d="M-4 0 1-4l12 1 12 3-13 3H1Z" fill="#89f4c9" stroke="#588d9d" stroke-width="1.1"/><path d="M2 0h20" stroke="#dcfff1" stroke-width="1.6"/>
+      <path d="M-16-7l8-2 4 3-2 15-9 1-4-4Z" fill="#344864"/>
+      ${meterLights(5,'#568b8b')}</g>`
+  };
+
+  function fusionBody(id, base, upgraded) {
+    return ref(upgraded && upgradedChassis[id] ? 'forge-'+id : base);
+  }
+  function fusionHead(id, base, upgraded, equipment = '') {
+    return upgraded && upgradedHeads[id] ? ref('up-head-'+id) : ref(base) + equipment + forgePart(id,upgraded);
+  }
   const tacticalMounts = { tacticalAir: { x: -10, y: -11, scale: .75 }, tacticalGround: { x: 6, y: 9, scale: .82 } };
   // Each dual-weapon tower has one chassis. The sockets also locate its shots and beams.
   const centeredMount = {x:0,y:0,scale:1};
@@ -805,16 +1006,17 @@
       <path d="M-17-6h9m-9 5h9m-9 5h9" stroke="#ead6a2"/><ellipse cx="19" rx="9" ry="18" fill="#e6b465"/>
       <ellipse cx="20" rx="6.6" ry="14" fill="#58505c"/><ellipse cx="21" rx="4.1" ry="9.5" fill="#a78587"/><ellipse cx="22" rx="2.4" ry="5.4" fill="#ffda90"/></g>`
   };
-  function cannonFusion(weapon, angle, flash) {
+  function cannonFusion(weapon, angle, flash, upgraded) {
     const kick = recoilKick(flash);
     let head;
     if (weapon === 'meteorTower') head = ref('fallingRock', `transform="translate(0 ${-16-5*kick}) rotate(${-12+14*kick}) scale(.8)"`);
     else if (weapon === 'crossCoil') head = flash > 0 ? `<circle r="${9+7*(1-flash)}" fill="none" stroke="#ddffff" stroke-width="2" opacity="${flash}"/>` : '';
     else {
       const facing = weapon === 'snowCannon' ? Math.round(angle/90)*90 : angle;
-      head = ref('cannon-head-'+weapon, `transform="translate(0 -3) rotate(${facing}) translate(${-4*kick} 0)"`);
+      head = `<g transform="translate(0 -3) rotate(${facing}) translate(${-4*kick} 0)">${fusionHead(weapon,'cannon-head-'+weapon,upgraded)}</g>`;
     }
-    return `<g class="fusion-tower" data-weapon="${weapon}">${ref('cannon-body-'+weapon)}${head}</g>`;
+    const fixed = weapon === 'meteorTower' || weapon === 'crossCoil';
+    return `<g class="fusion-tower" data-weapon="${weapon}">${fusionBody(weapon,'cannon-body-'+weapon,upgraded)}${fixed ? forgePart(weapon,upgraded) : ''}${head}</g>`;
   }
   const frostBodies = {
     frostfireJet: `<g stroke="#45535b" stroke-width="2.1"><path d="m-22-8 12-10 24 3 9 10-2 21-13 7-25-4-7-8Z" fill="#667c80"/>
@@ -848,16 +1050,30 @@
       <path d="m18-7 8-3 5 9-5 9-8-2 5-7Z" fill="#b7fbff"/><path d="m26-5 2 5-2 4" stroke="#fff" fill="none"/></g>`
   };
   const windCups = `<g stroke="#435c71" stroke-width="1.8">${[0,120,240].map(a=>`<g transform="rotate(${a})"><path d="M0 0 13-2" stroke="#5c7584" stroke-width="3"/><path d="M10-5q4-7 12-3l-1 8q-7 4-11-5Z" fill="#88cada"/><path d="m15-6 5-1" stroke="#dcf7fa"/></g>`).join('')}<circle r="4" fill="#efc783"/></g>`;
-  function frostFusion(weapon, angle, flash, charge) {
+  function frostFusion(weapon, angle, flash, charge, upgraded) {
     let active;
-    if (weapon === 'weatherStation') active = ref('windCups',`transform="translate(0 -16) scale(1 .64) rotate(${angle})"`);
+    if (weapon === 'weatherStation') active = ref(upgraded ? 'iceImpeller' : 'windCups',`transform="translate(0 -16) scale(1 .64) rotate(${angle})"`);
     else if (weapon === 'cryoPlasma') active = charge || flash ? `<g transform="translate(0 -29)" opacity="${Math.max(charge,flash)}"><circle r="${4+4*charge}" fill="#c9fbff" stroke="#88c5f9"/><path d="m-16 12 5-6 3 2 6-6m16 10-5-5-3 2-5-5" stroke="#c8ffff" fill="none"/></g>` : '';
     else {
       const recoil = weapon === 'cryoBeam' ? recoilOffset('pierce',flash) : 3*recoilKick(flash);
-      active = ref('frost-head-'+weapon,`transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)"`);
+      active = `<g transform="translate(0 -3) rotate(${angle}) translate(${-recoil} 0)">${fusionHead(weapon,'frost-head-'+weapon,upgraded)}</g>`;
     }
-    return `<g class="fusion-tower" data-weapon="${weapon}">${ref('frost-body-'+weapon)}${active}</g>`;
+    const fixed = weapon === 'weatherStation' || weapon === 'cryoPlasma';
+    return `<g class="fusion-tower" data-weapon="${weapon}">${fusionBody(weapon,'frost-body-'+weapon,upgraded)}${fixed ? forgePart(weapon,upgraded) : ''}${active}</g>`;
   }
+  const upgradedMortarArm = `<g stroke="#513e42" stroke-width="2" stroke-linejoin="round">
+    <path d="m-29-16 5 5 7 2 9-1 18 6 6 1 4 5-4 6-10-2-16-9-12 1-8-5Z" fill="${gold}"/>
+    <path d="m-27-10 6 3 11-1 20 7" fill="none" stroke="#ffe6a0" stroke-width="2"/>
+    <path d="m11-8 10-3 7 6-2 11-10 3-5-6Z" fill="${titanium}"/><path d="m14-6 8 1 2 7-5 4-5-6Z" fill="#bd6349"/>
+    <circle r="5.6" fill="${brass}"/><circle r="2.1" fill="#ffe2a1"/>
+    <path d="M-31-15q3 7 12 5l6-5 2 6q-8 10-16 7l-6-6Z" fill="#794d45"/></g>`;
+  const moltenBomb = `<g stroke="#533c44" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M-12-6q5-10 17-8 12 3 10 15-1 12-13 13-13 1-15-10Z" fill="#494650"/>
+    <path d="m-6-11 7-1 4 3-2 4-6 2-5-3Z" fill="#a97560"/><path d="m-10-4 6 3-3 5-4 1Z" fill="#ff9d49"/>
+    <path d="m1-7 5 3 3 6-5 6-7-3-1-6Z" fill="url(#art-fireball-core)"/><path d="m9-8 3 3 1 7-3-1-3-6Z" fill="#e58a4a"/>
+    <path d="m-9 8 6 3 9-1-3 3-9 0Z" fill="${brass}"/><path d="M-11-6q2 11 17 15" fill="none" stroke="#78644e" stroke-width="3.4"/><path d="M-11-6q2 10 17 15" fill="none" stroke="#e9bc7e" stroke-width="1.6"/>
+    <path d="m2-13 1-4 5 1-1 4Z" fill="${gold}"/><path d="M6-16q2-4 6-2" fill="none" stroke="#bb7948" stroke-width="2"/><path d="m12-20 1 2 2 1-3 1-2-2Z" fill="#ffdc6d" stroke="none"/></g>`;
+
   const flameParts = {
     heatRayBase: `<g stroke="#563e3b" stroke-width="2.3"><path d="m-21-6 9-10 16-2 15 9 4 15-8 14-21 4-15-10Z" fill="#6c5960"/>
       <path d="m-19-4 8-9 16-1 12 8 3 10-8 10-18 3-12-8Z" fill="#b48566"/><ellipse cy="1" rx="14" ry="11" fill="#724b44"/>
@@ -882,21 +1098,22 @@
       <path d="m-12-3 8 1 4-6 4 6 9-1-6 6 1 7-7-5-6 4 1-7Z" fill="#ff9b35" stroke="#bf5733" stroke-width="1"/>
       <path d="m-5 0 5-4 2 4 5 1-6 2-3-1-2 3Z" fill="#ffde68" stroke="none"/><path d="m-7-8 7-3 3 1" stroke="#d19a70" fill="none"/></g>`
   };
-  function flameFusion(weapon,angle,flash) {
+  function flameFusion(weapon,angle,flash,upgraded) {
     let art;
     if (weapon === 'heatRay') {
-      art = ref('heatRayBase') + ref('heatRayHead',`transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoilOffset('pierce',flash)} 0)"`);
+      art = ref('heatRayBase') + `<g transform="translate(0 ${headY}) rotate(${angle}) translate(${-recoilOffset('pierce',flash)} 0)">${ref('heatRayHead')}${forgePart(weapon,upgraded)}</g>`;
     } else if (weapon === 'fireStation') {
-      art = ref('fireStationBase') + ref('fireVanes',`transform="translate(-1 -18) scale(1 .7) rotate(${angle})"`);
+      const rotorMount = upgraded ? 'translate(-1 -15) scale(.94 .62)' : 'translate(-1 -18) scale(1 .7)';
+      art = fusionBody(weapon,'fireStationBase',upgraded) + ref(upgraded ? 'forgeImpeller' : 'fireVanes',`transform="${rotorMount} rotate(${angle})"`);
     } else {
       const facing = Math.cos(angle*Math.PI/180)<0 ? -1 : 1;
       const cycle = 1-flash, loaded = cycle<slingRelease ? 1 : ease((cycle-.72)/.2);
-      art = `<g transform="scale(${facing} 1)">${ref('mortarBase')}<g transform="translate(1 2) rotate(${slingAngle(cycle)})">
-        ${ref('mortarArm')}${ref('magmaStone',`transform="translate(-23 -10) scale(${.56*loaded})"`)}</g></g>`;
+      art = `<g transform="scale(${facing} 1)">${fusionBody(weapon,'mortarBase',upgraded)}<g transform="translate(1 2) rotate(${slingAngle(cycle)})">
+        ${ref(upgraded ? 'upgradedMortarArm' : 'mortarArm')}${ref(upgraded ? 'moltenBomb' : 'magmaStone',`transform="translate(-23 -10) scale(${(upgraded ? .78 : .56)*loaded})"`)}</g></g>`;
     }
     return `<g class="fusion-tower" data-weapon="${weapon}">${art}</g>`;
   }
-  function moltenFlight(cx,cy,tx,ty,t) {
+  function moltenFlight(cx,cy,tx,ty,t,upgraded) {
     if (t<slingRelease) return '';
     const p=(t-slingRelease)/(1-slingRelease), sy=cy-24;
     const height=Math.min(102,32+Math.hypot(tx-cx,ty-cy)*.24);
@@ -904,7 +1121,7 @@
     const heading=Math.atan2(ty-sy-4*height*(1-2*p),tx-cx)*180/Math.PI;
     return `<g class="molten-flight" transform="translate(${x} ${y})">
       <g transform="rotate(${heading})"><path d="M5-5Q-6-10-22-5l7 4-13 1q11 5 27 6Z" fill="#f49a49"/><path d="m0-4-17 2 7 2-6 2 16 2Z" fill="#ffe398"/></g>
-      ${ref('magmaStone',`transform="rotate(${175*p}) scale(${.56+.20*Math.sin(Math.PI*p)})"`)}</g>`;
+      ${ref(upgraded ? 'moltenBomb' : 'magmaStone',`transform="rotate(${175*p}) scale(${(upgraded ? .78 : .56)+.20*Math.sin(Math.PI*p)})"`)}</g>`;
   }
   const beamParts = {
     recoilBase: `<g stroke="#405957" stroke-width="2.1"><path d="m-22-9 12-7 22 1 10 9-2 19-14 9-20-4-9-12Z" fill="#607a74"/><path d="m-21-8 12-7 20 2 10 8-5 12-22 6-15-9Z" fill="#a6b49a"/><ellipse rx="12" ry="10" fill="#546d68"/><path d="m-14 12 7 3m14-3 7-3" stroke="#eac583"/></g>`,
@@ -917,35 +1134,37 @@
       <path d="M-7 6-12-3l-8-10 1-10 5 2 5 10L-1-4l8-7 6-14 4-1 2 8-7 15-7 8Z" fill="#82769f"/><path d="m-15-18 4 9 7 6m15-4 6-14" fill="none" stroke="#c7bdfa"/>
       <ellipse cy="-25" rx="10.4" ry="8.6" fill="#37334f"/><ellipse cy="-25" rx="15" ry="4" transform="rotate(-18 0 -25)" fill="none" stroke="#c0a4e5" stroke-width="2.4"/><path d="m-6-29 4-3 6 1" stroke="#e6d9fc" fill="none"/></g>`
   };
-  function beamFusion(weapon,angle,flash,charge) {
+  function beamFusion(weapon,angle,flash,charge,upgraded) {
     let art;
     if (weapon==='gravityCannon') {
-      art=ref('gravityBase');
-      if (charge || flash) art+=`<g transform="translate(0 -26) scale(${.7+.42*charge}) rotate(${charge*160})" fill="none" opacity="${Math.max(charge,flash)}"><circle r="12" stroke="#cebdff" stroke-dasharray="15 7" stroke-width="2.2"/><circle r="6.5" fill="#343053"/></g>`;
+      art=fusionBody(weapon,'gravityBase',upgraded);
+      if (charge || flash) art+=`<g transform="translate(0 ${upgraded ? -15 : -26}) scale(${.7+.42*charge}) rotate(${charge*160})" fill="none" opacity="${Math.max(charge,flash)}"><circle r="12" stroke="#cebdff" stroke-dasharray="15 7" stroke-width="2.2"/><circle r="6.5" fill="#343053"/></g>`;
     } else {
       const recoil=weapon==='recoilRay', offset=recoil ? recoilOffset('pierce',flash) : 0;
-      art=ref(recoil?'recoilBase':'disintegratorBase')+ref(recoil?'recoilHead':'disintegratorHead',`transform="translate(0 -3) rotate(${angle}) translate(${-offset} 0)"`);
+      const stage = Math.min(5, Math.round(charge*5));
+      const meter = upgraded && !recoil && stage > 0 ? ref('disintegration-meter-'+stage) : '';
+      art=fusionBody(weapon,recoil?'recoilBase':'disintegratorBase',upgraded)+`<g transform="translate(0 -3) rotate(${angle}) translate(${-offset} 0)">${fusionHead(weapon,recoil?'recoilHead':'disintegratorHead',upgraded)}${meter}</g>`;
     }
     return `<g class="fusion-tower" data-weapon="${weapon}">${art}</g>`;
   }
   function fusionResult(building, angle = -25, flash = 0, charge = 0, angle2 = building.kind === 'pea' && building.fusionKind === 'cannon' ? 12 : -25, flash2 = 0, charge2 = 0) {
     const { kind, upgraded } = building;
     if (kind === 'pea') return fusionTower(window.Garden.primaryWeapon(building), angle, flash, charge, upgraded, angle2, flash2);
-    if (kind === 'cannon') return cannonFusion(window.Garden.primaryWeapon(building), angle, flash);
-    if (kind === 'frost') return frostFusion(window.Garden.primaryWeapon(building), angle, flash, charge);
-    if (kind === 'flame') return flameFusion(window.Garden.primaryWeapon(building),angle,flash);
-    return beamFusion(window.Garden.primaryWeapon(building),angle,flash,charge);
+    if (kind === 'cannon') return cannonFusion(window.Garden.primaryWeapon(building), angle, flash, upgraded);
+    if (kind === 'frost') return frostFusion(window.Garden.primaryWeapon(building), angle, flash, charge, upgraded);
+    if (kind === 'flame') return flameFusion(window.Garden.primaryWeapon(building),angle,flash,upgraded);
+    return beamFusion(window.Garden.primaryWeapon(building),angle,flash,charge,upgraded);
   }
   function fusionTower(weapon, angle = -25, flash = 0, charge = 0, upgraded = false, angle2 = 15, flash2 = 0) {
-    const base = `<g stroke="#3e514e" stroke-width="2" stroke-linejoin="round">
+    const base = upgraded && upgradedChassis[weapon] ? ref('forge-'+weapon) : `<g stroke="#3e514e" stroke-width="2" stroke-linejoin="round">
       ${fusionPlatforms[weapon]}
-      ${upgraded ? fusionUpgrades[weapon] : ''}
+      ${upgraded ? fusionUpgrades[weapon] || '' : ''}
       </g>`;
     if (weapon === 'impactCannon') {
       const y = -5 - 3 * charge + 5 * flash;
       const glow = Math.max(charge * .82, flash);
       return `<g class="fusion-tower impact-resonator" data-weapon="impactCannon">${base}
-        <g transform="translate(0 ${y})">${ref('fusion-impactCannon')}
+        <g transform="translate(0 ${y})">${ref('fusion-impactCannon')}${forgePart(weapon,upgraded)}
           <g transform="scale(1 .76)" fill="none" opacity="${glow}"><circle r="13.8" stroke="#c5ffdf" stroke-width="2.6"/>
             <circle r="7" fill="#b1ffe0" stroke="#f0ffe9" stroke-width="1.6"/></g></g></g>`;
     }
@@ -954,25 +1173,32 @@
       const mount = tacticalMounts[id] ?? {x:0, y:0, scale:1};
       const field = id === 'magCannon' && charge ? `<g transform="translate(24 0)" opacity="${.4 + .6 * charge}"><ellipse rx="${3 + charge * 4}" ry="${2 + charge * 3}" fill="#d5fbff"/><path d="m-18-6 4 3 4-2 5 5 5 0m-18 7 5-4 4 1 4-4" stroke="#9beaff" fill="none" stroke-width="1.6"/></g>` : '';
       const equipment = upgraded && fusionHeadUpgrades[id] ? ref('equipment-' + id) : '';
-      return `<g transform="translate(${mount.x} ${mount.y}) scale(${mount.scale}) translate(0 ${headY}) rotate(${direction}) translate(${-recoil} 0)">${ref('fusion-' + id)}${equipment}${field}</g>`;
+      return `<g transform="translate(${mount.x} ${mount.y}) scale(${mount.scale}) translate(0 ${headY}) rotate(${direction}) translate(${-recoil} 0)">${fusionHead(id,'fusion-'+id,upgraded,equipment)}${field}</g>`;
     }
     return `<g class="fusion-tower" data-weapon="${weapon}">${base}${head(weapon,angle,flash)}${weapon === 'tacticalAir' ? head('tacticalGround',angle2,flash2) : ''}</g>`;
   }
   function definitions() {
     const drawings = { plinth, wall, siegeCarriage, spikeHousing, wallBlade, face, wings, rhinoWing, rhinoCover, silkNet, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, castle, royalCastle, castleBow, firePatch, snowflake, launchFlare };
-    Object.assign(drawings, {badgeCrystal:icons.crystal,badgeHammer:icons.hammer,snowball, fallingRock, cometStar, windCups}, flameParts, beamParts);
+    Object.assign(drawings,fusionFx);
+    Object.assign(drawings, {badgeCrystal:icons.crystal,badgeHammer:icons.hammer,snowball, fallingRock, cometStar, windCups,iceImpeller,forgeImpeller,upgradedMortarArm,moltenBomb}, flameParts, beamParts);
+    for (const [id, art] of Object.entries(upgradedChassis)) drawings['forge-'+id] = '<g stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">' + art + '</g>';
+    for (const [id, art] of Object.entries(upgradedHeads)) drawings['up-head-'+id] = '<g stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">' + art + '</g>';
+    for (let stage=1;stage<=5;stage++) drawings['disintegration-meter-'+stage] = meterLights(stage,'#b0ffdd');
     for (const [kind, shape] of Object.entries(frostBodies)) drawings['frost-body-' + kind] = shape;
     for (const [kind, shape] of Object.entries(frostHeads)) drawings['frost-head-' + kind] = shape;
     for (const [kind, shape] of Object.entries(cannonBodies)) drawings['cannon-body-' + kind] = shape;
     for (const [kind, shape] of Object.entries(cannonHeads)) drawings['cannon-head-' + kind] = shape;
     drawings['mounted-sling'] = catapult(false, true);
     for (const [id, art] of Object.entries(fusionHeadUpgrades)) drawings['equipment-' + id] = '<g stroke="#454956" stroke-width="1.4">' + art + '</g>';
+    for (const [id, art] of Object.entries(forgeParts)) drawings['forge-'+id] = '<g stroke="#41505b" stroke-width="1.6">' + art + '</g>';
     for (const [id, art] of Object.entries(fusionHeads)) drawings['fusion-' + id] = '<g stroke="#354650" stroke-width="1.65">' + art + '</g>';
     for (const [id, art] of Object.entries(fusionRounds)) drawings['round-' + id] = '<g stroke="#515b60" stroke-width="1.25">' + art + '</g>';
+    for (const [id, art] of Object.entries(forgedRounds)) drawings['forged-round-' + id] = '<g stroke="#485968" stroke-width="1.35">' + art + '</g>';
     for (const [kind, drawing] of Object.entries(mounts)) drawings['mount-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(feet)) drawings['feet-' + kind] = `<g fill="none" stroke-width="3.3">${drawing}</g>`;
     for (const [kind, drawing] of Object.entries(projectiles)) drawings['shot-' + kind] = drawing;
-    for (const [kind, drawing] of Object.entries(advancedHeads)) drawings['advanced-' + kind] = drawing;
+    for (const [kind, art] of Object.entries(buildingFittings)) drawings['fitting-'+kind] = '<g stroke="#46535a" stroke-width="1.5">' + art + '</g>';
+    for (const [kind, drawing] of Object.entries(advancedHeads)) drawings['advanced-' + kind] = drawing + ref('fitting-'+kind);
     for (const [kind, drawing] of Object.entries(upgradedShots)) drawings['advanced-shot-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
@@ -986,6 +1212,8 @@
       <radialGradient id="art-warm-soil"><stop stop-color="#fd7449" stop-opacity=".84"/><stop offset=".53" stop-color="#e64936" stop-opacity=".79"/><stop offset=".83" stop-color="#cb3f33" stop-opacity=".43"/><stop offset="1" stop-color="#bc443c" stop-opacity="0"/></radialGradient>
       <radialGradient id="art-plasma-core" cx="43%" cy="39%"><stop offset="0" stop-color="#fffceb"/><stop offset=".32" stop-color="#d6ffff"/><stop offset=".62" stop-color="#9dcbff"/><stop offset="1" stop-color="#9852c5"/></radialGradient>
       <radialGradient id="art-chain-glow"><stop offset="0" stop-color="#efffff"/><stop offset=".47" stop-color="#a7cfff" stop-opacity=".85"/><stop offset="1" stop-color="#a56df2" stop-opacity="0"/></radialGradient>
+      <radialGradient id="art-gravity-field"><stop stop-color="#211735" stop-opacity=".95"/><stop offset=".24" stop-color="#37204f" stop-opacity=".7"/><stop offset=".58" stop-color="#695885" stop-opacity=".26"/><stop offset=".88" stop-color="#8d76bc" stop-opacity=".14"/><stop offset="1" stop-color="#ad99db" stop-opacity=".4"/></radialGradient>
+      <linearGradient id="art-accretion" x1="0" y1=".8" x2="1" y2=".2"><stop stop-color="#7b68c5"/><stop offset=".28" stop-color="#e7bcff"/><stop offset=".48" stop-color="#fff0bf"/><stop offset=".74" stop-color="#d2aaed"/><stop offset="1" stop-color="#7461b3"/></linearGradient>
       <radialGradient id="art-fireball-core"><stop offset="0" stop-color="#ffffc3"/><stop offset=".55" stop-color="#ffda58"/><stop offset="1" stop-color="#f86f21"/></radialGradient>`;
     return fusionMaterials + energy + coldShell + whiteShield + Object.entries(drawings).map(([id, content]) => `<g id="art-${id}" ${pen}>${content}</g>`).join('');
   }
@@ -1084,14 +1312,14 @@
   function castleBowPosition(barrelOffset = 0) {
     return { x: Math.sign(barrelOffset) * 24, y: barrelOffset ? -6 : -13 };
   }
-  function castleArt(upgraded) {
+  function castleArt(upgraded, preview = false) {
     const bow = ref('castleBow', 'style="transform:rotate(var(--castle-aim,0deg))"');
     if (!upgraded) return ref('castle') + `<g id="castle-bow" transform="translate(0 ${castleBowPosition().y})">${bow}</g>`;
     const stations = [-1, 1].map(side => {
       const {x, y} = castleBowPosition(side);
       return `<g transform="translate(${x} ${y})">${bow}</g>`;
     });
-    return ref('royalCastle') + `<g id="castle-bow">${stations.join('')}</g>`;
+    return ref('royalCastle') + ref('fitting-castle') + `<g${preview ? '' : ' id="castle-bow"'}>${stations.join('')}</g>`;
   }
   window.GardenArt = { definitions, icon, tower, fusionTower, fusionResult, mountFor, tacticalMounts, bug, bugPose, badge, tool, shot, flight, moltenFlight, plasmaArc, laser, aura, spiderWebFlight, brokenHeart, chargeGlobe, stoneImpact, impactBurst, splitPlateAt, castle: castleArt, castleBowPosition };
 })();

@@ -108,24 +108,31 @@ dialog h2 { font-size: 30px; margin: 0 0 12px; }
 .building-actions button, .lesson-grade { display: inline-flex; align-items: center; justify-content: center; gap: 4px; border-radius: 9px; border: 1px solid #bda8c4; background: #f2e7f5; color: #563762; font: inherit; font-weight: 700; padding: 4px 8px; min-height: 48px; }
 #building-menu:has(#fusion-options:not([hidden])) {
   grid-template-columns: minmax(0, 1fr) auto auto; gap: 5px 8px;
-  width: min(340px, calc(100vw - 16px)); max-height: calc(100dvh - 12px); overflow-y: auto; padding: 8px;
+  width: min(396px, calc(100vw - 16px)); max-height: calc(100dvh - 12px); overflow-y: auto; padding: 8px;
 }
 #building-menu:has(#fusion-options:not([hidden])) .building-actions { display: contents; }
 #building-menu:has(#fusion-options:not([hidden])) #edit-grade { grid-area: 1 / 2; }
 #fusion-options, #building-menu:has(#fusion-options:not([hidden])) #edit-remove { grid-column: 1 / -1; }
 #fusion-label { display: block; text-align: left; margin: 1px 3px 4px; font-size: 16px; color: #674a2e; }
 #fusion-recipes { display: grid; gap: 3px; max-height: min(330px, 45dvh); overflow-y: auto; overscroll-behavior: contain; }
-#fusion-recipes button { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 0 6px; text-align: left; min-height: 48px; padding: 3px 8px 3px 4px;
+#fusion-recipes button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0 7px; text-align: left; min-height: 52px; padding: 3px 8px 3px 4px;
   border: 1px solid #b7bc96; background: #f4f4df; color: #263e31; line-height: 1.15; }
-#fusion-recipes button:not(:disabled):hover, #fusion-recipes button:focus-visible { background: #e3edc9; }
+#fusion-recipes button:not([aria-disabled="true"]):hover, #fusion-recipes button:focus-visible { background: #e3edc9; }
+#building-menu [aria-disabled="true"] { color: #686b60; background: #eeeede; cursor: help; }
+#fusion-locked[hidden] { display: none; }
+.tower-info[data-kind="shortage"] { z-index: 13; pointer-events: none; color: #793f2b; padding: 5px 12px; font-weight: 700; }
+.recipe-equation { display: inline-flex; align-items: center; gap: 2px; color: #536950; }
+.recipe-equation .tool-art { width: 32px; height: 34px; }
+.recipe-equation .fusion-portrait { width: 43px; height: 43px; }
+.grade-portrait { float: left; width: 52px; height: 49px; margin: 0 6px 2px 0; }
+.next-upgrade { display: flow-root; }
 .fusion-portrait { width: 46px; height: 44px; flex: none; }
-#fusion-recipes .fusion-portrait { grid-column: 1; grid-row: 1 / 3; }
 #building-name:has(.fusion-portrait) { display: flex; align-items: center; justify-content: center; gap: 4px; }
-.recipe-pair { grid-column: 2; grid-row: 1; font-size: 16px; font-weight: 500; }
-.recipe-result { grid-column: 2; grid-row: 2; font-size: 18px; font-weight: 700; }
-.recipe-target { display: inline-block; font-size: .76em; font-weight: 600; color: #395a64; white-space: nowrap; }
-.recipe-cost { grid-column: 3; grid-row: 1 / 3; display: inline-flex; align-items: center; gap: 2px; }
-.lesson-recipe { font-weight: bold; background: #e7efd7; border: 1px solid #a2b58e; border-radius: 8px; padding: 5px; }
+.recipe-result { font-size: 18px; font-weight: 700; }
+.recipe-target { display: block; font-size: 16px; font-weight: 600; color: #395a64; white-space: nowrap; }
+.recipe-cost { display: inline-flex; align-items: center; gap: 2px; }
+.lesson-picture .recipe-equation { max-width: 100%; gap: 1px; }
+.lesson-picture .recipe-equation svg { min-width: 0; flex: 1 1 30px; }
 #edit-remove { background: #f3ebda; color: #5a4833; border-color: #cabca4; }
 .building-actions .icon, .lesson-grade .icon { width: 22px; height: 22px; }
 #building-menu[hidden], .item-count[hidden], #edit-remove[hidden] { display: none; }

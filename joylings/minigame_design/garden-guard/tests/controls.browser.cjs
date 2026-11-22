@@ -203,13 +203,13 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.ok(G.upgrade(bonus, goal.c, goal.r).ok);
     await p.evaluate(data => localStorage.setItem('garden-guard-v1', JSON.stringify(data)), G.snapshot(bonus));
     await p.reload(); await press('#action');
-    const volley = p.locator('#shot-layer use[href="#art-shot-castle"]');
+    const volley = p.locator('#shot-layer use[href="#art-advanced-shot-castle"]');
     for (let i = 0; i < 180 && await volley.count() !== 2; i++) await p.clock.runFor(64);
     assert.equal(await volley.count(), 2);
     const dualArrows = await p.evaluate(() => {
       const shots = gardenDebug.getState().shots.filter(s => s.kind === 'castle');
       const bows = Array.from(document.querySelectorAll('#castle-bow use'));
-      const arrows = Array.from(document.querySelectorAll('#shot-layer use[href="#art-shot-castle"]'));
+      const arrows = Array.from(document.querySelectorAll('#shot-layer use[href="#art-advanced-shot-castle"]'));
       const board = document.querySelector('#board').getCTM().inverse();
       const origin = node => new DOMPoint(0, 0).matrixTransform(node.getCTM()).matrixTransform(board);
       return shots.map((s, i) => {

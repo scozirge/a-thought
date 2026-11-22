@@ -25,10 +25,12 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       assert.equal(normalize(await asset.text()), normalize(fs.readFileSync(path.join(dist, 'h5', file), 'utf8')), file);
       checkedFiles.push(file);
     }
-    const film = await p.request.get(`${base}field-guide.mp4?v=${version}`);
-    assert.equal(film.status(), 200);
-    assert.ok((await film.body()).equals(fs.readFileSync(path.join(dist, 'h5/field-guide.mp4'))), '公開課堂影片與本次錄影相符');
-    checkedFiles.push('field-guide.mp4');
+    for (const file of ['field-guide.mp4', 'upgrade-effects.mp4']) {
+      const film = await p.request.get(`${base}${file}?v=${version}`);
+      assert.equal(film.status(), 200, file);
+      assert.ok((await film.body()).equals(fs.readFileSync(path.join(dist, 'h5', file))), file + ' 與本地影片相符');
+      checkedFiles.push(file);
+    }
     assert.equal(await p.locator('#solution, #hint, .tool-name, .wave-card, #speed, .page-footer').count(), 0);
     assert.ok(await p.locator('#route-toggle').isChecked());
     assert.ok(await p.locator('#route-layer .ground-route').count() > 0);
@@ -37,7 +39,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       const {radius,lifetime,rate,damage}=Garden.toolFor(weapon,upgraded);
       return [radius,lifetime,rate,damage];
     })));
-    assert.deepEqual(vortices,[[1,8,.4,2],[1.6,8,.4,2],[1,6,.4,1],[1.5,6,.25,2]]);
+    assert.deepEqual(vortices,[[1,8,1/3,2],[1.2,8,1/3,2],[1,6,.4,1],[1.5,6,.25,2]]);
     const enemyKinds = await p.evaluate(() => Object.keys(Garden.ENEMIES));
     assert.equal(enemyKinds.length, 12);
     assert.deepEqual(enemyKinds.filter(kind => kind.endsWith('Boss')).sort(), ['rhinoBoss','spiderBoss','stagBoss']);

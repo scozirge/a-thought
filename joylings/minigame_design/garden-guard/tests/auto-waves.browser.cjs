@@ -149,7 +149,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     for (const b of answer.buildings.filter(b=>b.upgraded)) {
       await press(cell(b.c,b.r)); await press('#edit-grade'); await p.keyboard.press('Escape');
     }
-    if (answer.castleUpgraded) { await press(cell(0,3)); await press('#edit-grade'); }
+    if (answer.castleUpgraded) { await press(cell(0,3)); await press('#edit-grade'); await press('#edit-close'); }
     assert.equal((await read()).upgradeItems,answer.upgradeItems);
     await press('#action');
     await p.clock.runFor(7000); await p.screenshot({path:path.join(out,'campaign-final-battle.png')}); await finish();

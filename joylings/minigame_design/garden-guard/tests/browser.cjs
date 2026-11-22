@@ -6,6 +6,43 @@ const { pathToFileURL } = require('node:url');
 const G = require('../core.js');
 const base = process.env.GARDEN_URL || pathToFileURL(path.join(__dirname, '../dist/garden-guard.html')).href;
 const out = path.join(__dirname, '../dist/browser-check');
+async function checkMenuShortages(browser) {
+  const page = await browser.newPage({viewport:{width:1200,height:850}});
+  const cell = (c,r) => page.locator(`.cell-hit[data-c="${c}"][data-r="${r}"]`);
+  const menu = page.locator('#building-menu'), hint = page.locator('#tower-info');
+  try {
+    await page.goto(base);
+    await cell(5,4).click(); await cell(5,4).click();
+    const snapshot = () => page.evaluate(()=>Garden.snapshot(gardenDebug.getState()));
+    const first = await snapshot();
+    await page.locator('#edit-grade').hover();
+    assert.equal(await hint.innerText(),'水晶不足');
+    await page.locator('#edit-grade').focus();
+    await page.keyboard.press('Enter');
+    assert.deepEqual(await snapshot(),first);
+    await page.locator('#fusion-locked').hover();
+    assert.equal(await hint.innerText(),'合成槌不足');
+    await cell(2,2).click();
+    assert.ok(await menu.isHidden()); assert.deepEqual(await snapshot(),first);
+    await cell(2,2).click(); await cell(5,4).click();
+    const second = await snapshot();
+    await cell(2,2).click();
+    assert.ok(await menu.isHidden()); assert.deepEqual(await snapshot(),second);
+
+    const s=G.createState(3);
+    for(const [k,c,r] of [['pea',5,4],['cannon',5,4],['frost',2,2]]) assert.ok(G.build(s,k,c,r).ok);
+    await page.evaluate(data=>localStorage.setItem('garden-guard-v1',JSON.stringify(data)),G.snapshot(s));
+    await page.reload(); await cell(2,2).click();
+    const option=page.locator('#fusion-recipes button').first();
+    const before=await snapshot();
+    await option.hover(); assert.equal(await hint.innerText(),'合成槌不足');
+    await option.focus(); await page.keyboard.press('Enter');
+    assert.deepEqual(await snapshot(),before);
+    assert.ok(await menu.isVisible());
+    await cell(6,6).click(); assert.ok(await menu.isHidden());
+  } finally { await page.close(); }
+}
+
 async function checkFusionArt(browser) {
   const page = await browser.newPage({viewport:{width:1200,height:850}});
   const towers = Object.keys(G.TOOLS).filter(kind => kind !== 'wall');
@@ -23,6 +60,9 @@ async function checkFusionArt(browser) {
         await cell.click();
         const option = page.locator(`#fusion-recipes [data-fuse="${material}"]`);
         const recipe = G.fusionRecipe(baseKind,material), weapon = G.primaryWeapon(recipe);
+        assert.equal(await option.locator('.recipe-equation .tool-art').count(),2);
+        assert.equal(await option.locator('.recipe-equation .fusion-portrait').count(),1);
+        assert.deepEqual(await option.locator('.recipe-equation b').allTextContents(),['+','=']);
         const airOnly = ['cometCannon','fireCannon'].includes(weapon);
         const groundOnly = ['snowCannon','meteorTower','crossCoil','frostfireJet','moltenMortar'].includes(weapon);
         assert.equal(await option.locator('.recipe-target').innerText(),airOnly ? '空' : groundOnly ? '地' : '地／空');
@@ -45,7 +85,7 @@ async function checkFusionArt(browser) {
           assert.deepEqual(matches,[`瞄準 ${spec.aimSeconds} 秒`]);
         }
         if (spec.vortex) {
-          assert.ok((await info.innerText()).includes('每 2.5 秒召喚一次'));
+          assert.ok((await info.innerText()).includes(spec.vortex==='ice' ? '每 3 秒召喚一次' : '每 2.5 秒召喚一次'));
           assert.match(await info.locator('.info-effect').innerText(),new RegExp('遊走 '+spec.lifetime+' 秒'));
           assert.doesNotMatch(await info.locator('.info-effect').innerText(),/召喚/);
         }
@@ -238,7 +278,7 @@ async function checkFusionArt(browser) {
     await p.reload(); await press(target);
     assert.equal(await p.locator('#building-name').innerText(),'戰術砲臺+');
     assert.match(await p.locator('#edit-grade').innerText(),/取消升級/);
-    await press('#edit-grade'); await press(target);
+    await press('#edit-grade');
     await press('#edit-remove'); assert.equal(await p.locator('#hammer-count').textContent(), '1');
     assert.equal((await read()).buildings.length,0);
     await press('#undo'); assert.equal(await p.locator('#hammer-count').textContent(), '0');
@@ -247,6 +287,9 @@ async function checkFusionArt(browser) {
     await phone.locator('[data-tool="flame"]').tap(); assert.equal(await phone.locator('#tower-info .info-target').textContent(), '目標 地');
     await phone.locator('[data-tool="pea"]').tap(); await phone.locator(cell(3,5)).tap(); await phone.locator(cell(3,5)).tap();
     assert.equal(await phone.locator('#building-name').textContent(), '砲塔');
+    await phone.locator('#action').tap();
+    assert.ok(await phone.locator('#building-menu').isHidden());
+    assert.equal((await phone.evaluate(() => gardenDebug.getState())).phase, 'planning');
     await phone.locator('#action').tap(); await phone.locator('#action').tap(); assert.equal((await phone.evaluate(() => gardenDebug.getState())).phase, 'paused');
     for (const [width, height] of [[390,844], [320,568]]) {
       await phone.setViewportSize({width,height});
@@ -263,6 +306,7 @@ async function checkFusionArt(browser) {
       await phone.locator('.display-settings summary').tap();
     }
     await touch.close(); assert.deepEqual(errors, []);
+    await checkMenuShortages(browser);
     await checkFusionArt(browser);
     console.log(JSON.stringify({passed:true,tooltips:8,testSelector:10,refund:true,keyboard:true,touch:true,widths:[1440,900,390,320],zoom:'200%',browserErrors:errors}));
   } finally {await browser.close();}
