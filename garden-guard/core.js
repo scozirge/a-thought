@@ -67,20 +67,20 @@
   const frostWeapons = {
     frostfireJet: { name:'冰火噴槍', targets:['ground'], range:1, damage:2, rate:2, piercesShield:true, burnSeconds:TOOLS.flame.burnSeconds, color:'#aa6358', effect:'噴向相鄰一格，整格附加冰凍與 3 秒燃燒' },
     cryoBeam: { ...TOOLS.pierce, name:'急凍光束槍', delivery:'pierce', damage:TOOLS.pierce.damage+1, color:'#4e9eb6', effect:'光束直線穿盾，附加冰凍，觸電停住 0.1 秒' },
-    weatherStation: { name:'氣象儀', vortex:'ice', targets:['ground','air'], range:fullRange, rate:1/2.5, damage:2, radius:1, lifetime:8, speed:1.9, piercesShield:true, color:'#628ab0', effect:'冰龍捲遊走 8 秒，半徑 1 格內附加冰凍' },
+    weatherStation: { name:'氣象儀', vortex:'ice', targets:['ground','air'], range:fullRange, rate:1/3, damage:2, radius:1, lifetime:8, speed:1.9, piercesShield:true, color:'#628ab0', effect:'冰龍捲遊走 8 秒，半徑 1 格內附加冰凍' },
     cryoPlasma: { ...TOOLS.molecular, name:'凍結電漿', delivery:'molecular', priority:'notFrozen', freezeSeconds:1.5, bossFreezeSeconds:.5, damage:7, rate:TOOLS.molecular.rate*2, aimSeconds:TOOLS.molecular.aimSeconds/2, flightSeconds:.18, color:'#647eb7', effect:'優先鎖定未冰封的蟲。電漿穿盾，冰封普通蟲 1.5 秒、蟲王 0.5 秒' }
   };
   Object.assign(weapons, frostWeapons);
   const flameWeapons = {
     heatRay: { ...TOOLS.pierce, name:'激光砲', delivery:'pierce', rate:.7, damage:TOOLS.pierce.damage+1, burnSeconds:TOOLS.flame.burnSeconds, color:'#be593c', effect:'熱射線直線穿盾，觸電 0.1 秒，燃燒 3 秒' },
-    fireStation: { ...frostWeapons.weatherStation, vortex:'fire', damage:1, lifetime:6, burnSeconds:TOOLS.flame.burnSeconds, color:'#ba6743', effect:'火龍捲遊走 6 秒，點燃半徑 1 格內的蟲 3 秒' },
+    fireStation: { ...frostWeapons.weatherStation, vortex:'fire', rate:1/2.5, damage:1, lifetime:6, burnSeconds:TOOLS.flame.burnSeconds, color:'#ba6743', effect:'火龍捲遊走 6 秒，點燃半徑 1 格內的蟲 3 秒' },
     moltenMortar: { ...TOOLS.flame, name:'熱熔炸彈塔', delivery:'flame', minRange:0, range:TOOLS.molecular.range, damage:5, rate:.2, flightSeconds:1, fuseSeconds:2, blastDamage:15, color:'#a75443', effect:'1 秒落地，打中整格並點火。火石 2 秒後炸九宮格，各受 15 點傷害並留下火地' }
   };
   Object.assign(weapons, flameWeapons);
   const beamWeapons = {
     recoilRay: {...TOOLS.pierce, name:'反動砲', delivery:'pierce', knockback:1/3, stunSeconds:.2, color:'#5f9988', effect:'直線穿盾，沿路擊退 ⅓ 格，觸電 0.2 秒' },
     disintegrationBeam: {name:'分子崩解光束塔', targets:['ground','air'], range:4, rate:2, damage:1, maxDamage:5, priority:'highestHp', piercesShield:true, color:'#5686af', effect:'鎖定血量最高的蟲。連續命中每次加 1 傷，換目標後重新累積' },
-    gravityCannon: {...TOOLS.molecular, name:'黑洞砲', delivery:'molecular', radius:2, damage:20, splashDamage:1, minPullPercent:10, stunSeconds:.2, aimSeconds:3.5, color:'#7261a7', effect:'鎖定蟲最多的地格。半徑 2 格內最近的一隻受主傷，其餘各受 1 點。往中心吸 10%～100% 的距離，停下後暈 0.2 秒' }
+    gravityCannon: {...TOOLS.molecular, name:'黑洞砲', delivery:'molecular', radius:2.5, damage:20, splashDamage:1, minPullPercent:10, stunSeconds:.2, aimSeconds:3.5, color:'#7261a7', effect:'鎖定蟲最多的地格。半徑 2.5 格內最近的一隻受主傷，其餘各受 1 點。往中心吸 10%～100% 的距離，停下後暈 0.2 秒' }
   };
   Object.assign(weapons,beamWeapons);
   const fusionUpgrades = {
@@ -94,13 +94,13 @@
     snowCannon: {damagePerCell:3},
     meteorTower: {effect:'落地打中中心與四方向各兩格，共九格，點燃蟲與地面 3 秒'},
     cometCannon: {damage:4,radius:2.5,stunSeconds:.3,effect:'優先瞄準成群飛蟲，周圍 2.5 格其餘飛蟲各受 1 點，一起暈眩 0.3 秒'},
-    sonicCannon: {damage:6,effect:'鎖定 3 格內的位置，1 秒後打中九宮格並暈眩 1 秒'},
+    sonicCannon: {damage:weapons.sonicCannon.damage+1,effect:'鎖定 3 格內的位置，1 秒後打中九宮格並暈眩 1 秒'},
     crossCoil: {damage:8,stunSeconds:.2,effect:'電擊上下左右相鄰四格，穿盾並暈眩 0.2 秒'},
     frostfireJet: {rate:1/.35},
-    cryoBeam: {beamWidth:2,stunSeconds:.2,effect:'雙倍寬光束穿盾，附加冰凍與 0.2 秒觸電'},
-    weatherStation: {radius:1.6,effect:'冰龍捲遊走 8 秒，對半徑 1.6 格內的蟲附加冰凍'},
+    cryoBeam: {beamWidth:1.7,stunSeconds:.2,effect:'光束加寬 70%，穿盾，附加冰凍與 0.2 秒觸電'},
+    weatherStation: {radius:1.2,effect:'冰龍捲遊走 8 秒，對半徑 1.2 格內的蟲附加冰凍'},
     cryoPlasma: {damage:12,freezeSeconds:2,effect:'優先鎖定未結凍的蟲。穿盾，結凍普通蟲 2 秒、蟲王 0.5 秒'},
-    heatRay: {beamWidth:2,effect:'雙倍寬熱射線穿盾，觸電 0.1 秒並點燃 3 秒'},
+    heatRay: {beamWidth:1.7,effect:'熱射線加寬 70%，穿盾，觸電 0.1 秒並點燃 3 秒'},
     fireStation: {rate:.25,radius:1.5,damage:2,fireTrail:true,effect:'火龍捲遊走 6 秒，點燃半徑 1.5 格內的蟲，沿途留下 3 秒火地'},
     moltenMortar: {damage:15,blastDamage:20,effect:'落地打中整格並點火，2 秒後炸九宮格，各受 20 點並留下火地'},
     recoilRay: {stunSeconds:.4,effect:'直線穿盾，擊退 ⅓ 格後觸電 0.4 秒'},
@@ -865,7 +865,7 @@
       if (distance <= upgrades.molecular.chainRange && distance < nearest) { next = enemy; nearest = distance; }
     }
     if (!next) return;
-    effect(state, 'plasmaArc', previous.x, previous.y, { fromEnemy: previous, toEnemy: next,
+    effect(state, 'plasmaArc', previous.x, previous.y, { fromEnemy: previous, toEnemy: next, weapon: shot.weapon,
       lift: enemyLift(previous, state.time), toLift: enemyLift(next, state.time), hop: visited.length - 1, damage,
       chain: { shot, candidates, visited: [...visited, next.id] } });
   }
@@ -916,7 +916,7 @@
           pullTowardCell(state,e,c,r,percent / 100,tool.stunSeconds*BATTLE_SPEED);
         }
       }
-      effect(state,'gravityWell',c,r,{radius:tool.radius,duration:.30*BATTLE_SPEED});
+      effect(state,'gravityWell',c,r,{radius:tool.radius,upgraded:shot.upgraded,duration:.30*BATTLE_SPEED});
       return;
     }
     if (shot.kind === 'flame') {
@@ -927,7 +927,7 @@
         const blast = { ...shot, kind:shot.weapon, c, r };
         for (const enemy of targets) hit(state,enemy,blast,{damage:toolFor(shot.weapon,shot.upgraded).blastDamage});
         for (const cell of cells) ignite(state,cell.c,cell.r,false,shot.tower);
-        effect(state,'moltenBlast',c,r,{cells,duration:.82});
+        effect(state,'moltenBlast',c,r,{cells,upgraded:shot.upgraded,duration:.82});
         return;
       }
       const struck = state.enemies.filter(e => canTarget('flame', e) && Math.round(e.x) === c && Math.round(e.y) === r);
@@ -961,12 +961,12 @@
     const chain = contact && shot.kind === 'molecular' && plasma.chainRange ? state.enemies.slice() : null;
     if (contact && !hit(state, contact, shot)) return;
     if (shot.kind === 'cannon') {
-      effect(state, 'blast', x, y, { radius, upgraded: shot.upgraded });
+      effect(state, 'blast', x, y, { radius, upgraded: shot.upgraded, weapon: shot.weapon });
       for (const other of nearby) if (other !== contact) hit(state, other, shot);
     } else if (contact) {
       if (chain) chainPlasma(state, shot, contact, chain, [contact.id], plasma.chainDamage ?? Math.floor(plasma.damage / 3));
       effect(state, shot.kind === 'molecular' ? 'molecular' : 'spark', x, y,
-        { weapon: shot.weapon, lift: shot.lift ?? 0, angle: shot.angle ?? 0 });
+        { weapon: shot.weapon, upgraded: shot.upgraded, lift: shot.lift ?? 0, angle: shot.angle ?? 0 });
     }
   }
   function enemyLift(enemy, time) {
@@ -1164,7 +1164,7 @@
     const targets = occupantsOfCells(state,source.kind,cells);
     for (const e of targets) hit(state, e, source);
     if (source.kind === 'meteorTower') for (const cell of cells) ignite(state,cell.c,cell.r,false,source.tower);
-    effect(state, 'cellStrike', source.impactX, source.impactY, { weapon:source.kind, cells,
+    effect(state, 'cellStrike', source.impactX, source.impactY, { weapon:source.kind, cells, upgraded:source.upgraded,
       ...(source.kind === 'sonicCannon' ? {duration:.86} : {}) });
   }
   function occupantsOfCells(state, weapon, cells) {
@@ -1238,7 +1238,7 @@
     for (const e of state.enemies.filter(e => canTarget(shot.kind,e) && Math.hypot(e.x-shot.x,e.y-shot.y) <= tool.burstRadius)) {
       hit(state,e,source,{damage,burst:true});
     }
-    effect(state,'snowBurst',shot.x,shot.y,{radius:tool.burstRadius,duration:.52});
+    effect(state,'snowBurst',shot.x,shot.y,{radius:tool.burstRadius,upgraded:shot.upgraded,duration:.52});
     shot.age = shot.duration;
   }
   // For targeting only, estimate blast coverage on the fixed board. Impact uses exact positions.
@@ -1300,7 +1300,7 @@
       hit(state,e,shot,{damage:e === contact ? tool.damage : tool.splashDamage});
       if (!e.dead) e.stun = Math.max(e.stun,tool.stunSeconds*BATTLE_SPEED);
     }
-    effect(state,'cometBurst',contact.x,contact.y,{lift:enemyLift(contact,state.time),radius:tool.radius,duration:.85});
+    effect(state,'cometBurst',contact.x,contact.y,{lift:enemyLift(contact,state.time),radius:tool.radius,upgraded:shot.upgraded,duration:.85});
     return true;
   }
   function summonVortex(state, tower, weapon) {
@@ -1426,7 +1426,7 @@
       if (b.cooldown > 1e-9) return;
       b.cooldown += BATTLE_SPEED / tool.rate;
       b.flash = 1;
-      effect(state,'impactPulse',b.c,b.r,{radius:tool.range,duration:.65 * BATTLE_SPEED});
+      effect(state,'impactPulse',b.c,b.r,{radius:tool.range,upgraded:b.upgraded,duration:.65 * BATTLE_SPEED});
       const source = {kind:weapon,upgraded:b.upgraded,tower:b.id,c:b.c,r:b.r};
       state.enemies.forEach(e => {
         if ((e.x-b.c)**2 + (e.y-b.r)**2 <= tool.range**2) hit(state,e,source);
@@ -1510,7 +1510,7 @@
       b.flash = 1;
       const source = { upgraded: b.upgraded, tower: b.id, target: target.id, c: b.c, r: b.r, kind, ...(tool.delivery ? { weapon } : {}), angle: b.angle };
       if (weapon === 'frostfireJet') {
-        effect(state,'frostfireSpray',b.c,b.r,{angle:b.angle,impactX:aimX,impactY:aimY});
+        effect(state,'frostfireSpray',b.c,b.r,{angle:b.angle,impactX:aimX,impactY:aimY,upgraded:b.upgraded});
         const occupants = state.enemies.filter(e => canTarget(weapon,e) && Math.round(e.x) === aimX && Math.round(e.y) === aimY);
         for (const e of occupants) hit(state,e,source);
         return;
