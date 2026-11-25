@@ -39,6 +39,18 @@ async function checkScreen(page, width, height) {
     assert.equal(await page.locator('.entrance').count(), 4);
     assert.ok(await page.locator('#solution').isVisible());
     for (const [width, height] of screens) await checkScreen(page, width, height);
+    for (const [width,height] of [[320,480],[480,320]]) {
+      await page.setViewportSize({width,height});
+      await page.locator('.entrance[data-boss]').first().tap();
+      const guide=page.getByRole('dialog',{name:'入口蟲蟲'});
+      assert.ok(await guide.isVisible()); assert.equal(await guide.locator('.guide-card').count(),3);
+      await guide.getByRole('button',{name:'下一頁'}).tap();
+      await guide.getByRole('button',{name:'上一頁'}).tap();
+      const close=guide.getByRole('button',{name:'關閉入口蟲蟲'});
+      const box=await close.boundingBox();
+      assert.ok(box.width>=48 && box.height>=48 && box.x+box.width<=width && box.y>=0);
+      await close.tap(); assert.ok(await guide.isHidden());
+    }
     await checkScreen(page, 390, 844);
     await page.locator('[data-tool="wall"]').tap();
     await page.locator('.cell-hit[data-c="10"][data-r="7"]').tap();
@@ -55,9 +67,9 @@ async function checkScreen(page, width, height) {
     for (const level of [0, 9, 10]) {
       await page.evaluate(level => {
         const s = GardenSolutions.create(level);
-        Garden.startWave(s, 0, 2654435761);
-        for (let i = 0; i < 30000 && s.phase === 'running'; i++) Garden.step(s, 1 / 60);
-        if (s.phase !== 'won' && s.phase !== 'planning') throw Error(`第 ${level + 1} 關測試部署未過關：${s.phase}`);
+        Garden.startWave(s, 0, 42);
+        for (let i = 0; i < 30000 && s.phase === 'running'; i++) Garden.step(s, 1 / 60, true);
+        if (s.phase !== 'won' && s.phase !== 'cleared') throw Error(`第 ${level + 1} 關測試部署未過關：${s.phase}`);
         localStorage.setItem('garden-guard-v1', JSON.stringify(Garden.snapshot(s)));
       }, level);
       await page.reload();
@@ -71,7 +83,15 @@ async function checkScreen(page, width, height) {
           assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.width <= width && r.y + r.height <= height);
         }
       }
-      await result.locator('#result-primary').tap();
+      await result.getByRole('button',{name:'繼續',exact:true}).tap();
+      assert.equal(await page.locator('#level-select').inputValue(),String(level));
+      for (const [width,height] of [[320,480],[480,320]]) {
+        await page.setViewportSize({width,height});
+        for (const button of await page.locator('.round-actions button:visible').all()) {
+          const box=await button.boundingBox();
+          assert.ok(box.width>=48 && box.height>=48 && box.x>=0 && box.y>=0 && box.x+box.width<=width+1 && box.y+box.height<=height+1, `${width}×${height} ${await button.textContent()}`);
+        }
+      }
     }
     console.log(JSON.stringify({screens:screens.length, allCells:96, bonusEntrances:4, rotateDuringPause:true, rewardDialogs:[1,10,11]}));
   } finally { await browser.close(); }

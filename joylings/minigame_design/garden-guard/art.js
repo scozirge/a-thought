@@ -20,6 +20,7 @@
     leaf: `<path d="M3 19C0 10 8 3 20.8 2.8c.5 11.7-4.7 19.4-14.6 16.4Z" fill="#83b956" stroke="#305c41" stroke-width="1.6"/><path d="M3 22 16.5 8m-7.2 7.2-.4-4.4m3 .7 4.6-.5" fill="none" stroke="#315f43" stroke-width="1.7" stroke-linecap="round"/>`,
     play: '<path d="M6 4.5a1.6 1.6 0 0 1 2.4-1.3L21 10.7a1.6 1.6 0 0 1 0 2.6L8.4 20.8A1.6 1.6 0 0 1 6 19.5Z" fill="currentColor"/>',
     pause: '<path d="M5 4h5v16H5zm9 0h5v16h-5z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+    surrender: '<path d="M5 21V4q3-3 7 0t8 0v10q-4 3-8 0t-7 0" fill="#fff8e7" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>',
     undo: '<path d="m9 4-6 6 6 5m-5-5h9c5 0 7.5 3.2 7.5 8.5" class="icon-line"/>',
     reset: '<path d="M4.2 10A8 8 0 1 1 5.7 18M4 4v6h6" class="icon-line"/>',
     erase: '<path d="m3 13 9-10a2 2 0 0 1 3 0l6 5a2 2 0 0 1 0 3l-9 10H9l-6-5q-1.5-1.5 0-3Z" fill="#f5a491" stroke="#754d44" stroke-width="1.7"/><path d="m7 9 8 7 6-6-8-7Z" fill="#ffe0ad" stroke="#754d44" stroke-width="1.5"/><path d="M12 21h10" class="icon-line"/>',
@@ -164,14 +165,61 @@
     <path d="m-23-8 5-7h10m12 1h12" stroke="#f5edd0" stroke-width="3" fill="none"/></g>
     <path d="M-22 20q-6-3-7-10 7 1 10 7-1-7 4-10 3 8-1 13Z" fill="#679657"/>`;
 
-  // Three spotted shell plates meet at a dark seam. A broken plate uses the
-  // same shape and orientation as it travels to its newly spawned bug.
-  const splitPlate = `<path d="M1 0 6-6Q12-13 19-11c8 1 10 8 6 14-3 5-8 8-15 6L5 4Z" fill="#e98c59" stroke="#623e45" stroke-width="2.1"/>
-    <path d="M5 0q8-11 15-9" stroke="#ffdb91" stroke-width="2.6" fill="none"/>
-    <path d="M8 5q11 6 16-4" stroke="#bd6050" stroke-width="1.8" fill="none"/>
-    <ellipse cx="17" cy="-2" rx="3.5" ry="2.8" fill="#63414a" stroke="none" transform="rotate(-22 17 -2)"/>`;
+  const splitPlate = `<g stroke="#365b50" stroke-width="1.7" stroke-linejoin="round">
+    <path d="M5-6Q5-14 14-13q7 1 8 7l-5-2-2 4-4-4-3 3Z" fill="#d9e8af"/>
+    <path d="M8-1l4-3 4 4 4-4 4 1q0 12-8 13Q8 10 8-1Z" fill="#94c5a0"/>
+    <path d="m10-1 2-2 4 4 4-4" fill="none" stroke="#fff0bb" stroke-width="2"/>
+    <ellipse cx="24" cy="8" rx="3.5" ry="2.6" fill="#c4d99d"/></g>`;
+
+  // Round eggs distributed over a sphere, drawn back to front as the clutch rolls.
+  const splitRollFrames = 32;
+  function splitRollHref(distance) {
+    return '#art-split-roll-' + Math.floor(distance / 2.3 * splitRollFrames) % splitRollFrames;
+  }
+  function splitRollDrawing(frame) {
+    const pods = [];
+    const count = 18, radius = 16.5;
+    const turn = 2 * Math.PI * frame / splitRollFrames;
+    for (let i = 0; i < count; i++) {
+      const y = radius * (1 - 2 * (i + .5) / count);
+      const ring = Math.sqrt(radius * radius - y * y);
+      const angle = i * Math.PI * (3 - Math.sqrt(5)) - turn;
+      const x = ring * Math.sin(angle), z = ring * Math.cos(angle);
+      const scale = .93 + .16 * z / radius;
+      const transform = `translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${scale.toFixed(2)})`;
+      pods.push({ z, drawing: ref('split-pod', `transform="${transform}" color="${z < 0 ? '#78a888' : '#bedca7'}"`) });
+    }
+    return pods.sort((a,b) => a.z - b.z).map(pod => pod.drawing).join('');
+  }
   function splitPlateAt(index, x = 0, y = 0, scale = 1, facing = 0) {
     return `<use href="#art-splitPlate" transform="translate(${x} ${y}) rotate(${facing + index * 120}) scale(${scale})"/>`;
+  }
+  const centipedeFrames = 8;
+  function centipedeHref(distance) {
+    return '#art-centipede-' + Math.floor(distance / .72 * centipedeFrames) % centipedeFrames;
+  }
+  function centipedeDrawing(frame) {
+    const angle = frame * 2 * Math.PI / centipedeFrames;
+    const legs = [], plates = [];
+    for (let i = 0; i < 8; i++) {
+      const phase = angle - i * .88;
+      const x = -18 + i * 6.1, y = 2.3 * Math.sin(phase);
+      const width = 7.6 - Math.max(0, i - 3) * .8;
+      for (const side of [-1, 1]) {
+        const sweep = side * 3.7 * Math.cos(phase);
+        const spread = (i - 3) * 1.9;
+        const toe = i < 2 ? -6 : i > 5 ? 4 : 2;
+        const reach = 12.5 - Math.max(0, i - 5);
+        legs.push(`M${x.toFixed(1)} ${(y+side*3).toFixed(1)}l${(spread+sweep).toFixed(1)} ${side*6} ${(toe+sweep*.4).toFixed(1)} ${side*(reach-6)}`);
+      }
+      plates.push(`<use href="#art-centipede-plate" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(1 ${(width/7).toFixed(2)})"/>`);
+    }
+    const tail = (2.3*Math.sin(angle-7*.88)).toFixed(1);
+    const head = (2.3*Math.sin(angle)).toFixed(1);
+    return `<g stroke-linejoin="round" stroke-linecap="round">
+      <g class="bug-legs" fill="none"><path d="${legs.join(' ')}" stroke="#623b28" stroke-width="3.4"/><path d="${legs.join(' ')}" stroke="#dd9247" stroke-width="1.65"/></g>
+      <path transform="translate(23 ${tail})" d="m0-2 6-4 5-1M0 2l6 4 5 1" fill="none" stroke="#975026" stroke-width="2.8"/>
+      ${plates.reverse().join('')}<use href="#art-centipede-head" transform="translate(-25 ${head})"/></g>`;
   }
   // One forewing and one jaw are mirrored around the beetle's midline.
   const stagElytron = `<path d="M-1-1Q-3-8 0-15C9-20 28-16 35-8Q39-4 38-1Z" fill="#985231" stroke="#382c28"/>
@@ -199,27 +247,39 @@
       <path d="m8-10 8 4-5 4 5 5-6 4" fill="none" stroke="#ffce8c" stroke-width="2"/>
       <ellipse cx="-12" rx="13" ry="12" fill="#514052"/><path d="m-19-8-10-3 2 8 6 3m2 8-10 3 2-8 6-3" fill="#c1ac91"/>
       <g fill="#ffdc7f" stroke-width="1"><circle cx="-21" cy="-4" r="3"/><circle cx="-21" cy="4" r="3"/><circle cx="-16" cy="-8" r="2"/><circle cx="-16" cy="8" r="2"/></g></g>`,
-    bug: `<ellipse cx="1" rx="17" ry="13" fill="#dc5844"/>
-      <path d="M-10-8Q3-18 13-6" stroke="#fc9380" stroke-width="3.4" fill="none"/>
-      <path d="M-9 0h26" stroke="#743e37" stroke-width="1.7"/>
-      <g fill="#483c36" stroke="none"><circle cx="-2" cy="-8" r="3.5"/><circle cx="10" cy="-4" r="2.7"/><circle cx="-1" cy="7" r="3.4"/><circle cx="11" cy="5" r="2.4"/></g>`,
+    bug: `<g stroke="#4a3431" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <path d="m-18-5-8-8-7 1m15 17-8 8-7-1" fill="none"/>
+      <path d="M5 0h8" stroke-width="4"/><path d="M-10 0h7" stroke-width="3.5"/>
+      <path d="M10 0q0-9 9-10 9 0 12 10-3 10-12 10-9-1-9-10Z" fill="#823e36"/>
+      <path d="M15-5q5-4 9-1" fill="none" stroke="#df9070" stroke-width="2.2"/>
+      <ellipse cx="-1" rx="7.5" ry="6.4" fill="#b76146"/><circle cx="8" r="3" fill="#954534"/>
+      <path d="m-21-3-5-3 2 5m3 4-5 3 2-5" fill="#643b34"/>
+      <path d="M-22-4q2-6 8-5 8 0 8 9t-8 9q-6 1-8-5Z" fill="#be654b"/>
+      <path d="M-18-5q2-2 5-2" fill="none" stroke="#f1ae84"/>
+      <g fill="#342e2b" stroke="#fff0bf" stroke-width="1"><circle cx="-18.5" cy="-5" r="2.3"/><circle cx="-18.5" cy="5" r="2.3"/></g></g>`,
+    roach: `<g stroke="#523929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-14-3q-11-12-21-13m21 19q-11 12-21 13" fill="none"/>
+      <path d="m14-5 11-3-7 7m-4 6 11 3-7-7" fill="#94552e"/>
+      <path d="M-14 0q0-10 13-12Q15-14 22 0 15 14-1 12-14 10-14 0Z" fill="#a96735"/>
+      <path d="M-1-9q4 8 0 18m7-17q4 7 0 14m6-12q3 5 0 10" fill="none" stroke="#734328" stroke-width="1.7"/>
+      <path d="M-8-6q11-4 21 2-9-1-20 1Z" fill="#efc279" stroke="none"/>
+      <ellipse cx="-16" rx="6" ry="6.5" fill="#75412b"/>
+      <path d="M-15-8q5-6 12-3 2 4 2 11t-2 11q-7 3-12-3-5-8 0-16Z" fill="#ce934c"/>
+      <path d="M-12-4q2-4 5-3m-5 11q2 4 5 3" stroke="#72452d" stroke-width="2.7" fill="none"/>
+      <g fill="#322c25" stroke="#f9e0a5" stroke-width=".9"><circle cx="-19" cy="-4" r="2"/><circle cx="-19" cy="4" r="2"/></g></g>`,
     shield: `<path d="M-17-10Q-4-21 15-12q12 8 8 19-8 13-27 9-14-2-13-16Z" fill="var(--shell-body,#d69c52)"/>
       <path d="M-6-11q8 12 1 23M7-12q9 11 2 24" fill="none" stroke="#806342"/>`,
     hopper: `<path d="M-16-5Q-8-16 8-12l20 7-15 12Q0 15-12 8Z" fill="#85b641"/>
       <path d="M-6-5q12-5 29 0L4 3Z" fill="#bcd66b" stroke="#618238" stroke-width="1.4"/>`,
     mother: `<ellipse cx="-7" rx="17" ry="15" fill="#ae6393"/>
       <path d="M-12-12q12-9 24-4l10 8-6 19-21 7-5-12Z" fill="#cb81ab"/>
-      <g fill="#fff1cf" stroke="#926473" stroke-width="1.8">
+      <g fill="#ffdf72" stroke="#926730" stroke-width="1.8">
       <ellipse cx="13" cy="-12" rx="7" ry="9"/><ellipse cx="23" cy="-4" rx="7.5" ry="9"/><ellipse cx="24" cy="9" rx="7.5" ry="9"/><ellipse cx="12" cy="13" rx="8" ry="9"/><ellipse cx="12" cy="0" rx="7.5" ry="9"/>
       </g><path d="m12-15 1-1m10 11 1-1m0 13 1-1m-13 6 1-1m-2-11 1-1" stroke="#dbb79b" stroke-width="2.3"/>`,
     flyer: `<path d="M26 0 18-3v6Z" fill="#4e4634"/>
       <ellipse cx="3" rx="20" ry="11" fill="#ffcb4a"/>
       <path d="M0-10q4 10 0 20m10-19q5 8 0 18" fill="none" stroke="#594b38" stroke-width="5"/>
       <ellipse cx="-9" rx="8" ry="10" fill="#e69d3b"/>`,
-    splitter: `<g transform="translate(2 0)">
-      <path d="M-17-7Q-14-16-7-16L6-12 18-5 21 2 8 13-7 17-15 9Z" fill="#784655" stroke="#583c47"/>
-      ${[0, 1, 2].map(index => splitPlateAt(index)).join('')}
-      <circle r="2" fill="#754550" stroke="none"/></g>`,
     giant: `<g stroke="#303a2f" transform="scale(1 1.07)">
       <path d="M-16-15q8-8 25-6 18 1 23 13l1 10q-4 15-19 19-18 5-31-6l-5-10Z" fill="#454238" stroke-width="2.8"/>
       <path d="M-13-16Q6-26 24-14q9 7 8 16-2 14-21 18-14 3-26-6Z" fill="url(#art-scarab-shell)"/>
@@ -238,8 +298,7 @@
     stagBoss: `<use href="#art-stagElytron"/><use href="#art-stagElytron" transform="scale(1 -1)"/>
       <path d="M-12-12q5-7 13-4l2 6v20l-2 6q-8 3-13-4l-2-6V-6Z" fill="#4d4336" stroke="#352f2a"/>
       <path d="M-9-11q3-3 7-3" fill="none" stroke="#bea178" stroke-width="2.4"/><path d="m7-9 7 4 7-2-7 6-7-4Zm0 18 7-4 7 2-7-6-7 4Z" fill="#e1b361" stroke="#795125" stroke-width="1"/>`,
-    swift: `<path d="M-17-3q3-9 14-7L22-4l4 4-6 5-23 4q-11 0-14-6Z" fill="#d48537"/>
-      <path d="m-4-7 11 7-11 7m12-12 8 5-8 5" stroke="#ffe8a0" stroke-width="2.6" fill="none"/>`
+
   };
   const face = `<path d="m-4-4-9-8m9 16-9 7" fill="none" stroke-width="1.9"/>
     <ellipse rx="7.8" ry="9.8" fill="#425141"/><ellipse cx="-4" cy="-4.5" rx="3.4" ry="3.9" fill="#fff9dc" stroke="none"/>
@@ -250,19 +309,19 @@
   const feet = {
     rhinoBoss: '<path d="m-13-8-7-13-9-3 M0-12l-1-11-7-7 M14-10l8-13 9-3" stroke="#323a46" stroke-width="4"/><path d="m-22-20-5-2m28-1-5-4m28 5 5-2" stroke="#c3a36d" stroke-width="2"/>',
     spiderBoss: '<path d="m-16-6-8-12-9-5-5-9 m23 25-1-17-11-10-1-5 M-5-8l9-19-4-9 2-5 M4-7l17-10 4-11 10-4" stroke="#463449" stroke-width="4.2" stroke-linecap="round"/><path d="m-25-20-5-2m12-4-5-5m26 2-2-5m22 13 2-5" stroke="#bc8d84" stroke-width="2.2"/>',
-    bug: '<path d="M-10-6 L-16-16 -23-17 M-2-8 L0-19 -4-22 M8-6 L18-17 25-18" stroke="#53563d"/>',
+    bug: '<path d="M-7-3l-9-13-9-3 M-2-4l2-13-5-5 M2-3l16-14 12-4" stroke="#644435" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    roach: '<path d="M-9-5l-8-10-8-5 M-2-6l5-10-5-5 M6-6l15-13 12-4" stroke="#775232" stroke-width="3.6" stroke-linecap="round"/><path d="m-18-15 2-4m19 5 2-5m18-2 1-4" stroke="#805c32" stroke-width="1.7"/>',
     shield: '<path d="M-14-8 L-28-15 -29-22 -35-23 M-2-11 L0-29 -5-35 -10-35 M11-8 L27-16 29-22 35-23" stroke="#505548"/>',
     hopper: `<path d="M-12-5 L-17-15 -23-16 M-3-6 L-4-18 -10-20" stroke="#51693a"/>
       <path d="M4-5 18-24 27-8 33-11" stroke="#466238" stroke-width="3.6"/>
       <path d="M1-5 15-24q3-3 5 0l-2 7L7-3Z" fill="#abcb58" stroke="#526d39" stroke-width="2"/>`,
     mother: '<path d="M-17-6 L-25-20 -32-22 M-6-9 L-7-24 -13-28 M6-8 L20-23 29-24" stroke="#715467"/>',
     flyer: '<path d="M-13-5 L-18-15 -23-16 M-5-6 L-6-18 -11-20 M5-5 L21-18 29-19" stroke="#755630"/>',
-    splitter: '<path d="M-14-7 L-23-18 -29-19 M-2-9 L-2-22 -8-26 M12-8 L23-21 30-20" stroke="#6c4745"/>',
     giant: `<g stroke="#414637"><path d="m-16-9-4-9-6-4-5-1 1 4 3 3 6 2 3 7Z" fill="#947742" stroke-width="2"/>
       <path d="m-26-19-3-4m7 6-2-5M-3-14l-2-8-7-5m25 13 9-8 7-1" fill="none" stroke-width="3.7"/>
       <path d="m-6-22-5-4m33 4 5-1" fill="none" stroke="#b69a59" stroke-width="1.7"/></g>`,
     stagBoss: '<path d="M-12-8l-7-9-3-9-6-2 M0-11l1-11-7-7-1-3 M11-9l7-11 9-4 4-5" stroke="#46382f" stroke-width="3.8"/>',
-    swift: '<path d="M-12-5 L-22-19 -31-21 M-3-6 L1-21 -6-29 M7-4 L22-15 30-23" stroke="#875830"/>'
+
   };
   const rhinoWing = `<path d="M-2-7Q15-24 40-16q10 4 7 9C38 2 17 1-2-5Z" fill="#dfefe0" fill-opacity=".88" stroke="#607b80" stroke-width="1.7"/>
     <path d="M0-7q20-6 42-5M8-8l8-8m3 6 10-8m-3 7 11 8" fill="none" stroke="#96b4ae" stroke-width="1.3"/>`;
@@ -275,9 +334,9 @@
     <path d="m-28-9 7 4h43l7-4-2 7-6 3h-40l-6-3Z" fill="#e4d4a6" stroke="#4a5754"/>
     <g fill="#faf0c5" stroke="none"><circle cx="-20" cy="-10.5" r="2"/><circle cx="20" cy="-10.5" r="2"/></g>`;
   const enemyShapes = {
-    bug: { head: -14, shadow: 16 }, shield: { head: -17, shadow: 23 }, shield_down: { head: -17, shadow: 23 },
+    bug: { shadow: 20 }, roach: { shadow: 18 }, shield: { head: -17, shadow: 23 }, shield_down: { head: -17, shadow: 23 },
     hopper: { head: -15, shadow: 23 }, mother: { head: -21, shadow: 26 }, flyer: { head: -15, shadow: 16 },
-    splitter: { head: -16, shadow: 22 }, giant: { shadow: 24 }, stagBoss: { shadow: 32 }, rhinoBoss: { shadow: 30 }, spiderBoss: { shadow: 29 }, swift: { head: -14, shadow: 20 }
+    splitter: { shadow: 22 }, giant: { shadow: 24 }, stagBoss: { shadow: 32 }, rhinoBoss: { shadow: 30 }, spiderBoss: { shadow: 29 }, swift: { shadow: 26 }
   };
   const castle = `<ellipse cy="24" rx="32" ry="7" fill="#344d36" opacity=".24"/>
     <g stroke="#394858"><path d="M0-24v-17m0 0q5-4 12 0l-2 5-10-1Z" fill="#ee9f50"/>
@@ -557,6 +616,8 @@
     const path = `M${start} 0H${Math.max(start, length)}`;
     const intensity = (1 - t) ** 2;
     const rail = weapon === 'mapLaser';
+    const chargedRail = rail && upgraded;
+    const beamWidth = window.Garden.toolFor(weapon ?? 'pierce', upgraded).beamWidth || 1;
     const travel = reducedMotion ? .22 : t;
     if (weapon === 'recoilRay') return `<g class="recoil-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" stroke-linecap="round" fill="none">
       <path d="${path}" stroke="#4e8c83" stroke-width="7" opacity=".65"/><path d="${path}" stroke="#a5f3ca" stroke-width="3.7"/><path d="${path}" stroke="#fffbd1" stroke-width="1.4"/>
@@ -564,23 +625,27 @@
       <circle class="laser-origin" cx="${start}" r="4.5" fill="#e4ffc9"/>
       ${hitDistances.map(d=>`<g transform="translate(${d+9*t} 0) scale(${.65+.4*t})"><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#397b76" stroke-width="4.4"/><path d="m-9-9 6 9-6 9m7-18 6 9-6 9" stroke="#d9ffbf" stroke-width="2"/></g>`).join('')}</g>`;
     if (weapon === 'heatRay') return `<g class="heat-ray" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
-      <g transform="scale(1 ${window.Garden.toolFor(weapon,upgraded).beamWidth || 1})"><path d="${path}" stroke="#e96137" stroke-opacity=".43" stroke-width="${9+7*intensity}"/>
+      <g transform="scale(1 ${beamWidth})"><path d="${path}" stroke="#e96137" stroke-opacity=".43" stroke-width="${9+7*intensity}"/>
       <path d="${path}" stroke="#c64c34" stroke-width="6.4"/><path d="${path}" stroke="#ffae44" stroke-width="4.7"/><path d="${path}" stroke="#ffefb3" stroke-width="2"/>
       <path d="${path}" stroke="#fffbd7" stroke-width="3.8" stroke-dasharray="11 35" stroke-dashoffset="${-58*t}"/></g>
       <ellipse class="laser-origin" cx="${start}" rx="${4+4*intensity}" ry="4" fill="#fff3a0"/>
       ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${-angle})"><path d="m-8-2 4-5-1-6m10 8 4-3 1-4" stroke="#f9ad47" stroke-width="2.3"/>${ref('firePatch',`transform="translate(0 ${-7-6*t}) scale(${.63-.18*t})"`)}</g>`).join('')}</g>`;
     if (weapon === 'cryoBeam') return `<g class="cryo-beam" transform="translate(0 ${headY*scale}) rotate(${angle})" fill="none" stroke-linecap="round">
       ${upgraded ? `<g class="prism-beam"><path d="M${start} 0l6-5H${Math.max(start+6,length)}M${start} 0l6 5H${Math.max(start+6,length)}" stroke="#648fcf" stroke-width="2.8"/><path d="${path}" stroke="#adceff" stroke-width="12" stroke-opacity=".23"/></g>` : ''}
-      <g transform="scale(1 ${window.Garden.toolFor(weapon,upgraded).beamWidth || 1})"><path d="${path}" stroke="#3476b5" stroke-width="${5+5*intensity}" opacity=".55"/><path d="${path}" stroke="#8befff" stroke-width="4.6"/><path d="${path}" stroke="#fff" stroke-width="1.6"/>
+      <g transform="scale(1 ${beamWidth})"><path d="${path}" stroke="#3476b5" stroke-width="${5+5*intensity}" opacity=".55"/><path d="${path}" stroke="#8befff" stroke-width="4.6"/><path d="${path}" stroke="#fff" stroke-width="1.6"/>
       <path class="fx-accent" d="${path}" stroke="#edfaff" stroke-width="5.8" stroke-dasharray="2 24" stroke-dashoffset="${-48*t}"/></g>
       <circle class="laser-origin" cx="${start}" r="${3+2*intensity}" fill="#f1ffff"/>
       ${upgraded ? [.16,.52,.84].map(offset=>ref('prismGate',`transform="translate(${start+Math.max(0,length-start)*((offset+travel*.7)%1)} 0)"`)).join('') : ''}
       ${hitDistances.map(d=>`<g transform="translate(${d} 0) rotate(${25*t}) scale(${.42+.45*t})">${ref('snowflake','color="#f6ffff" stroke="#559acc"')}</g>`).join('')}</g>`;
     return `<g transform="translate(0 ${headY * scale}) rotate(${angle})" fill="none" stroke-linecap="round">
-      <path d="${path}" stroke="${rail ? '#59ddff' : '#fc597f'}" stroke-opacity=".3" stroke-width="${(upgraded ? 6 : 4) + 7 * intensity}"/>
-      <path d="${path}" stroke="${rail ? '#397dad' : '#d64262'}" stroke-width="${(upgraded ? 3.5 : 2) + 3 * intensity}"/><path d="${path}" stroke="#fff4ce" stroke-width="${1 + 2 * intensity}"/>
+      <g transform="scale(1 ${beamWidth})">
+      <path d="${path}" stroke="${rail ? '#59ddff' : '#fc597f'}" stroke-opacity=".3" stroke-width="${(chargedRail ? 16 : upgraded ? 6 : 4) + 7 * intensity}"/>
+      <path d="${path}" stroke="${rail ? '#397dad' : '#d64262'}" stroke-width="${(chargedRail ? 9 : upgraded ? 3.5 : 2) + 3 * intensity}"/>
+      ${chargedRail ? `<path class="rail-ribbon" d="${path}" stroke="#79eaff" stroke-width="${7 + 2 * intensity}"/>` : ''}
+      <path d="${path}" stroke="#fff4ce" stroke-width="${(chargedRail ? 3.5 : 1) + 2 * intensity}"/>
       ${upgraded ? `<path d="M${start} 0${Array.from({length: 16}, (_, i) => `L${start + (length - start) * (i + 1) / 16} ${i === 15 ? 0 : (i % 2 ? -1 : 1) * (2 + 3 * intensity)}`).join('')}" stroke="#9ffaff" stroke-width="2.8"/>` : ''}
       ${rail ? `<path d="${path}" stroke="#98f9ff" stroke-width="2" stroke-dasharray="14 32" stroke-dashoffset="${-120 * t}"/>` : ''}
+      </g>
       <circle class="laser-origin" cx="${start}" r="${2 + 3 * intensity}" fill="#fff5c9"/>
       <g class="laser-hits">${hitDistances.map(d => `<g transform="translate(${d} 0)"><circle r="${4 + t * 12}" stroke="${upgraded ? '#a8efff' : '#ffcb77'}" stroke-width="2.7"/>
         <path transform="rotate(${22 * t}) scale(${1 - .55 * t})" d="m0-13 3 8 8-3-5 7 6 5-9-1-3 9-2-9-8 3 4-7-6-4 8 1Z" fill="#fff5c9" stroke="${upgraded ? '#4e9aa4' : '#c65340'}" stroke-width="1.7"/></g>`).join('')}</g></g>`;
@@ -1177,6 +1242,9 @@
     }
     return `<g class="fusion-tower" data-weapon="${weapon}">${base}${head(weapon,angle,flash)}${weapon === 'tacticalAir' ? head('tacticalGround',angle2,flash2) : ''}</g>`;
   }
+  function coldShellId(level) {
+    return level === window.Garden.maxSlowStacks ? 'art-cold-shell' : 'art-cold-shell-' + level;
+  }
   function definitions() {
     const drawings = { plinth, wall, siegeCarriage, spikeHousing, wallBlade, face, wings, rhinoWing, rhinoCover, silkNet, shieldPlate: shield, splitPlate, stagElytron, stagHead, stagJaw, castle, royalCastle, castleBow, firePatch, snowflake, launchFlare };
     Object.assign(drawings,fusionFx);
@@ -1203,8 +1271,33 @@
     for (const [kind, drawing] of Object.entries(heads)) drawings['tower-' + kind] = drawing;
     for (const [kind, drawing] of Object.entries(shells)) drawings['bug-' + kind] = drawing;
     const whiteShield = '<filter id="art-white-shield" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>';
-    const coldShell = '<filter id="art-cold-shell" color-interpolation-filters="sRGB"><feColorMatrix values=".065 .16 .025 0 .025  .15 .48 .07 0 .125  .18 .59 .08 0 .27  0 0 0 1 0"/></filter>';
-    const energy = `<radialGradient id="art-ember-halo"><stop offset=".45" stop-color="#ffba42" stop-opacity=".56"/><stop offset="1" stop-color="#ff9e35" stop-opacity="0"/></radialGradient>
+    // Blend pale ice into the original blue matrix. The final slow tier uses the original colors.
+    const fullBlue = [[.065,.16,.025,0,.025], [.15,.48,.07,0,.125], [.18,.59,.08,0,.27]];
+    const iceColor = [.8,.94,1];
+    const coldShell = Array.from({length:window.Garden.maxSlowStacks},(_,i)=>i+1).map(level => {
+      const pale = .48*(window.Garden.maxSlowStacks-level)/(window.Garden.maxSlowStacks-1);
+      const rows = fullBlue.map((row, channel) => row.map((value, column) =>
+        value * (1-pale) + (column === 4 ? iceColor[channel] * pale : 0)
+      ).join(' '));
+      return `<filter id="${coldShellId(level)}" color-interpolation-filters="sRGB"><feColorMatrix values="${rows.join(' ')} 0 0 0 1 0"/></filter>`;
+    }).join('');
+    drawings['split-pod'] = `<circle r="8.8" fill="currentColor" stroke="#3a6657" stroke-width="1.4"/>
+      <circle r="8.2" fill="url(#art-egg-membrane)" stroke="none"/>
+      <path d="M-3 .5q1-3.2 4-2.2t1.1 4.3Q.7 5-1.2 4q2.6-.4 2.6-2.1T-.7 1Q-2 1.4-3 .5Z" fill="#6f8a57" stroke="none"/>
+      <circle cx="-.8" cy="-.4" r="1.3" fill="#f4d28c" stroke="none"/>
+      <path d="M-5.5-3.4q1-1.9 3.4-2.4" fill="none" stroke="#f5ffdb" stroke-width="1.5"/>`;
+    drawings['centipede-plate'] = `<path d="M-4-4q1-4 6-3l3 3v8L2 7q-5 1-6-3Z" fill="#a55332" stroke="#57392c" stroke-width="1.5"/>
+      <path d="M-2-4q2-3 5-1v3q-3-2-5 0Z" fill="#eca35e" stroke="none"/>`;
+    drawings['centipede-head'] = `<path d="M-3-4q-7-10-15-10m15 18q-7 10-15 10" fill="none" stroke="#89432b" stroke-width="2.3"/>
+      <path d="m-5-4-7-2 3 5m4 5-7 2 3-5" fill="#763d29" stroke="#543529" stroke-width="1.5"/>
+      <path d="M-8-5q6-7 13 0l1 5-1 5q-7 7-13 0Z" fill="#d4623a" stroke="#64362d" stroke-width="2"/>
+      <path d="M-5-5q4-3 7-1" fill="none" stroke="#ffc285" stroke-width="2"/>
+      <g fill="#3e2b26" stroke="#fff1bc" stroke-width="1"><circle cx="-6" cy="-4" r="2"/><circle cx="-6" cy="4" r="2"/></g>`;
+    for (let frame = 0; frame < centipedeFrames; frame++) drawings['centipede-' + frame] = centipedeDrawing(frame);
+    for (let frame = 0; frame < splitRollFrames; frame++) drawings['split-roll-' + frame] = splitRollDrawing(frame);
+    const energy = `
+      <radialGradient id="art-egg-membrane" cx="35%" cy="29%" r="76%"><stop stop-color="#f6ffdc" stop-opacity=".8"/><stop offset=".58" stop-color="#c4e2ac" stop-opacity=".13"/><stop offset="1" stop-color="#42796b" stop-opacity=".68"/></radialGradient>
+      <radialGradient id="art-ember-halo"><stop offset=".45" stop-color="#ffba42" stop-opacity=".56"/><stop offset="1" stop-color="#ff9e35" stop-opacity="0"/></radialGradient>
       <linearGradient id="art-basalt" x2=".7" y2="1"><stop stop-color="#bc886d"/><stop offset=".4" stop-color="#785347"/><stop offset="1" stop-color="#41363b"/></linearGradient>
       <linearGradient id="art-tongue"><stop stop-color="#ffcb62"/><stop offset=".44" stop-color="#ff9639"/><stop offset="1" stop-color="#e66537" stop-opacity=".78"/></linearGradient>
       <linearGradient id="art-scarab-shell" x1=".15" x2=".75" y1="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#736742"/><stop offset=".18" stop-color="#bfaa58"/><stop offset=".40" stop-color="#80985c"/><stop offset=".65" stop-color="#4d7355"/><stop offset="1" stop-color="#a78943"/></linearGradient>
@@ -1262,12 +1355,12 @@
   }
   function bugPose(kind, time) {
     return {
-      legs: `skewX(${5 * Math.sin(time * (kind === 'swift' ? 19 : 12))})`,
+      legs: `skewX(${5 * Math.sin(time * 12)})`,
       wings: kind === 'flyer' ? `scale(1 ${0.79 + Math.sin(time * 28) * 0.2})` : '',
       jaw: kind === 'stagBoss' ? `rotate(${3.5 * Math.sin(time * 4)} -20 -8)` : ''
     };
   }
-  function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, slow = false, labelId = '', maxHp) {
+  function bug(kind = 'bug', hp = null, time = 0, flash = 0, shieldFlash = 0, iceLevel = 0, labelId = '', maxHp) {
     const { head, shadow } = enemyShapes[kind];
     const size = window.Garden.enemyArtScale(kind, maxHp);
     const down = kind === 'shield_down', armored = down || kind === 'shield';
@@ -1278,30 +1371,35 @@
       const label = `<text class="bug-hp" x="0" y="0" fill="${flash > 0 ? '#ffe58e' : '#fffdf0'}">${hp}</text>`;
       health = labelId ? `<defs><g id="${labelId}">${label}</g></defs>` : `<g transform="translate(2 ${down ? -3 : 21})">${label}</g>`;
     }
-    const body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : kind === 'splitter' ? 'class="split-lobes"' : '');
+    let body;
+    if (kind === 'splitter') body = `<use class="egg-roll" href="${splitRollHref(0)}"/>`;
+    else if (kind === 'swift') body = `<use class="centipede-run" href="${centipedeHref(0)}"/>`;
+    else body = ref('bug-' + (down ? 'shield' : kind), kind === 'mother' ? 'class="brood-eggs"' : '');
     const shell = kind === 'giant' ? `<g class="scarab-shell">${body}${flash > 0 ? '<path class="armor-glint fx-accent" d="M-19-11q7-8 14-6m7 0q14-4 23 6" fill="none" stroke="#fff1af" stroke-width="3.2" stroke-linecap="round"/>' : ''}</g>` : body;
     let faceLayer;
     if (kind === 'stagBoss') {
       const jaw = ref('stagJaw', `transform="${pose.jaw}"`);
       faceLayer = jaw + `<g transform="scale(1 -1)">${jaw}</g>` + ref('stagHead');
-    } else if (kind === 'giant' || kind === 'rhinoBoss' || kind === 'spiderBoss') {
+    } else if (head === undefined) {
       faceLayer = '';
     } else {
       faceLayer = ref('face', `transform="translate(${head} 0)"`);
     }
-    const cold = slow ? 'filter="url(#art-cold-shell)"' : '';
+    const cold = iceLevel ? `filter="url(#${coldShellId(iceLevel === true ? window.Garden.maxSlowStacks : iceLevel)})"` : '';
     const shieldLayer = armored ? `<g class="hard-shell ${down ? 'lower-shell' : 'upper-shell'}" transform="scale(1 ${down ? -1 : 1})">
       ${ref('shieldPlate', cold)}${shieldFlash > 0 ? ref('shieldPlate', `class="shield-flash" filter="url(#art-white-shield)" opacity="${Math.min(1, shieldFlash / .12)}"`) : ''}</g>` : '';
-    return `<g class="bug-art" transform="scale(${size})"><ellipse cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>
-      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g class="bug-facing${slow ? ' chilled-shell' : ''}" ${cold}>
+    const groundShadow = kind === 'splitter' ? '' : `<ellipse class="bug-shadow" cy="${kind === 'flyer' ? 25 : 13}" rx="${shadow}" ry="5" fill="#234b38" opacity=".19"/>`;
+    return `<g class="bug-art" transform="scale(${size})">${groundShadow}
+      <g stroke="#3f513e" style="${down ? '--shell-body:#84c1a7;--plate:#477969' : ''}"><g class="bug-facing${iceLevel ? ' chilled-shell' : ''}" ${cold}>
       ${kind === 'flyer' ? `<g class="bug-wings" transform="${pose.wings}">${ref('wings')}${ref('wings', 'transform="scale(1 -1)"')}</g>` : ''}
       ${kind === 'rhinoBoss' ? rhinoWings : ''}
-      <g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="${pose.legs}">
-        ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>
+      ${feet[down ? 'shield' : kind] ? `<g class="bug-legs${kind === 'hopper' ? ' spring-legs' : ''}" transform="${pose.legs}">
+        ${ref(leg)}${ref(leg, 'transform="scale(1 -1)"')}</g>` : ''}
+      ${kind === 'giant' ? '<g class="scarab-streak" stroke-linejoin="round"><path d="m19-12 25 1-20 4Zm6 10 30 1-27 4Zm-5 13 23 1-20 3Z" fill="#ffdf79" stroke="#87672d" stroke-width="1.6"/><path d="m29-.2 15 .4" fill="none" stroke="#fff4c2" stroke-width="1.6"/></g>' : ''}
       ${shell}${kind === 'rhinoBoss' ? rhinoCovers : ''}${armored ? '' : faceLayer}
       </g>${shieldLayer}${armored ? `<g class="bug-facing" ${cold}>${faceLayer}</g>` : ''}</g>
       ${flash > 0 ? `<path class="hit-flash" d="m-15-16-2-4m10 2 1-4m5 7 3-3" fill="none" stroke="#fff2ae" stroke-width="3" stroke-linecap="round" opacity="${Math.min(1,flash * 8)}"/>` : ''}
-      ${slow ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}
+      ${iceLevel ? ref('snowflake', 'color="#e1fbff" transform="translate(12 -12) scale(.53)"') : ''}
       </g>${health}`;
   }
   function badge(kind, hp = null) { return `<svg class="bug-icon" viewBox="-45 -39 90 78" aria-hidden="true">${bug(kind, hp)}</svg>`; }
@@ -1321,5 +1419,5 @@
     });
     return ref('royalCastle') + ref('fitting-castle') + `<g${preview ? '' : ' id="castle-bow"'}>${stations.join('')}</g>`;
   }
-  window.GardenArt = { definitions, icon, tower, fusionTower, fusionResult, mountFor, tacticalMounts, bug, bugPose, badge, tool, shot, flight, moltenFlight, plasmaArc, laser, aura, spiderWebFlight, brokenHeart, chargeGlobe, stoneImpact, impactBurst, splitPlateAt, castle: castleArt, castleBowPosition };
+  window.GardenArt = { definitions, icon, tower, fusionTower, fusionResult, mountFor, tacticalMounts, bug, bugPose, badge, tool, shot, flight, moltenFlight, plasmaArc, laser, aura, spiderWebFlight, brokenHeart, chargeGlobe, stoneImpact, impactBurst, splitPlateAt, splitRollHref, centipedeHref, castle: castleArt, castleBowPosition };
 })();

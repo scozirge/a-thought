@@ -39,15 +39,20 @@ const normalize = text => text.replace(/\r\n/g, '\n');
       const {radius,lifetime,rate,damage}=Garden.toolFor(weapon,upgraded);
       return [radius,lifetime,rate,damage];
     })));
-    assert.deepEqual(vortices,[[1,8,1/3,2],[1.2,8,1/3,2],[1,6,.4,1],[1.5,6,.25,2]]);
+    assert.deepEqual(vortices,[[1.3,9,1/3,2],[1.5,9,1/3,2],[1,6,.4,1],[1.5,6,.25,1]]);
     const enemyKinds = await p.evaluate(() => Object.keys(Garden.ENEMIES));
-    assert.equal(enemyKinds.length, 12);
+    assert.equal(enemyKinds.length, 13);
+    assert.ok(enemyKinds.includes('roach'));
+    assert.deepEqual(await p.evaluate(() => [false,true].map(upgraded => {
+      const {damage,maxDamage,chargeSeconds}=Garden.toolFor('disintegrationBeam',upgraded);
+      return [damage,maxDamage,chargeSeconds];
+    })), [[2,6,.4],[3,7,.4]]);
     assert.deepEqual(enemyKinds.filter(kind => kind.endsWith('Boss')).sort(), ['rhinoBoss','spiderBoss','stagBoss']);
     assert.equal(await p.locator('#level-select option').count(), 10);
     for (const kind of ['pea', 'cannon', 'frost', 'flame', 'pierce', 'push', 'molecular']) {
       await p.locator(`[data-tool="${kind}"]`).hover();
       assert.equal(await p.locator('#tower-info').getAttribute('data-kind'), kind);
-      const timing = kind === 'molecular' ? /瞄準 2 秒/ : /攻擊 \d+(?:\.\d+)?次\/s/;
+      const timing = kind === 'molecular' ? /瞄準 1\.5 秒/ : /攻擊 \d+(?:\.\d+)?次\/s/;
       assert.match(await p.locator('#tower-info').innerText(), timing);
     }
     for (const [shield, row, behindRow] of [['shield', 0, 4], ['shield_down', 7, 2]]) {
@@ -63,7 +68,7 @@ const normalize = text => text.replace(/\r\n/g, '\n');
           return { hp: [front.hp, behind.hp], blocked: s.stats.blocked, flash: front.shieldFlash, effects: s.effects.map(e => e.kind) };
         }, { shield, row, behindRow, tower });
         const laser = tower === 'pierce';
-        assert.deepEqual(result, { hp: laser ? [55, 6] : [28, 7], blocked: 0, flash: 0, effects: [laser ? 'laser' : 'molecular'] }, tower + ' / ' + shield);
+        assert.deepEqual(result, { hp: laser ? [55, 6] : [18, 7], blocked: 0, flash: 0, effects: [laser ? 'laser' : 'molecular'] }, tower + ' / ' + shield);
       }
     }
     await p.keyboard.press('Escape');

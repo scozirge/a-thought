@@ -12,6 +12,33 @@ test('最短路徑：空地為 11 步，四方向相鄰且朝左側小屋', () =
   assert.deepEqual(plan.path.at(-1), G.GOAL);
   for (let i = 1; i < plan.path.length; i++) assert.equal(Math.abs(plan.path[i].c - plan.path[i - 1].c) + Math.abs(plan.path[i].r - plan.path[i - 1].r), 1);
 });
+test('移動保留建築、升級和資源，路線、復原及存檔使用新位置', () => {
+  const s = G.createState(3), entry = {c:11,r:3};
+  assert.ok(G.build(s,'pea',6,4).ok && G.build(s,'cannon',6,4).fused && G.upgrade(s,6,4).ok);
+  assert.ok(G.build(s,'wall',8,6).ok);
+  const b = G.at(s,6,4);
+  b.hp--; b.lastDamage=37; s.money=0;
+  const previous=G.snapshot(s), edits=s.undo.length;
+  for (const [c,r] of [[8,6],[6,4],[0,3],[11,3],[-1,0],[1.5,4]]) {
+    assert.equal(G.moveBuilding(s,6,4,c,r).ok,false);
+  }
+  assert.equal(G.moveBuilding(s,0,3,5,3).ok,false);
+  assert.equal(s.undo.length,edits); assert.deepEqual(G.snapshot(s),previous);
+  assert.ok(G.route(s,entry).path.some(p=>p.c===6 && p.r===3));
+  assert.ok(G.moveBuilding(s,6,4,6,3).ok);
+  assert.equal(G.at(s,6,4),undefined); assert.equal(G.at(s,6,3),b);
+  assert.deepEqual({...G.snapshot(s),buildings:previous.buildings},previous);
+  assert.deepEqual(G.snapshot(s).buildings[0],{...previous.buildings[0],r:3});
+  assert.ok(G.route(s,entry).path.every(p=>p.c!==6 || p.r!==3));
+  const saved=G.restore(G.snapshot(s));
+  assert.equal(G.at(saved,6,3).lastDamage,37);
+  assert.ok(G.undo(s)); assert.deepEqual(G.snapshot(s),previous);
+  assert.ok(G.moveBuilding(saved,8,6,8,5).ok);
+  G.startWave(saved); assert.equal(G.at(saved,6,3).secondary.r,3);
+  for (const phase of ['running','paused']) {
+    saved.phase=phase; assert.equal(G.moveBuilding(saved,6,3,6,4).ok,false);
+  }
+});
 test('仍有路時必須繞牆，不會為了短路徑拆牆', () => {
   const s = G.createState(); G.build(s, 'wall', 6, 3);
   const plan = G.route(s, { c: 11, r: 3 });

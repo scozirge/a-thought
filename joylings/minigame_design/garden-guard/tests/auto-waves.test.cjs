@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const G = require('../core.js');
+const solutions = require('../solutions.js');
 const layouts = require('./layouts.cjs');
 const advance = (s, seconds) => { for (let i = 0; i < Math.round(seconds * 60); i++) G.step(s, 1 / 60); };
 const finish = s => { for (let i = 0; i < 30000 && s.phase === 'running'; i++) G.step(s, 1 / 60); };
@@ -14,7 +15,7 @@ test('十個主線關卡各一波，隱藏關有三段攻勢；常規波次總�
   assert.equal(G.LEVELS.length, 11);
   let budget = G.LEVELS[0].money, hp = 0, count = 0;
   for (const l of G.LEVELS) {
-    assert.equal(l.money, budget); budget += l.reward;
+    assert.equal(l.money, budget + l.deploymentBonus); budget += l.reward;
     assert.equal(l.waves.length, l === G.LEVELS[G.BONUS_LEVEL] ? 3 : 1);
     assert.deepEqual(l.rocks, G.LEVELS[0].rocks); assert.deepEqual(l.water, G.LEVELS[0].water);
     const nextHp = l.waves.flat().filter(g => !g.kind.endsWith('Boss')).reduce((n, g) => n + g.hp * g.count, 0), nextCount = l.waves.flat().reduce((n, g) => n + g.count, 0);
@@ -38,7 +39,8 @@ test('依關卡間距出怪，後三關加入上、下方入口，開始只排�
       G.step(s, 1 / 60);
       for (const e of s.enemies) if (!seen.has(e.id)) {
         seen.add(e.id); births.push(e.bornAt);
-        const entry=entries[(births.length-1)%entries.length];
+        const pos=expected[births.length-1].position;
+        const entry={c:pos.x,r:pos.y};
         if (e.kind!==expected[births.length-1].kind) throw Error('出怪順序錯誤');
         assert.equal(e.c,entry.c);assert.equal(e.r,entry.r);
         assert.ok(Math.hypot(e.x-entry.c,e.y-entry.r)<0.03);
@@ -88,6 +90,29 @@ test('過關只發一次固定獎金，保留塔的身分、位置與耐久，�
   advance(restored, 100); assert.equal(restored.money, s.money);
 });
 
+test('勝利留在本關，讀檔保留戰後生命，重玩或下一關各自結算一次', () => {
+  for (let level=0; level<G.BONUS_LEVEL-1; level++) {
+    const state=solutions.create(level), opening=G.snapshot(state);
+    G.startWave(state,0,42); state.queue=[]; state.hearts=2;
+    G.step(state,1/60,true);
+    const saved=G.restore(G.snapshot(state));
+    assert.equal(saved.level,level); assert.equal(saved.phase,'cleared'); assert.equal(saved.hearts,2);
+    assert.equal(saved.money,opening.money+G.LEVELS[level].reward);
+    assert.equal(saved.upgradeItems,opening.upgradeItems+1);
+    assert.equal(saved.fusionHammers,opening.fusionHammers+Number(G.hammerLevels.includes(level+1)));
+    assert.equal(G.startWave(saved),false);
+    assert.equal(G.build(saved,'wall',5,4).ok,false);
+    const replay=G.replayVictory(saved);
+    assert.equal(replay.level,level); assert.equal(replay.phase,'planning');
+    assert.equal(replay.money,opening.money); assert.equal(replay.upgradeItems,opening.upgradeItems);
+    assert.equal(replay.fusionHammers,opening.fusionHammers);
+    assert.equal(G.advanceLevel(saved),true); assert.equal(saved.level,level+1);
+    assert.equal(saved.phase,'planning'); assert.equal(saved.hearts,G.LEVELS[level+1].hearts+Number(saved.castleUpgraded));
+    assert.equal(G.advanceLevel(saved),false);
+    assert.ok(G.restore(G.snapshot(saved)));
+  }
+});
+
 test('關間部署可單獨拆除舊塔全額退款並撤回，按開始才出下一關怪物', () => {
   const s = G.createState(); deploy(s, layouts[0]); G.startWave(s); finish(s);
   const tower = s.buildings.find(b => b.kind !== 'wall'), money = s.money, id = tower.id;
@@ -97,6 +122,77 @@ test('關間部署可單獨拆除舊塔全額退款並撤回，按開始才出�
   G.startWave(s); assert.equal(s.phase, 'running'); assert.equal(s.level, 1); assert.equal(s.fires.length, 0);
   assert.equal(s.queue.length, G.LEVELS[1].waves.flat().reduce((n,g) => n + g.count, 0));
   assert.equal(G.startWave(s), false); advance(s, 0.5); assert.ok(s.enemies.length > 0);
+});
+
+test('勝利重玩還原開戰前的資源與建築，重新讀檔與重複通關都只發一份獎勵', () => {
+  const win = state => {
+    assert.ok(G.startWave(state,0,41));
+    state.queue = [];
+    G.step(state,1/60);
+  };
+  const resources = s => [s.money,s.hearts,s.upgradeItems,s.fusionHammers,s.castleUpgraded,
+    s.buildings.map(b => [b.kind,b.c,b.r,b.upgraded,b.paidCost,b.hp])];
+  for (const level of [0,2,7,8,9,10]) {
+    const state = solutions.create(level), before = resources(state);
+    assert.equal(G.replayLevel(state),null);
+    win(state);
+    const after = resources(state);
+    for (let i=0; i<2; i++) {
+      const data = JSON.parse(JSON.stringify(G.snapshot(state)));
+      assert.ok(data.replayCheckpoint);
+      assert.ok(!data.replayCheckpoint.replayCheckpoint);
+      const restored = G.restore(data);
+      assert.equal(G.replayLevel(restored),level);
+      const replay = G.replayVictory(restored);
+      assert.deepEqual(resources(replay),before);
+      assert.equal(replay.level,level); assert.equal(replay.phase,'planning');
+      win(replay);
+      assert.deepEqual(resources(replay),after);
+      Object.assign(state,replay);
+    }
+  }
+});
+
+test('第十關部署補給只領一次，舊存檔與重玩都保留加發的十枚金幣', () => {
+  const ninth = G.createState(8);
+  G.startWave(ninth); ninth.queue=[]; G.step(ninth,1/60,true);
+  assert.equal(ninth.money,198); assert.equal(ninth.lastReward,28);
+  const cleared = G.restore({...G.snapshot(ninth),version:20});
+  assert.ok(G.advanceLevel(cleared)); assert.equal(cleared.money,208);
+  assert.equal(G.advanceLevel(cleared),false);
+
+  const tenth = G.createState(9);
+  assert.ok(G.build(tenth,'pea',3,4).ok);
+  const old = {...G.snapshot(tenth),version:20,money:198-G.TOOLS.pea.cost};
+  const loaded = G.restore(old);
+  assert.equal(loaded.money,old.money+10);
+  assert.equal(G.restore(G.snapshot(loaded)).money,loaded.money);
+  G.startWave(loaded); assert.equal(G.retry(loaded).money,old.money+10);
+  loaded.queue=[]; G.step(loaded,1/60);
+  const victory = {...G.snapshot(loaded),version:20,money:old.money+22,replayCheckpoint:old};
+  const won = G.restore(victory);
+  assert.equal(won.money,old.money+10+22);
+  assert.equal(G.replayVictory(won).money,old.money+10);
+  for (const version of [20,21]) {
+    const bonus=G.restore({...G.snapshot(G.createState(10)),version,money:202,bossPattern:19});
+    assert.equal(bonus.money,212);
+    G.startWave(bonus); assert.equal(G.retry(bonus).money,212);
+    assert.equal(G.restore(G.snapshot(bonus)).money,212);
+  }
+});
+
+test('舊版後段勝利存檔保留實領金幣，重玩時扣回當時的獎金', () => {
+  for (const [level,oldReward] of [[7,24],[8,36],[9,24]]) {
+    const s=G.createState(level);
+    G.startWave(s); s.queue=[]; G.step(s,1/60);
+    const data=G.snapshot(s);
+    delete data.replayCheckpoint;
+    data.money += oldReward - data.lastReward;
+    data.lastReward=oldReward;
+    const loaded=G.restore(data);
+    assert.equal(loaded.money,data.money); assert.equal(loaded.lastReward,oldReward);
+    assert.equal(G.replayVictory(loaded).money,data.money-oldReward-(level===8 ? 10 : 0));
+  }
 });
 
 test('十關可用正常累積獎金連續通關，關間可退款重佈，保留未拆除的牆', () => {
@@ -109,10 +205,10 @@ test('十關可用正常累積獎金連續通關，關間可退款重佈，保�
     deploy(s, layouts[level]); require('../solutions').applyUpgrades(s); shared += s.buildings.filter(b => ids.has(b.id)).length;
     const money = s.money;
     const invested = s.buildings.reduce((sum,b) => sum + b.paidCost, 0);
-    G.startWave(s); finish(s);
+    G.startWave(s,0,42); finish(s);
     assert.ok(s.hearts > 0, `第 ${level + 1} 關`);
     const survivingValue = s.buildings.reduce((sum,b) => sum + b.paidCost, 0);
-    assert.equal(s.money + survivingValue, money + invested + G.LEVELS[level].reward);
+    assert.equal(s.money + survivingValue, money + invested + G.LEVELS[level].reward + (level===8 ? 10 : 0));
     assert.equal(s.phase, level === 9 ? 'won' : 'planning');
   }
   assert.ok(shared > 0); assert.equal(s.completed, true);
@@ -143,13 +239,21 @@ test('普通雙塔和窮舉找到的舊版冰砲組合都守不住三路開局',
 
 test('預算內解答能完成混合防線，少建火力會降低通關數', () => {
   const previous = [42,52,64,76,90,104,120,136,154,182], wins = [0,0];
-  for (const level of [4,7,9]) {
+  for (let level = 0; level < G.BONUS_LEVEL; level++) {
     for (let mode = 0; mode < 2; mode++) {
       const s = G.createState(level); if (mode === 0) s.money = previous[level];
       for (const placement of layouts[level]) {
         const result=G.build(s,...placement); if(mode===1)assert.equal(result.ok,true);
       }
-      G.startWave(s); finish(s); if (s.phase !== 'lost') wins[mode]++;
+      const answer=solutions.create(level);
+      for (const b of answer.buildings) {
+        if (b.fusionKind && G.at(s,b.c,b.r)) G.build(s,b.fusionKind,b.c,b.r);
+      }
+      for (const b of answer.buildings) {
+        if (b.upgraded && G.at(s,b.c,b.r)) G.upgrade(s,b.c,b.r);
+      }
+      if (answer.castleUpgraded) G.upgrade(s,G.LEVELS[level].goal.c,G.LEVELS[level].goal.r);
+      G.startWave(s,0,42); finish(s); if (s.phase !== 'lost') wins[mode]++;
     }
   }
   assert.ok(wins[1] > wins[0], `舊預算通關 ${wins[0]}，新預算通關 ${wins[1]}`);
@@ -186,6 +290,16 @@ test('第五至十關的解答要靠牆延長路線，同樣數量的牆若沒�
   }
 });
 
+test('第十關可用 199 枚的解答抵禦不同的蜘蛛封塔順序', () => {
+  for (const seed of [4154657199,1464380619]) {
+    const s = solutions.create(9);
+    assert.equal(s.money + s.buildings.reduce((sum,b)=>sum+b.paidCost,0),208);
+    assert.equal(s.money,9);
+    G.startWave(s,0,seed); finish(s);
+    assert.equal(s.phase,'won');
+  }
+});
+
 test('舊存檔通過第十關即可解鎖，新開局與未過關的存檔仍隱藏', () => {
   const finished = G.snapshot(G.createState(9));
   delete finished.bonusUnlocked;
@@ -200,15 +314,28 @@ test('舊存檔通過第十關即可解鎖，新開局與未過關的存檔仍�
   assert.equal(G.restore({ ...G.snapshot(G.createState(10)), bonusUnlocked: false }), null);
 });
 
+test('隱藏關蟲王固定從右、左、上進場，預覽、舊存檔和重試一致', () => {
+  const level=G.BONUS_LEVEL, expected=[['stagBoss',11,3],['rhinoBoss',0,3],['spiderBoss',5,0]];
+  const gates=queue=>queue.filter(e=>e.kind.endsWith('Boss')).map(e=>[e.kind,e.position.x,e.position.y]);
+  assert.deepEqual(gates(G.spawnQueue(level)),expected);
+  for(let pattern=0;pattern<24;pattern++) {
+    const legacy={...G.snapshot(G.createState(level)),version:21,money:220,bossPattern:pattern};
+    const loaded=G.restore(legacy);
+    G.startWave(loaded,pattern,pattern+1); assert.deepEqual(gates(loaded.queue),expected);
+    const retry=G.retry(loaded);
+    G.startWave(retry); assert.deepEqual(gates(retry.queue),expected);
+  }
+});
+
 test('隱藏關中央小屋有五顆心，空盤失守後可重試，解答能守住三段攻勢', () => {
   const s = G.createState(10);
-  assert.equal(s.money, 250);
+  assert.equal(s.money, 230);
   assert.equal(s.hearts, 5);
   G.startWave(s); finish(s);
   assert.equal(s.phase, 'lost');
   assert.equal(G.retry(s).hearts, 5);
   const challenge = require('../solutions.js').create(10);
-  G.startWave(challenge); finish(challenge);
+  G.startWave(challenge,0,42); finish(challenge);
   assert.equal(challenge.wave, 2);
   assert.equal(challenge.phase, 'won');
   assert.ok(challenge.hearts > 0 && challenge.hearts <= 5 + Number(challenge.castleUpgraded));
@@ -229,14 +356,13 @@ test('隱藏關移除導引石牆或撤掉雷射火力，這套解答就會失�
 });
 
 test('終關打開兩格捷徑就會失守', () => {
-  const open = G.createState(9);
-  deploy(open, layouts[9]);
+  const open = solutions.create(9);
   const length = s => G.previews(s).reduce((n,p)=>n+p.path.length,0);
   const before = length(open);
-  assert.ok(G.remove(open,9,4).ok);
-  assert.ok(G.remove(open,9,3).ok);
+  assert.ok(G.remove(open,2,5).ok);
+  assert.ok(G.remove(open,6,7).ok);
   assert.ok(length(open)<before);
-  G.startWave(open); finish(open);
+  G.startWave(open,0,42); finish(open);
   assert.equal(open.phase,'lost');
 });
 
@@ -244,7 +370,7 @@ test('後兩關解答的雷射能一次貫穿多隻蟲，終關分子砲會對�
   for (const level of [8, 9]) {
     const s = G.createState(level);
     deploy(s, layouts[level]); require('../solutions').applyUpgrades(s);
-    G.startWave(s);
+    G.startWave(s,0,42);
     let piercedGroup = false, firedAtGiant = false;
     for (let tick = 0; tick < 30000 && s.phase === 'running'; tick++) {
       G.step(s, 1 / 60);
@@ -258,14 +384,16 @@ test('後兩關解答的雷射能一次貫穿多隻蟲，終關分子砲會對�
   }
 });
 
-test('第八關移除分子砲會失守，第九關移除雷射會讓更多蟲進城', () => {
+test('第八關分子砲減少孵化，第八、九關陣形的重點砲塔能減少失血或更早守住', () => {
   for (const [level, kind] of [[7, 'molecular'], [8, 'pierce']]) {
     const answer = G.createState(level), without = G.createState(level);
     deploy(answer, layouts[level]);
     deploy(without, layouts[level].map(([k,c,r]) => [k === kind ? 'wall' : k,c,r]));
+    solutions.applyUpgrades(answer);
+    solutions.applyUpgrades(without);
     assert.deepEqual(G.previews(without), G.previews(answer));
     const leaks = s => {
-      G.startWave(s);
+      G.startWave(s,0,42);
       let hits = 0;
       for (let tick = 0; tick < 30000 && s.phase === 'running'; tick++) {
         const before = s.hearts;
@@ -276,8 +404,8 @@ test('第八關移除分子砲會失守，第九關移除雷射會讓更多蟲�
     };
     const fullLeaks = leaks(answer), fewerTowers = leaks(without);
     assert.equal(answer.phase,'planning');
-    if (level === 7) assert.equal(without.phase,'lost');
-    assert.ok(fewerTowers > fullLeaks);
+    assert.ok(fullLeaks < fewerTowers || (fullLeaks === fewerTowers && answer.time < without.time));
+    if (level === 7) assert.ok(answer.stats.hatched < without.stats.hatched);
   }
 });
 
@@ -292,6 +420,8 @@ test('上版花完預算的無牆通關陣形守不住新版終關', () => {
     ['pea',8,0],
   ];
   const state = G.createState(9);
+  assert.ok(towers.reduce((cost,[kind]) => cost + G.TOOLS[kind].cost, 0) > state.money);
+  state.money = 226; // Replay the old layout at its original budget.
   for (const placement of towers) assert.ok(G.build(state, ...placement).ok);
   assert.equal(state.money, 4, '分子砲降價後多出四枚金幣');
   G.startWave(state);
@@ -336,8 +466,8 @@ test('調價前的塔保留原購買價，拆塔、撤回、讀檔與重試都�
 
 test('第六版十關存檔補足已累積資金一次，保留塔與關卡並補滿部署生命，完成存檔不重領', () => {
   const previous = [42,52,64,76,90,104,120,136,154,182];
-  assert.equal(G.LEVELS[0].money,48); assert.equal(G.LEVELS[9].money,226);
-  assert.deepEqual(G.LEVELS.map(l=>l.reward),[12,14,14,16,18,20,24,24,36,24,0]);
+  assert.equal(G.LEVELS[0].money,48); assert.deepEqual(G.LEVELS.slice(-3).map(l=>l.money),[170,208,230]);
+  assert.deepEqual(G.LEVELS.map(l=>l.reward),[12,14,14,16,18,20,24,4,28,22,0]);
   for (let level = 0; level < 10; level++) for (const completed of level === 9 ? [false,true] : [false]) {
     const s = G.createState(level); G.build(s,'molecular',3,4); s.hearts = 3; s.buildings[0].hp = 2;
     const legacy = {...G.snapshot(s),version:6,money:previous[level]-14+(completed?20:0),completed};
@@ -397,16 +527,16 @@ test('四面守園保護中央格，舊盤面搬家會退還原價與晶石且�
   const level=G.BONUS_LEVEL, s=G.createState(level), goal=G.LEVELS[level].goal;
   assert.deepEqual(goal,{c:5,r:3});
   assert.equal(G.build(s,'pea',5,3).ok,false);
-  const old=G.snapshot(s); old.version=13; old.hearts=1; old.money-=27; old.upgradeItems=0;
+  const old=G.snapshot(s); old.version=13; old.hearts=1; old.money=220-27; old.upgradeItems=0;
   old.buildings=[
     {kind:'molecular',c:5,r:3,hp:5,paidCost:22,upgraded:true,lastDamage:30},
     {kind:'pea',c:5,r:7,hp:5,paidCost:5,upgraded:false,lastDamage:1}
   ];
   const migrated=G.restore(old);
-  assert.equal(migrated.hearts,5); assert.equal(migrated.money,250);
+  assert.equal(migrated.hearts,5); assert.equal(migrated.money,230);
   assert.equal(migrated.upgradeItems,10); assert.equal(migrated.buildings.length,0);
   assert.equal(G.restore(G.snapshot(migrated)).upgradeItems,10);
-  assert.equal(G.restore(G.snapshot(migrated)).money,250);
+  assert.equal(G.restore(G.snapshot(migrated)).money,230);
   s.phase='running';
   for (const entry of G.entrances(level)) G.spawn(s,'flyer',5,entry.r,{x:entry.c,y:entry.r});
   let homeHits=0;

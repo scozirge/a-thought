@@ -24,7 +24,8 @@
         <div class="settings-options">
           <label><input id="route-toggle" type="checkbox" checked autocomplete="off">顯示蟲蟲進攻路線</label>
           <label><input id="enemy-health" type="checkbox" checked autocomplete="off">顯示蟲蟲血量</label>
-          <p class="status-help">冰凍累積 5 次會結凍 1 秒，解凍時清空。燃燒中再次點燃會立刻扣 1 血，並刷新時間。</p>
+          <p class="status-help">冰凍第 1～6 層依序變慢 10%、12%、14%、16%、18%、20%。第 7 層凍住 1.5 秒，蟲王凍住 0.5 秒。緩速消退時層數歸零。解凍後 1 秒內不會變慢或再結凍，之後才能重新疊冰。</p>
+          <p class="status-help">燃燒中再次點燃會立刻扣 1 血，並刷新時間。</p>
         </div>
       </details>
     </header>
@@ -35,6 +36,7 @@
           <g id="home-layer" pointer-events="none"></g><g id="building-layer" pointer-events="none"></g><g id="bug-layer" pointer-events="none"></g>
           <g id="shot-layer" pointer-events="none"></g><g id="effects-layer" pointer-events="none"></g><g id="health-layer" pointer-events="none"></g>
           <g id="hover-layer" pointer-events="none"></g><g id="hit-layer" role="grid" aria-label="建造格子"></g>
+          <g id="entrance-layer" role="group" aria-label="蟲蟲入口"></g>
         </svg>
     </section>
 
@@ -42,14 +44,29 @@
       <div id="tools" class="tools"></div>
       <div class="edit-controls">
         <button id="undo" class="icon-button" aria-label="退一步" data-icon="undo" disabled></button>
-        <button id="reset" class="icon-button" aria-label="重試這關" data-icon="reset"></button>
+        <button id="reset" class="icon-button" type="button">重置</button>
         <button hidden id="solution" class="icon-button" aria-label="清空並部署本關解答，重設本關預算" title="重設本關，放上預算內的解答">解答</button>
       </div>
-      <button id="action" class="action-button" aria-label="開始" data-icon="play"></button>
+      <div class="round-actions">
+        <button id="replay" class="action-button" type="button" hidden>此關再玩一次</button>
+        <button id="action" class="action-button" aria-label="開始" data-icon="play"></button>
+      </div>
     </div>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
   </main>
   <div id="tower-info" class="tower-info" role="tooltip" hidden></div>
+  <dialog id="entry-guide" aria-labelledby="entry-guide-title" aria-describedby="entry-guide-location">
+    <header class="guide-heading">
+      <div><h2 id="entry-guide-title">入口蟲蟲</h2><p id="entry-guide-location"></p></div>
+      <button type="button" id="entry-guide-close" aria-label="關閉入口蟲蟲" autofocus>×</button>
+    </header>
+    <div id="entry-cards"></div>
+    <nav id="entry-pages" aria-label="蟲蟲圖鑑分頁" hidden>
+      <button id="entry-prev" type="button" aria-label="上一頁" aria-controls="entry-cards">‹</button>
+      <span id="entry-page-count" role="status"></span>
+      <button id="entry-next" type="button" aria-label="下一頁" aria-controls="entry-cards">›</button>
+    </nav>
+  </dialog>
 
   <div id="building-menu" tabindex="-1" role="group" aria-labelledby="building-name" hidden>
     <strong id="building-name"></strong>
@@ -61,6 +78,7 @@
         <span id="fusion-label"></span>
         <div id="fusion-recipes"></div>
       </div>
+      <button id="edit-move" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M8 6l4-4 4 4M8 18l4 4 4-4M6 8l-4 4 4 4M18 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>移動</button>
       <button id="edit-remove"><span data-icon="erase"></span>拆除</button>
     </div>
   </div>
@@ -76,8 +94,12 @@
     <div id="win-crystal" class="victory-loot" hidden></div>
     <p id="bonus-invite" hidden></p>
     <div id="result-hearts" class="result-hearts"></div>
+    <section id="castle-hits" aria-labelledby="castle-hits-title" hidden>
+      <h3 id="castle-hits-title">讓城堡扣血的蟲</h3>
+      <ol id="castle-hit-list"></ol>
+    </section>
     <button id="result-primary" class="action-button" autofocus>再玩一次</button>
-    <button id="result-secondary" class="secondary-button">再玩一次</button>
+
   </dialog>
   <script src="core.js"></script><script src="solutions.js"></script><script src="art.js"></script><script src="app.js"></script>
 </body>

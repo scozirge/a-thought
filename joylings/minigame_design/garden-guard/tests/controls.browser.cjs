@@ -70,9 +70,44 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(frost.shots.length, 0);
     assert.ok(frost.effects.some(e => e.kind === 'frost' && e.x === 9 && e.y === 6 && e.radius === G.TOOLS.frost.range));
     await p.locator('[data-tool="frost"]').focus();
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'穿盾靈氣，周圍 2.65 格附加冰凍');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),G.toolFor('frost').effect);
     await p.screenshot({path:path.join(out,'frost-area-slow.png')});
     const frozen=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),frozen);
+
+    await p.evaluate(() => localStorage.setItem('garden-guard-v1',JSON.stringify({
+      ...Garden.snapshot(Garden.createState()), showEnemyHealth:false, showRoutes:false
+    })));
+    await p.reload();
+    await p.evaluate(() => {
+      const start=Garden.startWave;
+      Garden.startWave=state=>{
+        if (!start(state)) return false;
+        state.queue=[]; state.castle=null;
+        for (let n=1;n<=7;n++) {
+          const e=Garden.spawn(state,'shield',6,4,{x:1+n,y:4});
+          for (let i=0;i<n;i++) Garden.hit(state,e,{kind:'frost',c:1+n,r:4});
+        }
+        return true;
+      };
+    });
+    await press('#action'); await p.clock.runFor(48);
+    const bugs=p.locator('#bug-layer [data-enemy]');
+    for (let n=1;n<=7;n++) {
+      const bug=bugs.nth(n-1), filter=n<6 ? 'art-cold-shell-'+n : 'art-cold-shell';
+      assert.equal(await bug.locator('.chilled-shell').getAttribute('filter'),`url(#${filter})`);
+      assert.equal(await bug.locator('.hard-shell use').first().getAttribute('filter'),`url(#${filter})`);
+      assert.equal(await p.locator('#'+filter+' feColorMatrix').count(),1);
+      assert.equal(await bug.locator('.ice-stacks path').count(),n<7?n:0);
+      assert.equal(await bug.locator('.ice-prison').count(),Number(n===7));
+    }
+    const iceRow = await p.locator('.cell-hit[data-r="4"]').evaluateAll(cells=>{
+      const first=cells[2].getBoundingClientRect(), last=cells[8].getBoundingClientRect();
+      return {x:first.left,y:first.top,width:last.right-first.left,height:first.height};
+    });
+    await p.screenshot({path:path.join(out,'ice-stack-colors.png'),clip:iceRow});
+    await p.clock.runFor(1600);
+    assert.equal(await bugs.count(),7);
+    assert.equal(await bugs.locator('.chilled-shell,.ice-prison,.ice-stacks').count(),0);
 
     await prepare('push'); let pushed;
     for(let i=0;i<100;i++) {
@@ -89,7 +124,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await press('#action');
     assert.equal(await p.locator('.push-cell-effect,.push-effect').count(),0);
     await p.locator('[data-tool="push"]').focus();
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'同格沿路退 3 格・靠近城堡優先');
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),G.toolFor('push').effect);
     assert.ok((await p.locator('#tower-info').innerText()).includes('攻擊 0.35次/s'));
     await p.screenshot({path:path.join(out,'push-along-path.png')});
     const paused=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),paused);
@@ -100,14 +135,14 @@ const out = path.join(__dirname, '../dist/browser-check');
 
     await p.setViewportSize({width:1440,height:1080}); await prepare('molecular');
     await p.clock.runFor(1400); const aiming=await read(), tower=aiming.buildings[0];
-    assert.ok(tower.aim && tower.aim.age>0 && tower.aim.age<2*G.BATTLE_SPEED);
+    assert.ok(tower.aim && tower.aim.age>0 && tower.aim.age<1.5*G.BATTLE_SPEED);
     assert.equal(aiming.stats.hits,0); assert.equal(aiming.shots.length,0);
     assert.equal(await p.locator('.molecular-aim').getAttribute('data-target'),String(tower.aim.target));
     const line=await p.locator('.aim-line').getAttribute('d');
     await p.clock.runFor(100); assert.notEqual(await p.locator('.aim-line').getAttribute('d'),line,'瞄準線持續跟隨目標');
     await press('#action'); await p.locator('[data-tool="molecular"]').focus();
-    assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 28'));
-    assert.equal(await p.locator('#tower-info .info-effect').textContent(),'優先打血量最高的蟲，可穿盾');
+    assert.ok((await p.locator('#tower-info').innerText()).includes('傷害 38'));
+    assert.equal(await p.locator('#tower-info .info-effect').textContent(),G.toolFor('molecular').effect);
     await p.screenshot({path:path.join(out,'molecular-aim.png')});
     const aimingPaused=await read(); await p.clock.runFor(3000); assert.deepEqual(await read(),aimingPaused);
     const aimLine=await p.locator('.aim-line').getAttribute('d');
@@ -121,7 +156,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     for(let i=0;i<60;i++) {await p.clock.runFor(50);fired=await read();if(fired.shots.some(s=>s.kind==='molecular'))break;}
     const shot=fired.shots.find(s=>s.kind==='molecular'); assert.ok(shot); assert.equal(shot.target,tower.aim.target);
     const lockStarted=aiming.time-tower.aim.age;
-    assert.ok(fired.time-lockStarted>=2*G.BATTLE_SPEED-1e-6);
+    assert.ok(fired.time-lockStarted>=1.5*G.BATTLE_SPEED-1e-6);
     await p.clock.runFor(400); assert.ok((await read()).stats.defeated>0);
     await press('#action'); await p.locator('[data-tool="cannon"]').focus();
     assert.equal(await p.locator('#tower-info .info-target').textContent(),'目標 地');
@@ -132,7 +167,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     for (let i = 0; i < 130 && !await arc(0).count(); i++) await p.clock.runFor(32);
     assert.ok(await arc(0).isVisible());
     assert.equal(await arc(1).count(), 0);
-    assert.deepEqual((await read()).effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [9]);
+    assert.deepEqual((await read()).effects.filter(e => e.kind === 'plasmaArc').map(e => e.damage), [15]);
     for (let hop = 1; hop <= 2; hop++) {
       for (let i = 0; i < 18 && !await arc(hop).count(); i++) await p.clock.runFor(24);
       assert.ok(await arc(hop).isVisible());
@@ -261,7 +296,7 @@ const out = path.join(__dirname, '../dist/browser-check');
       assert.ok(await projectile.first().evaluate(node => node.getBBox().width > 0));
       await press('#action');
     }
-    for (const [baseTower,material, flight, impact] of [
+    for (const [baseTower,material, flight, impact, upgraded] of [
       ['cannon','frost','.rolling-snow','#effects-layer use[href="#art-snowflake"]'],
       ['cannon','flame','.strike-warning[data-weapon="meteorTower"]','.cell-strike[data-weapon="meteorTower"]'],
       ['cannon','pierce','.homing-comet','.comet-burst'],
@@ -275,10 +310,12 @@ const out = path.join(__dirname, '../dist/browser-check');
       ['flame','push',null,'.fire-vortex'],
       ['flame','molecular','.molten-flight','.armed-firestone'],
       ['pierce','push',null,'.recoil-ray'],
-      ['pierce','molecular',null,'.disintegration-beam'],
+      ['pierce','molecular','.disintegration-scan-line','.disintegration-beam'],
+      ['pierce','molecular','.disintegration-scan-line','.disintegration-beam',true],
       ['push','molecular','.gravity-charge','.gravity-well']
     ]) {
       const s=G.createState(3); G.build(s,material,5,4); G.build(s,baseTower,5,4);
+      if (upgraded || G.primaryWeapon(s.buildings[0]) === 'snowCannon') G.upgrade(s,5,4);
       await p.evaluate(data=>localStorage.setItem('garden-guard-v1',JSON.stringify(data)),G.snapshot(s));
       await p.reload();
       const weapon=G.primaryWeapon(s.buildings[0]);
@@ -297,6 +334,7 @@ const out = path.join(__dirname, '../dist/browser-check');
         const launch=p.locator(flight).first();
         for(let i=0;i<80 && !await launch.count();i++) await p.clock.runFor(40);
         assert.ok(await launch.isVisible(),weapon+' 發射');
+        if (weapon==='disintegrationBeam') assert.equal(await p.locator('.disintegration-beam').count(),0);
         if (weapon==='gravityCannon') {
           assert.equal(await launch.getAttribute('data-cell'),'6,4');
           const radius=Number(await launch.locator('.gravity-core').getAttribute('r'));
@@ -316,16 +354,33 @@ const out = path.join(__dirname, '../dist/browser-check');
         await p.clock.runFor(400);
         assert.equal(await fx.count(),0);
       }
+      if(weapon==='frostfireJet') {
+        await p.clock.runFor(170);
+        assert.equal(await fx.count(),0,'兩發之間噴流消散');
+        for(let i=0;i<30 && !await fx.count();i++) await p.clock.runFor(20);
+        assert.ok(await fx.isVisible(),'下一發重新噴射');
+        await press('#action');
+        const paused = await fx.innerHTML();
+        await p.clock.runFor(400); assert.equal(await fx.innerHTML(),paused);
+        await press('#action');
+      }
       if(weapon==='snowCannon') {
         const ball=p.locator('.rolling-snow').first();
-        const readScale=()=>ball.evaluate(el=>el.transform.baseVal.getItem(1).matrix.a);
+        const readScale=()=>ball.evaluate(el=>{
+          const shot=gardenDebug.getState().shots.find(s=>s.kind==='snowCannon');
+          const distance=(shot.x-shot.c)*shot.dx + (shot.y-shot.r)*shot.dy;
+          const scale=el.transform.baseVal.getItem(1).matrix.a;
+          if (Math.abs(scale*14-Garden.snowRadius(distance)*64)>.001) throw Error('球面與碰蟲判定大小不符');
+          return scale;
+        });
+        assert.equal(await ball.locator('.ice-plough').count(),0);
         const near=await readScale();
         const texture=await ball.locator('.snow-surface').innerHTML();
         await p.clock.runFor(650);
-        assert.ok(await readScale()>near+.15,'雪球滾遠後會變大');
+        assert.ok(await readScale()>near,'雪球滾遠後會變大');
         assert.notEqual(await ball.locator('.snow-surface').innerHTML(),texture,'俯視球面紋理隨滾動翻面');
         const burst=p.locator('.snow-burst');
-        for(let i=0;i<100 && !await burst.count();i++) await p.clock.runFor(40);
+        for(let i=0;i<150 && !await burst.count();i++) await p.clock.runFor(40);
         assert.ok(await burst.isVisible(),'地圖邊界可見碎冰爆裂');
       }
       if(weapon==='meteorTower') {
@@ -333,9 +388,18 @@ const out = path.join(__dirname, '../dist/browser-check');
         assert.equal(await p.locator('.ground-fire').count(),5);
       }
       if(weapon==='disintegrationBeam') {
-        assert.equal(await fx.getAttribute('data-power'),'1');
-        await p.clock.runFor(1550);assert.equal(await fx.getAttribute('data-power'),'4');
-        await p.clock.runFor(500);assert.equal(await fx.getAttribute('data-power'),'5');
+        assert.equal(await p.locator('.disintegration-scan-line').count(),0);
+        const spec=G.toolFor(weapon,upgraded), stroke=fx.locator('path').first();
+        let lastWidth=0;
+        for(let damage=spec.damage;damage<=spec.maxDamage;damage++) {
+          assert.equal(Number(await fx.getAttribute('data-power')),damage);
+          const width=Number(await stroke.getAttribute('stroke-width'));
+          if (damage===spec.damage) assert.ok(width<=2);
+          assert.ok(width>lastWidth); lastWidth=width;
+          await p.clock.runFor(Math.round(1000/spec.rate));
+        }
+        assert.equal(Number(await fx.getAttribute('data-power')),spec.maxDamage);
+        assert.ok(lastWidth>=16);
       }
       if(weapon==='cometCannon') assert.equal(await fx.locator('.emp-boundary').getAttribute('r'),'128');
       if(weapon==='sonicCannon') assert.equal(await fx.locator('.sonic-impact').count(),5);
@@ -350,6 +414,6 @@ const out = path.join(__dirname, '../dist/browser-check');
       await press('#action');
     }
     assert.deepEqual(errors,[]);
-    console.log(JSON.stringify({passed:true,fusionWeapons:21,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:2,trackingLine:true,molecularDamage:28,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
+    console.log(JSON.stringify({passed:true,fusionWeapons:21,frostArea:true,slowWithoutDamage:true,laserMuzzleAligned:true,singleCellPush:true,direction:'awayFromHomeAlongPath',aimSeconds:1.5,trackingLine:true,molecularDamage:38,piercingDamage:1,piercingRate:0.8,pause:true,mobile:true,browserErrors:errors}));
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

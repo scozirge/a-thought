@@ -61,7 +61,8 @@ const out = path.join(__dirname, '../dist/browser-check');
     const before=(await read()).buildings.map(b=>b.id); await press('[data-tool="wall"]'); await press(cell(7,0)); assert.deepEqual((await read()).buildings.map(b=>b.id),before);
     await press('#action'); const paused=await read(); await p.clock.runFor(10000); assert.deepEqual(await read(),paused);
     await press('#action'); await finish(); const cleared=await read();
-    assert.equal(cleared.phase,'planning'); assert.equal(cleared.level,1); assert.equal(cleared.hearts,5);
+    assert.equal(cleared.phase,'cleared'); assert.equal(cleared.level,0); assert.ok(cleared.hearts>0);
+    assert.equal(await p.locator('#level-select').inputValue(),'0');
     assert.equal(cleared.money,initial.money+G.LEVELS[0].reward);
     assert.deepEqual(cleared.buildings.map(({id,kind,c,r,hp})=>({id,kind,c,r,hp})),initial.buildings.map(({id,kind,c,r,hp})=>({id,kind,c,r,hp})));
     const result = p.getByRole('dialog', {name:'第 1 關勝利！'});
@@ -76,7 +77,13 @@ const out = path.join(__dirname, '../dist/browser-check');
     await p.setViewportSize({width:320,height:640});
     const box = await result.boundingBox();
     assert.ok(box.x >= 0 && box.x + box.width <= 320 && box.y >= 0 && box.y + box.height <= 640);
-    await result.getByRole('button', {name:'部署第 2 關'}).click();
+    await result.getByRole('button', {name:'繼續',exact:true}).click();
+    assert.ok(await result.isHidden()); assert.ok(await p.locator('#lesson').isHidden());
+    assert.equal(await p.locator('#level-select').inputValue(),'0');
+    assert.equal(await p.locator('#action').textContent(),'下一關 →');
+    assert.ok(await p.locator('#replay').isVisible());
+    await p.reload(); assert.ok(await result.isHidden()); assert.equal((await read()).phase,'cleared');
+    await press('#action');
     assert.equal(await p.locator('#lesson-title').innerText(), '用水晶升級建築'); await press('#lesson-close');
     await p.setViewportSize({width:1440,height:1080});
     await p.reload();
@@ -88,7 +95,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     const dealt = cleared.buildings.find(b => b.lastDamage > 0);
     await p.locator(cell(dealt.c,dealt.r)).focus();
     assert.equal(await p.locator('#tower-info .last-damage').textContent(), '上局傷害 '+dealt.lastDamage+' 點');
-    assert.equal(await p.locator('#result').getAttribute('open'),null); assert.equal(await p.locator('#action').textContent(),'下一關'); assert.equal(await p.locator('#level-select').inputValue(),'1');
+    assert.equal(await p.locator('#result').getAttribute('open'),null); assert.equal(await p.locator('#action').textContent(),'開始'); assert.equal(await p.locator('#level-select').inputValue(),'1');
     assert.equal(await p.locator('#crystals').isVisible(),true);
     await p.screenshot({path:path.join(out,'campaign-next-deployment.png')});
     const tower=cleared.buildings.find(b=>b.kind!=='wall');
@@ -113,8 +120,8 @@ const out = path.join(__dirname, '../dist/browser-check');
     await hpSetting.check();
     assert.ok(await p.locator('#health-layer use').count() > 0);
     await finish();
-    assert.equal(await hpSetting.isChecked(), false, '自然過關會回到下一關的預設');
-    assert.equal((await read()).level,2); assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
+    assert.equal(await hpSetting.isChecked(), true, '勝利後仍停在剛守住的關卡');
+    assert.equal((await read()).level,1); assert.equal((await read()).phase,'cleared');
     assert.ok(await p.getByRole('dialog', {name:'第 2 關勝利！'}).isVisible());
     const second = await read();
     await p.keyboard.press('Escape');
@@ -122,11 +129,17 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await p.locator('#result').isVisible(), false);
     assert.equal((await read()).upgradeItems,second.upgradeItems);
     assert.equal((await read()).money,second.money);
+    await press('#action'); assert.equal((await read()).level,2); assert.equal((await read()).phase,'planning');
+    assert.equal((await read()).hearts,5); assert.equal(await hpSetting.isChecked(),false);
     console.log('已驗證：前兩關連打、固定獎金、保留建築、部署等待、拆塔退款與重新整理。');
 
     // Ground-only towers see flying enemies in range and hold their fire.
     const air=G.createState(4); G.build(air,'cannon',9,3); G.build(air,'flame',9,4);
-    await prepare(G.snapshot(air)); await press('#action'); await p.clock.runFor(1000); await press('#action');
+    await prepare(G.snapshot(air));
+    await p.evaluate(()=>{const start=Garden.startWave;Garden.startWave=(s,...args)=>{
+      Garden.startWave=start; const ok=start(s,...args); if(ok) s.queue=s.queue.filter(e=>e.kind==='flyer');return ok;
+    };});
+    await press('#action'); await p.clock.runFor(1000); await press('#action');
     const flying=await read(); assert.ok(flying.enemies.length>=3&&flying.enemies.every(e=>e.kind==='flyer'));
     assert.equal(flying.stats.hits,0); assert.equal(flying.shots.length,0); assert.equal(flying.fires.length,0);
     await p.locator('#level-select').selectOption('7'); assert.equal((await read()).level,7); assert.equal((await read()).money,G.LEVELS[7].money); assert.equal((await read()).buildings.length,0);
@@ -146,22 +159,43 @@ const out = path.join(__dirname, '../dist/browser-check');
     assert.equal(await hpSetting.isChecked(), false, '直接選到終關採用關卡預設');
     await deploy(layouts[9]);
     const answer = require('../solutions').create(9);
+    for (const b of answer.buildings.filter(b=>b.fusionKind)) {
+      await press(cell(b.c,b.r)); await press('#fusion-recipes [data-fuse="'+b.fusionKind+'"]'); await p.keyboard.press('Escape');
+    }
     for (const b of answer.buildings.filter(b=>b.upgraded)) {
       await press(cell(b.c,b.r)); await press('#edit-grade'); await p.keyboard.press('Escape');
     }
     if (answer.castleUpgraded) { await press(cell(0,3)); await press('#edit-grade'); await press('#edit-close'); }
     assert.equal((await read()).upgradeItems,answer.upgradeItems);
+    const finalOpening = await read();
+    await p.evaluate(()=>{const start=Garden.startWave; Garden.startWave=s=>start(s,0,42);});
     await press('#action');
     await p.clock.runFor(7000); await p.screenshot({path:path.join(out,'campaign-final-battle.png')}); await finish();
     assert.equal((await read()).phase,'won'); assert.ok((await read()).hearts>0); assert.equal((await read()).completed,true);
     assert.equal(await p.locator('#result-title').textContent(),'第 10 關勝利！');
-    assert.match(await p.locator('#win-crystal').innerText(), /金幣\s+\+24/);
+    assert.match(await p.locator('#win-crystal').innerText(), /金幣\s+\+22/);
     await p.screenshot({path:path.join(out,'campaign-complete.png')});
     const finalMoney=(await read()).money; await p.reload(); assert.equal((await read()).phase,'won'); assert.equal((await read()).money,finalMoney);
-    assert.equal(await p.locator('#result-primary').textContent(), '挑戰第 11 關');
+    assert.equal(await p.locator('#result-primary').textContent(), '繼續');
+    const victorySave = await p.evaluate(()=>JSON.parse(localStorage.getItem('garden-guard-v1')));
     await press('#result-primary');
+    await p.setViewportSize({width:320,height:640});
+    const replayButton = p.getByRole('button',{name:'此關再玩一次',exact:true});
+    const nextButton = p.getByRole('button',{name:'下一關',exact:true});
+    for (const button of [replayButton,nextButton]) {
+      const box = await button.boundingBox();
+      assert.ok(box && box.x >= 0 && box.x+box.width <= 320 && box.y+box.height <= 640);
+    }
+    await replayButton.click();
+    const again = await read();
+    assert.equal(again.level,9); assert.equal(again.phase,'planning'); assert.equal(again.money,finalOpening.money);
+    assert.deepEqual(again.buildings.map(b=>[b.kind,b.c,b.r,b.upgraded]),finalOpening.buildings.map(b=>[b.kind,b.c,b.r,b.upgraded]));
+    await prepare(victorySave);
+    if (await p.locator('#result').isVisible()) await press('#result-primary');
+    await nextButton.click();
+    await p.setViewportSize({width:1440,height:1080});
     const bonus = await read();
-    assert.equal(bonus.level, 10); assert.equal(bonus.money, 250); assert.equal(bonus.hearts, 6);
+    assert.equal(bonus.level, 10); assert.equal(bonus.money, 230); assert.equal(bonus.hearts, 6);
     const castlePosition = await p.locator('.garden-home').evaluate(node => {
       const { e, f } = node.transform.baseVal.getItem(0).matrix;
       return [e, f];
@@ -179,7 +213,7 @@ const out = path.join(__dirname, '../dist/browser-check');
     await prepare({...G.snapshot(old),version:6,money:76});
     assert.equal((await read()).money,90); assert.equal((await read()).hearts,5); assert.equal(await p.locator('#health').textContent(),'5'); assert.equal((await read()).buildings.length,1);
     await p.reload(); assert.equal((await read()).money,90,'新版預算只調整一次');
-    await p.locator(cell(3,4)).focus(); assert.equal(await p.locator('#tower-info .info-effect').textContent(),'優先打血量最高的蟲，可穿盾');
+    await p.locator(cell(3,4)).focus(); assert.equal(await p.locator('#tower-info .info-effect').textContent(),G.toolFor('molecular').effect);
     assert.ok(Math.abs(Number(await p.locator('#range-layer circle').getAttribute('r'))-6.6*64)<1e-9);
     await press('[data-tool="pierce"]'); await p.locator(cell(3,5)).focus();
     assert.ok(Math.abs(Number(await p.locator('#range-layer circle').getAttribute('r'))-6.2*64)<1e-9);
@@ -199,14 +233,29 @@ const out = path.join(__dirname, '../dist/browser-check');
       await p.clock.runFor(800);
       assert.ok(await p.locator('#result').evaluate(el => el.open));
       assert.equal(await p.locator('#win-crystal').isVisible(), false);
+      const hits=(await read()).homeHits;
+      assert.equal(hits.length,5);
+      const hitRows=p.locator('#castle-hit-list li');
+      assert.deepEqual(await hitRows.locator('span:last-child').allTextContents(),hits.map(kind=>G.ENEMIES[kind].name));
+      assert.deepEqual(await hitRows.locator('.hit-number').allTextContents(),hits.map((_,i)=>String(i+1)));
+      assert.equal(await p.locator('#castle-hit-list .bug-icon').count(),hits.length);
+      if (retryBy==='button') {
+        for(const [width,height] of [[320,480],[480,320]]){
+          await p.setViewportSize({width,height});
+          assert.ok(await p.locator('#result').evaluate(el=>el.scrollHeight<=el.clientHeight+1 && el.scrollWidth<=el.clientWidth+1));
+          const button=await p.locator('#result-primary').boundingBox();
+          assert.ok(button.y>=0 && button.y+button.height<=height);
+        }
+        await p.setViewportSize({width:1440,height:1080});
+      }
       assert.equal(await p.locator('#result-secondary').isVisible(),false);
       if (retryBy==='reload') await p.reload();
       else if (retryBy==='escape') {
         await p.keyboard.press('Escape');
-        await p.getByRole('button', {name:'再試一次', exact:true}).click();
+        await p.getByRole('button', {name:'此關再玩一次', exact:true}).click();
       } else await press('#result-primary');
       assert.equal((await read()).phase,'planning'); assert.equal((await read()).hearts,5);
-      const back=await read();
+      const back=await read(); assert.deepEqual(back.homeHits,[]);
       assert.equal(back.level,3);assert.equal(back.money,deployment.money);
       assert.ok(back.buildings.some(b=>b.kind==='wall' && b.c===5 && b.r===4));
       assert.equal(await p.locator('#result').evaluate(el => el.open), false);

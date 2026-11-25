@@ -40,6 +40,35 @@ async function checkMenuShortages(browser) {
     assert.deepEqual(await snapshot(),before);
     assert.ok(await menu.isVisible());
     await cell(6,6).click(); assert.ok(await menu.isHidden());
+    await cell(5,4).click(); await page.locator('#edit-grade').click();
+    await page.locator('#edit-move').click();
+    await cell(2,2).click();
+    assert.equal(await page.locator('#status').innerText(),'請選空格');
+    await cell(6,4).hover();
+    assert.ok(await page.locator('#hover-layer .fusion-tower').isVisible());
+    const original=await snapshot();
+    await cell(6,4).click();
+    assert.deepEqual((await snapshot()).buildings[0],{...original.buildings[0],c:6});
+    assert.equal(await page.locator('#building-layer [data-c="6"][data-r="4"][data-upgraded="true"]').count(),1);
+    await page.locator('#undo').click(); assert.deepEqual(await snapshot(),original);
+    await cell(5,4).click(); await page.locator('#edit-move').click();
+    await page.keyboard.press('Escape'); assert.equal(await page.locator('#hover-layer text').count(),0);
+    await cell(5,4).click(); await page.locator('#edit-move').click();
+    await page.keyboard.press('ArrowRight'); await page.keyboard.press('Enter');
+    await page.reload(); assert.deepEqual((await snapshot()).buildings[0],{...original.buildings[0],c:6});
+    await cell(0,3).click(); assert.ok(await page.locator('#edit-move').isHidden());
+    await page.locator('#edit-close').click();
+    const reset=page.locator('#reset'), action=page.locator('#action'), beforeBattle=await snapshot();
+    assert.equal(await reset.innerText(),'重置');
+    await action.click(); assert.equal(await reset.innerText(),'暫停');
+    await reset.click(); assert.equal(await reset.innerText(),'放棄');
+    assert.equal(await page.evaluate(()=>gardenDebug.getState().phase),'paused');
+    await action.click(); assert.equal(await reset.innerText(),'暫停');
+    await reset.click(); await reset.click();
+    assert.equal(await reset.innerText(),'重置');
+    const restored=await snapshot();
+    assert.deepEqual(restored.buildings,beforeBattle.buildings);
+    for (const k of ['level','money','hearts','upgradeItems','fusionHammers']) assert.equal(restored[k],beforeBattle[k]);
   } finally { await page.close(); }
 }
 
@@ -80,13 +109,19 @@ async function checkFusionArt(browser) {
         await cell.focus();
         assert.equal(await page.locator('#tower-info .info-ingredients').innerText(),`（${G.TOOLS[recipe.kind].name}＋${G.TOOLS[recipe.fusionKind].name}）`);
         const spec=G.toolFor(weapon), info=page.locator('#tower-info');
+        assert.equal(await info.locator('.info-effect').first().innerText(),spec.effect);
+        assert.match(await info.locator('.info-distance').first().innerText(),/射程 .*[\d]+.*格/);
+        if (weapon === 'tacticalAir') assert.deepEqual(await info.locator('.info-distance').allInnerTexts(),[
+          '射程 4.1 格','射程 3.8 格 · 爆炸半徑 1.25 格'
+        ]);
+        if (spec.stunSeconds) assert.ok((await info.innerText()).includes(`暈眩 ${spec.stunSeconds} 秒`));
         if (spec.aimSeconds) {
           const matches=(await info.innerText()).match(/瞄準 [\d.]+ 秒/g);
           assert.deepEqual(matches,[`瞄準 ${spec.aimSeconds} 秒`]);
         }
         if (spec.vortex) {
           assert.ok((await info.innerText()).includes(spec.vortex==='ice' ? '每 3 秒召喚一次' : '每 2.5 秒召喚一次'));
-          assert.match(await info.locator('.info-effect').innerText(),new RegExp('遊走 '+spec.lifetime+' 秒'));
+          assert.match(await info.locator('.info-effect').innerText(),spec.vortex==='ice' ? /冰龍捲/ : /火龍捲/);
           assert.doesNotMatch(await info.locator('.info-effect').innerText(),/召喚/);
         }
         seen.add(preview);
@@ -207,7 +242,7 @@ async function checkFusionArt(browser) {
     assert.equal(await p.locator('#tower-info .info-ingredients').innerText(),'（城堡＋升級水晶）');
     await press(cell(castle.c,castle.r)); await press('#edit-grade'); await p.keyboard.press('Escape');
     assert.equal((await read()).upgradeItems,9); assert.equal(await p.locator('#castle-bow use').count(),1);
-    assert.equal(await p.locator('#action').textContent(), '下一關');
+    assert.equal(await p.locator('#action').textContent(), '開始');
     assert.doesNotMatch(await p.locator('body').innerText(), /移動路徑|盾甲蟲|從下方打/);
     for (const width of [1440,900,390,320]) {
       await p.setViewportSize({width,height:900});
@@ -226,12 +261,13 @@ async function checkFusionArt(browser) {
     await p.screenshot({path:path.join(out,'campaign-ui-zoom.png'),fullPage:true});
     // Exercise the unlock and recovery flow using an isolated third-stage clear.
     const won = G.createState(2); assert.ok(G.build(won,'pea',5,4).ok);
-    G.startWave(won); won.queue = []; G.step(won,.01);
+    G.startWave(won); won.queue = []; G.step(won,.01,true);
     await p.evaluate(data => localStorage.setItem('garden-guard-v1', JSON.stringify(data)), G.snapshot(won));
     await p.reload();
     assert.match(await p.locator('#win-crystal').innerText(), /解鎖融合槌/);
     assert.equal(await p.locator('#lesson').isVisible(), false);
-    await press('#result-primary'); assert.match(await p.locator('#lesson-title').innerText(), /融合槌/);
+    await press('#result-primary'); assert.ok(await p.locator('#lesson').isHidden());
+    await press('#action'); assert.match(await p.locator('#lesson-title').innerText(), /融合槌/);
     assert.equal(await p.locator('#lesson figure').count(), 3);
     await press('#lesson-close'); await p.reload();
     const target = cell(5,4);

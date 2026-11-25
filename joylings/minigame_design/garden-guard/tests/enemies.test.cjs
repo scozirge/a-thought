@@ -31,6 +31,70 @@ test('金龜蟲蓄力時不扣牆血，撞擊特效與實際扣血出現在同�
   assert.deepEqual([impact.x, impact.y, impact.facing], [6.5, 3, scarab.facing]);
 });
 
+test('金龜蟲首次受傷後衝一格，受控先停，五秒內的其他攻擊不會重啟衝刺', () => {
+  const s = G.createState(); G.startWave(s); s.queue=[]; s.castle=null;
+  const beetle = at(s,'giant',9,3,76);
+  const hit = () => G.hit(s,beetle,{kind:'pea',c:8,r:3});
+  G.hit(s,beetle,{kind:'frost',c:8,r:3});
+  assert.equal(beetle.dashRemaining,0);
+  hit(); assert.equal(beetle.dashRemaining,1);
+  beetle.stun=.25; advance(s,.25);
+  assert.equal(beetle.x,9); assert.equal(beetle.dashRemaining,1);
+  assert.equal(beetle.dashReadyAt,0);
+  const start=s.time;
+  G.step(s,1/60);
+  const ready=beetle.dashReadyAt;
+  assert.ok(Math.abs(ready-start-5*G.BATTLE_SPEED)<1e-9);
+  while (beetle.dashRemaining && s.time<2) G.step(s,1/60);
+  assert.ok(Math.abs(beetle.x-8)<1e-8); assert.equal(beetle.dashRemaining,0);
+  advance(s,ready-s.time-1/60);
+  hit(); assert.equal(beetle.dashRemaining,0);
+  G.togglePause(s); advance(s,2); G.togglePause(s); hit(); assert.equal(beetle.dashRemaining,0);
+  G.step(s,1/60); hit(); assert.equal(beetle.dashRemaining,1);
+  const wallState = G.createState();
+  for(let r=0;r<G.ROWS;r++) G.build(wallState,'wall',6,r);
+  G.startWave(wallState); wallState.queue=[]; wallState.castle=null;
+  const blocked = at(wallState,'giant',7,3,76);
+  const other = at(wallState,'giant',10,4,76);
+  G.hit(wallState,blocked,{kind:'pea',c:5,r:3});
+  G.hit(wallState,other,{kind:'pea',c:5,r:4});
+  advance(wallState,.4); assert.equal(blocked.x,7); assert.equal(blocked.dashRemaining,1);
+  assert.equal(blocked.lastDashStepAt,undefined);
+  assert.equal(blocked.dashReadyAt,0);
+  assert.equal(other.dashRemaining,0); assert.ok(other.dashReadyAt>wallState.time);
+  assert.equal(blocked.attackId,G.at(wallState,6,3).id);
+  G.at(wallState,6,3).hp=1;
+  for(let i=0;i<120 && blocked.dashRemaining;i++) G.step(wallState,1/60);
+  assert.equal(blocked.x,6); assert.equal(blocked.dashRemaining,0);
+  assert.ok(blocked.dashReadyAt>other.dashReadyAt);
+});
+
+test('金龜蟲起步後中了暈眩、電擊或尖刺仍衝滿一格，之後才倒數完整時間', () => {
+  for (const [source, timer] of [
+    [{kind:'cannon',weapon:'sonicCannon'}, 'stun'],
+    [{kind:'pierce'}, 'shock'],
+    [{kind:'wall',upgraded:true}, 'spikeStun']
+  ]) {
+    const s = G.createState(); G.startWave(s); s.queue=[]; s.castle=null;
+    const beetle = at(s,'giant',9,3,76);
+    G.hit(s,beetle,{kind:'pea',c:8,r:3});
+    advance(s,.1);
+    assert.ok(beetle.x<9 && beetle.x>8);
+    const duration=G.toolFor(source.weapon ?? source.kind,source.upgraded).stunSeconds*G.BATTLE_SPEED;
+    G.hit(s,beetle,{...source,c:8,r:3});
+    assert.equal(beetle[timer],0);
+    G.togglePause(s); const paused=beetle.x; advance(s,1);
+    assert.equal(beetle.x,paused); G.togglePause(s);
+    for (let tick=0;beetle.dashRemaining && tick<60;tick++) {
+      const before=beetle.x; G.step(s,1/60); assert.ok(beetle.x<before);
+    }
+    assert.ok(Math.abs(beetle.x-8)<1e-8); assert.equal(beetle[timer],duration);
+    const endX = beetle.x;
+    advance(s,duration); assert.equal(beetle.x,endX);
+    advance(s,2/60); assert.ok(beetle.x<8);
+  }
+});
+
 test('第三關蟲王離開直達路線拆一座建築，守在城門每兩秒扣一心', () => {
   const s=G.createState(2); G.build(s,'wall',7,1); G.upgrade(s,7,1); G.build(s,'wall',4,6);
   const wallet=s.money;
@@ -64,22 +128,25 @@ test('飛蟲與跨過石牆的跳蟲都沿實際飛行方向轉頭', () => {
   }
 });
 
-test('十二種蟲維持整數生命，飛蟲在加倍後減一，重新讀檔不會重複調整', () => {
-  assert.deepEqual(Object.values(G.ENEMIES).map(e => e.hp), [2, 6, 6, 6, 20, 3, 8, 250, 280, 200, 40, 4]);
-  assert.ok(G.LEVELS.every(l => l.waves.flat().every(g => g.hp > 0 && g.hp % 2 === (g.kind === 'flyer' ? 1 : 0))));
+test('各蟲維持正整數生命，各關飛蟲依設定血量出場且讀檔不重複扣血', () => {
+  assert.deepEqual(Object.fromEntries(Object.entries(G.ENEMIES).map(([kind,e]) => [kind,e.hp])),
+    {bug:2,roach:2,shield:6,shield_down:6,hopper:6,mother:20,flyer:2,splitter:8,rhinoBoss:250,spiderBoss:380,stagBoss:200,giant:40,swift:4});
+  assert.ok(G.LEVELS.every(l => l.waves.flat().every(g => Number.isInteger(g.hp) && g.hp > 0)));
+  assert.ok(G.spawnQueue(10).filter(e=>e.kind==='flyer').every(e=>e.hp===16));
   for(let level=4;level<10;level++) {
     const saved=G.snapshot(G.createState(level)), restored=G.restore(saved); G.startWave(restored);
     const flying=restored.queue.filter(e=>e.kind==='flyer');
-    assert.ok(flying.length>0); assert.ok(flying.every(e=>e.hp===[7,9,9,13,17,25][level-4]));
-    const e=G.spawn(restored,'flyer',flying[0].hp); assert.equal(e.maxHp,[7,9,9,13,17,25][level-4]);
+    const expected=[5,6,6,8,11,14][level-4];
+    assert.ok(flying.length>0); assert.ok(flying.every(e=>e.hp===expected));
+    const e=G.spawn(restored,'flyer',flying[0].hp); assert.equal(e.maxHp,expected);
   }
   const s = G.restore(G.snapshot(G.restore(G.snapshot(G.createState()))));
   G.startWave(s); advance(s, 0.6);
   assert.equal(s.enemies[0].hp, 6); assert.equal(s.enemies[0].maxHp, 6);
 });
 
-test('九種蟲分十關逐步增加，新生小蟲維持兩血，最後兩關以巨蟲取代爆炸蟲', () => {
-  assert.equal(Object.keys(G.ENEMIES).length, 12); assert.equal(G.ENEMIES.bomber,undefined);
+test('九種蟲分十關逐步增加，小蟑螂依關卡增加血量，最後兩關以巨蟲取代爆炸蟲', () => {
+  assert.equal(Object.keys(G.ENEMIES).length, 13); assert.equal(G.ENEMIES.bomber,undefined);
   let previous = new Set();
   G.LEVELS.forEach((level, i) => {
     const kinds = new Set(level.waves.flat().map(g => g.kind));
@@ -89,13 +156,26 @@ test('九種蟲分十關逐步增加，新生小蟲維持兩血，最後兩關�
     assert.equal(kinds.size, [2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9][i]);
     assert.equal(kinds.has('bomber'),false);
     if (i >= 8) assert.equal(level.waves.flat().filter(g => g.kind === 'giant').reduce((n, g) => n + g.count, 0), [11, 16, 18][i - 8]);
+    if (kinds.has('splitter')) {
+      const state = G.createState(i), egg = at(state,'splitter',6,3,1);
+      G.hit(state,egg,{kind:'pea',c:7,r:3});
+      const babies = state.enemies.filter(e => e.leap?.split);
+      assert.equal(babies.length,3);
+      const hp = [4,5,6,7,8,9][i-5];
+      assert.ok(babies.every(e => e.kind === 'roach' && e.hp === hp && e.maxHp === hp));
+    }
     for (const kind of previous) assert.ok(kinds.has(kind));
     for (const g of level.waves.flat()) { assert.ok(G.ENEMIES[g.kind]); if (g.kind === 'bug') assert.ok(g.hp >= G.ENEMIES.bug.hp); }
     previous = kinds;
   });
   assert.equal(G.spawn(G.createState(), 'bug').hp, 2);
   assert.ok(G.ENEMIES.swift.speed > G.ENEMIES.bug.speed * 1.8);
-  assert.ok(G.ENEMIES.giant.hp >= 20 && G.ENEMIES.giant.speed < G.ENEMIES.bug.speed / 2);
+  assert.ok(G.ENEMIES.giant.hp >= 20);
+  for (const [kind,speed] of Object.entries({giant:.35,mother:.3,stagBoss:.36,rhinoBoss:.40,spiderBoss:.34})) {
+    assert.equal(G.ENEMIES[kind].speed,speed*1.15);
+  }
+  assert.equal(G.ENEMIES.shield.speed,.68);
+  assert.equal(G.ENEMIES.flyer.speed,.9);
 });
 
 test('獨角仙出場十秒後飛越石牆，每次起飛相隔十秒', () => {
@@ -212,29 +292,64 @@ test('飛行中的蛛網只會封住發射時選定的塔', () => {
   assert.ok(!s.effects.some(e=>e.kind==='webHit'));
 });
 
-test('主線蟲王與隱藏關的三隻蟲王都在該段最後一批小蟲前入場', () => {
-  for (const [level, expected] of [[2,[33]], [5,[51]], [9,[103]], [10,[33,83,135]]]) {
+test('每波金龜蟲打頭陣、蟲王第二隻，穿插母蟲後其餘普通蟲仍依初始血量出場', () => {
+  for (const [level,stage] of G.LEVELS.entries()) {
     const queue=G.spawnQueue(level);
-    const positions=queue.flatMap((entry,i)=>entry.kind.endsWith('Boss') ? [i+1] : []);
-    assert.deepEqual(positions,expected);
-    for (const position of positions) {
-      assert.equal(queue[position].wave,queue[position-1].wave);
-      assert.ok(!queue[position].kind.endsWith('Boss'));
+    stage.waves.forEach((groups,wave) => {
+      const batch=queue.filter(e=>e.wave===wave);
+      if (groups.some(g=>g.kind==='giant')) assert.equal(batch[0].kind,'giant');
+      if (groups.some(g=>g.kind.endsWith('Boss'))) assert.ok(batch[1].kind.endsWith('Boss'));
+      const ordinary=batch.filter(e=>!e.kind.endsWith('Boss') && e.kind!=='giant' && e.kind!=='mother');
+      assert.deepEqual(ordinary.map(e=>e.hp),ordinary.map(e=>e.hp).sort((a,b)=>b-a));
+      for (const g of groups) assert.equal(batch.filter(e=>e.kind===g.kind && e.hp===g.hp).length,g.count);
+    });
+  }
+});
+
+test('各關所有入口共用母蟲兩秒間隔，有其他蟲時穿插出場，只剩母蟲時等待', () => {
+  for (const level of [6,7,8,9,10]) {
+    for (const mothersOnly of [false,true]) {
+      const s=G.createState(level); G.startWave(s,0,42); s.castle=null;
+      if (mothersOnly) s.queue=s.queue.filter(e=>e.kind==='mother');
+      const expected=s.queue.filter(e=>e.kind==='mother').length;
+      const mothers=[];
+      let slots=0, ticks=0;
+      while (s.queue.length && ticks++<20000) {
+        G.step(s,ticks%2 ? 1/60 : .027);
+        for (const enemy of s.enemies) {
+          if (enemy.kind==='mother') mothers.push({time:enemy.bornAt,slot:slots});
+          slots++;
+        }
+        s.enemies=[];
+      }
+      assert.equal(mothers.length,expected);
+      for (let i=1;i<mothers.length;i++) {
+        assert.ok(mothers[i].time-mothers[i-1].time>=2*G.BATTLE_SPEED-1e-9);
+        if (!mothersOnly) assert.ok(mothers[i].slot-mothers[i-1].slot>1);
+      }
     }
   }
 });
 
-test('隱藏關每段一隻不同蟲王，四選三指派共有二十四種', () => {
-  const seen=new Set();
-  for (let pattern=0;pattern<24;pattern++) {
-    const state=G.createState(10); G.startWave(state,pattern,37);
-    const bosses=state.queue.filter(e=>e.kind.endsWith('Boss'));
-    assert.deepEqual(bosses.map(e=>[e.wave,e.kind,e.hp]),[[0,'stagBoss',200],[1,'rhinoBoss',250],[2,'spiderBoss',280]]);
-    const cells=bosses.map(e=>G.key(e.position.x,e.position.y));
-    assert.equal(new Set(cells).size,3); seen.add(cells.join('|'));
-    assert.ok(bosses.every(e=>G.isEntrance(10,e.position.x,e.position.y)));
-  }
-  assert.equal(seen.size,24);
+test('城堡依實際失血順序記下地面、飛蟲與同一蟲王的多次攻擊，重試清空', () => {
+  const s=G.createState(3), goal=G.LEVELS[s.level].goal;
+  G.startWave(s); s.queue=[]; s.castle=null;
+  const boss=G.spawn(s,'stagBoss',200,goal.r,{x:goal.c+1,y:goal.r});
+  const leak=kind=>G.spawn(s,kind,99,goal.r,{x:goal.c,y:goal.r});
+  boss.siegeClock=0; leak('flyer'); leak('bug'); G.step(s,1/60);
+  boss.siegeClock=0; G.step(s,1/60);
+  leak('swift'); leak('flyer'); G.step(s,1/60);
+  assert.equal(s.phase,'lost');
+  assert.deepEqual(s.homeHits,['stagBoss','flyer','bug','stagBoss','swift']);
+  const retry=G.retry(s); G.startWave(retry); assert.deepEqual(retry.homeHits,[]);
+});
+test('隱藏關每段的第二隻都是指定蟲王，第四個入口只出普通蟲', () => {
+  const state=G.createState(10); G.startWave(state);
+  const bosses=state.queue.filter(e=>e.kind.endsWith('Boss'));
+  assert.deepEqual(bosses.map(e=>[e.wave,e.kind,e.hp]),[[0,'stagBoss',200],[1,'rhinoBoss',250],[2,'spiderBoss',380]]);
+  for (const boss of bosses) assert.equal(state.queue.filter(e=>e.wave===boss.wave)[1],boss);
+  const bottom = state.queue.filter(e=>e.position.y===G.ROWS-1);
+  assert.ok(bottom.length && bottom.every(e=>!e.kind.endsWith('Boss')));
 });
 
 test('下盾蟲擋住無穿盾能力的下方攻擊，從上方及同高側面攻擊有效', () => {
@@ -303,15 +418,48 @@ test('跳躍中的跳蟲不被擊退拉回障礙物，落地仍在有效格子',
   advance(s, 0.3); assert.equal(e.leap, null); assert.equal(G.at(s, e.c, e.r), undefined);
 });
 
-test('母蟲每實際三秒產生一隻兩血小蟲，死亡後停止產卵', () => {
-  const s = G.createState(), mother = G.spawn(s, 'mother'); s.phase = 'running';
-  advance(s, 3 * G.BATTLE_SPEED - 1 / 60); assert.equal(s.stats.hatched, 0);
-  advance(s, 1 / 60); assert.equal(s.stats.hatched, 1);
-  const baby = s.enemies.find(e => e.kind === 'bug'); assert.equal(baby.hp, 2);
-  assert.ok(Math.hypot(baby.x - mother.x, baby.y - mother.y) <= 1 + 1e-9);
-  advance(s, 3 * G.BATTLE_SPEED); assert.equal(s.stats.hatched, 2);
-  while (!mother.dead) G.hit(s, mother, { kind: 'molecular', c: 8, r: 5 });
-  advance(s, 3 * G.BATTLE_SPEED); assert.equal(s.stats.hatched, 2);
+test('母蟲出場滿四秒在所在格下蛋，母蟲死亡後再過三秒仍只孵出一隻當關血量的飛蟲', () => {
+  for (const [level,hp] of [[6,6],[7,8],[8,11],[9,14],[10,16]]) {
+    const s=G.createState(level); G.startWave(s,0,42); s.queue=[]; s.castle=null;
+    const mother=at(s,'mother',9,3);
+    advance(s,4*G.BATTLE_SPEED-1/60);
+    assert.equal(s.eggs.length,0);
+    G.step(s,1/60);
+    assert.equal(s.eggs.length,1); const [egg]=s.eggs;
+    assert.deepEqual([egg.c,egg.r],[Math.round(mother.x),Math.round(mother.y)]);
+    assert.ok(Math.abs(egg.hatchAt-s.time-3*G.BATTLE_SPEED)<1e-9);
+    G.hit(s,mother,{kind:'molecular',c:8,r:3},{damage:1000});
+    G.togglePause(s); advance(s,5*G.BATTLE_SPEED); G.togglePause(s);
+    advance(s,3*G.BATTLE_SPEED-1/60);
+    assert.equal(s.phase,'running'); assert.equal(s.enemies.length,0); assert.equal(s.stats.hatched,0);
+    G.step(s,1/60);
+    assert.equal(s.eggs.length,0); assert.equal(s.stats.hatched,1);
+    assert.equal(s.enemies.length,1);
+    const [baby]=s.enemies;
+    assert.deepEqual([baby.kind,baby.x,baby.y,baby.hp,baby.maxHp],['flyer',egg.c,egg.r,hp,hp]);
+    advance(s,.1); assert.ok(baby.x<egg.c);
+    G.hit(s,baby,{kind:'pea',c:8,r:3},{damage:1000}); G.step(s,1/60);
+    assert.equal(s.phase,level<9?'planning':'won');
+  }
+});
+
+test('每隻母蟲獨立每四秒下一顆，停住時照常，暫停遊戲會停表', () => {
+  const s=G.createState(6); G.startWave(s,0,42); s.queue=[]; s.castle=null;
+  const first=at(s,'mother',9,3);
+  first.stun=12*G.BATTLE_SPEED;
+  advance(s,G.BATTLE_SPEED);
+  const second=at(s,'mother',9,5);
+  second.frozenUntil=s.time+12*G.BATTLE_SPEED;
+  G.togglePause(s); advance(s,6*G.BATTLE_SPEED); G.togglePause(s);
+  const eggs=()=>s.eggs.map(e=>[e.c,e.r]);
+  advance(s,3*G.BATTLE_SPEED-1/60); assert.deepEqual(eggs(),[]);
+  G.step(s,1/60); assert.deepEqual(eggs(),[[9,3]]);
+  advance(s,G.BATTLE_SPEED); assert.deepEqual(eggs(),[[9,3],[9,5]]);
+  advance(s,2*G.BATTLE_SPEED); assert.deepEqual(eggs(),[[9,5]]);
+  assert.equal(s.stats.hatched,1);
+  advance(s,G.BATTLE_SPEED); assert.deepEqual(eggs(),[[9,3]]);
+  assert.equal(s.stats.hatched,2);
+  advance(s,G.BATTLE_SPEED); assert.deepEqual(eggs(),[[9,3],[9,5]]);
 });
 
 test('飛蟲直飛小屋，完整牆列與池塘都無法擋住，也不拆牆', () => {
@@ -320,30 +468,61 @@ test('飛蟲直飛小屋，完整牆列與池塘都無法擋住，也不拆牆',
   // Keep the stage open so the next stage's healing cannot hide home damage.
   s.queue = [{ kind: 'bug', hp: 2, row: 3, wave: 0 }]; s.spawnClock = 60;
   const e = G.spawn(s, 'flyer'); s.phase = 'running'; advance(s, 6);
-  assert.ok(e.x < 6); assert.equal(s.stats.broken, 0); assert.ok(s.buildings.every(b => b.hp === 4));
-  advance(s, 6); assert.equal(s.hearts, 4); assert.equal(s.enemies.length, 0);
+  assert.ok(Math.abs(e.x - (11 - 6 * .9)) < 1e-8); assert.equal(s.stats.broken, 0); assert.ok(s.buildings.every(b => b.hp === 4));
+  advance(s, 6); assert.equal(s.hearts, 5);
+  advance(s, .25); assert.equal(s.hearts, 4); assert.equal(s.enemies.length, 0);
   assert.equal(s.phase, 'running'); s.queue = []; advance(s, 1 / 60);
   assert.equal(s.phase, 'planning'); assert.equal(s.level, 1); assert.equal(s.hearts, 5);
   const pool = G.createState(1), f = G.spawn(pool, 'flyer'); pool.phase = 'running'; advance(pool, 6);
   assert.ok(f.x < 6); assert.equal(f.attackId, null);
 });
 
-test('分裂蟲死亡只分裂一次，三隻小蟲隨機出現在一格內的安全位置', () => {
+test('蜈蚣的步伐依實際前進距離變化，暈眩、結凍或被擊退時停步', () => {
+  const s=G.createState(), runner=at(s,'swift',9,3,8);
+  s.phase='running';
+  advance(s,.25);
+  assert.ok(runner.strideDistance>0);
+  assert.ok(Math.abs(runner.strideDistance - (9-runner.x))<1e-8);
+  const stride=runner.strideDistance;
+  runner.stun=.5; advance(s,.25); assert.equal(runner.strideDistance,stride);
+  runner.stun=0; runner.frozenUntil=s.time+.5; advance(s,.25); assert.equal(runner.strideDistance,stride);
+  runner.frozenUntil=0; G.pushEnemy(s,runner,1);
+  assert.ok(runner.push); advance(s,1/60); assert.equal(runner.strideDistance,stride);
+});
+
+test('滾動球卵提速三成，爆開的三隻小蟑螂從原地彈射一秒才落在三格內', () => {
   const s = G.createState(); G.build(s, 'wall', 7, 3); const e = at(s, 'splitter', 6, 3, 18), money = s.money;
+  assert.ok(Math.abs(G.ENEMIES.splitter.speed-.70*1.30)<1e-9);
   G.hit(s, e, { kind: 'pea', c: 6, r: 5 }, { damage: 16 });
   G.hit(s, e, { kind: 'cannon', c: 6, r: 5 }); G.hit(s, e, { kind: 'cannon', c: 6, r: 5 });
-  const babies = s.enemies.filter(b => b.kind === 'bug'); assert.equal(babies.length, 3); assert.equal(s.stats.split, 1);
+  const babies = s.enemies.filter(b => b.kind === 'roach'); assert.equal(babies.length, 3); assert.equal(s.stats.split, 1);
   assert.equal(s.effects.find(fx => fx.kind === 'split').maxHp, 18);
   assert.ok(babies.every(b => b.maxHp === 2));
-  assert.equal(s.money, money); assert.ok(new Set(babies.map(b => `${b.x},${b.y}`)).size > 1);
-  for (const b of babies) { assert.equal(b.hp, 2); assert.ok(Math.hypot(b.x - 6, b.y - 3) <= 1); assert.equal(G.at(s, b.c, b.r), undefined); }
+  assert.equal(s.money, money);
+  const landings=babies.map(b=>[b.leap.x,b.leap.y]);
+  assert.equal(new Set(landings.map(p=>p.join(','))).size,3);
+  for (const b of babies) {
+    assert.deepEqual([b.x,b.y],[6,3]); assert.equal(b.hp,2);
+    assert.ok(Math.hypot(b.leap.x-6,b.leap.y-3)<=3);
+    assert.equal(G.at(s,b.leap.x,b.leap.y),undefined);
+    assert.equal(G.canTarget('cannon',b),false); assert.equal(G.canTarget('fireCannon',b),true);
+  }
+  s.phase='running';
+  babies[0].stun=2*G.BATTLE_SPEED;
+  advance(s,G.BATTLE_SPEED/2); assert.ok(babies.every(b=>G.enemyLift(b,s.time)>45));
+  G.togglePause(s); const paused=JSON.stringify(babies); advance(s,2);
+  assert.equal(JSON.stringify(babies),paused); G.togglePause(s);
+  advance(s,G.BATTLE_SPEED/2-1/60); assert.ok(babies.every(b=>b.leap));
+  G.step(s,1/60);
+  assert.deepEqual(babies.map(b=>[b.x,b.y]),landings);
+  assert.ok(babies.every(b=>!b.leap && G.canTarget('cannon',b) && !G.canTarget('fireCannon',b)));
   G.hit(s, babies[0], { kind: 'pea', c: 6, r: 5 }); assert.equal(s.stats.split, 1);
 });
 
-test('範圍砲擊殺分裂蟲後，不會把同次爆炸剛出生的小蟲再算進攻擊', () => {
+test('範圍砲擊殺蟑螂卵後，不會把同次爆炸剛出生的小蟑螂再算進攻擊', () => {
   const s = G.createState(), e = at(s, 'splitter', 6, 3, 2);
   G.resolveShot(s, { kind: 'cannon', target: e.id, c: 6, r: 5 });
-  const babies = s.enemies.filter(b => b.kind === 'bug');
+  const babies = s.enemies.filter(b => b.kind === 'roach');
   assert.equal(babies.length, 3); assert.ok(babies.every(b => !b.dead && b.hp === 2));
 });
 
@@ -351,9 +530,35 @@ test('分裂位置在邊界和密集建築旁也不會落在地圖外或牆上',
   const s = G.createState(); s.money = 100;
   for (let r = 0; r <= 2; r++) G.build(s, 'wall', 1, r);
   const e = at(s, 'splitter', 0, 0, 1); G.hit(s, e, { kind: 'pea', c: 2, r: 2 });
-  for (const b of s.enemies.filter(b => b.kind === 'bug')) {
-    assert.ok(b.x >= 0 && b.y >= 0 && Math.hypot(b.x, b.y) <= 1); assert.equal(G.at(s, b.c, b.r), undefined);
+  for (const b of s.enemies.filter(b => b.kind === 'roach')) {
+    const {x,y}=b.leap; assert.ok(x>=0 && y>=0 && Math.hypot(x,y)<=3); assert.equal(G.at(s,x,y),undefined);
   }
+});
+
+test('卵團的隨機落點包含原地和整整三格', () => {
+  const s=G.createState(), distances=new Set();
+  for(let i=0;i<64;i++) {
+    const parent=at(s,'splitter',6,3,1);
+    G.hit(s,parent,{kind:'pea',c:7,r:3});
+    for(const {x,y} of s.effects.at(-1).offspring) distances.add(Math.hypot(x-6,y-3));
+  }
+  assert.ok(distances.has(0)); assert.equal(Math.max(...distances),3);
+});
+
+test('蟑螂卵能把小蟑螂彈過整排牆，落地後接著走地面路線', () => {
+  const s=G.createState(); s.money=100;
+  for(let r=0;r<G.ROWS;r++) G.build(s,'wall',5,r);
+  s.phase='running';
+  let child;
+  for(let i=0;i<32 && !child;i++) {
+    const egg=at(s,'splitter',6,3,1);
+    G.hit(s,egg,{kind:'pea',c:7,r:3});
+    child=s.enemies.find(e=>e.leap?.x===4 && e.leap.y===3);
+  }
+  assert.ok(child); advance(s,G.BATTLE_SPEED/2);
+  assert.equal(Math.round(child.x),5); assert.ok(G.enemyLift(child,s.time)>0);
+  advance(s,G.BATTLE_SPEED/2); assert.equal(child.x,4); assert.equal(child.leap,null);
+  advance(s,.2); assert.ok(child.x<4);
 });
 
 test('巨蟲死亡不炸毀周圍的塔和牆', () => {
@@ -377,7 +582,7 @@ test('進家消失不觸發分裂或產卵能力', () => {
 test('暫停凍結產卵和跳躍；準備存檔保留隨機種子，重試可重現分裂落點', () => {
   const s = G.createState(), e = at(s, 'hopper', 7, 3); G.spawn(s, 'mother');
   G.hit(s, e, { kind: 'pea', c: 7, r: 5 }); s.phase = 'paused'; const before = JSON.stringify(s); advance(s, 9); assert.equal(JSON.stringify(s), before);
-  function positions(state) { const split = at(state, 'splitter', 6, 3, 1); G.hit(state, split, { kind: 'pea', c: 6, r: 5 }); return state.enemies.filter(e => e.kind === 'bug').map(e => [e.x, e.y]); }
+  function positions(state) { const split = at(state, 'splitter', 6, 3, 1); G.hit(state, split, { kind: 'pea', c: 6, r: 5 }); return state.enemies.filter(e => e.kind === 'roach').map(e => [e.leap.x, e.leap.y]); }
   const prepared = G.snapshot(G.createState(2));
   assert.deepEqual(positions(G.restore(prepared)), positions(G.restore(prepared)));
   const changed = { ...prepared, rngState: 12345 }; assert.notDeepEqual(positions(G.restore(prepared)), positions(G.restore(changed)));
