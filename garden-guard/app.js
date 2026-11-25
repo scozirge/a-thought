@@ -16,7 +16,18 @@
   let lastWorldTime = -1, lastPhase = '', lastRevision = -1, uiSignature = '', lastFrame = 0, accumulator = 0;
   let finishAge = null, resultAfterHeart = false, frameId = null;
   let infoAnchor = null, infoTimer = 0, unlockSaved = false;
-  let seenRewardLevel = null, menuCell = null;
+  const entryGuide = $('entry-guide'), guidePageSize = 3;
+  let guideKinds = [], guidePage = 0;
+  let seenRewardLevel = null, menuCell = null, moving = null;
+  const movePrompt = '點空格移動，點原位取消';
+  const resetActions = {
+    planning: ['reset', '重置', '清空部署，全額退款'],
+    running: ['pause', '暫停', '暫停戰鬥'],
+    paused: ['surrender', '放棄', '放棄這次戰鬥，回到開戰前'],
+    cleared: ['reset', '重置', '重玩此關'],
+    lost: ['reset', '重置', '重試這關'],
+    won: ['reset', '重置', '回到第一關']
+  };
   const cellAt = (c, r) => $('hit-layer').querySelector(`[data-c="${c}"][data-r="${r}"]`);
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE));
@@ -33,6 +44,9 @@
   let lastLevel = state.level;
   $('level-select').innerHTML = G.LEVELS.slice(0, G.BONUS_LEVEL).map((_, i) => `<option value="${i}">第 ${i + 1} 關</option>`).join('');
   $('garden-art').innerHTML = A.definitions() + `<clipPath id="field-bounds"><rect x="${OX}" y="${OY}" width="${G.COLS * S}" height="${G.ROWS * S}" rx="6"/></clipPath>
+    <radialGradient id="yellow-eggshell" cx="33%" cy="25%" r="80%"><stop stop-color="#fff8ac"/><stop offset=".52" stop-color="#ffda4d"/><stop offset="1" stop-color="#e59b28"/></radialGradient>
+    <g id="brood-shell"><path d="M0-17C7-17 14-5 14 3c0 8-6 12-14 12s-14-4-14-12c0-8 7-20 14-20Z" fill="url(#yellow-eggshell)" stroke="#916122" stroke-width="2.2"/>
+      <ellipse cx="-5" cy="-7" rx="2.7" ry="4" transform="rotate(24 -5 -7)" fill="#fffbdc"/><path d="M7 4l2-2m-12 8 2 .6" fill="none" stroke="#c38a24" stroke-width="2.4" stroke-linecap="round"/></g>
     <radialGradient id="rolling-snow-light" cx="34%" cy="27%" r="78%"><stop stop-color="#fff"/><stop offset=".57" stop-color="#e5f7ff"/><stop offset=".85" stop-color="#add6e6"/><stop offset="1" stop-color="#7aaabc"/></radialGradient>`;
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = A.icon(el.dataset.icon); });
   $('tools').innerHTML = Object.entries(G.TOOLS).map(([kind, tool]) => `<button class="tool-card" data-tool="${kind}" aria-pressed="false" aria-label="${tool.name}，${tool.cost} 枚金幣">${A.tool(kind)}<span class="tool-cost">${A.icon('coin')}${tool.cost}</span></button>`).join('');
@@ -47,23 +61,52 @@
     if (tool.vortex) return `每 ${1 / tool.rate} 秒召喚一次`;
     return `攻擊 ${+tool.rate.toFixed(3)}次/s`;
   }
-  function towerStats(tool) {
-    if (!tool.rate) return `<p>耐久 ${tool.hp} · ${tool.cost} 金幣</p><p>引導蟲蟲繞路。石牆不能融合。</p>`;
+  function distanceStats(kind, tool) {
+    if (!tool.range) return [];
+    let range = `${tool.range} 格`;
+    if (kind === 'snowCannon') range = `橫向最遠 ${G.COLS - 1} 格、直向最遠 ${G.ROWS - 1} 格`;
+    else if (tool.range >= Math.hypot(G.COLS - 1, G.ROWS - 1)) range = `全圖（${G.COLS}×${G.ROWS} 格）`;
+    else if (tool.minRange) range = `超過 ${tool.minRange} 格，最遠 ${range}`;
+    else if (kind === 'crossCoil') range = `上下左右 ${range}`;
+    else if (kind === 'wall' || kind === 'frostfireJet') range = `周圍 ${range}（含斜角）`;
+    const details = [`射程 ${range}`];
+    if (tool.radius || tool.burstRadius) {
+      const label = tool.vortex ? '龍捲半徑' : kind === 'gravityCannon' ? '吸引半徑' : '爆炸半徑';
+      details.push(`${label} ${tool.radius ?? tool.burstRadius} 格`);
+    }
+    if (tool.knockback) details.push(`擊退最多 ${tool.knockback === 1/3 ? '1/3' : tool.knockback} 格`);
+    if (tool.chainRange) details.push(`連鎖距離 ${tool.chainRange} 格`);
+    return details;
+  }
+  function towerStats(kind, tool) {
+    if (!tool.rate) return `<p>耐久 ${tool.hp} · ${tool.cost} 金幣</p><p class="info-effect">${tool.effect}</p>`;
     let damage = tool.damage;
     if (tool.damagePerCell) damage = `第一格 ${tool.damage}，之後每格 +${tool.damagePerCell}`;
     if (tool.maxDamage) damage = `${tool.damage} → ${tool.maxDamage}`;
     if (tool.vortex) damage = `每秒 ${tool.damage}`;
-    const burn = tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : '';
+    const burn = kind === 'flame' ? ` · 地火 ${tool.groundFireSeconds} 秒，每秒 ${tool.burnDamage} 傷` : tool.burnDamage ? ` · 燃燒 ${tool.burnDamage}/s` : '';
     const targets = tool.targets.map(t => t === 'ground' ? '地' : '空').join('/');
-    return `<p>傷害 ${damage}${burn}</p><p>${attackTiming(tool)}</p><p class="info-target">目標 ${targets}</p><p class="info-effect">${tool.effect}</p>`;
+    const status = [
+      tool.chargeSeconds && `瞄準 ${tool.chargeSeconds} 秒`,
+      tool.stunSeconds && `暈眩 ${tool.stunSeconds} 秒`,
+      tool.freezeSeconds && `冰封 ${tool.freezeSeconds} 秒（蟲王 ${tool.bossFreezeSeconds} 秒）`,
+      tool.iceLayers && `冰凍 +${tool.iceLayers} 層`
+    ].filter(Boolean).map(text => `<p>${text}</p>`).join('');
+    return `<p>傷害 ${damage}${burn}</p><p>${attackTiming(tool)}</p><p class="info-distance">${distanceStats(kind, tool).join(' · ')}</p>${status}<p class="info-target">目標 ${targets}</p><p class="info-effect">${tool.effect}</p>`;
   }
   function upgradePreview(kind, title) {
     const current = G.toolFor(kind), next = G.toolFor(kind, true);
     const changes = [];
     if (current.damagePerCell !== next.damagePerCell) changes.push(`滾動每格 +${next.damagePerCell} 傷`);
-    if (current.damage !== next.damage) changes.push(`傷害 ${next.damage}`);
+    if (current.damage !== next.damage || current.maxDamage !== next.maxDamage) changes.push(`傷害 ${next.damage}${next.maxDamage ? ' → ' + next.maxDamage : ''}`);
+    if (kind === 'flame') changes.push(`地火 ${next.groundFireSeconds} 秒`);
+    if (current.stunSeconds !== next.stunSeconds) changes.push(`暈眩 ${next.stunSeconds} 秒`);
+    if (current.freezeSeconds !== next.freezeSeconds) changes.push(`冰封 ${next.freezeSeconds} 秒（蟲王 ${next.bossFreezeSeconds} 秒）`);
     if (current.rate !== next.rate || current.aimSeconds !== next.aimSeconds) changes.push(attackTiming(next));
-    return `<p class="next-upgrade">${[`升級為${title || next.name}`, changes.join(' · '), next.effect].filter(Boolean).join('<br>')}</p>`;
+    const previousDistances = distanceStats(kind, current);
+    changes.push(...distanceStats(kind, next).filter(detail => !previousDistances.includes(detail)));
+    const effect = next.effect !== current.effect ? next.effect : '';
+    return `<p class="next-upgrade">${[`升級為${title || next.name}`, changes.join(' · '), effect].filter(Boolean).join('<br>')}</p>`;
   }
   function showInfo(kind, anchor, upgraded = false, building = null, preview = false) {
     const tool = G.toolFor(kind, upgraded);
@@ -78,7 +121,7 @@
     const durability = building?.fusionKind ? `<p>耐久 ${building.hp}／${G.buildingHP(building.kind, building.fusionKind)}</p>` : '';
     const details = durability + kinds.map(k => {
       const spec = G.toolFor(k, upgraded);
-      return (kinds.length > 1 ? `<b>${spec.name}</b>` : '') + towerStats(spec);
+      return (kinds.length > 1 ? `<b>${spec.name}</b>` : '') + towerStats(k, spec);
     }).join('');
     const next = preview ? kinds.map(k => upgradePreview(k, building?.fusionKind && kinds.length === 1 ? G.buildingName(building) + '+' : null)).join('') : '';
     info.innerHTML = `<strong>${name}</strong>${ingredients ? `<p class="info-ingredients">（${ingredients.join('＋')}）</p>` : ''}${building ? `<p class="last-damage">${building.lastDamage == null ? '尚無上局傷害紀錄' : `上局傷害 ${building.lastDamage} 點`}</p>` : ''}${details}${next}`;
@@ -99,7 +142,14 @@
     const above = rect.top / zoom - 18, below = vh - rect.bottom / zoom - 18;
     let left = Math.max(8, Math.min(vw - w - 8, (rect.left + rect.width / 2) / zoom - w / 2));
     let top;
-    if (h <= above) top = rect.top / zoom - h - 10;
+    if (anchor.classList.contains('entrance')) {
+      const side = anchor.dataset.side;
+      if (side === 'right') left = rect.left / zoom - w - 8;
+      if (side === 'left') left = rect.right / zoom + 8;
+      left = Math.max(8, Math.min(vw - w - 8, left));
+      top = side === 'top' ? rect.bottom / zoom + 8 : side === 'bottom' ? rect.top / zoom - h - 8 : (rect.top + rect.height / 2) / zoom - h / 2;
+      top = Math.max(8, Math.min(vh - h - 8, top));
+    } else if (h <= above) top = rect.top / zoom - h - 10;
     else if (h <= below) top = rect.bottom / zoom + 10;
     else if (rect.right / zoom + w + 18 <= vw || rect.left / zoom >= w + 18) {
       left = rect.right / zoom + w + 18 <= vw ? rect.right / zoom + 10 : rect.left / zoom - w - 10;
@@ -111,22 +161,71 @@
     info.style.left = left + 'px'; info.style.top = top + 'px';
   }
   function showCellInfo(cell) {
+    if (moving) { hideInfo(); return; }
     const c = +cell.dataset.c, r = +cell.dataset.r, b = G.at(state, c, r);
     if (b) showInfo(b.kind, cell, b.upgraded, b);
     else if (G.isHome(state.level, c, r)) showInfo('castle', cell, state.castleUpgraded);
     else hideInfo();
   }
+  function showEntranceInfo(marker) {
+    if (menuCell || entryGuide.open) return;
+    hideInfo();
+    hover = null; selection();
+    infoAnchor = marker;
+    const info = $('tower-info'), kinds = marker.dataset.kinds.split(' ');
+    const boss = marker.dataset.boss;
+    const icons = kinds.filter(kind => kind !== boss).map(kind =>
+      `<span class="entry-enemy" data-kind="${kind}" role="img" aria-label="${G.ENEMIES[kind].name}" title="${G.ENEMIES[kind].name}">${A.badge(kind)}</span>`).join('');
+    info.dataset.kind = 'entrance';
+    info.innerHTML = `<strong>入口蟲蟲</strong>${boss ? `<div class="entry-boss" data-kind="${boss}">${A.badge(boss)}${G.ENEMIES[boss].name}</div>` : ''}<div class="entry-icons">${icons}</div>`;
+    positionInfo(marker);
+  }
+  function showGuidePage(page) {
+    const pages = Math.ceil(guideKinds.length / guidePageSize);
+    guidePage = Math.max(0, Math.min(page, pages - 1));
+    const start = guidePage * guidePageSize;
+    $('entry-cards').innerHTML = guideKinds.slice(start, start + guidePageSize).map(kind => {
+      const { name, trait } = G.ENEMIES[kind];
+      return `<article class="guide-card${kind.endsWith('Boss') ? ' guide-boss' : ''}" data-kind="${kind}">
+        <div class="guide-portrait">${A.badge(kind)}</div><h3>${name}</h3><p>${trait}</p></article>`;
+    }).join('');
+    $('entry-cards').scrollTop = 0;
+    $('entry-pages').hidden = pages <= 1;
+    const focused = document.activeElement;
+    $('entry-prev').disabled = guidePage === 0;
+    $('entry-next').disabled = guidePage === pages - 1;
+    if (pages > 1 && focused === $('entry-next') && focused.disabled) $('entry-prev').focus();
+    if (pages > 1 && focused === $('entry-prev') && focused.disabled) $('entry-next').focus();
+    $('entry-page-count').textContent = `${guidePage + 1} / ${pages}`;
+  }
+  function openEntranceGuide(marker) {
+    if (!marker || menuCell || entryGuide.open) return;
+    const boss = marker.dataset.boss;
+    guideKinds = marker.dataset.kinds.split(' ');
+    if (boss) guideKinds = [boss, ...guideKinds.filter(kind => kind !== boss)];
+    $('entry-guide-location').textContent = marker.dataset.location;
+    showGuidePage(0);
+    marker.focus({preventScroll:true});
+    hideInfo();
+    entryGuide.showModal();
+  }
+  function closeEntranceGuide() {
+    if (!entryGuide.open) return;
+    entryGuide.close();
+    hideInfo();
+  }
   function repositionInfo() {
     if (!infoAnchor) return;
     const anchor = infoAnchor, rect = anchor.getBoundingClientRect();
     if (rect.bottom <= 0 || rect.top >= innerHeight || rect.right <= 0 || rect.left >= innerWidth || (!anchor.matches(':hover') && document.activeElement !== anchor)) { hideInfo(); return; }
-    if (anchor.dataset.unavailable) showShortage(anchor);
+    if (anchor.classList.contains('entrance')) showEntranceInfo(anchor);
+    else if (anchor.dataset.unavailable) showShortage(anchor);
     else if (anchor === $('edit-grade')) previewGrade();
     else if (anchor.dataset.tool) showInfo(anchor.dataset.tool, anchor); else showCellInfo(anchor);
   }
 
   function save() {
-    const data = state.phase === 'planning' || state.phase === 'won' ? G.snapshot(state) : state.checkpoint;
+    const data = ['planning', 'cleared', 'won'].includes(state.phase) ? G.snapshot(state) : state.checkpoint;
     if (!data) return;
     try {
       if (state.bonusUnlocked && !unlockSaved) {
@@ -171,22 +270,41 @@
       }
       hits += '</g>';
     }
-    for (const entry of G.entrances(state.level)) {
+    $('ground-layer').innerHTML = s; $('hit-layer').innerHTML = hits;
+    drawEntrances();
+  }
+  function drawEntrances() {
+    closeEntranceGuide();
+    const entries = G.entrances(state.level);
+    const kindsByCell = new Map(entries.map(e => [G.key(e.c,e.r), new Set()]));
+    for (const {kind,position} of G.spawnQueue(state.level)) {
+      kindsByCell.get(G.key(position.x,position.y)).add(kind);
+    }
+    $('entrance-layer').innerHTML = entries.map(entry => {
+      const kinds = [...kindsByCell.get(G.key(entry.c,entry.r))], boss = kinds.find(kind => kind.endsWith('Boss'));
       const horizontal = entry.side === 'left' || entry.side === 'right';
       const x = horizontal ? (entry.side === 'right' ? 877 : 38) : X(entry.c);
-      const y = horizontal ? Y(entry.r) : entry.side === 'top' ? 19 : 573;
+      const y = horizontal ? Y(entry.r) : entry.side === 'top' ? 23 : 569;
       const angle = { left: 180, right: 0, top: -90, bottom: 90 }[entry.side];
-      s += `<g class="entrance" data-side="${entry.side}" data-c="${entry.c}" data-r="${entry.r}" transform="translate(${x} ${y}) rotate(${angle})" stroke-linejoin="round">
-      <path d="M2 2h5v23H2Z" fill="#926c42" stroke="#5f5436" stroke-width="1.8"/>
-      <path d="m-18 0 9-10h23v20H-9Z" fill="#ffe4a2" stroke="#715a38" stroke-width="2.4"/>
-      <path d="M8 0H-7l5-5m-5 5 5 5" stroke="#77552f" stroke-width="3.2" fill="none" stroke-linecap="round"/></g>`;
-    }
-    $('ground-layer').innerHTML = s; $('hit-layer').innerHTML = hits;
+      const side = { left:'左', right:'右', top:'上', bottom:'下' }[entry.side];
+      const location = `${side}側入口，${horizontal ? `第 ${entry.r+1} 排` : `第 ${entry.c+1} 欄`}`;
+      return `<g class="entrance" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="entry-guide" aria-label="${location}${boss ? '，'+G.ENEMIES[boss].name : ''}" data-location="${location}" data-side="${entry.side}" data-c="${entry.c}" data-r="${entry.r}"
+        data-kinds="${kinds.join(' ')}" ${boss ? `data-boss="${boss}"` : ''} transform="translate(${x} ${y})" stroke-linejoin="round">
+        <rect x="-30" y="-28" width="60" height="56" fill="transparent"/>
+        <g transform="rotate(${angle})">
+          <path class="entry-sign" d="M-28 0-10-17H16q5 0 5 5v24q0 5-5 5h-26Z" stroke-width="3.6"/>
+          <path d="m-24 0 16-14h23" fill="none" stroke="#ffe6aa" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="m-16 0 12-10v6h16v8H-4v6Z" fill="#fff9de" stroke="#60391e" stroke-width="1.9"/>
+        </g>${boss ? `<g class="entry-crown" transform="translate(${entry.side === 'left' ? -18 : 18} ${horizontal ? -15 : 0})">
+          <circle r="12" fill="#642943" stroke="#fff0b9" stroke-width="2"/>
+          <path d="m-8-4 4 3 4-6 4 6 4-3-2 9H-6Z" fill="#ffd96c" stroke="#724522" stroke-width="1.2"/>
+          <path d="M-5 6H5" stroke="#fff1b1" stroke-width="1.8"/></g>` : ''}</g>`;
+    }).join('');
   }
   function drawRoutes() {
     const layer = $('route-layer');
     if (state.phase !== 'planning' || !showRoutes.checked) { layer.replaceChildren(); return; }
-    const segments = new Map(), fliers = new Map();
+    const segments = new Map();
     for (const plan of G.previews(state)) {
       for (let i = 1; i < plan.path.length; i++) {
         const a = plan.path[i - 1], b = plan.path[i];
@@ -195,20 +313,30 @@
         if (!segments.has(key) || !plan.breaking) segments.set(key, { a, b, breaking: plan.breaking });
       }
     }
-    for (const item of G.spawnQueue(state.level)) {
-      if (G.ENEMIES[item.kind].airborne) fliers.set(G.key(item.position.x, item.position.y), item.position);
-    }
-    const air = [...fliers.values()].map(p => `M${X(p.x)} ${Y(p.y)} L${X(G.LEVELS[state.level].goal.c)} ${Y(G.LEVELS[state.level].goal.r)}`).join(' ');
     const ground = [...segments.values()].map(({a, b, breaking}) => {
       const x = X(a.c), y = Y(a.r), dx = X(b.c) - x, dy = Y(b.r) - y;
       const angle = Math.atan2(dy, dx) * 180 / Math.PI;
       const color = breaking ? '#a56137' : '#527b49';
       return `<g class="ground-route" transform="translate(${x} ${y}) rotate(${angle})" stroke="${color}"><path d="M0 0h${S}" stroke-width="2.5" stroke-dasharray="3 5"/><path d="m27-3 5 3-5 3" stroke-width="2.4" stroke-linejoin="round"/></g>`;
     }).join('');
-    layer.innerHTML = `<g fill="none" stroke-linecap="round" opacity=".73">${ground}${air ? `<path class="air-route" d="${air}" stroke="#417c99" opacity=".65" stroke-width="2" stroke-dasharray="8 7"/>` : ''}</g>`;
+    layer.innerHTML = `<g fill="none" stroke-linecap="round" opacity=".73">${ground}</g>`;
   }
   function selection() {
     $('hover-layer').innerHTML = ''; $('range-layer').innerHTML = '';
+    if (moving) {
+      let marks = `<g fill="#fff4b8" fill-opacity=".15" stroke="#735324" stroke-width="3" stroke-dasharray="7 4">${tileMark(moving.c, moving.r)}</g>`;
+      if (hover && (hover.c !== moving.c || hover.r !== moving.r)) {
+        const valid = !G.canMove(state, moving.c, moving.r, hover.c, hover.r);
+        const color = valid ? '#27664a' : '#a74635';
+        marks += `<g fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="3">${tileMark(hover.c, hover.r)}</g>`;
+        if (valid) {
+          const art = moving.fusionKind ? A.fusionResult(moving) : A.tower(moving.kind, moving.angle, 0, 0, moving.upgraded);
+          marks += `<g transform="translate(${X(hover.c)} ${Y(hover.r)})" opacity=".65">${art}</g>`;
+        }
+      }
+      $('hover-layer').innerHTML = marks + `<g aria-hidden="true" transform="translate(460 19)"><rect x="-125" y="-16" width="250" height="32" rx="13" fill="#fffbe9" stroke="#48674f" stroke-width="2"/><text text-anchor="middle" y="6" font-size="18" font-weight="700" fill="#294e39">${movePrompt}</text></g>`;
+      return;
+    }
     if (!hover) return;
     const x = X(hover.c), y = Y(hover.r), existing = G.at(state, hover.c, hover.r);
     const home = G.isHome(state.level, hover.c, hover.r);
@@ -239,13 +367,13 @@
   }
   function updateEnemy(view, enemy, showHealth) {
     const frozen = enemy.frozenUntil > state.time;
-    const time = (frozen ? enemy.frozenAt : state.time) + enemy.id, slow = enemy.slow > 0;
+    const time = (frozen ? enemy.frozenAt : state.time) + enemy.id;
     const hp = showHealth ? enemy.hp : null;
     const burning = enemy.burnTicks > 0, stunned = enemy.spikeStun > 1e-9 || (enemy.stun > 1e-9 && !enemy.push), shocked = enemy.shock > 1e-9;
-    const appearance = [hp, enemy.iceStacks, slow, frozen, burning, stunned, shocked, enemy.flash > 0, enemy.shieldFlash > 0].join('/');
+    const appearance = [hp, enemy.iceStacks, frozen, burning, stunned, shocked, enemy.flash > 0, enemy.shieldFlash > 0].join('/');
     if (view.appearance !== appearance) {
       const node = view.node;
-      node.innerHTML = A.bug(enemy.kind, hp, time, enemy.flash, enemy.shieldFlash, slow || frozen, view.labelId, enemy.maxHp);
+      node.innerHTML = A.bug(enemy.kind, hp, time, enemy.flash, enemy.shieldFlash, frozen ? G.maxSlowStacks : enemy.iceStacks, view.labelId, enemy.maxHp);
       if (enemy.iceStacks) node.insertAdjacentHTML('beforeend', `<g class="ice-stacks" fill="#baf5ff" stroke="#347697" stroke-width="1.2">${Array.from({length:enemy.iceStacks},(_,i)=>`<path transform="translate(${(i-(enemy.iceStacks-1)/2)*5} -22)" d="m0-3 2.5 3L0 3l-2.5-3Z"/>`).join('')}</g>`);
       if (frozen) {
         const size = G.enemyArtScale(enemy.kind,enemy.maxHp) * G.ENEMIES[enemy.kind].artSpan / 54;
@@ -261,6 +389,9 @@
           ${stunned ? '<g stroke="#a17533" fill="#ffe795" stroke-width="1.2"><path d="m-11-19 1-4 3 3 4 1-4 2-2 4-1-4-4-1Zm17-3 2-4 2 3 4 2-4 1-2 4-1-4-4-2Z"/></g>' : ''}</g>`);
       }
       view.legs = node.querySelector('.bug-legs');
+      view.eggRoll = enemy.kind === 'splitter' ? node.querySelector('.egg-roll') : null;
+      view.centipede = enemy.kind === 'swift' ? node.querySelector('.centipede-run') : null;
+      view.splitShadow = enemy.leap?.split ? node.querySelector('.bug-shadow') : null;
       view.wings = node.querySelector('.bug-wings');
       if (enemy.kind === 'rhinoBoss') {
         view.flightWings = node.querySelectorAll('.flight-wing');
@@ -273,20 +404,40 @@
       view.appearance = appearance;
     } else {
       const pose = A.bugPose(enemy.kind, time);
-      view.legs.setAttribute('transform', pose.legs);
+      if (view.legs) view.legs.setAttribute('transform', pose.legs);
       if (view.wings) view.wings.setAttribute('transform', pose.wings);
       if (view.jaws) for (const jaw of view.jaws) jaw.setAttribute('transform', pose.jaw);
       if (view.hit) view.hit.setAttribute('opacity', Math.min(1, enemy.flash * 8));
       if (view.block) view.block.setAttribute('opacity', Math.min(1, enemy.shieldFlash / .12));
     }
+    if (view.centipede) {
+      const frame = A.centipedeHref(reducedMotion.matches ? 0 : enemy.strideDistance);
+      if (view.centipede.getAttribute('href') !== frame) view.centipede.setAttribute('href', frame);
+    }
+    if (view.eggRoll) {
+      const frame = A.splitRollHref(reducedMotion.matches ? 0 : enemy.rollDistance);
+      if (view.eggRoll.getAttribute('href') !== frame) view.eggRoll.setAttribute('href', frame);
+    }
+    if (view.splitShadow) {
+      const height = G.enemyLift(enemy,state.time);
+      view.splitShadow.setAttribute('transform', `scale(${1-height/150} ${1-height/110})`);
+      view.splitShadow.setAttribute('opacity', .19-height*.0018);
+      if (!enemy.leap) view.splitShadow = null;
+    }
     if (view.scarabShell && !reducedMotion.matches) {
+      const dashing = state.time - (enemy.lastDashStepAt ?? -Infinity) < .12 * BATTLE_SPEED &&
+        enemy.attackId === null && !frozen && !shocked && !stunned && !enemy.spikeStun && !enemy.push && !enemy.pull;
+      if (view.dashing !== dashing) { view.node.dataset.dashing = dashing; view.dashing = dashing; }
       const sinceRam = state.time - (enemy.lastRamAt ?? -Infinity);
       const ram = Math.max(0, 1 - sinceRam / .23);
       const brace = enemy.attackId !== null ? Math.max(0, 1 - enemy.attackClock / .34) : 0;
       const recoil = enemy.flash / .18;
       // The sprite faces left in its own coordinates, even when moving vertically.
       view.scarabShell.setAttribute('transform', `translate(${4 * brace - 9 * ram + 3 * recoil} ${-2 * brace}) rotate(${-5 * brace + 4 * ram})`);
-    } else if (view.scarabShell) view.scarabShell.removeAttribute('transform');
+    } else if (view.scarabShell) {
+      view.scarabShell.removeAttribute('transform');
+      if (view.dashing) { view.node.dataset.dashing = false; view.dashing = false; }
+    }
     const cast = enemy.kind === 'spiderBoss' && state.shots.find(s => s.caster === enemy.id && s.age < s.duration * .55);
     const facing = cast ? cast.angle + 180 : enemy.facing;
     if (view.facing !== facing) {
@@ -367,10 +518,16 @@
   function aimProgress(b) {
     if (!b.aim) return 0;
     const tool=G.toolFor(G.primaryWeapon(b), b.upgraded);
-    return tool.maxDamage ? b.aim.damage/tool.maxDamage : Math.min(1,b.aim.age/(tool.aimSeconds*BATTLE_SPEED));
+    if (tool.maxDamage) return b.aim.damage/tool.maxDamage;
+    return tool.aimSeconds ? Math.min(1,b.aim.age/(tool.aimSeconds*BATTLE_SPEED)) : 0;
   }
   function trackingAngle(b,target) {
     return Math.atan2(Y(target.y)-G.enemyLift(target,state.time)-(Y(b.r)-3),X(target.x)-X(b.c))*180/Math.PI;
+  }
+  function disintegrationWidth(damage, upgraded) {
+    const tool = G.toolFor('disintegrationBeam', upgraded);
+    const stage = (damage - tool.damage) / (tool.maxDamage - tool.damage);
+    return 2 + stage * (upgraded ? 18 : 14);
   }
   const towerWeb = '<use class="tower-web" href="#art-silkNet" transform="scale(1.27)"/>';
   function fusionPortrait(building) {
@@ -429,9 +586,11 @@
     return `<rect x="${X(c)-S/2+2}" y="${Y(r)-S/2+2}" width="${S-4}" height="${S-4}" rx="6"/>`;
   }
   function frostfireSpray(e,t) {
-    const reach = 26 + 40*Math.min(1,t*5), wav = 4*Math.sin(t*9);
+    const distance = Math.hypot(e.impactX-e.x,e.impactY-e.y)*S;
+    const reach = distance ? Math.min(26,distance) + Math.max(0,distance-26)*Math.min(1,t*5) : 0;
+    const wav = reducedMotion.matches ? 0 : 4*Math.sin(t*9);
     if (e.upgraded) {
-      const end = Math.min(reach, Math.hypot(X(e.impactX)-X(e.x),Y(e.impactY)-Y(e.y)));
+      const end = reach;
       const mid = 25+(end-25)*.5, phase = reducedMotion.matches ? 0 : Math.sin(t*11)*3;
       const jets = [[-1,'#438bb3','#bffaff'],[1,'#c4663e','#ffcf71']].map(([side,edge,light])=>{
         const d=`M25 ${7*side}Q${mid-7} ${(14+phase)*side} ${mid} 0T${end} ${3*side}`;
@@ -500,9 +659,9 @@
   const snowFacets = [[-.65,0],[-.65,2.8],[-.28,1.4],[-.28,4.6],[.1,.35],[.1,3.5],[.5,1.8],[.5,4.9],[.77,.7],[.77,3.8]];
   function rollingSnowArt(s) {
     const distance = (s.x-s.c)*s.dx + (s.y-s.r)*s.dy;
-    const scale = .55 + .13 * distance;
+    const radius = G.snowRadius(distance), scale = S * radius / 14;
     // Integrate distance / radius as the sphere grows. The top surface moves in the travel direction.
-    const phase = reducedMotion.matches ? 0 : S / (14*.13) * Math.log(scale / (.55+.13*.33));
+    const phase = reducedMotion.matches ? 0 : 2 * Math.log(radius / .5) / G.toolFor('snowCannon').diameterGrowth;
     const facets = snowFacets.map(([lane, start]) => {
       const angle = phase + start, front = Math.cos(angle);
       if (front <= 0) return '';
@@ -510,7 +669,6 @@
       return `<g transform="translate(${x} ${13*lane}) scale(${front} 1)"><path d="m-2.8-.6 1.4-1 2.4.6 1.1 1.1-2.3.7Z" fill="#83b7ca"/><path d="m-2.6-.8 1.3-1.1 2.4.7" fill="none" stroke="#fff" stroke-width=".8"/></g>`;
     }).join('');
     return `<g clip-path="url(#field-bounds)"><g class="rolling-snow" transform="translate(${X(s.x)} ${Y(s.y)}) scale(${scale})">
-      ${s.upgraded ? `<g class="ice-plough" transform="rotate(${s.angle})"><path d="M-4-11q-10-1-18-7l5 7-8-1q8 8 16 9Zm0 22q-10 1-18 7l5-7-8 1q8-8 16-9Z" fill="#d5f5ff" stroke="#72a9c2" stroke-width="1.2"/></g>` : ''}
       <circle r="14" fill="url(#rolling-snow-light)" stroke="#5c91a7" stroke-width="1.3"/>
       <g class="snow-surface" transform="rotate(${s.angle})">${facets}${s.upgraded ? [0,2.1,4.2].map(a=>{
         const front=Math.cos(phase+a);
@@ -624,6 +782,15 @@
     }).join('');
     return `<g class="cell-strike" data-weapon="${e.weapon}" clip-path="url(#field-bounds)" opacity="${1-t}"><g fill="${color}" fill-opacity=".16">${marks}</g>${waves}</g>`;
   }
+  function eggArt(egg) {
+    const remaining = (egg.hatchAt - state.time) / BATTLE_SPEED;
+    const cracking = Math.max(0, 1 - remaining);
+    const wobble = reducedMotion.matches ? 0 : cracking * 10 * Math.sin(remaining * 24);
+    return `<g class="brood-egg" transform="translate(${X(egg.c)} ${Y(egg.r)})">
+      <ellipse cy="12" rx="14" ry="4" fill="#665830" opacity=".2"/>
+      <g transform="rotate(${wobble} 0 12)"><use href="#brood-shell"/>
+        <path d="m-11 1 6-3 3 4 5-6 3 3 5-3" fill="none" stroke="#916122" stroke-width="1.8" opacity="${cracking}"/></g></g>`;
+  }
   function renderWorld() {
     const lift = e => G.enemyLift(e, state.time);
     const settled = finishAge ?? 0;
@@ -648,7 +815,7 @@
         <use href="#art-firePatch" transform="translate(-16 6) skewX(${flicker * 5}) scale(.30 ${.32 + flicker * .05})"/>
         <use href="#art-firePatch" transform="translate(15 -4) scale(.23 ${.25 - flicker * .05})"/>
         <use href="#art-firePatch" transform="translate(6 13) scale(.16 ${.18 + flicker * .04})"/></g>`;
-    }).join('');
+    }).join('') + state.eggs.map(eggArt).join('');
     drawBuildings(beams, visibleFlash);
     drawEnemies(lift);
     const aiming = ['running', 'paused'].includes(state.phase) ? state.buildings.map(building => {
@@ -678,13 +845,24 @@
       const x = X(target.x), y = Y(target.y) - lift(target), radius = 28, length = 2 * Math.PI * radius;
       if (G.primaryWeapon(b)==='disintegrationBeam') {
         const cx=X(b.c), cy=Y(b.r)-3, distance=Math.hypot(x-cx,y-cy), start=Math.min(24,distance), power=b.aim.damage;
+        if (b.webUntil > state.time) return '';
+        const transform=`translate(${cx} ${cy}) rotate(${trackingAngle(b,target)})`;
         const line=`M${start} 0H${distance}`;
-        return `<g class="disintegration-beam" data-power="${power}" transform="translate(${cx} ${cy}) rotate(${trackingAngle(b,target)})" fill="none" stroke-linecap="round">
-          <path d="${line}" stroke="#585396" stroke-width="${4+power*1.8}" opacity=".66"/><path d="${line}" stroke="#75edda" stroke-width="${2+power*.88}"/><path d="${line}" stroke="#edffff" stroke-width="1.4"/>
-          <path d="${line}" stroke="#fff" stroke-width="2.7" stroke-dasharray="${b.upgraded ? '6 8' : '3 13'}" stroke-dashoffset="${reducedMotion.matches?0:-state.time*(b.upgraded ? 38 : 22)}"/>
-          ${b.upgraded ? `<g class="beam-packets">${Array.from({length:power},(_,i)=>{
+        if (!power) {
+          const charge = 1 - b.aim.remaining / (G.toolFor('disintegrationBeam', b.upgraded).chargeSeconds * BATTLE_SPEED);
+          const sweep = reducedMotion.matches ? 0 : -9 + 18 * charge;
+          return `<g class="disintegration-charge" transform="${transform}" fill="none" stroke-linecap="round">
+            <path class="disintegration-scan-line" d="${line}" stroke="#376b80" stroke-width="1.8" stroke-dasharray="4 5" stroke-dashoffset="${reducedMotion.matches ? 0 : -18 * charge}"/>
+            <g transform="translate(${distance} 0)"><path d="M-5 -10h-5v5m15 15h5V5" stroke="#376b80" stroke-width="1.8"/>
+              <path d="M${sweep} -8v16" stroke="#affff0" stroke-width="2"/></g></g>`;
+        }
+        const width = disintegrationWidth(power,b.upgraded);
+        return `<g class="disintegration-beam" data-power="${power}" transform="${transform}" fill="none" stroke-linecap="round">
+          <path d="${line}" stroke="#585396" stroke-width="${width}" opacity=".72"/><path d="${line}" stroke="#75edda" stroke-width="${width*.65}"/><path d="${line}" stroke="#edffff" stroke-width="${width*.22}"/>
+          <path d="${line}" stroke="#fff" stroke-width="${width*.19}" stroke-dasharray="${b.upgraded ? '6 8' : '3 13'}" stroke-dashoffset="${reducedMotion.matches?0:-state.time*(b.upgraded ? 38 : 22)}"/>
+          ${b.upgraded && width>2 ? `<g class="beam-packets">${Array.from({length:power},(_,i)=>{
             const p=((reducedMotion.matches ? .5 : state.time*1.6)+i/power)%1;
-            return `<g transform="translate(${start+(distance-start)*p} 0) skewX(-12)"><ellipse rx="3.1" ry="${4+power}" stroke="#4d7592" stroke-width="3.8"/><ellipse rx="3.1" ry="${4+power}" stroke="#c3ffde" stroke-width="1.8"/></g>`;
+            return `<g transform="translate(${start+(distance-start)*p} 0) skewX(-12)"><ellipse rx="${width*.16}" ry="${width*.5}" stroke="#4d7592" stroke-width="2"/><ellipse rx="${width*.16}" ry="${width*.5}" stroke="#c3ffde" stroke-width="1"/></g>`;
           }).join('')}</g>` : ''}
           <g transform="translate(${distance} 0) rotate(${reducedMotion.matches?0:state.time*32})"><circle r="${3.8+power}" stroke="#dcfff1" stroke-width="2"/>
           <circle r="${7+power}" stroke="#6abfca" stroke-width="2" stroke-dasharray="5 5"/></g></g>`;
@@ -756,14 +934,15 @@
           const dx=X(e.fromC)-x, dy=Y(e.fromR)-3-y, distance=Math.hypot(dx,dy);
           const muzzle=distance ? Math.max(0,1-24/distance) : 0;
           const line=`M${dx*muzzle} ${dy*muzzle}L0 0`;
-          lastPulse=`<g class="disintegration-flash" opacity="${(1-t)**2}" stroke-linecap="round"><path d="${line}" stroke="#6970a7" stroke-width="6"/><path d="${line}" stroke="#affde6" stroke-width="3"/></g>`;
+          const width = disintegrationWidth(e.strength,e.upgraded);
+          lastPulse=`<g class="disintegration-flash" opacity="${(1-t)**2}" stroke-linecap="round"><path d="${line}" stroke="#6970a7" stroke-width="${width}"/><path d="${line}" stroke="#affde6" stroke-width="${width*.65}"/></g>`;
         }
         return `<g ${at} fill="#a1f7e3" stroke="#686493">${lastPulse}${[20,125,235].map(a=>`<rect transform="rotate(${a}) translate(${6+13*t} 0) rotate(25)" width="${2+e.strength}" height="4"/>`).join('')}</g>`;
       }
       if (e.kind === 'snowContact') return `<g ${at} color="#ecffff" stroke="#76b3c6"><use href="#art-snowflake" transform="scale(${.6+.55*t})"/></g>`;
+      if (e.kind === 'frostfireSpray') return frostfireSpray(e,t);
       if (e.kind === 'snowBurst') return snowBurstArt(e,t);
       if (e.kind === 'cometBurst') return magneticBurst(e,t);
-      if (e.kind === 'frostfireSpray') return frostfireSpray(e,t);
       if (e.kind === 'laser') {
         const tower = state.buildings.find(b => b.id === e.tower);
         const mount = A.mountFor(tower, 'pierce'), gun = tower?.secondary?.kind === 'pierce' ? tower.secondary : tower;
@@ -817,18 +996,17 @@
         <path d="M6-5l6-4m-3 10 7 2" transform="translate(${8*t} 0)" fill="none" stroke="#ffc770" stroke-width="2"/></g></g>`;
       if (e.kind === 'spark' && e.weapon === 'fireCannon') return `<g class="ember-impact" ${at}><use href="#art-firePatch" transform="translate(0 ${4 - 7 * t}) scale(${.68 - t * .32})"/></g>`;
       if (e.kind === 'spark' || e.kind === 'flare') return `<g class="${e.kind}-effect" ${at}><g transform="rotate(${e.angle ?? 0})">${A.impactBurst(e.kind, t)}</g></g>`;
-      if (e.kind === 'hatch') return `<g class="hatch-effect" ${at} fill="#ffefc7" stroke="#a77f63" stroke-width="2">
+      if (e.kind === 'hatch') return `<g class="hatch-effect" ${at} fill="#ffdb58" stroke="#916122" stroke-width="2">
         <path transform="translate(${-t * 9} ${-t * 7}) rotate(${-t * 25})" d="M-9 1q-1-15 7-17 8 0 10 12L4-6 0-1-4-5Z"/>
         <path transform="translate(${t * 9} ${t * 6}) rotate(${t * 20})" d="m-10 3 6-3 4 4 4-6 6 3C9 17-8 17-10 3Z"/></g>`;
       if (e.kind === 'split') {
         const start = G.enemyArtScale('splitter', e.maxHp);
-        const angle = e.facing * Math.PI / 180, offset = 2 * start * (1 - t);
         const plates = e.offspring.map((child, i) => {
-          const dx = (child.x - e.x) * S * t + offset * Math.cos(angle);
-          const dy = (child.y - e.y) * S * t + offset * Math.sin(angle);
-          return A.splitPlateAt(i, dx, dy, start * (1 - t), e.facing);
+          const dx = (child.x - e.x) * S * .32 * t;
+          const dy = (child.y - e.y) * S * .32 * t - 12 * Math.sin(Math.PI*t);
+          return A.splitPlateAt(i, dx, dy, start * (1 - .6*t), e.facing + (i%2 ? -80 : 65)*t);
         });
-        return `<g class="split-effect" ${at}>${plates.join('')}</g>`;
+        return `<g class="split-effect" ${at}><ellipse rx="${11+24*t}" ry="${6+11*t}" fill="none" stroke="#ffdf93" stroke-width="${3*(1-t)}"/>${plates.join('')}</g>`;
       }
       if (e.kind === 'leap') return `<path class="leap-effect" d="M${x} ${y}Q${(x + X(e.toX)) / 2} ${Math.min(y, Y(e.toY)) - 75} ${X(e.toX)} ${Y(e.toY)}" fill="none" stroke="#688a38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="${(1 - t) * .75}"/>`;
       if (e.kind === 'blast') {
@@ -882,8 +1060,10 @@
     $('hammer-count').textContent = state.fusionHammers;
     $('crystals').title = state.upgradeItems ? '升級水晶' : '水晶不足';
     $('hammers').title = state.fusionHammers ? '融合槌' : '合成槌不足';
-    $('crystals').hidden = state.level < 1;
-    $('hammers').hidden = state.level < 3;
+    const won = state.phase === 'cleared' || state.phase === 'won';
+    const completedCount = state.level + Number(won);
+    $('crystals').hidden = completedCount < 1;
+    $('hammers').hidden = completedCount < 3;
     $('crystals').setAttribute('aria-label', `升級水晶 ${state.upgradeItems} 顆`);
     $('hammers').setAttribute('aria-label', `融合槌 ${state.fusionHammers} 把`);
     $('money').textContent = state.money;
@@ -903,9 +1083,17 @@
       b.setAttribute('aria-disabled', String(state.phase !== 'planning'));
     });
     $('undo').disabled = state.phase !== 'planning' || state.undo.length === 0;
-    $('reset').setAttribute('aria-label', state.phase === 'planning' ? '清空部署，全額退款' : state.phase === 'won' ? '回到第一關' : '重試這關');
-    const label = advancing ? '暫停' : state.phase === 'paused' ? '繼續' : state.phase === 'won' ? '看成果' : state.phase === 'lost' ? '再試一次' : state.level > 0 && state.level < G.BONUS_LEVEL ? '下一關' : '開始';
-    $('action').innerHTML = state.phase === 'planning' ? label : A.icon(advancing ? 'pause' : 'play');
+    const [icon, caption, hint] = resetActions[state.phase];
+    $('reset').innerHTML = A.icon(icon) + caption;
+    $('reset').title = hint;
+    $('reset').hidden = won;
+    $('replay').hidden = !won || state.level === G.BONUS_LEVEL;
+    if (won) $('replay').title = `重玩第 ${state.level+1} 關`;
+    const next = won && state.level < G.BONUS_LEVEL;
+    const label = advancing ? '暫停' : state.phase === 'paused' ? '繼續' : next ? '下一關' : won || state.phase === 'lost' ? '此關再玩一次' : '開始';
+    $('action').innerHTML = next ? '下一關 <span aria-hidden="true">→</span>' : advancing || state.phase === 'paused' ? A.icon(advancing ? 'pause' : 'play') : label;
+    $('action').classList.toggle('next-stage', next);
+    $('action').classList.toggle('long-label', label === '此關再玩一次');
     $('action').setAttribute('aria-label', label);
     $('action').classList.toggle('pause-state', advancing);
   }
@@ -916,11 +1104,12 @@
       + prize('crystal', 'crystal', level === 1 ? '解鎖升級水晶' : '升級水晶', 1)
       + (G.hammerLevels.includes(level) ? prize('hammer', 'hammer', level === 3 ? '解鎖融合槌' : '融合槌', 1) : '');
   }
-  const clearedLevel = () => state.phase === 'won' ? state.level + 1 : state.level;
+  const clearedLevel = () => state.level + Number(state.phase === 'won' || state.phase === 'cleared');
   function outcome() {
+    closeEntranceGuide();
     resultAfterHeart = false;
     closeMenu(); hideInfo();
-    const nextStage = state.phase === 'planning', won = nextStage || state.phase === 'won';
+    const won = state.phase !== 'lost';
     const bonus = state.level === G.BONUS_LEVEL;
     $('win-crystal').hidden = !won;
     if (won) $('win-crystal').innerHTML = victoryLoot(state.lastReward);
@@ -929,11 +1118,12 @@
     const invite = $('bonus-invite');
     invite.hidden = !(state.phase === 'won' && !bonus);
     invite.textContent = invite.hidden ? '' : '隱藏關「四面守園」已開啟，守住中央的城堡！';
-    $('result-hearts').hidden = nextStage;
-    if (!nextStage) $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts + Number(state.castleUpgraded) }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
-    $('result-primary').textContent = nextStage ? `部署第 ${state.level + 1} 關` : won ? (bonus ? '再玩一次' : '挑戰第 11 關') : '重試這關';
-    $('result-secondary').hidden = nextStage || !won;
-    $('result-secondary').textContent = '看看花園';
+    $('result-hearts').hidden = state.phase === 'cleared' || state.phase === 'planning';
+    if (!$('result-hearts').hidden) $('result-hearts').innerHTML = Array.from({ length: G.LEVELS[state.level].hearts + Number(state.castleUpgraded) }, (_, i) => A.icon('heart', i < state.hearts ? '' : 'empty')).join('');
+    $('castle-hits').hidden = won || !state.homeHits.length;
+    $('castle-hit-list').innerHTML = won ? '' : state.homeHits.map((kind, i) =>
+      `<li><span class="hit-number" aria-hidden="true">${i+1}</span>${A.badge(kind)}<span>${G.ENEMIES[kind].name}</span></li>`).join('');
+    $('result-primary').textContent = won ? '繼續' : '重試這關';
     if (won) $('result').setAttribute('aria-describedby', invite.hidden ? 'win-crystal' : 'win-crystal bonus-invite');
     else $('result').removeAttribute('aria-describedby');
     if (!$('result').open) $('result').showModal();
@@ -965,13 +1155,13 @@
     }
     if (lastPhase !== state.phase) {
       closeMenu();
-      const finished = lastPhase === 'running' && (state.phase === 'planning' || state.phase === 'won');
+      const finished = lastPhase === 'running' && (state.phase === 'cleared' || state.phase === 'won');
       const ended = state.phase === 'won' || state.phase === 'lost';
       resultAfterHeart = ended && lastPhase === 'running' && state.effects.some(e => e.kind === 'home');
       finishAge = finished || resultAfterHeart ? 0 : null;
       lastPhase = state.phase;
       if (state.phase !== 'paused') save();
-      const hasReward = state.phase === 'won' || (state.phase === 'planning' && state.lastReward > 0);
+      const hasReward = state.phase === 'cleared' || state.phase === 'won' || (state.phase === 'planning' && state.lastReward > 0);
       selection();
       if (!resultAfterHeart && (state.phase === 'lost' || (hasReward && seenRewardLevel !== clearedLevel()))) outcome();
     }
@@ -981,6 +1171,7 @@
   }
   function loadLevel(level, replacement = null) {
     if (level === G.BONUS_LEVEL && !state.bonusUnlocked) return;
+    finishMove();
     closeMenu(); hideInfo();
     if ($('lesson').open) $('lesson').close();
     if ($('result').open) $('result').close();
@@ -988,6 +1179,7 @@
     next.bonusUnlocked ||= state.bonusUnlocked;
     seenRewardLevel = null;
     state = next; selected = 'pea'; hover = null; accumulator = 0;
+    if (lastLevel === state.level) drawEntrances();
     $('status').textContent = level === G.BONUS_LEVEL ? '守住中央城堡，小蟲會從四面進攻！' : '';
     lastPhase = ''; lastRevision = -1; uiSignature = ''; sync(true);
   }
@@ -995,6 +1187,12 @@
     if (infoAnchor && $('building-menu').contains(infoAnchor)) hideInfo();
     menuCell = null;
     $('building-menu').hidden = true;
+  }
+  function finishMove() {
+    if (!moving) return;
+    moving = null;
+    $('status').textContent = '';
+    selection();
   }
   function positionMenu() {
     if (!menuCell) return;
@@ -1048,7 +1246,7 @@
     grade.hidden = false;
     setAvailability(grade, !upgraded && !state.upgradeItems ? '水晶不足' : '');
     grade.title = grade.dataset.unavailable || (upgraded ? '退回 1 顆升級水晶' : '使用 1 顆升級水晶');
-    $('edit-remove').hidden = home;
+    $('edit-remove').hidden = $('edit-move').hidden = home;
     showFusionOptions(b);
     $('building-menu').hidden = false;
     positionMenu();
@@ -1074,6 +1272,15 @@
   function interact(c, r) {
     const b = G.at(state, c, r), home = G.isHome(state.level, c, r);
     if (state.phase !== 'planning') { showCellInfo(cellAt(c, r)); return; }
+    if (moving) {
+      if (moving.c === c && moving.r === r) { finishMove(); return; }
+      const result = G.moveBuilding(state, moving.c, moving.r, c, r);
+      if (!result.ok) { feedback(result.error, c, r); return; }
+      const name = G.buildingName(moving);
+      finishMove(); save(); sync(true);
+      $('status').textContent = name + '已移動';
+      return;
+    }
     if (home || b) {
       openMenu(c, r); return;
     }
@@ -1092,7 +1299,7 @@
     const tool = event.target.closest('[data-tool]'); if (!tool) return;
     showInfo(tool.dataset.tool, tool);
     if (state.phase !== 'planning') return;
-    closeMenu(); selected = tool.dataset.tool; hover = null; selection(); updateUI(true);
+    finishMove(); closeMenu(); selected = tool.dataset.tool; hover = null; selection(); updateUI(true);
   });
   for (const button of $('tools').querySelectorAll('[data-tool]')) {
     button.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') showInfo(button.dataset.tool, button); });
@@ -1164,14 +1371,27 @@
     hideInfo();
   });
   $('edit-grade').addEventListener('click', () => editBuilding(false));
+  $('edit-move').addEventListener('click', () => {
+    if (!menuCell || state.phase !== 'planning') return;
+    const { c, r } = menuCell;
+    moving = G.at(state, c, r);
+    if (!moving) return;
+    closeMenu(); hideInfo();
+    selected = null;
+    cellAt(c, r).focus({ preventScroll: true });
+    $('status').textContent = movePrompt;
+    selection(); updateUI(true);
+  });
   $('edit-remove').addEventListener('click', () => editBuilding(true));
   $('edit-grade').addEventListener('pointerenter', previewGrade);
   $('edit-grade').addEventListener('focus', event => { if (event.target.matches(':focus-visible')) previewGrade(); });
   $('edit-grade').addEventListener('keydown', event => { if (event.key === 'Tab') hideInfo(); });
   $('edit-grade').addEventListener('pointerleave', deferHideInfo);
-  $('undo').addEventListener('click', () => { if (G.undo(state)) { save(); sync(true); } });
+  $('undo').addEventListener('click', () => { finishMove(); if (G.undo(state)) { save(); sync(true); } });
   $('reset').addEventListener('click', () => {
-    if (state.phase==='lost' || state.checkpoint) loadLevel(state.level, G.retry(state));
+    finishMove();
+    if (G.isAdvancing(state)) { G.togglePause(state); sync(true); }
+    else if (state.phase === 'paused' || state.phase === 'lost') loadLevel(state.level, G.retry(state));
     else if (state.phase === 'planning') {
       // Reorganise the current budget without erasing earned campaign funds.
       for (const b of [...state.buildings]) G.remove(state, b.c, b.r);
@@ -1199,17 +1419,42 @@
     });
   } else solution.remove();
   $('action').addEventListener('click', () => {
-    hideInfo();
+    finishMove(); hideInfo();
     hover = null; $('status').textContent = ''; selection();
     if (state.phase === 'planning') { save(); G.startWave(state); }
     else if (state.phase === 'running' || state.phase === 'paused') G.togglePause(state);
     else if (state.phase === 'lost') { loadLevel(state.level, G.retry(state)); return; }
-    else outcome();
+    else { advanceAfterVictory(); return; }
     sync(true);
   });
   $('hit-layer').addEventListener('click', event => {
     const cell = event.target.closest('[data-c]'); if (!cell) return;
     interact(+cell.dataset.c, +cell.dataset.r);
+  });
+  const entryLayer = $('entrance-layer');
+  for (const type of ['pointerover','focusin']) entryLayer.addEventListener(type, event => {
+    const marker = event.target.closest('.entrance');
+    if (!marker || (type === 'pointerover' && (event.pointerType === 'touch' || marker.contains(event.relatedTarget)))) return;
+    showEntranceInfo(marker);
+  });
+  entryLayer.addEventListener('pointerout', event => {
+    if (!event.target.closest('.entrance')?.contains(event.relatedTarget)) deferHideInfo();
+  });
+  entryLayer.addEventListener('focusout', deferHideInfo);
+  entryLayer.addEventListener('click', event => openEntranceGuide(event.target.closest('.entrance')));
+  entryLayer.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault(); openEntranceGuide(event.target.closest('.entrance'));
+    }
+  });
+  $('entry-guide-close').addEventListener('click', closeEntranceGuide);
+  entryGuide.addEventListener('cancel', event => { event.preventDefault(); closeEntranceGuide(); });
+  $('entry-prev').addEventListener('click', () => showGuidePage(guidePage - 1));
+  $('entry-next').addEventListener('click', () => showGuidePage(guidePage + 1));
+  entryGuide.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault(); showGuidePage(guidePage + (event.key === 'ArrowRight' ? 1 : -1));
+    }
   });
   $('hit-layer').addEventListener('pointermove', event => {
     if (event.pointerType === 'touch' || menuCell) return;
@@ -1238,24 +1483,42 @@
     } else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(focusCell.c, focusCell.r); }
   });
   document.addEventListener('keydown', event => {
+    if (entryGuide.open) return;
     if (event.key === 'Escape' && settings.open && !$('result').open) {
       settings.open = false; settings.querySelector('summary').focus(); return;
     }
     if (event.key === 'Escape' && !$('result').open && !$('lesson').open) {
       if (menuCell) cellAt(menuCell.c, menuCell.r).focus();
-      closeMenu(); hideInfo(); selected = null; hover = null; selection(); updateUI(true); }
+      finishMove(); closeMenu(); hideInfo(); selected = null; hover = null; selection(); updateUI(true); }
   });
-  $('result-primary').addEventListener('click', () => {
-    if (state.phase === 'planning') {
-      if (state.level === 1 || state.level === 3) openLesson(state.level);
-      else dismissOutcome();
+  function replayVictory() {
+    const original = G.replayVictory(state);
+    if (original) loadLevel(original.level, original);
+  }
+  $('replay').addEventListener('click', replayVictory);
+  function advanceAfterVictory() {
+    if (state.phase === 'cleared') {
+      const nextLevel = state.level + 1;
+      if (G.advanceLevel(state)) {
+        state.lastReward = 0;
+        state.replayCheckpoint = null;
+        sync(true);
+        if (nextLevel === 1 || nextLevel === 3) openLesson(nextLevel);
+      }
     }
     else if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
     else if (state.level === G.BONUS_LEVEL - 1) {
       const bonus = G.createState(G.BONUS_LEVEL);
       if (state.castleUpgraded) { const goal = G.LEVELS[G.BONUS_LEVEL].goal; G.upgrade(bonus, goal.c, goal.r); bonus.undo = []; }
       loadLevel(G.BONUS_LEVEL, bonus);
-    } else loadLevel(0);
+    } else replayVictory();
+  }
+  $('result-primary').addEventListener('click', () => {
+    if (state.phase === 'lost') loadLevel(state.level, G.retry(state));
+    else {
+      dismissOutcome();
+      $('action').focus();
+    }
   });
   function openLesson(level) {
     const fusion = level === 3;
@@ -1282,7 +1545,7 @@
   }
   $('lesson-close').addEventListener('click', finishLesson);
   $('lesson').addEventListener('cancel', event => { event.preventDefault(); finishLesson(); });
-  $('result-secondary').addEventListener('click', dismissOutcome);
+
   $('result').addEventListener('cancel', event => { event.preventDefault(); dismissOutcome(); });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && G.isAdvancing(state)) { G.togglePause(state); save(); sync(true); }
@@ -1304,7 +1567,7 @@
     const elapsed = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0; lastFrame = now;
     if (G.isAdvancing(state)) {
       accumulator += elapsed * BATTLE_SPEED;
-      while (accumulator >= 1 / 60) { G.step(state, 1 / 60); accumulator -= 1 / 60; }
+      while (accumulator >= 1 / 60) { G.step(state, 1 / 60, true); accumulator -= 1 / 60; }
     } else accumulator = 0;
     // Finish the last impact in deployment without stepping the next wave.
     const settling = finishAge !== null && finishAge < 1;
