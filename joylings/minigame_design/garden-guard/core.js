@@ -24,7 +24,7 @@
     flame: { name: '火球投石機', targets: ['ground'], cost: 7, range: 5, minRange: 2, damage: 5, rate: 0.45, flightSeconds: .5, groundFireSeconds: 4, burnDamage: 1, burnSeconds: 3, burnRadius: 0.75, effect: '把火石丟到最多蟲會經過的格子。', hp: 5, color: '#d37643' },
     pierce: { name: '雷射砲', targets: ['ground', 'air'], cost: 12, range: 6.2, damage: 1, rate: 0.8, piercesShield: true, stunSeconds: .1, effect: '瞄準排成一線的蟲，穿盾電暈牠們。', hp: 5, color: '#4a8f88' },
     push: { name: '衝擊拳機', targets: ['ground', 'air'], cost: 9, range: 4, damage: 1, rate: 0.35, knockback: 3, effect: '把最靠近城堡的蟲推回去。', hp: 5, color: '#7882af' },
-    molecular: { name: '電漿塔', targets: ['ground', 'air'], cost: 18, range: 6.6, damage: 38, rate: 1/1.5, aimSeconds: 1.5, priority: 'highestHp', piercesShield: true, effect: '電漿球穿過盾牌，專打血最多的蟲。', hp: 5, color: '#a16cab' },
+    molecular: { name: '電漿塔', targets: ['ground', 'air'], cost: 18, range: 6.6, damage: 38, rate: 1/1.5, aimSeconds: 1.5, priority: 'highestHp', piercesShield: true, effect: '和其他電漿塔分頭打血多的蟲，電漿球能穿盾。', hp: 5, color: '#a16cab' },
     wall: { name: '石牆', cost: 1, hp: 4, effect: '擋住去路，讓蟲繞路。', color: '#a48a66' }
   };
   const weapons = { ...TOOLS, castle: { name: '城堡', targets: TOOLS.pea.targets, rate: TOOLS.pea.rate, range: 3, damage: 2, effect: '自動射箭，守住城門。', color: '#597581' } };
@@ -32,7 +32,7 @@
     castle: { name: '雙弩城堡', effect: '一次射兩支箭，城堡多一顆心。' },
     pea: { name: '雙管砲塔', rate: TOOLS.pea.rate * 2.5, effect: '雙管連射，先打飛蟲。' },
     push: { name: '震盪拳機', damage: TOOLS.push.damage + 2, knockback: 4, stunSeconds: 1, effect: '把蟲推回去，每少推一格就多暈 1 秒。' },
-    molecular: { name: '連鎖電漿塔', damage: 46, chainRange: 3, effect: '電漿球穿過盾牌，再彈向附近的蟲。' },
+    molecular: { name: '連鎖電漿塔', damage: 46, chainRange: 3, effect: '和其他電漿塔分頭瞄準，打中後再彈向附近的蟲。' },
     cannon: { name: '巨砲', damage: 4, effect: '大砲彈爆開，一次打中一群蟲。' },
     frost: { name: '霜凍石', rate: TOOLS.frost.rate * 1.2, damage: 1, effect: '放出一圈冰氣，讓附近的蟲受傷變慢。' },
     flame: { name: '大火球投石機', damage: 7, groundFireSeconds: 5, afterburnSeconds: 5, effect: '火石瞄準蟲群必經的格子，蟲離開後還會燒。' },
@@ -1685,6 +1685,18 @@
     }
     return best?.enemy;
   }
+  function otherPlasmaTargets(state, tower) {
+    const counts = new Map();
+    function count(target) { counts.set(target, (counts.get(target) ?? 0) + 1); }
+    for (const other of state.buildings) {
+      if (other !== tower && other.aim?.target != null && primaryWeapon(other) === 'molecular') count(other.aim.target);
+    }
+    // Keep a target reserved during the handoff from aiming to projectile flight.
+    for (const shot of state.shots) {
+      if ((shot.weapon ?? shot.kind) === 'molecular' && shot.tower !== tower.id) count(shot.target);
+    }
+    return counts;
+  }
   function chooseTarget(state, tower, weapon, tool) {
     if (weapon === 'flame') return chooseCatapultCell(state,tower,tool);
     if ((tool.delivery ?? weapon) === 'pierce') return chooseBeamTarget(state,tower,tool);
@@ -1692,6 +1704,7 @@
     if (weapon === 'sonicCannon' || weapon === 'moltenMortar') return chooseBlastCell(state,tower,weapon,tool);
     const goal = LEVELS[state.level].goal;
     const rangeSquared = tool.range * tool.range;
+    const plasmaTargets = weapon === 'molecular' && state.enemies.length > 1 ? otherPlasmaTargets(state, tower) : null;
     let best = null, bestPriority = Infinity, bestTie = Infinity, bestHome = Infinity;
     for (const enemy of state.enemies) {
       const dx = enemy.x - tower.c, dy = enemy.y - tower.r;
@@ -1703,9 +1716,16 @@
       if (distanceSquared > rangeSquared || (tool.minRange && distanceSquared <= tool.minRange ** 2) || !canTarget(weapon, enemy, tower.upgraded)) continue;
       const locked = enemy.id === tower.aim?.target;
       const iceBlocked = !canApplyIce(enemy, state.time);
-      if (locked && !(tool.priority === 'notFrozen' && iceBlocked)) return enemy;
-      const priority = tool.priority === 'highestHp' ? -enemy.hp : Number((weapon === 'pea' && !isAirborne(enemy)) || (tool.priority === 'notFrozen' && iceBlocked) || (tool.priority === 'unfrozen' && (enemy.slow > 0 || iceBlocked)) || (tool.priority === 'unburned' && enemy.burnTicks > 0));
-      const tie = tool.priority === 'notFrozen' ? (locked ? -Infinity : -enemy.hp) : 0;
+      const claims = plasmaTargets?.get(enemy.id) ?? 0;
+      if (locked && !claims && !(tool.priority === 'notFrozen' && iceBlocked)) return enemy;
+      let priority, tie = 0;
+      if (plasmaTargets) {
+        priority = claims;
+        tie = locked ? -Infinity : -enemy.hp;
+      } else {
+        priority = tool.priority === 'highestHp' ? -enemy.hp : Number((weapon === 'pea' && !isAirborne(enemy)) || (tool.priority === 'notFrozen' && iceBlocked) || (tool.priority === 'unfrozen' && (enemy.slow > 0 || iceBlocked)) || (tool.priority === 'unburned' && enemy.burnTicks > 0));
+        if (tool.priority === 'notFrozen') tie = locked ? -Infinity : -enemy.hp;
+      }
       const home = weapon === 'push' ? (enemy.x - goal.c) ** 2 + (enemy.y - goal.r) ** 2
         : Math.abs(enemy.x - goal.c) + Math.abs(enemy.y - goal.r);
       if (priority < bestPriority || (priority === bestPriority && (tie < bestTie || (tie === bestTie &&

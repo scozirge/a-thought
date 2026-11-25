@@ -1106,6 +1106,50 @@ test('分子砲優先射程內剩餘血量最高者，忽略射程外、死亡�
   G.step(s, 1 / 60); assert.equal(s.buildings[0].aim.target, flying.id, '重新瞄準也可選空中目標');
 });
 
+test('普通與升級電漿塔依血量分頭鎖定地空目標，多出的塔分攤火力', () => {
+  const s=G.createState(4);
+  for (const [c,r] of [[4,3],[5,4],[4,5],[5,5]]) assert.ok(G.build(s,'molecular',c,r).ok);
+  assert.ok(G.upgrade(s,5,4).ok);
+  G.startWave(s); s.queue=[]; s.castle=null;
+  const low=stationary(s,'flyer',6,6), high=stationary(s,'shield',7,3), middle=stationary(s,'bug',7,5);
+  high.hp=95; middle.hp=70;
+  const targets=[high.id,middle.id,low.id,high.id];
+  G.step(s,1/60);
+  assert.deepEqual(s.buildings.map(b=>b.aim.target),targets);
+  advance(s,1.5*G.BATTLE_SPEED-1/60);
+  assert.deepEqual(s.shots.map(shot=>shot.target),targets);
+});
+
+test('兩塔可集火孤立蟲王，有新蟲才分頭，保留原目標的塔繼續瞄準', () => {
+  const s=G.createState(4);
+  for(const c of [4,5]) assert.ok(G.build(s,'molecular',c,4).ok);
+  G.startWave(s); s.queue=[]; s.castle=null;
+  const boss=stationary(s,'stagBoss',7,4); boss.hp=200;
+  advance(s,.5*G.BATTLE_SPEED);
+  assert.ok(s.buildings.every(b=>b.aim.target===boss.id));
+  const flyer=stationary(s,'flyer',6,5);
+  G.step(s,1/60);
+  const keeper=s.buildings.find(b=>b.aim.target===boss.id);
+  assert.ok(keeper.aim.age>.5*G.BATTLE_SPEED);
+  assert.equal(s.buildings.find(b=>b.aim.target===flyer.id).aim.age,1/60);
+  flyer.dead=true;
+  advance(s,(1.5+.36)*G.BATTLE_SPEED);
+  assert.equal(boss.hp,200-2*38);
+});
+
+test('其他塔的直擊電漿球在飛行中，剛解除蛛網的塔會選尚未被打的蟲', () => {
+  const s=G.createState(4);
+  for(const c of [4,5]) assert.ok(G.build(s,'molecular',c,4).ok);
+  G.startWave(s); s.queue=[]; s.castle=null;
+  const second=s.buildings[1]; second.webUntil=3*G.BATTLE_SPEED;
+  const high=stationary(s,'shield',7,3); high.hp=100;
+  const low=stationary(s,'flyer',7,5);
+  advance(s,1.5*G.BATTLE_SPEED);
+  assert.equal(s.buildings[0].aim,null); assert.equal(s.shots[0].target,high.id);
+  second.webUntil=s.time; G.step(s,1/60);
+  assert.equal(second.aim.target,low.id);
+});
+
 test('分子砲不射擊六點六格以外的目標，血量相同則先選靠近家的目標', () => {
   const s = G.createState(); G.build(s, 'molecular', 2, 3); s.phase = 'running';
   enemy(s, 'giant', 100, 8.8, 3); G.step(s, 1 / 60); assert.equal(s.shots.length, 0);
